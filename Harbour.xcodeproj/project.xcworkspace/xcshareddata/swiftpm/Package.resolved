@@ -1,0 +1,43 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Alamofire",
+        "repositoryURL": "https://github.com/Alamofire/Alamofire.git",
+        "state": {
+          "branch": "master",
+          "revision": "e02ea43ba2b5a71bb734aeee89398965d07061ca",
+          "version": null
+        }
+      },
+      {
+        "package": "AlamofireNetworkActivityIndicator",
+        "repositoryURL": "https://github.com/Alamofire/AlamofireNetworkActivityIndicator.git",
+        "state": {
+          "branch": "master",
+          "revision": "f252f5bfb6f6ec0ddabe362faf49ea18bcb1ca1f",
+          "version": null
+        }
+      },
+      {
+        "package": "KeychainAccess",
+        "repositoryURL": "https://github.com/kishikawakatsumi/KeychainAccess.git",
+        "state": {
+          "branch": "master",
+          "revision": "c801c3f13edc581d2e9441b5146e767ad55e078f",
+          "version": null
+        }
+      },
+      {
+        "package": "SwiftyJSON",
+        "repositoryURL": "https://github.com/SwiftyJSON/SwiftyJSON.git",
+        "state": {
+          "branch": "master",
+          "revision": "cbf2d4955557abc1ed5debab21d20763e7ebc540",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

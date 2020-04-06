@@ -1,0 +1,154 @@
+/* 
+  Localization.strings
+  Harbour
+
+  Created by royal on 03/04/2020.
+  Copyright © 2020 shameful. All rights reserved.
+ 
+  Base: en_US
+*/
+
+// Global
+"Dashboard" = "Dashboard";
+
+"Username" = "Username";
+"Password" = "Password";
+
+"Settings" = "Settings";
+"About" = "About";
+"Libraries" = "Libraries";
+"API" = "API";
+"Interface" = "Interface";
+"Privacy & Legal" = "Privacy & Legal";
+"Other" = "Other";
+
+"Endpoint URL" = "Endpoint URL";
+"Not logged in" = "Not logged in";
+"Log in" = "Log in";
+"Log out" = "Log out";
+"Done!" = "Done!";
+"Yes" = "Yes";
+"No" = "No";
+"Reset" = "Reset";
+"Nevermind" = "Nevermind";
+"Loading..." = "Loading...";
+
+"Fill all fields!" = "Fill all fields!";
+"Continue" = "Continue";
+"Nevermind" = "Nevermind";
+"Go back" = "Go back";
+
+"unknown" = "unknown";
+"none" = "none";
+"true" = "true";
+"false" = "false";
+
+// Onboarding
+"ONBOARDING_TITLE" = "Welcome to";
+
+"ONBOARDING_FUNCTION1_TITLE" = "Monitor";
+"ONBOARDING_FUNCTION1_DESCRIPTION" = "See your containers as they are in (almost) real time.";
+
+"ONBOARDING_FUNCTION2_TITLE" = "Manage";
+"ONBOARDING_FUNCTION2_DESCRIPTION" = "Start & stop, edit, see logs - you name it.";
+
+"ONBOARDING_FUNCTION3_TITLE" = "Soon: Deploy!";
+"ONBOARDING_FUNCTION3_DESCRIPTION" = "Create and customize new containers from Docker Hub.";
+
+// Setup
+"SETUP_TITLE" = "User Setup";
+
+// Settings
+"SETTINGS_ENDPOINTURL_TOOLTIP" = "URL address of the server with Portainer running.";
+
+"SETTINGS_AUTOMATICREFRESH" = "Automatic refresh";
+"SETTINGS_AUTOMATICREFRESH_TOOLTIP : %@" = "Should we automatically refresh containers every %@ seconds?";
+
+"SETTINGS_HAPTICFEEDBACK" = "Haptic Feedback";
+"SETTINGS_HAPTICFEEDBACK_TOOLTIP" = "If you don't love haptic feedback as much as I do, you might want to turn this off.";
+
+"SETTINGS_ENABLEDRAWER" = "Use Drawer";
+"SETTINGS_ENABLEDRAWER_TOOLTIP" = "Should we display a drawer for controlling the container in the detail view?";
+
+"SETTINGS_FULLSCREENDASHBOARD" = "Fullscreen Dashboard";
+"SETTINGS_FULLSCREENDASHBOARD_TOOLTIP" = "If turned off there will be an additional sidebar to the left of the screen.";
+
+"SETTINGS_RESETTED" = "App will be wiped clean after a restart. Should we do it now?";
+
+"SETTINGS_LOGGEDIN : %@" = "Logged in as \"%@\"";
+
+"Made with ❤️ (and ☕️) by @rrroyal" = "Made with ❤️ (and ☕️) by @rrroyal";
+
+"SETTINGS_RESET" = "Are you sure?";
+"SETTINGS_RESET_TOOLTIP" = "All of your app data will be gone forever!";
+"Reset user settings" = "Reset user settings";
+
+// About
+"ABOUT_ABOUTHARBOUR_TITLE" = "About Harbour";
+"ABOUT_ABOUTHARBOUR" = "Harbour is made 100% in Swift and doesn't contain any form of trackers, ads and any other forms of nonsense. UI is made in SwiftUI, so sometimes it may be buggy (sorry :/). If You encounter any glitches, crashes or anything like this make sure to inform me about this!";
+
+"ABOUT_DOCKERSETUP" = "Docker setup";
+"ABOUT_DOCKERSETUP_DESCRIPTION" = "To use this app, you need Portainer installed (click on this paragraph to open Portainer' website). Then, complete setup and log in using Harbour.";
+
+"ABOUT_ABOUTME_TITLE" = "About me (the creator :))";
+"ABOUT_ABOUTME" = "Twitter: @destroystokyo\nGitHub: @rrroyal\nEmail: hello@shameful.xyz";
+
+// Privacy
+"PRIVACY_WHATDATA" = "What data do we gather?";
+"PRIVACY_WHATDATA_DESCRIPTION" = "None. The only thing that is saved is Your login and password, so You can actually use this app. This data doesn't leave Your device and nobody, except for You, can see it.";
+"PRIVACY_DMME" = "If You have any questions about this app send me a message! Go to the \"About\" section for my handles.";
+
+// Container detail
+"Environment" = "Environment";
+"Network" = "Network";
+"Mounts" = "Mounts";
+"JSON" = "JSON";
+
+"General" = "General";
+"Health" = "Health";
+"State" = "State";
+
+"Start" = "Start";
+"Resume" = "Resume";
+"Stop" = "Stop";
+"Pause" = "Pause";
+"Restart" = "Restart";
+"Kill" = "Kill";
+"Remove" = "Remove";
+
+"Protocol" = "Protocol";
+"Container Port" = "Container Port";
+"Host Port" = "Host Port";
+"Host IP" = "Host IP";
+
+"Name" = "Name";
+"Type" = "Type";
+"Source" = "Source";
+"Destination" = "Destination";
+"Read / Write" = "Read / Write";
+"Driver" = "Driver";
+"Mode" = "Mode";
+"Propagation" = "Propagation";
+
+"ID" = "ID";
+"Platform" = "Platform";
+"Created" = "Created";
+"Image" = "Image";
+"Hostname" = "Hostname";
+"Driver" = "Driver";
+
+"Status" = "Status";
+"FailingStreak" = "Failing Streak";
+"Latest Output" = "Latest Output";
+"Latest Exit Code" = "Latest Exit Code";
+"Latest Start" = "Latest Start";
+"Latest End" = "Latest End";
+"PID" = "PID";
+"FinishedAt" = "Finished At";
+"Error" = "Error";
+"Paused" = "Paused";
+"Dead" = "Dead";
+"Restarting" = "Restarting";
+"Running" = "Running";
+"OOMKilled" = "OOM Killed";
+"ExitCode" = "Exit Code";
