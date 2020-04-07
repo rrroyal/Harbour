@@ -128,18 +128,12 @@ struct SetupView: View {
 							}
 						}
 					})
-					/* DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-						self.Containers.getContainers()
-					} */
 				}
 			}) {
 				Text(buttonText)
 					.customButton(buttonColor)
 			}
 			.id("Button:" + buttonText)
-			// .disabled((self.Containers.endpointURL == "" || self.username == "" || self.password == "") ? true : false)
-			// .opacity((self.Containers.endpointURL == "" || self.username == "" || self.password == "") ? 0.5 : 1)
-			// .transition(.opacity)
 			
 			Text((self.hasParent ? "Go back" : "Nevermind"))
 				.font(.callout)

@@ -21,6 +21,7 @@
 "Interface" = "Interface";
 "Privacy & Legal" = "Privacy & Legal";
 "Other" = "Other";
+"Icons" = "Icons";
 
 "Endpoint URL" = "Endpoint URL";
 "Not logged in" = "Not logged in";
@@ -72,6 +73,8 @@
 
 "SETTINGS_FULLSCREENDASHBOARD" = "Fullscreen Dashboard";
 "SETTINGS_FULLSCREENDASHBOARD_TOOLTIP" = "If turned off there will be an additional sidebar to the left of the screen.";
+
+"SETTINGS_CHANGEICON" = "Change App Icon";
 
 "SETTINGS_RESETTED" = "App will be wiped clean after a restart. Should we do it now?";
 

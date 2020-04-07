@@ -8,6 +8,62 @@
 
 import SwiftUI
 
+struct IconSettingsView: View {
+	@State var currentIcon = UIApplication.shared.alternateIconName ?? "Light"
+	var icons: [String] = Bundle.main.icons
+	
+	var body: some View {
+		ScrollView {
+			VStack {
+				ForEach(icons, id: \.self) { icon in
+					HStack {
+						if (icon == "Light") {
+							Image(uiImage: Bundle.main.icon ?? UIImage())
+								.resizable()
+								.aspectRatio(contentMode: .fit)
+								.frame(width: 48, height: 48)
+								.mask(RoundedRectangle(cornerRadius: 12, style: .continuous))
+						} else {
+							Image(uiImage: UIImage(imageLiteralResourceName: "\(icon)@2x.png"))
+								.resizable()
+								.aspectRatio(contentMode: .fit)
+								.frame(width: 48, height: 48)
+								.mask(RoundedRectangle(cornerRadius: 12, style: .continuous))
+						}
+						
+						Text(icon)
+							.font(.headline)
+						
+						Spacer()
+						
+						if (self.currentIcon == icon) {
+							Image(systemName: "checkmark")
+								.font(.headline)
+						}
+					}
+					.padding()
+					.background(RoundedRectangle(cornerRadius: 12).fill(Color.cellBackground))
+					.onTapGesture {
+						print("[!] Changing icon to \"\(icon)\"")
+						self.currentIcon = icon
+						if (icon == "Light") {
+							UIApplication.shared.setAlternateIconName(nil)
+						} else {
+							UIApplication.shared.setAlternateIconName(icon) { error in
+								if let error = error {
+									print(error.localizedDescription)
+								}
+							}
+						}
+					}
+				}
+			}
+			.padding()
+		}
+		.navigationBarTitle(Text("Icons"))
+	}
+}
+
 struct AboutView: View {
 	var body: some View {
 		ScrollView {
@@ -203,6 +259,8 @@ struct SettingsView: View {
 				HStack {
 					if (self.Containers.loggedIn) {
 						Text("SETTINGS_LOGGEDIN : \(self.Containers.username)")
+							.font(.body)
+							.bold()
 							.id("settings:loggedin:" + self.Containers.username)
 						Spacer()
 						Button(action: {
@@ -220,6 +278,8 @@ struct SettingsView: View {
 						.id("settings:loggedin")
 					} else {
 						Text("Not logged in")
+							.font(.body)
+							.bold()
 							.id("settings:notloggedin:")
 						Spacer()
 						Button(action: {
@@ -279,6 +339,15 @@ struct SettingsView: View {
 						Text("SETTINGS_FULLSCREENDASHBOARD_TOOLTIP")
 							.font(.footnote)
 							.opacity(0.5)
+					}
+				}
+				
+				// Alternate icons
+				if (UIApplication.shared.supportsAlternateIcons) {
+					NavigationLink(destination: IconSettingsView()) {
+						Text("SETTINGS_CHANGEICON")
+							.font(.body)
+							.bold()
 					}
 				}
 			}
