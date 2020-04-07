@@ -201,15 +201,16 @@ struct SettingsView: View {
 				
 				// Log in/out
 				HStack {
-					if (self.Settings.loggedIn) {
+					if (self.Containers.loggedIn) {
 						Text("SETTINGS_LOGGEDIN : \(self.Containers.username)")
 							.id("settings:loggedin:" + self.Containers.username)
 						Spacer()
 						Button(action: {
 							generateHaptic(.light)
 							withAnimation {
-								self.Containers.login(username: "", password: "")
-								self.Settings.loggedIn = false
+								// self.Containers.login(username: "", password: "")
+								self.Containers.loggedIn = false
+								// self.Settings.loggedIn = false
 							}
 						}) {
 							Text("Log out")

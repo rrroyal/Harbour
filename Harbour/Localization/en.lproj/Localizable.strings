@@ -67,7 +67,7 @@
 "SETTINGS_HAPTICFEEDBACK" = "Haptic Feedback";
 "SETTINGS_HAPTICFEEDBACK_TOOLTIP" = "If you don't love haptic feedback as much as I do, you might want to turn this off.";
 
-"SETTINGS_ENABLEDRAWER" = "Use Drawer";
+"SETTINGS_ENABLEDRAWER" = "Enable Drawer";
 "SETTINGS_ENABLEDRAWER_TOOLTIP" = "Should we display a drawer for controlling the container in the detail view?";
 
 "SETTINGS_FULLSCREENDASHBOARD" = "Fullscreen Dashboard";

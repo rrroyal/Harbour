@@ -73,8 +73,7 @@ struct ContentView: View {
 				.environmentObject(self.Containers)
 		})
 		.onAppear {
-			if (!self.Settings.loggedIn) {
-				print("[!] Not logged in!")
+			if (!self.Containers.loggedIn) {
 				return
 			}
 			
@@ -97,7 +96,7 @@ struct ContentView: View {
 			}
 		}
 		.onReceive(timer) { _ in
-			if (!self.Settings.automaticRefresh || !self.Settings.loggedIn) {
+			if (!self.Settings.automaticRefresh || !self.Containers.loggedIn) {
 				return
 			}
 			

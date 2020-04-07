@@ -112,12 +112,25 @@ struct SetupView: View {
 					}
 				} else {
 					print("[!] Auth data received! Logging in...")
-					self.Containers.getToken(username: self.username, password: self.password, refresh: true)
+					self.Containers.getToken(username: self.username, password: self.password, refresh: true, completionHandler: { success in
+						print("[*] Logging in!")
+						
+						if (success) {
+							generateHaptic(.success)
+							self.isParentPresented = false
+						} else {
+							generateHaptic(.error)
+							self.buttonColor = Color(UIColor.systemRed)
+							self.buttonText = self.Containers.status
+							DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+								self.buttonColor = Color.mainColor
+								self.buttonText = "Log in"
+							}
+						}
+					})
 					/* DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 						self.Containers.getContainers()
 					} */
-					generateHaptic(.success)
-					self.isParentPresented = false
 				}
 			}) {
 				Text(buttonText)

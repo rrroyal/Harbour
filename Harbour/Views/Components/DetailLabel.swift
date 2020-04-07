@@ -12,6 +12,7 @@ struct DetailLabel: View {
 	var title: String
 	var value: String
 	var monospaced: Bool?
+	var canCopy: Bool? = false
 	
 	var body: some View {
 		VStack(alignment: .leading) {
@@ -28,6 +29,8 @@ struct DetailLabel: View {
 		.multilineTextAlignment(.leading)
 		.lineLimit(nil)
 		.onTapGesture {
+			if (!(self.canCopy ?? false)) { return }
+			
 			generateHaptic(.light)
 			UIPasteboard.general.string = self.value
 			print("[!] Copied value: \"\(self.value)\"")

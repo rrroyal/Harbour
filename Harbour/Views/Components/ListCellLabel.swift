@@ -11,6 +11,7 @@ import SwiftUI
 struct ListCellLabel: View {
 	@State var title: String
 	@State var value: String
+	var canCopy: Bool? = false
 	
 	var body: some View {
 		VStack(alignment: .leading) {
@@ -25,6 +26,8 @@ struct ListCellLabel: View {
 				.multilineTextAlignment(.leading)
 				.lineLimit(nil)
 				.onTapGesture {
+					if (!(self.canCopy ?? false)) { return }
+					
 					generateHaptic(.light)
 					UIPasteboard.general.string = self.value
 					print("[!] Copied value: \"\(self.value)\"")

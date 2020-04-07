@@ -87,18 +87,18 @@ struct ContainerNetworkView: View {
 			ForEach(ports) { port in
 				Section(header: Text(port.id)) {
 					// Protocol
-					ListCellLabel(title: "Protocol", value: port.protoc)
+					ListCellLabel(title: "Protocol", value: port.protoc, canCopy: true)
 					
 					// Port
-					ListCellLabel(title: "Container Port", value: String(port.port))
+					ListCellLabel(title: "Container Port", value: String(port.port), canCopy: true)
 					
 					/// Port is not always exposed
 					if (port.hostIP != nil && port.hostPort != nil) {
 						// Host Port
-						ListCellLabel(title: "Host Port", value: "\(port.hostPort ?? 0)")	// Compiler is throwing errors if I use String()
+						ListCellLabel(title: "Host Port", value: "\(port.hostPort ?? 0)", canCopy: true)	// Compiler is throwing errors if I use String()
 						
 						// Host IP
-						ListCellLabel(title: "Host IP", value: port.hostIP ?? "none")
+						ListCellLabel(title: "Host IP", value: port.hostIP ?? "none", canCopy: true)
 					}
 				}
 			.padding(.vertical, 2)
@@ -161,16 +161,16 @@ struct ContainerMountsView: View {
 			ForEach(mounts) { mount in
 				Section(header: Text(mount.destination)) {
 					// Name
-					ListCellLabel(title: "Name", value: mount.name)
+					ListCellLabel(title: "Name", value: mount.name, canCopy: true)
 					
 					// Type
-					ListCellLabel(title: "Type", value: mount.type)
+					ListCellLabel(title: "Type", value: mount.type, canCopy: true)
 					
 					// Source
-					ListCellLabel(title: "Source", value: mount.source)
+					ListCellLabel(title: "Source", value: mount.source, canCopy: true)
 					
 					// Destination
-					ListCellLabel(title: "Destination", value: mount.destination)
+					ListCellLabel(title: "Destination", value: mount.destination, canCopy: true)
 					
 					// RW
 					ListCellLabel(title: "Read / Write", value: mount.rw ? "true" : "false")
@@ -178,13 +178,13 @@ struct ContainerMountsView: View {
 					/// Volume-type specific labels
 					if (mount.type == "volume") {
 						// Driver
-						ListCellLabel(title: "Driver", value: mount.driver ?? "none")
+						ListCellLabel(title: "Driver", value: mount.driver ?? "none", canCopy: true)
 						
 						// Mode
-						ListCellLabel(title: "Mode", value: mount.mode ?? "unknown")
+						ListCellLabel(title: "Mode", value: mount.mode ?? "unknown", canCopy: true)
 					} else {
 						// Propagation
-						ListCellLabel(title: "Propagation", value: mount.propagation ?? "unknown")
+						ListCellLabel(title: "Propagation", value: mount.propagation ?? "unknown", canCopy: true)
 					}
 				}
 				.padding(.vertical, 2)

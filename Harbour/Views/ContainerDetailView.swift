@@ -97,25 +97,25 @@ struct ContainerDetailView: View {
 					// General
 					Section(header: Text("General").font(.title).bold().padding(.bottom, 5)) {
 						// Status
-						DetailLabel(title: "Status", value: self.containerData["State"]["Status"].stringValue)
+						DetailLabel(title: "Status", value: self.containerData["State"]["Status"].stringValue, canCopy: true)
 					
 						// ID
-						DetailLabel(title: "ID", value: self.containerData["Id"].stringValue, monospaced: true)
+						DetailLabel(title: "ID", value: self.containerData["Id"].stringValue, monospaced: true, canCopy: true)
 						
 						// Platform
-						DetailLabel(title: "Platform", value: self.containerData["Platform"].stringValue)
+						DetailLabel(title: "Platform", value: self.containerData["Platform"].stringValue, canCopy: true)
 						
 						// Created
-						DetailLabel(title: "Created", value: self.containerData["Created"].stringValue)
+						DetailLabel(title: "Created", value: self.containerData["Created"].stringValue, canCopy: true)
 						
 						// Image
-						DetailLabel(title: "Image", value: self.containerData["Config"]["Image"].stringValue)
+						DetailLabel(title: "Image", value: self.containerData["Config"]["Image"].stringValue, canCopy: true)
 						
 						// Hostname
-						DetailLabel(title: "Hostname", value: self.containerData["Config"]["Hostname"].stringValue, monospaced: true)
+						DetailLabel(title: "Hostname", value: self.containerData["Config"]["Hostname"].stringValue, monospaced: true, canCopy: true)
 						
 						// Driver
-						DetailLabel(title: "Driver", value: self.containerData["Driver"].stringValue)
+						DetailLabel(title: "Driver", value: self.containerData["Driver"].stringValue, canCopy: true)
 					}
 					
 					Spacer()
@@ -123,16 +123,16 @@ struct ContainerDetailView: View {
 					// State
 					Section(header: Text("State").font(.title).bold().padding(.bottom, 5)) {
 						// PID
-						DetailLabel(title: "PID", value: String(self.containerData["State"]["Pid"].intValue))
+						DetailLabel(title: "PID", value: String(self.containerData["State"]["Pid"].intValue), canCopy: true)
 						
 						// FinishedAt
-						DetailLabel(title: "FinishedAt", value: self.containerData["State"]["FinishedAt"].stringValue)
+						DetailLabel(title: "FinishedAt", value: self.containerData["State"]["FinishedAt"].stringValue, canCopy: true)
 						
 						// Running
 						DetailLabel(title: "Running", value: self.containerData["State"]["Running"].boolValue ? "true" : "false")
 						
 						// Error
-						DetailLabel(title: "Error", value: self.containerData["State"]["Error"].stringValue != "" ? self.containerData["State"]["Error"].stringValue : "none")
+						DetailLabel(title: "Error", value: self.containerData["State"]["Error"].stringValue != "" ? self.containerData["State"]["Error"].stringValue : "<none>", canCopy: true)
 						
 						// Paused
 						DetailLabel(title: "Paused", value: self.containerData["State"]["Paused"].boolValue ? "true" : "false")
@@ -147,7 +147,7 @@ struct ContainerDetailView: View {
 						DetailLabel(title: "OOMKilled", value: self.containerData["State"]["OOMKilled"].boolValue ? "true" : "false")
 						
 						// ExitCode
-						DetailLabel(title: "ExitCode", value: String(self.containerData["State"]["ExitCode"].intValue))
+						DetailLabel(title: "ExitCode", value: String(self.containerData["State"]["ExitCode"].intValue), canCopy: true)
 					}
 					
 					Spacer()
@@ -156,24 +156,24 @@ struct ContainerDetailView: View {
 					if (self.containerData["State"]["Health"].exists()) {
 						Section(header: Text("Health").font(.title).bold().padding(.bottom, 5)) {
 							// Status
-							DetailLabel(title: "Status", value: self.containerData["State"]["Health"]["Status"].stringValue)
+							DetailLabel(title: "Status", value: self.containerData["State"]["Health"]["Status"].stringValue, canCopy: true)
 							
 							// FailingStreak
-							DetailLabel(title: "FailingStreak", value: String(self.containerData["State"]["Health"]["FailingStreak"].intValue))
+							DetailLabel(title: "FailingStreak", value: String(self.containerData["State"]["Health"]["FailingStreak"].intValue), canCopy: true)
 							
 							// Latest log
 							if ((self.containerData["State"]["Health"]["Log"].arrayObject?.count ?? 0) > 0) {
 								// Output
-								DetailLabel(title: "Latest Output", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["Output"] ?? "unknown")", monospaced: true)
+								DetailLabel(title: "Latest Output", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["Output"] ?? "unknown")", monospaced: true, canCopy: true)
 								
 								// Exit code
-								DetailLabel(title: "Latest Exit Code", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["ExitCode"] ?? "unknown")")
+								DetailLabel(title: "Latest Exit Code", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["ExitCode"] ?? "unknown")", canCopy: true)
 								
 								// Start
-								DetailLabel(title: "Latest Start", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["Start"] ?? "unknown")")
+								DetailLabel(title: "Latest Start", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["Start"] ?? "unknown")", canCopy: true)
 								
 								// End
-								DetailLabel(title: "Latest End", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["End"] ?? "unknown")")
+								DetailLabel(title: "Latest End", value: "\((self.containerData["State"]["Health"]["Log"].arrayObject?.last as! [String: Any])["End"] ?? "unknown")", canCopy: true)
 							}
 						}
 						

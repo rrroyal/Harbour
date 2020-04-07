@@ -13,11 +13,6 @@ import Combine
 class SettingsModel: ObservableObject {
 	private var ud = UserDefaults.standard
 	
-	public var loggedIn: Bool {
-		get { return ud.bool(forKey: "loggedIn") }
-		set (value) { if (ud.bool(forKey: "loggedIn") != value) { ud.set(value, forKey: "loggedIn") } }
-	}
-	
 	public var hapticFeedback: Bool {
 		get { return ud.bool(forKey: "hapticFeedback") }
 		set (value) { if (ud.bool(forKey: "hapticFeedback") != value) { ud.set(value, forKey: "hapticFeedback") } }

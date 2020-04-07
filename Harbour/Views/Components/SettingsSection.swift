@@ -37,17 +37,19 @@ struct SettingsSection<Content>: View where Content: View {
 				Text("Made with ❤️ (and ☕️) by @rrroyal")
 					.font(.callout)
 					.bold()
-					.opacity(0.2)
+					.opacity(1)
 					.multilineTextAlignment(.center)
+					.foregroundColor(.primary)
 				Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String) (Build \(Bundle.main.infoDictionary?["CFBundleVersion"] as! String))")
 					.font(.callout)
 					.bold()
-					.opacity(0.2)
+					.opacity(1)
 					.multilineTextAlignment(.center)
+					.foregroundColor(.primary)
 			}
 			.padding()
 			.frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: Alignment.center)
-			.contentShape(Rectangle())
+			.edgesIgnoringSafeArea(.bottom)
 			.onTapGesture {
 				guard let url = URL(string: "https://github.com/rrroyal") else { return }
 				generateHaptic(.light)

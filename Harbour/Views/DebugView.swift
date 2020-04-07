@@ -24,7 +24,7 @@ struct DebugView: View {
 					print("[!] username set: \"\(self.username)\"")
 					self.Containers.username = self.username
 					self.username = ""
-					self.Settings.loggedIn = true
+					self.Containers.loggedIn = true
 					self.Containers.getContainers()
 					generateHaptic(.success)
 				}
@@ -56,7 +56,7 @@ struct DebugView: View {
 				HStack {
 					Text("Logged in")
 					Spacer()
-					Text("\(self.Containers.loggedIn ? "true" : "false") / \(self.Settings.loggedIn ? "true" : "false")")
+					Text("\(self.Containers.loggedIn ? "true" : "false")")
 				}
 				
 				// Endpoint URL

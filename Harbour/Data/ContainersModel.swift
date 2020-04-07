@@ -74,6 +74,21 @@ class ContainersModel: ObservableObject {
 			if (UserDefaults.standard.bool(forKey: "loggedIn") != value) {
 				print("[!] Updating loggedIn: \"\(value)\"")
 				UserDefaults.standard.set(value, forKey: "loggedIn")
+				
+				if (value) {
+					print("[*] Logging in")
+					self.getToken(username: self.username, password: self.password, completionHandler: { success in
+						if (!success) { return }
+						self.getContainers()
+					})
+				} else {
+					print("[*] Logging out")
+					self.containers = []
+					self.username = ""
+					self.password = ""
+					self.jwt = ""
+					self.status = "Not logged in"
+				}
 			}
 		}
 	}
@@ -110,19 +125,16 @@ class ContainersModel: ObservableObject {
 		// Is endpointURL present?
 		if (endpointURL == "") {
 			print("[!] No URL found! (init)")
+			self.loggedIn = false
 			self.status = "No endpoint URL"
-			self.containers = []
 			return
 		}
 		
 		// Is login data saved?
-		if (username == "" || password == "") {
+		if (username == "" || password == "" || !loggedIn) {
 			print("[!] No login data found! (init)")
+			self.loggedIn = false
 			self.status = "Not logged in"
-			self.username = ""
-			self.password = ""
-			self.jwt = ""
-			self.containers = []
 			return
 		}
     }
@@ -132,7 +144,7 @@ class ContainersModel: ObservableObject {
 	/// - Parameters:
 	///   - username: Endpoint user name
 	///   - password: Endpoint user password
-	public func login(username: String, password: String) {
+	/* public func login(username: String, password: String) {
 		print("[!] Updating login info: \"\(username)\":\"\(password.lengthOfBytes(using: .utf8))B\"")
 		
 		if (username == "" || password == "") {
@@ -142,14 +154,17 @@ class ContainersModel: ObservableObject {
 			self.password = ""
 			self.jwt = ""
 			self.status = "Not logged in"
-			containers = []
+			self.containers = []
 		} else {
 			print("[*] Updating token...")
 			self.username = username
 			self.password = password
-			getToken(username: username, password: password, refresh: true)
+			getToken(username: username, password: password, completionHandler: { success in
+				if (!success) { return }
+				self.getContainers()
+			})
 		}
-	}
+	} */
 	
 	// MARK: - getToken()
 	/// Get token from server URL
@@ -157,7 +172,7 @@ class ContainersModel: ObservableObject {
 	///   - username: Username that we will log in with
 	///   - password: Password for account with our username
 	///   - refresh: Should we refresh after logging in?
-	func getToken(username: String, password: String, refresh: Bool? = false) {
+	func getToken(username: String, password: String, refresh: Bool? = false, completionHandler: ((Bool) -> (Void))? = nil) {
 		if (endpointURL == "") {
 			print("[!] No URL found! (getToken)")
 			status = "No endpoint URL"
@@ -191,7 +206,8 @@ class ContainersModel: ObservableObject {
 					
 					if (json["jwt"].stringValue == "") {
 						print("[!] Invalid JWT response! JSON: \(json)")
-						self.status = json["details"].stringValue
+						self.status = json["message"].stringValue
+						(completionHandler ?? {_ in})(false)
 						return
 					}
 					
@@ -206,6 +222,7 @@ class ContainersModel: ObservableObject {
 						print("[*] Refreshing containers...")
 						self.getContainers()
 					}
+					(completionHandler ?? {_ in })(true)
 				}
 				break
 			case .failure(let error):
