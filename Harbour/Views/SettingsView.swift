@@ -44,8 +44,15 @@ struct IconSettingsView: View {
 					.padding()
 					.background(RoundedRectangle(cornerRadius: 12).fill(Color.cellBackground))
 					.onTapGesture {
+						if (self.currentIcon == icon) {
+							return
+						}
+						
 						print("[!] Changing icon to \"\(icon)\"")
+						
 						self.currentIcon = icon
+						generateHaptic(.light)
+						
 						if (icon == "Light") {
 							UIApplication.shared.setAlternateIconName(nil)
 						} else {

@@ -132,7 +132,7 @@ struct ContainerDetailView: View {
 						DetailLabel(title: "Running", value: self.containerData["State"]["Running"].boolValue ? "true" : "false")
 						
 						// Error
-						DetailLabel(title: "Error", value: self.containerData["State"]["Error"].stringValue != "" ? self.containerData["State"]["Error"].stringValue : "<none>", canCopy: true)
+						DetailLabel(title: "Error", value: self.containerData["State"]["Error"].stringValue != "" ? self.containerData["State"]["Error"].stringValue : "none", canCopy: true)
 						
 						// Paused
 						DetailLabel(title: "Paused", value: self.containerData["State"]["Paused"].boolValue ? "true" : "false")
