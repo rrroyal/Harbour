@@ -96,6 +96,9 @@ struct ContainerDetailView: View {
 				VStack(alignment: .leading) {
 					// General
 					Section(header: Text("General").font(.title).bold().padding(.bottom, 5)) {
+						// Status
+						DetailLabel(title: "Status", value: self.containerData["State"]["Status"].stringValue)
+					
 						// ID
 						DetailLabel(title: "ID", value: self.containerData["Id"].stringValue, monospaced: true)
 						
@@ -119,14 +122,14 @@ struct ContainerDetailView: View {
 										
 					// State
 					Section(header: Text("State").font(.title).bold().padding(.bottom, 5)) {
-						// Status
-						DetailLabel(title: "Status", value: self.containerData["State"]["Status"].stringValue)
-						
 						// PID
 						DetailLabel(title: "PID", value: String(self.containerData["State"]["Pid"].intValue))
 						
 						// FinishedAt
 						DetailLabel(title: "FinishedAt", value: self.containerData["State"]["FinishedAt"].stringValue)
+						
+						// Running
+						DetailLabel(title: "Running", value: self.containerData["State"]["Running"].boolValue ? "true" : "false")
 						
 						// Error
 						DetailLabel(title: "Error", value: self.containerData["State"]["Error"].stringValue != "" ? self.containerData["State"]["Error"].stringValue : "none")
@@ -139,9 +142,6 @@ struct ContainerDetailView: View {
 						
 						// Restarting
 						DetailLabel(title: "Restarting", value: self.containerData["State"]["Restarting"].boolValue ? "true" : "false")
-						
-						// Running
-						DetailLabel(title: "Running", value: self.containerData["State"]["Running"].boolValue ? "true" : "false")
 						
 						// OOMKilled
 						DetailLabel(title: "OOMKilled", value: self.containerData["State"]["OOMKilled"].boolValue ? "true" : "false")
