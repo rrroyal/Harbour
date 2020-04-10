@@ -122,6 +122,8 @@ struct ContainerCell: View {
 					HStack {
 						Text("Pause")
 						Image(systemName: "pause.fill")
+							.resizable()
+							.aspectRatio(contentMode: .fit)
 					}
 				}
 			}
@@ -135,6 +137,8 @@ struct ContainerCell: View {
 				HStack {
 					Text(buttonStartString)
 					Image(systemName: buttonStartIcon)
+						.resizable()
+                        .aspectRatio(contentMode: .fit)
 				}
 			}
 		}

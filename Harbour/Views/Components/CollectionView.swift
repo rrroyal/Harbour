@@ -46,7 +46,7 @@ public struct CollectionView<Data, Content>: View where Data: RandomAccessCollec
   
 	public var body : some View {
 		GeometryReader { geometry in
-			ScrollView(showsIndicators: false) {
+			ScrollView(showsIndicators: true) {
 				VStack(spacing: self.vSpacing) {
 					ForEach((0 ..< self.rows).map { Index(id: $0) }) { row in
 						self.rowAtIndex(row.id * self.cols, geometry: geometry)

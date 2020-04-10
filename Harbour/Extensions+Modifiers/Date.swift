@@ -9,17 +9,17 @@
 import Foundation
 
 extension Date {
-   var timestampString: String? {
-      let formatter = DateComponentsFormatter()
-      formatter.unitsStyle = .full
-      formatter.maximumUnitCount = 1
-      formatter.allowedUnits = [.year, .month, .day, .hour, .minute, .second]
+	var timestampString: String? {
+		let formatter = DateComponentsFormatter()
+		formatter.unitsStyle = .abbreviated
+		formatter.maximumUnitCount = 2
+		formatter.allowedUnits = [.year, .month, .day, .hour, .minute, .second]
 
-      guard let timeString = formatter.string(from: self, to: Date()) else {
-           return nil
-      }
+		guard let timeString = formatter.string(from: self, to: Date()) else {
+			return nil
+		}
 
-      let formatString = NSLocalizedString("%@", comment: "")
-      return String(format: formatString, timeString)
+		let formatString = NSLocalizedString("%@", comment: "")
+		return String(format: formatString, timeString)
    }
 }

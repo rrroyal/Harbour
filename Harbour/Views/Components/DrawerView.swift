@@ -12,20 +12,24 @@ struct DrawerView<Content: View>: View {
     @Binding var isExpanded: Bool
     @State private var translation = CGSize.zero
     var content: Content
+	
+	// Animation style
+	let drawerAnimation: Animation = Animation.interpolatingSpring(mass: 0.5, stiffness: 45, damping: 45, initialVelocity: 15)
     
     // The default opacity of back layer when the drawer is pulled out
-	let backgroundOpacityMax: CGFloat = 0	// Until I get NavigationBar opacity working
+	let backgroundExpandedOpacity: CGFloat = 0 // 0.1
     var backgroundOpacity: Double {
         if self.translation.height < 0 {
-			return isExpanded ? Double(backgroundOpacityMax) : Double(min(abs(self.translation.height * 0.001), backgroundOpacityMax))
+			return isExpanded ? Double(backgroundExpandedOpacity) : Double(min(abs(self.translation.height * 0.001), backgroundExpandedOpacity))
         } else {
-            return isExpanded ? Double(max(backgroundOpacityMax - abs(self.translation.height * 0.001), 0)) : 0
+            return isExpanded ? Double(max(backgroundExpandedOpacity - abs(self.translation.height * 0.001), 0)) : 0
         }
     }
 	
 	// Drawer shadow
 	var isDrawerShadowEnabled = true
     
+	// Drawer size
 	var expectedDrawerHeight: CGFloat?
     private var drawerHeight: CGFloat {
 		if let height = expectedDrawerHeight {
@@ -39,7 +43,6 @@ struct DrawerView<Content: View>: View {
         return UIScreen.main.bounds.height / 2
     }
     
-    // The default width of drawer
 	private var drawerWidth: CGFloat {
 		if UIDevice.current.userInterfaceIdiom == .phone {
 			return UIScreen.main.bounds.width
@@ -48,6 +51,7 @@ struct DrawerView<Content: View>: View {
 		}
 	}
     
+	// Drawer position
 	private var xOffset: CGFloat {
 		if UIDevice.current.userInterfaceIdiom == .phone {
 			return 0
@@ -97,11 +101,12 @@ struct DrawerView<Content: View>: View {
             // Darken the background
             Rectangle()
 				.background(Color.black)
-                .opacity(backgroundOpacity)
-                .animation(.easeInOut)
+				.opacity(self.backgroundOpacity)
+				.animation(drawerAnimation)
                 .transition(.opacity)
 				.contentShape(Rectangle())
 				.allowsHitTesting(self.isExpanded)
+				.layoutPriority(10)
                 .onTapGesture {
                     self.isExpanded = false
                 }
@@ -155,7 +160,7 @@ struct DrawerView<Content: View>: View {
             )
 			.shadow(color: Color.black.opacity(0.15), radius: isDrawerShadowEnabled ? 16 : 0, x: 0, y: 0)
             .offset(x: xOffset, y: yOffset)
-            .animation(Animation.interpolatingSpring(mass: 0.5, stiffness: 45, damping: 45, initialVelocity: 15))
+            .animation(drawerAnimation)
         }
         .edgesIgnoringSafeArea(.all)
     }

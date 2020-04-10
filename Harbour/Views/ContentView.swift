@@ -8,7 +8,6 @@
 //
 
 import SwiftUI
-// import Combine
 
 struct ContentView: View {
 	@EnvironmentObject var Containers: ContainersModel
@@ -23,7 +22,6 @@ struct ContentView: View {
     var body: some View {
 		NavigationView {
 			VStack(alignment: .leading) {
-			// Group {
 				if (self.Containers.containers.count > 0) {
 					CollectionView(self.Containers.containers, isFullScreen: self.Settings.useFullScreenDashboard) { container in
 						NavigationLink(destination: ContainerDetailView(container: container), tag: container.id, selection: self.$selectedView) {
@@ -42,7 +40,7 @@ struct ContentView: View {
 			.padding(.horizontal, 4)
 			.transition(.opacity)
 			.animation(.easeInOut(duration: 0.25))
-			.navigationBarTitle(Text("Dashboard"))
+			.navigationBarTitle(Text("Dashboard"), displayMode: .automatic)
 			.navigationBarItems(
 				leading: Button(action: {
 					print("[!] Manually refreshing...")
