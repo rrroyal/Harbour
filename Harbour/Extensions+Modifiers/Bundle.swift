@@ -22,4 +22,12 @@ extension Bundle {
 	public var icons: [String] {
 		return ["Light", "Dark"]
 	}
+	
+	public var buildVersion: String {
+		return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+	}
+	
+	public var buildNumber: String {
+		return Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+	}
 }

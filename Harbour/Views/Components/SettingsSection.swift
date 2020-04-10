@@ -42,7 +42,7 @@ struct SettingsSection<Content>: View where Content: View {
 					.foregroundColor(.primary)
 					.fixedSize()
 					.animation(.none)
-				Text("Version \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as! String) (Build \(Bundle.main.infoDictionary?["CFBundleVersion"] as! String))")
+				Text("Version \(Bundle.main.buildVersion) (Build \(Bundle.main.buildNumber))")
 					.font(.callout)
 					.bold()
 					.opacity(1)

@@ -217,7 +217,7 @@ struct SettingsView: View {
 	@State var showingResetAlert: Bool = false
 	@State var showingSetupView: Bool = false
 	@State var endpointURL: String = ""
-
+	
 	var body: some View {
 		List {
 			// API
@@ -383,12 +383,27 @@ struct SettingsView: View {
 				}
 				#endif
 				
+				// Updates
+				if (self.Settings.updatesAvailable) {
+					HStack {
+						Spacer()
+						Button(action: {
+							guard let url = URL(string: "https://github.com/rrroyal/Harbour/releases/latest") else { return }
+							generateHaptic(.light)
+							UIApplication.shared.open(url)
+						}) {
+							Text("New update available!")
+								.bold()
+						}
+						Spacer()
+					}
+				}
+				
 				// Reset button
 				HStack {
 					Spacer()
 					Button(action: {
 						generateHaptic(.warning)
-						// self.settings.resetSettings()
 						self.showingResetSheet = true
 					}) {
 						Text("Reset user settings")
@@ -431,7 +446,7 @@ struct SettingsView: View {
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
         SettingsView()
-		.environmentObject(SettingsModel())
-		.environmentObject(ContainersModel())
+			.environmentObject(SettingsModel())
+			.environmentObject(ContainersModel())
     }
 }
