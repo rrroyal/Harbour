@@ -138,7 +138,7 @@ struct ContainerCell: View {
 					Text(buttonStartString)
 					Image(systemName: buttonStartIcon)
 						.resizable()
-                        .aspectRatio(contentMode: .fit)
+						.aspectRatio(contentMode: .fit)
 				}
 			}
 		}
