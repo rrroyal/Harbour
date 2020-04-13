@@ -1,7 +1,7 @@
 <p align="center">
 	<img width="200" src="Resources/Icon/Harbour@2x.png" alt="Harbour Logo"><br>
 	<h3 align="center">Harbour</h3>
-	<p align="center">Docker/Portainer client for iOS <i>(and iPadOS)</i> written in SwiftUI.</p>
+	<p align="center">Docker management app for iOS written in SwiftUI.</p>
 </p>
 
 ## Screenshots
