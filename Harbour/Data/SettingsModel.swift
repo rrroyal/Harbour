@@ -53,7 +53,7 @@ class SettingsModel: ObservableObject {
 	}
 	
 	public func checkForUpdates() {
-		let currentVersion: String = "\(Bundle.main.buildVersion)"
+		let currentVersion: String = Bundle.main.buildVersion
 		let repoURL: URL = URL(string: "https://api.github.com/repos/rrroyal/Harbour/releases/latest")!
 		
 		// Check latest release
