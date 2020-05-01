@@ -54,7 +54,7 @@ struct ContentView: View {
 						.padding(.vertical)
 						.padding(.leading, 2)
 				},
-				trailing: NavigationLink(destination: SettingsView().environmentObject(Containers), tag: "settings", selection: self.$selectedView) {
+				trailing: NavigationLink(destination: SettingsView().environmentObject(Containers).environmentObject(Settings), tag: "settings", selection: self.$selectedView) {
 					Image(systemName: "gear")
 						.font(.system(size: 20))
 						.padding([.leading, .vertical])

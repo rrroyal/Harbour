@@ -9,7 +9,7 @@
 import UIKit
 
 extension Bundle {
-	public var icon: UIImage? {
+	public var appIcon: UIImage? {
 		if let icons = infoDictionary?["CFBundleIcons"] as? [String: Any],
 			let primaryIcon = icons["CFBundlePrimaryIcon"] as? [String: Any],
 			let iconFiles = primaryIcon["CFBundleIconFiles"] as? [String],
@@ -19,8 +19,8 @@ extension Bundle {
 		return nil
 	}
 	
-	public var icons: [String] {
-		return ["Light", "Dark"]
+	public var appIcons: [String] {
+		return ["Light", "Dark", "Dev"]
 	}
 	
 	public var buildVersion: String {

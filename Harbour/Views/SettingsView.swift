@@ -10,15 +10,14 @@ import SwiftUI
 
 struct IconSettingsView: View {
 	@State var currentIcon = UIApplication.shared.alternateIconName ?? "Light"
-	var icons: [String] = Bundle.main.icons
 	
 	var body: some View {
 		ScrollView {
 			VStack {
-				ForEach(icons, id: \.self) { icon in
+				ForEach(Bundle.main.appIcons, id: \.self) { icon in
 					HStack {
 						if (icon == "Light") {
-							Image(uiImage: Bundle.main.icon ?? UIImage())
+							Image(uiImage: Bundle.main.appIcon ?? UIImage())
 								.resizable()
 								.aspectRatio(contentMode: .fit)
 								.frame(width: 48, height: 48)

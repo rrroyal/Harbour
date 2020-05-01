@@ -7,12 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00E7C387245B72A0009E7FCD /* Dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C383245B729A009E7FCD /* Dark@2x.png */; };
+		00E7C388245B72A0009E7FCD /* Dark~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C384245B729E009E7FCD /* Dark~ipad.png */; };
+		00E7C389245B72A0009E7FCD /* Dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C385245B729F009E7FCD /* Dark@3x.png */; };
+		00E7C38A245B72A0009E7FCD /* Dark~ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C386245B72A0009E7FCD /* Dark~ipad@2x.png */; };
+		00E7C390245B72C9009E7FCD /* Dev~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C38C245B72C8009E7FCD /* Dev~ipad.png */; };
+		00E7C391245B72C9009E7FCD /* Dev~ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C38D245B72C8009E7FCD /* Dev~ipad@2x.png */; };
+		00E7C392245B72C9009E7FCD /* Dev@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C38E245B72C8009E7FCD /* Dev@3x.png */; };
+		00E7C393245B72C9009E7FCD /* Dev@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 00E7C38F245B72C8009E7FCD /* Dev@2x.png */; };
 		E7073A9B243B7CF60079D418 /* ListCellLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7073A9A243B7CF60079D418 /* ListCellLabel.swift */; };
 		E7073A9D243BAEBD0079D418 /* DetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7073A9C243BAEBD0079D418 /* DetailLabel.swift */; };
 		E7159764242045D500028C3E /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7159763242045D500028C3E /* UIApplication.swift */; };
 		E73997FA242FB13200E8788F /* DrawerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E73997F9242FB13200E8788F /* DrawerView.swift */; };
-		E7412C8A243CE95800217B43 /* Dark@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7412C86243CE95700217B43 /* Dark@3x.png */; };
-		E7412C8B243CE95800217B43 /* Dark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7412C87243CE95700217B43 /* Dark@2x.png */; };
 		E742E7EC241D9F4F00CED243 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = E742E7EB241D9F4F00CED243 /* Alamofire */; };
 		E742E7EF241D9F8100CED243 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = E742E7EE241D9F8100CED243 /* SwiftyJSON */; };
 		E742E7F5241DA05E00CED243 /* ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E742E7F4241DA05E00CED243 /* ContainerCell.swift */; };
@@ -44,17 +50,21 @@
 		E79FD6C6242A5693008A459A /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79FD6C5242A5693008A459A /* CollectionView.swift */; };
 		E7B1DF46242916DD0046D400 /* ContainerDetailView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B1DF45242916DD0046D400 /* ContainerDetailView+.swift */; };
 		E7DA8072243CF385002B6E55 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DA8071243CF385002B6E55 /* Bundle.swift */; };
-		E7DA8079243D0261002B6E55 /* Dark~ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E7DA8077243D0261002B6E55 /* Dark~ipad@2x.png */; };
-		E7DA807A243D0261002B6E55 /* Dark~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = E7DA8078243D0261002B6E55 /* Dark~ipad.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		00E7C383245B729A009E7FCD /* Dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark@2x.png"; sourceTree = "<group>"; };
+		00E7C384245B729E009E7FCD /* Dark~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark~ipad.png"; sourceTree = "<group>"; };
+		00E7C385245B729F009E7FCD /* Dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark@3x.png"; sourceTree = "<group>"; };
+		00E7C386245B72A0009E7FCD /* Dark~ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark~ipad@2x.png"; sourceTree = "<group>"; };
+		00E7C38C245B72C8009E7FCD /* Dev~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dev~ipad.png"; sourceTree = "<group>"; };
+		00E7C38D245B72C8009E7FCD /* Dev~ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dev~ipad@2x.png"; sourceTree = "<group>"; };
+		00E7C38E245B72C8009E7FCD /* Dev@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dev@3x.png"; sourceTree = "<group>"; };
+		00E7C38F245B72C8009E7FCD /* Dev@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dev@2x.png"; sourceTree = "<group>"; };
 		E7073A9A243B7CF60079D418 /* ListCellLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellLabel.swift; sourceTree = "<group>"; };
 		E7073A9C243BAEBD0079D418 /* DetailLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLabel.swift; sourceTree = "<group>"; };
 		E7159763242045D500028C3E /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		E73997F9242FB13200E8788F /* DrawerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawerView.swift; sourceTree = "<group>"; };
-		E7412C86243CE95700217B43 /* Dark@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark@3x.png"; sourceTree = "<group>"; };
-		E7412C87243CE95700217B43 /* Dark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark@2x.png"; sourceTree = "<group>"; };
 		E742E7F4241DA05E00CED243 /* ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerCell.swift; sourceTree = "<group>"; };
 		E742E7F6241DA0A100CED243 /* ContainerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerDetailView.swift; sourceTree = "<group>"; };
 		E742E7F8241DA0E700CED243 /* ContainersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainersModel.swift; sourceTree = "<group>"; };
@@ -84,8 +94,6 @@
 		E79FD6C5242A5693008A459A /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		E7B1DF45242916DD0046D400 /* ContainerDetailView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerDetailView+.swift"; sourceTree = "<group>"; };
 		E7DA8071243CF385002B6E55 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
-		E7DA8077243D0261002B6E55 /* Dark~ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark~ipad@2x.png"; sourceTree = "<group>"; };
-		E7DA8078243D0261002B6E55 /* Dark~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Dark~ipad.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,13 +111,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		00E7C38B245B72AA009E7FCD /* Dark */ = {
+			isa = PBXGroup;
+			children = (
+				00E7C383245B729A009E7FCD /* Dark@2x.png */,
+				00E7C385245B729F009E7FCD /* Dark@3x.png */,
+				00E7C384245B729E009E7FCD /* Dark~ipad.png */,
+				00E7C386245B72A0009E7FCD /* Dark~ipad@2x.png */,
+			);
+			path = Dark;
+			sourceTree = "<group>";
+		};
+		00E7C394245B72CE009E7FCD /* Dev */ = {
+			isa = PBXGroup;
+			children = (
+				00E7C38F245B72C8009E7FCD /* Dev@2x.png */,
+				00E7C38E245B72C8009E7FCD /* Dev@3x.png */,
+				00E7C38C245B72C8009E7FCD /* Dev~ipad.png */,
+				00E7C38D245B72C8009E7FCD /* Dev~ipad@2x.png */,
+			);
+			path = Dev;
+			sourceTree = "<group>";
+		};
 		E7412C85243CE74F00217B43 /* App Icons */ = {
 			isa = PBXGroup;
 			children = (
-				E7DA8078243D0261002B6E55 /* Dark~ipad.png */,
-				E7DA8077243D0261002B6E55 /* Dark~ipad@2x.png */,
-				E7412C87243CE95700217B43 /* Dark@2x.png */,
-				E7412C86243CE95700217B43 /* Dark@3x.png */,
+				00E7C38B245B72AA009E7FCD /* Dark */,
+				00E7C394245B72CE009E7FCD /* Dev */,
 			);
 			path = "App Icons";
 			sourceTree = "<group>";
@@ -289,14 +317,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7412C8A243CE95800217B43 /* Dark@3x.png in Resources */,
+				00E7C388245B72A0009E7FCD /* Dark~ipad.png in Resources */,
 				E774A72D241D500F00502990 /* LaunchScreen.storyboard in Resources */,
+				00E7C393245B72C9009E7FCD /* Dev@2x.png in Resources */,
 				E75323AF243777BA00B33269 /* Localizable.strings in Resources */,
+				00E7C390245B72C9009E7FCD /* Dev~ipad.png in Resources */,
+				00E7C392245B72C9009E7FCD /* Dev@3x.png in Resources */,
+				00E7C38A245B72A0009E7FCD /* Dark~ipad@2x.png in Resources */,
+				00E7C387245B72A0009E7FCD /* Dark@2x.png in Resources */,
 				E774A72A241D500F00502990 /* Preview Assets.xcassets in Resources */,
-				E7412C8B243CE95800217B43 /* Dark@2x.png in Resources */,
 				E774A727241D500F00502990 /* Assets.xcassets in Resources */,
-				E7DA807A243D0261002B6E55 /* Dark~ipad.png in Resources */,
-				E7DA8079243D0261002B6E55 /* Dark~ipad@2x.png in Resources */,
+				00E7C389245B72A0009E7FCD /* Dark@3x.png in Resources */,
+				00E7C391245B72C9009E7FCD /* Dev~ipad@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -482,9 +514,9 @@
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"Harbour/Preview Content\"";
-				DEVELOPMENT_TEAM = WPN9Y7CDCT;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Harbour/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -492,8 +524,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;
@@ -509,9 +540,9 @@
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 14;
 				DEVELOPMENT_ASSET_PATHS = "\"Harbour/Preview Content\"";
-				DEVELOPMENT_TEAM = WPN9Y7CDCT;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Harbour/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -519,8 +550,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
+				MARKETING_VERSION = 1.1.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTS_MACCATALYST = NO;

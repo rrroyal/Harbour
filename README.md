@@ -13,15 +13,15 @@
 </p>
 
 ## Features
-- Light and dark mode
+- 100% native and made in SwiftUI
+- Light and Dark Mode
 - Control and inspect containers
 - Display logs
-- Context menus
 - Design based on Apple's *Human Interface Guidelines*
-- 100% native
 - iPad app
 
 ## How to use
+![Xcode Build](https://github.com/rrroyal/Harbour/workflows/Xcode%20Build/badge.svg)
 ### Installation
 1. Clone the repo.
 2. Open the project in Xcode >= 11.4.

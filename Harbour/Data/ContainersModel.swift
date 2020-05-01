@@ -48,7 +48,7 @@ class ContainersModel: ObservableObject {
 	@Published var containers: [Container] = []
 	@Published var status: String = ""
 	
-	private let keychain: Keychain = Keychain(service: "xyz.shameful.harbour-jwt").label("Harbour Token").synchronizable(true).accessibility(.afterFirstUnlock)
+	private let keychain: Keychain = Keychain(service: "\(Bundle.main.bundleIdentifier ?? "harbour")-token").label("Harbour Token").synchronizable(true).accessibility(.afterFirstUnlock)
 	
 	private var retryCount: Int = 0
 	

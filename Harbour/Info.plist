@@ -19,6 +19,15 @@
 				<key>UIPrerenderedIcon</key>
 				<false/>
 			</dict>
+			<key>Dev</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>Dev</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
 		</dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
@@ -39,6 +48,15 @@
 				<key>CFBundleIconFiles</key>
 				<array>
 					<string>Dark~ipad</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+			</dict>
+			<key>Dev</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>Dev~ipad</string>
 				</array>
 				<key>UIPrerenderedIcon</key>
 				<false/>
