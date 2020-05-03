@@ -22,6 +22,7 @@
 
 ## How to use
 ![Xcode Build](https://github.com/rrroyal/Harbour/workflows/Xcode%20Build/badge.svg)
+[![Bitrise Status](https://app.bitrise.io/app/586c41c16e39d7c6/status.svg?token=W6Bxaa9-8dNG5i-WPdhiuA&branch=master)](https://app.bitrise.io/app/586c41c16e39d7c6)
 ### Installation
 1. Clone the repo.
 2. Open the project in Xcode >= 11.4.
