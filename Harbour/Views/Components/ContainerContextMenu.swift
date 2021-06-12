@@ -40,7 +40,7 @@ struct ContainerContextMenu: View {
 	}
 	
 	var killButton: some View {
-		Button(role: .destructive, action: { await execute(.kill) }) {
+		Button(role: .destructive, action: { await execute(.kill, haptic: .heavy) }) {
 			Text("Kill")
 			Image(systemName: "bolt")
 		}
@@ -48,7 +48,7 @@ struct ContainerContextMenu: View {
 	
 	var body: some View {
 		Group {
-			Label(container.state?.rawValue.capitalizingFirstLetter() ?? "Unknown", systemImage: container.stateSymbol)
+			Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter() ?? "Unknown", systemImage: container.stateSymbol)
 			
 			Divider()
 						
@@ -56,18 +56,22 @@ struct ContainerContextMenu: View {
 				case .created:
 					pauseButton
 					stopButton
+					Divider()
 					killButton
 				case .running:
 					pauseButton
 					stopButton
+					Divider()
 					killButton
 				case .paused:
 					resumeButton
 					stopButton
+					Divider()
 					killButton
 				case .restarting:
 					pauseButton
 					stopButton
+					Divider()
 					killButton
 				case .removing:
 					killButton
@@ -80,12 +84,15 @@ struct ContainerContextMenu: View {
 					startButton
 					pauseButton
 					stopButton
+					Divider()
 					killButton
 			}
 		}
 	}
 	
-	private func execute(_ action: PortainerKit.ExecuteAction) async {
+	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) async {
+		await UIDevice.current.generateHaptic(haptic)
+		
 		let result = await Portainer.shared.execute(action, for: container)
 		switch result {
 			case .success():
@@ -99,6 +106,7 @@ struct ContainerContextMenu: View {
 				}
 				
 			case .failure(let error):
+				await UIDevice.current.generateHaptic(.error)
 				AppState.shared.handle(error)
 		}
 	}

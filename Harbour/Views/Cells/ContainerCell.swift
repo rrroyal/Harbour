@@ -48,19 +48,13 @@ struct ContainerCell: View {
 				.minimumScaleFactor(0.6)
 				.multilineTextAlignment(.leading)
 		}
-		.padding(12)
+		.padding(.medium)
 		.aspectRatio(1, contentMode: .fill)
 		.background(
 			RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
-				.foregroundColor(Color(uiColor: .systemGray6))
+				.foregroundColor(Color(uiColor: .secondarySystemBackground))
 		)
 		.animation(.easeInOut, value: container)
 		.transition(.opacity)
 	}
 }
-
-/* struct ContainerCell_Previews: PreviewProvider {
-    static var previews: some View {
-        ContainerCell()
-    }
-} */

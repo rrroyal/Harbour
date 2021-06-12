@@ -9,6 +9,10 @@ import Foundation
 
 extension String {
 	func capitalizingFirstLetter() -> String {
-		return prefix(1).capitalized + dropFirst()
+		self.prefix(1).capitalized + self.dropFirst()
+	}
+
+	var isReallyEmpty: Bool {
+		self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
 	}
 }

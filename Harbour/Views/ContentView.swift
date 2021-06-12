@@ -80,12 +80,12 @@ struct ContentView: View {
 			SettingsView()
 				.environmentObject(portainer)
 		}
-		/* .task {
-			if let endpointID = portainer.selectedEndpoint?.id {
-				await portainer.getContainers(endpointID: endpointID)
-			}
-		} */
-    }
+		/* .onAppear {
+		 	if let endpointID = portainer.selectedEndpoint?.id {
+		 		await portainer.getContainers(endpointID: endpointID)
+		 	}
+		 } */
+	}
 }
 
 struct ContentView_Previews: PreviewProvider {

@@ -28,42 +28,48 @@ struct LoginView: View {
 				.keyboardType(.URL)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
+				.textFieldStyle(RoundedTextFieldStyle())
 			
 			TextField("garyhost", text: $username)
 				.keyboardType(.default)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
+				.textFieldStyle(RoundedTextFieldStyle())
 				
 			SecureField("huner2", text: $password)
 				.keyboardType(.default)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
+				.textFieldStyle(RoundedTextFieldStyle())
 
 			Spacer()
 			
-			Button("Log in", role: nil) {
-				UIDevice.current.generateHaptic(.light)
-				
-				guard let url = URL(string: endpoint) else {
-					UIDevice.current.generateHaptic(.error)
-					return
-				}
-				
-				let result = await portainer.login(url: url, username: username, password: password)
-				switch result {
-					case .success():
-						UIDevice.current.generateHaptic(.success)
-						presentationMode.wrappedValue.dismiss()
-					case .failure(let error):
-						AppState.shared.handle(error)
-						break
-				}
-			}
-			.keyboardShortcut(.defaultAction)
-			.foregroundColor(.white)
-			.buttonStyle(PrimaryButtonStyle())
+			Button("Log in", role: nil, action: login)
+				.keyboardShortcut(.defaultAction)
+				.foregroundColor(.white)
+				.buttonStyle(PrimaryButtonStyle())
+				.animation(.easeInOut, value: endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
+				.disabled(endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
 		}
 		.padding()
+	}
+	
+	func login() async {
+		UIDevice.current.generateHaptic(.light)
+		
+		guard let url = URL(string: endpoint) else {
+			UIDevice.current.generateHaptic(.error)
+			return
+		}
+		
+		let result = await portainer.login(url: url, username: username, password: password)
+		switch result {
+			case .success():
+				UIDevice.current.generateHaptic(.success)
+				presentationMode.wrappedValue.dismiss()
+			case .failure(let error):
+				AppState.shared.handle(error)
+		}
 	}
 }
 

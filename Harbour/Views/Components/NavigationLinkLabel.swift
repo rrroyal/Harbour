@@ -33,7 +33,7 @@ struct NavigationLinkLabel: View {
 				.foregroundStyle(.secondary)
 				.opacity(Globals.Views.secondaryOpacity)
 		}
-		.padding(13)
+		.padding(.medium)
 		.background(
 			RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)
 				.fill(backgroundColor)

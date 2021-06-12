@@ -13,7 +13,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 	public init(color: Color = .accentColor) {
 		self.color = color
 	}
-		
+
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
 			.font(.body.weight(.semibold))
@@ -27,5 +27,5 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)
 			.scaleEffect(configuration.isPressed ? Globals.Buttons.pressedSize : 1)
 			.animation(Globals.Views.springAnimation, value: configuration.isPressed)
-		}
+	}
 }

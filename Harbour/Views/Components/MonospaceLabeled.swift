@@ -18,13 +18,19 @@ struct MonospaceLabeled: View {
 				.foregroundColor(content != nil ? .primary : nil)
 				.lineLimit(nil)
 				.contentShape(Rectangle())
+			#if os(macOS)
+				.textSelection(.enabled)
+			#else
 				.onLongPressGesture { copy(content) }
+			#endif
 		}
 	}
-	
-	func copy(_ object: Any?) {
-		guard let object = object else { return }
-		UIDevice.current.generateHaptic(.selectionChanged)
-		UIPasteboard.general.string = String(describing: object)
-	}
-	}
+
+	#if !os(macOS)
+		func copy(_ object: Any?) {
+			guard let object = object else { return }
+			UIDevice.current.generateHaptic(.selectionChanged)
+			UIPasteboard.general.string = String(describing: object)
+		}
+	#endif
+}

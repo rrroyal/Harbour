@@ -3,7 +3,7 @@
 //  Harbour
 //
 //  Created by royal on 11/06/2021.
-//	Borrowed from https://github.com/SwiftUIX/SwiftUIX
+//	Borrowed and adapted from https://github.com/SwiftUIX/SwiftUIX
 //
 
 import SwiftUI

@@ -14,43 +14,45 @@ struct ContainerNetworkDetailsView: View {
 	var body: some View {
 		List {
 			if let networks = container.networkSettings?.networks {
-				Section(header: Text("Networks")) {
+				Section(header: Text("Network")) {
 					Text(String(describing: networks))
 				}
 			}
 			
 			if let ports = container.ports, !ports.isEmpty {
-				Section(header: Text("Ports")) {
-					ForEach(container.ports ?? [], id: \.self) { port in
-						PortLabel(port: port)
-					}
+				ForEach(container.ports ?? [], id: \.self) { port in
+					PortSection(port: port)
 				}
 			}
 		}
 		.navigationTitle(Text("Network"))
-    }
+	}
 }
 
-fileprivate extension ContainerNetworkDetailsView {
-	struct PortLabel: View {
+private extension ContainerNetworkDetailsView {
+	struct PortSection: View {
 		let port: PortainerKit.Port
 		let label: String?
-				
-		init(port: PortainerKit.Port) {
+		
+		public init(port: PortainerKit.Port) {
 			self.port = port
 			
-			var str = ""
-			if let privatePort = port.privatePort { str += "\(privatePort)" }
-			if let ip = port.ip { str += ":\(ip)" }
-			if let publicPort = port.publicPort { str += ":\(publicPort)" }
-			if let type = port.type { str += "/\(type.rawValue)" }
-			
-			self.label = str.isEmpty ? nil : str
+			// swiftlint:disable indentation_width
+			if let privatePort = port.privatePort,
+			   let type = port.type {
+				self.label = "\(privatePort)/\(type.rawValue)"
+			} else {
+				self.label = nil
+			}
 		}
 		
 		var body: some View {
-			Text(label ?? "empty")
-				.foregroundColor(label != nil ? .primary : .secondary)
+			Section(header: self.label != nil ? Text(self.label ?? "") : nil) {
+				MonospaceLabeled(label: "IP", content: port.ip != nil ? "\(port.ip ?? "")" : nil)
+				MonospaceLabeled(label: "Private port", content: port.privatePort != nil ? "\(port.privatePort ?? 0)" : nil)
+				MonospaceLabeled(label: "Public port", content: port.publicPort != nil ? "\(port.publicPort ?? 0)" : nil)
+				MonospaceLabeled(label: "Type", content: port.type != nil ? "\(port.type?.rawValue ?? "")" : nil)
+			}
 		}
 	}
 }

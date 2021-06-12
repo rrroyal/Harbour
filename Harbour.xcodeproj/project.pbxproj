@@ -22,6 +22,7 @@
 		E75A51EC2673A7F300857D2B /* ContainerHostConfigDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EB2673A7F300857D2B /* ContainerHostConfigDetailsView.swift */; };
 		E75A51EE2673B17B00857D2B /* MonospaceLabeled.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */; };
 		E75A51F02673CE3500857D2B /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EF2673CE3500857D2B /* View+.swift */; };
+		E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */; };
 		E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */; };
 		E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E512672B5B000AAB6A1 /* ContentView.swift */; };
 		E7BF9E622672B5B100AAB6A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */; };
@@ -67,6 +68,7 @@
 		E75A51EB2673A7F300857D2B /* ContainerHostConfigDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerHostConfigDetailsView.swift; sourceTree = "<group>"; };
 		E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonospaceLabeled.swift; sourceTree = "<group>"; };
 		E75A51EF2673CE3500857D2B /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextFieldStyle.swift; sourceTree = "<group>"; };
 		E76F79AA267304940009FE65 /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = PortainerKit; path = Modules/PortainerKit; sourceTree = "<group>"; };
 		E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourApp.swift; sourceTree = "<group>"; };
 		E7BF9E512672B5B000AAB6A1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -122,6 +124,23 @@
 				E7339C592674366000A55B5C /* Container */,
 			);
 			path = Details;
+			sourceTree = "<group>";
+		};
+		E76B26EE267518B8000F437D /* TextField */ = {
+			isa = PBXGroup;
+			children = (
+				E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */,
+			);
+			path = TextField;
+			sourceTree = "<group>";
+		};
+		E76B26EF267518BE000F437D /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */,
+				E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */,
+			);
+			path = Button;
 			sourceTree = "<group>";
 		};
 		E76F798E267304760009FE65 /* Harbour */ = {
@@ -202,8 +221,8 @@
 		E7BF9E8B2672F48700AAB6A1 /* Styles */ = {
 			isa = PBXGroup;
 			children = (
-				E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */,
-				E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */,
+				E76B26EF267518BE000F437D /* Button */,
+				E76B26EE267518B8000F437D /* TextField */,
 			);
 			path = Styles;
 			sourceTree = "<group>";
@@ -212,8 +231,8 @@
 			isa = PBXGroup;
 			children = (
 				E7BF9E932672FB8600AAB6A1 /* Labeled.swift */,
-				E75A51E32673A4F000857D2B /* NavigationLinkLabel.swift */,
 				E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */,
+				E75A51E32673A4F000857D2B /* NavigationLinkLabel.swift */,
 				E7339C552674236700A55B5C /* ContainerContextMenu.swift */,
 			);
 			path = Components;
@@ -496,7 +515,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -535,7 +554,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
