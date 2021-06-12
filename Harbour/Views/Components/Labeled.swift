@@ -11,16 +11,16 @@ import SwiftUI
 public struct Labeled<Label: View, Control: View>: View {
 	@usableFromInline
 	let label: Label
-	
+
 	@usableFromInline
 	let control: Control
-	
+
 	public var body: some View {
 		HStack {
 			label
-			
+
 			Spacer()
-			
+
 			control
 				.foregroundStyle(.secondary)
 				.multilineTextAlignment(.trailing)
@@ -28,9 +28,9 @@ public struct Labeled<Label: View, Control: View>: View {
 	}
 }
 
-extension Labeled {
+public extension Labeled {
 	@inlinable
-	public init(
+	init(
 		@ViewBuilder control: () -> Control,
 		@ViewBuilder label: () -> Label
 	) {
@@ -39,17 +39,17 @@ extension Labeled {
 	}
 }
 
-extension Labeled where Label == Text {
+public extension Labeled where Label == Text {
 	@inlinable
-	public init(
+	init(
 		_ title: Text,
 		@ViewBuilder control: () -> Control
 	) {
 		self.init(control: control, label: { title })
 	}
-	
+
 	@inlinable
-	public init<S: StringProtocol>(
+	init<S: StringProtocol>(
 		_ title: S,
 		@ViewBuilder control: () -> Control
 	) {

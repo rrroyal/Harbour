@@ -10,7 +10,7 @@ import SwiftUI
 struct MonospaceLabeled: View {
 	let label: String
 	let content: String?
-	
+
 	var body: some View {
 		Labeled(label) {
 			Text(content ?? "none")

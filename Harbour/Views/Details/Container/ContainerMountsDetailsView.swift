@@ -5,23 +5,23 @@
 //  Created by royal on 11/06/2021.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 struct ContainerMountsDetailsView: View {
 	let container: PortainerKit.Container
 	
-    var body: some View {
+	var body: some View {
 		List {
 			ForEach(container.mounts ?? [], id: \.target) { mount in
 				MountSection(mount: mount)
 			}
 		}
 		.navigationTitle(Text("Mounts"))
-    }
+	}
 }
 
-fileprivate extension ContainerMountsDetailsView {
+private extension ContainerMountsDetailsView {
 	struct MountSection: View {
 		let mount: PortainerKit.Mount
 		
@@ -37,9 +37,7 @@ fileprivate extension ContainerMountsDetailsView {
 		@ViewBuilder
 		var consistencySection: some View {
 			if let consistency = mount.consistency {
-				DisclosureGroup("Consistency") {
-					
-				}
+				DisclosureGroup("Consistency") {}
 			} else {
 				MonospaceLabeled(label: "Consistency", content: nil)
 			}
@@ -48,9 +46,7 @@ fileprivate extension ContainerMountsDetailsView {
 		@ViewBuilder
 		var bindOptionsSection: some View {
 			if let options = mount.bindOptions {
-				DisclosureGroup("Bind options") {
-					
-				}
+				DisclosureGroup("Bind options") {}
 			} else {
 				MonospaceLabeled(label: "Bind options", content: nil)
 			}
@@ -59,9 +55,7 @@ fileprivate extension ContainerMountsDetailsView {
 		@ViewBuilder
 		var volumeOptionsSection: some View {
 			if let options = mount.volumeOptions {
-				DisclosureGroup("Volume options") {
-					
-				}
+				DisclosureGroup("Volume options") {}
 			} else {
 				MonospaceLabeled(label: "Volume options", content: nil)
 			}

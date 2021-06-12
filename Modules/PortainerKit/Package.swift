@@ -4,17 +4,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "PortainerKit",
+	name: "PortainerKit",
 	/* platforms: [
-		.iOS(.v15),
-		.macOS(.v11)
-	], */
-    products: [
-        .library(name: "PortainerKit", targets: ["PortainerKit"])
-    ],
-    dependencies: [],
-    targets: [
-        .target(name: "PortainerKit", dependencies: [])
-    ]
+			.iOS(.v15),
+			.macOS(.v11)
+		], */
+	products: [
+		.library(name: "PortainerKit", targets: ["PortainerKit"])
+	],
+	dependencies: [],
+	targets: [
+		.target(name: "PortainerKit", dependencies: [])
+	]
 	// swiftLanguageVersions: []
 )

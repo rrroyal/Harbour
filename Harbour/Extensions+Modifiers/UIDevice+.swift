@@ -22,17 +22,17 @@ extension UIDevice {
 		case rigid
 		case selectionChanged
 	}
-	
+
 	/// Generates a haptic feedback/vibration.
 	/// - Parameter style: Style of the feedback
 	func generateHaptic(_ style: FeedbackStyle) {
 		guard UserDefaults.standard.bool(forKey: UserDefaults.Keys.enableHaptics) else {
 			return
 		}
-		
+
 		let hapticCapability = CHHapticEngine.capabilitiesForHardware()
 		let supportsHaptics = hapticCapability.supportsHaptics
-		
+
 		if supportsHaptics {
 			// Haptic Feedback
 			switch style {

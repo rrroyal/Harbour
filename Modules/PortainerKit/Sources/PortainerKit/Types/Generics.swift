@@ -12,7 +12,13 @@ import Foundation
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
 	enum ContainerStatus: String, Codable {
-		case created, running, paused, restarting, removing, exited, dead
+		case created
+		case running
+		case paused
+		case restarting
+		case removing
+		case exited
+		case dead
 	}
 	
 	enum EndpointStatus: Int, Codable {
@@ -27,12 +33,12 @@ public extension PortainerKit {
 	}
 	
 	enum ExecuteAction: String {
-		case start = "start"
-		case stop = "stop"
-		case restart = "restart"
-		case kill = "kill"
-		case pause = "pause"
-		case unpause = "unpause"
+		case start
+		case stop
+		case restart
+		case kill
+		case pause
+		case unpause
 		
 		public var expectedState: ContainerStatus {
 			switch self {
@@ -53,11 +59,16 @@ public extension PortainerKit {
 	}
 	
 	enum MountConsistency: String, Codable {
-		case `default`, consistent, cached, delegated
+		case `default`
+		case consistent
+		case cached
+		case delegated
 	}
 	
 	enum MountType: String, Codable {
-		case bind, volume, tmpfs
+		case bind
+		case volume
+		case tmpfs
 	}
 }
 
@@ -91,7 +102,12 @@ public extension PortainerKit {
 		}
 		
 		public enum Propagation: String, Codable {
-			case `private`, rprivate, shared, rshared, slave, rslave
+			case `private`
+			case rprivate
+			case shared
+			case rshared
+			case slave
+			case rslave
 		}
 		
 		public let propagation: Propagation?
@@ -277,114 +293,114 @@ public extension PortainerKit {
 		}
 		
 		/* "HostConfig": {
-			"AutoRemove": false,
-			"Binds": [
-				"portainer_data:/data",
-				"/run/host-services/docker.proxy.sock:/var/run/docker.sock"
-			],
-			"BlkioDeviceReadBps": null,
-			"BlkioDeviceReadIOps": null,
-			"BlkioDeviceWriteBps": null,
-			"BlkioDeviceWriteIOps": null,
-			"BlkioWeight": 0,
-			"BlkioWeightDevice": [],
-			"CapAdd": null,
-			"CapDrop": null,
-			"Cgroup": "",
-			"CgroupParent": "",
-			"CgroupnsMode": "host",
-			"ConsoleSize": [
-				0,
-				0
-			],
-			"ContainerIDFile": "",
-			"CpuCount": 0,
-			"CpuPercent": 0,
-			"CpuPeriod": 0,
-			"CpuQuota": 0,
-			"CpuRealtimePeriod": 0,
-			"CpuRealtimeRuntime": 0,
-			"CpuShares": 0,
-			"CpusetCpus": "",
-			"CpusetMems": "",
-			"DeviceCgroupRules": null,
-			"DeviceRequests": null,
-			"Devices": [],
-			"Dns": [],
-			"DnsOptions": [],
-			"DnsSearch": [],
-			"ExtraHosts": null,
-			"GroupAdd": null,
-			"IOMaximumBandwidth": 0,
-			"IOMaximumIOps": 0,
-			"IpcMode": "private",
-			"Isolation": "",
-			"KernelMemory": 0,
-			"KernelMemoryTCP": 0,
-			"Links": null,
-			"LogConfig": {
-				"Config": {},
-				"Type": "json-file"
-			},
-			"MaskedPaths": [
-				"/proc/asound",
-				"/proc/acpi",
-				"/proc/kcore",
-				"/proc/keys",
-				"/proc/latency_stats",
-				"/proc/timer_list",
-				"/proc/timer_stats",
-				"/proc/sched_debug",
-				"/proc/scsi",
-				"/sys/firmware"
-			],
-			"Memory": 0,
-			"MemoryReservation": 0,
-			"MemorySwap": 0,
-			"MemorySwappiness": null,
-			"NanoCpus": 0,
-			"NetworkMode": "default",
-			"OomKillDisable": false,
-			"OomScoreAdj": 0,
-			"PidMode": "",
-			"PidsLimit": null,
-			"PortBindings": {
-				"8000/tcp": [
-					{
-					"HostIp": "",
-					"HostPort": "8000"
-				}
-				],
-				"9000/tcp": [
-					{
-					"HostIp": "",
-					"HostPort": "9000"
-				}
-				]
-			},
-			"Privileged": false,
-			"PublishAllPorts": false,
-			"ReadonlyPaths": [
-				"/proc/bus",
-				"/proc/fs",
-				"/proc/irq",
-				"/proc/sys",
-				"/proc/sysrq-trigger"
-			],
-			"ReadonlyRootfs": false,
-			"RestartPolicy": {
-				"MaximumRetryCount": 0,
-				"Name": "always"
-			},
-			"Runtime": "runc",
-			"SecurityOpt": null,
-			"ShmSize": 67108864,
-			"UTSMode": "",
-			"Ulimits": null,
-			"UsernsMode": "",
-			"VolumeDriver": "",
-			"VolumesFrom": null
-		} */
+		 	"AutoRemove": false,
+		 	"Binds": [
+		 		"portainer_data:/data",
+		 		"/run/host-services/docker.proxy.sock:/var/run/docker.sock"
+		 	],
+		 	"BlkioDeviceReadBps": null,
+		 	"BlkioDeviceReadIOps": null,
+		 	"BlkioDeviceWriteBps": null,
+		 	"BlkioDeviceWriteIOps": null,
+		 	"BlkioWeight": 0,
+		 	"BlkioWeightDevice": [],
+		 	"CapAdd": null,
+		 	"CapDrop": null,
+		 	"Cgroup": "",
+		 	"CgroupParent": "",
+		 	"CgroupnsMode": "host",
+		 	"ConsoleSize": [
+		 		0,
+		 		0
+		 	],
+		 	"ContainerIDFile": "",
+		 	"CpuCount": 0,
+		 	"CpuPercent": 0,
+		 	"CpuPeriod": 0,
+		 	"CpuQuota": 0,
+		 	"CpuRealtimePeriod": 0,
+		 	"CpuRealtimeRuntime": 0,
+		 	"CpuShares": 0,
+		 	"CpusetCpus": "",
+		 	"CpusetMems": "",
+		 	"DeviceCgroupRules": null,
+		 	"DeviceRequests": null,
+		 	"Devices": [],
+		 	"Dns": [],
+		 	"DnsOptions": [],
+		 	"DnsSearch": [],
+		 	"ExtraHosts": null,
+		 	"GroupAdd": null,
+		 	"IOMaximumBandwidth": 0,
+		 	"IOMaximumIOps": 0,
+		 	"IpcMode": "private",
+		 	"Isolation": "",
+		 	"KernelMemory": 0,
+		 	"KernelMemoryTCP": 0,
+		 	"Links": null,
+		 	"LogConfig": {
+		 		"Config": {},
+		 		"Type": "json-file"
+		 	},
+		 	"MaskedPaths": [
+		 		"/proc/asound",
+		 		"/proc/acpi",
+		 		"/proc/kcore",
+		 		"/proc/keys",
+		 		"/proc/latency_stats",
+		 		"/proc/timer_list",
+		 		"/proc/timer_stats",
+		 		"/proc/sched_debug",
+		 		"/proc/scsi",
+		 		"/sys/firmware"
+		 	],
+		 	"Memory": 0,
+		 	"MemoryReservation": 0,
+		 	"MemorySwap": 0,
+		 	"MemorySwappiness": null,
+		 	"NanoCpus": 0,
+		 	"NetworkMode": "default",
+		 	"OomKillDisable": false,
+		 	"OomScoreAdj": 0,
+		 	"PidMode": "",
+		 	"PidsLimit": null,
+		 	"PortBindings": {
+		 		"8000/tcp": [
+		 			{
+		 			"HostIp": "",
+		 			"HostPort": "8000"
+		 		}
+		 		],
+		 		"9000/tcp": [
+		 			{
+		 			"HostIp": "",
+		 			"HostPort": "9000"
+		 		}
+		 		]
+		 	},
+		 	"Privileged": false,
+		 	"PublishAllPorts": false,
+		 	"ReadonlyPaths": [
+		 		"/proc/bus",
+		 		"/proc/fs",
+		 		"/proc/irq",
+		 		"/proc/sys",
+		 		"/proc/sysrq-trigger"
+		 	],
+		 	"ReadonlyRootfs": false,
+		 	"RestartPolicy": {
+		 		"MaximumRetryCount": 0,
+		 		"Name": "always"
+		 	},
+		 	"Runtime": "runc",
+		 	"SecurityOpt": null,
+		 	"ShmSize": 67108864,
+		 	"UTSMode": "",
+		 	"Ulimits": null,
+		 	"UsernsMode": "",
+		 	"VolumeDriver": "",
+		 	"VolumesFrom": null
+		 } */
 		
 		public let networkMode: String?
 	}
@@ -411,7 +427,7 @@ public extension PortainerKit {
 		
 		public let ingressClasses: [KubernetesIngressClassConfig]?
 		public let storageClasses: [KubernetesStorageClassConfig]?
-		public let useLoadBalancer:	Bool?
+		public let useLoadBalancer: Bool?
 		public let useServerMetrics: Bool?
 	}
 	
@@ -576,7 +592,8 @@ public extension PortainerKit {
 		}
 		
 		public enum PortType: String, Codable {
-			case tcp, udp
+			case tcp
+			case udp
 		}
 		
 		public let ip: String?

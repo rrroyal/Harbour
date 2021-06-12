@@ -11,12 +11,12 @@ import SwiftUI
 struct HarbourApp: App {
 	@StateObject var appState: AppState = AppState.shared
 	@StateObject var portainer: Portainer = Portainer.shared
-	
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
+
+	var body: some Scene {
+		WindowGroup {
+			ContentView()
 				.environmentObject(appState)
 				.environmentObject(portainer)
-        }
-    }
+		}
+	}
 }

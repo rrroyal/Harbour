@@ -37,7 +37,7 @@ public extension PortainerKit {
 			case url = "URL"
 			case userAccessPolicies = "UserAccessPolicies"
 		}
-		
+
 		public let authorizedTeams: [Int]?
 		public let authorizedUsers: [Int]?
 		public let azureCredentials: AzureCredentials?

@@ -35,7 +35,7 @@ public extension PortainerKit {
 			case config = "Config"
 			case networkSettings = "NetworkSettings"
 		}
-		
+
 		public let id: String
 		public let created: Date
 		public let path: String
@@ -60,7 +60,7 @@ public extension PortainerKit {
 		public let mounts: [MountPoint]
 		public let config: ContainerConfig
 		public let networkSettings: NetworkConfig
-		
+
 		public static func == (lhs: PortainerKit.ContainerDetails, rhs: PortainerKit.ContainerDetails) -> Bool {
 			lhs.id == rhs.id
 		}

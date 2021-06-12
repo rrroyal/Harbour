@@ -5,13 +5,13 @@
 //  Created by royal on 11/06/2021.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 struct ContainerNetworkDetailsView: View {
 	let container: PortainerKit.Container
 	
-    var body: some View {
+	var body: some View {
 		List {
 			if let networks = container.networkSettings?.networks {
 				Section(header: Text("Networks")) {

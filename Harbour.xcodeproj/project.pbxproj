@@ -226,6 +226,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E7BF9E662672B5B100AAB6A1 /* Build configuration list for PBXNativeTarget "Harbour" */;
 			buildPhases = (
+				E7911A0526751C9800933E0F /* ShellScript */,
 				E7BF9E532672B5B100AAB6A1 /* Sources */,
 				E7BF9E542672B5B100AAB6A1 /* Frameworks */,
 				E7BF9E552672B5B100AAB6A1 /* Resources */,
@@ -291,6 +292,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		E7911A0526751C9800933E0F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Swiftlint\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		E7BF9E532672B5B100AAB6A1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -298,6 +319,7 @@
 			files = (
 				E7BF9E942672FB8600AAB6A1 /* Labeled.swift in Sources */,
 				E7BF9E882672F29200AAB6A1 /* LoginView.swift in Sources */,
+				E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */,
 				E75A51EA2673A79700857D2B /* ContainerLogsView.swift in Sources */,
 				E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */,
 				E75A51F02673CE3500857D2B /* View+.swift in Sources */,

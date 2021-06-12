@@ -5,11 +5,11 @@
 //  Created by royal on 11/06/2021.
 //
 
-import SwiftUI
 import Combine
+import KeychainAccess
 import os.log
 import PortainerKit
-import KeychainAccess
+import SwiftUI
 
 final class Portainer: ObservableObject {
 	public static let shared: Portainer = Portainer()
@@ -29,6 +29,7 @@ final class Portainer: ObservableObject {
 			}
 		}
 	}
+
 	@Published public var endpoints: [PortainerKit.Endpoint] = [] {
 		didSet {
 			if endpoints.count == 1 {
@@ -49,6 +50,7 @@ final class Portainer: ObservableObject {
 	private init() {
 		self.logger.debug("init()")
 		
+		// swiftlint:disable indentation_width
 		if let url = ud.url(forKey: UserDefaults.Keys.endpointURL),
 		   let token = keychain[url.absoluteString] {
 			self.logger.debug("Initializing PortainerKit for URL=\(url, privacy: .sensitive)")

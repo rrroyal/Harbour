@@ -8,8 +8,8 @@
 import Foundation
 
 @available(iOS 15, macOS 12, *)
-extension PortainerKit {
-	public enum APIError: Error, Comparable {
+public extension PortainerKit {
+	enum APIError: Error, Comparable {
 		case custom(_ reason: String)
 		case responseCodeOutsideRange(_ code: Int)
 		case unknownError

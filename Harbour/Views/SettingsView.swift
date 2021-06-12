@@ -29,9 +29,9 @@ struct SettingsView: View {
 					Alert(
 						title: Text("Are you sure?"),
 						primaryButton: .destructive(Text("Yes"), action: {
-						UIDevice.current.generateHaptic(.heavy)
-						portainer.logOut()
-					}),
+							UIDevice.current.generateHaptic(.heavy)
+							portainer.logOut()
+						}),
 						secondaryButton: .cancel()
 					)
 				}
@@ -62,12 +62,10 @@ struct SettingsView: View {
 	}
 	
 	var otherSection: some View {
-		Section(header: Text("Other"), footer: madeWithLove) {
-			
-		}
+		Section(header: Text("Other"), footer: madeWithLove) {}
 	}
 	
-    var body: some View {
+	var body: some View {
 		NavigationView {
 			Form {
 				portainerSection
@@ -78,11 +76,11 @@ struct SettingsView: View {
 		.sheet(isPresented: $isLoginSheetPresented) {
 			LoginView()
 		}
-    }
+	}
 }
 
 struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
-    }
+	static var previews: some View {
+		SettingsView()
+	}
 }

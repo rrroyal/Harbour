@@ -1,0 +1,66 @@
+--swiftversion 5
+
+--elseposition same-line
+--guardelse same-line
+
+--extensionacl on-extension
+
+--indent tab
+--indentcase true
+--smarttabs enabled
+
+--semicolons never
+
+--rules blankLinesAroundMark, \
+	blankLinesAtEndOfScope, \
+	blankLinesAtStartOfScope, \
+	blankLinesBetweenScopes, \
+	consecutiveBlankLines, \
+	consecutiveSpaces, \
+	duplicateImports, \
+	elseOnSameLine, \
+	emptyBraces, \
+	enumNamespaces, \
+	extensionAccessControl, \
+	initCoderUnavailable, \
+	indent, \
+	isEmpty, \
+	leadingDelimiters, \
+	linebreakAtEndOfFile, \
+	preferKeyPath, \
+	redundantBackticks, \
+	redundantBreak, \
+	redundantExtensionACL, \
+	redundantFileprivate, \
+	redundantGet, \
+	redundantInit, \
+	redundantLet, \
+	redundantLetError, \
+	redundantObjc, \
+	redundantParens, \
+	redundantPattern, \
+	redundantRawValues, \
+	redundantReturn, \
+	redundantVoidReturnType, \
+	semicolons, \
+	sortedImports, \
+	sortedSwitchCases, \
+	spaceAroundBraces, \
+	spaceAroundBrackets, \
+	spaceAroundComments, \
+	spaceAroundGenerics, \
+	spaceAroundOperators, \
+	spaceAroundParens, \
+	spaceInsideBraces, \
+	spaceInsideBrackets, \
+	spaceInsideComments, \
+	spaceInsideGenerics, \
+	spaceInsideParens, \
+	strongOutlets, \
+	strongifiedSelf, \
+	todos, \
+	typeSugar, \
+	unusedArguments, \
+	void, \
+	wrapArguments, \
+	wrapEnumCases

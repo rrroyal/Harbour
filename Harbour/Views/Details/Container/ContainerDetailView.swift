@@ -5,8 +5,8 @@
 //  Created by royal on 11/06/2021.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 struct ContainerDetailView: View {
 	@EnvironmentObject var portainer: Portainer
@@ -40,7 +40,7 @@ struct ContainerDetailView: View {
 		}
 	}
 	
-    var body: some View {
+	var body: some View {
 		ScrollView {
 			LazyVStack(spacing: 15) {
 				buttonsSection
@@ -66,8 +66,8 @@ struct ContainerDetailView: View {
 				}, label: {
 					Image(systemName: container.stateSymbol)
 				})
-				.animation(.easeInOut, value: container.state)
-				.transition(.opacity)
+					.animation(.easeInOut, value: container.state)
+					.transition(.opacity)
 			}
 		}
 		.refreshable {
@@ -81,7 +81,7 @@ struct ContainerDetailView: View {
 		.onReceive(portainer.refreshCurrentContainer) {
 			async { await refresh() }
 		}
-    }
+	}
 	
 	private func refresh() async {
 		let result = await portainer.inspectContainer(container)

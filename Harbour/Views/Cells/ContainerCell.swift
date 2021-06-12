@@ -5,15 +5,15 @@
 //  Created by royal on 11/06/2021.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 struct ContainerCell: View {
 	let container: PortainerKit.Container
 		
 	let circleSize: Double = 10
 	
-    var body: some View {
+	var body: some View {
 		VStack(alignment: .leading) {
 			HStack(alignment: .top) {
 				if let state = container.state {
@@ -56,7 +56,7 @@ struct ContainerCell: View {
 		)
 		.animation(.easeInOut, value: container)
 		.transition(.opacity)
-    }
+	}
 }
 
 /* struct ContainerCell_Previews: PreviewProvider {

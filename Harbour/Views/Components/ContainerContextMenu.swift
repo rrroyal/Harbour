@@ -5,8 +5,8 @@
 //  Created by royal on 12/06/2021.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 struct ContainerContextMenu: View {
 	let container: PortainerKit.Container
@@ -46,7 +46,7 @@ struct ContainerContextMenu: View {
 		}
 	}
 	
-    var body: some View {
+	var body: some View {
 		Group {
 			Label(container.state?.rawValue.capitalizingFirstLetter() ?? "Unknown", systemImage: container.stateSymbol)
 			
@@ -83,7 +83,7 @@ struct ContainerContextMenu: View {
 					killButton
 			}
 		}
-    }
+	}
 	
 	private func execute(_ action: PortainerKit.ExecuteAction) async {
 		let result = await Portainer.shared.execute(action, for: container)

@@ -1,0 +1,26 @@
+opt_in_rules:
+    - colon
+    - comma
+    - empty_count
+    - vertical_whitespace
+    - indentation_width
+disabled_rules:
+    - line_length
+    - inclusive_language
+    - identifier_name
+    - multiple_closures_with_trailing_closure
+    - redundant_optional_initialization
+    - nesting
+    - file_length
+    - trailing_whitespace
+    - type_body_length
+    - function_body_length
+    - switch_case_alignment
+    - vertical_parameter_alignment
+force_cast: warning
+force_try: error
+cyclomatic_complexity:
+    warning: 20
+indentation_width:
+    length: 4
+    include_comments: false

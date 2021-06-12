@@ -15,7 +15,7 @@ internal extension PortainerKit {
 		case containers(endpointID: Int)
 		case containerDetails(endpointID: Int, containerID: String)
 		case executeAction(_ action: ExecuteAction, endpointID: Int, containerID: String)
-		
+
 		var path: String {
 			switch self {
 				case .login:

@@ -15,7 +15,7 @@ struct LoginView: View {
 	@State private var username: String = ""
 	@State private var password: String = ""
 
-    var body: some View {
+	var body: some View {
 		VStack {
 			Spacer()
 			
@@ -64,11 +64,11 @@ struct LoginView: View {
 			.buttonStyle(PrimaryButtonStyle())
 		}
 		.padding()
-    }
+	}
 }
 
 struct LoginView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginView()
-    }
+	static var previews: some View {
+		LoginView()
+	}
 }

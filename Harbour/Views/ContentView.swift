@@ -5,8 +5,8 @@
 //  Created by royal on 10/06/2021.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 struct ContentView: View {
 	@EnvironmentObject var portainer: Portainer
@@ -14,7 +14,7 @@ struct ContentView: View {
 	
 	let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
 	
-    var body: some View {
+	var body: some View {
 		NavigationView {
 			ScrollView {
 				LazyVGrid(columns: columns) {
@@ -24,8 +24,8 @@ struct ContentView: View {
 						}
 						.buttonStyle(DecreasesOnPressButtonStyle())
 						/* .contextMenu {
-							ContainerContextMenu(container: container)
-						} */
+						 	ContainerContextMenu(container: container)
+						 } */
 					}
 				}
 				.padding(.horizontal)
@@ -89,8 +89,8 @@ struct ContentView: View {
 }
 
 struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+	static var previews: some View {
+		ContentView()
 			.environmentObject(Portainer.shared)
-    }
+	}
 }

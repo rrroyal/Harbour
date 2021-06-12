@@ -9,7 +9,6 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public class PortainerKit {
-	
 	// MARK: Public properties
 	
 	/// Endpoint URL
@@ -37,7 +36,7 @@ public class PortainerKit {
 		
 		self.session = URLSession(configuration: configuration)
 		self.token = token
-    }
+	}
 	
 	// MARK: - Public functions
 	
@@ -145,7 +144,7 @@ public class PortainerKit {
 				return .success(())
 			}
 			
-			if 200...304 ~= res.statusCode {
+			if 200 ... 304 ~= res.statusCode {
 				return .success(())
 			} else {
 				return .failure(APIError.responseCodeOutsideRange(res.statusCode))
@@ -179,6 +178,7 @@ public class PortainerKit {
 			let decoded = try decoder.decode(Output.self, from: response.0)
 			return .success(decoded)
 		} catch {
+			// swiftlint:disable indentation_width
 			if let errorJson = try? decoder.decode([String: String].self, from: response.0),
 			   let message = errorJson["message"] {
 				return .failure(APIError.fromMessage(message))
