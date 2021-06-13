@@ -78,10 +78,8 @@ struct ContentView: View {
 			}
 		}
 		.sheet(isPresented: $appState.showContainerConsoleView) {
-			if let containerID = appState.attachedContainerID {
-				ContainerConsoleView(containerID: containerID)
-					.environmentObject(portainer)
-			}
+			ContainerConsoleView()
+				.environmentObject(portainer)
 		}
 		.sheet(isPresented: $isSettingsViewPresented) {
 			SettingsView()

@@ -91,18 +91,19 @@ struct ContainerContextMenu: View {
 			Divider()
 			
 			Button(action: {
-				AppState.shared.attachedContainerID = container.id
+				Portainer.shared.attach(to: container)
 				AppState.shared.showContainerConsoleView = true
 			}) {
 				Label("Attach", systemImage: "terminal")
 			}
+			.disabled(container.state != .running)
 		}
 	}
 	
 	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) async {
 		await UIDevice.current.generateHaptic(haptic)
 		
-		let result = await Portainer.shared.execute(action, containerID: container.id)
+		let result = await Portainer.shared.execute(action, on: container)
 		switch result {
 			case .success():
 				DispatchQueue.main.async {

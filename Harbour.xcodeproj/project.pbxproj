@@ -10,6 +10,8 @@
 		E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7272E8926736CCF00228494 /* PortainerKit+.swift */; };
 		E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C552674236700A55B5C /* ContainerContextMenu.swift */; };
 		E7339C582674262500A55B5C /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C572674262500A55B5C /* String+.swift */; };
+		E74AC7F326768543003411AA /* Portainer+PortainerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F226768543003411AA /* Portainer+PortainerError.swift */; };
+		E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */; };
 		E75A51D8267384E100857D2B /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51D7267384E100857D2B /* AppState.swift */; };
 		E75A51DB2673892400857D2B /* ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51DA2673892400857D2B /* ContainerCell.swift */; };
 		E75A51DE26738A2000857D2B /* ContainerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51DD26738A2000857D2B /* ContainerDetailView.swift */; };
@@ -57,6 +59,8 @@
 		E7272E8926736CCF00228494 /* PortainerKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerKit+.swift"; sourceTree = "<group>"; };
 		E7339C552674236700A55B5C /* ContainerContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerContextMenu.swift; sourceTree = "<group>"; };
 		E7339C572674262500A55B5C /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
+		E74AC7F226768543003411AA /* Portainer+PortainerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+PortainerError.swift"; sourceTree = "<group>"; };
+		E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+AttachedContainer.swift"; sourceTree = "<group>"; };
 		E75A51D7267384E100857D2B /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
 		E75A51DA2673892400857D2B /* ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerCell.swift; sourceTree = "<group>"; };
 		E75A51DD26738A2000857D2B /* ContainerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerDetailView.swift; sourceTree = "<group>"; };
@@ -111,6 +115,16 @@
 				E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */,
 			);
 			path = Container;
+			sourceTree = "<group>";
+		};
+		E74AC7F126768532003411AA /* Portainer */ = {
+			isa = PBXGroup;
+			children = (
+				E7BF9E772672E17D00AAB6A1 /* Portainer.swift */,
+				E74AC7F226768543003411AA /* Portainer+PortainerError.swift */,
+				E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */,
+			);
+			path = Portainer;
 			sourceTree = "<group>";
 		};
 		E75A51D92673891700857D2B /* Cells */ = {
@@ -187,8 +201,8 @@
 		E7BF9E762672E15700AAB6A1 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				E74AC7F126768532003411AA /* Portainer */,
 				E75A51D7267384E100857D2B /* AppState.swift */,
-				E7BF9E772672E17D00AAB6A1 /* Portainer.swift */,
 				E75A51DF26739ED100857D2B /* Preferences.swift */,
 			);
 			path = Data;
@@ -347,6 +361,7 @@
 				E75A51F02673CE3500857D2B /* View+.swift in Sources */,
 				E75A51E62673A75700857D2B /* ContainerMountsDetailsView.swift in Sources */,
 				E7BF9E802672E62000AAB6A1 /* UserDefaults+.swift in Sources */,
+				E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */,
 				E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */,
 				E7BF9E782672E17D00AAB6A1 /* Portainer.swift in Sources */,
 				E7DD4CC6267650CB002709F0 /* ContainerConsoleView.swift in Sources */,
@@ -360,6 +375,7 @@
 				E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */,
 				E75A51E42673A4F000857D2B /* NavigationLinkLabel.swift in Sources */,
 				E75A51EC2673A7F300857D2B /* ContainerHostConfigDetailsView.swift in Sources */,
+				E74AC7F326768543003411AA /* Portainer+PortainerError.swift in Sources */,
 				E75A51EE2673B17B00857D2B /* MonospaceLabeled.swift in Sources */,
 				E75A51E82673A78300857D2B /* ContainerNetworkDetailsView.swift in Sources */,
 				E75A51D8267384E100857D2B /* AppState.swift in Sources */,

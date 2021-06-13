@@ -12,7 +12,6 @@ class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
 
 	@Published public var showContainerConsoleView: Bool = false
-	@Published public var attachedContainerID: String? = nil
 
 	private let logger: Logger = Logger(subsystem: "\(Bundle.main.bundleIdentifier ?? "Harbour").AppState", category: "AppState")
 
