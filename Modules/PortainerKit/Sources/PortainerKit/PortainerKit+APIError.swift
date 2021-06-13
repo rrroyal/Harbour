@@ -11,7 +11,7 @@ import Foundation
 public extension PortainerKit {
 	enum APIError: Error, Comparable {
 		case custom(_ reason: String)
-		case responseCodeOutsideRange(_ code: Int)
+		case responseCodeUnacceptable(_ code: Int)
 		case unknownError
 		
 		case invalidCredentials

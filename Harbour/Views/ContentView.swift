@@ -9,6 +9,7 @@ import PortainerKit
 import SwiftUI
 
 struct ContentView: View {
+	@EnvironmentObject var appState: AppState
 	@EnvironmentObject var portainer: Portainer
 	@State private var isSettingsViewPresented: Bool = false
 	
@@ -74,6 +75,12 @@ struct ContentView: View {
 				if let endpointID = portainer.selectedEndpoint?.id {
 					await portainer.getContainers(endpointID: endpointID)
 				}
+			}
+		}
+		.sheet(isPresented: $appState.showContainerConsoleView) {
+			if let containerID = appState.attachedContainerID {
+				ContainerConsoleView(containerID: containerID)
+					.environmentObject(portainer)
 			}
 		}
 		.sheet(isPresented: $isSettingsViewPresented) {

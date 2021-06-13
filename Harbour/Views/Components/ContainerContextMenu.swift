@@ -87,13 +87,22 @@ struct ContainerContextMenu: View {
 					Divider()
 					killButton
 			}
+			
+			Divider()
+			
+			Button(action: {
+				AppState.shared.attachedContainerID = container.id
+				AppState.shared.showContainerConsoleView = true
+			}) {
+				Label("Attach", systemImage: "terminal")
+			}
 		}
 	}
 	
 	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) async {
 		await UIDevice.current.generateHaptic(haptic)
 		
-		let result = await Portainer.shared.execute(action, for: container)
+		let result = await Portainer.shared.execute(action, containerID: container.id)
 		switch result {
 			case .success():
 				DispatchQueue.main.async {

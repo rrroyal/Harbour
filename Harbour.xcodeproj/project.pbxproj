@@ -37,6 +37,7 @@
 		E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */; };
 		E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */; };
 		E7BF9E942672FB8600AAB6A1 /* Labeled.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E932672FB8600AAB6A1 /* Labeled.swift */; };
+		E7DD4CC6267650CB002709F0 /* ContainerConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -83,6 +84,7 @@
 		E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		E7BF9E932672FB8600AAB6A1 /* Labeled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labeled.swift; sourceTree = "<group>"; };
+		E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConsoleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,6 +108,7 @@
 				E75A51E72673A78300857D2B /* ContainerNetworkDetailsView.swift */,
 				E75A51EB2673A7F300857D2B /* ContainerHostConfigDetailsView.swift */,
 				E75A51E92673A79700857D2B /* ContainerLogsView.swift */,
+				E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */,
 			);
 			path = Container;
 			sourceTree = "<group>";
@@ -346,6 +349,7 @@
 				E7BF9E802672E62000AAB6A1 /* UserDefaults+.swift in Sources */,
 				E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */,
 				E7BF9E782672E17D00AAB6A1 /* Portainer.swift in Sources */,
+				E7DD4CC6267650CB002709F0 /* ContainerConsoleView.swift in Sources */,
 				E75A51E22673A1C100857D2B /* Bundle+.swift in Sources */,
 				E7339C582674262500A55B5C /* String+.swift in Sources */,
 				E7BF9E8A2672F2F600AAB6A1 /* UIDevice+.swift in Sources */,

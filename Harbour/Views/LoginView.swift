@@ -11,7 +11,7 @@ struct LoginView: View {
 	@Environment(\.presentationMode) var presentationMode
 	@EnvironmentObject var portainer: Portainer
 	
-	@State private var endpoint: String = Portainer.shared.endpointURL?.absoluteString ?? ""
+	@State private var endpoint: String = Portainer.shared.endpointURL ?? ""
 	@State private var username: String = ""
 	@State private var password: String = ""
 
@@ -36,7 +36,7 @@ struct LoginView: View {
 				.autocapitalization(.none)
 				.textFieldStyle(RoundedTextFieldStyle())
 				
-			SecureField("huner2", text: $password)
+			SecureField("hunter2", text: $password)
 				.keyboardType(.default)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)

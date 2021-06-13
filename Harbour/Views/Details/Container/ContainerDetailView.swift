@@ -84,7 +84,7 @@ struct ContainerDetailView: View {
 	}
 	
 	private func refresh() async {
-		let result = await portainer.inspectContainer(container)
+		let result = await portainer.inspectContainer(id: container.id)
 		switch result {
 			case .success(let containerDetails):
 				self.containerDetails = containerDetails

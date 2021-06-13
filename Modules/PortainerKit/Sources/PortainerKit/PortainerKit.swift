@@ -5,10 +5,13 @@
 //  Created by royal on 10/06/2021.
 //
 
+import Combine
 import Foundation
 
 @available(iOS 15, macOS 12, *)
 public class PortainerKit {
+	public typealias WebSocketPassthroughSubject = PassthroughSubject<Result<WebSocketMessage, Error>, Error>
+	
 	// MARK: Public properties
 	
 	/// Endpoint URL
@@ -44,7 +47,7 @@ public class PortainerKit {
 	/// - Parameters:
 	///   - username: Username
 	///   - password: Password
-	/// - Returns: Result containing JWT token and error.
+	/// - Returns: Result containing JWT token or error.
 	public func login(username: String, password: String) async -> Result<String, Error> {
 		guard var request = request(for: .login) else { return .failure(APIError.invalidURL) }
 		request.httpMethod = "POST"
@@ -75,7 +78,7 @@ public class PortainerKit {
 	}
 	
 	/// Fetches available endpoints.
-	/// - Returns: Result containing `[Endpoint]` and error.
+	/// - Returns: Result containing `[Endpoint]` or error.
 	public func getEndpoints() async -> Result<[Endpoint], Error> {
 		guard let request = request(for: .endpoints) else { return .failure(APIError.invalidURL) }
 		do {
@@ -89,7 +92,7 @@ public class PortainerKit {
 	
 	/// Fetches available containers for supplied endpoint ID.
 	/// - Parameter endpointID: Endpoint ID
-	/// - Returns: Result containing `[Container]` and error.
+	/// - Returns: Result containing `[Container]` or error.
 	public func getContainers(for endpointID: Int) async -> Result<[Container], Error> {
 		guard let request = request(for: .containers(endpointID: endpointID)) else { return .failure(APIError.invalidURL) }
 		do {
@@ -105,9 +108,9 @@ public class PortainerKit {
 	/// - Parameters:
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
-	/// - Returns: Result containing `ContainerDetails` and error.
+	/// - Returns: Result containing `ContainerDetails` or error.
 	public func inspectContainer(_ containerID: String, endpointID: Int) async -> Result<ContainerDetails, Error> {
-		guard let request = request(for: .containerDetails(endpointID: endpointID, containerID: containerID)) else { return .failure(APIError.invalidURL) }
+		guard let request = request(for: .containerDetails(containerID: containerID, endpointID: endpointID)) else { return .failure(APIError.invalidURL) }
 		do {
 			let response = try await session.data(for: request)
 			
@@ -130,28 +133,88 @@ public class PortainerKit {
 	///   - action: Executed action
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
-	/// - Returns: Result containing void success and error.
+	/// - Returns: Result containing void success or error.
 	public func execute(_ action: ExecuteAction, containerID: String, endpointID: Int) async -> Result<Void, Error> {
-		guard var request = request(for: .executeAction(action, endpointID: endpointID, containerID: containerID)) else { return .failure(APIError.invalidURL) }
+		guard var request = request(for: .executeAction(action, containerID: containerID, endpointID: endpointID)) else { return .failure(APIError.invalidURL) }
 		request.httpMethod = "POST"
 		
 		do {
 			let response = try await session.data(for: request)
-			guard let res = response.1 as? HTTPURLResponse else {
+			if let statusCode = (response.1 as? HTTPURLResponse)?.statusCode {
+				if 200 ... 304 ~= statusCode {
+					return .success(())
+				} else {
+					return .failure(APIError.responseCodeUnacceptable(statusCode))
+				}
+			} else {
 				// It shouldn't happen, but we should gracefully handle it anyways.
 				// For now, we're hoping it worked ¯\_(ツ)_/¯.
 				print("Response isn't HTTPURLResponse!", #fileID, #line)
 				return .success(())
 			}
-			
-			if 200 ... 304 ~= res.statusCode {
-				return .success(())
-			} else {
-				return .failure(APIError.responseCodeOutsideRange(res.statusCode))
-			}
 		} catch {
 			return .failure(error)
 		}
+	}
+	
+	/// Attaches to container with supplied ID.
+	/// - Parameters:
+	///   - containerID: Container ID
+	///   - endpointID: Endpoint ID
+	/// - Returns: Result containing `WebSocketPassthroughSubject` or error.
+	public func attach(to containerID: String, endpointID: Int) -> Result<WebSocketPassthroughSubject, Error> {
+		let url: URL? = {
+			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
+			components.scheme = components.scheme?.replacingOccurrences(of: "http", with: "ws") ?? "ws"
+			components.queryItems = [
+				URLQueryItem(name: "token", value: self.token),
+				URLQueryItem(name: "endpointId", value: String(endpointID)),
+				URLQueryItem(name: "id", value: containerID)
+			]
+			return components.url
+		}()
+						
+		guard let url = url else { return .failure(APIError.invalidURL) }
+		
+		let task = session.webSocketTask(with: url)
+		
+		let passthroughSubject = WebSocketPassthroughSubject()
+		
+		_ = passthroughSubject
+			.tryFilter { try ($0.get()).source == .client }
+			.sink(receiveCompletion: { _ in
+				task.cancel()
+			}, receiveValue: { value in
+				do {
+					let message = try value.get()
+					task.send(message.message) { error in
+						if let error = error { passthroughSubject.send(.failure(error)) }
+					}
+				} catch {
+					passthroughSubject.send(.failure(error))
+				}
+			})
+		
+		func setReceiveHandler() {
+			DispatchQueue.main.async { [weak self] in
+				guard self != nil else { return }
+				
+				task.receive {
+					defer { setReceiveHandler() }
+					do {
+						let message = WebSocketMessage(message: try $0.get(), source: .server)
+						passthroughSubject.send(.success(message))
+					} catch {
+						passthroughSubject.send(.failure(error))
+					}
+				}
+			}
+		}
+		
+		setReceiveHandler()
+		task.resume()
+		
+		return .success(passthroughSubject)
 	}
 	
 	// MARK: - Private functions
@@ -159,8 +222,8 @@ public class PortainerKit {
 	/// Creates a authorized URLRequest.
 	/// - Parameter path: Request path
 	/// - Returns: `URLRequest` with authorization header set.
-	private func request(for path: RequestPath) -> URLRequest? {
-		guard let url = URL(string: "\(self.url)/\(path.path)") else { return nil }
+	private func request(for path: RequestPath, overrideURL: URL? = nil) -> URLRequest? {
+		guard let url = URL(string: (overrideURL ?? self.url).absoluteString + path.path) else { return nil }
 		var request = URLRequest(url: url)
 		
 		if let token = self.token {

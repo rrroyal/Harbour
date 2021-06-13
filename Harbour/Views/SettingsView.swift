@@ -14,9 +14,9 @@ struct SettingsView: View {
 	
 	var portainerSection: some View {
 		Section(header: Text("Portainer")) {
-			if let url = portainer.endpointURL {
+			if let endpointURL = portainer.endpointURL {
 				Labeled("URL") {
-					Text(url.absoluteString)
+					Text(endpointURL)
 				}
 			}
 			
