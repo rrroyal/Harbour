@@ -16,7 +16,7 @@ struct ContainerConsoleView: View {
 		if let attachedContainer = portainer.attachedContainer {
 			ConsoleView(attachedContainer: attachedContainer)
 		} else {
-			Text("Not attached")
+			Text("how did you get here? ಠ_ಠ")
 				.foregroundStyle(.primary)
 		}
 	}

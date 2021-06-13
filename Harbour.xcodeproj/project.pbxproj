@@ -24,11 +24,13 @@
 		E75A51EC2673A7F300857D2B /* ContainerHostConfigDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EB2673A7F300857D2B /* ContainerHostConfigDetailsView.swift */; };
 		E75A51EE2673B17B00857D2B /* MonospaceLabeled.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */; };
 		E75A51F02673CE3500857D2B /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EF2673CE3500857D2B /* View+.swift */; };
+		E7685BBB26769B2000CD592E /* AppNotifications in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBA26769B2000CD592E /* AppNotifications */; };
+		E7685BBD26769B2300CD592E /* LoadingIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBC26769B2300CD592E /* LoadingIndicator */; };
+		E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBE26769B2500CD592E /* PortainerKit */; };
 		E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */; };
 		E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */; };
 		E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E512672B5B000AAB6A1 /* ContentView.swift */; };
 		E7BF9E622672B5B100AAB6A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */; };
-		E7BF9E742672BC9500AAB6A1 /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7BF9E732672BC9500AAB6A1 /* PortainerKit */; };
 		E7BF9E782672E17D00AAB6A1 /* Portainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E772672E17D00AAB6A1 /* Portainer.swift */; };
 		E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */; };
 		E7BF9E802672E62000AAB6A1 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E7F2672E62000AAB6A1 /* UserDefaults+.swift */; };
@@ -73,8 +75,10 @@
 		E75A51EB2673A7F300857D2B /* ContainerHostConfigDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerHostConfigDetailsView.swift; sourceTree = "<group>"; };
 		E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonospaceLabeled.swift; sourceTree = "<group>"; };
 		E75A51EF2673CE3500857D2B /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		E7685BB726769B0900CD592E /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PortainerKit; sourceTree = "<group>"; };
+		E7685BB826769B0C00CD592E /* LoadingIndicator */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoadingIndicator; sourceTree = "<group>"; };
+		E7685BB926769B0E00CD592E /* AppNotifications */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppNotifications; sourceTree = "<group>"; };
 		E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextFieldStyle.swift; sourceTree = "<group>"; };
-		E76F79AA267304940009FE65 /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = folder; name = PortainerKit; path = Modules/PortainerKit; sourceTree = "<group>"; };
 		E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourApp.swift; sourceTree = "<group>"; };
 		E7BF9E512672B5B000AAB6A1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -96,14 +100,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */,
 				E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */,
-				E7BF9E742672BC9500AAB6A1 /* PortainerKit in Frameworks */,
+				E7685BBD26769B2300CD592E /* LoadingIndicator in Frameworks */,
+				E7685BBB26769B2000CD592E /* AppNotifications in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E72F350626769ABD00A38910 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				E7685BB926769B0E00CD592E /* AppNotifications */,
+				E7685BB826769B0C00CD592E /* LoadingIndicator */,
+				E7685BB726769B0900CD592E /* PortainerKit */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
 		E7339C592674366000A55B5C /* Container */ = {
 			isa = PBXGroup;
 			children = (
@@ -177,7 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				E76F798E267304760009FE65 /* Harbour */,
-				E76F79AA267304940009FE65 /* PortainerKit */,
+				E72F350626769ABD00A38910 /* Modules */,
 				E7BF9E582672B5B100AAB6A1 /* Products */,
 				E7BF9E702672BC8D00AAB6A1 /* Frameworks */,
 			);
@@ -274,8 +290,10 @@
 			);
 			name = Harbour;
 			packageProductDependencies = (
-				E7BF9E732672BC9500AAB6A1 /* PortainerKit */,
 				E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */,
+				E7685BBA26769B2000CD592E /* AppNotifications */,
+				E7685BBC26769B2300CD592E /* LoadingIndicator */,
+				E7685BBE26769B2500CD592E /* PortainerKit */,
 			);
 			productName = "Harbour (iOS)";
 			productReference = E7BF9E572672B5B100AAB6A1 /* Harbour.app */;
@@ -614,7 +632,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E7BF9E732672BC9500AAB6A1 /* PortainerKit */ = {
+		E7685BBA26769B2000CD592E /* AppNotifications */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppNotifications;
+		};
+		E7685BBC26769B2300CD592E /* LoadingIndicator */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LoadingIndicator;
+		};
+		E7685BBE26769B2500CD592E /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PortainerKit;
 		};
