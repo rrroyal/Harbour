@@ -25,9 +25,10 @@
 		E75A51EE2673B17B00857D2B /* MonospaceLabeled.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */; };
 		E75A51F02673CE3500857D2B /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EF2673CE3500857D2B /* View+.swift */; };
 		E7685BBB26769B2000CD592E /* AppNotifications in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBA26769B2000CD592E /* AppNotifications */; };
-		E7685BBD26769B2300CD592E /* LoadingIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBC26769B2300CD592E /* LoadingIndicator */; };
 		E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBE26769B2500CD592E /* PortainerKit */; };
 		E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */; };
+		E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7748E7C267E831B00456BFD /* UIWindow+.swift */; };
+		E7748E7F267E835600456BFD /* Notification+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7748E7E267E835600456BFD /* Notification+.swift */; };
 		E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */; };
 		E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E512672B5B000AAB6A1 /* ContentView.swift */; };
 		E7BF9E622672B5B100AAB6A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */; };
@@ -76,9 +77,10 @@
 		E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonospaceLabeled.swift; sourceTree = "<group>"; };
 		E75A51EF2673CE3500857D2B /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		E7685BB726769B0900CD592E /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PortainerKit; sourceTree = "<group>"; };
-		E7685BB826769B0C00CD592E /* LoadingIndicator */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LoadingIndicator; sourceTree = "<group>"; };
 		E7685BB926769B0E00CD592E /* AppNotifications */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppNotifications; sourceTree = "<group>"; };
 		E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextFieldStyle.swift; sourceTree = "<group>"; };
+		E7748E7C267E831B00456BFD /* UIWindow+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+.swift"; sourceTree = "<group>"; };
+		E7748E7E267E835600456BFD /* Notification+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+.swift"; sourceTree = "<group>"; };
 		E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourApp.swift; sourceTree = "<group>"; };
 		E7BF9E512672B5B000AAB6A1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -102,7 +104,6 @@
 			files = (
 				E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */,
 				E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */,
-				E7685BBD26769B2300CD592E /* LoadingIndicator in Frameworks */,
 				E7685BBB26769B2000CD592E /* AppNotifications in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -114,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				E7685BB926769B0E00CD592E /* AppNotifications */,
-				E7685BB826769B0C00CD592E /* LoadingIndicator */,
 				E7685BB726769B0900CD592E /* PortainerKit */,
 			);
 			path = Modules;
@@ -228,9 +228,11 @@
 			isa = PBXGroup;
 			children = (
 				E75A51E12673A1C100857D2B /* Bundle+.swift */,
+				E7748E7E267E835600456BFD /* Notification+.swift */,
 				E7272E8926736CCF00228494 /* PortainerKit+.swift */,
 				E7339C572674262500A55B5C /* String+.swift */,
 				E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */,
+				E7748E7C267E831B00456BFD /* UIWindow+.swift */,
 				E7BF9E7F2672E62000AAB6A1 /* UserDefaults+.swift */,
 				E75A51EF2673CE3500857D2B /* View+.swift */,
 			);
@@ -278,7 +280,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E7BF9E662672B5B100AAB6A1 /* Build configuration list for PBXNativeTarget "Harbour" */;
 			buildPhases = (
-				E7911A0526751C9800933E0F /* ShellScript */,
 				E7BF9E532672B5B100AAB6A1 /* Sources */,
 				E7BF9E542672B5B100AAB6A1 /* Frameworks */,
 				E7BF9E552672B5B100AAB6A1 /* Resources */,
@@ -292,7 +293,6 @@
 			packageProductDependencies = (
 				E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */,
 				E7685BBA26769B2000CD592E /* AppNotifications */,
-				E7685BBC26769B2300CD592E /* LoadingIndicator */,
 				E7685BBE26769B2500CD592E /* PortainerKit */,
 			);
 			productName = "Harbour (iOS)";
@@ -346,31 +346,12 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		E7911A0526751C9800933E0F /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Swiftlint\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		E7BF9E532672B5B100AAB6A1 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E7748E7F267E835600456BFD /* Notification+.swift in Sources */,
 				E7BF9E942672FB8600AAB6A1 /* Labeled.swift in Sources */,
 				E7BF9E882672F29200AAB6A1 /* LoginView.swift in Sources */,
 				E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */,
@@ -387,6 +368,7 @@
 				E7339C582674262500A55B5C /* String+.swift in Sources */,
 				E7BF9E8A2672F2F600AAB6A1 /* UIDevice+.swift in Sources */,
 				E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */,
+				E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */,
 				E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */,
 				E75A51DB2673892400857D2B /* ContainerCell.swift in Sources */,
 				E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */,
@@ -635,10 +617,6 @@
 		E7685BBA26769B2000CD592E /* AppNotifications */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppNotifications;
-		};
-		E7685BBC26769B2300CD592E /* LoadingIndicator */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LoadingIndicator;
 		};
 		E7685BBE26769B2500CD592E /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;

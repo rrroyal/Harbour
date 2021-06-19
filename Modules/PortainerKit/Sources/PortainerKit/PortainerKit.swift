@@ -157,6 +157,25 @@ public class PortainerKit {
 		}
 	}
 	
+	/// Fetches logs from container with supplied ID.
+	/// - Parameters:
+	///   - containerID: Container ID
+	///   - endpointID: Endpoint ID
+	///   - since: Fetch logs since then
+	///   - tail: Number of lines, counting from the end
+	///   - displayTimestamps: Display timestamps?
+	/// - Returns: Result containing `String` logs or error.
+	public func getLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async -> Result<String, Error> {
+		guard let request = request(for: .logs(containerID: containerID, endpointID: endpointID, since: since, tail: tail, timestamps: displayTimestamps)) else { return .failure(APIError.invalidURL) }
+		do {
+			let (data, _) = try await session.data(for: request)
+			guard let string = String(data: data, encoding: .utf8) else { return .failure(APIError.decodingFailed) }
+			return .success(string)
+		} catch {
+			return .failure(error)
+		}
+	}
+	
 	/// Attaches to container with supplied ID.
 	/// - Parameters:
 	///   - containerID: Container ID
@@ -175,11 +194,10 @@ public class PortainerKit {
 		}()
 						
 		guard let url = url else { return .failure(APIError.invalidURL) }
-		
 		let task = session.webSocketTask(with: url)
-		
 		let passthroughSubject = WebSocketPassthroughSubject()
 		
+		/*
 		_ = passthroughSubject
 			.tryFilter { try ($0.get()).source == .client }
 			.sink(receiveCompletion: { _ in
@@ -194,16 +212,16 @@ public class PortainerKit {
 					passthroughSubject.send(.failure(error))
 				}
 			})
+		 */
 		
 		func setReceiveHandler() {
 			DispatchQueue.main.async { [weak self] in
 				guard self != nil else { return }
-				
 				task.receive {
-					defer { setReceiveHandler() }
 					do {
 						let message = WebSocketMessage(message: try $0.get(), source: .server)
 						passthroughSubject.send(.success(message))
+						setReceiveHandler()
 					} catch {
 						passthroughSubject.send(.failure(error))
 					}

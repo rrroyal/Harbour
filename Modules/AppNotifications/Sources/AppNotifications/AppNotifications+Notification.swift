@@ -17,7 +17,8 @@ public extension AppNotifications {
 			title: String,
 			description: String? = nil,
 			foregroundColor: Color = .primary,
-			backgroundStyle: BackgroundStyle = .material(.regular)
+			backgroundStyle: BackgroundStyle = .material(.regular),
+			onTap: (() -> Void)? = nil
 		) {
 			self.id = id
 			self.dismissType = dismissType
@@ -26,6 +27,7 @@ public extension AppNotifications {
 			self.description = description
 			self.foregroundColor = foregroundColor
 			self.backgroundStyle = backgroundStyle
+			self.onTap = onTap
 		}
 		
 		public let id: String
@@ -39,6 +41,8 @@ public extension AppNotifications {
 		
 		public let foregroundColor: Color
 		public let backgroundStyle: BackgroundStyle
+		
+		public let onTap: (() -> Void)?
 		
 		@Published public var isVisible: Bool = false
 		

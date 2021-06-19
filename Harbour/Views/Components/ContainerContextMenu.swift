@@ -92,7 +92,7 @@ struct ContainerContextMenu: View {
 			
 			Button(action: {
 				Portainer.shared.attach(to: container)
-				AppState.shared.showContainerConsoleView = true
+				AppState.shared.isContainerConsoleViewPresented = true
 			}) {
 				Label("Attach", systemImage: "terminal")
 			}

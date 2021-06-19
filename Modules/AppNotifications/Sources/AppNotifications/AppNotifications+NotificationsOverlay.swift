@@ -21,13 +21,15 @@ internal extension AppNotifications {
 		 } */
 
 		public var body: some View {
-			ZStack(alignment: alignment) {
-				ForEach(model.activeNotifications.reversed()) { notification in
-					NotificationView(notification: notification, anchor: anchor, onHide: { model.dismiss(notification) })
+			GeometryReader { geometry in
+				ZStack(alignment: alignment) {
+					ForEach(model.activeNotifications.reversed()) { notification in
+						NotificationView(notification: notification, anchor: anchor, containerGeometry: geometry, onHide: { model.dismiss(notification) })
+					}
 				}
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
+				.padding()
 			}
-			.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: alignment)
-			.padding()
 		}
 	}
 }

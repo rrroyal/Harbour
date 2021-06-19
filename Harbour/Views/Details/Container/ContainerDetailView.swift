@@ -40,6 +40,16 @@ struct ContainerDetailView: View {
 		}
 	}
 	
+	var loadingOverlay: some View {
+		ZStack {
+			Color(uiColor: .systemBackground)
+				.opacity(1 - Globals.Views.secondaryOpacity)
+			ProgressView()
+		}
+		.allowsHitTesting(isLoading)
+		.edgesIgnoringSafeArea(.all)
+	}
+	
 	var body: some View {
 		ScrollView {
 			LazyVStack(spacing: 15) {
@@ -48,26 +58,17 @@ struct ContainerDetailView: View {
 			}
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
-		.overlay(
-			ZStack {
-				Color(uiColor: .systemBackground)
-					.opacity(1 - Globals.Views.secondaryOpacity)
-				ProgressView()
-			}
-			.allowsHitTesting(isLoading)
-			.edgesIgnoringSafeArea(.all)
-			.hidden(!isLoading)
-		)
+		.overlay(loadingOverlay.hidden(!isLoading))
 		.navigationTitle(container.displayName ?? container.id)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
 				Menu(content: {
 					ContainerContextMenu(container: container)
-				}, label: {
+				}) {
 					Image(systemName: container.stateSymbol)
-				})
-					.animation(.easeInOut, value: container.state)
-					.transition(.opacity)
+				}
+				// .animation(.easeInOut, value: container.state)
+				// .transition(.opacity)
 			}
 		}
 		.refreshable {

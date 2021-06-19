@@ -10,6 +10,7 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerConsoleView: View {
+	// @Environment(\.presentationMode) var presentationMode
 	@EnvironmentObject var portainer: Portainer
 
 	var body: some View {
@@ -39,7 +40,7 @@ private extension ContainerConsoleView {
 							.id(messagesTextID)
 					}
 					.padding(.small)
-					.onChange(of: attachedContainer.buffer.count) { _ in
+					.onChange(of: attachedContainer.attributedString.endIndex) { _ in
 						scroll.scrollTo(messagesTextID, anchor: .bottom)
 					}
 				}

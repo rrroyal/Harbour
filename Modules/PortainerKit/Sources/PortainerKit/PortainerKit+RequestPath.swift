@@ -15,6 +15,7 @@ internal extension PortainerKit {
 		case containers(endpointID: Int)
 		case containerDetails(containerID: String, endpointID: Int)
 		case executeAction(_ action: ExecuteAction, containerID: String, endpointID: Int)
+		case logs(containerID: String, endpointID: Int, since: TimeInterval, tail: Int, timestamps: Bool)
 		case attach
 
 		var path: String {
@@ -29,8 +30,10 @@ internal extension PortainerKit {
 					return "/api/endpoints/\(endpointID)/docker/containers/\(containerID)/json"
 				case .executeAction(let action, let containerID, let endpointID):
 					return "/api/endpoints/\(endpointID)/docker/containers/\(containerID)/\(action.rawValue)"
+				case .logs(let containerID, let endpointID, let since, let tail, let timestamps):
+					return "/api/endpoints/\(endpointID)/docker/containers/\(containerID)/logs?since=\(since)&stderr=true&stdout=true&tail=\(tail)&timestamps=\(timestamps)"
 				case .attach:
-					return "/api/websocket/attach"					
+					return "/api/websocket/attach"
 			}
 		}
 	}

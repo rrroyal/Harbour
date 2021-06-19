@@ -10,7 +10,7 @@ let package = Package(
 		.macOS(.v11)
 	],
 	products: [
-		.library(name: "AppNotifications", targets: ["AppNotifications"]),
+		.library(name: "AppNotifications", targets: ["AppNotifications"])
 	],
 	dependencies: [],
 	targets: [

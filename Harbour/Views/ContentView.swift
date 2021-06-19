@@ -11,7 +11,6 @@ import SwiftUI
 struct ContentView: View {
 	@EnvironmentObject var appState: AppState
 	@EnvironmentObject var portainer: Portainer
-	@State private var isSettingsViewPresented: Bool = false
 	
 	let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
 	
@@ -37,7 +36,7 @@ struct ContentView: View {
 			.toolbar {
 				ToolbarItem(placement: .navigation) {
 					Button(action: {
-						isSettingsViewPresented = true
+						appState.isSettingsViewPresented = true
 					}) {
 						Image(systemName: "gear")
 					}
@@ -76,14 +75,6 @@ struct ContentView: View {
 					await portainer.getContainers(endpointID: endpointID)
 				}
 			}
-		}
-		.sheet(isPresented: $appState.showContainerConsoleView) {
-			ContainerConsoleView()
-				.environmentObject(portainer)
-		}
-		.sheet(isPresented: $isSettingsViewPresented) {
-			SettingsView()
-				.environmentObject(portainer)
 		}
 		/* .onAppear {
 		 	if let endpointID = portainer.selectedEndpoint?.id {

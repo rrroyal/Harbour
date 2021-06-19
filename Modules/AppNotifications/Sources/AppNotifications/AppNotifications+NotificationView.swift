@@ -15,6 +15,25 @@ internal extension AppNotifications {
 		@ObservedObject var notification: Notification
 		let anchor: Edge
 		let onHide: () -> Void
+		let hideOffset: CGSize
+		
+		internal init(notification: Notification, anchor: Edge, containerGeometry: GeometryProxy, onHide: @escaping () -> Void) {
+			self.notification = notification
+			self.anchor = anchor
+			self.onHide = onHide
+			
+			let hideOffsetMultiplier: Double = 0.25
+			switch anchor {
+				case .top:
+					hideOffset = CGSize(width: 0, height: -(containerGeometry.size.height * hideOffsetMultiplier))
+				case .leading:
+					hideOffset = CGSize(width: -(containerGeometry.size.width * hideOffsetMultiplier), height: 0)
+				case .bottom:
+					hideOffset = CGSize(width: 0, height: (containerGeometry.size.height * hideOffsetMultiplier))
+				case .trailing:
+					hideOffset = CGSize(width: (containerGeometry.size.width * hideOffsetMultiplier), height: 0)
+			}
+		}
 		
 		@State private var translation: CGSize = .zero
 		
@@ -111,7 +130,8 @@ internal extension AppNotifications {
 						.offset(x: offset.width, y: offset.height) // Drag offset
 						.gesture(notificationDragGesture) // Drag gesture
 						.animation(animation) // Animation
-						.transition(.asymmetric(insertion: .move(edge: anchor), removal: .move(edge: anchor))) // Transition
+						.transition(.asymmetric(insertion: .offset(hideOffset), removal: .offset(hideOffset))) // Transition
+						.optionalTapGesture(notification.onTap)
 				}
 			}
 		}
@@ -136,6 +156,15 @@ private extension View {
 					.background(material, in: shape)
 					.background(shape.fill(color))
 					.tint(color)
+		}
+	}
+	
+	@ViewBuilder
+	func optionalTapGesture(_ action: (() -> Void)?) -> some View {
+		if let action = action {
+			self.onTapGesture(perform: action)
+		} else {
+			self
 		}
 	}
 }

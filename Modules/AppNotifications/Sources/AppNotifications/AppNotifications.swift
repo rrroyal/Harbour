@@ -50,6 +50,7 @@ public final class AppNotifications: ObservableObject {
 	/// - Parameter notification: Notification to dismiss
 	public func dismiss(_ notification: Notification) {
 		DispatchQueue.main.async { [weak self] in
+			// swiftlint:disable indentation_width
 			guard let self = self,
 			      let index = self.activeNotifications.firstIndex(of: notification) else {
 				return
@@ -58,6 +59,13 @@ public final class AppNotifications: ObservableObject {
 			self.activeNotifications[index].isVisible = false
 			self.activeNotifications.remove(at: index)
 		}
+	}
+	
+	/// Dismisses all notifications with matching ID
+	/// - Parameter match: ID to match
+	public func dismiss(matching match: String) {
+		let notifications = activeNotifications.filter { $0.id == match }
+		notifications.forEach(dismiss)
 	}
 	
 	/// Updates the dismiss timer.

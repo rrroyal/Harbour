@@ -14,6 +14,8 @@ public extension PortainerKit {
 		case responseCodeUnacceptable(_ code: Int)
 		case unknownError
 		
+		case decodingFailed
+		
 		case invalidCredentials
 		case invalidJWTToken
 		case unauthorized

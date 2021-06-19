@@ -212,6 +212,30 @@ final class Portainer: ObservableObject {
 		}
 	}
 	
+	/// Fetches logs from selected container.
+	/// - Parameters:
+	///   - container: Get logs from this container
+	///   - since: Logs since this time
+	///   - tail: Number of lines
+	///   - displayTimestamps: Display timestamps?
+	/// - Returns: Result containing `String` logs or error.
+	public func getLogs(from container: PortainerKit.Container, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async -> Result<String, Error> {
+		logger.debug("Getting logs from containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)...")
+		
+		guard let api = api else { return .failure(PortainerError.noAPI) }
+		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
+		
+		let result = await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
+		logger.debug("Got logs from containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
+		switch result {
+			case .success(let logs):
+				return .success(logs)
+			case .failure(let error):
+				logger.error("\(String(describing: error))")
+				return .failure(error)
+		}
+	}
+	
 	/// Attaches to container through a WebSocket connection.
 	/// - Parameter container: Container to attach to
 	/// - Returns: Result containing `AttachedContainer` or error.
@@ -229,8 +253,8 @@ final class Portainer: ObservableObject {
 		logger.debug("Attached to containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
 		let result = api.attach(to: container.id, endpointID: endpointID)
 		switch result {
-			case .success(let passthroughSubject):
-				let attachedContainer = AttachedContainer(container: container, passthroughSubject: passthroughSubject)
+			case .success(let messagePassthroughSubject):
+				let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
 				self.attachedContainer = attachedContainer
 				return .success(attachedContainer)
 			case .failure(let error):
