@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsView: View {
 	@EnvironmentObject var portainer: Portainer
 	@State private var isLogoutWarningPresented: Bool = false
-	@State private var isLoginSheetPresented: Bool = false
+	@State private var isLoginViewPresented: Bool = false
 	
 	var portainerSection: some View {
 		Section(header: Text("Portainer")) {
@@ -30,7 +30,7 @@ struct SettingsView: View {
 						title: Text("Are you sure?"),
 						primaryButton: .destructive(Text("Yes"), action: {
 							UIDevice.current.generateHaptic(.heavy)
-							portainer.logOut()
+							withAnimation { portainer.logOut() }
 						}),
 						secondaryButton: .cancel()
 					)
@@ -38,10 +38,13 @@ struct SettingsView: View {
 			} else {
 				Button("Log in") {
 					UIDevice.current.generateHaptic(.soft)
-					isLoginSheetPresented = true
+					isLoginViewPresented = true
 				}
 			}
 		}
+		.animation(.easeInOut, value: portainer.isLoggedIn)
+		.animation(.easeInOut, value: portainer.endpointURL)
+		.transition(.opacity)
 	}
 	
 	var madeWithLove: some View {
@@ -59,10 +62,15 @@ struct SettingsView: View {
 			}
 		}
 		.frame(maxWidth: .infinity, alignment: .center)
+		.padding(.vertical)
 	}
 	
 	var otherSection: some View {
-		Section(header: Text("Other"), footer: madeWithLove) {}
+		Section(header: Text("Other"), footer: madeWithLove) {
+			NavigationLink("🤫") {
+				DebugView()
+			}
+		}
 	}
 	
 	var body: some View {
@@ -71,9 +79,9 @@ struct SettingsView: View {
 				portainerSection
 				otherSection
 			}
-			.navigationTitle(Text("Settings"))
+			.navigationTitle("Settings")
 		}
-		.sheet(isPresented: $isLoginSheetPresented) {
+		.sheet(isPresented: $isLoginViewPresented) {
 			LoginView()
 		}
 	}

@@ -102,11 +102,11 @@ internal extension AppNotifications {
 				}
 				
 				VStack(alignment: .leading, spacing: 2) {
-					Text(notification.title)
+					Text(LocalizedStringKey(notification.title))
 						.font(.headline)
 					
 					if let description = notification.description {
-						Text(description)
+						Text(LocalizedStringKey(description))
 							.font(.subheadline)
 							.foregroundStyle(.secondary)
 					}

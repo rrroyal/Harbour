@@ -61,7 +61,6 @@ final class Portainer: ObservableObject {
 	private init() {
 		logger.debug("init()")
 		
-		// swiftlint:disable indentation_width
 		if let urlString = endpointURL,
 		   let url = URL(string: urlString),
 		   let token = keychain[urlString] {
@@ -106,11 +105,16 @@ final class Portainer: ObservableObject {
 	
 	/// Logs out, removing all local authentication.
 	public func logOut() {
+		logger.info("Logging out")
 		if let urlString = endpointURL {
 			try? keychain.remove(urlString)
 		}
-		ud.removeObject(forKey: UserDefaults.Keys.endpointURL)
 		isLoggedIn = false
+		endpointURL = nil
+		selectedEndpoint = nil
+		endpoints = []
+		containers = []
+		attachedContainer = nil
 	}
 	
 	/// Fetches available endpoints.
@@ -155,7 +159,7 @@ final class Portainer: ObservableObject {
 		let result = await api.getContainers(for: endpointID)
 		switch result {
 			case .success(let containers):
-				logger.debug("Got \(containers.count) container(s).")
+				logger.debug("Got \(containers.count) container(s) for endpointID=\(endpointID).")
 				DispatchQueue.main.async { [weak self] in
 					self?.containers = containers
 				}

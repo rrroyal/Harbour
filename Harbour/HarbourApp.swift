@@ -28,6 +28,9 @@ struct HarbourApp: App {
 					ContainerConsoleView()
 						.environmentObject(portainer)
 				}
+				.sheet(isPresented: $appState.isSetupViewPresented, onDismiss: { Preferences.shared.launchedBefore = true }) {
+					SetupView()
+				}
 				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil)) { _ in
 					guard portainer.attachedContainer != nil else { return }
 					UIDevice.current.generateHaptic(.light)
@@ -40,7 +43,7 @@ struct HarbourApp: App {
 		guard portainer.attachedContainer != nil else { return }
 		
 		let notificationID: String = "ContainerDismissedNotification"
-		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .timeout(5), icon: "terminal", title: "Container dismissed", description: "Shake device or tap this message to open again.", backgroundStyle: .material(.regularMaterial), onTap: {
+		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .timeout(5), icon: "terminal", title: "%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%", description: "%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%", backgroundStyle: .material(.regularMaterial), onTap: {
 			UIDevice.current.generateHaptic(.light)
 			appState.isContainerConsoleViewPresented = true
 			appState.persistenceNotifications.dismiss(matching: notificationID)

@@ -32,7 +32,7 @@ struct ContentView: View {
 				// .transition(.opacity)
 				.animation(.easeInOut, value: portainer.containers)
 			}
-			.navigationTitle(Text("Harbour"))
+			.navigationTitle("Harbour")
 			.toolbar {
 				ToolbarItem(placement: .navigation) {
 					Button(action: {

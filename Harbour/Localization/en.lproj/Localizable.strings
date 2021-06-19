@@ -1,0 +1,78 @@
+/* 
+  Localizable.strings
+  Harbour
+
+  Created by royal on 20/06/2021.
+  en_US
+*/
+
+// MARK: - Harbour
+
+// MARK: Globals
+
+"Refresh" = "Refresh";
+"Are you sure?" = "Are you sure?";
+"Yes" = "Yes";
+"Log in" = "Log in";
+
+// MARK: HarbourApp.swift
+
+"%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%" = "Container dismissed";
+"%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%" = "Shake device or tap this message to open again.";
+
+// MARK: Views/Details/Container/ContainerDetailView.swift
+
+"Mounts" = "Mounts";
+"Network" = "Network";
+"Host" = "Host";
+"Logs" = "Logs";
+
+// MARK: Views/Details/Container/ContainerMountsDetailsView.swift
+
+// MARK: Views/Details/Container/ContainerNetworkDetailsView.swift
+
+// MARK: Views/Details/Container/ContainerHostConfigDetailsView.swift
+
+// MARK: Views/Details/Container/ContainerLogsView.swift
+
+// MARK: Views/Details/Container/ContainerConsoleView.swift
+
+// MARK: Views/ContentView.swift
+
+"Endpoint" = "Endpoint";
+"No endpoints" = "No endpoints";
+
+// MARK: Views/SettingsView.swift
+
+"Log out" = "Log out";
+"Made with ❤️ (and ☕️) by @rrroyal" = "Made with ❤️ (and ☕️) by @rrroyal";
+
+// MARK: Views/LoginView.swift
+
+"Invalid URL" = "Invalid URL";
+"Success!" = "Success!";
+
+// MARK: Views/SetupView.swift
+
+"Hi! Welcome to %@!" = "Hi! Welcome to %@!";
+"Beam me up, Scotty!" = "Beam me up, Scotty!";
+"%SETUP_FEATURE1_HEADLINE%" = "Control your containers";
+"%SETUP_FEATURE1_DESCRIPTION%" = "Your Minecraft server is taking up too much ram? Quickly restart it from your phone.";
+
+"%SETUP_FEATURE2_HEADLINE%" = "See all of the details";
+"%SETUP_FEATURE2_DESCRIPTION%" = "You want to see what ports are exposed? Easy.";
+
+"%SETUP_FEATURE3_HEADLINE%" = "Attach to them too";
+"%SETUP_FEATURE3_DESCRIPTION%" = "Yeah. I spent way too much time on that one.";
+
+// MARK: - PortainerKit
+
+// MARK: PortainerKit+APIError.swift
+"Response unacceptable (%@)" = "Response unacceptable (%@)";
+"Unknown error" = "Unknown error";
+"Decoding failed" = "Decoding failed";
+"Invalid credentials" = "Invalid credentials";
+"Invalid token" = "Invalid token";
+"Unauthorized" = "Unauthorized";
+"Invalid payload" = "Invalid payload";
+"Invalid URL" = "Invalid URL";

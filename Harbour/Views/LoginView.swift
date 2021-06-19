@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PortainerKit
 
 struct LoginView: View {
 	@Environment(\.presentationMode) var presentationMode
@@ -14,7 +15,11 @@ struct LoginView: View {
 	@State private var endpoint: String = Portainer.shared.endpointURL ?? ""
 	@State private var username: String = ""
 	@State private var password: String = ""
-
+	
+	@State private var isLoading: Bool = false
+	@State private var buttonLabel: String? = nil
+	@State private var buttonColor: Color? = nil
+	
 	var body: some View {
 		VStack {
 			Spacer()
@@ -44,12 +49,25 @@ struct LoginView: View {
 
 			Spacer()
 			
-			Button("Log in", role: nil, action: login)
-				.keyboardShortcut(.defaultAction)
-				.foregroundColor(.white)
-				.buttonStyle(PrimaryButtonStyle())
-				.animation(.easeInOut, value: endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
-				.disabled(endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
+			Button(role: nil, action: login) {
+				if isLoading {
+					ProgressView()
+				} else {
+					if let buttonLabel = buttonLabel {
+						Text(LocalizedStringKey(buttonLabel))
+					} else {
+						Text("Log in")
+					}
+				}
+			}
+			.keyboardShortcut(.defaultAction)
+			.foregroundColor(.white)
+			.buttonStyle(PrimaryButtonStyle(backgroundColor: buttonColor ?? .accentColor))
+			.transition(.opacity)
+			.animation(.easeInOut, value: isLoading || endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
+			.animation(.easeInOut, value: buttonLabel)
+			.animation(.easeInOut, value: buttonColor)
+			.disabled(isLoading || endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
 		}
 		.padding()
 	}
@@ -59,16 +77,38 @@ struct LoginView: View {
 		
 		guard let url = URL(string: endpoint) else {
 			UIDevice.current.generateHaptic(.error)
+			buttonLabel = "Invalid URL"
+			buttonColor = .red
 			return
 		}
 		
+		isLoading = true
 		let result = await portainer.login(url: url, username: username, password: password)
+		isLoading = false
 		switch result {
 			case .success():
 				UIDevice.current.generateHaptic(.success)
-				presentationMode.wrappedValue.dismiss()
+				DispatchQueue.main.async {
+					buttonLabel = "Success!"
+					buttonColor = .green
+					presentationMode.wrappedValue.dismiss()
+				}
+				
 			case .failure(let error):
-				AppState.shared.handle(error)
+				UIDevice.current.generateHaptic(.error)
+				DispatchQueue.main.async {
+					if let error = error as? PortainerKit.APIError {
+						buttonLabel = error.description
+					} else {
+						buttonLabel = error.localizedDescription
+					}
+					buttonColor = .red
+				}
+		}
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+			buttonLabel = nil
+			buttonColor = nil
 		}
 	}
 }

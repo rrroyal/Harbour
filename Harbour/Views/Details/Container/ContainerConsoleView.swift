@@ -27,25 +27,16 @@ private extension ContainerConsoleView {
 	struct ConsoleView: View {
 		@ObservedObject var attachedContainer: Portainer.AttachedContainer
 
-		let messagesTextID: String = "MessagesList"
-
 		var body: some View {
 			ScrollView {
-				ScrollViewReader { scroll in
-					LazyVStack {
-						Text(attachedContainer.attributedString)
-							.font(.system(.footnote, design: .monospaced))
-							.lineLimit(nil)
-							.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-							.id(messagesTextID)
-					}
-					.padding(.small)
-					.onChange(of: attachedContainer.attributedString.endIndex) { _ in
-						scroll.scrollTo(messagesTextID, anchor: .bottom)
-					}
+				LazyVStack {
+					Text(attachedContainer.attributedString)
+						.font(.system(.footnote, design: .monospaced))
+						.lineLimit(nil)
+						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 				}
+				.padding(.small)
 			}
-			.background(Color(uiColor: .systemBackground).edgesIgnoringSafeArea(.all))
 		}
 	}
 }

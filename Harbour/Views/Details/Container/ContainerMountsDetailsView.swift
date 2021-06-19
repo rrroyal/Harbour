@@ -17,7 +17,7 @@ struct ContainerMountsDetailsView: View {
 				MountSection(mount: mount)
 			}
 		}
-		.navigationTitle(Text("Mounts"))
+		.navigationTitle("Mounts")
 	}
 }
 

@@ -169,7 +169,7 @@ public class PortainerKit {
 		guard let request = request(for: .logs(containerID: containerID, endpointID: endpointID, since: since, tail: tail, timestamps: displayTimestamps)) else { return .failure(APIError.invalidURL) }
 		do {
 			let (data, _) = try await session.data(for: request)
-			guard let string = String(data: data, encoding: .utf8) else { return .failure(APIError.decodingFailed) }
+			guard let string = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) else { return .failure(APIError.decodingFailed) }
 			return .success(string)
 		} catch {
 			return .failure(error)
@@ -259,7 +259,6 @@ public class PortainerKit {
 			let decoded = try decoder.decode(Output.self, from: response.0)
 			return .success(decoded)
 		} catch {
-			// swiftlint:disable indentation_width
 			if let errorJson = try? decoder.decode([String: String].self, from: response.0),
 			   let message = errorJson["message"] {
 				return .failure(APIError.fromMessage(message))

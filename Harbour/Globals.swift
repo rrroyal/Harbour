@@ -16,6 +16,8 @@ struct Globals {
 		static let candyOpacity: Double = 0.12
 
 		static let springAnimation = Animation.interpolatingSpring(stiffness: 250, damping: 30)
+		
+		static let maxButtonWidth: Double = 600
 	}
 
 	enum Buttons {

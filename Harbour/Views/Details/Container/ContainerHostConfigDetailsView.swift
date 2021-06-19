@@ -13,6 +13,6 @@ struct ContainerHostConfigDetailsView: View {
 
 	var body: some View {
 		List {}
-			.navigationTitle(Text("Host"))
+			.navigationTitle("Host")
 	}
 }

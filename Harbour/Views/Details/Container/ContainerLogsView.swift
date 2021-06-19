@@ -16,11 +16,13 @@ struct ContainerLogsView: View {
 	
 	@State private var tail: Int = 100
 	@State private var displayTimestamps: Bool = false
-
+	
+	let tailAmounts: [Int] = [10, 100, 500, 1000, 10_000, 100_000, 1_000_000, 10_000_000]
+	
 	var toolbarMenu: some View {
 		Menu(content: {
 			Menu("Lines") {
-				ForEach([10, 100, 500, 1000], id: \.self) { count in
+				ForEach(tailAmounts, id: \.self) { count in
 					Button(role: nil, action: {
 						tail = count
 						await fetch()
@@ -51,7 +53,7 @@ struct ContainerLogsView: View {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
 		}) {
-			Image(systemName: "xmark")
+			Image(systemName: "slider.horizontal.3")
 		}
 	}
 	
@@ -61,12 +63,11 @@ struct ContainerLogsView: View {
 				Text(logs)
 					.font(.system(.footnote, design: .monospaced))
 					.lineLimit(nil)
-					.multilineTextAlignment(.leading)
-					.padding()
-					.frame(maxWidth: .infinity, alignment: .leading)
+					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 			}
+			.padding(.small)
 		}
-		.navigationTitle(Text("Logs"))
+		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {

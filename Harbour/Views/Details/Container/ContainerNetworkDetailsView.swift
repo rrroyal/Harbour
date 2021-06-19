@@ -25,7 +25,7 @@ struct ContainerNetworkDetailsView: View {
 				}
 			}
 		}
-		.navigationTitle(Text("Network"))
+		.navigationTitle("Network")
 	}
 }
 
@@ -37,7 +37,6 @@ private extension ContainerNetworkDetailsView {
 		public init(port: PortainerKit.Port) {
 			self.port = port
 			
-			// swiftlint:disable indentation_width
 			if let privatePort = port.privatePort,
 			   let type = port.type {
 				self.label = "\(privatePort)/\(type.rawValue)"

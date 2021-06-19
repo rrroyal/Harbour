@@ -11,5 +11,6 @@ extension UserDefaults {
 	enum Keys {
 		static let enableHaptics: String = "EnableHaptics"
 		static let endpointURL: String = "EndpointURL"
+		static let launchedBefore: String = "LaunchedBefore"
 	}
 }
