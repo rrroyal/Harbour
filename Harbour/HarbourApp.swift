@@ -10,8 +10,9 @@ import AppNotifications
 
 @main
 struct HarbourApp: App {
-	@StateObject var appState: AppState = AppState.shared
-	@StateObject var portainer: Portainer = Portainer.shared
+	@StateObject var appState: AppState = .shared
+	@StateObject var portainer: Portainer = .shared
+	@StateObject var preferences: Preferences = .shared
 
 	var body: some Scene {
 		WindowGroup {
@@ -23,6 +24,7 @@ struct HarbourApp: App {
 				.sheet(isPresented: $appState.isSettingsViewPresented) {
 					SettingsView()
 						.environmentObject(portainer)
+						.environmentObject(preferences)
 				}
 				.sheet(isPresented: $appState.isContainerConsoleViewPresented, onDismiss: onContainerConsoleViewDismissed) {
 					ContainerConsoleView()

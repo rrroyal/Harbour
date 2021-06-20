@@ -10,6 +10,7 @@ import SwiftUI
 
 struct ContainerNetworkDetailsView: View {
 	let container: PortainerKit.Container
+	let details: PortainerKit.ContainerDetails?
 	
 	var body: some View {
 		List {

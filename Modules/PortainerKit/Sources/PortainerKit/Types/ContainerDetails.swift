@@ -53,12 +53,12 @@ public extension PortainerKit {
 		public let mountLabel: String
 		public let processLabel: String
 		public let appArmorProfile: String
+		public let config: ContainerConfig
 		public let hostConfig: HostConfig
 		public let graphDriver: GraphDriver
 		public let sizeRW: Int64?
 		public let sizeRootFS: Int64?
 		public let mounts: [MountPoint]
-		public let config: ContainerConfig
 		public let networkSettings: NetworkConfig
 
 		public static func == (lhs: PortainerKit.ContainerDetails, rhs: PortainerKit.ContainerDetails) -> Bool {

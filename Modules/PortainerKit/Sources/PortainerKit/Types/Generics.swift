@@ -191,8 +191,8 @@ public extension PortainerKit {
 		public let dead: Bool
 		public let pid: Int
 		public let error: String
-		public let startedAt: String? // TODO: Move to `Data`
-		public let finishedAt: String? // TODO: Move to `Data`
+		public let startedAt: Date?
+		public let finishedAt: Date?
 	}
 	
 	struct DockerSnapshot: Codable {

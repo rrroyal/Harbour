@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72112E9267F496B00D6004D /* LabeledSection.swift */; };
 		E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7272E8926736CCF00228494 /* PortainerKit+.swift */; };
 		E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C552674236700A55B5C /* ContainerContextMenu.swift */; };
 		E7339C582674262500A55B5C /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C572674262500A55B5C /* String+.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E72112E9267F496B00D6004D /* LabeledSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledSection.swift; sourceTree = "<group>"; };
 		E7272E8926736CCF00228494 /* PortainerKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerKit+.swift"; sourceTree = "<group>"; };
 		E7339C552674236700A55B5C /* ContainerContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerContextMenu.swift; sourceTree = "<group>"; };
 		E7339C572674262500A55B5C /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
@@ -263,9 +265,9 @@
 				E7BF9E8B2672F48700AAB6A1 /* Styles */,
 				E7BF9E512672B5B000AAB6A1 /* ContentView.swift */,
 				E7BF9E852672EF5600AAB6A1 /* SettingsView.swift */,
-				E77C5FB2267E9B99000B4994 /* DebugView.swift */,
 				E77C5FB4267E9D1A000B4994 /* SetupView.swift */,
 				E7BF9E872672F29200AAB6A1 /* LoginView.swift */,
+				E77C5FB2267E9B99000B4994 /* DebugView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -284,6 +286,7 @@
 			children = (
 				E7BF9E932672FB8600AAB6A1 /* Labeled.swift */,
 				E75A51ED2673B17B00857D2B /* MonospaceLabeled.swift */,
+				E72112E9267F496B00D6004D /* LabeledSection.swift */,
 				E75A51E32673A4F000857D2B /* NavigationLinkLabel.swift */,
 				E7339C552674236700A55B5C /* ContainerContextMenu.swift */,
 			);
@@ -401,6 +404,7 @@
 				E75A51E82673A78300857D2B /* ContainerNetworkDetailsView.swift in Sources */,
 				E75A51D8267384E100857D2B /* AppState.swift in Sources */,
 				E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */,
+				E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */,
 				E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */,
 				E75A51E026739ED100857D2B /* Preferences.swift in Sources */,
 				E75A51DE26738A2000857D2B /* ContainerDetailView.swift in Sources */,

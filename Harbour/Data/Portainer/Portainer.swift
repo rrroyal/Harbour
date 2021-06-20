@@ -19,7 +19,7 @@ final class Portainer: ObservableObject {
 	// MARK: Miscellaneous
 	
 	@Published public var isLoggedIn: Bool = false
-	@AppStorage(UserDefaults.Keys.endpointURL) var endpointURL: String?
+	@AppStorage(UserDefaults.Key.endpointURL) var endpointURL: String?
 	
 	// MARK: Endpoint
 	

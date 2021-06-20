@@ -21,11 +21,11 @@ struct ContentView: View {
 					ForEach(portainer.containers) { container in
 						NavigationLink(destination: ContainerDetailView(container: container)) {
 							ContainerCell(container: container)
+								.contextMenu {
+									ContainerContextMenu(container: container)
+								}
 						}
 						.buttonStyle(DecreasesOnPressButtonStyle())
-						/* .contextMenu {
-						 	ContainerContextMenu(container: container)
-						 } */
 					}
 				}
 				.padding(.horizontal)

@@ -18,11 +18,10 @@ public struct Labeled<Label: View, Control: View>: View {
 	public var body: some View {
 		HStack {
 			label
-
+			
 			Spacer()
-
+			
 			control
-				.foregroundStyle(.secondary)
 				.multilineTextAlignment(.trailing)
 		}
 	}

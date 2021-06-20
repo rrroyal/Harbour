@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import os.log
 import PortainerKit
+import AppNotifications
 
 extension Portainer {
 	class AttachedContainer: ObservableObject {
@@ -65,7 +66,9 @@ extension Portainer {
 					}
 				case .failure(let error):
 					update(String(describing: error))
-					AppState.shared.handle(error, displayNotification: !AppState.shared.isContainerConsoleViewPresented)
+					
+					let notification: AppNotifications.Notification = .init(id: "ContainerWebSocketDisconnected-\(container.id)", dismissType: .timeout(10), icon: "bolt", title: "WebSocket disconnected", description: error.localizedDescription, backgroundStyle: .material(.regular))
+					AppState.shared.handle(error, notification: notification)
 			}
 		}
 	

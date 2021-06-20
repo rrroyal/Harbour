@@ -11,7 +11,8 @@ import SwiftUI
 class Preferences: ObservableObject {
 	public static let shared: Preferences = Preferences()
 
-	@AppStorage(UserDefaults.Keys.launchedBefore) public var launchedBefore: Bool = false
+	@AppStorage(UserDefaults.Key.launchedBefore) public var launchedBefore: Bool = false
+	@AppStorage(UserDefaults.Key.displayContainerDismissedPrompt) public var displayContainerDismissedPrompt: Bool = true
 	
 	public let ud: UserDefaults = UserDefaults.standard
 

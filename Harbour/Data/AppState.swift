@@ -33,4 +33,9 @@ class AppState: ObservableObject {
 			errorNotifications.add(notification)
 		}
 	}
+	
+	public func handle(_ error: Error, notification: AppNotifications.Notification, _fileID: StaticString = #fileID, _line: Int = #line) {
+		self.handle(error, displayNotification: false, _fileID: _fileID, _line: _line)
+		errorNotifications.add(notification)
+	}
 }

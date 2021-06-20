@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
 	@EnvironmentObject var portainer: Portainer
+	@EnvironmentObject var preferences: Preferences
 	@State private var isLogoutWarningPresented: Bool = false
 	@State private var isLoginViewPresented: Bool = false
 	
@@ -47,6 +48,12 @@ struct SettingsView: View {
 		.transition(.opacity)
 	}
 	
+	var interfaceSection: some View {
+		Section(header: Text("Other")) {
+			ToggleOption(label: "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%", description: "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%", isOn: $preferences.displayContainerDismissedPrompt)
+		}
+	}
+	
 	var madeWithLove: some View {
 		VStack(spacing: 3) {
 			Text("Harbour v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
@@ -77,12 +84,39 @@ struct SettingsView: View {
 		NavigationView {
 			Form {
 				portainerSection
+				interfaceSection
 				otherSection
 			}
 			.navigationTitle("Settings")
 		}
 		.sheet(isPresented: $isLoginViewPresented) {
 			LoginView()
+		}
+	}
+}
+
+fileprivate extension SettingsView {
+	struct ToggleOption: View {
+		let label: String
+		let description: String?
+		@Binding var isOn: Bool
+		
+		var body: some View {
+			Toggle(isOn: $isOn) {
+				VStack(alignment: .leading, spacing: 4) {
+					Text(LocalizedStringKey(label))
+						.font(.headline)
+						.frame(maxWidth: .infinity, alignment: .leading)
+					
+					if let description = description {
+						Text(LocalizedStringKey(description))
+							.font(.subheadline)
+							.foregroundStyle(.secondary)
+							.frame(maxWidth: .infinity, alignment: .leading)
+					}
+				}
+			}
+			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 		}
 	}
 }

@@ -44,6 +44,9 @@
 
 // MARK: Views/SettingsView.swift
 
+"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
+"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "TODO";
+
 "Log out" = "Log out";
 "Made with ❤️ (and ☕️) by @rrroyal" = "Made with ❤️ (and ☕️) by @rrroyal";
 
