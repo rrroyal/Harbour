@@ -8,6 +8,7 @@
 import Foundation
 import os.log
 import AppNotifications
+import UIKit
 
 class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
@@ -15,6 +16,10 @@ class AppState: ObservableObject {
 	@Published public var isSettingsViewPresented: Bool = false
 	@Published public var isContainerConsoleViewPresented: Bool = false
 	@Published public var isSetupViewPresented: Bool = false
+	
+	public var activeNetworkActivities: Set<String> = [] {
+		didSet { UIApplication.shared.setLoadingIndicatorActive(!activeNetworkActivities.isEmpty) }
+	}
 	
 	public let errorNotifications: AppNotifications = AppNotifications()
 	public let persistenceNotifications: AppNotifications = AppNotifications()

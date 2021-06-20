@@ -58,14 +58,14 @@ public extension PortainerKit {
 		}
 	}
 	
-	enum MountConsistency: String, Codable {
+	enum MountConsistency: String, Codable, Hashable {
 		case `default`
 		case consistent
 		case cached
 		case delegated
 	}
 	
-	enum MountType: String, Codable {
+	enum MountType: String, Codable, Hashable {
 		case bind
 		case volume
 		case tmpfs
@@ -96,7 +96,7 @@ public extension PortainerKit {
 		public let tenantID: String?
 	}
 	
-	struct BindOptions: Codable {
+	struct BindOptions: Codable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case propagation = "Propagation"
 		}
@@ -227,7 +227,7 @@ public extension PortainerKit {
 		public let volumeCount: Int?
 	}
 	
-	struct DriverConfig: Codable {
+	struct DriverConfig: Codable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case name = "Name"
 			case options = "Options"
@@ -272,10 +272,10 @@ public extension PortainerKit {
 				case workDir = "WorkDir"
 			}
 			
-			let lowerDir: String
-			let mergedDir: String
-			let upperDir: String
-			let workDir: String
+			public let lowerDir: String
+			public let mergedDir: String
+			public let upperDir: String
+			public let workDir: String
 		}
 		
 		enum CodingKeys: String, CodingKey {
@@ -481,7 +481,7 @@ public extension PortainerKit {
 		public let provisioner: String?
 	}
 	
-	struct Mount: Codable {
+	struct Mount: Codable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case target = "Target"
 			case source = "Source"
@@ -501,9 +501,13 @@ public extension PortainerKit {
 		public let bindOptions: BindOptions?
 		public let volumeOptions: VolumeOptions?
 		public let tmpfsOptions: TmpfsOptions?
+		
+		public static func == (lhs: PortainerKit.Mount, rhs: PortainerKit.Mount) -> Bool {
+			lhs.target == rhs.target && lhs.source == rhs.source && lhs.type == rhs.type && lhs.readOnly == rhs.readOnly
+		}
 	}
 	
-	struct MountPoint: Codable {
+	struct MountPoint: Codable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case type = "Type"
 			case name = "Name"
@@ -577,10 +581,10 @@ public extension PortainerKit {
 	
 	struct NetworkSettings: Codable {
 		enum CodingKeys: String, CodingKey {
-			case networks = "Networks"
+			case network = "Networks"
 		}
 		
-		public let networks: Network?
+		public let network: Network?
 	}
 
 	struct Port: Codable, Hashable {
@@ -602,7 +606,7 @@ public extension PortainerKit {
 		public let type: PortType?
 	}
 	
-	struct TmpfsOptions: Codable {
+	struct TmpfsOptions: Codable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case sizeBytes = "SizeBytes"
 			case mode = "Mode"
@@ -628,7 +632,7 @@ public extension PortainerKit {
 		public let tlsSkipVerify: Bool?
 	}
 	
-	struct VolumeOptions: Codable {
+	struct VolumeOptions: Codable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case noCopy = "NoCopy"
 			case labels = "Labels"

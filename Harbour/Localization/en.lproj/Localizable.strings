@@ -20,7 +20,7 @@
 "%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%" = "Container dismissed";
 "%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%" = "Shake device or tap this message to open again.";
 
-// MARK: Views/Details/Container/ContainerDetailView.swift
+// MARK: Views/Details/Container/ContainerDetailsView.swift
 
 "Mounts" = "Mounts";
 "Network" = "Network";

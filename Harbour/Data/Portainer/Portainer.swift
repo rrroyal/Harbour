@@ -83,6 +83,10 @@ final class Portainer: ObservableObject {
 		let api = PortainerKit(url: url)
 		self.api = api
 		
+		let activeActionID = generateActionID(url, username, password)
+		AppState.shared.activeNetworkActivities.insert(activeActionID)
+		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
+		
 		let result = await api.login(username: username, password: password)
 		switch result {
 			case .success(let token):
@@ -106,9 +110,7 @@ final class Portainer: ObservableObject {
 	/// Logs out, removing all local authentication.
 	public func logOut() {
 		logger.info("Logging out")
-		if let urlString = endpointURL {
-			try? keychain.remove(urlString)
-		}
+		if let urlString = endpointURL { try? keychain.remove(urlString) }
 		isLoggedIn = false
 		endpointURL = nil
 		selectedEndpoint = nil
@@ -124,6 +126,10 @@ final class Portainer: ObservableObject {
 		logger.debug("Getting endpoints...")
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
+		
+		let activeActionID = generateActionID()
+		AppState.shared.activeNetworkActivities.insert(activeActionID)
+		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 		
 		let result = await api.getEndpoints()
 		switch result {
@@ -156,6 +162,10 @@ final class Portainer: ObservableObject {
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 
+		let activeActionID = generateActionID(endpointID)
+		AppState.shared.activeNetworkActivities.insert(activeActionID)
+		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
+
 		let result = await api.getContainers(for: endpointID)
 		switch result {
 			case .success(let containers):
@@ -182,6 +192,10 @@ final class Portainer: ObservableObject {
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
 
+		let activeActionID = generateActionID(container.id)
+		AppState.shared.activeNetworkActivities.insert(activeActionID)
+		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
+		
 		let result = await api.inspectContainer(container.id, endpointID: endpointID)
 		switch result {
 			case .success(let containerDetails):
@@ -204,6 +218,10 @@ final class Portainer: ObservableObject {
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
+		
+		let activeActionID = generateActionID(action, container.id)
+		AppState.shared.activeNetworkActivities.insert(activeActionID)
+		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 		
 		let result = await api.execute(action, containerID: container.id, endpointID: endpointID)
 		switch result {
@@ -229,10 +247,14 @@ final class Portainer: ObservableObject {
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
 		
+		let activeActionID = generateActionID(container.id)
+		AppState.shared.activeNetworkActivities.insert(activeActionID)
+		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
+
 		let result = await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
-		logger.debug("Got logs from containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
 		switch result {
 			case .success(let logs):
+				logger.debug("Got logs from containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
 				return .success(logs)
 			case .failure(let error):
 				logger.error("\(String(describing: error))")
@@ -254,15 +276,26 @@ final class Portainer: ObservableObject {
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
 		
-		logger.debug("Attached to containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
+		let activeActionID = generateActionID(container.id)
+		AppState.shared.activeNetworkActivities.insert(activeActionID)
+		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
+		
 		let result = api.attach(to: container.id, endpointID: endpointID)
 		switch result {
 			case .success(let messagePassthroughSubject):
+				logger.debug("Attached to containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
 				let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
 				self.attachedContainer = attachedContainer
 				return .success(attachedContainer)
 			case .failure(let error):
+				logger.error("\(String(describing: error))")
 				return .failure(error)
 		}
+	}
+	
+	// MARK: - Private functions
+	
+	private func generateActionID(_ args: Any..., _function: StaticString = #function) -> String {
+		"Portainer.\(_function)(\(String(describing: args)))"
 	}
 }

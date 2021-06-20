@@ -16,9 +16,7 @@ struct SettingsView: View {
 	var portainerSection: some View {
 		Section(header: Text("Portainer")) {
 			if let endpointURL = portainer.endpointURL {
-				Labeled("URL") {
-					Text(endpointURL)
-				}
+				Labeled(label: "URL", content: endpointURL)
 			}
 			
 			if portainer.isLoggedIn {

@@ -3,55 +3,62 @@
 //  Harbour
 //
 //  Created by royal on 11/06/2021.
-//	Borrowed and adapted from https://github.com/SwiftUIX/SwiftUIX
 //
 
 import SwiftUI
 
-public struct Labeled<Label: View, Control: View>: View {
-	@usableFromInline
-	let label: Label
+struct Labeled: View {
+	let label: String
+	let content: String?
+	let monospace: Bool
+	
+	public init(label: String, content: String?, monospace: Bool = false) {
+		self.label = label
+		self.monospace = monospace
+		
+		if let content = content, !content.isEmpty {
+			self.content = content
+		} else {
+			self.content = nil
+		}
+	}
+	
+	public init(label: String, bool: Bool?) {
+		self.label = label
+		self.monospace = false
+		
+		if let bool = bool {
+			self.content = bool ? "✅" : "❌"
+		} else {
+			self.content = "❔"
+		}
+	}
 
-	@usableFromInline
-	let control: Control
-
-	public var body: some View {
+	var body: some View {
 		HStack {
-			label
+			Text(LocalizedStringKey(label))
 			
 			Spacer()
 			
-			control
+			Text(content ?? "none")
+				.font(.system(.subheadline, design: monospace ? .monospaced : .default))
+				.foregroundColor(content != nil ? .primary : .secondary)
+				.lineLimit(nil)
 				.multilineTextAlignment(.trailing)
+				.contentShape(Rectangle())
+			#if os(macOS)
+				.textSelection(.enabled)
+			#else
+				.onTapGesture { copy(content) }
+			#endif
 		}
 	}
-}
 
-public extension Labeled {
-	@inlinable
-	init(
-		@ViewBuilder control: () -> Control,
-		@ViewBuilder label: () -> Label
-	) {
-		self.label = label()
-		self.control = control()
+#if !os(macOS)
+	func copy(_ object: Any?) {
+		guard let object = object else { return }
+		UIDevice.current.generateHaptic(.selectionChanged)
+		UIPasteboard.general.string = String(describing: object)
 	}
-}
-
-public extension Labeled where Label == Text {
-	@inlinable
-	init(
-		_ title: Text,
-		@ViewBuilder control: () -> Control
-	) {
-		self.init(control: control, label: { title })
-	}
-
-	@inlinable
-	init<S: StringProtocol>(
-		_ title: S,
-		@ViewBuilder control: () -> Control
-	) {
-		self.init(Text(title), control: control)
-	}
+#endif
 }

@@ -12,19 +12,48 @@ struct ContainerNetworkDetailsView: View {
 	let container: PortainerKit.Container
 	let details: PortainerKit.ContainerDetails?
 	
-	var body: some View {
-		List {
-			if let networks = container.networkSettings?.networks {
-				Section(header: Text("Network")) {
-					Text(String(describing: networks))
-				}
+	@ViewBuilder
+	var networkSection: some View {
+		Section {
+			if let network = details?.networkSettings {
+				Labeled(label: "Address", content: network.address, monospace: true)
+				Labeled(label: "Port mapping", content: network.portMapping, monospace: true)
+				Labeled(label: "Bridge", content: network.bridge, monospace: true)
+				Labeled(label: "Gateway", content: network.gateway, monospace: true)
+				Labeled(label: "Mac address", content: network.macAddress, monospace: true)
+				Labeled(label: "IP prefix len.", content: "\(network.ipPrefixLen)", monospace: true)
+				// Labeled(label: "Ports", content: String(describing: network.ports), monospace: true)
 			}
 			
-			if let ports = container.ports, !ports.isEmpty {
-				ForEach(container.ports ?? [], id: \.self) { port in
-					PortSection(port: port)
-				}
+			/* if let network = container.networkSettings?.network {
+				Labeled(label: "Links", content: network.links?.joined(separator: ", "), monospace: true)
+				Labeled(label: "Aliases", content: network.aliases?.joined(separator: ", "), monospace: true)
+				Labeled(label: "Network ID", content: network.networkID, monospace: true)
+				Labeled(label: "Endpoint ID", content: network.endpointID, monospace: true)
+				Labeled(label: "Gateway", content: network.gateway, monospace: true)
+				Labeled(label: "IP Address", content: network.ipAddress?.description, monospace: true)
+				Labeled(label: "IP prefix len.", content: network.ipPrefixLen?.description, monospace: true)
+				Labeled(label: "IPv6 Gateway", content: network.ipv6Gateway, monospace: true)
+				Labeled(label: "Global IPv6 Address", content: network.globalIPv6Address, monospace: true)
+				Labeled(label: "Global IPv6 prefix len.", content: network.globalIPv6PrefixLen?.description, monospace: true)
+				Labeled(label: "Mac address", content: network.macAddress, monospace: true)
+			} */
+		}
+	}
+	
+	@ViewBuilder
+	var portsSection: some View {
+		if let ports = container.ports, !ports.isEmpty {
+			ForEach(container.ports ?? [], id: \.self) { port in
+				PortSection(port: port)
 			}
+		}
+	}
+	
+	var body: some View {
+		List {
+			networkSection
+			portsSection
 		}
 		.navigationTitle("Network")
 	}
@@ -48,10 +77,10 @@ private extension ContainerNetworkDetailsView {
 		
 		var body: some View {
 			Section(header: self.label != nil ? Text(self.label ?? "") : nil) {
-				MonospaceLabeled(label: "IP", content: port.ip != nil ? "\(port.ip ?? "")" : nil)
-				MonospaceLabeled(label: "Private port", content: port.privatePort != nil ? "\(port.privatePort ?? 0)" : nil)
-				MonospaceLabeled(label: "Public port", content: port.publicPort != nil ? "\(port.publicPort ?? 0)" : nil)
-				MonospaceLabeled(label: "Type", content: port.type != nil ? "\(port.type?.rawValue ?? "")" : nil)
+				Labeled(label: "IP", content: port.ip != nil ? "\(port.ip ?? "")" : nil, monospace: true)
+				Labeled(label: "Private port", content: port.privatePort != nil ? "\(port.privatePort ?? 0)" : nil, monospace: true)
+				Labeled(label: "Public port", content: port.publicPort != nil ? "\(port.publicPort ?? 0)" : nil, monospace: true)
+				Labeled(label: "Type", content: port.type != nil ? "\(port.type?.rawValue ?? "")" : nil, monospace: true)
 			}
 		}
 	}

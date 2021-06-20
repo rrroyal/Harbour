@@ -7,9 +7,11 @@
 
 import SwiftUI
 import AppNotifications
+import LoadingIndicator
 
 @main
 struct HarbourApp: App {
+	@Environment(\.scenePhase) var scenePhase
 	@StateObject var appState: AppState = .shared
 	@StateObject var portainer: Portainer = .shared
 	@StateObject var preferences: Preferences = .shared
@@ -33,16 +35,13 @@ struct HarbourApp: App {
 				.sheet(isPresented: $appState.isSetupViewPresented, onDismiss: { Preferences.shared.launchedBefore = true }) {
 					SetupView()
 				}
-				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil)) { _ in
-					guard portainer.attachedContainer != nil else { return }
-					UIDevice.current.generateHaptic(.light)
-					appState.isContainerConsoleViewPresented = true
-				}
+				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
+				.onChange(of: scenePhase, perform: onScenePhaseChange)
 		}
 	}
 	
 	private func onContainerConsoleViewDismissed() {
-		guard portainer.attachedContainer != nil else { return }
+		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
 		let notificationID: String = "ContainerDismissedNotification"
 		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .timeout(5), icon: "terminal", title: "%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%", description: "%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%", backgroundStyle: .material(.regularMaterial), onTap: {
@@ -51,5 +50,24 @@ struct HarbourApp: App {
 			appState.persistenceNotifications.dismiss(matching: notificationID)
 		})
 		appState.persistenceNotifications.add(notification)
+	}
+	
+	private func onDeviceDidShake(_: Notification) {
+		guard portainer.attachedContainer != nil else { return }
+		UIDevice.current.generateHaptic(.light)
+		appState.isContainerConsoleViewPresented = true
+	}
+	
+	private func onScenePhaseChange(_ scenePhase: ScenePhase) {
+		switch scenePhase {
+			case .background:
+				break
+			case .inactive:
+				break
+			case .active:
+				UIApplication.shared.setupLoadingIndicator()
+			@unknown default:
+				break
+		}
 	}
 }

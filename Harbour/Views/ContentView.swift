@@ -19,7 +19,7 @@ struct ContentView: View {
 			ScrollView {
 				LazyVGrid(columns: columns) {
 					ForEach(portainer.containers) { container in
-						NavigationLink(destination: ContainerDetailView(container: container)) {
+						NavigationLink(destination: ContainerDetailsView(container: container)) {
 							ContainerCell(container: container)
 								.contextMenu {
 									ContainerContextMenu(container: container)

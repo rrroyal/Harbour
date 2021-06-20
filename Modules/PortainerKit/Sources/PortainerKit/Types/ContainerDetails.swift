@@ -13,6 +13,7 @@ public extension PortainerKit {
 		enum CodingKeys: String, CodingKey {
 			case id = "Id"
 			case created = "Created"
+			case platform = "Platform"
 			case path = "Path"
 			case args = "Args"
 			case state = "State"
@@ -38,6 +39,7 @@ public extension PortainerKit {
 
 		public let id: String
 		public let created: Date
+		public let platform: String
 		public let path: String
 		public let args: [String]
 		public let state: ContainerState
