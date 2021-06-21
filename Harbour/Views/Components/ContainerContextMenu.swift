@@ -91,8 +91,9 @@ struct ContainerContextMenu: View {
 			Divider()
 			
 			Button(action: {
+				UIDevice.current.generateHaptic(.light)
 				Portainer.shared.attach(to: container)
-				AppState.shared.isContainerConsoleViewPresented = true
+				AppState.shared.isContainerConsoleSheetPresented = true
 			}) {
 				Label("Attach", systemImage: "terminal")
 			}

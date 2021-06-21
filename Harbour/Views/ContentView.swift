@@ -11,8 +11,64 @@ import SwiftUI
 struct ContentView: View {
 	@EnvironmentObject var appState: AppState
 	@EnvironmentObject var portainer: Portainer
+	@EnvironmentObject var preferences: Preferences
+	
+	@State private var isSettingsSheetPresented: Bool = false
 	
 	let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
+	
+	var toolbarMenu: some View {
+		Menu(content: {
+			if !portainer.endpoints.isEmpty {
+				ForEach(portainer.endpoints) { endpoint in
+					Button(action: {
+						UIDevice.current.generateHaptic(.light)
+						portainer.selectedEndpoint = endpoint
+					}) {
+						Text(endpoint.displayName)
+						if portainer.selectedEndpoint?.id == endpoint.id {
+							Image(systemName: "checkmark")
+						}
+					}
+				}
+			} else {
+				Text("No endpoints")
+			}
+			
+			Divider()
+			
+			Button(role: nil, action: {
+				UIDevice.current.generateHaptic(.light)
+				await portainer.getEndpoints()
+			}) {
+				Label("Refresh", systemImage: "arrow.clockwise")
+			}
+		}) {
+			Image(systemName: portainer.selectedEndpoint != nil ? "tag.fill" : !portainer.endpoints.isEmpty ? "tag" : "tag.slash")
+		}
+		.disabled(!portainer.isLoggedIn)
+	}
+	
+	var backgroundView: some View {
+		Group {
+			if portainer.isLoggedIn {
+				if portainer.selectedEndpoint != nil {
+					if portainer.containers.isEmpty {
+						Text("No containers")
+					}
+				} else {
+					Text("Select endpoint")
+				}
+			} else {
+				Text("Not logged in")
+			}
+		}
+		.opacity(Globals.Views.secondaryOpacity)
+		.transition(.opacity)
+		.animation(.easeInOut, value: portainer.isLoggedIn)
+		.animation(.easeInOut, value: portainer.containers.isEmpty)
+		// .hidden(portainer.isLoggedIn && !portainer.containers.isEmpty)
+	}
 	
 	var body: some View {
 		NavigationView {
@@ -36,45 +92,26 @@ struct ContentView: View {
 			.toolbar {
 				ToolbarItem(placement: .navigation) {
 					Button(action: {
-						appState.isSettingsViewPresented = true
+						UIDevice.current.generateHaptic(.soft)
+						isSettingsSheetPresented = true
 					}) {
 						Image(systemName: "gear")
 					}
 				}
 				
-				ToolbarItem(placement: .primaryAction) {
-					Menu(portainer.selectedEndpoint?.displayName ?? "Endpoint") {
-						if !portainer.endpoints.isEmpty {
-							ForEach(portainer.endpoints) { endpoint in
-								Button(action: {
-									portainer.selectedEndpoint = endpoint
-								}) {
-									Text(endpoint.displayName)
-									if portainer.selectedEndpoint?.id == endpoint.id {
-										Image(systemName: "checkmark")
-									}
-								}
-							}
-						} else {
-							Text("No endpoints")
-						}
-						
-						Divider()
-						
-						Button(role: nil, action: {
-							await portainer.getEndpoints()
-						}) {
-							Label("Refresh", systemImage: "arrow.clockwise")
-						}
-					}
-					.disabled(!portainer.isLoggedIn)
-				}
+				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 			}
+			.background(backgroundView)
 			.refreshable {
 				if let endpointID = portainer.selectedEndpoint?.id {
 					await portainer.getContainers(endpointID: endpointID)
 				}
 			}
+		}
+		.sheet(isPresented: $isSettingsSheetPresented) {
+			SettingsView()
+				.environmentObject(portainer)
+				.environmentObject(preferences)
 		}
 		/* .onAppear {
 		 	if let endpointID = portainer.selectedEndpoint?.id {

@@ -11,12 +11,12 @@ struct SettingsView: View {
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
 	@State private var isLogoutWarningPresented: Bool = false
-	@State private var isLoginViewPresented: Bool = false
+	@State private var isLoginSheetPresented: Bool = false
 	
 	var portainerSection: some View {
 		Section(header: Text("Portainer")) {
 			if let endpointURL = portainer.endpointURL {
-				Labeled(label: "URL", content: endpointURL)
+				Labeled(label: "URL", content: endpointURL, monospace: true)
 			}
 			
 			if portainer.isLoggedIn {
@@ -37,7 +37,7 @@ struct SettingsView: View {
 			} else {
 				Button("Log in") {
 					UIDevice.current.generateHaptic(.soft)
-					isLoginViewPresented = true
+					isLoginSheetPresented = true
 				}
 			}
 		}
@@ -47,8 +47,9 @@ struct SettingsView: View {
 	}
 	
 	var interfaceSection: some View {
-		Section(header: Text("Other")) {
+		Section(header: Text("Interface")) {
 			ToggleOption(label: "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%", description: "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%", isOn: $preferences.displayContainerDismissedPrompt)
+			ToggleOption(label: "%SETTINGS_ENABLE_HAPTICS_TITLE%", description: "%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%", isOn: $preferences.enableHaptics)
 		}
 	}
 	
@@ -87,7 +88,7 @@ struct SettingsView: View {
 			}
 			.navigationTitle("Settings")
 		}
-		.sheet(isPresented: $isLoginViewPresented) {
+		.sheet(isPresented: $isLoginSheetPresented) {
 			LoginView()
 		}
 	}
@@ -115,6 +116,7 @@ fileprivate extension SettingsView {
 				}
 			}
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
+			.padding(.vertical, .small)
 		}
 	}
 }

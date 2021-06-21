@@ -129,33 +129,33 @@ fileprivate extension ContainerDetailsView {
 		var body: some View {
 			DisclosureSection(label: "General") {
 				Group {
-					LabeledSection(label: "ID", content: details.id)
-					LabeledSection(label: "Name", content: details.name)
-					LabeledSection(label: "Image", content: details.image)
-					LabeledSection(label: "Platform", content: details.platform)
-					LabeledSection(label: "Path", content: details.path)
-					LabeledSection(label: "Arguments", content: !details.args.isEmpty ? details.args.joined(separator: ", ") : nil)
-					LabeledSection(label: "Created", content: details.created.formatted(), monospace: false)
+					LabeledSection(label: "ID", content: details.id, monospace: true)
+					LabeledSection(label: "Name", content: details.name, monospace: true)
+					LabeledSection(label: "Image", content: details.image, monospace: true)
+					LabeledSection(label: "Platform", content: details.platform, monospace: true)
+					LabeledSection(label: "Path", content: details.path, monospace: true)
+					LabeledSection(label: "Arguments", content: !details.args.isEmpty ? details.args.joined(separator: ", ") : nil, monospace: true)
+					LabeledSection(label: "Created", content: details.created.formatted())
 				}
 				
 				Group {
-					LabeledSection(label: "Mount label", content: details.mountLabel)
-					LabeledSection(label: "Process label", content: details.processLabel)
+					LabeledSection(label: "Mount label", content: details.mountLabel, monospace: true)
+					LabeledSection(label: "Process label", content: details.processLabel, monospace: true)
 				}
 				
 				Group {
-					LabeledSection(label: "Restart count", content: "\(details.restartCount)", monospace: false)
-					LabeledSection(label: "Driver", content: details.driver)
-					LabeledSection(label: "App armor profile", content: details.appArmorProfile)
-					LabeledSection(label: "RW size", content: details.sizeRW != nil ? "\(details.sizeRW ?? 0)" : nil)
-					LabeledSection(label: "RootFS size", content: details.sizeRootFS != nil ? "\(details.sizeRootFS ?? 0)" : nil)
+					LabeledSection(label: "Restart count", content: "\(details.restartCount)", monospace: true)
+					LabeledSection(label: "Driver", content: details.driver, monospace: true)
+					LabeledSection(label: "App armor profile", content: details.appArmorProfile, monospace: true)
+					LabeledSection(label: "RW size", content: details.sizeRW != nil ? "\(details.sizeRW ?? 0)" : nil, monospace: true)
+					LabeledSection(label: "RootFS size", content: details.sizeRootFS != nil ? "\(details.sizeRootFS ?? 0)" : nil, monospace: true)
 				}
 				
 				Group {
-					LabeledSection(label: "resolv.conf path", content: details.resolvConfPath)
-					LabeledSection(label: "Hostname path", content: details.hostnamePath)
-					LabeledSection(label: "Hosts path", content: details.hostsPath)
-					LabeledSection(label: "Log path", content: details.logPath)
+					LabeledSection(label: "resolv.conf path", content: details.resolvConfPath, monospace: true)
+					LabeledSection(label: "Hostname path", content: details.hostnamePath, monospace: true)
+					LabeledSection(label: "Hosts path", content: details.hostsPath, monospace: true)
+					LabeledSection(label: "Log path", content: details.logPath, monospace: true)
 				}
 			}
 		}
@@ -166,16 +166,16 @@ fileprivate extension ContainerDetailsView {
 
 		var body: some View {
 			DisclosureSection(label: "State") {
-				LabeledSection(label: "Status", content: state.status.rawValue)
-				LabeledSection(label: "PID", content: "\(state.pid)")
-				LabeledSection(label: "Running", content: "\(state.running)")
-				LabeledSection(label: "Paused", content: "\(state.paused)")
-				LabeledSection(label: "Restarting", content: "\(state.restarting)")
-				LabeledSection(label: "OOM Killed", content: "\(state.oomKilled)")
-				LabeledSection(label: "Dead", content: "\(state.dead)")
-				LabeledSection(label: "Error", content: state.error)
-				LabeledSection(label: "Started at", content: state.startedAt?.formatted(), monospace: false)
-				LabeledSection(label: "Finished at", content: state.finishedAt?.formatted(), monospace: false)
+				LabeledSection(label: "Status", content: state.status.rawValue, monospace: true)
+				LabeledSection(label: "PID", content: "\(state.pid)", monospace: true)
+				LabeledSection(label: "Running", content: "\(state.running)", monospace: true)
+				LabeledSection(label: "Paused", content: "\(state.paused)", monospace: true)
+				LabeledSection(label: "Restarting", content: "\(state.restarting)", monospace: true)
+				LabeledSection(label: "OOM Killed", content: "\(state.oomKilled)", monospace: true)
+				LabeledSection(label: "Dead", content: "\(state.dead)", monospace: true)
+				LabeledSection(label: "Error", content: state.error, monospace: true)
+				LabeledSection(label: "Started at", content: state.startedAt?.formatted())
+				LabeledSection(label: "Finished at", content: state.finishedAt?.formatted())
 			}
 		}
 	}
@@ -185,11 +185,11 @@ fileprivate extension ContainerDetailsView {
 
 		var body: some View {
 			DisclosureSection(label: "GraphDriver") {
-				LabeledSection(label: "Name", content: graphDriver.name)
-				LabeledSection(label: "Lower dir", content: graphDriver.data.lowerDir)
-				LabeledSection(label: "Merged dir", content: graphDriver.data.mergedDir)
-				LabeledSection(label: "Upper dir", content: graphDriver.data.upperDir)
-				LabeledSection(label: "Work dir", content: graphDriver.data.workDir)
+				LabeledSection(label: "Name", content: graphDriver.name, monospace: true)
+				LabeledSection(label: "Lower dir", content: graphDriver.data.lowerDir, monospace: true)
+				LabeledSection(label: "Merged dir", content: graphDriver.data.mergedDir, monospace: true)
+				LabeledSection(label: "Upper dir", content: graphDriver.data.upperDir, monospace: true)
+				LabeledSection(label: "Work dir", content: graphDriver.data.workDir, monospace: true)
 			}
 		}
 	}

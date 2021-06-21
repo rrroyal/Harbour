@@ -8,9 +8,15 @@
 import SwiftUI
 
 struct RoundedTextFieldStyle: TextFieldStyle {
+	let fontDesign: Font.Design
+	
+	init(fontDesign: Font.Design = .default) {
+		self.fontDesign = fontDesign
+	}
+	
 	func _body(configuration: TextField<Self._Label>) -> some View {
 		configuration
-			.font(.callout.weight(.regular))
+			.font(.system(.callout, design: fontDesign).weight(.regular))
 			.multilineTextAlignment(.center)
 			.padding(.medium)
 			.background(

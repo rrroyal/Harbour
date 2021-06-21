@@ -14,7 +14,7 @@ struct LabeledSection: View {
 	let content: String?
 	let monospace: Bool
 	
-	public init(label: String, content: String?, monospace: Bool = true) {
+	public init(label: String, content: String?, monospace: Bool = false) {
 		self.label = label
 		self.monospace = monospace
 		

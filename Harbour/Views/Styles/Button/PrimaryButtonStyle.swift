@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PrimaryButtonStyle: ButtonStyle {
+	@Environment(\.isEnabled) var isEnabled: Bool
 	let foregroundColor: Color
 	let backgroundColor: Color
 
@@ -18,15 +19,16 @@ struct PrimaryButtonStyle: ButtonStyle {
 
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
-			.foregroundColor(foregroundColor)
+			.foregroundColor(isEnabled ? foregroundColor : .secondary)
 			.font(.body.weight(.semibold))
 			.padding()
 			.frame(maxWidth: Globals.Views.maxButtonWidth, alignment: .center)
-			.background(backgroundColor)
+			.background(isEnabled ? backgroundColor : Color(uiColor: .systemGray5))
 			.cornerRadius(Globals.Views.cornerRadius)
 			// .compositingGroup()
 			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)
 			.scaleEffect(configuration.isPressed ? Globals.Buttons.pressedSize : 1)
 			.animation(Globals.Views.springAnimation, value: configuration.isPressed)
+			.animation(.easeInOut, value: isEnabled)
 	}
 }

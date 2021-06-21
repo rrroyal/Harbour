@@ -12,15 +12,7 @@ import UIKit
 @available(iOS 14, *)
 extension UIDevice {
 	enum FeedbackStyle {
-		case error
-		case success
-		case warning
-		case light
-		case medium
-		case heavy
-		case soft
-		case rigid
-		case selectionChanged
+		case error, success, warning, light, medium, heavy, soft, rigid, selectionChanged
 	}
 
 	/// Generates a haptic feedback/vibration.
@@ -36,27 +28,27 @@ extension UIDevice {
 		if supportsHaptics {
 			// Haptic Feedback
 			switch style {
-				case .error: UINotificationFeedbackGenerator().notificationOccurred(.error)
-				case .success: UINotificationFeedbackGenerator().notificationOccurred(.success)
-				case .warning: UINotificationFeedbackGenerator().notificationOccurred(.warning)
-				case .light: UIImpactFeedbackGenerator(style: .light).impactOccurred()
-				case .medium: UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-				case .heavy: UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
-				case .soft: UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-				case .rigid: UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+				case .error:	UINotificationFeedbackGenerator().notificationOccurred(.error)
+				case .success:	UINotificationFeedbackGenerator().notificationOccurred(.success)
+				case .warning:	UINotificationFeedbackGenerator().notificationOccurred(.warning)
+				case .light:	UIImpactFeedbackGenerator(style: .light).impactOccurred()
+				case .medium:	UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+				case .heavy:	UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+				case .soft:		UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+				case .rigid:	UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
 				case .selectionChanged: UISelectionFeedbackGenerator().selectionChanged()
 			}
 		} else {
 			// Older devices
 			switch style {
-				case .error: AudioServicesPlaySystemSound(1521)
-				case .success: break
-				case .warning: break
-				case .light: AudioServicesPlaySystemSound(1519)
-				case .medium: break
-				case .heavy: AudioServicesPlaySystemSound(1520)
-				case .soft: break
-				case .rigid: break
+				case .error:	AudioServicesPlaySystemSound(1521)
+				case .success:	break
+				case .warning:	break
+				case .light:	AudioServicesPlaySystemSound(1519)
+				case .medium:	break
+				case .heavy:	AudioServicesPlaySystemSound(1520)
+				case .soft:		break
+				case .rigid:	break
 				case .selectionChanged: AudioServicesPlaySystemSound(1519)
 			}
 		}

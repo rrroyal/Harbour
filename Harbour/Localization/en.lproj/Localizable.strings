@@ -41,11 +41,16 @@
 
 "Endpoint" = "Endpoint";
 "No endpoints" = "No endpoints";
+"No containers" = "No containers";
+"Select endpoint" = "Select endpoint";
+"Not logged in" = "Not logged in";
 
 // MARK: Views/SettingsView.swift
 
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "TODO";
+"%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
+"%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone it down if you don't like it as much as I do :]";
 
 "Log out" = "Log out";
 "Made with ❤️ (and ☕️) by @rrroyal" = "Made with ❤️ (and ☕️) by @rrroyal";

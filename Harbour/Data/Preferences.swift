@@ -12,6 +12,7 @@ class Preferences: ObservableObject {
 	public static let shared: Preferences = Preferences()
 
 	@AppStorage(UserDefaults.Key.launchedBefore) public var launchedBefore: Bool = false
+	@AppStorage(UserDefaults.Key.enableHaptics) public var enableHaptics: Bool = true
 	@AppStorage(UserDefaults.Key.displayContainerDismissedPrompt) public var displayContainerDismissedPrompt: Bool = true
 	
 	public let ud: UserDefaults = UserDefaults.standard

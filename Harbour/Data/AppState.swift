@@ -13,9 +13,8 @@ import UIKit
 class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
 
-	@Published public var isSettingsViewPresented: Bool = false
-	@Published public var isContainerConsoleViewPresented: Bool = false
-	@Published public var isSetupViewPresented: Bool = false
+	@Published public var isContainerConsoleSheetPresented: Bool = false
+	@Published public var isSetupSheetPresented: Bool = false
 	
 	public var activeNetworkActivities: Set<String> = [] {
 		didSet { UIApplication.shared.setLoadingIndicatorActive(!activeNetworkActivities.isEmpty) }
@@ -27,14 +26,14 @@ class AppState: ObservableObject {
 	private let logger: Logger = Logger(subsystem: "\(Bundle.main.bundleIdentifier ?? "Harbour").AppState", category: "AppState")
 
 	private init() {
-		if !Preferences.shared.launchedBefore { isSetupViewPresented = true }
+		if !Preferences.shared.launchedBefore { isSetupSheetPresented = true }
 	}
 
 	public func handle(_ error: Error, displayNotification: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
 		self.logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
 		if displayNotification {
-			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .timeout(5), icon: "xmark", title: "Error!", description: error.localizedDescription, backgroundStyle: .colorAndMaterial(color: .red.opacity(0.5), material: .regularMaterial))
+			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .timeout(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, backgroundStyle: .colorAndMaterial(color: .red.opacity(0.5), material: .regularMaterial))
 			errorNotifications.add(notification)
 		}
 	}

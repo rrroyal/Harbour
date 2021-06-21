@@ -33,7 +33,7 @@ struct LoginView: View {
 				.keyboardType(.URL)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
-				.textFieldStyle(RoundedTextFieldStyle())
+				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
 			
 			TextField("garyhost", text: $username)
 				.keyboardType(.default)
