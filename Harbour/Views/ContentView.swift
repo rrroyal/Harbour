@@ -44,7 +44,9 @@ struct ContentView: View {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
 		}) {
-			Image(systemName: portainer.selectedEndpoint != nil ? "tag.fill" : !portainer.endpoints.isEmpty ? "tag" : "tag.slash")
+			// Image(systemName: portainer.selectedEndpoint != nil ? "tag.fill" : !portainer.endpoints.isEmpty ? "tag" : "tag.slash")
+			Image(systemName: "tag")
+				.symbolVariant(portainer.selectedEndpoint != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
 		}
 		.disabled(!portainer.isLoggedIn)
 	}

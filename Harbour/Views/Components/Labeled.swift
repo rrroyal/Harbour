@@ -45,20 +45,7 @@ struct Labeled: View {
 				.foregroundColor(content != nil ? .primary : .secondary)
 				.lineLimit(nil)
 				.multilineTextAlignment(.trailing)
-				.contentShape(Rectangle())
-			#if os(macOS)
 				.textSelection(.enabled)
-			#else
-				.onTapGesture { copy(content) }
-			#endif
 		}
 	}
-
-#if !os(macOS)
-	func copy(_ object: Any?) {
-		guard let object = object else { return }
-		UIDevice.current.generateHaptic(.selectionChanged)
-		UIPasteboard.general.string = String(describing: object)
-	}
-#endif
 }

@@ -39,28 +39,15 @@ struct LabeledSection: View {
 				.font(.system(.callout, design: monospace ? .monospaced : .default))
 				.foregroundColor(content != nil ? .primary : .secondary)
 				.lineLimit(nil)
+				.textSelection(.enabled)
 				.frame(maxWidth: .infinity, alignment: .leading)
 				.padding(.medium)
 				.background(
 					RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)
 						.fill(backgroundColor)
 				)
-				.contentShape(Rectangle())
-			#if os(macOS)
-				.textSelection(.enabled)
-			#else
-				.onTapGesture { copy(content) }
-			#endif
 		}
 	}
-	
-#if !os(macOS)
-	func copy(_ object: Any?) {
-		guard let object = object else { return }
-		UIDevice.current.generateHaptic(.selectionChanged)
-		UIPasteboard.general.string = String(describing: object)
-	}
-#endif
 }
 
 struct LabeledSection_Previews: PreviewProvider {

@@ -33,6 +33,7 @@ private extension ContainerConsoleView {
 					Text(attachedContainer.attributedString)
 						.font(.system(.footnote, design: .monospaced))
 						.lineLimit(nil)
+						.textSelection(.enabled)
 						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 				}
 				.padding(.small)

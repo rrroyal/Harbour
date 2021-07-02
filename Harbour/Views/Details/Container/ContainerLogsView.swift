@@ -27,6 +27,7 @@ struct ContainerLogsView: View {
 					Text(logs)
 						.font(.system(.footnote, design: .monospaced))
 						.lineLimit(nil)
+						.textSelection(.enabled)
 						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 						.id(logsLabelID)
 				}
