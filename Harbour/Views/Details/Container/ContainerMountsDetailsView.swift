@@ -9,12 +9,12 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerMountsDetailsView: View {
-	@ObservedObject var container: PortainerKit.Container
-	let details: PortainerKit.ContainerDetails?
+	let mounts: [PortainerKit.Mount]?
+	let details: [PortainerKit.MountPoint]?
 	
 	@ViewBuilder
 	var generalSection: some View {
-		ForEach(container.mounts?.sorted(by: { ($0.source ?? "", $0.target ?? "") > ($1.source ?? "", $1.target ?? "") }) ?? [], id: \.self) { mount in
+		ForEach(mounts?.sorted(by: { ($0.source ?? "", $0.target ?? "") > ($1.source ?? "", $1.target ?? "") }) ?? [], id: \.self) { mount in
 			Section {
 				Group {
 					Labeled(label: "Source", content: mount.source, monospace: true)
@@ -36,7 +36,7 @@ struct ContainerMountsDetailsView: View {
 	@ViewBuilder
 	var detailSection: some View {
 		if let details = details {
-			ForEach(details.mounts.sorted(by: { $0.destination > $1.destination }), id: \.self) { mount in
+			ForEach(details.sorted(by: { $0.destination > $1.destination }), id: \.self) { mount in
 				Section(header: Text(mount.destination)) {
 					Labeled(label: "Name", content: mount.name, monospace: true)
 					Labeled(label: "Source", content: mount.source, monospace: true)
@@ -60,6 +60,10 @@ struct ContainerMountsDetailsView: View {
 			detailSection
 		}
 		.navigationTitle("Mounts")
+		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			ToolbarTitle(title: "Mounts", subtitle: nil)
+		}
 	}
 }
 

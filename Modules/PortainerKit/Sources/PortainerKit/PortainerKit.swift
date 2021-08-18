@@ -118,11 +118,25 @@ public class PortainerKit {
 			let response = try await session.data(for: request)
 			
 			let decoder = JSONDecoder()
+			let dateFormatter = ISO8601DateFormatter()
 			
-			let dateFormatter = DateFormatter()
-			dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-			dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-			decoder.dateDecodingStrategy = .formatted(dateFormatter)
+			/// Dear Docker/Portainer developers -
+			/// WHY THE HELL DO YOU RETURN FRACTIONAL SECONDS ONLY SOMETIMES
+			/// Sincerely, deeply upset me.
+			decoder.dateDecodingStrategy = .custom { decoder -> Date in
+				let container = try decoder.singleValueContainer()
+				let str = try container.decode(String.self)
+				
+				// ISO8601 with fractional seconds
+				dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+				if let date = dateFormatter.date(from: str) { return date }
+				
+				// ISO8601 without fractional seconds
+				dateFormatter.formatOptions = [.withInternetDateTime]
+				if let date = dateFormatter.date(from: str) { return date }
+				
+				throw DateError.invalidDate(dateString: str)
+			}
 
 			let parsed: Result<ContainerDetails, Error> = parseResponse(response, decoder: decoder)
 			return parsed

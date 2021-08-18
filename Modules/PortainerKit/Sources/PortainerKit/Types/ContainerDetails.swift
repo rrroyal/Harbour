@@ -10,6 +10,26 @@ import Foundation
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
 	struct ContainerDetails: Identifiable, Codable, Equatable {
+		public struct NetworkSettings: Codable {
+			enum CodingKeys: String, CodingKey {
+				case bridge = "Bridge"
+				case gateway = "Gateway"
+				case address = "Address"
+				case ipPrefixLen = "IPPrefixLen"
+				case macAddress = "MacAddress"
+				case portMapping = "PortMapping"
+				case ports = "Ports"
+			}
+			
+			public let bridge: String
+			public let gateway: String
+			public let address: String?
+			public let ipPrefixLen: Int
+			public let macAddress: String
+			public let portMapping: String?
+			public let ports: Port
+		}
+		
 		enum CodingKeys: String, CodingKey {
 			case id = "Id"
 			case created = "Created"
@@ -61,7 +81,7 @@ public extension PortainerKit {
 		public let sizeRW: Int64?
 		public let sizeRootFS: Int64?
 		public let mounts: [MountPoint]
-		public let networkSettings: NetworkConfig
+		public let networkSettings: NetworkSettings
 
 		public static func == (lhs: PortainerKit.ContainerDetails, rhs: PortainerKit.ContainerDetails) -> Bool {
 			lhs.id == rhs.id

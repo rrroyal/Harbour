@@ -1,5 +1,5 @@
 //
-//  PortainerKit+APIError.swift
+//  PortainerKit+Errors.swift
 //  PortainerKit
 //
 //  Created by unitears on 10/06/2021.
@@ -48,5 +48,9 @@ public extension PortainerKit {
 				default:						return .custom(reason)
 			}
 		}
+	}
+	
+	enum DateError: Error {
+		case invalidDate(dateString: String)
 	}
 }

@@ -15,5 +15,7 @@ extension UserDefaults {
 		
 		static let enableHaptics: String = "EnableHaptics"
 		static let displayContainerDismissedPrompt: String = "DisplayContainerDismissedPrompt"
+		
+		static let autoRefreshInterval: String = "AutoRefreshInterval"
 	}
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContainerLogsView: View {
 	@EnvironmentObject var portainer: Portainer
-	@ObservedObject var container: PortainerKit.Container
+	let container: PortainerKit.Container
 
 	@State private var logs: String = ""
 	
@@ -102,6 +102,9 @@ struct ContainerLogsView: View {
 		}
 		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			ToolbarTitle(title: "Logs", subtitle: nil)
+		}
 		.task { await refresh() }
 	}
 	

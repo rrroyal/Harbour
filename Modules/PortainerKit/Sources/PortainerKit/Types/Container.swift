@@ -10,6 +10,14 @@ import Foundation
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
 	class Container: Identifiable, Codable, Equatable, ObservableObject {
+		public struct NetworkSettings: Codable {
+			enum CodingKeys: String, CodingKey {
+				case network = "Networks"
+			}
+			
+			public let network: Network?
+		}
+		
 		enum CodingKeys: String, CodingKey {
 			case id = "Id"
 			case names = "Names"

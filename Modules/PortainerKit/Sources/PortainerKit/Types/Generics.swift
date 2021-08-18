@@ -558,34 +558,6 @@ public extension PortainerKit {
 		public let globalIPv6PrefixLen: Int64?
 		public let macAddress: String?
 	}
-	
-	struct NetworkConfig: Codable {
-		enum CodingKeys: String, CodingKey {
-			case bridge = "Bridge"
-			case gateway = "Gateway"
-			case address = "Address"
-			case ipPrefixLen = "IPPrefixLen"
-			case macAddress = "MacAddress"
-			case portMapping = "PortMapping"
-			case ports = "Ports"
-		}
-		
-		public let bridge: String
-		public let gateway: String
-		public let address: String?
-		public let ipPrefixLen: Int
-		public let macAddress: String
-		public let portMapping: String?
-		public let ports: Port
-	}
-	
-	struct NetworkSettings: Codable {
-		enum CodingKeys: String, CodingKey {
-			case network = "Networks"
-		}
-		
-		public let network: Network?
-	}
 
 	struct Port: Codable, Hashable {
 		enum CodingKeys: String, CodingKey {

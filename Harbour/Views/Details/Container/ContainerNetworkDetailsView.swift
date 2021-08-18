@@ -9,13 +9,14 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerNetworkDetailsView: View {
-	@ObservedObject var container: PortainerKit.Container
-	let details: PortainerKit.ContainerDetails?
+	let networkSettings: PortainerKit.Container.NetworkSettings?
+	let details: PortainerKit.ContainerDetails.NetworkSettings?
+	let ports: [PortainerKit.Port]?
 	
 	@ViewBuilder
 	var networkSection: some View {
 		Section {
-			if let network = details?.networkSettings {
+			if let network = details {
 				Labeled(label: "Address", content: network.address, monospace: true)
 				Labeled(label: "Port mapping", content: network.portMapping, monospace: true)
 				Labeled(label: "Bridge", content: network.bridge, monospace: true)
@@ -43,8 +44,8 @@ struct ContainerNetworkDetailsView: View {
 	
 	@ViewBuilder
 	var portsSection: some View {
-		if let ports = container.ports, !ports.isEmpty {
-			ForEach(container.ports ?? [], id: \.self) { port in
+		if let ports = ports, !ports.isEmpty {
+			ForEach(ports, id: \.self) { port in
 				PortSection(port: port)
 			}
 		}
@@ -56,6 +57,10 @@ struct ContainerNetworkDetailsView: View {
 			portsSection
 		}
 		.navigationTitle("Network")
+		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			ToolbarTitle(title: "Network", subtitle: nil)
+		}
 	}
 }
 

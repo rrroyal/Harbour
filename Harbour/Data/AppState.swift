@@ -6,13 +6,15 @@
 //
 
 import Foundation
+import Combine
 import os.log
-import AppNotifications
 import UIKit
+import AppNotifications
 
 class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
 
+	@Published public var activeContainerDetail: String? = nil
 	@Published public var isContainerConsoleSheetPresented: Bool = false
 	@Published public var isSetupSheetPresented: Bool = false
 	
@@ -24,10 +26,45 @@ class AppState: ObservableObject {
 	public let persistenceNotifications: AppNotifications = AppNotifications()
 
 	private let logger: Logger = Logger(subsystem: "\(Bundle.main.bundleIdentifier ?? "Harbour").AppState", category: "AppState")
+	
+	private var autoRefreshTimer: AnyCancellable? = nil
 
 	private init() {
-		if !Preferences.shared.launchedBefore { isSetupSheetPresented = true }
+		if !Preferences.shared.launchedBefore {
+			isSetupSheetPresented = true
+		}
+		
+		if Preferences.shared.autoRefreshInterval > 0 {
+			setupAutoRefreshTimer()
+		}
 	}
+	
+	// MARK: - Auto refresh
+	
+	public func setupAutoRefreshTimer(interval: Double = Preferences.shared.autoRefreshInterval) {
+		self.logger.debug("(Auto refresh) Interval: \(interval)")
+		
+		autoRefreshTimer?.cancel()
+
+		guard interval > 0 else {
+			autoRefreshTimer = nil
+			return
+		}
+		
+		autoRefreshTimer = Timer.publish(every: interval, on: .current, in: .common)
+			.autoconnect()
+			.sink { _ in
+				Task {
+					guard let selectedEndpointID = Portainer.shared.selectedEndpoint?.id else {
+						return
+					}
+					
+					await Portainer.shared.getContainers(endpointID: selectedEndpointID)
+				}
+			}
+	}
+	
+	// MARK: - Error handling
 	
 	public func handle(_ error: Error, notification: AppNotifications.Notification, _fileID: StaticString = #fileID, _line: Int = #line) {
 		handle(error, displayNotification: false, _fileID: _fileID, _line: _line)

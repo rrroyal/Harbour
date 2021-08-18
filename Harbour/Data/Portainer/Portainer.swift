@@ -59,14 +59,15 @@ final class Portainer: ObservableObject {
 	// MARK: - init
 	
 	private init() {
-		logger.debug("init()")
-		
 		if let urlString = endpointURL,
 		   let url = URL(string: urlString),
 		   let token = keychain[urlString] {
-			logger.debug("Initializing PortainerKit for URL=\(url, privacy: .sensitive)")
+			logger.debug("Initializing PortainerKit for URL: \(url, privacy: .sensitive)")
 			api = PortainerKit(url: url, token: token)
-			Task { await getEndpoints() }
+			
+			Task {
+				await getEndpoints()
+			}
 		}
 	}
 	
@@ -79,8 +80,7 @@ final class Portainer: ObservableObject {
 	///   - password: Password
 	/// - Returns: Result containing JWT token or error.
 	public func login(url: URL, username: String, password: String) async -> Result<Void, Error> {
-
-		logger.debug("Logging in! URL=\(url.absoluteString, privacy: .sensitive) username=\(username, privacy: .sensitive) password=\(password, privacy: .private)")
+		logger.debug("Logging in! URL: \(url.absoluteString, privacy: .sensitive)")
 		let api = PortainerKit(url: url)
 		self.api = api
 		
@@ -159,7 +159,7 @@ final class Portainer: ObservableObject {
 	/// - Returns: Result containing `[PortainerKit.Container]` or error.
 	@discardableResult
 	public func getContainers(endpointID: Int) async -> Result<[PortainerKit.Container], Error> {
-		logger.debug("Getting containers for endpointID=\(endpointID)...")
+		logger.debug("Getting containers for endpointID: \(endpointID)...")
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 
@@ -170,7 +170,7 @@ final class Portainer: ObservableObject {
 		let result = await api.getContainers(for: endpointID)
 		switch result {
 			case .success(let containers):
-				logger.debug("Got \(containers.count) container(s) for endpointID=\(endpointID).")
+				logger.debug("Got \(containers.count) container(s) for endpointID: \(endpointID).")
 				DispatchQueue.main.async { [weak self] in
 					self?.containers = containers
 				}
@@ -188,7 +188,7 @@ final class Portainer: ObservableObject {
 	/// - Parameter container: Container to be inspected
 	/// - Returns: Result containing `PortainerKit.ContainerDetails` or error.
 	public func inspectContainer(_ container: PortainerKit.Container) async -> Result<PortainerKit.ContainerDetails, Error> {
-		logger.debug("Inspecting container with ID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)...")
+		logger.debug("Inspecting container with ID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
@@ -200,7 +200,7 @@ final class Portainer: ObservableObject {
 		let result = await api.inspectContainer(container.id, endpointID: endpointID)
 		switch result {
 			case .success(let containerDetails):
-				logger.debug("Got details for containerID=\(container.id), endpointID=\(endpointID).")
+				logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
 				return .success(containerDetails)
 			case .failure(let error):
 				logger.error("\(String(describing: error))")
@@ -215,7 +215,7 @@ final class Portainer: ObservableObject {
 	/// - Returns: Result containing void or error.
 	@discardableResult
 	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container) async -> Result<Void, Error> {
-		logger.debug("Executing action \(action.rawValue) for containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)...")
+		logger.debug("Executing action \(action.rawValue) for containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
@@ -227,7 +227,7 @@ final class Portainer: ObservableObject {
 		let result = await api.execute(action, containerID: container.id, endpointID: endpointID)
 		switch result {
 			case .success():
-				logger.debug("Executed action \(action.rawValue) for containerID=\(container.id), endpointID=\(endpointID).")
+				logger.debug("Executed action \(action.rawValue) for containerID: \(container.id), endpointID: \(endpointID).")
 				return .success(())
 			case .failure(let error):
 				logger.error("\(String(describing: error))")
@@ -243,7 +243,7 @@ final class Portainer: ObservableObject {
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: Result containing `String` logs or error.
 	public func getLogs(from container: PortainerKit.Container, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async -> Result<String, Error> {
-		logger.debug("Getting logs from containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)...")
+		logger.debug("Getting logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
@@ -255,7 +255,7 @@ final class Portainer: ObservableObject {
 		let result = await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
 		switch result {
 			case .success(let logs):
-				logger.debug("Got logs from containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
+				logger.debug("Got logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
 				return .success(logs)
 			case .failure(let error):
 				logger.error("\(String(describing: error))")
@@ -272,7 +272,7 @@ final class Portainer: ObservableObject {
 			return .success(attachedContainer)
 		}
 		
-		logger.debug("Attaching to containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)...")
+		logger.debug("Attaching to containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
 		guard let api = api else { return .failure(PortainerError.noAPI) }
 		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
@@ -284,7 +284,7 @@ final class Portainer: ObservableObject {
 		let result = api.attach(to: container.id, endpointID: endpointID)
 		switch result {
 			case .success(let messagePassthroughSubject):
-				logger.debug("Attached to containerID=\(container.id), endpointID=\(self.selectedEndpoint?.id ?? -1)!")
+				logger.debug("Attached to containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
 				let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
 				self.attachedContainer = attachedContainer
 				return .success(attachedContainer)

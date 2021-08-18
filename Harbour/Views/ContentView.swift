@@ -81,6 +81,7 @@ struct ContentView: View {
 			ScrollView {
 				LazyVGrid(columns: columns) {
 					ForEach(portainer.containers) { container in
+						// NavigationLink(tag: container.id, selection: $appState.activeContainerDetail, destination: {
 						NavigationLink(destination: ContainerDetailView(container: container)) {
 							ContainerCell(container: container)
 								.contextMenu {
@@ -90,15 +91,13 @@ struct ContentView: View {
 						.buttonStyle(DecreasesOnPressButtonStyle())
 					}
 				}
-				.padding(.horizontal)
+				.padding()
 				// .transition(.opacity)
 				.animation(.easeInOut, value: portainer.containers)
 			}
 			.navigationTitle("Harbour")
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
-				ToolbarTitle(title: "Harbour", subtitle: isLoading ? "Refreshing..." : nil)
-				
 				ToolbarItem(placement: .navigation) {
 					Button(action: {
 						UIDevice.current.generateHaptic(.soft)
@@ -107,6 +106,8 @@ struct ContentView: View {
 						Image(systemName: "gear")
 					}
 				}
+				
+				ToolbarTitle(title: "Harbour", subtitle: isLoading ? "Refreshing..." : nil)
 				
 				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 			}

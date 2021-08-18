@@ -12,20 +12,20 @@ struct ContainerDetailView: View {
 	@EnvironmentObject var portainer: Portainer
 	@ObservedObject var container: PortainerKit.Container
 	
-	@State var isLoading: Bool = true
+	@State var isLoading: Bool = false
 	@State var containerDetails: PortainerKit.ContainerDetails? = nil
 		
 	var buttonsSection: some View {
 		LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 2)) {
-			NavigationLink(destination: ContainerMountsDetailsView(container: container, details: containerDetails)) {
+			NavigationLink(destination: ContainerMountsDetailsView(mounts: container.mounts, details: containerDetails?.mounts)) {
 				NavigationLinkLabel(label: "Mounts", symbolName: "externaldrive.fill")
 			}
 			
-			NavigationLink(destination: ContainerNetworkDetailsView(container: container, details: containerDetails)) {
+			NavigationLink(destination: ContainerNetworkDetailsView(networkSettings: container.networkSettings, details: containerDetails?.networkSettings, ports: container.ports)) {
 				NavigationLinkLabel(label: "Network", symbolName: "network")
 			}
 			
-			NavigationLink(destination: ContainerConfigDetailsView(container: container, details: containerDetails)) {
+			NavigationLink(destination: ContainerConfigDetailsView(config: containerDetails?.config, hostConfig: containerDetails?.hostConfig ?? container.hostConfig)) {
 				NavigationLinkLabel(label: "Config", symbolName: "server.rack")
 			}
 			
@@ -47,16 +47,31 @@ struct ContainerDetailView: View {
 					GraphDriverSection(graphDriver: containerDetails.graphDriver)
 				}
 			}
-			.padding(.horizontal)
+			.padding()
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
 		.navigationTitle(container.displayName ?? container.id)
+		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
+			ToolbarTitle(title: container.displayName ?? container.id, subtitle: isLoading ? "Refreshing..." : nil)
+			
 			ToolbarItem(placement: .primaryAction) {
 				Menu(content: {
 					ContainerContextMenu(container: container)
+					
+					Divider()
+					
+					Button(action: {
+						UIDevice.current.generateHaptic(.light)
+						Task {
+							await refresh()
+						}
+					}) {
+						Label("Refresh", systemImage: "arrow.clockwise")
+					}
 				}) {
 					Image(systemName: container.stateSymbol)
+						.accentColor(container.stateColor)
 				}
 				// .animation(.easeInOut, value: container.state)
 				// .transition(.opacity)
@@ -70,16 +85,16 @@ struct ContainerDetailView: View {
 	}
 	
 	private func refresh() async {
-		guard !isLoading else { return }
-		
 		isLoading = true
 		let result = await portainer.inspectContainer(container)
 		isLoading = false
 		
 		switch result {
 			case .success(let containerDetails):
-				self.containerDetails = containerDetails
-				container.update(from: containerDetails)
+				withAnimation {
+					self.containerDetails = containerDetails
+					container.update(from: containerDetails)
+				}
 			case .failure(let error):
 				AppState.shared.handle(error)
 		}

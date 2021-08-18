@@ -14,6 +14,7 @@ class Preferences: ObservableObject {
 	@AppStorage(UserDefaults.Key.launchedBefore) public var launchedBefore: Bool = false
 	@AppStorage(UserDefaults.Key.enableHaptics) public var enableHaptics: Bool = true
 	@AppStorage(UserDefaults.Key.displayContainerDismissedPrompt) public var displayContainerDismissedPrompt: Bool = true
+	@AppStorage(UserDefaults.Key.autoRefreshInterval) public var autoRefreshInterval: Double = 0
 	
 	public let ud: UserDefaults = UserDefaults(suiteName: "group.\(Bundle.main.bundleIdentifier!)") ?? UserDefaults.standard
 

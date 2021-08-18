@@ -9,15 +9,15 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerConfigDetailsView: View {
-	@ObservedObject var container: PortainerKit.Container
-	let details: PortainerKit.ContainerDetails?
+	let config: PortainerKit.ContainerConfig?
+	let hostConfig: PortainerKit.HostConfig?
 	
 	@State private var isConfigSectionExpanded: Bool = true
 	@State private var isHostConfigSectionExpanded: Bool = true
 
 	var configSection: some View {
 		Section(header: Text("Config")) {
-			if let config = details?.config {
+			if let config = config {
 				Text(String(describing: config))
 			} else {
 				Text("not loaded")
@@ -27,7 +27,7 @@ struct ContainerConfigDetailsView: View {
 	
 	var hostConfigSection: some View {
 		Section(header: Text("Host config")) {
-			if let hostConfig = details?.hostConfig ?? container.hostConfig {
+			if let hostConfig = hostConfig {
 				Text(String(describing: hostConfig))
 			} else {
 				Text("not loaded")
@@ -41,5 +41,9 @@ struct ContainerConfigDetailsView: View {
 			hostConfigSection
 		}
 		.navigationTitle("Config")
+		.navigationBarTitleDisplayMode(.inline)
+		.toolbar {
+			ToolbarTitle(title: "Config", subtitle: nil)
+		}
 	}
 }
