@@ -2,7 +2,7 @@
 //  ContainerLogsView.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import PortainerKit
@@ -10,12 +10,20 @@ import SwiftUI
 
 struct ContainerLogsView: View {
 	@EnvironmentObject var portainer: Portainer
-	let container: PortainerKit.Container
+	@ObservedObject var container: PortainerKit.Container
 
 	@State private var logs: String = ""
 	
-	@State private var tail: Int = 100
-	@State private var displayTimestamps: Bool = false
+	@State private var tail: Int = 100 {
+		didSet {
+			Task { await refresh() }
+		}
+	}
+	@State private var displayTimestamps: Bool = false {
+		didSet {
+			Task { await refresh() }
+		}
+	}
 	
 	let logsLabelID: String = "LogsLabel"
 	let tailAmounts: [Int] = [10, 100, 500, 1000, 10_000, 100_000, 1_000_000, 10_000_000]
@@ -53,10 +61,9 @@ struct ContainerLogsView: View {
 							
 							Menu("Lines") {
 								ForEach(tailAmounts, id: \.self) { count in
-									Button(role: nil, action: {
+									Button(action: {
 										UIDevice.current.generateHaptic(.light)
 										tail = count
-										await fetch()
 									}) {
 										Text("\(count)")
 										if tail == count {
@@ -66,10 +73,9 @@ struct ContainerLogsView: View {
 								}
 							}
 							
-							Button(role: nil, action: {
+							Button(action: {
 								UIDevice.current.generateHaptic(.light)
 								displayTimestamps.toggle()
-								await fetch()
 							}) {
 								Text("Timestamps")
 								if displayTimestamps {
@@ -79,9 +85,11 @@ struct ContainerLogsView: View {
 							
 							Divider()
 							
-							Button(role: nil, action: {
+							Button(action: {
 								UIDevice.current.generateHaptic(.light)
-								await fetch()
+								Task {
+									await refresh()
+								}
 							}) {
 								Label("Refresh", systemImage: "arrow.clockwise")
 							}
@@ -94,10 +102,10 @@ struct ContainerLogsView: View {
 		}
 		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
-		.task(fetch)
+		.task { await refresh() }
 	}
 	
-	private func fetch() async {
+	private func refresh() async {
 		let result = await portainer.getLogs(from: container, since: 0, tail: tail, displayTimestamps: displayTimestamps)
 		switch result {
 			case .success(let logs):

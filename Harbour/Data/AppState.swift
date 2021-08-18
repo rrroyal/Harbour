@@ -2,7 +2,7 @@
 //  AppState.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import Foundation
@@ -28,18 +28,22 @@ class AppState: ObservableObject {
 	private init() {
 		if !Preferences.shared.launchedBefore { isSetupSheetPresented = true }
 	}
+	
+	public func handle(_ error: Error, notification: AppNotifications.Notification, _fileID: StaticString = #fileID, _line: Int = #line) {
+		handle(error, displayNotification: false, _fileID: _fileID, _line: _line)
+		DispatchQueue.main.async { [weak self] in
+			self?.errorNotifications.add(notification)
+		}
+	}
 
 	public func handle(_ error: Error, displayNotification: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
-		self.logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
+		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
 		if displayNotification {
 			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .timeout(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, backgroundStyle: .colorAndMaterial(color: .red.opacity(0.5), material: .regularMaterial))
-			errorNotifications.add(notification)
+			DispatchQueue.main.async { [weak self] in
+				self?.errorNotifications.add(notification)
+			}
 		}
-	}
-	
-	public func handle(_ error: Error, notification: AppNotifications.Notification, _fileID: StaticString = #fileID, _line: Int = #line) {
-		self.handle(error, displayNotification: false, _fileID: _fileID, _line: _line)
-		errorNotifications.add(notification)
 	}
 }

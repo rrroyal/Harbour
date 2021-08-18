@@ -2,7 +2,7 @@
 //  Labeled.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import SwiftUI
@@ -25,12 +25,12 @@ struct Labeled: View {
 	
 	public init(label: String, bool: Bool?) {
 		self.label = label
-		self.monospace = false
+		monospace = false
 		
 		if let bool = bool {
-			self.content = bool ? "✅" : "❌"
+			content = bool ? "✅" : "❌"
 		} else {
-			self.content = "❔"
+			content = "❔"
 		}
 	}
 

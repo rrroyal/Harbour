@@ -2,7 +2,7 @@
 //  SettingsView.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import SwiftUI
@@ -60,8 +60,8 @@ struct SettingsView: View {
 				.foregroundColor(.secondary)
 				.opacity(Globals.Views.secondaryOpacity)
 			
-			Link(destination: URL(string: "https://github.com/rrroyal/Harbour")!) {
-				Text("Made with ❤️ (and ☕️) by @rrroyal")
+			Link(destination: URL(string: "https://github.com/rrunitears/Harbour")!) {
+				Text("Made with ❤️ (and ☕️) by @rrunitears")
 					.font(.subheadline.weight(.semibold))
 					.foregroundColor(.secondary)
 					.opacity(Globals.Views.secondaryOpacity)

@@ -2,7 +2,7 @@
 //  AppNotifications+NotificationsOverlay.swift
 //  AppNotifications
 //
-//  Created by royal on 13/06/2021.
+//  Created by unitears on 13/06/2021.
 //
 
 import SwiftUI
@@ -15,9 +15,9 @@ internal extension AppNotifications {
 		let anchor: Edge
 
 		/* public init(model: AppNotifications, alignment: Alignment, anchor: Edge) {
-		 	self.model = model
-		 	self.alignment = alignment
-		 	self.anchor = anchor
+		 	model = model
+		 	alignment = alignment
+		 	anchor = anchor
 		 } */
 
 		public var body: some View {

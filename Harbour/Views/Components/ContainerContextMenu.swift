@@ -2,7 +2,7 @@
 //  ContainerContextMenu.swift
 //  Harbour
 //
-//  Created by royal on 12/06/2021.
+//  Created by unitears on 12/06/2021.
 //
 
 import PortainerKit
@@ -12,35 +12,35 @@ struct ContainerContextMenu: View {
 	let container: PortainerKit.Container
 	
 	var resumeButton: some View {
-		Button(role: nil, action: { await execute(.unpause) }) {
+		Button(action: { execute(.unpause) }) {
 			Text("Resume")
 			Image(systemName: "wake")
 		}
 	}
 	
 	var startButton: some View {
-		Button(role: nil, action: { await execute(.start) }) {
+		Button(action: { execute(.start) }) {
 			Text("Start")
 			Image(systemName: "play")
 		}
 	}
 	
 	var pauseButton: some View {
-		Button(role: nil, action: { await execute(.pause) }) {
+		Button(action: { execute(.pause) }) {
 			Text("Pause")
 			Image(systemName: "pause")
 		}
 	}
 	
 	var stopButton: some View {
-		Button(role: nil, action: { await execute(.stop) }) {
+		Button(action: { execute(.stop) }) {
 			Text("Stop")
 			Image(systemName: "stop")
 		}
 	}
 	
 	var killButton: some View {
-		Button(role: .destructive, action: { await execute(.kill, haptic: .heavy) }) {
+		Button(role: .destructive, action: { execute(.kill, haptic: .heavy) }) {
 			Text("Kill")
 			Image(systemName: "bolt")
 		}
@@ -101,24 +101,26 @@ struct ContainerContextMenu: View {
 		}
 	}
 	
-	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) async {
-		await UIDevice.current.generateHaptic(haptic)
-		
-		let result = await Portainer.shared.execute(action, on: container)
-		switch result {
-			case .success():
-				DispatchQueue.main.async {
-					self.container.state = action.expectedState
-					Portainer.shared.refreshCurrentContainer.send()
-				}
-				
-				if let endpointID = Portainer.shared.selectedEndpoint?.id {
-					await Portainer.shared.getContainers(endpointID: endpointID)
-				}
-				
-			case .failure(let error):
-				await UIDevice.current.generateHaptic(.error)
-				AppState.shared.handle(error)
+	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) {
+		UIDevice.current.generateHaptic(haptic)
+
+		Task {
+			let result = await Portainer.shared.execute(action, on: container)
+			switch result {
+				case .success():
+					DispatchQueue.main.async {
+						container.state = action.expectedState
+						Portainer.shared.refreshCurrentContainer.send()
+					}
+					
+					if let endpointID = Portainer.shared.selectedEndpoint?.id {
+						await Portainer.shared.getContainers(endpointID: endpointID)
+					}
+					
+				case .failure(let error):
+					await UIDevice.current.generateHaptic(.error)
+					AppState.shared.handle(error)
+			}
 		}
 	}
 }

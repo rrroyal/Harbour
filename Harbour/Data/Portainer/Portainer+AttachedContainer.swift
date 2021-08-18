@@ -2,7 +2,7 @@
 //  Portainer+AttachedContainer.swift
 //  Harbour
 //
-//  Created by royal on 13/06/2021.
+//  Created by unitears on 13/06/2021.
 //
 
 import Combine
@@ -22,11 +22,11 @@ extension Portainer {
 		private var messageCancellable: AnyCancellable? = nil
 		
 		public init(container: PortainerKit.Container, messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject) {
-			self.logger.info("Attached to container with ID \(container.id)")
+			logger.info("Attached to container with ID \(container.id)")
 			self.container = container
 			self.messagePassthroughSubject = messagePassthroughSubject
 						
-			self.messageCancellable = messagePassthroughSubject
+			messageCancellable = messagePassthroughSubject
 				.filter {
 					if let result = try? $0.get() { return result.source == .server }
 					return true
@@ -39,7 +39,7 @@ extension Portainer {
 			logger.info("Deinitialized")
 		}
 		
-		private func passthroughSubjectCompletion(completion: Subscribers.Completion<Error>) {
+		private func passthroughSubjectCompletion(_ completion: Subscribers.Completion<Error>) {
 			switch completion {
 				case .finished:
 					let string = "Session ended."
@@ -51,7 +51,7 @@ extension Portainer {
 			}
 		}
 		
-		private func passthroughSubjectValue(result: Result<PortainerKit.WebSocketMessage, Error>) {
+		private func passthroughSubjectValue(_ result: Result<PortainerKit.WebSocketMessage, Error>) {
 			switch result {
 				case .success(let message):
 					switch message.message {
@@ -75,8 +75,7 @@ extension Portainer {
 		private func update(_ string: String) {
 			let attributedString: AttributedString = AttributedString(string)
 			DispatchQueue.main.async { [weak self] in
-				guard let self = self else { return }
-				self.attributedString.append(attributedString)
+				self?.attributedString.append(attributedString)
 			}
 		}
 	}

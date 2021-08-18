@@ -2,7 +2,7 @@
 //  Preferences.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import Foundation
@@ -15,7 +15,7 @@ class Preferences: ObservableObject {
 	@AppStorage(UserDefaults.Key.enableHaptics) public var enableHaptics: Bool = true
 	@AppStorage(UserDefaults.Key.displayContainerDismissedPrompt) public var displayContainerDismissedPrompt: Bool = true
 	
-	public let ud: UserDefaults = UserDefaults.standard
+	public let ud: UserDefaults = UserDefaults(suiteName: "group.\(Bundle.main.bundleIdentifier!)") ?? UserDefaults.standard
 
 	private init() {}
 }

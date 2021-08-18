@@ -2,14 +2,14 @@
 //  ContainerCell.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import PortainerKit
 import SwiftUI
 
 struct ContainerCell: View {
-	let container: PortainerKit.Container
+	@ObservedObject var container: PortainerKit.Container
 		
 	let circleSize: Double = 10
 	

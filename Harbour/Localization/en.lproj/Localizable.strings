@@ -2,7 +2,7 @@
   Localizable.strings
   Harbour
 
-  Created by royal on 20/06/2021.
+  Created by unitears on 20/06/2021.
   en_US
 */
 
@@ -53,7 +53,7 @@
 "%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone it down if you don't like it as much as I do :]";
 
 "Log out" = "Log out";
-"Made with ❤️ (and ☕️) by @rrroyal" = "Made with ❤️ (and ☕️) by @rrroyal";
+"Made with ❤️ (and ☕️) by @rrunitears" = "Made with ❤️ (and ☕️) by @rrunitears";
 
 // MARK: Views/LoginView.swift
 

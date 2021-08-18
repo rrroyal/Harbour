@@ -2,7 +2,7 @@
 //  PortainerKit.swift
 //  PortainerKit
 //
-//  Created by royal on 10/06/2021.
+//  Created by unitears on 10/06/2021.
 //
 
 import Combine
@@ -36,8 +36,11 @@ public class PortainerKit {
 		
 		let configuration = URLSessionConfiguration.default
 		configuration.httpAdditionalHeaders = ["Accept-Encoding": "gzip"]
+		configuration.multipathServiceType = .aggregate
+		configuration.shouldUseExtendedBackgroundIdleMode = true
+		configuration.networkServiceType = .responsiveData
 		
-		self.session = URLSession(configuration: configuration)
+		session = URLSession(configuration: configuration)
 		self.token = token
 	}
 	
@@ -67,7 +70,7 @@ public class PortainerKit {
 			let decoded = try JSONDecoder().decode([String: String].self, from: data)
 			
 			if let jwt: String = decoded["jwt"] {
-				self.token = jwt
+				token = jwt
 				return .success(jwt)
 			} else {
 				return .failure(APIError.fromMessage(decoded["message"]))
@@ -186,7 +189,7 @@ public class PortainerKit {
 			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
 			components.scheme = components.scheme?.replacingOccurrences(of: "http", with: "ws") ?? "ws"
 			components.queryItems = [
-				URLQueryItem(name: "token", value: self.token),
+				URLQueryItem(name: "token", value: token),
 				URLQueryItem(name: "endpointId", value: String(endpointID)),
 				URLQueryItem(name: "id", value: containerID)
 			]
@@ -241,10 +244,10 @@ public class PortainerKit {
 	/// - Parameter path: Request path
 	/// - Returns: `URLRequest` with authorization header set.
 	private func request(for path: RequestPath, overrideURL: URL? = nil) -> URLRequest? {
-		guard let url = URL(string: (overrideURL ?? self.url).absoluteString + path.path) else { return nil }
+		guard let url = URL(string: (overrideURL ?? url).absoluteString + path.path) else { return nil }
 		var request = URLRequest(url: url)
 		
-		if let token = self.token {
+		if let token = token {
 			request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 		}
 		

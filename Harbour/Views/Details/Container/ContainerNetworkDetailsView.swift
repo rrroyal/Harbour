@@ -2,14 +2,14 @@
 //  ContainerNetworkDetailsView.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import PortainerKit
 import SwiftUI
 
 struct ContainerNetworkDetailsView: View {
-	let container: PortainerKit.Container
+	@ObservedObject var container: PortainerKit.Container
 	let details: PortainerKit.ContainerDetails?
 	
 	@ViewBuilder
@@ -69,14 +69,14 @@ private extension ContainerNetworkDetailsView {
 			
 			if let privatePort = port.privatePort,
 			   let type = port.type {
-				self.label = "\(privatePort)/\(type.rawValue)"
+				label = "\(privatePort)/\(type.rawValue)"
 			} else {
-				self.label = nil
+				label = nil
 			}
 		}
 		
 		var body: some View {
-			Section(header: self.label != nil ? Text(self.label ?? "") : nil) {
+			Section(header: label != nil ? Text(label ?? "") : nil) {
 				Labeled(label: "IP", content: port.ip != nil ? "\(port.ip ?? "")" : nil, monospace: true)
 				Labeled(label: "Private port", content: port.privatePort != nil ? "\(port.privatePort ?? 0)" : nil, monospace: true)
 				Labeled(label: "Public port", content: port.publicPort != nil ? "\(port.publicPort ?? 0)" : nil, monospace: true)

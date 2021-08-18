@@ -2,7 +2,7 @@
 //  HarbourApp.swift
 //  Harbour
 //
-//  Created by royal on 10/06/2021.
+//  Created by unitears on 10/06/2021.
 //
 
 import SwiftUI
@@ -11,7 +11,7 @@ import LoadingIndicator
 
 @main
 struct HarbourApp: App {
-	@Environment(\.scenePhase) var scenePhase
+	@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 	@StateObject var appState: AppState = .shared
 	@StateObject var portainer: Portainer = .shared
 	@StateObject var preferences: Preferences = .shared
@@ -32,7 +32,6 @@ struct HarbourApp: App {
 					SetupView()
 				}
 				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
-				.onChange(of: scenePhase, perform: onScenePhaseChange)
 		}
 	}
 	
@@ -52,18 +51,5 @@ struct HarbourApp: App {
 		guard portainer.attachedContainer != nil else { return }
 		UIDevice.current.generateHaptic(.light)
 		appState.isContainerConsoleSheetPresented = true
-	}
-	
-	private func onScenePhaseChange(_ scenePhase: ScenePhase) {
-		switch scenePhase {
-			case .background:
-				break
-			case .inactive:
-				break
-			case .active:
-				UIApplication.shared.setupLoadingIndicator()
-			@unknown default:
-				break
-		}
 	}
 }

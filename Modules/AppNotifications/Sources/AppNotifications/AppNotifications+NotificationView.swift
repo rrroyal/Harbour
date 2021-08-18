@@ -2,7 +2,7 @@
 //  AppNotifications+NotificationView.swift
 //  AppNotifications
 //
-//  Created by royal on 13/06/2021.
+//  Created by unitears on 13/06/2021.
 //
 
 import SwiftUI
@@ -146,7 +146,7 @@ private extension View {
 	func background<S: InsettableShape>(_ style: AppNotifications.Notification.BackgroundStyle, in shape: S) -> some View {
 		switch style {
 			case .material(let material):
-				self.background(material, in: shape)
+				background(material, in: shape)
 			case .color(let color):
 				self
 					.background(shape.fill(color))
@@ -162,7 +162,7 @@ private extension View {
 	@ViewBuilder
 	func optionalTapGesture(_ action: (() -> Void)?) -> some View {
 		if let action = action {
-			self.onTapGesture(perform: action)
+			onTapGesture(perform: action)
 		} else {
 			self
 		}

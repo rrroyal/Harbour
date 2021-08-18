@@ -2,17 +2,17 @@
 //  String+.swift
 //  Harbour
 //
-//  Created by royal on 12/06/2021.
+//  Created by unitears on 12/06/2021.
 //
 
 import Foundation
 
 extension String {
 	func capitalizingFirstLetter() -> String {
-		self.prefix(1).capitalized + self.dropFirst()
+		prefix(1).capitalized + dropFirst()
 	}
 
 	var isReallyEmpty: Bool {
-		self.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+		trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
 	}
 }

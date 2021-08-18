@@ -2,19 +2,19 @@
 //  PortainerKit+.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import PortainerKit
 import SwiftUI
 
 extension PortainerKit.Endpoint {
-	var displayName: String { self.name ?? "\(self.id)" }
+	var displayName: String { name ?? "\(id)" }
 }
 
 extension PortainerKit.Container {
 	var displayName: String? {
-		guard let name: String = self.names?.first?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
+		guard let name: String = names?.first?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
 		if name.starts(with: "/") {
 			return String(name.dropFirst())
 		} else {
@@ -23,7 +23,7 @@ extension PortainerKit.Container {
 	}
 
 	var stateColor: Color {
-		switch self.state {
+		switch state {
 			case .created: return .yellow
 			case .running: return .green
 			case .paused: return .orange
@@ -36,7 +36,7 @@ extension PortainerKit.Container {
 	}
 
 	var stateSymbol: String {
-		switch self.state {
+		switch state {
 			case .created: return "wake"
 			case .running: return "power"
 			case .paused: return "pause"

@@ -1,17 +1,16 @@
 //
-//  ContainerDetailsView.swift
+//  ContainerDetailView.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import PortainerKit
 import SwiftUI
 
-struct ContainerDetailsView: View {
+struct ContainerDetailView: View {
 	@EnvironmentObject var portainer: Portainer
-
-	let container: PortainerKit.Container
+	@ObservedObject var container: PortainerKit.Container
 	
 	@State var isLoading: Bool = true
 	@State var containerDetails: PortainerKit.ContainerDetails? = nil
@@ -37,21 +36,6 @@ struct ContainerDetailsView: View {
 		.buttonStyle(DecreasesOnPressButtonStyle())
 	}
 	
-	var loadingOverlay: some View {
-		ZStack {
-			Color(uiColor: .systemBackground)
-				.opacity(1 - Globals.Views.secondaryOpacity)
-			ProgressView()
-		}
-		.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-		.allowsHitTesting(isLoading)
-		.edgesIgnoringSafeArea(.all)
-		.opacity(isLoading ? 1 : 0)
-		.animation(.easeInOut, value: isLoading)
-		.transition(.opacity)
-		// .hidden(!isLoading)
-	}
-	
 	var body: some View {
 		ScrollView {
 			LazyVStack(spacing: 10) {
@@ -66,7 +50,6 @@ struct ContainerDetailsView: View {
 			.padding(.horizontal)
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
-		.overlay(loadingOverlay)
 		.navigationTitle(container.displayName ?? container.id)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
@@ -79,34 +62,31 @@ struct ContainerDetailsView: View {
 				// .transition(.opacity)
 			}
 		}
-		.refreshable(action: refresh)
-		.task {
-			self.isLoading = true
-			await refresh()
-			self.isLoading = false
-		}
+		.refreshable { await refresh() }
+		.task { await refresh() }
 		.onReceive(portainer.refreshCurrentContainer) {
-			async {
-				self.isLoading = true
-				await refresh()
-				self.isLoading = false
-			}
+			Task { await refresh() }
 		}
 	}
 	
 	private func refresh() async {
+		guard !isLoading else { return }
+		
+		isLoading = true
 		let result = await portainer.inspectContainer(container)
+		isLoading = false
+		
 		switch result {
 			case .success(let containerDetails):
 				self.containerDetails = containerDetails
-				self.container.state = containerDetails.state.status
+				container.update(from: containerDetails)
 			case .failure(let error):
 				AppState.shared.handle(error)
 		}
 	}
 }
 
-fileprivate extension ContainerDetailsView {
+fileprivate extension ContainerDetailView {
 	struct DisclosureSection<Content>: View where Content: View {
 		let label: String
 		@ViewBuilder let content: () -> Content

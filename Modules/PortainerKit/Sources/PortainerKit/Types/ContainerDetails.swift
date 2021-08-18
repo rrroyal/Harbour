@@ -2,14 +2,14 @@
 //  ContainerDetails.swift
 //  PortainerKit
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	class ContainerDetails: Identifiable, Codable, Equatable {
+	struct ContainerDetails: Identifiable, Codable, Equatable {
 		enum CodingKeys: String, CodingKey {
 			case id = "Id"
 			case created = "Created"

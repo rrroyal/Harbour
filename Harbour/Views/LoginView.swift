@@ -2,7 +2,7 @@
 //  LoginView.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import SwiftUI
@@ -49,7 +49,7 @@ struct LoginView: View {
 
 			Spacer()
 			
-			Button(role: nil, action: login) {
+			Button(action: login) {
 				if isLoading {
 					ProgressView()
 				} else {
@@ -72,7 +72,7 @@ struct LoginView: View {
 		.padding()
 	}
 	
-	func login() async {
+	func login() {
 		UIDevice.current.generateHaptic(.light)
 		
 		guard let url = URL(string: endpoint) else {
@@ -82,33 +82,35 @@ struct LoginView: View {
 			return
 		}
 		
-		isLoading = true
-		let result = await portainer.login(url: url, username: username, password: password)
-		isLoading = false
-		switch result {
-			case .success():
-				UIDevice.current.generateHaptic(.success)
-				DispatchQueue.main.async {
-					buttonLabel = "Success!"
-					buttonColor = .green
-					presentationMode.wrappedValue.dismiss()
-				}
-				
-			case .failure(let error):
-				UIDevice.current.generateHaptic(.error)
-				DispatchQueue.main.async {
-					if let error = error as? PortainerKit.APIError {
-						buttonLabel = error.description
-					} else {
-						buttonLabel = error.localizedDescription
+		Task {
+			isLoading = true
+			let result = await portainer.login(url: url, username: username, password: password)
+			isLoading = false
+			switch result {
+				case .success():
+					UIDevice.current.generateHaptic(.success)
+					DispatchQueue.main.async {
+						buttonColor = .green
+						buttonLabel = "Success!"
+						presentationMode.wrappedValue.dismiss()
 					}
-					buttonColor = .red
-				}
-		}
-		
-		DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-			buttonLabel = nil
-			buttonColor = nil
+					
+				case .failure(let error):
+					UIDevice.current.generateHaptic(.error)
+					DispatchQueue.main.async {
+						buttonColor = .red
+						if let error = error as? PortainerKit.APIError {
+							buttonLabel = error.description
+						} else {
+							buttonLabel = error.localizedDescription
+						}
+					}
+			}
+			
+			DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+				buttonLabel = nil
+				buttonColor = nil
+			}
 		}
 	}
 }

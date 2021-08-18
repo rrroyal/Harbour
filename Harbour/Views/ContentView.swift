@@ -2,7 +2,7 @@
 //  ContentView.swift
 //  Harbour
 //
-//  Created by royal on 10/06/2021.
+//  Created by unitears on 10/06/2021.
 //
 
 import PortainerKit
@@ -13,9 +13,10 @@ struct ContentView: View {
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
 	
+	@State private var isLoading: Bool = false
 	@State private var isSettingsSheetPresented: Bool = false
 	
-	let columns: [GridItem] = Array(repeating: .init(.flexible()), count: 3)
+	let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 	
 	var toolbarMenu: some View {
 		Menu(content: {
@@ -37,14 +38,17 @@ struct ContentView: View {
 			
 			Divider()
 			
-			Button(role: nil, action: {
+			Button(action: {
 				UIDevice.current.generateHaptic(.light)
-				await portainer.getEndpoints()
+				Task {
+					isLoading = true
+					await portainer.getEndpoints()
+					isLoading = false
+				}
 			}) {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
 		}) {
-			// Image(systemName: portainer.selectedEndpoint != nil ? "tag.fill" : !portainer.endpoints.isEmpty ? "tag" : "tag.slash")
 			Image(systemName: "tag")
 				.symbolVariant(portainer.selectedEndpoint != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
 		}
@@ -77,7 +81,7 @@ struct ContentView: View {
 			ScrollView {
 				LazyVGrid(columns: columns) {
 					ForEach(portainer.containers) { container in
-						NavigationLink(destination: ContainerDetailsView(container: container)) {
+						NavigationLink(destination: ContainerDetailView(container: container)) {
 							ContainerCell(container: container)
 								.contextMenu {
 									ContainerContextMenu(container: container)
@@ -91,7 +95,10 @@ struct ContentView: View {
 				.animation(.easeInOut, value: portainer.containers)
 			}
 			.navigationTitle("Harbour")
+			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
+				ToolbarTitle(title: "Harbour", subtitle: isLoading ? "Refreshing..." : nil)
+				
 				ToolbarItem(placement: .navigation) {
 					Button(action: {
 						UIDevice.current.generateHaptic(.soft)
@@ -106,7 +113,9 @@ struct ContentView: View {
 			.background(backgroundView)
 			.refreshable {
 				if let endpointID = portainer.selectedEndpoint?.id {
+					isLoading = true
 					await portainer.getContainers(endpointID: endpointID)
+					isLoading = false
 				}
 			}
 		}

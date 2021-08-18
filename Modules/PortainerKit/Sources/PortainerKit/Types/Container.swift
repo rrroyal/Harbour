@@ -2,14 +2,14 @@
 //  Container.swift
 //  PortainerKit
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	class Container: Identifiable, Codable, Equatable {
+	class Container: Identifiable, Codable, Equatable, ObservableObject {
 		enum CodingKeys: String, CodingKey {
 			case id = "Id"
 			case names = "Names"
@@ -50,6 +50,11 @@ public extension PortainerKit {
 				lhs.status == rhs.status &&
 				lhs.names == rhs.names &&
 				lhs.labels == rhs.labels
+		}
+		
+		// TODO: Update other properties
+		public func update(from details: PortainerKit.ContainerDetails) {
+			self.state = details.state.status
 		}
 	}
 }

@@ -2,7 +2,7 @@
 //  View+.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import SwiftUI
@@ -20,11 +20,11 @@ extension View {
 	}
 
 	func padding(_ edges: Edge.Set, _ length: PaddingSize) -> some View {
-		self.padding(edges, length.rawValue)
+		padding(edges, length.rawValue)
 	}
 
 	func padding(_ size: PaddingSize) -> some View {
-		self.padding(size.rawValue)
+		padding(size.rawValue)
 	}
 }
 

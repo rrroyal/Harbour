@@ -2,14 +2,14 @@
 //  ContainerConfigDetailsView.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import PortainerKit
 import SwiftUI
 
 struct ContainerConfigDetailsView: View {
-	let container: PortainerKit.Container
+	@ObservedObject var container: PortainerKit.Container
 	let details: PortainerKit.ContainerDetails?
 	
 	@State private var isConfigSectionExpanded: Bool = true

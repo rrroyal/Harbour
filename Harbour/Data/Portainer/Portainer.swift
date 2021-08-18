@@ -2,7 +2,7 @@
 //  Portainer.swift
 //  Harbour
 //
-//  Created by royal on 11/06/2021.
+//  Created by unitears on 11/06/2021.
 //
 
 import Combine
@@ -26,7 +26,7 @@ final class Portainer: ObservableObject {
 	@Published public var selectedEndpoint: PortainerKit.Endpoint? = nil {
 		didSet {
 			if let endpointID = selectedEndpoint?.id {
-				async { await getContainers(endpointID: endpointID) }
+				Task { await getContainers(endpointID: endpointID) }
 			} else {
 				containers = []
 			}
@@ -66,7 +66,7 @@ final class Portainer: ObservableObject {
 		   let token = keychain[urlString] {
 			logger.debug("Initializing PortainerKit for URL=\(url, privacy: .sensitive)")
 			api = PortainerKit(url: url, token: token)
-			async { await getEndpoints() }
+			Task { await getEndpoints() }
 		}
 	}
 	
@@ -79,6 +79,7 @@ final class Portainer: ObservableObject {
 	///   - password: Password
 	/// - Returns: Result containing JWT token or error.
 	public func login(url: URL, username: String, password: String) async -> Result<Void, Error> {
+
 		logger.debug("Logging in! URL=\(url.absoluteString, privacy: .sensitive) username=\(username, privacy: .sensitive) password=\(password, privacy: .private)")
 		let api = PortainerKit(url: url)
 		self.api = api
