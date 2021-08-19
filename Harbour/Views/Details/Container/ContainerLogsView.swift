@@ -12,6 +12,7 @@ struct ContainerLogsView: View {
 	@EnvironmentObject var portainer: Portainer
 	let container: PortainerKit.Container
 
+	@State private var isLoading: Bool = false
 	@State private var logs: String = ""
 	
 	@State private var tail: Int = 100 {
@@ -103,18 +104,21 @@ struct ContainerLogsView: View {
 		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
-			ToolbarTitle(title: "Logs", subtitle: nil)
+			ToolbarTitle(title: "Logs", subtitle: isLoading ? "Refreshing..." : nil)
 		}
 		.task { await refresh() }
 	}
 	
 	private func refresh() async {
-		let result = await portainer.getLogs(from: container, since: 0, tail: tail, displayTimestamps: displayTimestamps)
-		switch result {
-			case .success(let logs):
-				self.logs = logs
-			case .failure(let error):
-				AppState.shared.handle(error)
+		isLoading = true
+		
+		do {
+			let logs = try await portainer.getLogs(from: container, since: 0, tail: tail, displayTimestamps: displayTimestamps)
+			self.logs = logs
+		} catch {
+			AppState.shared.handle(error)
 		}
+		
+		isLoading = false
 	}
 }

@@ -91,9 +91,13 @@ struct ContainerContextMenu: View {
 			Divider()
 			
 			Button(action: {
-				UIDevice.current.generateHaptic(.light)
-				Portainer.shared.attach(to: container)
-				AppState.shared.isContainerConsoleSheetPresented = true
+				do {
+					UIDevice.current.generateHaptic(.light)
+					try Portainer.shared.attach(to: container)
+					AppState.shared.isContainerConsoleSheetPresented = true
+				} catch {
+					AppState.shared.handle(error)
+				}
 			}) {
 				Label("Attach", systemImage: "terminal")
 			}
@@ -105,21 +109,19 @@ struct ContainerContextMenu: View {
 		UIDevice.current.generateHaptic(haptic)
 
 		Task {
-			let result = await Portainer.shared.execute(action, on: container)
-			switch result {
-				case .success():
-					DispatchQueue.main.async {
-						container.state = action.expectedState
-						Portainer.shared.refreshCurrentContainer.send()
-					}
-					
-					if let endpointID = Portainer.shared.selectedEndpoint?.id {
-						await Portainer.shared.getContainers(endpointID: endpointID)
-					}
-					
-				case .failure(let error):
-					await UIDevice.current.generateHaptic(.error)
-					AppState.shared.handle(error)
+			do {
+				try await Portainer.shared.execute(action, on: container)
+				
+				DispatchQueue.main.async {
+					container.state = action.expectedState
+					Portainer.shared.refreshCurrentContainer.send()
+				}
+				
+				if let endpointID = Portainer.shared.selectedEndpoint?.id {
+					try await Portainer.shared.getContainers(endpointID: endpointID)
+				}
+			} catch {
+				AppState.shared.handle(error)
 			}
 		}
 	}

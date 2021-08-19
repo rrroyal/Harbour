@@ -26,7 +26,13 @@ final class Portainer: ObservableObject {
 	@Published public var selectedEndpoint: PortainerKit.Endpoint? = nil {
 		didSet {
 			if let endpointID = selectedEndpoint?.id {
-				Task { await getContainers(endpointID: endpointID) }
+				Task {
+					do {
+						try await getContainers(endpointID: endpointID)
+					} catch {
+						AppState.shared.handle(error)
+					}
+				}
 			} else {
 				containers = []
 			}
@@ -66,7 +72,9 @@ final class Portainer: ObservableObject {
 			api = PortainerKit(url: url, token: token)
 			
 			Task {
-				await getEndpoints()
+				do {
+					try await getEndpoints()
+				} catch {}
 			}
 		}
 	}
@@ -79,7 +87,7 @@ final class Portainer: ObservableObject {
 	///   - username: Username
 	///   - password: Password
 	/// - Returns: Result containing JWT token or error.
-	public func login(url: URL, username: String, password: String) async -> Result<Void, Error> {
+	public func login(url: URL, username: String, password: String) async throws {
 		logger.debug("Logging in! URL: \(url.absoluteString, privacy: .sensitive)")
 		let api = PortainerKit(url: url)
 		self.api = api
@@ -88,24 +96,15 @@ final class Portainer: ObservableObject {
 		AppState.shared.activeNetworkActivities.insert(activeActionID)
 		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 		
-		let result = await api.login(username: username, password: password)
-		switch result {
-			case .success(let token):
-				logger.debug("Successfully logged in!")
-				
-				DispatchQueue.main.async { [weak self] in
-					self?.endpointURL = url.absoluteString
-				}
-				
-				keychain[url.absoluteString] = token
-				await getEndpoints()
-				
-				return .success(())
-				
-			case .failure(let error):
-				logger.error("\(String(describing: error))")
-				return .failure(error)
+		let token = try await api.login(username: username, password: password)
+		
+		logger.debug("Successfully logged in!")
+		
+		DispatchQueue.main.async { [weak self] in
+			self?.endpointURL = url.absoluteString
 		}
+		
+		keychain[url.absoluteString] = token
 	}
 	
 	/// Logs out, removing all local authentication.
@@ -121,90 +120,100 @@ final class Portainer: ObservableObject {
 	}
 	
 	/// Fetches available endpoints.
-	/// - Returns: Result containing `[PortainerKit.Endpoint]` or error.
+	/// - Returns: `[PortainerKit.Endpoint]`
 	@discardableResult
-	public func getEndpoints() async -> Result<[PortainerKit.Endpoint], Error> {
+	public func getEndpoints() async throws -> [PortainerKit.Endpoint] {
 		logger.debug("Getting endpoints...")
 		
-		guard let api = api else { return .failure(PortainerError.noAPI) }
+		guard let api = api else { throw PortainerError.noAPI }
 		
 		let activeActionID = generateActionID()
 		AppState.shared.activeNetworkActivities.insert(activeActionID)
 		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 		
-		let result = await api.getEndpoints()
-		switch result {
-			case .success(let endpoints):
-				logger.debug("Got \(endpoints.count) endpoint(s).")
-				DispatchQueue.main.async { [weak self] in
-					self?.endpoints = endpoints
-					self?.isLoggedIn = true
+		do {
+			let endpoints = try await api.getEndpoints()
+			
+			logger.debug("Got \(endpoints.count) endpoint(s).")
+			DispatchQueue.main.async { [weak self] in
+				self?.endpoints = endpoints
+				self?.isLoggedIn = true
+			}
+			
+			return endpoints
+		} catch {
+			DispatchQueue.main.async { [weak self] in
+				self?.endpoints = []
+				
+				if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
+					self?.isLoggedIn = false
 				}
-				return .success(endpoints)
-			case .failure(let error):
-				logger.error("\(String(describing: error))")
-				DispatchQueue.main.async { [weak self] in
-					self?.endpoints = []
-					
-					if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
-						self?.isLoggedIn = false
-					}
-				}
-				return .failure(error)
+			}
+			
+			throw error
 		}
 	}
 	
 	/// Fetches available containers for selected endpoint ID.
 	/// - Parameter endpointID: Endpoint ID
-	/// - Returns: Result containing `[PortainerKit.Container]` or error.
+	/// - Returns: `[PortainerKit.Container]`
 	@discardableResult
-	public func getContainers(endpointID: Int) async -> Result<[PortainerKit.Container], Error> {
+	public func getContainers(endpointID: Int) async throws -> [PortainerKit.Container] {
 		logger.debug("Getting containers for endpointID: \(endpointID)...")
 		
-		guard let api = api else { return .failure(PortainerError.noAPI) }
+		guard let api = api else { throw PortainerError.noAPI }
 
 		let activeActionID = generateActionID(endpointID)
 		AppState.shared.activeNetworkActivities.insert(activeActionID)
 		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 
-		let result = await api.getContainers(for: endpointID)
-		switch result {
-			case .success(let containers):
-				logger.debug("Got \(containers.count) container(s) for endpointID: \(endpointID).")
-				DispatchQueue.main.async { [weak self] in
-					self?.containers = containers
+		do {
+			let containers = try await api.getContainers(for: endpointID)
+			
+			logger.debug("Got \(containers.count) container(s) for endpointID: \(endpointID).")
+			DispatchQueue.main.async { [weak self] in
+				self?.containers = containers
+			}
+			
+			return containers
+		} catch {
+			DispatchQueue.main.async { [weak self] in
+				self?.containers = []
+				
+				if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
+					self?.isLoggedIn = false
 				}
-				return .success(containers)
-			case .failure(let error):
-				logger.error("\(String(describing: error))")
-				DispatchQueue.main.async { [weak self] in
-					self?.containers = []
-				}
-				return .failure(error)
+			}
+			
+			throw error
 		}
 	}
 	
 	/// Fetches container details.
 	/// - Parameter container: Container to be inspected
-	/// - Returns: Result containing `PortainerKit.ContainerDetails` or error.
-	public func inspectContainer(_ container: PortainerKit.Container) async -> Result<PortainerKit.ContainerDetails, Error> {
+	/// - Returns: `PortainerKit.ContainerDetails`
+	public func inspectContainer(_ container: PortainerKit.Container) async throws -> PortainerKit.ContainerDetails {
 		logger.debug("Inspecting container with ID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
-		guard let api = api else { return .failure(PortainerError.noAPI) }
-		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
+		guard let api = api else { throw PortainerError.noAPI }
+		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
 
 		let activeActionID = generateActionID(container.id)
 		AppState.shared.activeNetworkActivities.insert(activeActionID)
 		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 		
-		let result = await api.inspectContainer(container.id, endpointID: endpointID)
-		switch result {
-			case .success(let containerDetails):
-				logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
-				return .success(containerDetails)
-			case .failure(let error):
-				logger.error("\(String(describing: error))")
-				return .failure(error)
+		do {
+			let containerDetails = try await api.inspectContainer(container.id, endpointID: endpointID)
+			logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
+			return containerDetails
+		} catch {
+			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
+				DispatchQueue.main.async { [weak self] in
+					self?.isLoggedIn = false
+				}
+			}
+			
+			throw error
 		}
 	}
 	
@@ -212,26 +221,27 @@ final class Portainer: ObservableObject {
 	/// - Parameters:
 	///   - action: Action to be executed
 	///   - container: Container, where the action will be executed
-	/// - Returns: Result containing void or error.
-	@discardableResult
-	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container) async -> Result<Void, Error> {
+	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container) async throws {
 		logger.debug("Executing action \(action.rawValue) for containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
-		guard let api = api else { return .failure(PortainerError.noAPI) }
-		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
+		guard let api = api else { throw PortainerError.noAPI }
+		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
 		
 		let activeActionID = generateActionID(action, container.id)
 		AppState.shared.activeNetworkActivities.insert(activeActionID)
 		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 		
-		let result = await api.execute(action, containerID: container.id, endpointID: endpointID)
-		switch result {
-			case .success():
-				logger.debug("Executed action \(action.rawValue) for containerID: \(container.id), endpointID: \(endpointID).")
-				return .success(())
-			case .failure(let error):
-				logger.error("\(String(describing: error))")
-				return .failure(error)
+		do {
+			try await api.execute(action, containerID: container.id, endpointID: endpointID)
+			logger.debug("Executed action \(action.rawValue) for containerID: \(container.id), endpointID: \(endpointID).")
+		} catch {
+			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
+				DispatchQueue.main.async { [weak self] in
+					self?.isLoggedIn = false
+				}
+			}
+			
+			throw error
 		}
 	}
 	
@@ -241,25 +251,29 @@ final class Portainer: ObservableObject {
 	///   - since: Logs since this time
 	///   - tail: Number of lines
 	///   - displayTimestamps: Display timestamps?
-	/// - Returns: Result containing `String` logs or error.
-	public func getLogs(from container: PortainerKit.Container, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async -> Result<String, Error> {
+	/// - Returns: `String` logs
+	public func getLogs(from container: PortainerKit.Container, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
 		logger.debug("Getting logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
-		guard let api = api else { return .failure(PortainerError.noAPI) }
-		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
+		guard let api = api else { throw PortainerError.noAPI }
+		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
 		
 		let activeActionID = generateActionID(container.id)
 		AppState.shared.activeNetworkActivities.insert(activeActionID)
 		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 
-		let result = await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
-		switch result {
-			case .success(let logs):
-				logger.debug("Got logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
-				return .success(logs)
-			case .failure(let error):
-				logger.error("\(String(describing: error))")
-				return .failure(error)
+		do {
+			let logs = try await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
+			logger.debug("Got logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
+			return logs
+		} catch {
+			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
+				DispatchQueue.main.async { [weak self] in
+					self?.isLoggedIn = false
+				}
+			}
+			
+			throw error
 		}
 	}
 	
@@ -267,30 +281,36 @@ final class Portainer: ObservableObject {
 	/// - Parameter container: Container to attach to
 	/// - Returns: Result containing `AttachedContainer` or error.
 	@discardableResult
-	public func attach(to container: PortainerKit.Container) -> Result<AttachedContainer, Error> {
+	public func attach(to container: PortainerKit.Container) throws -> AttachedContainer {
 		if let attachedContainer = attachedContainer, attachedContainer.container.id == container.id {
-			return .success(attachedContainer)
+			return attachedContainer
 		}
 		
 		logger.debug("Attaching to containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
-		guard let api = api else { return .failure(PortainerError.noAPI) }
-		guard let endpointID = selectedEndpoint?.id else { return .failure(PortainerError.noEndpoint) }
+		guard let api = api else { throw PortainerError.noAPI }
+		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
 		
 		let activeActionID = generateActionID(container.id)
 		AppState.shared.activeNetworkActivities.insert(activeActionID)
 		defer { AppState.shared.activeNetworkActivities.remove(activeActionID) }
 		
-		let result = api.attach(to: container.id, endpointID: endpointID)
-		switch result {
-			case .success(let messagePassthroughSubject):
-				logger.debug("Attached to containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
-				let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
-				self.attachedContainer = attachedContainer
-				return .success(attachedContainer)
-			case .failure(let error):
-				logger.error("\(String(describing: error))")
-				return .failure(error)
+		do {
+			let messagePassthroughSubject = try api.attach(to: container.id, endpointID: endpointID)
+			logger.debug("Attached to containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
+			
+			let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
+			self.attachedContainer = attachedContainer
+			
+			return attachedContainer
+		} catch {
+			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
+				DispatchQueue.main.async { [weak self] in
+					self?.isLoggedIn = false
+				}
+			}
+			
+			throw error
 		}
 	}
 	

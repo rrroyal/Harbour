@@ -12,8 +12,8 @@ struct ContainerDetailView: View {
 	@EnvironmentObject var portainer: Portainer
 	@ObservedObject var container: PortainerKit.Container
 	
-	@State var isLoading: Bool = false
-	@State var containerDetails: PortainerKit.ContainerDetails? = nil
+	@State private var isLoading: Bool = false
+	@State private var containerDetails: PortainerKit.ContainerDetails? = nil
 		
 	var buttonsSection: some View {
 		LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 2)) {
@@ -86,18 +86,18 @@ struct ContainerDetailView: View {
 	
 	private func refresh() async {
 		isLoading = true
-		let result = await portainer.inspectContainer(container)
-		isLoading = false
 		
-		switch result {
-			case .success(let containerDetails):
-				withAnimation {
-					self.containerDetails = containerDetails
-					container.update(from: containerDetails)
-				}
-			case .failure(let error):
-				AppState.shared.handle(error)
+		do {
+			let containerDetails = try await portainer.inspectContainer(container)
+			withAnimation {
+				self.containerDetails = containerDetails
+				container.update(from: containerDetails)
+			}
+		} catch {
+			AppState.shared.handle(error)
 		}
+		
+		isLoading = false
 	}
 }
 

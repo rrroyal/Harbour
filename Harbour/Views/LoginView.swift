@@ -83,33 +83,31 @@ struct LoginView: View {
 		}
 		
 		Task {
-			isLoading = true
-			let result = await portainer.login(url: url, username: username, password: password)
-			isLoading = false
-			switch result {
-				case .success():
-					UIDevice.current.generateHaptic(.success)
-					DispatchQueue.main.async {
-						buttonColor = .green
-						buttonLabel = "Success!"
-						presentationMode.wrappedValue.dismiss()
+			do {
+				isLoading = true
+				try await portainer.login(url: url, username: username, password: password)
+				isLoading = false
+				
+				UIDevice.current.generateHaptic(.success)
+				
+				buttonColor = .green
+				buttonLabel = "Success!"
+				presentationMode.wrappedValue.dismiss()
+			} catch {
+				UIDevice.current.generateHaptic(.error)
+				DispatchQueue.main.async {
+					buttonColor = .red
+					if let error = error as? PortainerKit.APIError {
+						buttonLabel = error.description
+					} else {
+						buttonLabel = error.localizedDescription
 					}
-					
-				case .failure(let error):
-					UIDevice.current.generateHaptic(.error)
-					DispatchQueue.main.async {
-						buttonColor = .red
-						if let error = error as? PortainerKit.APIError {
-							buttonLabel = error.description
-						} else {
-							buttonLabel = error.localizedDescription
-						}
-					}
-			}
-			
-			DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-				buttonLabel = nil
-				buttonColor = nil
+				}
+				
+				DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+					buttonLabel = nil
+					buttonColor = nil
+				}
 			}
 		}
 	}

@@ -41,9 +41,13 @@ struct ContentView: View {
 			Button(action: {
 				UIDevice.current.generateHaptic(.light)
 				Task {
-					isLoading = true
-					await portainer.getEndpoints()
-					isLoading = false
+					do {
+						isLoading = true
+						try await portainer.getEndpoints()
+						isLoading = false
+					} catch {
+						AppState.shared.handle(error)
+					}
 				}
 			}) {
 				Label("Refresh", systemImage: "arrow.clockwise")
@@ -114,9 +118,13 @@ struct ContentView: View {
 			.background(backgroundView)
 			.refreshable {
 				if let endpointID = portainer.selectedEndpoint?.id {
-					isLoading = true
-					await portainer.getContainers(endpointID: endpointID)
-					isLoading = false
+					do {
+						isLoading = true
+						try await portainer.getContainers(endpointID: endpointID)
+						isLoading = false
+					} catch {
+						AppState.shared.handle(error)
+					}
 				}
 			}
 		}

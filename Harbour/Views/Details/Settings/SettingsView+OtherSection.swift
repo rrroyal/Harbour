@@ -16,7 +16,7 @@ extension SettingsView {
 					.foregroundColor(.secondary)
 					.opacity(Globals.Views.secondaryOpacity)
 				
-				Link(destination: URL(string: "https://github.com/rrunitears/Harbour")!) {
+				Link(destination: URL(string: "https://github.com/rrroyal/Harbour")!) {
 					Text("Made with ❤️ (and ☕️) by @unitears")
 						.font(.subheadline.weight(.semibold))
 						.foregroundColor(.secondary)

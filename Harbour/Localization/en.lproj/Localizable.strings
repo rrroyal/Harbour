@@ -51,6 +51,7 @@
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "TODO";
 "%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
 "%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone it down if you don't like it as much as I do :]";
+"%SETTINGS_AUTO_REFRESH%" = "Auto refresh";
 
 "Log out" = "Log out";
 "Made with ❤️ (and ☕️) by @unitears" = "Made with ❤️ (and ☕️) by @unitears";

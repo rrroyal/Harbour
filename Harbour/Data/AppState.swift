@@ -55,11 +55,16 @@ class AppState: ObservableObject {
 			.autoconnect()
 			.sink { _ in
 				Task {
-					guard let selectedEndpointID = Portainer.shared.selectedEndpoint?.id else {
-						return
+					do {
+						guard let selectedEndpointID = Portainer.shared.selectedEndpoint?.id else {
+							return
+						}
+						
+						try await Portainer.shared.getContainers(endpointID: selectedEndpointID)
+					} catch {
+						await UIDevice.current.generateHaptic(.error)
+						self.handle(error)
 					}
-					
-					await Portainer.shared.getContainers(endpointID: selectedEndpointID)
 				}
 			}
 	}
@@ -74,6 +79,7 @@ class AppState: ObservableObject {
 	}
 
 	public func handle(_ error: Error, displayNotification: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
+		UIDevice.current.generateHaptic(.error)
 		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
 		if displayNotification {
