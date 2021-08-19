@@ -13,6 +13,8 @@ struct ContainerCell: View {
 		
 	let circleSize: Double = 10
 	
+	let backgroundRectangle: some Shape = RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
+	
 	var body: some View {
 		VStack(alignment: .leading) {
 			HStack(alignment: .top) {
@@ -51,9 +53,10 @@ struct ContainerCell: View {
 		.padding(.medium)
 		.aspectRatio(1, contentMode: .fill)
 		.background(
-			RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
-				.foregroundColor(Color(uiColor: .secondarySystemBackground))
+			backgroundRectangle
+				.fill(Color(uiColor: .secondarySystemBackground))
 		)
+		.contentShape(backgroundRectangle)
 		.animation(.easeInOut, value: container)
 		.transition(.opacity)
 	}

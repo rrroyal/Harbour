@@ -9,6 +9,8 @@ import SwiftUI
 
 // MARK: - AppNotifications+NotificationVIew
 
+// TODO: Scale down on press
+
 @available(iOS 15.0, macOS 12.0, *)
 internal extension AppNotifications {
 	struct NotificationView: View {

@@ -72,9 +72,9 @@ struct ContainerDetailView: View {
 				}) {
 					Image(systemName: container.stateSymbol)
 						.accentColor(container.stateColor)
+						.animation(.easeInOut, value: container.state)
+						.transition(.opacity)
 				}
-				// .animation(.easeInOut, value: container.state)
-				// .transition(.opacity)
 			}
 		}
 		.refreshable { await refresh() }

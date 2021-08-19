@@ -14,6 +14,14 @@ struct ContainerNetworkDetailsView: View {
 	let ports: [PortainerKit.Port]?
 	
 	@ViewBuilder
+	var emptyDisclaimer: some View {
+		if networkSettings == nil && details == nil && ports?.isEmpty ?? true {
+			Text("No network details")
+				.opacity(Globals.Views.secondaryOpacity)
+		}
+	}
+	
+	@ViewBuilder
 	var networkSection: some View {
 		Section {
 			if let network = details {
@@ -56,6 +64,7 @@ struct ContainerNetworkDetailsView: View {
 			networkSection
 			portsSection
 		}
+		.overlay(emptyDisclaimer)
 		.navigationTitle("Network")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {

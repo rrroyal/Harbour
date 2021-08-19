@@ -15,6 +15,14 @@ struct ContainerConfigDetailsView: View {
 	@State private var isConfigSectionExpanded: Bool = true
 	@State private var isHostConfigSectionExpanded: Bool = true
 
+	@ViewBuilder
+	var emptyDisclaimer: some View {
+		if config == nil && hostConfig == nil {
+			Text("No config")
+				.opacity(Globals.Views.secondaryOpacity)
+		}
+	}
+	
 	var configSection: some View {
 		Section(header: Text("Config")) {
 			if let config = config {
@@ -40,6 +48,7 @@ struct ContainerConfigDetailsView: View {
 			configSection
 			hostConfigSection
 		}
+		.overlay(emptyDisclaimer)
 		.navigationTitle("Config")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {

@@ -29,6 +29,14 @@ struct ContainerLogsView: View {
 	let logsLabelID: String = "LogsLabel"
 	let tailAmounts: [Int] = [10, 100, 500, 1000, 10_000, 100_000, 1_000_000, 10_000_000]
 	
+	@ViewBuilder
+	var emptyDisclaimer: some View {
+		if logs.isEmpty {
+			Text("Empty")
+				.opacity(Globals.Views.secondaryOpacity)
+		}
+	}
+	
 	var body: some View {
 		ScrollView {
 			ScrollViewReader { scroll in
@@ -101,6 +109,7 @@ struct ContainerLogsView: View {
 				}
 			}
 		}
+		.background(emptyDisclaimer)
 		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {

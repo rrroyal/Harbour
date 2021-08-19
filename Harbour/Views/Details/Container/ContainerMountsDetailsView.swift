@@ -13,6 +13,14 @@ struct ContainerMountsDetailsView: View {
 	let details: [PortainerKit.MountPoint]?
 	
 	@ViewBuilder
+	var emptyDisclaimer: some View {
+		if mounts?.isEmpty ?? true && details?.isEmpty ?? true {
+			Text("No mounts")
+				.opacity(Globals.Views.secondaryOpacity)
+		}
+	}
+	
+	@ViewBuilder
 	var generalSection: some View {
 		ForEach(mounts?.sorted(by: { ($0.source ?? "", $0.target ?? "") > ($1.source ?? "", $1.target ?? "") }) ?? [], id: \.self) { mount in
 			Section {
@@ -59,6 +67,7 @@ struct ContainerMountsDetailsView: View {
 			generalSection
 			detailSection
 		}
+		.overlay(emptyDisclaimer)
 		.navigationTitle("Mounts")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {

@@ -59,7 +59,7 @@ struct ContentView: View {
 		.disabled(!portainer.isLoggedIn)
 	}
 	
-	var backgroundView: some View {
+	var emptyDisclaimer: some View {
 		Group {
 			if portainer.isLoggedIn {
 				if portainer.selectedEndpoint != nil {
@@ -85,7 +85,6 @@ struct ContentView: View {
 			ScrollView {
 				LazyVGrid(columns: columns) {
 					ForEach(portainer.containers) { container in
-						// NavigationLink(tag: container.id, selection: $appState.activeContainerDetail, destination: {
 						NavigationLink(destination: ContainerDetailView(container: container)) {
 							ContainerCell(container: container)
 								.contextMenu {
@@ -115,7 +114,7 @@ struct ContentView: View {
 				
 				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 			}
-			.background(backgroundView)
+			.background(emptyDisclaimer)
 			.refreshable {
 				if let endpointID = portainer.selectedEndpoint?.id {
 					do {
