@@ -19,6 +19,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
+			.multilineTextAlignment(.center)
 			.foregroundColor(isEnabled ? foregroundColor : .secondary)
 			.font(.body.weight(.semibold))
 			.padding()

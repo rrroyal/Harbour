@@ -95,13 +95,13 @@ struct LoginView: View {
 				presentationMode.wrappedValue.dismiss()
 			} catch {
 				UIDevice.current.generateHaptic(.error)
-				DispatchQueue.main.async {
-					buttonColor = .red
-					if let error = error as? PortainerKit.APIError {
-						buttonLabel = error.description
-					} else {
-						buttonLabel = error.localizedDescription
-					}
+				
+				isLoading = false
+				buttonColor = .red
+				if let error = error as? PortainerKit.APIError {
+					buttonLabel = error.description
+				} else {
+					buttonLabel = error.localizedDescription
 				}
 				
 				DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

@@ -100,10 +100,8 @@ final class Portainer: ObservableObject {
 		
 		logger.debug("Successfully logged in!")
 		
-		DispatchQueue.main.async { [weak self] in
-			self?.endpointURL = url.absoluteString
-		}
-		
+		isLoggedIn = true
+		endpointURL = url.absoluteString
 		keychain[url.absoluteString] = token
 	}
 	

@@ -1,10 +1,3 @@
-//
-//  View+.swift
-//  AppNotifications
-//
-//  Created by unitears on 13/06/2021.
-//
-
 import SwiftUI
 
 @available(iOS 15.0, macOS 12.0, *)

@@ -83,7 +83,7 @@ class AppState: ObservableObject {
 		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
 		if displayNotification {
-			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .timeout(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, backgroundStyle: .colorAndMaterial(color: .red.opacity(0.5), material: .regularMaterial))
+			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .after(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, backgroundStyle: .colorAndMaterial(color: .red.opacity(0.5), material: .regularMaterial))
 			DispatchQueue.main.async { [weak self] in
 				self?.errorNotifications.add(notification)
 			}

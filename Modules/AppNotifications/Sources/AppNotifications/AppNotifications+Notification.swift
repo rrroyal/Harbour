@@ -1,11 +1,5 @@
-//
-//  AppNotifications+Notification.swift
-//  AppNotifications
-//
-//  Created by unitears on 13/06/2021.
-//
-
 import SwiftUI
+import Combine
 
 @available(iOS 15.0, macOS 12.0, *)
 public extension AppNotifications {
@@ -44,10 +38,34 @@ public extension AppNotifications {
 		
 		public let onTap: (() -> Void)?
 		
-		@Published public var isVisible: Bool = false
+		@Published public var isExpanded: Bool = false {
+			didSet { updateTimer() }
+		}
+		
+		internal var dismiss: (() -> Void)!
+		
+		internal var timer: AnyCancellable? = nil
 		
 		public static func == (lhs: AppNotifications.Notification, rhs: AppNotifications.Notification) -> Bool {
 			lhs.id == rhs.id
+		}
+		
+		public func hash(into hasher: inout Hasher) {
+			hasher.combine(id)
+		}
+		
+		internal func updateTimer() {
+			guard case .after(let timeout) = self.dismissType, !isExpanded else {
+				timer?.cancel()
+				timer = nil
+				return
+			}
+			
+			timer = Timer.TimerPublisher(interval: timeout, runLoop: .main, mode: .common)
+				.autoconnect()
+				.sink { [weak self] _ in
+					self?.dismiss()
+				}
 		}
 	}
 }
@@ -57,7 +75,7 @@ public extension AppNotifications.Notification {
 	enum DismissType: Equatable {
 		case none
 		case manual
-		case timeout(_ timeout: TimeInterval)
+		case after(_ timeout: TimeInterval)
 	}
 	
 	enum BackgroundStyle {
