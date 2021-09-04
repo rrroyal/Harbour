@@ -67,7 +67,7 @@ extension Portainer {
 				case .failure(let error):
 					update(String(describing: error))
 					
-					let notification: AppNotifications.Notification = .init(id: "ContainerWebSocketDisconnected-\(container.id)", dismissType: .after(5), icon: "bolt", title: "WebSocket disconnected", description: error.localizedDescription, backgroundStyle: .material(.regular))
+					let notification: AppNotifications.Notification = .init(id: "ContainerWebSocketDisconnected-\(container.id)", dismissType: .after(5), icon: "bolt", title: "WebSocket disconnected", description: error.localizedDescription, style: .color(foreground: .white, background: .red))
 					AppState.shared.handle(error, notification: notification)
 			}
 		}

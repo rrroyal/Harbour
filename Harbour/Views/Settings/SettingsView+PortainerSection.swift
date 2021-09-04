@@ -41,7 +41,7 @@ extension SettingsView {
 		var body: some View {
 			Section(header: Text("Portainer")) {
 				/// Endpoint URL
-				if let endpointURL = portainer.endpointURL {
+				if let endpointURL = Preferences.shared.endpointURL {
 					Labeled(label: "URL", content: endpointURL, monospace: true)
 				}
 				
@@ -53,7 +53,7 @@ extension SettingsView {
 				}
 			}
 			.animation(.easeInOut, value: portainer.isLoggedIn)
-			.animation(.easeInOut, value: portainer.endpointURL)
+			.animation(.easeInOut, value: Preferences.shared.endpointURL)
 			.transition(.opacity)
 			.sheet(isPresented: $isLoginSheetPresented) {
 				LoginView()

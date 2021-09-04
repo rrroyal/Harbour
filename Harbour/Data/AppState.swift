@@ -34,7 +34,7 @@ class AppState: ObservableObject {
 			isSetupSheetPresented = true
 		}
 		
-		if Preferences.shared.autoRefreshInterval > 0 {
+		if Portainer.shared.isLoggedIn && Preferences.shared.autoRefreshInterval > 0 {
 			setupAutoRefreshTimer()
 		}
 	}
@@ -46,10 +46,7 @@ class AppState: ObservableObject {
 		
 		autoRefreshTimer?.cancel()
 
-		guard interval > 0 else {
-			autoRefreshTimer = nil
-			return
-		}
+		guard interval > 0 else { return }
 		
 		autoRefreshTimer = Timer.publish(every: interval, on: .current, in: .common)
 			.autoconnect()
@@ -83,7 +80,7 @@ class AppState: ObservableObject {
 		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
 		if displayNotification {
-			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .after(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, backgroundStyle: .colorAndMaterial(color: .red.opacity(0.5), material: .regularMaterial))
+			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .after(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, style: .color(foreground: .white, background: .red))
 			DispatchQueue.main.async { [weak self] in
 				self?.errorNotifications.add(notification)
 			}

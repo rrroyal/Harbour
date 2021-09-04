@@ -19,7 +19,6 @@ final class Portainer: ObservableObject {
 	// MARK: Miscellaneous
 	
 	@Published public var isLoggedIn: Bool = false
-	@AppStorage(UserDefaults.Key.endpointURL) var endpointURL: String?
 	
 	// MARK: Endpoint
 	
@@ -65,7 +64,7 @@ final class Portainer: ObservableObject {
 	// MARK: - init
 	
 	private init() {
-		if let urlString = endpointURL,
+		if let urlString = Preferences.shared.endpointURL,
 		   let url = URL(string: urlString),
 		   let token = keychain[urlString] {
 			logger.debug("Initializing PortainerKit for URL: \(url, privacy: .sensitive)")
@@ -101,20 +100,23 @@ final class Portainer: ObservableObject {
 		logger.debug("Successfully logged in!")
 		
 		isLoggedIn = true
-		endpointURL = url.absoluteString
+		Preferences.shared.endpointURL = url.absoluteString
 		keychain[url.absoluteString] = token
 	}
 	
 	/// Logs out, removing all local authentication.
 	public func logOut() {
 		logger.info("Logging out")
-		if let urlString = endpointURL { try? keychain.remove(urlString) }
+		
+		if let urlString = Preferences.shared.endpointURL { try? keychain.remove(urlString) }
+		
 		isLoggedIn = false
-		endpointURL = nil
 		selectedEndpoint = nil
 		endpoints = []
 		containers = []
 		attachedContainer = nil
+		
+		Preferences.shared.endpointURL = nil
 	}
 	
 	/// Fetches available endpoints.

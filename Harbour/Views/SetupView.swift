@@ -67,13 +67,15 @@ fileprivate extension WelcomeView {
 		let headline: String
 		let description: String
 		
-		let imageWidth: Double = 50
+		let imageWidth: Double = 60
 		
 		var body: some View {
-			HStack(spacing: 15) {
+			HStack(spacing: 10) {
 				Image(systemName: image)
 					.font(.title.weight(.semibold))
+					.foregroundStyle(Color.accentColor)
 					.symbolVariant(.fill)
+					.symbolRenderingMode(.hierarchical)
 					.frame(width: imageWidth)
 				
 				VStack(alignment: .leading, spacing: 2) {

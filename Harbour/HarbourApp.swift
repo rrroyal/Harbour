@@ -19,9 +19,6 @@ struct HarbourApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environmentObject(appState)
-				.environmentObject(portainer)
-				.environmentObject(preferences)
 				.notificationsOverlay(appState.errorNotifications, alignment: .top, anchor: .top)
 				.notificationsOverlay(appState.persistenceNotifications, alignment: .bottom, anchor: .bottom)
 				.sheet(isPresented: $appState.isContainerConsoleSheetPresented, onDismiss: onContainerConsoleViewDismissed) {
@@ -32,6 +29,10 @@ struct HarbourApp: App {
 					SetupView()
 				}
 				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
+				.defaultAppStorage(.group)
+				.environmentObject(appState)
+				.environmentObject(portainer)
+				.environmentObject(preferences)
 		}
 	}
 	
@@ -39,7 +40,7 @@ struct HarbourApp: App {
 		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
 		let notificationID: String = "ContainerDismissedNotification"
-		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .after(5), icon: "terminal", title: "%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%", description: "%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%", backgroundStyle: .material(.regularMaterial), onTap: {
+		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .after(5), icon: "terminal", title: "%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%", description: "%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%", style: .primary, onTap: {
 			UIDevice.current.generateHaptic(.light)
 			appState.isContainerConsoleSheetPresented = true
 			appState.persistenceNotifications.dismiss(matching: notificationID)

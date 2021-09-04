@@ -18,13 +18,11 @@ extension UIDevice {
 	/// Generates a haptic feedback/vibration.
 	/// - Parameter style: Style of the feedback
 	func generateHaptic(_ style: FeedbackStyle) {
-		guard UserDefaults.standard.bool(forKey: UserDefaults.Key.enableHaptics) else {
+		guard Preferences.shared.enableHaptics else {
 			return
 		}
 
-		let hapticCapability = CHHapticEngine.capabilitiesForHardware()
-		let supportsHaptics = hapticCapability.supportsHaptics
-
+		let supportsHaptics = CHHapticEngine.capabilitiesForHardware().supportsHaptics
 		if supportsHaptics {
 			// Haptic Feedback
 			switch style {

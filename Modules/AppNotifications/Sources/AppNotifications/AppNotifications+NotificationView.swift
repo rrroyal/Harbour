@@ -9,7 +9,7 @@ internal extension AppNotifications {
 	struct NotificationView: View {
 		@ObservedObject var notification: Notification
 		let anchor: Edge
-				
+		
 		let cornerRadius: Double = 16
 		let maxWidth: Double = 500
 		
@@ -38,12 +38,12 @@ internal extension AppNotifications {
 				.multilineTextAlignment(.leading)
 				.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			.foregroundColor(notification.foregroundColor)					// Foreground color
-			.padding(.vertical, 12)											// Vertical padding
-			.padding(.horizontal, 18)										// Horizontal padding
-			.background(notification.backgroundStyle, in: backgroundShape)	// Background
-			.mask(backgroundShape)											// Shape mask
-			.frame(maxWidth: maxWidth, alignment: .center)					// Max width
+			// .foregroundColor(notification.foregroundColor)		// Foreground color
+			.padding(.vertical, 12)									// Vertical padding
+			.padding(.horizontal, 18)								// Horizontal padding
+			// .mask(backgroundShape)								// Shape mask
+			.background(notification.style, in: backgroundShape)	// Background
+			.frame(maxWidth: maxWidth, alignment: .center)			// Max width
 			.optionalTapGesture(notification.onTap)
 		}
 	}
@@ -54,15 +54,16 @@ internal extension AppNotifications {
 @available(iOS 15.0, macOS 12.0, *)
 private extension View {
 	@ViewBuilder
-	func background<S: InsettableShape>(_ style: AppNotifications.Notification.BackgroundStyle, in shape: S) -> some View {
+	func background<S: InsettableShape>(_ style: AppNotifications.Notification.NotificationStyle, in shape: S) -> some View {
 		switch style {
 			case .material(let material):
 				background(material, in: shape)
-			case .color(let color):
+			case .color(let foreground, let background):
 				self
-					.background(shape.fill(color))
-					.background(Color(uiColor: .systemBackground))
-					// .shadow(color: .black.opacity(0.25), radius: 16, x: 0, y: 6)
+					.foregroundColor(foreground)
+					.background(shape.fill(background))
+					// .background(Color(uiColor: .systemBackground))
+					.shadow(color: .black.opacity(0.1), radius: 16, x: 0, y: 6)
 			case .colorAndMaterial(let color, let material):
 				self
 					.background(material, in: shape)

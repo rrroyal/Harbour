@@ -10,8 +10,7 @@ public extension AppNotifications {
 			icon: String?,
 			title: String,
 			description: String? = nil,
-			foregroundColor: Color = .primary,
-			backgroundStyle: BackgroundStyle = .material(.regular),
+			style: NotificationStyle = .primary,
 			onTap: (() -> Void)? = nil
 		) {
 			self.id = id
@@ -19,8 +18,7 @@ public extension AppNotifications {
 			self.icon = icon
 			self.title = title
 			self.description = description
-			self.foregroundColor = foregroundColor
-			self.backgroundStyle = backgroundStyle
+			self.style = style
 			self.onTap = onTap
 		}
 		
@@ -33,8 +31,7 @@ public extension AppNotifications {
 		public let title: String
 		public let description: String?
 		
-		public let foregroundColor: Color
-		public let backgroundStyle: BackgroundStyle
+		public let style: NotificationStyle
 		
 		public let onTap: (() -> Void)?
 		
@@ -44,7 +41,7 @@ public extension AppNotifications {
 		
 		internal var dismiss: (() -> Void)!
 		
-		internal var timer: AnyCancellable? = nil
+		internal var timer: Timer? = nil
 		
 		public static func == (lhs: AppNotifications.Notification, rhs: AppNotifications.Notification) -> Bool {
 			lhs.id == rhs.id
@@ -56,16 +53,14 @@ public extension AppNotifications {
 		
 		internal func updateTimer() {
 			guard case .after(let timeout) = self.dismissType, !isExpanded else {
-				timer?.cancel()
-				timer = nil
+				timer?.invalidate()
 				return
 			}
 			
-			timer = Timer.TimerPublisher(interval: timeout, runLoop: .main, mode: .common)
-				.autoconnect()
-				.sink { [weak self] _ in
-					self?.dismiss()
-				}
+			timer?.invalidate()
+			timer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false) { [weak self] _ in
+				self?.dismiss()
+			}
 		}
 	}
 }
@@ -78,9 +73,11 @@ public extension AppNotifications.Notification {
 		case after(_ timeout: TimeInterval)
 	}
 	
-	enum BackgroundStyle {
-		case color(_ color: Color)
+	enum NotificationStyle {
+		case color(foreground: Color, background: Color)
 		case material(_ material: Material)
 		case colorAndMaterial(color: Color, material: Material)
+		
+		public static let primary: Self = .color(foreground: .primary, background: Color(uiColor: .tertiarySystemBackground))
 	}
 }

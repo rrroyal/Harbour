@@ -10,7 +10,16 @@ import SwiftUI
 struct DebugView: View {
     var body: some View {
 		List {
-			
+			Section(header: Text("UserDefaults")) {
+				Button("Reset launchedBefore") {
+					Preferences.shared.launchedBefore = false
+				}
+				
+				Button("Reset all") {
+					Preferences.Key.allCases.forEach { Preferences.shared.ud.removeObject(forKey: $0.rawValue) }
+				}
+				.accentColor(.red)
+			}
 		}
 		.navigationTitle("🤫")
     }

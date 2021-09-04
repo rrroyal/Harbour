@@ -95,7 +95,6 @@ struct ContentView: View {
 					}
 				}
 				.padding()
-				// .transition(.opacity)
 				.animation(.easeInOut, value: portainer.containers)
 			}
 			.navigationTitle("Harbour")

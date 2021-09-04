@@ -12,13 +12,15 @@ struct LoginView: View {
 	@Environment(\.presentationMode) var presentationMode
 	@EnvironmentObject var portainer: Portainer
 	
-	@State private var endpoint: String = Portainer.shared.endpointURL ?? ""
+	@State private var endpoint: String = Preferences.shared.endpointURL ?? ""
 	@State private var username: String = ""
 	@State private var password: String = ""
 	
 	@State private var isLoading: Bool = false
 	@State private var buttonLabel: String? = nil
 	@State private var buttonColor: Color? = nil
+	
+	@State private var errorTimer: Timer? = nil
 	
 	var body: some View {
 		VStack {
@@ -39,13 +41,13 @@ struct LoginView: View {
 				.keyboardType(.default)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
-				.textFieldStyle(RoundedTextFieldStyle())
+				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
 				
 			SecureField("hunter2", text: $password)
 				.keyboardType(.default)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
-				.textFieldStyle(RoundedTextFieldStyle())
+				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
 
 			Spacer()
 			
@@ -54,7 +56,7 @@ struct LoginView: View {
 					ProgressView()
 				} else {
 					if let buttonLabel = buttonLabel {
-						Text(LocalizedStringKey(buttonLabel))
+						Text(LocalizedStringKey(buttonLabel.capitalizingFirstLetter()))
 					} else {
 						Text("Log in")
 					}
@@ -104,7 +106,8 @@ struct LoginView: View {
 					buttonLabel = error.localizedDescription
 				}
 				
-				DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+				errorTimer?.invalidate()
+				errorTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
 					buttonLabel = nil
 					buttonColor = nil
 				}

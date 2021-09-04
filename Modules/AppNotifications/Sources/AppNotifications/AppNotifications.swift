@@ -9,8 +9,7 @@ public class AppNotifications: ObservableObject {
 	
 	public func add(_ notification: AppNotifications.Notification) {
 		notification.dismiss = {
-			notification.timer?.cancel()
-			notification.timer = nil
+			notification.timer?.invalidate()
 			self.dismiss(notification)
 		}
 		notification.updateTimer()

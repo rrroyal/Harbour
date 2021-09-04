@@ -45,7 +45,6 @@
 		E7BF9E622672B5B100AAB6A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */; };
 		E7BF9E782672E17D00AAB6A1 /* Portainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E772672E17D00AAB6A1 /* Portainer.swift */; };
 		E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */; };
-		E7BF9E802672E62000AAB6A1 /* UserDefaults+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E7F2672E62000AAB6A1 /* UserDefaults+.swift */; };
 		E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E852672EF5600AAB6A1 /* SettingsView.swift */; };
 		E7BF9E882672F29200AAB6A1 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E872672F29200AAB6A1 /* LoginView.swift */; };
 		E7BF9E8A2672F2F600AAB6A1 /* UIDevice+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */; };
@@ -107,7 +106,6 @@
 		E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E7BF9E572672B5B100AAB6A1 /* Harbour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harbour.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7BF9E772672E17D00AAB6A1 /* Portainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Portainer.swift; sourceTree = "<group>"; };
-		E7BF9E7F2672E62000AAB6A1 /* UserDefaults+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+.swift"; sourceTree = "<group>"; };
 		E7BF9E852672EF5600AAB6A1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E7BF9E872672F29200AAB6A1 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+.swift"; sourceTree = "<group>"; };
@@ -176,7 +174,6 @@
 		E75A51DC26738A1400857D2B /* Details */ = {
 			isa = PBXGroup;
 			children = (
-				E7B10B6E26CD80A6005B82BC /* Settings */,
 				E7339C592674366000A55B5C /* Container */,
 			);
 			path = Details;
@@ -278,7 +275,6 @@
 				E7339C572674262500A55B5C /* String+.swift */,
 				E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */,
 				E7748E7C267E831B00456BFD /* UIWindow+.swift */,
-				E7BF9E7F2672E62000AAB6A1 /* UserDefaults+.swift */,
 				E75A51EF2673CE3500857D2B /* View+.swift */,
 			);
 			path = "Extensions+Modifiers";
@@ -291,6 +287,7 @@
 				E7BF9E8B2672F48700AAB6A1 /* Styles */,
 				E75A51D92673891700857D2B /* Cells */,
 				E75A51DC26738A1400857D2B /* Details */,
+				E7B10B6E26CD80A6005B82BC /* Settings */,
 				E7BF9E512672B5B000AAB6A1 /* ContentView.swift */,
 				E77C5FB4267E9D1A000B4994 /* SetupView.swift */,
 				E7BF9E872672F29200AAB6A1 /* LoginView.swift */,
@@ -409,7 +406,6 @@
 				E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */,
 				E75A51F02673CE3500857D2B /* View+.swift in Sources */,
 				E75A51E62673A75700857D2B /* ContainerMountsDetailsView.swift in Sources */,
-				E7BF9E802672E62000AAB6A1 /* UserDefaults+.swift in Sources */,
 				E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */,
 				E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */,
 				E7BF9E782672E17D00AAB6A1 /* Portainer.swift in Sources */,
