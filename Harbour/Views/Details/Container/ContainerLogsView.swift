@@ -12,10 +12,15 @@ struct ContainerLogsView: View {
 	@EnvironmentObject var portainer: Portainer
 	let container: PortainerKit.Container
 
-	@State private var isLoading: Bool = false
+	@State private var loading: Bool = false
 	@State private var logs: String = ""
 	
 	@State private var tail: Int = 100 {
+		didSet {
+			Task { await refresh() }
+		}
+	}
+	@State private var since: TimeInterval = 0 {
 		didSet {
 			Task { await refresh() }
 		}
@@ -52,6 +57,7 @@ struct ContainerLogsView: View {
 				.toolbar {
 					ToolbarItem(placement: .primaryAction) {
 						Menu(content: {
+							// Scroll to top
 							Button(action: {
 								UIDevice.current.generateHaptic(.soft)
 								withAnimation { scroll.scrollTo(logsLabelID, anchor: .top) }
@@ -59,6 +65,7 @@ struct ContainerLogsView: View {
 								Label("Scroll to top", systemImage: "arrow.up.to.line")
 							}
 							
+							// Scroll to bottom
 							Button(action: {
 								UIDevice.current.generateHaptic(.soft)
 								withAnimation { scroll.scrollTo(logsLabelID, anchor: .bottom) }
@@ -68,6 +75,7 @@ struct ContainerLogsView: View {
 							
 							Divider()
 							
+							// Lines
 							Menu("Lines") {
 								ForEach(tailAmounts, id: \.self) { count in
 									Button(action: {
@@ -82,6 +90,20 @@ struct ContainerLogsView: View {
 								}
 							}
 							
+							// Since
+							Menu("Since") {
+								Button("All") {
+									UIDevice.current.generateHaptic(.light)
+									since = 0
+								}
+								
+								Button("Now") {
+									UIDevice.current.generateHaptic(.light)
+									since = Date().timeIntervalSince1970
+								}
+							}
+							
+							// Timestamps
 							Button(action: {
 								UIDevice.current.generateHaptic(.light)
 								displayTimestamps.toggle()
@@ -94,6 +116,7 @@ struct ContainerLogsView: View {
 							
 							Divider()
 							
+							// Refresh
 							Button(action: {
 								UIDevice.current.generateHaptic(.light)
 								Task {
@@ -113,21 +136,21 @@ struct ContainerLogsView: View {
 		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
-			ToolbarTitle(title: "Logs", subtitle: isLoading ? "Refreshing..." : nil)
+			ToolbarTitle(title: "Logs", subtitle: loading ? "Refreshing..." : nil)
 		}
 		.task { await refresh() }
 	}
 	
 	private func refresh() async {
-		isLoading = true
+		loading = true
 		
 		do {
-			let logs = try await portainer.getLogs(from: container, since: 0, tail: tail, displayTimestamps: displayTimestamps)
+			let logs = try await portainer.getLogs(from: container, since: since, tail: tail, displayTimestamps: displayTimestamps)
 			self.logs = logs
 		} catch {
 			AppState.shared.handle(error)
 		}
 		
-		isLoading = false
+		loading = false
 	}
 }

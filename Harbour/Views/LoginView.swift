@@ -16,7 +16,7 @@ struct LoginView: View {
 	@State private var username: String = ""
 	@State private var password: String = ""
 	
-	@State private var isLoading: Bool = false
+	@State private var loading: Bool = false
 	@State private var buttonLabel: String? = nil
 	@State private var buttonColor: Color? = nil
 	
@@ -52,26 +52,28 @@ struct LoginView: View {
 			Spacer()
 			
 			Button(action: login) {
-				if isLoading {
+				if loading {
 					ProgressView()
 				} else {
-					if let buttonLabel = buttonLabel {
-						Text(LocalizedStringKey(buttonLabel.capitalizingFirstLetter()))
-					} else {
-						Text("Log in")
+					Group {
+						if let buttonLabel = buttonLabel {
+							Text(LocalizedStringKey(buttonLabel.capitalizingFirstLetter()))
+						} else {
+							Text("Log in")
+						}
 					}
+					.transition(.opacity)
 				}
 			}
 			.keyboardShortcut(.defaultAction)
 			.foregroundColor(.white)
 			.buttonStyle(PrimaryButtonStyle(backgroundColor: buttonColor ?? .accentColor))
-			.transition(.opacity)
-			.animation(.easeInOut, value: isLoading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
-			.animation(.easeInOut, value: buttonLabel)
+			.animation(.easeInOut, value: loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 			.animation(.easeInOut, value: buttonColor)
-			.disabled(isLoading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
+			.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 		}
 		.padding()
+		.animation(.easeInOut, value: buttonLabel)
 	}
 	
 	func login() {
@@ -86,19 +88,19 @@ struct LoginView: View {
 		
 		Task {
 			do {
-				isLoading = true
+				loading = true
 				try await portainer.login(url: url, username: username, password: password)
-				isLoading = false
 				
 				UIDevice.current.generateHaptic(.success)
 				
+				loading = false
 				buttonColor = .green
 				buttonLabel = "Success!"
 				presentationMode.wrappedValue.dismiss()
 			} catch {
 				UIDevice.current.generateHaptic(.error)
 				
-				isLoading = false
+				loading = false
 				buttonColor = .red
 				if let error = error as? PortainerKit.APIError {
 					buttonLabel = error.description
@@ -113,6 +115,12 @@ struct LoginView: View {
 				}
 			}
 		}
+	}
+}
+
+extension LoginView {
+	enum Field {
+		case endpoint, username, password
 	}
 }
 

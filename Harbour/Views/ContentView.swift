@@ -13,7 +13,7 @@ struct ContentView: View {
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
 	
-	@State private var isLoading: Bool = false
+	@State private var loading: Bool = false
 	@State private var isSettingsSheetPresented: Bool = false
 	
 	let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
@@ -40,15 +40,15 @@ struct ContentView: View {
 			
 			Button(action: {
 				UIDevice.current.generateHaptic(.light)
+				loading = true
 				Task {
 					do {
-						isLoading = true
 						try await portainer.getEndpoints()
-						isLoading = false
 					} catch {
 						AppState.shared.handle(error)
 					}
 				}
+				loading = false
 			}) {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
@@ -109,20 +109,22 @@ struct ContentView: View {
 					}
 				}
 				
-				ToolbarTitle(title: "Harbour", subtitle: isLoading ? "Refreshing..." : nil)
+				ToolbarTitle(title: "Harbour", subtitle: loading ? "Refreshing..." : nil)
 				
 				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 			}
 			.background(emptyDisclaimer)
 			.refreshable {
 				if let endpointID = portainer.selectedEndpoint?.id {
+					loading = true
+
 					do {
-						isLoading = true
 						try await portainer.getContainers(endpointID: endpointID)
-						isLoading = false
 					} catch {
 						AppState.shared.handle(error)
 					}
+					
+					loading = false
 				}
 			}
 		}

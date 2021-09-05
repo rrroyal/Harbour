@@ -12,7 +12,7 @@ struct ContainerDetailView: View {
 	@EnvironmentObject var portainer: Portainer
 	@ObservedObject var container: PortainerKit.Container
 	
-	@State private var isLoading: Bool = false
+	@State private var loading: Bool = false
 	@State private var containerDetails: PortainerKit.ContainerDetails? = nil
 		
 	var buttonsSection: some View {
@@ -53,7 +53,7 @@ struct ContainerDetailView: View {
 		.navigationTitle(container.displayName ?? container.id)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
-			ToolbarTitle(title: container.displayName ?? container.id, subtitle: isLoading ? "Refreshing..." : nil)
+			ToolbarTitle(title: container.displayName ?? container.id, subtitle: loading ? "Refreshing..." : nil)
 			
 			ToolbarItem(placement: .primaryAction) {
 				Menu(content: {
@@ -85,7 +85,7 @@ struct ContainerDetailView: View {
 	}
 	
 	private func refresh() async {
-		isLoading = true
+		loading = true
 		
 		do {
 			let containerDetails = try await portainer.inspectContainer(container)
@@ -97,7 +97,7 @@ struct ContainerDetailView: View {
 			AppState.shared.handle(error)
 		}
 		
-		isLoading = false
+		loading = false
 	}
 }
 
