@@ -37,10 +37,15 @@ struct HarbourApp: App {
 	}
 	
 	private func onContainerConsoleViewDismissed() {
+		guard preferences.persistAttachedContainer else {
+			portainer.attachedContainer = nil
+			return
+		}
+		
 		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
 		let notificationID: String = "ContainerDismissedNotification"
-		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .after(5), icon: "terminal", title: "%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%", description: "%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%", style: .primary, onTap: {
+		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .after(5), icon: "terminal", title: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE, description: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION, style: .primary, onTap: {
 			UIDevice.current.generateHaptic(.light)
 			appState.isContainerConsoleSheetPresented = true
 			appState.persistenceNotifications.dismiss(matching: notificationID)

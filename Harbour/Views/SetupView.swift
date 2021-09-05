@@ -40,9 +40,9 @@ fileprivate struct WelcomeView: View {
 			Spacer()
 			
 			VStack(spacing: 20) {
-				FeatureCell(image: "power", headline: "%SETUP_FEATURE1_HEADLINE%", description: "%SETUP_FEATURE1_DESCRIPTION%")
-				FeatureCell(image: "square.text.square", headline: "%SETUP_FEATURE2_HEADLINE%", description: "%SETUP_FEATURE2_DESCRIPTION%")
-				FeatureCell(image: "terminal", headline: "%SETUP_FEATURE3_HEADLINE%", description: "%SETUP_FEATURE3_DESCRIPTION%")
+				FeatureCell(image: "power", headline: String.Localization.SETUP_FEATURE1_TITLE, description: String.Localization.SETUP_FEATURE1_DESCRIPTION)
+				FeatureCell(image: "square.text.square", headline: String.Localization.SETUP_FEATURE2_TITLE, description: String.Localization.SETUP_FEATURE2_DESCRIPTION)
+				FeatureCell(image: "terminal", headline: String.Localization.SETUP_FEATURE3_TITLE, description: String.Localization.SETUP_FEATURE3_DESCRIPTION)
 			}
 			
 			Spacer()

@@ -11,6 +11,7 @@ extension SettingsView {
 	fileprivate static let vstackSpacing: Double = 4
 	
 	struct SliderOption: View {
+		@Environment(\.isEnabled) var isEnabled: Bool
 		let label: String
 		let description: String?
 		@Binding var value: Double
@@ -32,6 +33,7 @@ extension SettingsView {
 							.foregroundStyle(.secondary)
 					}
 				}
+				.opacity(isEnabled ? 1 : Globals.Views.secondaryOpacity)
 				
 				Slider(value: $value, in: range, step: step, onEditingChanged: onEditingChanged)
 					.onChange(of: value) {
@@ -45,6 +47,7 @@ extension SettingsView {
 	}
 	
 	struct ToggleOption: View {
+		@Environment(\.isEnabled) var isEnabled: Bool
 		let label: String
 		let description: String?
 		@Binding var isOn: Bool
@@ -64,6 +67,7 @@ extension SettingsView {
 					}
 				}
 				.padding(.vertical, .small)
+				.opacity(isEnabled ? 1 : Globals.Views.secondaryOpacity)
 			}
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 		}

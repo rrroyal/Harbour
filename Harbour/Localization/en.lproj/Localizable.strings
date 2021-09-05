@@ -17,7 +17,7 @@
 
 // MARK: HarbourApp.swift
 
-"%CONTAINER_DISMISSED_NOTIFICATION_HEADLINE%" = "Container dismissed";
+"%CONTAINER_DISMISSED_NOTIFICATION_TITLE%" = "Container dismissed";
 "%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%" = "Shake device or tap this message to open again.";
 
 // MARK: Views/Details/Container/ContainerDetailsView.swift
@@ -47,11 +47,13 @@
 
 // MARK: Views/SettingsView.swift
 
+"%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
+"%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connection to the attached container after dismissing.";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
-"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "TODO";
+"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container.";
 "%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
 "%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone it down if you don't like it as much as I do :]";
-"%SETTINGS_AUTO_REFRESH%" = "Auto refresh";
+"%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
 
 "Log out" = "Log out";
 "Made with ❤️ (and ☕️) by @unitears" = "Made with ❤️ (and ☕️) by @unitears";
@@ -65,13 +67,13 @@
 
 "Hi! Welcome to %@!" = "Hi! Welcome to %@!";
 "Beam me up, Scotty!" = "Beam me up, Scotty!";
-"%SETUP_FEATURE1_HEADLINE%" = "Control your containers";
+"%SETUP_FEATURE1_TITLE%" = "Control your containers";
 "%SETUP_FEATURE1_DESCRIPTION%" = "Your Minecraft server is taking up too much ram? Quickly restart it from your phone.";
 
-"%SETUP_FEATURE2_HEADLINE%" = "See all of the details";
+"%SETUP_FEATURE2_TITLE%" = "See all of the details";
 "%SETUP_FEATURE2_DESCRIPTION%" = "You want to see what ports are exposed? Easy.";
 
-"%SETUP_FEATURE3_HEADLINE%" = "Attach to them too";
+"%SETUP_FEATURE3_TITLE%" = "Attach to them too";
 "%SETUP_FEATURE3_DESCRIPTION%" = "Yeah. I spent way too much time on that one.";
 
 // MARK: - PortainerKit

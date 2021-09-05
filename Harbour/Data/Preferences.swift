@@ -13,6 +13,7 @@ class Preferences: ObservableObject {
 
 	@AppStorage(Preferences.Key.launchedBefore.rawValue, store: .group) public var launchedBefore: Bool = false
 	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .group) public var enableHaptics: Bool = true
+	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .group) public var persistAttachedContainer: Bool = true
 	@AppStorage(Preferences.Key.displayContainerDismissedPrompt.rawValue, store: .group) public var displayContainerDismissedPrompt: Bool = true
 	@AppStorage(Preferences.Key.autoRefreshInterval.rawValue, store: .group) public var autoRefreshInterval: Double = 0
 	@AppStorage(Preferences.Key.endpointURL.rawValue, store: .group) public var endpointURL: String?
@@ -28,8 +29,9 @@ extension Preferences {
 		
 		case endpointURL = "EndpointURL"
 		
-		case enableHaptics = "EnableHaptics"
+		case persistAttachedContainer = "PersistAttachedContainer"
 		case displayContainerDismissedPrompt = "DisplayContainerDismissedPrompt"
+		case enableHaptics = "EnableHaptics"
 		
 		case autoRefreshInterval = "AutoRefreshInterval"
 	}

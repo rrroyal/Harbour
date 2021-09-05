@@ -13,7 +13,7 @@ struct SettingsView: View {
 	
 	var body: some View {
 		NavigationView {
-			Form {
+			List {
 				PortainerSection()
 				InterfaceSection()
 				OtherSection()

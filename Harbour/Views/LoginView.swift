@@ -66,10 +66,10 @@ struct LoginView: View {
 			.foregroundColor(.white)
 			.buttonStyle(PrimaryButtonStyle(backgroundColor: buttonColor ?? .accentColor))
 			.transition(.opacity)
-			.animation(.easeInOut, value: isLoading || endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
+			.animation(.easeInOut, value: isLoading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 			.animation(.easeInOut, value: buttonLabel)
 			.animation(.easeInOut, value: buttonColor)
-			.disabled(isLoading || endpoint.isReallyEmpty || username.isReallyEmpty || password.isReallyEmpty)
+			.disabled(isLoading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 		}
 		.padding()
 	}
