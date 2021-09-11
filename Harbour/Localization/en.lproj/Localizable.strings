@@ -48,11 +48,11 @@
 // MARK: Views/SettingsView.swift
 
 "%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
-"%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connection to the attached container after dismissing.";
+"%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connection to the attached container after dismissing";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
-"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container.";
+"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container";
 "%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
-"%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone it down if you don't like it as much as I do :]";
+"%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
 "%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
 
 "Log out" = "Log out";
@@ -67,6 +67,7 @@
 
 "Hi! Welcome to %@!" = "Hi! Welcome to %@!";
 "Beam me up, Scotty!" = "Beam me up, Scotty!";
+
 "%SETUP_FEATURE1_TITLE%" = "Control your containers";
 "%SETUP_FEATURE1_DESCRIPTION%" = "Your Minecraft server is taking up too much ram? Quickly restart it from your phone.";
 

@@ -1,2 +1,0 @@
-darker: #003f8c
-lighter: #007bff
