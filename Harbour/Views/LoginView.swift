@@ -31,7 +31,7 @@ struct LoginView: View {
 			
 			Spacer()
 			
-			TextField("http://172.17.0.2:9000", text: $endpoint)
+			TextField("http://172.17.0.2", text: $endpoint)
 				.keyboardType(.URL)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)

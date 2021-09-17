@@ -50,7 +50,7 @@ final class Portainer: ObservableObject {
 	
 	// MARK: Containers
 	
-	public let refreshCurrentContainer: PassthroughSubject<Void, Never> = .init()
+	public let refreshCurrentContainerPassthroughSubject: PassthroughSubject<Void, Never> = .init()
 	@Published public var attachedContainer: AttachedContainer? = nil
 	@Published public private(set) var containers: [PortainerKit.Container] = []
 	
@@ -99,8 +99,10 @@ final class Portainer: ObservableObject {
 		
 		logger.debug("Successfully logged in!")
 		
-		isLoggedIn = true
-		Preferences.shared.endpointURL = url.absoluteString
+		DispatchQueue.main.async { [weak self] in
+			self?.isLoggedIn = true
+			Preferences.shared.endpointURL = url.absoluteString
+		}
 		keychain[url.absoluteString] = token
 	}
 	

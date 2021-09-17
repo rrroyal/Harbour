@@ -136,14 +136,13 @@ public class PortainerKit {
 		
 		let response = try await session.data(for: request)
 		if let statusCode = (response.1 as? HTTPURLResponse)?.statusCode {
-			if 200 ... 304 ~= statusCode {
-			} else {
+			if !(200...304 ~= statusCode) {
 				throw APIError.responseCodeUnacceptable(statusCode)
 			}
 		} else {
 			// It shouldn't happen, but we should gracefully handle it anyways.
 			// For now, we're hoping it worked ¯\_(ツ)_/¯.
-			print("Response isn't HTTPURLResponse!", #fileID, #line)
+			assertionFailure("Response isn't HTTPURLResponse! \(#fileID):\(#line)")
 		}
 	}
 	

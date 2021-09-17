@@ -79,7 +79,7 @@ struct ContainerDetailView: View {
 		}
 		.refreshable { await refresh() }
 		.task { await refresh() }
-		.onReceive(portainer.refreshCurrentContainer) {
+		.onReceive(portainer.refreshCurrentContainerPassthroughSubject) {
 			Task { await refresh() }
 		}
 	}

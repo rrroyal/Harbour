@@ -18,9 +18,12 @@ class AppState: ObservableObject {
 	@Published public var isContainerConsoleSheetPresented: Bool = false
 	@Published public var isSetupSheetPresented: Bool = false
 	
-	public var activeNetworkActivities: Set<String> = [] {
+	@Published public var fetchingMainScreenData: Bool = false
+	
+	// TODO: Fix LoadingIndicator
+	public var activeNetworkActivities: Set<String> = [] /* {
 		didSet { UIApplication.shared.setLoadingIndicatorActive(!activeNetworkActivities.isEmpty) }
-	}
+	} */
 	
 	public let errorNotifications: AppNotifications = AppNotifications()
 	public let persistenceNotifications: AppNotifications = AppNotifications()
@@ -34,7 +37,7 @@ class AppState: ObservableObject {
 			isSetupSheetPresented = true
 		}
 		
-		if Portainer.shared.isLoggedIn && Preferences.shared.autoRefreshInterval > 0 {
+		if Preferences.shared.autoRefreshInterval > 0 {
 			setupAutoRefreshTimer()
 		}
 	}
@@ -51,7 +54,11 @@ class AppState: ObservableObject {
 		autoRefreshTimer = Timer.publish(every: interval, on: .current, in: .common)
 			.autoconnect()
 			.sink { _ in
-				Task {
+				Task { [weak self] in
+					DispatchQueue.main.async { [weak self] in
+						self?.fetchingMainScreenData = true
+					}
+					
 					do {
 						guard let selectedEndpointID = Portainer.shared.selectedEndpoint?.id else {
 							return
@@ -60,7 +67,11 @@ class AppState: ObservableObject {
 						try await Portainer.shared.getContainers(endpointID: selectedEndpointID)
 					} catch {
 						await UIDevice.current.generateHaptic(.error)
-						self.handle(error)
+						self?.handle(error)
+					}
+					
+					DispatchQueue.main.async { [weak self] in
+						self?.fetchingMainScreenData = false
 					}
 				}
 			}

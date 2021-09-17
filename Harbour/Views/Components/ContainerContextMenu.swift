@@ -114,7 +114,7 @@ struct ContainerContextMenu: View {
 				
 				DispatchQueue.main.async {
 					container.state = action.expectedState
-					Portainer.shared.refreshCurrentContainer.send()
+					Portainer.shared.refreshCurrentContainerPassthroughSubject.send()
 				}
 				
 				if let endpointID = Portainer.shared.selectedEndpoint?.id {

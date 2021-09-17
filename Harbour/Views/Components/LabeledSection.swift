@@ -39,8 +39,9 @@ struct LabeledSection: View {
 				.font(.system(.callout, design: monospace ? .monospaced : .default))
 				.foregroundColor(content != nil ? .primary : .secondary)
 				.lineLimit(nil)
-				.textSelection(.enabled)
 				.frame(maxWidth: .infinity, alignment: .leading)
+				.contentShape(Rectangle())
+				.textSelection(.enabled)
 				.padding(.medium)
 				.background(
 					RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)

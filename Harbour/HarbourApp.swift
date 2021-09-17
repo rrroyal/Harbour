@@ -7,11 +7,9 @@
 
 import SwiftUI
 import AppNotifications
-import LoadingIndicator
 
 @main
 struct HarbourApp: App {
-	@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 	@StateObject var appState: AppState = .shared
 	@StateObject var portainer: Portainer = .shared
 	@StateObject var preferences: Preferences = .shared

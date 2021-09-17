@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {

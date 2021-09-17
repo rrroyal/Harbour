@@ -33,9 +33,7 @@
 		E77C5FB3267E9B99000B4994 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77C5FB2267E9B99000B4994 /* DebugView.swift */; };
 		E77C5FB5267E9D1A000B4994 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77C5FB4267E9D1A000B4994 /* SetupView.swift */; };
 		E77C5FB9267EA4E5000B4994 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E77C5FBB267EA4E5000B4994 /* Localizable.strings */; };
-		E781089D26B05386006A8B9F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E781089C26B05386006A8B9F /* AppDelegate.swift */; };
 		E7992A4426BF3BA3007335CA /* ToolbarTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */; };
-		E7A14DE1267FADC4007B93CD /* LoadingIndicator in Frameworks */ = {isa = PBXBuildFile; productRef = E7A14DE0267FADC4007B93CD /* LoadingIndicator */; };
 		E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */; };
 		E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */; };
 		E7B10B7426CD82A2005B82BC /* SettingsView+PortainerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7326CD82A2005B82BC /* SettingsView+PortainerSection.swift */; };
@@ -94,9 +92,7 @@
 		E77C5FB2267E9B99000B4994 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		E77C5FB4267E9D1A000B4994 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		E77C5FBA267EA4E5000B4994 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		E781089C26B05386006A8B9F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarTitle.swift; sourceTree = "<group>"; };
-		E7A14DDF267FAD77007B93CD /* LoadingIndicator */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LoadingIndicator; path = ../../LoadingIndicator; sourceTree = "<group>"; };
 		E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+Components.swift"; sourceTree = "<group>"; };
 		E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+OtherSection.swift"; sourceTree = "<group>"; };
 		E7B10B7326CD82A2005B82BC /* SettingsView+PortainerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+PortainerSection.swift"; sourceTree = "<group>"; };
@@ -123,7 +119,6 @@
 				E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */,
 				E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */,
 				E7685BBB26769B2000CD592E /* AppNotifications in Frameworks */,
-				E7A14DE1267FADC4007B93CD /* LoadingIndicator in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -134,7 +129,6 @@
 			isa = PBXGroup;
 			children = (
 				E7685BB926769B0E00CD592E /* AppNotifications */,
-				E7A14DDF267FAD77007B93CD /* LoadingIndicator */,
 				E7685BB726769B0900CD592E /* PortainerKit */,
 			);
 			path = Modules;
@@ -200,7 +194,6 @@
 			isa = PBXGroup;
 			children = (
 				E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */,
-				E781089C26B05386006A8B9F /* AppDelegate.swift */,
 				E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */,
 				E7BF9E762672E15700AAB6A1 /* Data */,
 				E7BF9E832672EF4200AAB6A1 /* Views */,
@@ -354,7 +347,6 @@
 				E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */,
 				E7685BBA26769B2000CD592E /* AppNotifications */,
 				E7685BBE26769B2500CD592E /* PortainerKit */,
-				E7A14DE0267FADC4007B93CD /* LoadingIndicator */,
 			);
 			productName = "Harbour (iOS)";
 			productReference = E7BF9E572672B5B100AAB6A1 /* Harbour.app */;
@@ -433,7 +425,6 @@
 				E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */,
 				E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */,
 				E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */,
-				E781089D26B05386006A8B9F /* AppDelegate.swift in Sources */,
 				E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */,
 				E75A51DB2673892400857D2B /* ContainerCell.swift in Sources */,
 				E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */,
@@ -706,10 +697,6 @@
 		E7685BBE26769B2500CD592E /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PortainerKit;
-		};
-		E7A14DE0267FADC4007B93CD /* LoadingIndicator */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = LoadingIndicator;
 		};
 		E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -92,7 +92,7 @@ struct ContainerLogsView: View {
 							
 							// Since
 							Menu("Since") {
-								Button("All") {
+								Button("Creation") {
 									UIDevice.current.generateHaptic(.light)
 									since = 0
 								}
