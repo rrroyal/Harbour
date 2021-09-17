@@ -231,10 +231,28 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
+		E7B970EF26ED37DE00358FB9 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				E7B970F026ED37EB00358FB9 /* Extensions+Modifiers */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		E7B970F026ED37EB00358FB9 /* Extensions+Modifiers */ = {
+			isa = PBXGroup;
+			children = (
+				E7272E8926736CCF00228494 /* PortainerKit+.swift */,
+				E75A51EF2673CE3500857D2B /* View+.swift */,
+			);
+			path = "Extensions+Modifiers";
+			sourceTree = "<group>";
+		};
 		E7BF9E4A2672B5B000AAB6A1 = {
 			isa = PBXGroup;
 			children = (
 				E76F798E267304760009FE65 /* Harbour */,
+				E7B970EF26ED37DE00358FB9 /* Shared */,
 				E72F350626769ABD00A38910 /* Modules */,
 				E7BF9E582672B5B100AAB6A1 /* Products */,
 				E7BF9E702672BC8D00AAB6A1 /* Frameworks */,
@@ -271,11 +289,9 @@
 			children = (
 				E75A51E12673A1C100857D2B /* Bundle+.swift */,
 				E7748E7E267E835600456BFD /* Notification+.swift */,
-				E7272E8926736CCF00228494 /* PortainerKit+.swift */,
 				E7339C572674262500A55B5C /* String+.swift */,
 				E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */,
 				E7748E7C267E831B00456BFD /* UIWindow+.swift */,
-				E75A51EF2673CE3500857D2B /* View+.swift */,
 			);
 			path = "Extensions+Modifiers";
 			sourceTree = "<group>";
