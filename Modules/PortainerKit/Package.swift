@@ -5,10 +5,10 @@ import PackageDescription
 
 let package = Package(
 	name: "PortainerKit",
-	/* platforms: [
+	platforms: [
 		.iOS(.v15),
 		.macOS(.v12)
-	], */
+	],
 	products: [
 		.library(name: "PortainerKit", targets: ["PortainerKit"])
 	],

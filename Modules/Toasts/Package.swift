@@ -4,16 +4,16 @@
 import PackageDescription
 
 let package = Package(
-	name: "AppNotifications",
+	name: "Toasts",
 	platforms: [
 		.iOS(.v15),
 		.macOS(.v12)
 	],
 	products: [
-		.library(name: "AppNotifications", targets: ["AppNotifications"])
+		.library(name: "Toasts", targets: ["Toasts"])
 	],
 	dependencies: [],
 	targets: [
-		.target(name: "AppNotifications", dependencies: [])
+		.target(name: "Toasts", dependencies: [])
 	]
 )

@@ -25,7 +25,7 @@
 		E75A51EC2673A7F300857D2B /* ContainerConfigDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EB2673A7F300857D2B /* ContainerConfigDetailsView.swift */; };
 		E75A51EE2673B17B00857D2B /* Labeled.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51ED2673B17B00857D2B /* Labeled.swift */; };
 		E75A51F02673CE3500857D2B /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EF2673CE3500857D2B /* View+.swift */; };
-		E7685BBB26769B2000CD592E /* AppNotifications in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBA26769B2000CD592E /* AppNotifications */; };
+		E764C29726F8C4C8006528FE /* Toasts in Frameworks */ = {isa = PBXBuildFile; productRef = E764C29626F8C4C8006528FE /* Toasts */; };
 		E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBE26769B2500CD592E /* PortainerKit */; };
 		E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */; };
 		E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7748E7C267E831B00456BFD /* UIWindow+.swift */; };
@@ -84,8 +84,8 @@
 		E75A51EB2673A7F300857D2B /* ContainerConfigDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConfigDetailsView.swift; sourceTree = "<group>"; };
 		E75A51ED2673B17B00857D2B /* Labeled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labeled.swift; sourceTree = "<group>"; };
 		E75A51EF2673CE3500857D2B /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		E764C29526F8C413006528FE /* Toasts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Toasts; sourceTree = "<group>"; };
 		E7685BB726769B0900CD592E /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PortainerKit; sourceTree = "<group>"; };
-		E7685BB926769B0E00CD592E /* AppNotifications */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AppNotifications; sourceTree = "<group>"; };
 		E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextFieldStyle.swift; sourceTree = "<group>"; };
 		E7748E7C267E831B00456BFD /* UIWindow+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+.swift"; sourceTree = "<group>"; };
 		E7748E7E267E835600456BFD /* Notification+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+.swift"; sourceTree = "<group>"; };
@@ -117,8 +117,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */,
+				E764C29726F8C4C8006528FE /* Toasts in Frameworks */,
 				E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */,
-				E7685BBB26769B2000CD592E /* AppNotifications in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,7 +128,7 @@
 		E72F350626769ABD00A38910 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				E7685BB926769B0E00CD592E /* AppNotifications */,
+				E764C29526F8C413006528FE /* Toasts */,
 				E7685BB726769B0900CD592E /* PortainerKit */,
 			);
 			path = Modules;
@@ -345,8 +345,8 @@
 			name = Harbour;
 			packageProductDependencies = (
 				E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */,
-				E7685BBA26769B2000CD592E /* AppNotifications */,
 				E7685BBE26769B2500CD592E /* PortainerKit */,
+				E764C29626F8C4C8006528FE /* Toasts */,
 			);
 			productName = "Harbour (iOS)";
 			productReference = E7BF9E572672B5B100AAB6A1 /* Harbour.app */;
@@ -692,9 +692,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E7685BBA26769B2000CD592E /* AppNotifications */ = {
+		E764C29626F8C4C8006528FE /* Toasts */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = AppNotifications;
+			productName = Toasts;
 		};
 		E7685BBE26769B2500CD592E /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;

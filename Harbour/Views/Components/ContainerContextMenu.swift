@@ -9,7 +9,7 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerContextMenu: View {
-	let container: PortainerKit.Container
+	@ObservedObject var container: PortainerKit.Container
 	
 	var resumeButton: some View {
 		Button(action: { execute(.unpause) }) {

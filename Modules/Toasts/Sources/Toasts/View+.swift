@@ -6,10 +6,9 @@ public extension View {
 	/// - Parameters:
 	///   - model: `AppNotifications` model
 	///   - alignment: Overlay alignment
-	///   - anchor: Overlay anchor
 	/// - Returns: View
 	@ViewBuilder
-	func notificationsOverlay(_ model: AppNotifications, alignment: Alignment, anchor: Edge) -> some View {
-		overlay(AppNotifications.NotificationsOverlay(model: model, alignment: alignment, anchor: anchor))
+	func toastsOverlay(model: Toasts) -> some View {
+		overlay(Toasts.ToastsOverlay(model: model))
 	}
 }

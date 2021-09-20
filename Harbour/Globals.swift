@@ -9,7 +9,7 @@ import SwiftUI
 
 struct Globals {
 	enum Views {
-		static let cornerRadius: Double = 12
+		static let cornerRadius: Double = 14
 		static let largeCornerRadius: Double = 18
 
 		static let secondaryOpacity: Double = 0.3

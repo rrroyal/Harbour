@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import os.log
 import PortainerKit
-import AppNotifications
+import Toasts
 
 extension Portainer {
 	class AttachedContainer: ObservableObject {
@@ -67,8 +67,8 @@ extension Portainer {
 				case .failure(let error):
 					update(String(describing: error))
 					
-					let notification: AppNotifications.Notification = .init(id: "ContainerWebSocketDisconnected-\(container.id)", dismissType: .after(5), icon: "bolt", title: "WebSocket disconnected", description: error.localizedDescription, style: .color(foreground: .white, background: .red))
-					AppState.shared.handle(error, notification: notification)
+					let toast: Toasts.Toast = .init(id: "ContainerWebSocketDisconnected-\(container.id)", dismissType: .after(5), icon: "bolt", title: "WebSocket disconnected", description: error.localizedDescription, style: .color(foreground: .white, background: .red))
+					AppState.shared.handle(error, toast: toast)
 			}
 		}
 	

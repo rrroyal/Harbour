@@ -2,15 +2,15 @@ import SwiftUI
 import Combine
 
 @available(iOS 15.0, macOS 12.0, *)
-public extension AppNotifications {
-	class Notification: ObservableObject, Identifiable, Equatable {
+public extension Toasts {
+	class Toast: ObservableObject, Identifiable, Equatable {
 		public init(
 			id: String,
 			dismissType: DismissType,
 			icon: String?,
 			title: String,
 			description: String? = nil,
-			style: NotificationStyle = .primary,
+			style: Style = .primary,
 			onTap: (() -> Void)? = nil
 		) {
 			self.id = id
@@ -31,7 +31,7 @@ public extension AppNotifications {
 		public let title: String
 		public let description: String?
 		
-		public let style: NotificationStyle
+		public let style: Style
 		
 		public let onTap: (() -> Void)?
 		
@@ -43,7 +43,7 @@ public extension AppNotifications {
 		
 		internal var timer: Timer? = nil
 		
-		public static func == (lhs: AppNotifications.Notification, rhs: AppNotifications.Notification) -> Bool {
+		public static func == (lhs: Toast, rhs: Toast) -> Bool {
 			lhs.id == rhs.id
 		}
 		
@@ -66,14 +66,14 @@ public extension AppNotifications {
 }
 
 @available(iOS 15.0, macOS 12.0, *)
-public extension AppNotifications.Notification {
+public extension Toasts.Toast {
 	enum DismissType: Equatable {
 		case none
 		case manual
 		case after(_ timeout: TimeInterval)
 	}
 	
-	enum NotificationStyle {
+	enum Style {
 		case color(foreground: Color, background: Color)
 		case material(_ material: Material)
 		case colorAndMaterial(color: Color, material: Material)

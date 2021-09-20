@@ -42,7 +42,7 @@ extension SettingsView {
 			Section(header: Text("Portainer")) {
 				/// Endpoint URL
 				if let endpointURL = Preferences.shared.endpointURL {
-					Labeled(label: "URL", content: endpointURL, monospace: true)
+					Labeled(label: "URL", content: endpointURL, monospace: true, lineLimit: 1)
 				}
 				
 				/// Logged in/not logged in label

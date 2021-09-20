@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import AppNotifications
+import Toasts
 
 @main
 struct HarbourApp: App {
@@ -17,8 +17,7 @@ struct HarbourApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.notificationsOverlay(appState.errorNotifications, alignment: .top, anchor: .top)
-				.notificationsOverlay(appState.persistenceNotifications, alignment: .bottom, anchor: .bottom)
+				.toastsOverlay(model: appState.toasts)
 				.sheet(isPresented: $appState.isContainerConsoleSheetPresented, onDismiss: onContainerConsoleViewDismissed) {
 					ContainerConsoleView()
 						.environmentObject(portainer)
@@ -42,13 +41,13 @@ struct HarbourApp: App {
 		
 		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
-		let notificationID: String = "ContainerDismissedNotification"
-		let notification: AppNotifications.Notification = .init(id: notificationID, dismissType: .after(5), icon: "terminal", title: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE, description: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION, style: .primary, onTap: {
+		let toastID: String = "ContainerDismissedToast"
+		let toast: Toasts.Toast = .init(id: toastID, dismissType: .after(5), icon: "terminal", title: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE, description: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION, style: .primary, onTap: {
 			UIDevice.current.generateHaptic(.light)
 			appState.isContainerConsoleSheetPresented = true
-			appState.persistenceNotifications.dismiss(matching: notificationID)
+			appState.toasts.dismiss(matching: toastID)
 		})
-		appState.persistenceNotifications.add(notification)
+		appState.toasts.add(toast)
 	}
 	
 	private func onDeviceDidShake(_: Notification) {

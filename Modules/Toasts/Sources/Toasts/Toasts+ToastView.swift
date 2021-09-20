@@ -1,14 +1,13 @@
 import SwiftUI
 
-// MARK: - AppNotifications+NotificationVIew
+// MARK: - Toasts+ToastView
 
 // TODO: Scale down on press
 
 @available(iOS 15.0, macOS 12.0, *)
-internal extension AppNotifications {
-	struct NotificationView: View {
-		@ObservedObject var notification: Notification
-		let anchor: Edge
+internal extension Toasts {
+	struct ToastView: View {
+		@ObservedObject var toast: Toast
 		
 		let cornerRadius: Double = 16
 		let maxWidth: Double = 500
@@ -19,16 +18,16 @@ internal extension AppNotifications {
 		
 		var body: some View {
 			HStack(spacing: 15) {
-				if let icon = notification.icon {
+				if let icon = toast.icon {
 					Image(systemName: icon)
 						.font(.title2.weight(.semibold))
 				}
 				
 				VStack(alignment: .leading, spacing: 2) {
-					Text(LocalizedStringKey(notification.title))
+					Text(LocalizedStringKey(toast.title))
 						.font(.headline)
 					
-					if let description = notification.description {
+					if let description = toast.description {
 						Text(LocalizedStringKey(description))
 							.font(.subheadline)
 							.foregroundStyle(.secondary)
@@ -38,13 +37,13 @@ internal extension AppNotifications {
 				.multilineTextAlignment(.leading)
 				.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			// .foregroundColor(notification.foregroundColor)		// Foreground color
+			// .foregroundColor(toast.foregroundColor)				// Foreground color
 			.padding(.vertical, 12)									// Vertical padding
 			.padding(.horizontal, 18)								// Horizontal padding
 			// .mask(backgroundShape)								// Shape mask
-			.background(notification.style, in: backgroundShape)	// Background
+			.background(toast.style, in: backgroundShape)			// Background
 			.frame(maxWidth: maxWidth, alignment: .center)			// Max width
-			.optionalTapGesture(notification.onTap)
+			.optionalTapGesture(toast.onTap)
 		}
 	}
 }
@@ -54,7 +53,7 @@ internal extension AppNotifications {
 @available(iOS 15.0, macOS 12.0, *)
 private extension View {
 	@ViewBuilder
-	func background<S: InsettableShape>(_ style: AppNotifications.Notification.NotificationStyle, in shape: S) -> some View {
+	func background<S: InsettableShape>(_ style: Toasts.Toast.Style, in shape: S) -> some View {
 		switch style {
 			case .material(let material):
 				background(material, in: shape)

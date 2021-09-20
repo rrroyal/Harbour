@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import os.log
 import UIKit
-import AppNotifications
+import Toasts
 
 class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
@@ -25,8 +25,7 @@ class AppState: ObservableObject {
 		didSet { UIApplication.shared.setLoadingIndicatorActive(!activeNetworkActivities.isEmpty) }
 	} */
 	
-	public let errorNotifications: AppNotifications = AppNotifications()
-	public let persistenceNotifications: AppNotifications = AppNotifications()
+	public let toasts: Toasts = Toasts()
 
 	private let logger: Logger = Logger(subsystem: "\(Bundle.main.bundleIdentifier ?? "Harbour").AppState", category: "AppState")
 	
@@ -79,21 +78,21 @@ class AppState: ObservableObject {
 	
 	// MARK: - Error handling
 	
-	public func handle(_ error: Error, notification: AppNotifications.Notification, _fileID: StaticString = #fileID, _line: Int = #line) {
-		handle(error, displayNotification: false, _fileID: _fileID, _line: _line)
-		DispatchQueue.main.async { [weak self] in
-			self?.errorNotifications.add(notification)
+	public func handle(_ error: Error, toast: Toasts.Toast, _fileID: StaticString = #fileID, _line: Int = #line) {
+		handle(error, displayToast: false, _fileID: _fileID, _line: _line)
+		DispatchQueue.main.async {
+			self.toasts.add(toast)
 		}
 	}
 
-	public func handle(_ error: Error, displayNotification: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
+	public func handle(_ error: Error, displayToast: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
 		UIDevice.current.generateHaptic(.error)
 		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
-		if displayNotification {
-			let notification: AppNotifications.Notification = .init(id: UUID().uuidString, dismissType: .after(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, style: .color(foreground: .white, background: .red))
-			DispatchQueue.main.async { [weak self] in
-				self?.errorNotifications.add(notification)
+		if displayToast {
+			let toast: Toasts.Toast = .init(id: UUID().uuidString, dismissType: .after(5), icon: "exclamationmark.triangle", title: "Error!", description: error.localizedDescription, style: .color(foreground: .white, background: .red))
+			DispatchQueue.main.async {
+				self.toasts.add(toast)
 			}
 		}
 	}
