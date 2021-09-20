@@ -588,6 +588,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Harbour/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Harbour;
 				INFOPLIST_KEY_CFBundleExecutable = Harbour;
 				INFOPLIST_KEY_CFBundleName = Harbour;
 				INFOPLIST_KEY_CFBundleVersion = 1;
@@ -628,6 +629,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Harbour/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Harbour;
 				INFOPLIST_KEY_CFBundleExecutable = Harbour;
 				INFOPLIST_KEY_CFBundleName = Harbour;
 				INFOPLIST_KEY_CFBundleVersion = 1;
