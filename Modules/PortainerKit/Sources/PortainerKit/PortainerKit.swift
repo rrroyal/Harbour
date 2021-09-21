@@ -36,7 +36,6 @@ public class PortainerKit {
 		
 		let configuration = URLSessionConfiguration.default
 		configuration.httpAdditionalHeaders = ["Accept-Encoding": "gzip"]
-		configuration.multipathServiceType = .aggregate
 		configuration.shouldUseExtendedBackgroundIdleMode = true
 		configuration.networkServiceType = .responsiveData
 		
