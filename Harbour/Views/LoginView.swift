@@ -71,6 +71,12 @@ struct LoginView: View {
 			.animation(.easeInOut, value: loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 			.animation(.easeInOut, value: buttonColor)
 			.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
+			
+			/* Link(destination: URL(string: "https://harbour.shameful.xyz/docs/login")!) {
+				Text("How to log in?")
+					.font(.headline)
+					.padding()
+			} */
 		}
 		.padding()
 		.animation(.easeInOut, value: buttonLabel)

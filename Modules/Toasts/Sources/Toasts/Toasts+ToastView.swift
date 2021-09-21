@@ -9,7 +9,7 @@ internal extension Toasts {
 	struct ToastView: View {
 		@ObservedObject var toast: Toast
 		
-		let cornerRadius: Double = 16
+		let cornerRadius: Double = 18
 		let maxWidth: Double = 500
 		
 		var backgroundShape: some InsettableShape {

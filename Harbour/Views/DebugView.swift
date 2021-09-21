@@ -17,6 +17,7 @@ struct DebugView: View {
 				
 				Button("Reset all") {
 					Preferences.Key.allCases.forEach { Preferences.shared.ud.removeObject(forKey: $0.rawValue) }
+					exit(0)
 				}
 				.accentColor(.red)
 			}
