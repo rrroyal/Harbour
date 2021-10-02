@@ -53,7 +53,10 @@ extension DebugView {
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
-					Button(action: getLogs) {
+					Button(action: {
+						UIDevice.current.generateHaptic(.light)
+						getLogs()
+					}) {
 						Image(systemName: "arrow.clockwise")
 					}
 				}

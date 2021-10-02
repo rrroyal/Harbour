@@ -50,6 +50,7 @@
 		E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */; };
 		E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */; };
 		E7C84B792708BB170071DE06 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C84B782708BB170071DE06 /* Localization.swift */; };
+		E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */; };
 		E7DD4CC6267650CB002709F0 /* ContainerConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */; };
 /* End PBXBuildFile section */
 
@@ -110,6 +111,7 @@
 		E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		E7C84B782708BB170071DE06 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
+		E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentButtonStyle.swift; sourceTree = "<group>"; };
 		E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConsoleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -187,6 +189,7 @@
 			isa = PBXGroup;
 			children = (
 				E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */,
+				E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */,
 				E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */,
 			);
 			path = Button;
@@ -431,6 +434,7 @@
 				E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */,
 				E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */,
 				E75A51DB2673892400857D2B /* ContainerCell.swift in Sources */,
+				E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */,
 				E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */,
 				E77C5FB3267E9B99000B4994 /* DebugView.swift in Sources */,
 				E77C5FB5267E9D1A000B4994 /* SetupView.swift in Sources */,

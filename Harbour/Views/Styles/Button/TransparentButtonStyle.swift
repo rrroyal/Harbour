@@ -1,17 +1,19 @@
 //
-//  DecreasesOnPressButtonStyle.swift
+//  TransparentButtonStyle.swift
 //  Harbour
 //
-//  Created by unitears on 11/06/2021.
+//  Created by unitears on 02/10/2021.
 //
 
 import SwiftUI
 
-struct DecreasesOnPressButtonStyle: ButtonStyle {
+struct TransparentButtonStyle: ButtonStyle {
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
 			.multilineTextAlignment(.center)
-			// .compositingGroup()
+			.padding()
+			.background(Color(uiColor: .systemGray5).opacity(configuration.isPressed ? Globals.Views.secondaryOpacity : 0))
+			.cornerRadius(Globals.Views.cornerRadius)
 			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)
 			.scaleEffect(configuration.isPressed ? Globals.Buttons.pressedSize : 1)
 			.animation(Globals.Views.springAnimation, value: configuration.isPressed)

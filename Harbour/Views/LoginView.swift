@@ -10,7 +10,6 @@ import PortainerKit
 
 struct LoginView: View {
 	@Environment(\.presentationMode) var presentationMode
-	@Environment(\.openURL) var openURL
 	@EnvironmentObject var portainer: Portainer
 	
 	@State private var endpoint: String = Preferences.shared.endpointURL ?? ""
@@ -20,6 +19,7 @@ struct LoginView: View {
 	@State private var savePassword: Bool = false
 	
 	@FocusState private var focusedField: FocusField?
+	// @State private var showLoginHelpMessage: Bool = false
 	@State private var loading: Bool = false
 	
 	@State private var buttonLabel: String? = nil
@@ -69,7 +69,7 @@ struct LoginView: View {
 			.autocapitalization(.none)
 			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
 			.focused($focusedField, equals: .password)
-
+			
 			Spacer()
 			
 			Button(action: login) {
@@ -93,26 +93,43 @@ struct LoginView: View {
 			.animation(.easeInOut, value: buttonColor)
 			.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 			
-			HStack {
-				Button(action: {
-					UIDevice.current.generateHaptic(.selectionChanged)
-					savePassword.toggle()
-				}) {
-					Text(savePassword ? "Saving password!" : "Save password?")
+			Button(action: {
+				UIDevice.current.generateHaptic(.selectionChanged)
+				savePassword.toggle()
+			}) {
+				HStack {
+					Image(systemName: savePassword ? "checkmark" : "circle.dashed")
+						.symbolVariant(savePassword ? .circle.fill : .none)
+						.id("SavePasswordIcon:\(savePassword)")
+					
+					Text("Save password")
 				}
-				.buttonStyle(PrimaryButtonStyle(foregroundColor: savePassword ? .white : .primary, backgroundColor: savePassword ? .accentColor : Color(uiColor: .systemGray6)))
-				
-				Button(action: {
-					UIDevice.current.generateHaptic(.soft)
-					openURL(URL(string: "https://harbour.shameful.xyz/docs/setup")!)
-				}) {
-					Text("How to log in?")
-				}
-				.buttonStyle(PrimaryButtonStyle(foregroundColor: .primary, backgroundColor: Color(uiColor: .systemGray6)))
+				.font(.callout.weight(.semibold))
+				.opacity(savePassword ? 1 : Globals.Views.secondaryOpacity)
 			}
+			.buttonStyle(TransparentButtonStyle())
+			.animation(.easeInOut, value: savePassword)
+			
+			/* if showLoginHelpMessage {
+				Link(destination: URL(string: "https://harbour.shameful.xyz/docs/setup")!) {
+					HStack {
+						Image(systemName: "globe")
+						Text("Trouble logging in?")
+					}
+					.font(.callout.weight(.semibold))
+					.opacity(Globals.Views.secondaryOpacity)
+				}
+				.buttonStyle(TransparentButtonStyle())
+				.frame(maxWidth: .infinity, alignment: .topTrailing)
+			} */
 		}
 		.padding()
 		.animation(.easeInOut, value: buttonLabel)
+		// .animation(.easeInOut, value: showLoginHelpMessage)
+		// .onAppear(perform: setupLoginHelpMessageTimer)
+		.onDisappear {
+			errorTimer?.invalidate()
+		}
 	}
 	
 	func login() {
@@ -163,6 +180,12 @@ struct LoginView: View {
 			}
 		}
 	}
+	
+	/* func setupLoginHelpMessageTimer() {
+		_ = Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { _ in
+			self.showLoginHelpMessage = true
+		}
+	} */
 }
 
 extension LoginView {

@@ -11,17 +11,19 @@ struct PrimaryButtonStyle: ButtonStyle {
 	@Environment(\.isEnabled) var isEnabled: Bool
 	let foregroundColor: Color
 	let backgroundColor: Color
+	let font: Font
 
-	public init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor) {
+	public init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) {
 		self.foregroundColor = foregroundColor
 		self.backgroundColor = backgroundColor
+		self.font = font
 	}
 
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
 			.multilineTextAlignment(.center)
 			.foregroundColor(isEnabled ? foregroundColor : .secondary)
-			.font(.body.weight(.semibold))
+			.font(font)
 			.padding()
 			.frame(maxWidth: Globals.Views.maxButtonWidth, alignment: .center)
 			.background(isEnabled ? backgroundColor : Color(uiColor: .systemGray5))

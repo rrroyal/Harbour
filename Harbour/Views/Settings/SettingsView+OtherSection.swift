@@ -34,6 +34,15 @@ extension SettingsView {
 					DebugView()
 				}
 				#endif
+				
+				Link(destination: URL(string: "https://harbour.shameful.xyz/docs")!) {
+					HStack {
+						Text("Docs")
+						Spacer()
+						Image(systemName: "globe")
+					}
+				}
+				.accentColor(.primary)
 			}
 		}
 	}
@@ -50,8 +59,13 @@ extension SettingsView.OtherSection {
 		var body: some View {
 			List(libraries, id: \.url) { library in
 				Link(destination: library.url) {
-					Text(library.label)
+					HStack {
+						Text(library.label)
+						Spacer()
+						Image(systemName: "globe")
+					}
 				}
+				.accentColor(.primary)
 			}
 			.navigationTitle("Libraries")
 		}
