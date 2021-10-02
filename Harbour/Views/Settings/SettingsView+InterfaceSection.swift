@@ -26,17 +26,17 @@ extension SettingsView {
 		var body: some View {
 			Section(header: Text("Interface")) {
 				/// Enable haptics
-				ToggleOption(label: String.Localization.SETTINGS_ENABLE_HAPTICS_TITLE, description: String.Localization.SETTINGS_ENABLE_HAPTICS_DESCRIPTION, isOn: $preferences.enableHaptics)
+				ToggleOption(label: Localization.SETTINGS_ENABLE_HAPTICS_TITLE, description: Localization.SETTINGS_ENABLE_HAPTICS_DESCRIPTION, isOn: $preferences.enableHaptics)
 				
 				/// Persist attached container
-				ToggleOption(label: String.Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE, description: String.Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION, isOn: $preferences.persistAttachedContainer)
+				ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION, isOn: $preferences.persistAttachedContainer)
 				
 				/// Display "Container dismissed" prompt
-				ToggleOption(label: String.Localization.SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE, description: String.Localization.SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION, isOn: $preferences.displayContainerDismissedPrompt)
+				ToggleOption(label: Localization.SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE, description: Localization.SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION, isOn: $preferences.displayContainerDismissedPrompt)
 					.disabled(!preferences.persistAttachedContainer)
 				
 				/// Auto-refresh interval
-				SliderOption(label: String.Localization.SETTINGS_AUTO_REFRESH_TITLE, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
+				SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
 					.disabled(!Portainer.shared.isLoggedIn)
 			}
 		}

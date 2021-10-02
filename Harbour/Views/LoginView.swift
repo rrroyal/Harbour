@@ -57,7 +57,7 @@ struct LoginView: View {
 				} else {
 					Group {
 						if let buttonLabel = buttonLabel {
-							Text(LocalizedStringKey(buttonLabel.capitalizingFirstLetter()))
+							Text(NSLocalizedString(buttonLabel, comment: "").capitalizingFirstLetter())
 						} else {
 							Text("Log in")
 						}

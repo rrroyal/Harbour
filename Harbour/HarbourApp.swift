@@ -42,7 +42,7 @@ struct HarbourApp: App {
 		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
 		let toastID: String = "ContainerDismissedToast"
-		let toast: Toasts.Toast = .init(id: toastID, dismissType: .after(5), icon: "terminal", title: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE, description: String.Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION, style: .primary, onTap: {
+		let toast: Toasts.Toast = .init(id: toastID, dismissType: .after(5), icon: "terminal", title: Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE, description: Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION, style: .primary, onTap: {
 			UIDevice.current.generateHaptic(.light)
 			appState.isContainerConsoleSheetPresented = true
 			appState.toasts.dismiss(matching: toastID)

@@ -72,7 +72,7 @@
 "%SETUP_FEATURE1_DESCRIPTION%" = "Your Minecraft server is taking up too much ram? Quickly restart it from your phone.";
 
 "%SETUP_FEATURE2_TITLE%" = "See all of the details";
-"%SETUP_FEATURE2_DESCRIPTION%" = "You want to see what ports are exposed? Easy.";
+"%SETUP_FEATURE2_DESCRIPTION%" = "You can check logs, mounts, network config - everything!";
 
 "%SETUP_FEATURE3_TITLE%" = "Attach to them too";
 "%SETUP_FEATURE3_DESCRIPTION%" = "Yeah. I spent way too much time on that one.";
