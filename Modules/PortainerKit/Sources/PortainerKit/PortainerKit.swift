@@ -23,7 +23,7 @@ public class PortainerKit {
 	private let session: URLSession
 	
 	/// Authorization token
-	private var token: String?
+	public var token: String?
 	
 	// MARK: - init
 	
@@ -39,7 +39,7 @@ public class PortainerKit {
 		configuration.shouldUseExtendedBackgroundIdleMode = true
 		configuration.networkServiceType = .responsiveData
 		
-		session = URLSession(configuration: configuration)
+		self.session = URLSession(configuration: configuration)
 		self.token = token
 	}
 	
@@ -51,7 +51,7 @@ public class PortainerKit {
 	///   - password: Password
 	/// - Returns: JWT token
 	public func login(username: String, password: String) async throws -> String {
-		guard var request = request(for: .login) else { throw APIError.invalidURL }
+		var request = try request(for: .login)
 		request.httpMethod = "POST"
 		
 		let body = [
@@ -74,20 +74,16 @@ public class PortainerKit {
 	/// Fetches available endpoints.
 	/// - Returns: `[Endpoint]`
 	public func getEndpoints() async throws -> [Endpoint] {
-		guard let request = request(for: .endpoints) else { throw APIError.invalidURL }
-		
-		let response = try await session.data(for: request)
-		return try parseResponse(response)
+		let request = try request(for: .endpoints)
+		return try await fetch(request: request)
 	}
 	
 	/// Fetches available containers for supplied endpoint ID.
 	/// - Parameter endpointID: Endpoint ID
 	/// - Returns: `[Container]`
 	public func getContainers(for endpointID: Int) async throws -> [Container] {
-		guard let request = request(for: .containers(endpointID: endpointID)) else { throw APIError.invalidURL }
-		
-		let response = try await session.data(for: request)
-		return try parseResponse(response)
+		let request = try request(for: .containers(endpointID: endpointID))
+		return try await fetch(request: request)
 	}
 	
 	/// Inspects the requested container.
@@ -96,9 +92,7 @@ public class PortainerKit {
 	///   - endpointID: Endpoint ID
 	/// - Returns: `ContainerDetails`
 	public func inspectContainer(_ containerID: String, endpointID: Int) async throws -> ContainerDetails {
-		guard let request = request(for: .containerDetails(containerID: containerID, endpointID: endpointID)) else { throw APIError.invalidURL }
-		
-		let response = try await session.data(for: request)
+		let request = try request(for: .containerDetails(containerID: containerID, endpointID: endpointID))
 		
 		let decoder = JSONDecoder()
 		let dateFormatter = ISO8601DateFormatter()
@@ -121,7 +115,7 @@ public class PortainerKit {
 			throw DateError.invalidDate(dateString: str)
 		}
 		
-		return try parseResponse(response, decoder: decoder)
+		return try await fetch(request: request, decoder: decoder)
 	}
 	
 	/// Executes selected action for container with supplied ID.
@@ -130,7 +124,7 @@ public class PortainerKit {
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
 	public func execute(_ action: ExecuteAction, containerID: String, endpointID: Int) async throws {
-		guard var request = request(for: .executeAction(action, containerID: containerID, endpointID: endpointID)) else { throw APIError.invalidURL }
+		var request = try request(for: .executeAction(action, containerID: containerID, endpointID: endpointID))
 		request.httpMethod = "POST"
 		
 		let response = try await session.data(for: request)
@@ -141,7 +135,7 @@ public class PortainerKit {
 		} else {
 			// It shouldn't happen, but we should gracefully handle it anyways.
 			// For now, we're hoping it worked ¯\_(ツ)_/¯.
-			assertionFailure("Response isn't HTTPURLResponse! \(#fileID):\(#line)")
+			assertionFailure("Response isn't HTTPURLResponse 🤨 [\(#fileID):\(#line)]")
 		}
 	}
 	
@@ -154,7 +148,7 @@ public class PortainerKit {
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
 	public func getLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
-		guard let request = request(for: .logs(containerID: containerID, endpointID: endpointID, since: since, tail: tail, timestamps: displayTimestamps)) else { throw APIError.invalidURL }
+		let request = try request(for: .logs(containerID: containerID, endpointID: endpointID, since: since, tail: tail, timestamps: displayTimestamps))
 		
 		let (data, _) = try await session.data(for: request)
 		guard let string = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) else { throw APIError.decodingFailed }
@@ -208,8 +202,8 @@ public class PortainerKit {
 	/// Creates a authorized URLRequest.
 	/// - Parameter path: Request path
 	/// - Returns: `URLRequest` with authorization header set.
-	private func request(for path: RequestPath, overrideURL: URL? = nil) -> URLRequest? {
-		guard let url = URL(string: (overrideURL ?? url).absoluteString + path.path) else { return nil }
+	private func request(for path: RequestPath, overrideURL: URL? = nil) throws -> URLRequest {
+		guard let url = URL(string: (overrideURL ?? url).absoluteString + path.path) else { throw APIError.invalidURL }
 		var request = URLRequest(url: url)
 		
 		if let token = token {
@@ -219,10 +213,13 @@ public class PortainerKit {
 		return request
 	}
 	
-	/// Parses the request response, decoding data and/or handling errors.
-	/// - Parameter response: Request response
-	/// - Returns: Decoded output
-	private func parseResponse<Output: Codable>(_ response: (Data, URLResponse), decoder: JSONDecoder = JSONDecoder()) throws -> Output {
+	/// Fetches & decodes data for supplied request.
+	/// - Parameter request: Request
+	/// - Parameter decoder: JSONDecoder
+	/// - Returns: Output
+	private func fetch<Output: Codable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {
+		let response = try await session.data(for: request)
+		
 		do {
 			let decoded = try decoder.decode(Output.self, from: response.0)
 			return decoded

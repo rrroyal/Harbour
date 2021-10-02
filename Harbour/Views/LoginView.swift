@@ -10,13 +10,18 @@ import PortainerKit
 
 struct LoginView: View {
 	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.openURL) var openURL
 	@EnvironmentObject var portainer: Portainer
 	
 	@State private var endpoint: String = Preferences.shared.endpointURL ?? ""
 	@State private var username: String = ""
 	@State private var password: String = ""
 	
+	@State private var savePassword: Bool = false
+	
+	@FocusState private var focusedField: FocusField?
 	@State private var loading: Bool = false
+	
 	@State private var buttonLabel: String? = nil
 	@State private var buttonColor: Color? = nil
 	
@@ -31,23 +36,39 @@ struct LoginView: View {
 			
 			Spacer()
 			
-			TextField("http://172.17.0.2", text: $endpoint)
-				.keyboardType(.URL)
-				.disableAutocorrection(true)
-				.autocapitalization(.none)
-				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-			
-			TextField("garyhost", text: $username)
-				.keyboardType(.default)
-				.disableAutocorrection(true)
-				.autocapitalization(.none)
-				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+			TextField("http://172.17.0.2", text: $endpoint, onCommit: {
+				if !endpoint.starts(with: "http") {
+					UIDevice.current.generateHaptic(.selectionChanged)
+					endpoint = "http://\(endpoint)"
+				}
 				
-			SecureField("hunter2", text: $password)
-				.keyboardType(.default)
-				.disableAutocorrection(true)
-				.autocapitalization(.none)
-				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+				focusedField = .username
+			})
+			.keyboardType(.URL)
+			.disableAutocorrection(true)
+			.autocapitalization(.none)
+			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+			.focused($focusedField, equals: .endpoint)
+			
+			TextField("garyhost", text: $username, onCommit: {
+				UIDevice.current.generateHaptic(.selectionChanged)
+				focusedField = .password
+			})
+			.keyboardType(.default)
+			.disableAutocorrection(true)
+			.autocapitalization(.none)
+			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+			.focused($focusedField, equals: .username)
+				
+			SecureField("hunter2", text: $password, onCommit: {
+				guard !(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty) else { return }
+				login()
+			})
+			.keyboardType(.default)
+			.disableAutocorrection(true)
+			.autocapitalization(.none)
+			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+			.focused($focusedField, equals: .password)
 
 			Spacer()
 			
@@ -72,11 +93,23 @@ struct LoginView: View {
 			.animation(.easeInOut, value: buttonColor)
 			.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 			
-			/* Link(destination: URL(string: "https://harbour.shameful.xyz/docs/login")!) {
-				Text("How to log in?")
-					.font(.headline)
-					.padding()
-			} */
+			HStack {
+				Button(action: {
+					UIDevice.current.generateHaptic(.selectionChanged)
+					savePassword.toggle()
+				}) {
+					Text(savePassword ? "Saving password!" : "Save password?")
+				}
+				.buttonStyle(PrimaryButtonStyle(foregroundColor: savePassword ? .white : .primary, backgroundColor: savePassword ? .accentColor : Color(uiColor: .systemGray6)))
+				
+				Button(action: {
+					UIDevice.current.generateHaptic(.soft)
+					openURL(URL(string: "https://harbour.shameful.xyz/docs/setup")!)
+				}) {
+					Text("How to log in?")
+				}
+				.buttonStyle(PrimaryButtonStyle(foregroundColor: .primary, backgroundColor: Color(uiColor: .systemGray6)))
+			}
 		}
 		.padding()
 		.animation(.easeInOut, value: buttonLabel)
@@ -92,10 +125,12 @@ struct LoginView: View {
 			return
 		}
 		
+		focusedField = nil
+		
 		Task {
 			do {
 				loading = true
-				try await portainer.login(url: url, username: username, password: password)
+				try await portainer.login(url: url, username: username, password: password, savePassword: savePassword)
 				
 				UIDevice.current.generateHaptic(.success)
 				
@@ -103,6 +138,12 @@ struct LoginView: View {
 				buttonColor = .green
 				buttonLabel = "Success!"
 				presentationMode.wrappedValue.dismiss()
+				
+				do {
+					try await portainer.getEndpoints()
+				} catch {
+					AppState.shared.handle(error)
+				}
 			} catch {
 				UIDevice.current.generateHaptic(.error)
 				
@@ -125,7 +166,7 @@ struct LoginView: View {
 }
 
 extension LoginView {
-	enum Field {
+	enum FocusField {
 		case endpoint, username, password
 	}
 }

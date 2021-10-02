@@ -64,16 +64,56 @@ final class Portainer: ObservableObject {
 	// MARK: - init
 	
 	private init() {
-		if let urlString = Preferences.shared.endpointURL,
-		   let url = URL(string: urlString),
-		   let token = keychain[urlString] {
-			logger.debug("Initializing PortainerKit for URL: \(url, privacy: .sensitive)")
-			api = PortainerKit(url: url, token: token)
+		// Check if endpointURL is saved
+		if let urlString = Preferences.shared.endpointURL, let url = URL(string: urlString) {
+			// It is, try to log in
+			logger.debug("Has saved URL: \(url, privacy: .sensitive)")
 			
 			Task {
-				do {
-					try await getEndpoints()
-				} catch {}
+				// Check if token is saved
+				if let token = keychain[KeychainKeys.token] {
+					// Yeah - use it and fetch endpoints
+					logger.debug("Also has token, cool! Using it 😊")
+					self.api = PortainerKit(url: url, token: token)
+					
+					do {
+						try await self.getEndpoints()
+					} catch {
+						// Something went wrong! Check if token was invalid and has saved credentials
+						if error as? PortainerKit.APIError == PortainerKit.APIError.invalidJWTToken,
+						   let username = keychain[KeychainKeys.username], let password = keychain[KeychainKeys.password] {
+							// Yup - try to use them to refresh the token
+							logger.debug("Saved token is invalid, but has credentials!")
+							
+							do {
+								try await login(url: url, username: username, password: password, savePassword: true)
+								try await self.getEndpoints()
+								// Success!
+							} catch {
+								// Something went wrong - log out 😞
+								logOut()
+								AppState.shared.handle(error)
+							}
+						} else {
+							// Error was regarding something else OR there's no saved credentials 😕
+							AppState.shared.handle(error)
+							logOut()
+						}
+					}
+				} else if let username = keychain[KeychainKeys.username], let password = keychain[KeychainKeys.password] {
+					// No token BUT has credentials! Try to use them...
+					logger.debug("No saved token, but has credentials!")
+					
+					do {
+						try await login(url: url, username: username, password: password, savePassword: true)
+						try await self.getEndpoints()
+						// Got it!
+					} catch {
+						// Something went wrong 😑
+						logOut()
+						AppState.shared.handle(error)
+					}
+				}
 			}
 		}
 	}
@@ -85,8 +125,9 @@ final class Portainer: ObservableObject {
 	///   - url: Endpoint URL
 	///   - username: Username
 	///   - password: Password
+	///   - savePassword: Should password be saved?
 	/// - Returns: Result containing JWT token or error.
-	public func login(url: URL, username: String, password: String) async throws {
+	public func login(url: URL, username: String, password: String, savePassword: Bool) async throws {
 		logger.debug("Logging in! URL: \(url.absoluteString, privacy: .sensitive)")
 		let api = PortainerKit(url: url)
 		self.api = api
@@ -103,14 +144,19 @@ final class Portainer: ObservableObject {
 			self?.isLoggedIn = true
 			Preferences.shared.endpointURL = url.absoluteString
 		}
-		keychain[url.absoluteString] = token
+		keychain[KeychainKeys.token] = token
+		
+		if savePassword {
+			keychain[KeychainKeys.username] = username
+			keychain[KeychainKeys.password] = password
+		}
 	}
 	
 	/// Logs out, removing all local authentication.
 	public func logOut() {
 		logger.info("Logging out")
 		
-		if let urlString = Preferences.shared.endpointURL { try? keychain.remove(urlString) }
+		try? keychain.removeAll()
 		
 		isLoggedIn = false
 		selectedEndpoint = nil
@@ -320,5 +366,13 @@ final class Portainer: ObservableObject {
 	
 	private func generateActionID(_ args: Any..., _function: StaticString = #function) -> String {
 		"Portainer.\(_function)(\(String(describing: args)))"
+	}
+}
+
+private extension Portainer {
+	enum KeychainKeys {
+		static let token: String = "token"
+		static let username: String = "username"
+		static let password: String = "password"
 	}
 }
