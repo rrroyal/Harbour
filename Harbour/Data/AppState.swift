@@ -32,6 +32,10 @@ class AppState: ObservableObject {
 	private var autoRefreshTimer: AnyCancellable? = nil
 
 	private init() {
+		#if DEBUG
+		UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
+		#endif
+		
 		if !Preferences.shared.launchedBefore {
 			isSetupSheetPresented = true
 		}

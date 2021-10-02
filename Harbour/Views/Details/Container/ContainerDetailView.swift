@@ -13,19 +13,18 @@ struct ContainerDetailView: View {
 	@ObservedObject var container: PortainerKit.Container
 	
 	@State private var loading: Bool = false
-	@State private var containerDetails: PortainerKit.ContainerDetails? = nil
 		
 	var buttonsSection: some View {
 		LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 2)) {
-			NavigationLink(destination: ContainerMountsDetailsView(mounts: container.mounts, details: containerDetails?.mounts)) {
+			NavigationLink(destination: ContainerMountsDetailsView(mounts: container.mounts, details: container.details?.mounts)) {
 				NavigationLinkLabel(label: "Mounts", symbolName: "externaldrive.fill")
 			}
 			
-			NavigationLink(destination: ContainerNetworkDetailsView(networkSettings: container.networkSettings, details: containerDetails?.networkSettings, ports: container.ports)) {
+			NavigationLink(destination: ContainerNetworkDetailsView(networkSettings: container.networkSettings, details: container.details?.networkSettings, ports: container.ports)) {
 				NavigationLinkLabel(label: "Network", symbolName: "network")
 			}
 			
-			NavigationLink(destination: ContainerConfigDetailsView(config: containerDetails?.config, hostConfig: containerDetails?.hostConfig ?? container.hostConfig)) {
+			NavigationLink(destination: ContainerConfigDetailsView(config: container.details?.config, hostConfig: container.details?.hostConfig ?? container.hostConfig)) {
 				NavigationLinkLabel(label: "Config", symbolName: "server.rack")
 			}
 			
@@ -41,7 +40,7 @@ struct ContainerDetailView: View {
 			LazyVStack(spacing: 10) {
 				buttonsSection
 				
-				if let containerDetails = containerDetails {
+				if let containerDetails = container.details {
 					GeneralSection(details: containerDetails)
 					StateSection(state: containerDetails.state)
 					GraphDriverSection(graphDriver: containerDetails.graphDriver)
@@ -90,7 +89,6 @@ struct ContainerDetailView: View {
 		do {
 			let containerDetails = try await portainer.inspectContainer(container)
 			withAnimation {
-				self.containerDetails = containerDetails
 				container.update(from: containerDetails)
 			}
 		} catch {

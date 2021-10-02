@@ -52,6 +52,8 @@ public extension PortainerKit {
 		public let hostConfig: HostConfig?
 		public let networkSettings: NetworkSettings?
 		public let mounts: [Mount]?
+		
+		public var details: ContainerDetails? = nil
 
 		public static func == (lhs: PortainerKit.Container, rhs: PortainerKit.Container) -> Bool {
 			lhs.id == rhs.id &&
@@ -63,6 +65,8 @@ public extension PortainerKit {
 		
 		// TODO: Update other properties
 		public func update(from details: PortainerKit.ContainerDetails) {
+			self.details = details
+			
 			self.state = details.state.status
 		}
 	}

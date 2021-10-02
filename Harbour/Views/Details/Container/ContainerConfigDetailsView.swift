@@ -11,9 +11,6 @@ import SwiftUI
 struct ContainerConfigDetailsView: View {
 	let config: PortainerKit.ContainerConfig?
 	let hostConfig: PortainerKit.HostConfig?
-	
-	@State private var isConfigSectionExpanded: Bool = true
-	@State private var isHostConfigSectionExpanded: Bool = true
 
 	@ViewBuilder
 	var emptyDisclaimer: some View {
