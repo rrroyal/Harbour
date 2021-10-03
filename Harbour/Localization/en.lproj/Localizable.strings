@@ -88,3 +88,7 @@
 "Unauthorized" = "Unauthorized";
 "Invalid payload" = "Invalid payload";
 "Invalid URL" = "Invalid URL";
+
+// MARK: - Other
+"%KEYCHAIN_TOKEN_COMMENT%" = "This is your authorization token for Portainer - if you delete it, you will be logged out of Harbour.";
+"%KEYCHAIN_CREDS_COMMENT%" = "This keychain entry is here because \"Save password\" was on when logging in. This is only used to renew JWT token during authorization. To read more, visit https://harbour.shameful.xyz/docs/faq#save-password";

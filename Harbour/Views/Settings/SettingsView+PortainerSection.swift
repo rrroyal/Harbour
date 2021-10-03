@@ -39,7 +39,7 @@ extension SettingsView {
 		}
 		
 		var body: some View {
-			Section(header: Text("Portainer")) {
+			Section("Portainer") {
 				/// Endpoint URL
 				if let endpointURL = Preferences.shared.endpointURL {
 					Labeled(label: "URL", content: endpointURL, monospace: true, lineLimit: 1)

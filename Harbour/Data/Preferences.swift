@@ -38,5 +38,5 @@ extension Preferences {
 }
 
 extension UserDefaults {
-	static var group: UserDefaults = UserDefaults(suiteName: "WPN9Y7CDCT.group.\(Bundle.main.bundleIdentifier!)")!
+	static var group: UserDefaults = UserDefaults(suiteName: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)")!
 }

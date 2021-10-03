@@ -21,7 +21,7 @@ struct ContainerConfigDetailsView: View {
 	}
 	
 	var configSection: some View {
-		Section(header: Text("Config")) {
+		Section("Config") {
 			if let config = config {
 				Text(String(describing: config))
 			} else {
@@ -31,7 +31,7 @@ struct ContainerConfigDetailsView: View {
 	}
 	
 	var hostConfigSection: some View {
-		Section(header: Text("Host config")) {
+		Section("Host config") {
 			if let hostConfig = hostConfig {
 				Text(String(describing: hostConfig))
 			} else {

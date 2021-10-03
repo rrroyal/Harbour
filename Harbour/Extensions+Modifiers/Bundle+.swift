@@ -15,4 +15,8 @@ public extension Bundle {
 	var buildNumber: String {
 		Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
 	}
+	
+	var appIdentifierPrefix: String {
+		Bundle.main.infoDictionary?["AppIdentifierPrefix"] as? String ?? ""
+	}
 }

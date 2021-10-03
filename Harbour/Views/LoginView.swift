@@ -36,79 +36,92 @@ struct LoginView: View {
 			
 			Spacer()
 			
-			TextField("http://172.17.0.2", text: $endpoint, onCommit: {
-				if !endpoint.starts(with: "http") {
+			VStack {
+				TextField("http://172.17.0.2", text: $endpoint, onCommit: {
+					guard !endpoint.isReallyEmpty else { return }
+					
+					if !endpoint.starts(with: "http") {
+						UIDevice.current.generateHaptic(.selectionChanged)
+						endpoint = "http://\(endpoint)"
+					}
+					
+					focusedField = .username
+				})
+				.keyboardType(.URL)
+				.disableAutocorrection(true)
+				.autocapitalization(.none)
+				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+				.focused($focusedField, equals: .endpoint)
+				
+				TextField("garyhost", text: $username, onCommit: {
+					guard !username.isEmpty else { return }
+					
 					UIDevice.current.generateHaptic(.selectionChanged)
-					endpoint = "http://\(endpoint)"
-				}
-				
-				focusedField = .username
-			})
-			.keyboardType(.URL)
-			.disableAutocorrection(true)
-			.autocapitalization(.none)
-			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-			.focused($focusedField, equals: .endpoint)
-			
-			TextField("garyhost", text: $username, onCommit: {
-				UIDevice.current.generateHaptic(.selectionChanged)
-				focusedField = .password
-			})
-			.keyboardType(.default)
-			.disableAutocorrection(true)
-			.autocapitalization(.none)
-			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-			.focused($focusedField, equals: .username)
-				
-			SecureField("hunter2", text: $password, onCommit: {
-				guard !(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty) else { return }
-				login()
-			})
-			.keyboardType(.default)
-			.disableAutocorrection(true)
-			.autocapitalization(.none)
-			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-			.focused($focusedField, equals: .password)
+					focusedField = .password
+				})
+				.keyboardType(.default)
+				.disableAutocorrection(true)
+				.autocapitalization(.none)
+				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+				.focused($focusedField, equals: .username)
+					
+				SecureField("hunter2", text: $password, onCommit: {
+					guard !(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty) else { return }
+					
+					UIDevice.current.generateHaptic(.light)
+					login()
+				})
+				.keyboardType(.default)
+				.disableAutocorrection(true)
+				.autocapitalization(.none)
+				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+				.focused($focusedField, equals: .password)
+			}
 			
 			Spacer()
 			
-			Button(action: login) {
-				if loading {
-					ProgressView()
-				} else {
-					Group {
-						if let buttonLabel = buttonLabel {
-							Text(NSLocalizedString(buttonLabel, comment: "").capitalizingFirstLetter())
-						} else {
-							Text("Log in")
+			VStack {
+				Button(action: {
+					UIDevice.current.generateHaptic(.light)
+					login()
+				}) {
+					if loading {
+						ProgressView()
+					} else {
+						Group {
+							if let buttonLabel = buttonLabel {
+								Text(NSLocalizedString(buttonLabel, comment: "").capitalizingFirstLetter())
+							} else {
+								Text("Log in")
+							}
 						}
+						.transition(.opacity)
 					}
-					.transition(.opacity)
 				}
-			}
-			.keyboardShortcut(.defaultAction)
-			.foregroundColor(.white)
-			.buttonStyle(PrimaryButtonStyle(backgroundColor: buttonColor ?? .accentColor))
-			.animation(.easeInOut, value: loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
-			.animation(.easeInOut, value: buttonColor)
-			.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
-			
-			Button(action: {
-				UIDevice.current.generateHaptic(.selectionChanged)
-				savePassword.toggle()
-			}) {
-				HStack {
-					Image(systemName: savePassword ? "checkmark" : "circle.dashed")
-						.symbolVariant(savePassword ? .circle.fill : .none)
-						.id("SavePasswordIcon:\(savePassword)")
-					
-					Text("Save password")
+				.keyboardShortcut(.defaultAction)
+				.foregroundColor(.white)
+				.buttonStyle(PrimaryButtonStyle(backgroundColor: buttonColor ?? .accentColor))
+				.animation(.easeInOut, value: loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
+				.animation(.easeInOut, value: buttonColor)
+				.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
+				
+				Button(action: {
+					UIDevice.current.generateHaptic(.selectionChanged)
+					savePassword.toggle()
+				}) {
+					HStack {
+						Image(systemName: savePassword ? "checkmark" : "circle.dashed")
+							.symbolVariant(savePassword ? .circle.fill : .none)
+							.id("SavePasswordIcon:\(savePassword)")
+						
+						Text("Save password")
+					}
+					.font(.callout.weight(.semibold))
+					.opacity(savePassword ? 1 : Globals.Views.secondaryOpacity)
 				}
-				.font(.callout.weight(.semibold))
-				.opacity(savePassword ? 1 : Globals.Views.secondaryOpacity)
+				.buttonStyle(TransparentButtonStyle())
+				.animation(.easeInOut, value: savePassword)
 			}
-			.buttonStyle(TransparentButtonStyle())
-			.animation(.easeInOut, value: savePassword)
 			
 			/* if showLoginHelpMessage {
 				Link(destination: URL(string: "https://harbour.shameful.xyz/docs/setup")!) {
@@ -133,8 +146,6 @@ struct LoginView: View {
 	}
 	
 	func login() {
-		UIDevice.current.generateHaptic(.light)
-		
 		guard let url = URL(string: endpoint) else {
 			UIDevice.current.generateHaptic(.error)
 			buttonLabel = "Invalid URL"

@@ -13,7 +13,12 @@ import OSLog
 struct DebugView: View {
     var body: some View {
 		List {
-			Section(header: Text("UserDefaults")) {
+			Section("Build info") {
+				Labeled(label: "Bundle ID", content: Bundle.main.bundleIdentifier, monospace: true)
+				Labeled(label: "App prefix", content: Bundle.main.appIdentifierPrefix, monospace: true)
+			}
+			
+			Section("UserDefaults") {
 				Button("Reset launchedBefore") {
 					Preferences.shared.launchedBefore = false
 				}
@@ -70,7 +75,7 @@ extension DebugView {
 				let entries = try logStore.getEntries()
 				logs = entries
 					.compactMap { $0 as? OSLogEntryLog }
-					.filter { $0.subsystem.contains(Bundle.main.bundleIdentifier ?? "Harbour") }
+					.filter { $0.subsystem.contains(Bundle.main.bundleIdentifier!) }
 					.map { "[\($0.level.rawValue)] \($0.date): \($0.category): \($0.composedMessage)" }
 			} catch {
 				logs = [String(describing: error)]

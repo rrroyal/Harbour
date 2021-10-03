@@ -18,7 +18,7 @@ extension Portainer {
 		
 		@Published public private(set) var attributedString: AttributedString = ""
 		
-		private let logger: Logger = Logger(subsystem: "\(Bundle.main.bundleIdentifier ?? "Harbour").Portainer.AttachedContainer", category: "AttachedContainer")
+		private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer.AttachedContainer")
 		private var messageCancellable: AnyCancellable? = nil
 		
 		public init(container: PortainerKit.Container, messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject) {

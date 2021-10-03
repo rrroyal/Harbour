@@ -27,7 +27,7 @@ class AppState: ObservableObject {
 	
 	public let toasts: Toasts = Toasts()
 
-	private let logger: Logger = Logger(subsystem: "\(Bundle.main.bundleIdentifier ?? "Harbour").AppState", category: "AppState")
+	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
 	
 	private var autoRefreshTimer: AnyCancellable? = nil
 

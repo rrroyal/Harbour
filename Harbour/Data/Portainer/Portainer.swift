@@ -56,8 +56,8 @@ final class Portainer: ObservableObject {
 	
 	// MARK: - Private properties
 	
-	private let logger: Logger = Logger(subsystem: "\(Bundle.main.bundleIdentifier ?? "Harbour").Portainer", category: "Portainer")
-	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier ?? "Harbour").label("Harbour").synchronizable(true).accessibility(.afterFirstUnlock)
+	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer")
+	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)").synchronizable(true).accessibility(.afterFirstUnlock)
 	private let ud: UserDefaults = Preferences.shared.ud
 	private var api: PortainerKit?
 	
@@ -71,7 +71,7 @@ final class Portainer: ObservableObject {
 			
 			Task {
 				// Check if token is saved
-				if let token = keychain[KeychainKeys.token] {
+				if let token = try? keychain.get(KeychainKeys.token) {
 					// Yeah - use it and fetch endpoints
 					logger.debug("Also has token, cool! Using it 😊")
 					self.api = PortainerKit(url: url, token: token)
@@ -81,7 +81,7 @@ final class Portainer: ObservableObject {
 					} catch {
 						// Something went wrong! Check if token was invalid and has saved credentials
 						if error as? PortainerKit.APIError == PortainerKit.APIError.invalidJWTToken,
-						   let username = keychain[KeychainKeys.username], let password = keychain[KeychainKeys.password] {
+						   let username = try? keychain.get(KeychainKeys.username), let password = try? keychain.get(KeychainKeys.password) {
 							// Yup - try to use them to refresh the token
 							logger.debug("Saved token is invalid, but has credentials!")
 							
@@ -100,7 +100,7 @@ final class Portainer: ObservableObject {
 							logOut()
 						}
 					}
-				} else if let username = keychain[KeychainKeys.username], let password = keychain[KeychainKeys.password] {
+				} else if let username = try? keychain.get(KeychainKeys.username), let password = try? keychain.get(KeychainKeys.password) {
 					// No token BUT has credentials! Try to use them...
 					logger.debug("No saved token, but has credentials!")
 					
@@ -144,11 +144,12 @@ final class Portainer: ObservableObject {
 			self?.isLoggedIn = true
 			Preferences.shared.endpointURL = url.absoluteString
 		}
-		keychain[KeychainKeys.token] = token
+		try keychain.comment(NSLocalizedString(Localization.KEYCHAIN_TOKEN_COMMENT, comment: "")).label("Harbour (token)").set(token, key: KeychainKeys.token)
 		
 		if savePassword {
-			keychain[KeychainKeys.username] = username
-			keychain[KeychainKeys.password] = password
+			let keychain = self.keychain.comment(NSLocalizedString(Localization.KEYCHAIN_CREDS_COMMENT, comment: ""))
+			try keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
+			try keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
 		}
 	}
 	
