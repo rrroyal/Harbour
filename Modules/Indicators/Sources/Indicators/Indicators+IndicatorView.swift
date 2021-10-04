@@ -4,6 +4,9 @@ internal extension Indicators {
 	struct IndicatorView: View {
 		let indicator: Indicator
 		
+		let padding: Double = 10
+		let backgroundShape: some Shape = RoundedRectangle(cornerRadius: 32, style: .circular)
+		
 		var body: some View {
 			HStack {
 				if let icon = indicator.icon {
@@ -19,7 +22,7 @@ internal extension Indicators {
 				VStack {
 					Text(indicator.headline)
 						.font(.subheadline)
-						.fontWeight(indicator.subheadline != nil ? .semibold : .medium)
+						.fontWeight(.medium)
 						.lineLimit(1)
 						.foregroundStyle(indicator.style.headlineStyle)
 						.foregroundColor(indicator.style.headlineColor)
@@ -28,27 +31,27 @@ internal extension Indicators {
 					if let subheadline = indicator.subheadline {
 						Text(subheadline)
 							.font(.subheadline)
-							.fontWeight(.semibold)
+							.fontWeight(.medium)
 							.lineLimit(1)
 							.foregroundStyle(indicator.style.subheadlineStyle)
 							.foregroundColor(indicator.style.subheadlineColor)
-							.padding(.horizontal, 10)
 							.animation(.easeInOut, value: indicator.style.subheadlineColor)
 					}
 				}
-				.padding(.trailing, indicator.icon != nil ? 5 : 0)
+				.padding(.trailing, indicator.icon != nil ? padding : 0)
+				.padding(.horizontal, indicator.subheadline != nil ? padding : 0)
 				.multilineTextAlignment(.center)
 				.minimumScaleFactor(0.8)
 				.transition(.opacity)
 			}
-			.padding(10)
-			.padding(.horizontal, 10)
-			.background(Material.regular, in: RoundedRectangle(cornerRadius: 32, style: .circular))
+			.padding(padding)
+			.padding(.horizontal, padding)
+			// .background(Material.regular, in: backgroundShape)
+			.background(backgroundShape.fill(Color(uiColor: .secondarySystemGroupedBackground)).shadow(color: Color.black.opacity(0.075), radius: 16, x: 0, y: 0))
 			.animation(.easeInOut, value: indicator.icon)
 			.animation(.easeInOut, value: indicator.headline)
 			.animation(.easeInOut, value: indicator.subheadline)
 			.optionalTapGesture(indicator.onTap)
-			// .shadow(color: Color.black.opacity(0.1), radius: 12, x: 0, y: 0)
 		}
 	}
 }
@@ -81,6 +84,8 @@ struct IndicatorView_Previews: PreviewProvider {
 			Indicators.IndicatorView(indicator: .init(id: "", icon: "bolt.fill", headline: "Headline", subheadline: "Subheadline", dismissType: .manual, style: .init(subheadlineColor: .red, iconColor: .red)))
 		}
 		.padding()
+		.background(Color(uiColor: .systemBackground))
 		.previewLayout(.sizeThatFits)
+		.environment(\.colorScheme, .light)
 	}
 }

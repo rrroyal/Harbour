@@ -165,8 +165,6 @@ final class Portainer: ObservableObject {
 			self.endpoints = []
 			self.containers = []
 			self.attachedContainer = nil
-			
-			Preferences.shared.endpointURL = nil
 		}
 	}
 	
@@ -193,14 +191,7 @@ final class Portainer: ObservableObject {
 			
 			return endpoints
 		} catch {
-			DispatchQueue.main.async { [weak self] in
-				self?.endpoints = []
-				
-				if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
-					self?.isLoggedIn = false
-				}
-			}
-			
+			handle(error)
 			throw error
 		}
 	}
@@ -228,14 +219,7 @@ final class Portainer: ObservableObject {
 			
 			return containers
 		} catch {
-			DispatchQueue.main.async { [weak self] in
-				self?.containers = []
-				
-				if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
-					self?.isLoggedIn = false
-				}
-			}
-			
+			handle(error)
 			throw error
 		}
 	}
@@ -258,12 +242,7 @@ final class Portainer: ObservableObject {
 			logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
 			return containerDetails
 		} catch {
-			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
-				DispatchQueue.main.async { [weak self] in
-					self?.isLoggedIn = false
-				}
-			}
-			
+			handle(error)
 			throw error
 		}
 	}
@@ -286,12 +265,7 @@ final class Portainer: ObservableObject {
 			try await api.execute(action, containerID: container.id, endpointID: endpointID)
 			logger.debug("Executed action \(action.rawValue) for containerID: \(container.id), endpointID: \(endpointID).")
 		} catch {
-			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
-				DispatchQueue.main.async { [weak self] in
-					self?.isLoggedIn = false
-				}
-			}
-			
+			handle(error)
 			throw error
 		}
 	}
@@ -318,12 +292,7 @@ final class Portainer: ObservableObject {
 			logger.debug("Got logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
 			return logs
 		} catch {
-			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
-				DispatchQueue.main.async { [weak self] in
-					self?.isLoggedIn = false
-				}
-			}
-			
+			handle(error)
 			throw error
 		}
 	}
@@ -355,12 +324,7 @@ final class Portainer: ObservableObject {
 			
 			return attachedContainer
 		} catch {
-			if let error = error as? PortainerKit.APIError, error == .invalidJWTToken {
-				DispatchQueue.main.async { [weak self] in
-					self?.isLoggedIn = false
-				}
-			}
-			
+			handle(error)
 			throw error
 		}
 	}
@@ -369,6 +333,17 @@ final class Portainer: ObservableObject {
 	
 	private func generateActionID(_ args: Any..., _function: StaticString = #function) -> String {
 		"Portainer.\(_function)(\(String(describing: args)))"
+	}
+	
+	private func handle(_ error: Error) {
+		guard let error = error as? PortainerKit.APIError else { return }
+		
+		switch error {
+			case .invalidJWTToken:
+				logOut()
+			default:
+				break
+		}
 	}
 }
 

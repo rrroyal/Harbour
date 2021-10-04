@@ -18,9 +18,7 @@ internal extension Indicators {
 					dragOffset.height = $0.translation.height < 0 ? $0.translation.height : $0.translation.height * dragInWrongDirectionMultiplier
 				}
 				.onEnded {
-					withAnimation {
-						dragOffset = .zero
-					}
+					dragOffset = .zero
 					
 					if $0.translation.height < dragThreshold {
 						model.dismiss()
@@ -41,6 +39,7 @@ internal extension Indicators {
 			.padding(.horizontal)
 			.padding(.top, 5)
 			.animation(animation, value: model.activeIndicator?.id)
+			.animation(animation, value: dragOffset)
 		}
 	}
 }

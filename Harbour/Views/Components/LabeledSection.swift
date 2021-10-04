@@ -25,7 +25,7 @@ struct LabeledSection: View {
 		}
 	}
 	
-	let backgroundColor: Color = Color(uiColor: UIColor.secondarySystemGroupedBackground)
+	let backgroundColor: Color = Color(uiColor: .secondarySystemGroupedBackground)
 	
     var body: some View {
 		VStack(alignment: .leading, spacing: 6) {

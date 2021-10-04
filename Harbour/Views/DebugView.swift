@@ -9,6 +9,7 @@
 
 import SwiftUI
 import OSLog
+import Indicators
 
 struct DebugView: View {
     var body: some View {
@@ -20,14 +21,30 @@ struct DebugView: View {
 			
 			Section("UserDefaults") {
 				Button("Reset finishedSetup") {
+					UIDevice.current.generateHaptic(.light)
 					Preferences.shared.finishedSetup = false
 				}
 				
 				Button("Reset all") {
+					UIDevice.current.generateHaptic(.heavy)
 					Preferences.Key.allCases.forEach { Preferences.shared.ud.removeObject(forKey: $0.rawValue) }
 					exit(0)
 				}
 				.accentColor(.red)
+			}
+			
+			Section("Indicators") {
+				Button("Display manual indicator") {
+					let indicator: Indicators.Indicator = .init(id: "manual", icon: "bolt", headline: "Headline", subheadline: "Subheadline", dismissType: .manual)
+					UIDevice.current.generateHaptic(.light)
+					AppState.shared.indicators.display(indicator)
+				}
+				
+				Button("Display automatic indicator") {
+					let indicator: Indicators.Indicator = .init(id: "automatic", icon: "bolt", headline: "Headline", subheadline: "Subheadline", dismissType: .after(5))
+					UIDevice.current.generateHaptic(.light)
+					AppState.shared.indicators.display(indicator)
+				}
 			}
 			
 			Section {
