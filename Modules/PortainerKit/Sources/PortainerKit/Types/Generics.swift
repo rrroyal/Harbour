@@ -42,18 +42,12 @@ public extension PortainerKit {
 		
 		public var expectedState: ContainerStatus {
 			switch self {
-				case .start:
-					return .running
-				case .stop:
-					return .exited
-				case .restart:
-					return .restarting
-				case .kill:
-					return .exited
-				case .pause:
-					return .paused
-				case .unpause:
-					return .running
+				case .start:	return .running
+				case .stop:		return .exited
+				case .restart:	return .restarting
+				case .kill:		return .exited
+				case .pause:	return .paused
+				case .unpause:	return .running
 			}
 		}
 	}

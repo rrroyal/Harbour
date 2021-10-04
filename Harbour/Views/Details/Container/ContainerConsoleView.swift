@@ -10,24 +10,10 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerConsoleView: View {
-	// @Environment(\.presentationMode) var presentationMode
 	@EnvironmentObject var portainer: Portainer
 
 	var body: some View {
 		if let attachedContainer = portainer.attachedContainer {
-			ConsoleView(attachedContainer: attachedContainer)
-		} else {
-			Text("how did you get here? ಠ_ಠ")
-				.foregroundStyle(.primary)
-		}
-	}
-}
-
-private extension ContainerConsoleView {
-	struct ConsoleView: View {
-		@ObservedObject var attachedContainer: Portainer.AttachedContainer
-
-		var body: some View {
 			ScrollView {
 				LazyVStack {
 					Text(attachedContainer.attributedString)
@@ -38,6 +24,9 @@ private extension ContainerConsoleView {
 				}
 				.padding(.small)
 			}
+		} else {
+			Text("how did you get here? ಠ_ಠ")
+				.foregroundStyle(.secondary)
 		}
 	}
 }

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Toasts
+import Indicators
 
 @main
 struct HarbourApp: App {
@@ -17,12 +17,11 @@ struct HarbourApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.toastsOverlay(model: appState.toasts)
+				.indicatorOverlay(model: appState.indicators)
 				.sheet(isPresented: $appState.isContainerConsoleSheetPresented, onDismiss: onContainerConsoleViewDismissed) {
 					ContainerConsoleView()
-						.environmentObject(portainer)
 				}
-				.sheet(isPresented: $appState.isSetupSheetPresented, onDismiss: { Preferences.shared.launchedBefore = true }) {
+				.sheet(isPresented: $appState.isSetupSheetPresented, onDismiss: { Preferences.shared.finishedSetup = true }) {
 					SetupView()
 				}
 				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
@@ -41,13 +40,13 @@ struct HarbourApp: App {
 		
 		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
-		let toastID: String = "ContainerDismissedToast"
-		let toast: Toasts.Toast = .init(id: toastID, dismissType: .after(5), icon: "terminal", title: Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE, description: Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION, style: .primary, onTap: {
+		let indicatorID: String = "ContainerDismissedIndicator"
+		let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE.localizedString, subheadline: Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION.localizedString, dismissType: .after(5), onTap: {
 			UIDevice.current.generateHaptic(.light)
 			appState.isContainerConsoleSheetPresented = true
-			appState.toasts.dismiss(matching: toastID)
+			appState.indicators.dismiss(matching: indicatorID)
 		})
-		appState.toasts.add(toast)
+		appState.indicators.display(indicator)
 	}
 	
 	private func onDeviceDidShake(_: Notification) {

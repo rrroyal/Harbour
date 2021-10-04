@@ -69,8 +69,8 @@ struct ContainerDetailView: View {
 						Label("Refresh", systemImage: "arrow.clockwise")
 					}
 				}) {
-					Image(systemName: container.stateSymbol)
-						.accentColor(container.stateColor)
+					Image(systemName: container.state.icon)
+						.accentColor(container.state.color)
 						.animation(.easeInOut, value: container.state)
 						.transition(.opacity)
 				}

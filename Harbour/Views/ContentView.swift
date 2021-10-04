@@ -13,9 +13,8 @@ struct ContentView: View {
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
 	
+	@State private var searchQuery: String = ""
 	@State private var isSettingsSheetPresented: Bool = false
-	
-	let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
 	
 	var toolbarMenu: some View {
 		Menu(content: {
@@ -81,20 +80,12 @@ struct ContentView: View {
 	
 	var body: some View {
 		NavigationView {
-			ScrollView {
-				LazyVGrid(columns: columns) {
-					ForEach(portainer.containers) { container in
-						NavigationLink(destination: ContainerDetailView(container: container)) {
-							ContainerCell(container: container)
-								.contextMenu {
-									ContainerContextMenu(container: container)
-								}
-						}
-						.buttonStyle(DecreasesOnPressButtonStyle())
-					}
+			Group {
+				if preferences.useGridView {
+					ContainerGridView(containers: portainer.containers.filtered(query: searchQuery))
+				} else {
+					ContainerListView(containers: portainer.containers.filtered(query: searchQuery))
 				}
-				.padding()
-				.animation(.easeInOut, value: portainer.containers)
 			}
 			.navigationTitle("Harbour")
 			.navigationBarTitleDisplayMode(.inline)
@@ -126,6 +117,7 @@ struct ContentView: View {
 					appState.fetchingMainScreenData = false
 				}
 			}
+			.searchable(text: $searchQuery)
 		}
 		.sheet(isPresented: $isSettingsSheetPresented) {
 			SettingsView()

@@ -15,7 +15,24 @@ extension SettingsView {
 		@State private var isLoginSheetPresented: Bool = false
 		@State private var isLogoutWarningPresented: Bool = false
 		
+		var autoRefreshIntervalDescription: String {
+			guard preferences.autoRefreshInterval > 0 else {
+				return "Off"
+			}
+			
+			let formatter = DateComponentsFormatter()
+			formatter.allowedUnits = [.second]
+			formatter.unitsStyle = .full
+			
+			return formatter.string(from: preferences.autoRefreshInterval) ?? "\(preferences.autoRefreshInterval) second(s)"
+		}
+		
+		@ViewBuilder
 		var loggedInView: some View {
+			/// Auto-refresh interval
+			SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localizedString, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
+				.disabled(!Portainer.shared.isLoggedIn)
+			
 			Button("Log out", role: .destructive) {
 				UIDevice.current.generateHaptic(.warning)
 				isLogoutWarningPresented = true
@@ -58,6 +75,12 @@ extension SettingsView {
 			.sheet(isPresented: $isLoginSheetPresented) {
 				LoginView()
 			}
+		}
+		
+		private func setupAutoRefreshTimer(isEditing: Bool) {
+			guard !isEditing else { return }
+			
+			AppState.shared.setupAutoRefreshTimer(interval: preferences.autoRefreshInterval)
 		}
 	}
 }

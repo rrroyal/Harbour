@@ -19,8 +19,8 @@ struct DebugView: View {
 			}
 			
 			Section("UserDefaults") {
-				Button("Reset launchedBefore") {
-					Preferences.shared.launchedBefore = false
+				Button("Reset finishedSetup") {
+					Preferences.shared.finishedSetup = false
 				}
 				
 				Button("Reset all") {

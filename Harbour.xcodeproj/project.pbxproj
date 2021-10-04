@@ -13,8 +13,13 @@
 		E7339C582674262500A55B5C /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C572674262500A55B5C /* String+.swift */; };
 		E74AC7F326768543003411AA /* Portainer+PortainerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F226768543003411AA /* Portainer+PortainerError.swift */; };
 		E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */; };
+		E751F054270B0B5000980DCA /* Indicators in Frameworks */ = {isa = PBXBuildFile; productRef = E751F053270B0B5000980DCA /* Indicators */; };
+		E751F059270B314700980DCA /* ContainerListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F058270B314700980DCA /* ContainerListView.swift */; };
+		E751F05B270B315200980DCA /* ContainerListView+ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F05A270B315200980DCA /* ContainerListView+ContainerCell.swift */; };
+		E751F05D270B315B00980DCA /* ContainerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F05C270B315B00980DCA /* ContainerGridView.swift */; };
+		E751F05F270B316400980DCA /* ContainerGridView+ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F05E270B316400980DCA /* ContainerGridView+ContainerCell.swift */; };
+		E751F063270B37DA00980DCA /* Array+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751F062270B37DA00980DCA /* Array+.swift */; };
 		E75A51D8267384E100857D2B /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51D7267384E100857D2B /* AppState.swift */; };
-		E75A51DB2673892400857D2B /* ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51DA2673892400857D2B /* ContainerCell.swift */; };
 		E75A51DE26738A2000857D2B /* ContainerDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51DD26738A2000857D2B /* ContainerDetailView.swift */; };
 		E75A51E026739ED100857D2B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51DF26739ED100857D2B /* Preferences.swift */; };
 		E75A51E22673A1C100857D2B /* Bundle+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51E12673A1C100857D2B /* Bundle+.swift */; };
@@ -25,7 +30,6 @@
 		E75A51EC2673A7F300857D2B /* ContainerConfigDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EB2673A7F300857D2B /* ContainerConfigDetailsView.swift */; };
 		E75A51EE2673B17B00857D2B /* Labeled.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51ED2673B17B00857D2B /* Labeled.swift */; };
 		E75A51F02673CE3500857D2B /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EF2673CE3500857D2B /* View+.swift */; };
-		E764C29726F8C4C8006528FE /* Toasts in Frameworks */ = {isa = PBXBuildFile; productRef = E764C29626F8C4C8006528FE /* Toasts */; };
 		E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBE26769B2500CD592E /* PortainerKit */; };
 		E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */; };
 		E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7748E7C267E831B00456BFD /* UIWindow+.swift */; };
@@ -74,8 +78,13 @@
 		E7339C572674262500A55B5C /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
 		E74AC7F226768543003411AA /* Portainer+PortainerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+PortainerError.swift"; sourceTree = "<group>"; };
 		E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+AttachedContainer.swift"; sourceTree = "<group>"; };
+		E751F052270B096B00980DCA /* Indicators */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Indicators; sourceTree = "<group>"; };
+		E751F058270B314700980DCA /* ContainerListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerListView.swift; sourceTree = "<group>"; };
+		E751F05A270B315200980DCA /* ContainerListView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerListView+ContainerCell.swift"; sourceTree = "<group>"; };
+		E751F05C270B315B00980DCA /* ContainerGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerGridView.swift; sourceTree = "<group>"; };
+		E751F05E270B316400980DCA /* ContainerGridView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerGridView+ContainerCell.swift"; sourceTree = "<group>"; };
+		E751F062270B37DA00980DCA /* Array+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+.swift"; sourceTree = "<group>"; };
 		E75A51D7267384E100857D2B /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		E75A51DA2673892400857D2B /* ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerCell.swift; sourceTree = "<group>"; };
 		E75A51DD26738A2000857D2B /* ContainerDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerDetailView.swift; sourceTree = "<group>"; };
 		E75A51DF26739ED100857D2B /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		E75A51E12673A1C100857D2B /* Bundle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+.swift"; sourceTree = "<group>"; };
@@ -86,7 +95,6 @@
 		E75A51EB2673A7F300857D2B /* ContainerConfigDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConfigDetailsView.swift; sourceTree = "<group>"; };
 		E75A51ED2673B17B00857D2B /* Labeled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labeled.swift; sourceTree = "<group>"; };
 		E75A51EF2673CE3500857D2B /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
-		E764C29526F8C413006528FE /* Toasts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Toasts; sourceTree = "<group>"; };
 		E7685BB726769B0900CD592E /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PortainerKit; sourceTree = "<group>"; };
 		E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextFieldStyle.swift; sourceTree = "<group>"; };
 		E7748E7C267E831B00456BFD /* UIWindow+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+.swift"; sourceTree = "<group>"; };
@@ -120,8 +128,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E751F054270B0B5000980DCA /* Indicators in Frameworks */,
 				E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */,
-				E764C29726F8C4C8006528FE /* Toasts in Frameworks */,
 				E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -132,8 +140,8 @@
 		E72F350626769ABD00A38910 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				E764C29526F8C413006528FE /* Toasts */,
 				E7685BB726769B0900CD592E /* PortainerKit */,
+				E751F052270B096B00980DCA /* Indicators */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -161,12 +169,31 @@
 			path = Portainer;
 			sourceTree = "<group>";
 		};
-		E75A51D92673891700857D2B /* Cells */ = {
+		E751F055270B312900980DCA /* Containers List */ = {
 			isa = PBXGroup;
 			children = (
-				E75A51DA2673892400857D2B /* ContainerCell.swift */,
+				E751F057270B313C00980DCA /* List */,
+				E751F056270B313600980DCA /* Grid */,
 			);
-			path = Cells;
+			path = "Containers List";
+			sourceTree = "<group>";
+		};
+		E751F056270B313600980DCA /* Grid */ = {
+			isa = PBXGroup;
+			children = (
+				E751F058270B314700980DCA /* ContainerListView.swift */,
+				E751F05A270B315200980DCA /* ContainerListView+ContainerCell.swift */,
+			);
+			path = Grid;
+			sourceTree = "<group>";
+		};
+		E751F057270B313C00980DCA /* List */ = {
+			isa = PBXGroup;
+			children = (
+				E751F05C270B315B00980DCA /* ContainerGridView.swift */,
+				E751F05E270B316400980DCA /* ContainerGridView+ContainerCell.swift */,
+			);
+			path = List;
 			sourceTree = "<group>";
 		};
 		E75A51DC26738A1400857D2B /* Details */ = {
@@ -286,6 +313,7 @@
 		E7BF9E7E2672E60E00AAB6A1 /* Extensions+Modifiers */ = {
 			isa = PBXGroup;
 			children = (
+				E751F062270B37DA00980DCA /* Array+.swift */,
 				E75A51E12673A1C100857D2B /* Bundle+.swift */,
 				E7748E7E267E835600456BFD /* Notification+.swift */,
 				E7339C572674262500A55B5C /* String+.swift */,
@@ -298,9 +326,9 @@
 		E7BF9E832672EF4200AAB6A1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				E7BF9E922672FB7A00AAB6A1 /* Components */,
 				E7BF9E8B2672F48700AAB6A1 /* Styles */,
-				E75A51D92673891700857D2B /* Cells */,
+				E7BF9E922672FB7A00AAB6A1 /* Components */,
+				E751F055270B312900980DCA /* Containers List */,
 				E75A51DC26738A1400857D2B /* Details */,
 				E7B10B6E26CD80A6005B82BC /* Settings */,
 				E7BF9E512672B5B000AAB6A1 /* ContentView.swift */,
@@ -352,7 +380,7 @@
 			packageProductDependencies = (
 				E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */,
 				E7685BBE26769B2500CD592E /* PortainerKit */,
-				E764C29626F8C4C8006528FE /* Toasts */,
+				E751F053270B0B5000980DCA /* Indicators */,
 			);
 			productName = "Harbour (iOS)";
 			productReference = E7BF9E572672B5B100AAB6A1 /* Harbour.app */;
@@ -413,11 +441,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7748E7F267E835600456BFD /* Notification+.swift in Sources */,
+				E751F063270B37DA00980DCA /* Array+.swift in Sources */,
 				E7BF9E882672F29200AAB6A1 /* LoginView.swift in Sources */,
+				E751F05F270B316400980DCA /* ContainerGridView+ContainerCell.swift in Sources */,
 				E7992A4426BF3BA3007335CA /* ToolbarTitle.swift in Sources */,
 				E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */,
 				E75A51EA2673A79700857D2B /* ContainerLogsView.swift in Sources */,
 				E7C84B792708BB170071DE06 /* Localization.swift in Sources */,
+				E751F059270B314700980DCA /* ContainerListView.swift in Sources */,
 				E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */,
 				E75A51F02673CE3500857D2B /* View+.swift in Sources */,
 				E75A51E62673A75700857D2B /* ContainerMountsDetailsView.swift in Sources */,
@@ -433,12 +464,12 @@
 				E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */,
 				E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */,
 				E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */,
-				E75A51DB2673892400857D2B /* ContainerCell.swift in Sources */,
 				E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */,
 				E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */,
 				E77C5FB3267E9B99000B4994 /* DebugView.swift in Sources */,
 				E77C5FB5267E9D1A000B4994 /* SetupView.swift in Sources */,
 				E7B10B7426CD82A2005B82BC /* SettingsView+PortainerSection.swift in Sources */,
+				E751F05B270B315200980DCA /* ContainerListView+ContainerCell.swift in Sources */,
 				E7B10B7626CD82D5005B82BC /* SettingsView+InterfaceSection.swift in Sources */,
 				E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */,
 				E75A51E42673A4F000857D2B /* NavigationLinkLabel.swift in Sources */,
@@ -450,6 +481,7 @@
 				E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */,
 				E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */,
 				E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */,
+				E751F05D270B315B00980DCA /* ContainerGridView.swift in Sources */,
 				E75A51E026739ED100857D2B /* Preferences.swift in Sources */,
 				E75A51DE26738A2000857D2B /* ContainerDetailView.swift in Sources */,
 			);
@@ -700,9 +732,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E764C29626F8C4C8006528FE /* Toasts */ = {
+		E751F053270B0B5000980DCA /* Indicators */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = Toasts;
+			productName = Indicators;
 		};
 		E7685BBE26769B2500CD592E /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;

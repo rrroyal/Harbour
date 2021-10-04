@@ -17,8 +17,8 @@
 
 // MARK: HarbourApp.swift
 
-"%CONTAINER_DISMISSED_NOTIFICATION_TITLE%" = "Container dismissed";
-"%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%" = "Shake device or tap this message to open again.";
+"%CONTAINER_DISMISSED_NOTIFICATION_TITLE%" = "Container dismissed!";
+"%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%" = "Tap me to open it again";
 
 // MARK: Views/Details/Container/ContainerDetailsView.swift
 
@@ -47,13 +47,16 @@
 
 // MARK: Views/SettingsView.swift
 
+"%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
+
+"%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable Haptics";
+"%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
+"%SETTINGS_USE_GRID_VIEW_TITLE%" = "Use Grid View";
+"%SETTINGS_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility 😕";
 "%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
 "%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connection to the attached container after dismissing";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container";
-"%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
-"%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
-"%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
 
 "Log out" = "Log out";
 "Made with ❤️ (and ☕️) by @unitears" = "Made with ❤️ (and ☕️) by @unitears";
@@ -80,6 +83,7 @@
 // MARK: - PortainerKit
 
 // MARK: PortainerKit+APIError.swift
+
 "Response unacceptable (%@)" = "Response unacceptable (%@)";
 "Unknown error" = "Unknown error";
 "Decoding failed" = "Decoding failed";
@@ -90,5 +94,8 @@
 "Invalid URL" = "Invalid URL";
 
 // MARK: - Other
+
+"%WEBSOCKET_DISCONNECTED_TITLE%" = "WebSocket disconnected!";
+
 "%KEYCHAIN_TOKEN_COMMENT%" = "This is your authorization token for Portainer - if you delete it, you will be logged out of Harbour.";
 "%KEYCHAIN_CREDS_COMMENT%" = "This keychain entry is here because \"Save password\" was on when logging in. This is only used to renew JWT token during authorization. To read more, visit https://harbour.shameful.xyz/docs/faq#save-password";

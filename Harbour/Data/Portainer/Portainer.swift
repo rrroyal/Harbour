@@ -144,10 +144,10 @@ final class Portainer: ObservableObject {
 			self?.isLoggedIn = true
 			Preferences.shared.endpointURL = url.absoluteString
 		}
-		try keychain.comment(NSLocalizedString(Localization.KEYCHAIN_TOKEN_COMMENT, comment: "")).label("Harbour (token)").set(token, key: KeychainKeys.token)
+		try keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localizedString).label("Harbour (token)").set(token, key: KeychainKeys.token)
 		
 		if savePassword {
-			let keychain = self.keychain.comment(NSLocalizedString(Localization.KEYCHAIN_CREDS_COMMENT, comment: ""))
+			let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localizedString)
 			try keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
 			try keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
 		}
@@ -159,13 +159,15 @@ final class Portainer: ObservableObject {
 		
 		try? keychain.removeAll()
 		
-		isLoggedIn = false
-		selectedEndpoint = nil
-		endpoints = []
-		containers = []
-		attachedContainer = nil
-		
-		Preferences.shared.endpointURL = nil
+		DispatchQueue.main.async {
+			self.isLoggedIn = false
+			self.selectedEndpoint = nil
+			self.endpoints = []
+			self.containers = []
+			self.attachedContainer = nil
+			
+			Preferences.shared.endpointURL = nil
+		}
 	}
 	
 	/// Fetches available endpoints.
