@@ -25,7 +25,7 @@ extension ContainerListView {
 					Text(fallback)
 				}
 			}
-			.font(.caption.weight(.medium))
+			.font(.subheadline.weight(.medium))
 			.foregroundStyle(.secondary)
 			.lineLimit(1)
 			.minimumScaleFactor(0.8)

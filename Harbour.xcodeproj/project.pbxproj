@@ -183,8 +183,8 @@
 		E751F056270B313600980DCA /* Grid */ = {
 			isa = PBXGroup;
 			children = (
-				E751F058270B314700980DCA /* ContainerListView.swift */,
-				E751F05A270B315200980DCA /* ContainerListView+ContainerCell.swift */,
+				E751F05C270B315B00980DCA /* ContainerGridView.swift */,
+				E751F05E270B316400980DCA /* ContainerGridView+ContainerCell.swift */,
 			);
 			path = Grid;
 			sourceTree = "<group>";
@@ -192,8 +192,8 @@
 		E751F057270B313C00980DCA /* List */ = {
 			isa = PBXGroup;
 			children = (
-				E751F05C270B315B00980DCA /* ContainerGridView.swift */,
-				E751F05E270B316400980DCA /* ContainerGridView+ContainerCell.swift */,
+				E751F058270B314700980DCA /* ContainerListView.swift */,
+				E751F05A270B315200980DCA /* ContainerListView+ContainerCell.swift */,
 			);
 			path = List;
 			sourceTree = "<group>";

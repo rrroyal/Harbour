@@ -12,7 +12,7 @@ extension SettingsView {
 		var madeWithLove: some View {
 			Link(destination: URL(string: "https://github.com/rrroyal/Harbour")!) {
 				VStack(spacing: 5) {
-					Text("Made with ❤️ (and ☕️) by @rrroyal")
+					Text(Localization.SETTINGS_FOOTER.localizedString)
 					Text("Harbour v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
 				}
 				.font(.subheadline.weight(.semibold))

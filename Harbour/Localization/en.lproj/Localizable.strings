@@ -14,6 +14,7 @@
 "Are you sure?" = "Are you sure?";
 "Yes" = "Yes";
 "Log in" = "Log in";
+"Log out" = "Log out";
 
 // MARK: HarbourApp.swift
 
@@ -52,14 +53,13 @@
 "%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable Haptics";
 "%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
 "%SETTINGS_USE_GRID_VIEW_TITLE%" = "Use Grid View";
-"%SETTINGS_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility 😕";
+"%SETTINGS_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility";
 "%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
 "%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connection to the attached container after dismissing";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container";
 
-"Log out" = "Log out";
-"Made with ❤️ (and ☕️) by @rrroyal" = "Made with ❤️ (and ☕️) by @rrroyal";
+"%SETTINGS_FOOTER%" = "Made with ❤️ (and ☕️) by @rrroyal";
 
 // MARK: Views/LoginView.swift
 
