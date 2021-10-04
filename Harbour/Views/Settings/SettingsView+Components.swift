@@ -2,7 +2,7 @@
 //  SettingsView+Components.swift
 //  Harbour
 //
-//  Created by unitears on 18/08/2021.
+//  Created by royal on 18/08/2021.
 //
 
 import SwiftUI

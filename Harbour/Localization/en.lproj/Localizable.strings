@@ -2,7 +2,7 @@
   Localizable.strings
   Harbour
 
-  Created by unitears on 20/06/2021.
+  Created by royal on 20/06/2021.
   en_US
 */
 
@@ -59,7 +59,7 @@
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container";
 
 "Log out" = "Log out";
-"Made with ❤️ (and ☕️) by @unitears" = "Made with ❤️ (and ☕️) by @unitears";
+"Made with ❤️ (and ☕️) by @rrroyal" = "Made with ❤️ (and ☕️) by @rrroyal";
 
 // MARK: Views/LoginView.swift
 
