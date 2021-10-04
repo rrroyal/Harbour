@@ -13,6 +13,10 @@ struct ContainerDetailView: View {
 	@ObservedObject var container: PortainerKit.Container
 	
 	@State private var loading: Bool = false
+	
+	@State private var lastLogsSnippet: String? = nil
+	
+	let lastLogsTailCount: Int = 5
 		
 	var buttonsSection: some View {
 		LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 2)) {
@@ -35,10 +39,47 @@ struct ContainerDetailView: View {
 		.buttonStyle(DecreasesOnPressButtonStyle())
 	}
 	
+	@ViewBuilder
+	var generalSection: some View {
+		if let details = container.details {
+			LabeledSection(label: "ID", content: details.id, monospace: true)
+			LabeledSection(label: "Created", content: details.created.formatted())
+			LabeledSection(label: "PID", content: "\(details.state.pid)", monospace: true)
+			LabeledSection(label: "Status", content: container.status ?? details.state.status.rawValue, monospace: true)
+			LabeledSection(label: "Error", content: details.state.error, monospace: true)
+			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted())
+			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted())
+		} else {
+			ProgressView()
+				.padding()
+				.frame(maxWidth: .infinity, alignment: .center)
+		}
+	}
+	
+	var logsSection: some View {
+		CustomSection(label: "Logs (last \(lastLogsTailCount) lines)") {
+			if let logs = lastLogsSnippet {
+				Text(logs)
+					.font(.system(.footnote, design: .monospaced))
+					.lineLimit(nil)
+					.contentShape(Rectangle())
+					.frame(maxWidth: .infinity, alignment: .topLeading)
+					.textSelection(.enabled)
+			} else {
+				ProgressView()
+					.padding()
+					.frame(maxWidth: .infinity, alignment: .center)
+			}
+		}
+		.transition(.opacity)
+	}
+	
 	var body: some View {
 		ScrollView {
-			LazyVStack(spacing: 10) {
+			LazyVStack(spacing: 20) {
 				buttonsSection
+				generalSection
+				logsSection
 				
 				if let containerDetails = container.details {
 					GeneralSection(details: containerDetails)
@@ -49,6 +90,8 @@ struct ContainerDetailView: View {
 			.padding()
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
+		.animation(.easeInOut, value: lastLogsSnippet)
+		.animation(.easeInOut, value: container.details)
 		.navigationTitle(container.displayName ?? container.id)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
@@ -86,6 +129,15 @@ struct ContainerDetailView: View {
 	private func refresh() async {
 		loading = true
 		
+		Task {
+			do {
+				let logs = try await portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true)
+				self.lastLogsSnippet = logs.trimmingCharacters(in: .whitespacesAndNewlines)
+			} catch {
+				self.lastLogsSnippet = error.localizedDescription
+			}
+		}
+		
 		do {
 			let containerDetails = try await portainer.inspectContainer(container)
 			withAnimation {
@@ -103,15 +155,13 @@ fileprivate extension ContainerDetailView {
 	struct DisclosureSection<Content>: View where Content: View {
 		let label: String
 		@ViewBuilder let content: () -> Content
-		
-		@State var isExpanded: Bool = true
-		
+				
 		var body: some View {
-			DisclosureGroup(isExpanded: $isExpanded, content: {
+			DisclosureGroup(content: {
 				VStack(spacing: 20, content: content)
+					.padding(.top, .medium)
 			}) {
 				Text(LocalizedStringKey(label))
-					.padding(.vertical, .medium)
 			}
 		}
 	}
@@ -122,13 +172,11 @@ fileprivate extension ContainerDetailView {
 		var body: some View {
 			DisclosureSection(label: "General") {
 				Group {
-					LabeledSection(label: "ID", content: details.id, monospace: true)
 					LabeledSection(label: "Name", content: details.name, monospace: true)
 					LabeledSection(label: "Image", content: details.image, monospace: true)
 					LabeledSection(label: "Platform", content: details.platform, monospace: true)
 					LabeledSection(label: "Path", content: details.path, monospace: true)
 					LabeledSection(label: "Arguments", content: !details.args.isEmpty ? details.args.joined(separator: ", ") : nil, monospace: true)
-					LabeledSection(label: "Created", content: details.created.formatted())
 				}
 				
 				Group {
@@ -159,16 +207,12 @@ fileprivate extension ContainerDetailView {
 
 		var body: some View {
 			DisclosureSection(label: "State") {
-				LabeledSection(label: "Status", content: state.status.rawValue, monospace: true)
-				LabeledSection(label: "PID", content: "\(state.pid)", monospace: true)
+				LabeledSection(label: "State", content: state.status.rawValue, monospace: true)
 				LabeledSection(label: "Running", content: "\(state.running)", monospace: true)
 				LabeledSection(label: "Paused", content: "\(state.paused)", monospace: true)
 				LabeledSection(label: "Restarting", content: "\(state.restarting)", monospace: true)
 				LabeledSection(label: "OOM Killed", content: "\(state.oomKilled)", monospace: true)
 				LabeledSection(label: "Dead", content: "\(state.dead)", monospace: true)
-				LabeledSection(label: "Error", content: state.error, monospace: true)
-				LabeledSection(label: "Started at", content: state.startedAt?.formatted())
-				LabeledSection(label: "Finished at", content: state.finishedAt?.formatted())
 			}
 		}
 	}

@@ -57,8 +57,6 @@ struct ContainerMountsDetailsView: View {
 					Labeled(label: "RW?", bool: mount.rw)
 				}
 			}
-		} else {
-			Text("No details")
 		}
 	}
 	

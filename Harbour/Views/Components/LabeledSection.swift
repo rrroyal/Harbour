@@ -1,11 +1,9 @@
 //
-//  LabeledSection.swift
+//  CustomSection.swift
 //  Harbour
 //
 //  Created by unitears on 20/06/2021.
 //
-
-/* yeah, i'm sorry */
 
 import SwiftUI
 
@@ -25,28 +23,14 @@ struct LabeledSection: View {
 		}
 	}
 	
-	let backgroundColor: Color = Color(uiColor: .secondarySystemGroupedBackground)
-	
-    var body: some View {
-		VStack(alignment: .leading, spacing: 6) {
-			Text(LocalizedStringKey(label))
-				.font(.footnote)
-				.foregroundStyle(.secondary)
-				.textCase(.uppercase)
-				.padding(.horizontal)
-			
+	var body: some View {
+		CustomSection(label: label) {
 			Text(content ?? "none")
 				.font(.system(.callout, design: monospace ? .monospaced : .default))
 				.foregroundColor(content != nil ? .primary : .secondary)
 				.lineLimit(nil)
-				.frame(maxWidth: .infinity, alignment: .leading)
 				.contentShape(Rectangle())
 				.textSelection(.enabled)
-				.padding(.medium)
-				.background(
-					RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)
-						.fill(backgroundColor)
-				)
 		}
 	}
 }

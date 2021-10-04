@@ -56,6 +56,7 @@
 		E7C84B792708BB170071DE06 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C84B782708BB170071DE06 /* Localization.swift */; };
 		E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */; };
 		E7DD4CC6267650CB002709F0 /* ContainerConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */; };
+		E7EAE5CC270B6234008CFD20 /* CustomSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EAE5CB270B6234008CFD20 /* CustomSection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -121,6 +122,7 @@
 		E7C84B782708BB170071DE06 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentButtonStyle.swift; sourceTree = "<group>"; };
 		E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConsoleView.swift; sourceTree = "<group>"; };
+		E7EAE5CB270B6234008CFD20 /* CustomSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,6 +355,7 @@
 			children = (
 				E75A51ED2673B17B00857D2B /* Labeled.swift */,
 				E72112E9267F496B00D6004D /* LabeledSection.swift */,
+				E7EAE5CB270B6234008CFD20 /* CustomSection.swift */,
 				E75A51E32673A4F000857D2B /* NavigationLinkLabel.swift */,
 				E7339C552674236700A55B5C /* ContainerContextMenu.swift */,
 				E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */,
@@ -450,6 +453,7 @@
 				E7C84B792708BB170071DE06 /* Localization.swift in Sources */,
 				E751F059270B314700980DCA /* ContainerListView.swift in Sources */,
 				E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */,
+				E7EAE5CC270B6234008CFD20 /* CustomSection.swift in Sources */,
 				E75A51F02673CE3500857D2B /* View+.swift in Sources */,
 				E75A51E62673A75700857D2B /* ContainerMountsDetailsView.swift in Sources */,
 				E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */,

@@ -12,7 +12,7 @@ struct NavigationLinkLabel: View {
 	let symbolName: String
 	let backgroundColor: Color
 	
-	public init(label: String, symbolName: String, backgroundColor: Color = Color(uiColor: UIColor.secondarySystemGroupedBackground)) {
+	public init(label: String, symbolName: String, backgroundColor: Color = Color(uiColor: .secondarySystemGroupedBackground)) {
 		self.label = label
 		self.symbolName = symbolName
 		self.backgroundColor = backgroundColor
