@@ -1,0 +1,85 @@
+/* 
+  Localizable.strings
+  Harbour
+
+  Created by royal on 20/06/2021.
+  en_US
+*/
+
+// MARK: Generics
+
+"Refresh" = "Refresh";
+"Are you sure?" = "Are you sure?";
+"Yes" = "Yes";
+"Log in" = "Log in";
+"Log out" = "Log out";
+"Not logged in" = "Not logged in";
+
+// MARK: Docker
+
+"Endpoint" = "Endpoint";
+"No endpoints" = "No endpoints";
+"No containers" = "No containers";
+"Select endpoint" = "Select endpoint";
+
+"Mounts" = "Mounts";
+"Network" = "Network";
+"Host" = "Host";
+"Logs" = "Logs";
+
+// MARK: Settings
+
+"%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
+
+"%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable Haptics";
+"%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
+"%SETTINGS_USE_GRID_VIEW_TITLE%" = "Use Grid View";
+"%SETTINGS_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility";
+"%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
+"%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connection to the attached container after dismissing";
+"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
+"%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container";
+
+"%SETTINGS_FOOTER%" = "Made with ❤️ (and ☕️) by @rrroyal";
+
+// MARK: Setup
+
+"Hi! Welcome to %@!" = "Hi! Welcome to %@!";
+"Beam me up, Scotty!" = "Beam me up, Scotty!";
+
+"%SETUP_FEATURE1_TITLE%" = "Control your containers";
+"%SETUP_FEATURE1_DESCRIPTION%" = "Your Minecraft server is taking up too much ram? Quickly restart it from your phone.";
+
+"%SETUP_FEATURE2_TITLE%" = "See all of the details";
+"%SETUP_FEATURE2_DESCRIPTION%" = "You can check logs, mounts, network config - everything!";
+
+"%SETUP_FEATURE3_TITLE%" = "Attach to them too";
+"%SETUP_FEATURE3_DESCRIPTION%" = "Yeah. I spent way too much time on that one.";
+
+// MARK: Login
+
+"Invalid URL" = "Invalid URL";
+"Success!" = "Success!";
+
+// MARK: Errors
+
+"Response unacceptable (%@)" = "Response unacceptable (%@)";
+"Unknown error" = "Unknown error";
+"Decoding failed" = "Decoding failed";
+"Invalid credentials" = "Invalid credentials";
+"Invalid token" = "Invalid token";
+"Unauthorized" = "Unauthorized";
+"Invalid payload" = "Invalid payload";
+"Invalid URL" = "Invalid URL";
+
+// MARK: Indicators
+
+"%CONTAINER_DISMISSED_INDICATOR_TITLE%" = "Container dismissed!";
+"%CONTAINER_DISMISSED_INDICATOR_DESCRIPTION%" = "Tap me to open it again";
+
+"%WEBSOCKET_DISCONNECTED_TITLE%" = "WebSocket disconnected!";
+
+// MARK: Keychain
+
+"%KEYCHAIN_TOKEN_COMMENT%" = "This is your authorization token for Portainer - if you delete it, you will be logged out of Harbour.";
+"%KEYCHAIN_CREDS_COMMENT%" = "This keychain entry is here because \"Save password\" was on when logging in. This is only used to renew JWT token during authorization. To read more, visit https://harbour.shameful.xyz/docs/faq#save-password";
