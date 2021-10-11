@@ -38,6 +38,8 @@ public class PortainerKit {
 		configuration.httpAdditionalHeaders = ["Accept-Encoding": "gzip"]
 		configuration.shouldUseExtendedBackgroundIdleMode = true
 		configuration.networkServiceType = .responsiveData
+		configuration.timeoutIntervalForRequest = 30
+		configuration.timeoutIntervalForResource = 60
 		
 		self.session = URLSession(configuration: configuration)
 		self.token = token

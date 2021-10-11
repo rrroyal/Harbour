@@ -11,6 +11,5 @@ extension Portainer {
 	enum PortainerError: Error {
 		case noAPI
 		case noEndpoint
-		case noResponse
 	}
 }

@@ -41,7 +41,7 @@ extension SettingsView {
 				Alert(title: Text("Are you sure?"),
 					  primaryButton: .destructive(Text("Yes"), action: {
 					UIDevice.current.generateHaptic(.heavy)
-					withAnimation { portainer.logOut() }
+					portainer.logOut()
 				}),
 					  secondaryButton: .cancel()
 				)

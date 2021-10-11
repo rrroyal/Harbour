@@ -134,7 +134,7 @@ struct ContainerDetailView: View {
 				let logs = try await portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true)
 				self.lastLogsSnippet = logs.trimmingCharacters(in: .whitespacesAndNewlines)
 			} catch {
-				self.lastLogsSnippet = error.localizedDescription
+				AppState.shared.handle(error)
 			}
 		}
 		

@@ -4,6 +4,7 @@ internal extension Indicators {
 	struct IndicatorsOverlay: View {
 		@ObservedObject var model: Indicators
 		
+		@State var isExpanded: Bool = false
 		@State var dragOffset: CGSize = .zero
 		
 		let dragInWrongDirectionMultiplier: CGFloat = 0.015
@@ -20,7 +21,17 @@ internal extension Indicators {
 				.onEnded {
 					dragOffset = .zero
 					
-					if $0.translation.height < dragThreshold {
+					guard let indicator = model.activeIndicator else { return }
+					if $0.translation.height > 0 && indicator.expandedText != nil {
+						UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+						isExpanded.toggle()
+						
+						if isExpanded {
+							model.timer?.invalidate()
+						} else {
+							model.updateTimer()
+						}
+					} else if $0.translation.height < dragThreshold {
 						model.dismiss()
 					}
 				}
@@ -29,7 +40,7 @@ internal extension Indicators {
 		var body: some View {
 			Group {
 				if let indicator = model.activeIndicator {
-					Indicators.IndicatorView(indicator: indicator)
+					Indicators.IndicatorView(indicator: indicator, isExpanded: $isExpanded)
 						.offset(dragOffset)
 						.gesture(dragGesture)
 						.transition(transition)

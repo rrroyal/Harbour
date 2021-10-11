@@ -14,6 +14,8 @@ class Preferences: ObservableObject {
 	@AppStorage(Preferences.Key.finishedSetup.rawValue, store: .group) public var finishedSetup: Bool = false
 	
 	@AppStorage(Preferences.Key.endpointURL.rawValue, store: .group) public var endpointURL: String?
+	@AppStorage(Preferences.Key.selectedEndpointID.rawValue, store: .group) public var selectedEndpointID: Int?
+
 	@AppStorage(Preferences.Key.autoRefreshInterval.rawValue, store: .group) public var autoRefreshInterval: Double = 0
 	
 	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .group) public var enableHaptics: Bool = true
@@ -31,6 +33,8 @@ extension Preferences {
 		case finishedSetup = "FinishedSetup"
 		
 		case endpointURL = "EndpointURL"
+		case selectedEndpointID = "SelectedEndpointID"
+		
 		case autoRefreshInterval = "AutoRefreshInterval"
 		
 		case enableHaptics = "EnableHaptics"

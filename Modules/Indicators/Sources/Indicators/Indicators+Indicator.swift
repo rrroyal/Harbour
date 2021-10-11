@@ -8,6 +8,7 @@ public extension Indicators {
 		public let icon: String?
 		public let headline: String
 		public let subheadline: String?
+		public let expandedText: String?
 		public let dismissType: DismissType
 		public let style: Style
 		public let onTap: (() -> Void)?
@@ -16,6 +17,7 @@ public extension Indicators {
 					icon: String? = nil,
 					headline: String,
 					subheadline: String? = nil,
+					expandedText: String? = nil,
 					dismissType: DismissType,
 					style: Style = .default,
 					onTap: (() -> Void)? = nil
@@ -24,6 +26,7 @@ public extension Indicators {
 			self.icon = icon
 			self.headline = headline
 			self.subheadline = subheadline
+			self.expandedText = expandedText
 			self.dismissType = dismissType
 			self.style = style
 			self.onTap = onTap

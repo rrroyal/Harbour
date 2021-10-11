@@ -3,7 +3,7 @@ import Foundation
 public class Indicators: ObservableObject {
 	@Published public private(set) var activeIndicator: Indicator?
 	
-	private var timer: Timer? = nil
+	internal var timer: Timer? = nil
 	
 	public init() { }
 	
@@ -27,7 +27,7 @@ public class Indicators: ObservableObject {
 		}
 	}
 	
-	private func updateTimer() {
+	internal func updateTimer() {
 		if case .after(let timeout) = activeIndicator?.dismissType {
 			let storedIndicator = activeIndicator
 

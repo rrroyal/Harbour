@@ -6,47 +6,28 @@
   en_US
 */
 
-// MARK: - Harbour
-
-// MARK: Globals
+// MARK: Generics
 
 "Refresh" = "Refresh";
 "Are you sure?" = "Are you sure?";
 "Yes" = "Yes";
 "Log in" = "Log in";
 "Log out" = "Log out";
+"Not logged in" = "Not logged in";
 
-// MARK: HarbourApp.swift
+// MARK: Docker
 
-"%CONTAINER_DISMISSED_NOTIFICATION_TITLE%" = "Container dismissed!";
-"%CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION%" = "Tap me to open it again";
-
-// MARK: Views/Details/Container/ContainerDetailsView.swift
+"Endpoint" = "Endpoint";
+"No endpoints" = "No endpoints";
+"No containers" = "No containers";
+"Select endpoint" = "Select endpoint";
 
 "Mounts" = "Mounts";
 "Network" = "Network";
 "Host" = "Host";
 "Logs" = "Logs";
 
-// MARK: Views/Details/Container/ContainerMountsDetailsView.swift
-
-// MARK: Views/Details/Container/ContainerNetworkDetailsView.swift
-
-// MARK: Views/Details/Container/ContainerHostConfigDetailsView.swift
-
-// MARK: Views/Details/Container/ContainerLogsView.swift
-
-// MARK: Views/Details/Container/ContainerConsoleView.swift
-
-// MARK: Views/ContentView.swift
-
-"Endpoint" = "Endpoint";
-"No endpoints" = "No endpoints";
-"No containers" = "No containers";
-"Select endpoint" = "Select endpoint";
-"Not logged in" = "Not logged in";
-
-// MARK: Views/SettingsView.swift
+// MARK: Settings
 
 "%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
 
@@ -61,12 +42,7 @@
 
 "%SETTINGS_FOOTER%" = "Made with ❤️ (and ☕️) by @rrroyal";
 
-// MARK: Views/LoginView.swift
-
-"Invalid URL" = "Invalid URL";
-"Success!" = "Success!";
-
-// MARK: Views/SetupView.swift
+// MARK: Setup
 
 "Hi! Welcome to %@!" = "Hi! Welcome to %@!";
 "Beam me up, Scotty!" = "Beam me up, Scotty!";
@@ -80,9 +56,12 @@
 "%SETUP_FEATURE3_TITLE%" = "Attach to them too";
 "%SETUP_FEATURE3_DESCRIPTION%" = "Yeah. I spent way too much time on that one.";
 
-// MARK: - PortainerKit
+// MARK: Login
 
-// MARK: PortainerKit+APIError.swift
+"Invalid URL" = "Invalid URL";
+"Success!" = "Success!";
+
+// MARK: Errors
 
 "Response unacceptable (%@)" = "Response unacceptable (%@)";
 "Unknown error" = "Unknown error";
@@ -93,9 +72,14 @@
 "Invalid payload" = "Invalid payload";
 "Invalid URL" = "Invalid URL";
 
-// MARK: - Other
+// MARK: Indicators
+
+"%CONTAINER_DISMISSED_INDICATOR_TITLE%" = "Container dismissed!";
+"%CONTAINER_DISMISSED_INDICATOR_DESCRIPTION%" = "Tap me to open it again";
 
 "%WEBSOCKET_DISCONNECTED_TITLE%" = "WebSocket disconnected!";
+
+// MARK: Keychain
 
 "%KEYCHAIN_TOKEN_COMMENT%" = "This is your authorization token for Portainer - if you delete it, you will be logged out of Harbour.";
 "%KEYCHAIN_CREDS_COMMENT%" = "This keychain entry is here because \"Save password\" was on when logging in. This is only used to renew JWT token during authorization. To read more, visit https://harbour.shameful.xyz/docs/faq#save-password";

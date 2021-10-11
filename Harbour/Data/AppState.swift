@@ -13,17 +13,12 @@ import Indicators
 
 class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
-
-	@Published public var activeContainerDetail: String? = nil
-	@Published public var isContainerConsoleSheetPresented: Bool = false
+	
+	@Published public var isSettingsSheetPresented: Bool = false
 	@Published public var isSetupSheetPresented: Bool = false
+	@Published public var isContainerConsoleSheetPresented: Bool = false
 	
 	@Published public var fetchingMainScreenData: Bool = false
-	
-	// TODO: Fix LoadingIndicator
-	public var activeNetworkActivities: Set<String> = [] /* {
-		didSet { UIApplication.shared.setLoadingIndicatorActive(!activeNetworkActivities.isEmpty) }
-	} */
 	
 	public let indicators: Indicators = Indicators()
 
@@ -96,7 +91,7 @@ class AppState: ObservableObject {
 		
 		if displayIndicator {
 			let style: Indicators.Indicator.Style = .init(subheadlineColor: .red, subheadlineStyle: .primary, iconColor: .red, iconStyle: .primary)
-			let indicator: Indicators.Indicator = .init(id: UUID().uuidString, icon: "exclamationmark.triangle.fill", headline: "Error!", subheadline: error.localizedDescription, dismissType: .after(5), style: style)
+			let indicator: Indicators.Indicator = .init(id: UUID().uuidString, icon: "exclamationmark.triangle.fill", headline: "Error!", subheadline: error.localizedDescription, expandedText: error.localizedDescription, dismissType: .after(5), style: style)
 			DispatchQueue.main.async {
 				self.indicators.display(indicator)
 			}

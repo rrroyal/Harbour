@@ -14,7 +14,6 @@ struct ContentView: View {
 	@EnvironmentObject var preferences: Preferences
 	
 	@State private var searchQuery: String = ""
-	@State private var isSettingsSheetPresented: Bool = false
 	
 	var toolbarMenu: some View {
 		Menu(content: {
@@ -42,6 +41,9 @@ struct ContentView: View {
 				Task {
 					do {
 						try await portainer.getEndpoints()
+						if let endpointID = portainer.selectedEndpoint?.id {
+							try await portainer.getContainers(endpointID: endpointID)
+						}
 					} catch {
 						AppState.shared.handle(error)
 					}
@@ -57,34 +59,49 @@ struct ContentView: View {
 		.disabled(!portainer.isLoggedIn)
 	}
 	
-	var emptyDisclaimer: some View {
-		Group {
-			if portainer.isLoggedIn {
-				if portainer.selectedEndpoint != nil {
-					if portainer.containers.isEmpty {
-						Text("No containers")
+	@ViewBuilder
+	var loggedInView: some View {
+		if portainer.selectedEndpoint != nil {
+			if !portainer.containers.isEmpty {
+				Group {
+					if preferences.useGridView {
+						ContainerGridView(containers: portainer.containers.filtered(query: searchQuery))
+					} else {
+						ContainerListView(containers: portainer.containers.filtered(query: searchQuery))
 					}
-				} else {
-					Text("Select endpoint")
 				}
+				.searchable(text: $searchQuery)
 			} else {
-				Text("Not logged in")
+				Text("No containers")
+					.opacity(Globals.Views.secondaryOpacity)
 			}
+		} else {
+			Text("Select endpoint")
+				.opacity(Globals.Views.secondaryOpacity)
 		}
-		.opacity(Globals.Views.secondaryOpacity)
-		.transition(.opacity)
-		.animation(.easeInOut, value: portainer.isLoggedIn)
-		.animation(.easeInOut, value: portainer.containers.isEmpty)
-		// .hidden(portainer.isLoggedIn && !portainer.containers.isEmpty)
 	}
 	
 	var body: some View {
 		NavigationView {
 			Group {
-				if preferences.useGridView {
-					ContainerGridView(containers: portainer.containers.filtered(query: searchQuery))
+				if portainer.isLoggedIn {
+					loggedInView
+						.refreshable {
+							if let endpointID = portainer.selectedEndpoint?.id {
+								appState.fetchingMainScreenData = true
+								
+								do {
+									try await portainer.getContainers(endpointID: endpointID)
+								} catch {
+									AppState.shared.handle(error)
+								}
+								
+								appState.fetchingMainScreenData = false
+							}
+						}
 				} else {
-					ContainerListView(containers: portainer.containers.filtered(query: searchQuery))
+					Text("Not logged in")
+						.opacity(Globals.Views.secondaryOpacity)
 				}
 			}
 			.navigationTitle("Harbour")
@@ -93,7 +110,7 @@ struct ContentView: View {
 				ToolbarItem(placement: .navigation) {
 					Button(action: {
 						UIDevice.current.generateHaptic(.soft)
-						isSettingsSheetPresented = true
+						appState.isSettingsSheetPresented = true
 					}) {
 						Image(systemName: "gear")
 					}
@@ -103,27 +120,11 @@ struct ContentView: View {
 				
 				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 			}
-			.background(emptyDisclaimer)
-			.refreshable {
-				if let endpointID = portainer.selectedEndpoint?.id {
-					appState.fetchingMainScreenData = true
-
-					do {
-						try await portainer.getContainers(endpointID: endpointID)
-					} catch {
-						AppState.shared.handle(error)
-					}
-					
-					appState.fetchingMainScreenData = false
-				}
-			}
-			.searchable(text: $searchQuery)
 		}
-		.sheet(isPresented: $isSettingsSheetPresented) {
-			SettingsView()
-				.environmentObject(portainer)
-				.environmentObject(preferences)
-		}
+		.transition(.opacity)
+		.animation(.easeInOut, value: portainer.isLoggedIn)
+		.animation(.easeInOut, value: portainer.selectedEndpoint != nil)
+		.animation(.easeInOut, value: portainer.containers.count)
 		/* .onAppear {
 		 	if let endpointID = portainer.selectedEndpoint?.id {
 		 		await portainer.getContainers(endpointID: endpointID)

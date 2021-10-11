@@ -18,11 +18,16 @@ struct HarbourApp: App {
 		WindowGroup {
 			ContentView()
 				.indicatorOverlay(model: appState.indicators)
-				.sheet(isPresented: $appState.isContainerConsoleSheetPresented, onDismiss: onContainerConsoleViewDismissed) {
-					ContainerConsoleView()
+				.sheet(isPresented: $appState.isSettingsSheetPresented) {
+					SettingsView()
+						.environmentObject(portainer)
+						.environmentObject(preferences)
 				}
 				.sheet(isPresented: $appState.isSetupSheetPresented, onDismiss: { Preferences.shared.finishedSetup = true }) {
 					SetupView()
+				}
+				.sheet(isPresented: $appState.isContainerConsoleSheetPresented, onDismiss: onContainerConsoleViewDismissed) {
+					ContainerConsoleView()
 				}
 				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
 				.defaultAppStorage(.group)
@@ -41,7 +46,7 @@ struct HarbourApp: App {
 		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
 		let indicatorID: String = "ContainerDismissedIndicator"
-		let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_NOTIFICATION_TITLE.localizedString, subheadline: Localization.CONTAINER_DISMISSED_NOTIFICATION_DESCRIPTION.localizedString, dismissType: .after(5), onTap: {
+		let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localizedString, subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localizedString, dismissType: .after(5), onTap: {
 			UIDevice.current.generateHaptic(.light)
 			appState.isContainerConsoleSheetPresented = true
 			appState.indicators.dismiss(matching: indicatorID)
