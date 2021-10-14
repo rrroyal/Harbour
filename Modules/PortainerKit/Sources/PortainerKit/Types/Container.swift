@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-@available(iOS 15, macOS 12, *)
+@available(iOS 14, macOS 11, *)
 public extension PortainerKit {
 	class Container: Identifiable, Codable, Equatable, ObservableObject {
 		public struct NetworkSettings: Codable {

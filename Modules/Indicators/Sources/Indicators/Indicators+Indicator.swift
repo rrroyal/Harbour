@@ -57,32 +57,15 @@ public extension Indicators.Indicator {
 	
 	struct Style {
 		public var headlineColor: Color?
-		public var headlineStyle: HierarchicalShapeStyle
-		
 		public var subheadlineColor: Color?
-		public var subheadlineStyle: HierarchicalShapeStyle
-		
 		public var iconColor: Color?
-		public var iconStyle: HierarchicalShapeStyle
-		public var iconVariants: SymbolVariants
 		
-		public init(headlineColor: Color? = nil,
-					headlineStyle: HierarchicalShapeStyle = .primary,
-					subheadlineColor: Color? = nil,
-					subheadlineStyle: HierarchicalShapeStyle = .primary,
-					iconColor: Color? = nil,
-					iconStyle: HierarchicalShapeStyle = .primary,
-					iconVariants: SymbolVariants = .none
-		) {
+		public init(headlineColor: Color? = nil, subheadlineColor: Color? = nil, iconColor: Color? = nil) {
 			self.headlineColor = headlineColor
-			self.headlineStyle = headlineStyle
 			self.subheadlineColor = subheadlineColor
-			self.subheadlineStyle = subheadlineStyle
 			self.iconColor = iconColor
-			self.iconStyle = iconStyle
-			self.iconVariants = iconVariants
 		}
 		
-		public static let `default` = Style(headlineStyle: .primary, subheadlineStyle: .secondary, iconStyle: .secondary, iconVariants: .fill)
+		public static let `default` = Style(headlineColor: .primary, subheadlineColor: .secondary, iconColor: .secondary)
 	}
 }

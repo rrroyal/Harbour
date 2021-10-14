@@ -26,8 +26,6 @@ internal extension Indicators {
 				if let icon = indicator.icon {
 					Image(systemName: icon)
 						.font(indicator.subheadline != nil ? .title3 : .footnote)
-						.symbolVariant(indicator.style.iconVariants)
-						.foregroundStyle(indicator.style.iconStyle)
 						.foregroundColor(indicator.style.iconColor)
 						.animation(.easeInOut, value: indicator.style.iconColor)
 						.transition(.opacity)
@@ -38,7 +36,6 @@ internal extension Indicators {
 						.font(.footnote)
 						.fontWeight(.medium)
 						.lineLimit(1)
-						.foregroundStyle(indicator.style.headlineStyle)
 						.foregroundColor(indicator.style.headlineColor)
 						.animation(.easeInOut, value: indicator.style.headlineColor)
 					
@@ -47,7 +44,6 @@ internal extension Indicators {
 							.font(.footnote)
 							.fontWeight(.medium)
 							.lineLimit(isExpanded ? nil : 1)
-							.foregroundStyle(indicator.style.subheadlineStyle)
 							.foregroundColor(indicator.style.subheadlineColor)
 							.animation(.easeInOut, value: indicator.style.subheadlineColor)
 					}
@@ -60,8 +56,7 @@ internal extension Indicators {
 			}
 			.padding(padding)
 			.padding(.horizontal, padding)
-			// .background(Material.regular, in: backgroundShape)
-			.background(backgroundShape.fill(Color(uiColor: .secondarySystemGroupedBackground)).shadow(color: Color.black.opacity(0.1), radius: 14, x: 0, y: 0))
+			.background(backgroundShape.fill(Color(UIColor.secondarySystemGroupedBackground)).shadow(color: Color.black.opacity(0.1), radius: 14, x: 0, y: 0))
 			.frame(maxWidth: isExpanded ? nil : maxWidth)
 			.animation(.easeInOut, value: indicator.icon)
 			.animation(.easeInOut, value: indicator.headline)
@@ -100,7 +95,7 @@ struct IndicatorView_Previews: PreviewProvider {
 			Indicators.IndicatorView(indicator: .init(id: "", icon: "bolt.fill", headline: "Headline", subheadline: "Subheadline", dismissType: .manual, style: .init(subheadlineColor: .red, iconColor: .red)), isExpanded: isExpanded)
 		}
 		.padding()
-		.background(Color(uiColor: .systemBackground))
+		.background(Color(UIColor.systemBackground))
 		.previewLayout(.sizeThatFits)
 		.environment(\.colorScheme, .light)
 	}

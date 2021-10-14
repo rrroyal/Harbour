@@ -18,7 +18,6 @@ struct LoginView: View {
 	
 	@State private var savePassword: Bool = false
 	
-	@FocusState private var focusedField: FocusField?
 	// @State private var showLoginHelpMessage: Bool = false
 	@State private var loading: Bool = false
 	
@@ -44,26 +43,17 @@ struct LoginView: View {
 						UIDevice.current.generateHaptic(.selectionChanged)
 						endpoint = "http://\(endpoint)"
 					}
-					
-					focusedField = .username
 				})
 				.keyboardType(.URL)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
 				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-				.focused($focusedField, equals: .endpoint)
 				
-				TextField("garyhost", text: $username, onCommit: {
-					guard !username.isEmpty else { return }
-					
-					UIDevice.current.generateHaptic(.selectionChanged)
-					focusedField = .password
-				})
+				TextField("garyhost", text: $username)
 				.keyboardType(.default)
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
 				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-				.focused($focusedField, equals: .username)
 					
 				SecureField("hunter2", text: $password, onCommit: {
 					guard !(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty) else { return }
@@ -75,7 +65,6 @@ struct LoginView: View {
 				.disableAutocorrection(true)
 				.autocapitalization(.none)
 				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-				.focused($focusedField, equals: .password)
 			}
 			
 			Spacer()
@@ -110,8 +99,7 @@ struct LoginView: View {
 					savePassword.toggle()
 				}) {
 					HStack {
-						Image(systemName: savePassword ? "checkmark" : "circle.dashed")
-							.symbolVariant(savePassword ? .circle.fill : .none)
+						Image(systemName: savePassword ? "checkmark.circle.fill" : "circle.dashed")
 							.id("SavePasswordIcon:\(savePassword)")
 						
 						Text("Save password")
@@ -153,41 +141,34 @@ struct LoginView: View {
 			return
 		}
 		
-		focusedField = nil
-		
-		Task {
-			do {
-				loading = true
-				try await portainer.login(url: url, username: username, password: password, savePassword: savePassword)
-				
-				UIDevice.current.generateHaptic(.success)
-				
-				loading = false
-				buttonColor = .green
-				buttonLabel = "Success!"
-				presentationMode.wrappedValue.dismiss()
-				
-				do {
-					try await portainer.getEndpoints()
-				} catch {
-					AppState.shared.handle(error)
-				}
-			} catch {
-				UIDevice.current.generateHaptic(.error)
-				
-				loading = false
-				buttonColor = .red
-				if let error = error as? PortainerKit.APIError {
-					buttonLabel = error.description
-				} else {
-					buttonLabel = error.localizedDescription
-				}
-				
-				errorTimer?.invalidate()
-				errorTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-					buttonLabel = nil
-					buttonColor = nil
-				}
+		loading = true
+		portainer.login(url: url, username: username, password: password, savePassword: savePassword) { result in
+			switch result {
+				case .success:
+					UIDevice.current.generateHaptic(.success)
+					
+					loading = false
+					buttonColor = .green
+					buttonLabel = "Success!"
+					presentationMode.wrappedValue.dismiss()
+					portainer.getEndpoints(completionHandler: { _ in })
+					
+				case .failure(let error):
+					UIDevice.current.generateHaptic(.error)
+					
+					loading = false
+					buttonColor = .red
+					if let error = error as? PortainerKit.APIError {
+						buttonLabel = error.description
+					} else {
+						buttonLabel = error.localizedDescription
+					}
+					
+					errorTimer?.invalidate()
+					errorTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
+						buttonLabel = nil
+						buttonColor = nil
+					}
 			}
 		}
 	}

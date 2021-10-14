@@ -12,7 +12,7 @@ struct NavigationLinkLabel: View {
 	let symbolName: String
 	let backgroundColor: Color
 	
-	public init(label: String, symbolName: String, backgroundColor: Color = Color(uiColor: .secondarySystemGroupedBackground)) {
+	public init(label: String, symbolName: String, backgroundColor: Color = Color(UIColor.secondarySystemGroupedBackground)) {
 		self.label = label
 		self.symbolName = symbolName
 		self.backgroundColor = backgroundColor
@@ -30,7 +30,7 @@ struct NavigationLinkLabel: View {
 			
 			Image(systemName: "chevron.forward")
 				.font(.subheadline.weight(.bold))
-				.foregroundStyle(.secondary)
+				.foregroundColor(.secondary)
 				.opacity(Globals.Views.secondaryOpacity)
 		}
 		.padding(.medium)

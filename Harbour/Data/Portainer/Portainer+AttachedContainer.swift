@@ -16,9 +16,9 @@ extension Portainer {
 		public let container: PortainerKit.Container
 		public let messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject
 		
-		@Published public private(set) var attributedString: AttributedString = ""
+		@Published public private(set) var string: String = ""
 		
-		private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer.AttachedContainer")
+		private let logger: PseudoLogger = PseudoLogger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer.AttachedContainer")
 		private var messageCancellable: AnyCancellable? = nil
 		
 		public init(container: PortainerKit.Container, messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject) {
@@ -73,9 +73,8 @@ extension Portainer {
 		}
 	
 		private func update(_ string: String) {
-			let attributedString: AttributedString = AttributedString(string)
 			DispatchQueue.main.async { [weak self] in
-				self?.attributedString.append(attributedString)
+				self?.string.append(string)
 			}
 		}
 	}

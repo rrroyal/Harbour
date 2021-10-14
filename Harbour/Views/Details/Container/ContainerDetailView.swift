@@ -64,7 +64,6 @@ struct ContainerDetailView: View {
 					.lineLimit(nil)
 					.contentShape(Rectangle())
 					.frame(maxWidth: .infinity, alignment: .topLeading)
-					.textSelection(.enabled)
 			} else {
 				ProgressView()
 					.padding()
@@ -89,7 +88,7 @@ struct ContainerDetailView: View {
 			}
 			.padding()
 		}
-		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
+		.background(Color(UIColor.systemGroupedBackground).edgesIgnoringSafeArea(.all))
 		.animation(.easeInOut, value: lastLogsSnippet)
 		.animation(.easeInOut, value: container.details)
 		.navigationTitle(container.displayName ?? container.id)
@@ -105,9 +104,7 @@ struct ContainerDetailView: View {
 					
 					Button(action: {
 						UIDevice.current.generateHaptic(.light)
-						Task {
-							await refresh()
-						}
+						refresh()
 					}) {
 						Label("Refresh", systemImage: "arrow.clockwise")
 					}
@@ -119,35 +116,36 @@ struct ContainerDetailView: View {
 				}
 			}
 		}
-		.refreshable { await refresh() }
-		.task { await refresh() }
-		.onReceive(portainer.refreshCurrentContainerPassthroughSubject) {
-			Task { await refresh() }
-		}
+		.onAppear(perform: refresh)
+		.onReceive(portainer.refreshCurrentContainerPassthroughSubject, perform: refresh)
 	}
 	
-	private func refresh() async {
+	private func refresh() {
 		loading = true
 		
-		Task {
-			do {
-				let logs = try await portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true)
-				self.lastLogsSnippet = logs.trimmingCharacters(in: .whitespacesAndNewlines)
-			} catch {
-				AppState.shared.handle(error)
+		portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true) { result in
+			switch result {
+				case .success(let logs):
+					self.lastLogsSnippet = logs.trimmingCharacters(in: .whitespacesAndNewlines)
+					
+				case .failure(let error):
+					AppState.shared.handle(error)
 			}
 		}
 		
-		do {
-			let containerDetails = try await portainer.inspectContainer(container)
-			withAnimation {
-				container.update(from: containerDetails)
+		portainer.inspectContainer(container) { result in
+			switch result {
+				case .success(let details):
+					withAnimation {
+						container.update(from: details)
+					}
+					
+				case .failure(let error):
+					AppState.shared.handle(error)
 			}
-		} catch {
-			AppState.shared.handle(error)
+			
+			loading = false
 		}
-		
-		loading = false
 	}
 }
 

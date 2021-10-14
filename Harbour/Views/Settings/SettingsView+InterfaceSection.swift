@@ -12,7 +12,7 @@ extension SettingsView {
 		@EnvironmentObject var preferences: Preferences
 		
 		var body: some View {
-			Section("Interface") {
+			Section(header: Text("Interface")) {
 				/// Enable haptics
 				ToggleOption(label: Localization.SETTINGS_ENABLE_HAPTICS_TITLE.localizedString, description: Localization.SETTINGS_ENABLE_HAPTICS_DESCRIPTION.localizedString, isOn: $preferences.enableHaptics)
 				

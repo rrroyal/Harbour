@@ -12,7 +12,7 @@ struct TransparentButtonStyle: ButtonStyle {
 		configuration.label
 			.multilineTextAlignment(.center)
 			.padding()
-			.background(Color(uiColor: .systemGray5).opacity(configuration.isPressed ? Globals.Views.secondaryOpacity : 0))
+			.background(Color(UIColor.systemGray5).opacity(configuration.isPressed ? Globals.Views.secondaryOpacity : 0))
 			.cornerRadius(Globals.Views.cornerRadius)
 			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)
 			.scaleEffect(configuration.isPressed ? Globals.Buttons.pressedSize : 1)

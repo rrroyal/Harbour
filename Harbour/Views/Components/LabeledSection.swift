@@ -30,7 +30,6 @@ struct LabeledSection: View {
 				.foregroundColor(content != nil ? .primary : .secondary)
 				.lineLimit(nil)
 				.contentShape(Rectangle())
-				.textSelection(.enabled)
 		}
 	}
 }

@@ -38,23 +38,27 @@ struct ContentView: View {
 			Button(action: {
 				UIDevice.current.generateHaptic(.light)
 				appState.fetchingMainScreenData = true
-				Task {
-					do {
-						try await portainer.getEndpoints()
-						if let endpointID = portainer.selectedEndpoint?.id {
-							try await portainer.getContainers(endpointID: endpointID)
-						}
-					} catch {
-						AppState.shared.handle(error)
+				
+				portainer.getEndpoints() { result in
+					DispatchQueue.main.async {
+						appState.fetchingMainScreenData = false
+					}
+					
+					switch result {
+						case .success:
+							if let endpointID = portainer.selectedEndpoint?.id {
+								portainer.getContainers(endpointID: endpointID)
+							}
+							
+						case .failure(let error):
+							AppState.shared.handle(error)
 					}
 				}
-				appState.fetchingMainScreenData = false
 			}) {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
 		}) {
-			Image(systemName: "tag")
-				.symbolVariant(portainer.selectedEndpoint != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
+			Image(systemName: portainer.selectedEndpoint != nil ? "tag.fill" : (!portainer.endpoints.isEmpty ? "tag" : "tag.slash"))
 		}
 		.disabled(!portainer.isLoggedIn)
 	}
@@ -70,7 +74,6 @@ struct ContentView: View {
 						ContainerListView(containers: portainer.containers.filtered(query: searchQuery))
 					}
 				}
-				.searchable(text: $searchQuery)
 			} else {
 				Text("No containers")
 					.opacity(Globals.Views.secondaryOpacity)
@@ -86,19 +89,6 @@ struct ContentView: View {
 			Group {
 				if portainer.isLoggedIn {
 					loggedInView
-						.refreshable {
-							if let endpointID = portainer.selectedEndpoint?.id {
-								appState.fetchingMainScreenData = true
-								
-								do {
-									try await portainer.getContainers(endpointID: endpointID)
-								} catch {
-									AppState.shared.handle(error)
-								}
-								
-								appState.fetchingMainScreenData = false
-							}
-						}
 				} else {
 					Text("Not logged in")
 						.opacity(Globals.Views.secondaryOpacity)
@@ -107,18 +97,15 @@ struct ContentView: View {
 			.navigationTitle("Harbour")
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
-				ToolbarItem(placement: .navigation) {
-					Button(action: {
-						UIDevice.current.generateHaptic(.soft)
-						appState.isSettingsSheetPresented = true
-					}) {
+				ToolbarItem(placement: .navigationBarLeading) {
+					NavigationLink(destination: SettingsView().environmentObject(portainer).environmentObject(preferences)) {
 						Image(systemName: "gear")
 					}
 				}
 				
 				ToolbarTitle(title: "Harbour", subtitle: appState.fetchingMainScreenData ? "Refreshing..." : nil)
 				
-				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
+				ToolbarItem(placement: .navigationBarTrailing, content: { toolbarMenu })
 			}
 		}
 		.transition(.opacity)

@@ -21,7 +21,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 			.padding(.medium)
 			.background(
 				RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)
-					.fill(Color(uiColor: .secondarySystemBackground))
+					.fill(Color(UIColor.secondarySystemBackground))
 			)
 	}
 }

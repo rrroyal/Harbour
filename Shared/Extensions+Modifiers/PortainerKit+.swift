@@ -23,7 +23,7 @@ extension PortainerKit.ExecuteAction {
 	var color: Color {
 		switch self {
 			case .start:	return .green
-			case .stop:		return Color(uiColor: .darkGray)
+			case .stop:		return Color(UIColor.darkGray)
 			case .restart:	return .blue
 			case .kill:		return .red
 			case .pause:	return .orange
@@ -61,8 +61,8 @@ extension PortainerKit.ContainerStatus {
 			case .running:		return .green
 			case .paused:		return .orange
 			case .restarting:	return .blue
-			case .removing:		return Color(uiColor: .lightGray)
-			case .exited:		return Color(uiColor: .darkGray)
+			case .removing:		return Color(UIColor.lightGray)
+			case .exited:		return Color(UIColor.darkGray)
 			case .dead:			return .gray
 		}
 	}

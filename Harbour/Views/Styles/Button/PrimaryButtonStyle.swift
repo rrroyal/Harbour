@@ -26,7 +26,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.font(font)
 			.padding()
 			.frame(maxWidth: Globals.Views.maxButtonWidth, alignment: .center)
-			.background(isEnabled ? backgroundColor : Color(uiColor: .systemGray5))
+			.background(isEnabled ? backgroundColor : Color(UIColor.systemGray5))
 			.cornerRadius(Globals.Views.cornerRadius)
 			// .compositingGroup()
 			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)

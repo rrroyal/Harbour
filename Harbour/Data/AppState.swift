@@ -22,7 +22,7 @@ class AppState: ObservableObject {
 	
 	public let indicators: Indicators = Indicators()
 
-	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
+	private let logger: PseudoLogger = PseudoLogger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
 	
 	private var autoRefreshTimer: AnyCancellable? = nil
 
@@ -51,26 +51,19 @@ class AppState: ObservableObject {
 		
 		autoRefreshTimer = Timer.publish(every: interval, on: .current, in: .common)
 			.autoconnect()
-			.sink { _ in
-				Task { [weak self] in
-					DispatchQueue.main.async { [weak self] in
-						self?.fetchingMainScreenData = true
-					}
-					
-					do {
-						guard let selectedEndpointID = Portainer.shared.selectedEndpoint?.id else {
-							return
-						}
-						
-						try await Portainer.shared.getContainers(endpointID: selectedEndpointID)
-					} catch {
-						await UIDevice.current.generateHaptic(.error)
-						self?.handle(error)
-					}
-					
-					DispatchQueue.main.async { [weak self] in
-						self?.fetchingMainScreenData = false
-					}
+			.sink { [weak self] _ in
+				DispatchQueue.main.async { [weak self] in
+					self?.fetchingMainScreenData = true
+				}
+				
+				guard let selectedEndpointID = Portainer.shared.selectedEndpoint?.id else {
+					return
+				}
+				
+				Portainer.shared.getContainers(endpointID: selectedEndpointID)
+				
+				DispatchQueue.main.async { [weak self] in
+					self?.fetchingMainScreenData = false
 				}
 			}
 	}
@@ -90,7 +83,7 @@ class AppState: ObservableObject {
 		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
 		if displayIndicator {
-			let style: Indicators.Indicator.Style = .init(subheadlineColor: .red, subheadlineStyle: .primary, iconColor: .red, iconStyle: .primary)
+			let style: Indicators.Indicator.Style = .init(subheadlineColor: .red, iconColor: .red)
 			let indicator: Indicators.Indicator = .init(id: UUID().uuidString, icon: "exclamationmark.triangle.fill", headline: "Error!", subheadline: error.localizedDescription, expandedText: error.localizedDescription, dismissType: .after(5), style: style)
 			DispatchQueue.main.async {
 				self.indicators.display(indicator)

@@ -6,8 +6,8 @@ import PackageDescription
 let package = Package(
 	name: "PortainerKit",
 	platforms: [
-		.iOS(.v15),
-		.macOS(.v12)
+		.iOS(.v14),
+		.macOS(.v11)
 	],
 	products: [
 		.library(name: "PortainerKit", targets: ["PortainerKit"])

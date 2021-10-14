@@ -21,7 +21,7 @@ extension ContainerGridView {
 					if let state = container.state {
 						Text(state.rawValue.capitalizingFirstLetter())
 							.font(.footnote.weight(.medium))
-							.foregroundStyle(.secondary)
+							.foregroundColor(.secondary)
 							.lineLimit(1)
 							.frame(maxWidth: .infinity, alignment: .leading)
 					}
@@ -39,7 +39,7 @@ extension ContainerGridView {
 				if let status = container.status {
 					Text(status)
 						.font(.caption.weight(.medium))
-						.foregroundStyle(.secondary)
+						.foregroundColor(.secondary)
 						.lineLimit(1)
 						.minimumScaleFactor(0.8)
 						.multilineTextAlignment(.leading)
@@ -56,7 +56,7 @@ extension ContainerGridView {
 			}
 			.padding(.medium)
 			.aspectRatio(1, contentMode: .fill)
-			.background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
+			.background(backgroundRectangle.fill(Color(UIColor.secondarySystemBackground)))
 			.contentShape(backgroundRectangle)
 			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)

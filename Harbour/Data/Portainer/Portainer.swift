@@ -5,11 +5,11 @@
 //  Created by royal on 11/06/2021.
 //
 
+import Foundation
 import Combine
 import KeychainAccess
 import os.log
 import PortainerKit
-import SwiftUI
 
 final class Portainer: ObservableObject {
 	// MARK: - Public properties
@@ -27,13 +27,7 @@ final class Portainer: ObservableObject {
 			Preferences.shared.selectedEndpointID = selectedEndpoint?.id
 			
 			if let endpointID = selectedEndpoint?.id {
-				Task {
-					do {
-						try await getContainers(endpointID: endpointID)
-					} catch {
-						AppState.shared.handle(error)
-					}
-				}
+				getContainers(endpointID: endpointID)
 			} else {
 				containers = []
 			}
@@ -68,8 +62,8 @@ final class Portainer: ObservableObject {
 	
 	// MARK: - Private util
 	
-	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer")
-	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)").synchronizable(true).accessibility(.afterFirstUnlock)
+	private let logger: PseudoLogger = PseudoLogger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer")
+	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!).synchronizable(true).accessibility(.afterFirstUnlock)
 	private let ud: UserDefaults = Preferences.shared.ud
 	private var api: PortainerKit?
 	
@@ -77,18 +71,12 @@ final class Portainer: ObservableObject {
 	
 	private init() {
 		if let urlString = Preferences.shared.endpointURL, let url = URL(string: urlString) {
-			logger.debug("Has saved URL: \(url, privacy: .sensitive)")
+			logger.debug("Has saved URL: \(url)")
 			
 			if let token = try? keychain.get(KeychainKeys.token) {
 				logger.debug("Has token, cool! Using it 😊")
 				api = PortainerKit(url: url, token: token)
-				DispatchQueue.main.async {
-					 Task {
-						AppState.shared.fetchingMainScreenData = true
-						_ = try? await self.getEndpoints()
-						AppState.shared.fetchingMainScreenData = false
-					}
-				}
+				getEndpoints(completionHandler: { _ in })
 			}
 		}
 	}
@@ -101,26 +89,33 @@ final class Portainer: ObservableObject {
 	///   - username: Username
 	///   - password: Password
 	///   - savePassword: Should password be saved?
-	/// - Returns: Result containing JWT token or error.
-	public func login(url: URL, username: String, password: String, savePassword: Bool) async throws {
-		logger.debug("Logging in! URL: \(url.absoluteString, privacy: .sensitive)")
+	public func login(url: URL, username: String, password: String, savePassword: Bool, completionHandler: @escaping (Result<Void, Error>) -> ()) {
+		logger.debug("Logging in! URL: \(url.absoluteString)")
 		let api = PortainerKit(url: url)
 		self.api = api
 		
-		let token = try await api.login(username: username, password: password)
-		
-		logger.debug("Successfully logged in!")
-		
-		DispatchQueue.main.async {
-			self.isLoggedIn = true
-			Preferences.shared.endpointURL = url.absoluteString
-		}
-		
-		try keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localizedString).label("Harbour (token)").set(token, key: KeychainKeys.token)
-		if savePassword {
-			let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localizedString)
-			try keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
-			try keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
+		api.login(username: username, password: password) { result in			
+			switch result {
+				case .success(let token):
+					self.logger.debug("Successfully logged in!")
+					
+					DispatchQueue.main.async {
+						self.isLoggedIn = true
+						Preferences.shared.endpointURL = url.absoluteString
+					}
+					
+					try? self.keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localizedString).label("Harbour (token)").set(token, key: KeychainKeys.token)
+					if savePassword {
+						let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localizedString)
+						try? keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
+						try? keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
+					}
+					
+					completionHandler(.success(()))
+				case .failure(let error):
+					self.handle(error)
+					completionHandler(.failure(error))
+			}
 		}
 	}
 	
@@ -143,87 +138,102 @@ final class Portainer: ObservableObject {
 	
 	/// Fetches available endpoints.
 	/// - Returns: `[PortainerKit.Endpoint]`
-	@discardableResult
-	public func getEndpoints() async throws -> [PortainerKit.Endpoint] {
+	public func getEndpoints(completionHandler: @escaping (Result<[PortainerKit.Endpoint], Error>) -> ()) {
 		logger.debug("Getting endpoints...")
 		
-		guard let api = api else { throw PortainerError.noAPI }
+		guard let api = api else {
+			handle(PortainerError.noAPI)
+			return
+		}
 		
-		do {
-			let endpoints = try await api.getEndpoints()
+		api.getEndpoints() { result in
+			completionHandler(result)
 			
-			logger.debug("Got \(endpoints.count) endpoint(s).")
-			DispatchQueue.main.async { [weak self] in
-				self?.endpoints = endpoints
-				self?.isLoggedIn = true
+			switch result {
+				case .success(let endpoints):
+					self.logger.debug("Got \(endpoints.count) endpoint(s).")
+					DispatchQueue.main.async { [weak self] in
+						self?.endpoints = endpoints
+						self?.isLoggedIn = true
+					}
+				case .failure(let error):
+					self.handle(error)
 			}
-			
-			return endpoints
-		} catch {
-			handle(error)
-			throw error
 		}
 	}
 	
 	/// Fetches available containers for selected endpoint ID.
 	/// - Parameter endpointID: Endpoint ID
 	/// - Returns: `[PortainerKit.Container]`
-	@discardableResult
-	public func getContainers(endpointID: Int) async throws -> [PortainerKit.Container] {
+	public func getContainers(endpointID: Int) {
 		logger.debug("Getting containers for endpointID: \(endpointID)...")
 		
-		guard let api = api else { throw PortainerError.noAPI }
+		guard let api = api else {
+			handle(PortainerError.noAPI)
+			return
+		}
 
-		do {
-			let containers = try await api.getContainers(for: endpointID)
-			
-			logger.debug("Got \(containers.count) container(s) for endpointID: \(endpointID).")
-			DispatchQueue.main.async { [weak self] in
-				self?.containers = containers
+		api.getContainers(for: endpointID) { result in
+			switch result {
+				case .success(let containers):
+					self.logger.debug("Got \(containers.count) container(s) for endpointID: \(endpointID).")
+					DispatchQueue.main.async { [weak self] in
+						self?.containers = containers
+					}
+				case .failure(let error):
+					self.handle(error)
 			}
-			
-			return containers
-		} catch {
-			handle(error)
-			throw error
 		}
 	}
 	
 	/// Fetches container details.
 	/// - Parameter container: Container to be inspected
 	/// - Returns: `PortainerKit.ContainerDetails`
-	public func inspectContainer(_ container: PortainerKit.Container) async throws -> PortainerKit.ContainerDetails {
+	public func inspectContainer(_ container: PortainerKit.Container, completionHandler: @escaping (Result<PortainerKit.ContainerDetails, Error>) -> ()) {
 		logger.debug("Inspecting container with ID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
-		guard let api = api else { throw PortainerError.noAPI }
-		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
-		
-		do {
-			let containerDetails = try await api.inspectContainer(container.id, endpointID: endpointID)
-			logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
-			return containerDetails
-		} catch {
-			handle(error)
-			throw error
+		guard let api = api else {
+			completionHandler(.failure(PortainerError.noAPI))
+			handle(PortainerError.noAPI)
+			return
 		}
+		guard let endpointID = selectedEndpoint?.id else {
+			completionHandler(.failure(PortainerError.noEndpoint))
+			handle(PortainerError.noEndpoint)
+			return
+		}
+		
+		api.inspectContainer(container.id, endpointID: endpointID, completionHandler: completionHandler)
+		logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
 	}
 	
 	/// Executes an action on selected container.
 	/// - Parameters:
 	///   - action: Action to be executed
 	///   - container: Container, where the action will be executed
-	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container) async throws {
+	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container, completionHandler: @escaping (Result<Void, Error>) -> ()) {
 		logger.debug("Executing action \(action.rawValue) for containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
-		guard let api = api else { throw PortainerError.noAPI }
-		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
+		guard let api = api else {
+			completionHandler(.failure(PortainerError.noAPI))
+			handle(PortainerError.noAPI)
+			return
+		}
+		guard let endpointID = selectedEndpoint?.id else {
+			completionHandler(.failure(PortainerError.noEndpoint))
+			handle(PortainerError.noEndpoint)
+			return
+		}
 		
-		do {
-			try await api.execute(action, containerID: container.id, endpointID: endpointID)
-			logger.debug("Executed action \(action.rawValue) for containerID: \(container.id), endpointID: \(endpointID).")
-		} catch {
-			handle(error)
-			throw error
+		api.execute(action, containerID: container.id, endpointID: endpointID) { result in
+			switch result {
+				case .success:
+					self.logger.debug("Executed action \(action.rawValue) for containerID: \(container.id), endpointID: \(endpointID).")
+					completionHandler(.success(()))
+				case .failure(let error):
+					self.handle(error)
+					completionHandler(.failure(error))
+			}
 		}
 	}
 	
@@ -234,20 +244,21 @@ final class Portainer: ObservableObject {
 	///   - tail: Number of lines
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
-	public func getLogs(from container: PortainerKit.Container, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
+	public func getLogs(from container: PortainerKit.Container, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false, completionHandler: @escaping (Result<String, Error>) -> ()) {
 		logger.debug("Getting logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
 		
-		guard let api = api else { throw PortainerError.noAPI }
-		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
-
-		do {
-			let logs = try await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
-			logger.debug("Got logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
-			return logs
-		} catch {
-			handle(error)
-			throw error
+		guard let api = api else {
+			completionHandler(.failure(PortainerError.noAPI))
+			handle(PortainerError.noAPI)
+			return
 		}
+		guard let endpointID = selectedEndpoint?.id else {
+			completionHandler(.failure(PortainerError.noEndpoint))
+			handle(PortainerError.noEndpoint)
+			return
+		}
+		
+		api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps, completionHandler: completionHandler)
 	}
 	
 	/// Attaches to container through a WebSocket connection.
@@ -292,13 +303,13 @@ final class Portainer: ObservableObject {
 					// Check if has stored creds
 					if let url = api?.url, let username = try? keychain.get(KeychainKeys.username), let password = try? keychain.get(KeychainKeys.password) {
 						logger.debug("Received `invalidJWTToken`, but has credentials!")
-						Task {
-							do {
-								try await login(url: url, username: username, password: password, savePassword: true)
-								try await self.getEndpoints()
-							} catch {
-								logger.debug("Credentials invalid, logging out :(")
-								logOut()
+						login(url: url, username: username, password: password, savePassword: true) { result in
+							switch result {
+								case .success:
+									self.getEndpoints(completionHandler: { _ in })
+								case .failure:
+									self.logger.debug("Credentials invalid, logging out :(")
+									self.logOut()
 							}
 						}
 					}

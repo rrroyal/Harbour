@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 15, macOS 12, *)
+@available(iOS 14, macOS 11, *)
 public extension PortainerKit {
 	enum APIError: Error, Comparable {
 		case custom(_ reason: String)
@@ -23,6 +23,8 @@ public extension PortainerKit {
 		case invalidPayload
 		case invalidURL
 		
+		case noData
+		
 		public var description: String {
 			switch self {
 				case .custom(let reason):					return reason
@@ -34,6 +36,7 @@ public extension PortainerKit {
 				case .unauthorized:							return "Unauthorized"
 				case .invalidPayload:						return "Invalid payload"
 				case .invalidURL:							return "Invalid URL"
+				case .noData:								return "No data"
 			}
 		}
 		

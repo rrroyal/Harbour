@@ -30,7 +30,7 @@ extension SettingsView {
 					if let description = description {
 						Text(LocalizedStringKey(description))
 							.font(.body)
-							.foregroundStyle(.secondary)
+							.foregroundColor(.secondary)
 					}
 				}
 				.opacity(isEnabled ? 1 : Globals.Views.secondaryOpacity)
@@ -62,7 +62,7 @@ extension SettingsView {
 					if let description = description {
 						Text(LocalizedStringKey(description))
 							.font(.subheadline)
-							.foregroundStyle(.secondary)
+							.foregroundColor(.secondary)
 							.frame(maxWidth: .infinity, alignment: .leading)
 					}
 				}

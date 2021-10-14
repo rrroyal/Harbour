@@ -29,11 +29,9 @@ extension SettingsView {
 					LibrariesView()
 				}
 				
-				#if DEBUG
 				NavigationLink("🤫") {
 					DebugView()
 				}
-				#endif
 				
 				Link(destination: URL(string: "https://harbour.shameful.xyz/docs")!) {
 					HStack {

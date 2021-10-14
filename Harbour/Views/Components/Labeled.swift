@@ -48,7 +48,6 @@ struct Labeled: View {
 				.foregroundColor(content != nil ? .primary : .secondary)
 				.lineLimit(lineLimit)
 				.multilineTextAlignment(.trailing)
-				.textSelection(.enabled)
 		}
 	}
 }

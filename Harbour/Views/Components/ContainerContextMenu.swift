@@ -48,10 +48,11 @@ struct ContainerContextMenu: View {
 	}
 	
 	var killButton: some View {
-		Button(role: .destructive, action: { execute(.kill, haptic: .heavy) }) {
+		Button(action: { execute(.kill, haptic: .heavy) }) {
 			Text(PortainerKit.ExecuteAction.kill.label)
 			Image(systemName: PortainerKit.ExecuteAction.kill.icon)
 		}
+		.accentColor(.red)
 	}
 	
 	var body: some View {
@@ -120,24 +121,24 @@ struct ContainerContextMenu: View {
 	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) {
 		UIDevice.current.generateHaptic(haptic)
 		
-		let style: Indicators.Indicator.Style = .init(subheadlineColor: action.color, subheadlineStyle: .primary, iconColor: action.color, iconStyle: .primary, iconVariants: .fill)
+		let style: Indicators.Indicator.Style = .init(subheadlineColor: action.color, iconColor: action.color)
 		let indicator: Indicators.Indicator = .init(id: "ContainerActionExecution-\(container.id)", icon: action.icon, headline: container.displayName ?? "Container", subheadline: action.label, dismissType: .after(3), style: style)
 		AppState.shared.indicators.display(indicator)
-
-		Task {
-			do {
-				try await Portainer.shared.execute(action, on: container)
-				
-				DispatchQueue.main.async {
-					container.state = action.expectedState
-					Portainer.shared.refreshCurrentContainerPassthroughSubject.send()
-				}
-				
-				if let endpointID = Portainer.shared.selectedEndpoint?.id {
-					try await Portainer.shared.getContainers(endpointID: endpointID)
-				}
-			} catch {
-				AppState.shared.handle(error)
+		
+		Portainer.shared.execute(action, on: container) { result in
+			switch result {
+				case .success:
+					DispatchQueue.main.async {
+						container.state = action.expectedState
+						Portainer.shared.refreshCurrentContainerPassthroughSubject.send()
+					}
+					
+					if let endpointID = Portainer.shared.selectedEndpoint?.id {
+						Portainer.shared.getContainers(endpointID: endpointID)
+					}
+					
+				case .failure(let error):
+					AppState.shared.handle(error)
 			}
 		}
 	}

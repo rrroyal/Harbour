@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 15, macOS 12, *)
+@available(iOS 14, macOS 11, *)
 public extension PortainerKit {
 	enum MessageSource {
 		case server

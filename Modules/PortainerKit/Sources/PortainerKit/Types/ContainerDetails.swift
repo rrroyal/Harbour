@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 15, macOS 12, *)
+@available(iOS 14, macOS 11, *)
 public extension PortainerKit {
 	struct ContainerDetails: Identifiable, Codable, Equatable {
 		public struct NetworkSettings: Codable {
@@ -59,7 +59,7 @@ public extension PortainerKit {
 
 		public let id: String
 		public let created: Date
-		public let platform: String
+		public let platform: String?
 		public let path: String
 		public let args: [String]
 		public let state: ContainerState

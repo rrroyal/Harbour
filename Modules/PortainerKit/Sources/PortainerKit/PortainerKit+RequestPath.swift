@@ -7,7 +7,7 @@
 
 import Foundation
 
-@available(iOS 15, macOS 12, *)
+@available(iOS 14, macOS 11, *)
 internal extension PortainerKit {
 	enum RequestPath {
 		case login

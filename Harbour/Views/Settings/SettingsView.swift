@@ -12,14 +12,13 @@ struct SettingsView: View {
 	@EnvironmentObject var preferences: Preferences
 	
 	var body: some View {
-		NavigationView {
-			List {
-				PortainerSection()
-				InterfaceSection()
-				OtherSection()
-			}
-			.navigationTitle("Settings")
+		List {
+			PortainerSection()
+			InterfaceSection()
+			OtherSection()
 		}
+		.listStyle(InsetGroupedListStyle())
+		.navigationTitle("Settings")
 	}
 }
 

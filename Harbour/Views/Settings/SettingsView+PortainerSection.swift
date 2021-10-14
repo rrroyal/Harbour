@@ -33,10 +33,11 @@ extension SettingsView {
 			SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localizedString, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
 				.disabled(!Portainer.shared.isLoggedIn)
 			
-			Button("Log out", role: .destructive) {
+			Button("Log out") {
 				UIDevice.current.generateHaptic(.warning)
 				isLogoutWarningPresented = true
 			}
+			.accentColor(.red)
 			.alert(isPresented: $isLogoutWarningPresented) {
 				Alert(title: Text("Are you sure?"),
 					  primaryButton: .destructive(Text("Yes"), action: {
@@ -56,7 +57,7 @@ extension SettingsView {
 		}
 		
 		var body: some View {
-			Section("Portainer") {
+			Section(header: Text("Portainer")) {
 				/// Endpoint URL
 				if let endpointURL = Preferences.shared.endpointURL {
 					Labeled(label: "URL", content: endpointURL, monospace: true, lineLimit: 1)

@@ -19,14 +19,15 @@ extension ContainerListView {
 		var containerStatusSubheadline: some View {
 			Group {
 				if let status = container.status,
-				   let state = container.state {
-					Text("\(status) • \(state.rawValue.capitalizingFirstLetter())")
+				   let state = container.state?.rawValue.capitalizingFirstLetter(),
+				   status != state {
+					Text("\(status) • \(state)")
 				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter() {
 					Text(fallback)
 				}
 			}
 			.font(.subheadline.weight(.medium))
-			.foregroundStyle(.secondary)
+			.foregroundColor(.secondary)
 			.lineLimit(1)
 			.minimumScaleFactor(0.8)
 			.multilineTextAlignment(.leading)
@@ -55,7 +56,7 @@ extension ContainerListView {
 					.animation(.easeInOut, value: container.state.color)
 			}
 			.padding()
-			.background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
+			.background(backgroundRectangle.fill(Color(UIColor.secondarySystemBackground)))
 			.contentShape(backgroundRectangle)
 			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)

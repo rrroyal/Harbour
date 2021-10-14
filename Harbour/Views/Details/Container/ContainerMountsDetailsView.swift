@@ -45,7 +45,7 @@ struct ContainerMountsDetailsView: View {
 	var detailSection: some View {
 		if let details = details {
 			ForEach(details.sorted(by: { $0.destination > $1.destination }), id: \.self) { mount in
-				Section(mount.destination) {
+				Section(header: Text(mount.destination)) {
 					Labeled(label: "Name", content: mount.name, monospace: true)
 					Labeled(label: "Source", content: mount.source, monospace: true)
 					Labeled(label: "Destination", content: mount.destination, monospace: true)

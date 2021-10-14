@@ -17,7 +17,7 @@ struct CustomSection<Content: View>: View {
 		VStack(alignment: .leading, spacing: 6) {
 			Text(LocalizedStringKey(label))
 				.font(.footnote)
-				.foregroundStyle(.secondary)
+				.foregroundColor(.secondary)
 				.textCase(.uppercase)
 				.padding(.horizontal)
 			
@@ -26,7 +26,7 @@ struct CustomSection<Content: View>: View {
 				.frame(maxWidth: .infinity, alignment: .leading)
 				.background(
 					RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)
-						.fill(Color(uiColor: .secondarySystemGroupedBackground))
+						.fill(Color(UIColor.secondarySystemGroupedBackground))
 				)
 		}
 	}

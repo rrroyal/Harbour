@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Generic enums
 
-@available(iOS 15, macOS 12, *)
+@available(iOS 14, macOS 11, *)
 public extension PortainerKit {
 	enum ContainerStatus: String, Codable {
 		case created
@@ -68,7 +68,7 @@ public extension PortainerKit {
 
 // MARK: - Generic types
 
-@available(iOS 15, macOS 12, *)
+@available(iOS 14, macOS 11, *)
 public extension PortainerKit {
 	struct AccessPolicy: Codable {
 		enum CodingKeys: String, CodingKey {

@@ -53,10 +53,13 @@
 		E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */; };
 		E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */; };
 		E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */; };
+		E7C43C402718219B007A0678 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C43C3F2718219B007A0678 /* Date+.swift */; };
 		E7C84B792708BB170071DE06 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C84B782708BB170071DE06 /* Localization.swift */; };
 		E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */; };
 		E7DD4CC6267650CB002709F0 /* ContainerConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */; };
 		E7EAE5CC270B6234008CFD20 /* CustomSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EAE5CB270B6234008CFD20 /* CustomSection.swift */; };
+		E7F46732271C95C600A616E7 /* PseudoLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F46731271C95C600A616E7 /* PseudoLogger.swift */; };
+		E7F46734271C98EB00A616E7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F46733271C98EB00A616E7 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -119,10 +122,13 @@
 		E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecreasesOnPressButtonStyle.swift; sourceTree = "<group>"; };
 		E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
+		E7C43C3F2718219B007A0678 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		E7C84B782708BB170071DE06 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentButtonStyle.swift; sourceTree = "<group>"; };
 		E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConsoleView.swift; sourceTree = "<group>"; };
 		E7EAE5CB270B6234008CFD20 /* CustomSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSection.swift; sourceTree = "<group>"; };
+		E7F46731271C95C600A616E7 /* PseudoLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PseudoLogger.swift; sourceTree = "<group>"; };
+		E7F46733271C98EB00A616E7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,7 +234,9 @@
 			isa = PBXGroup;
 			children = (
 				E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */,
+				E7F46733271C98EB00A616E7 /* AppDelegate.swift */,
 				E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */,
+				E7F46731271C95C600A616E7 /* PseudoLogger.swift */,
 				E7BF9E762672E15700AAB6A1 /* Data */,
 				E7BF9E832672EF4200AAB6A1 /* Views */,
 				E7BF9E7E2672E60E00AAB6A1 /* Extensions+Modifiers */,
@@ -317,6 +325,7 @@
 			children = (
 				E751F062270B37DA00980DCA /* Array+.swift */,
 				E75A51E12673A1C100857D2B /* Bundle+.swift */,
+				E7C43C3F2718219B007A0678 /* Date+.swift */,
 				E7748E7E267E835600456BFD /* Notification+.swift */,
 				E7339C572674262500A55B5C /* String+.swift */,
 				E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */,
@@ -466,7 +475,10 @@
 				E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */,
 				E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */,
 				E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */,
+				E7C43C402718219B007A0678 /* Date+.swift in Sources */,
+				E7F46734271C98EB00A616E7 /* AppDelegate.swift in Sources */,
 				E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */,
+				E7F46732271C95C600A616E7 /* PseudoLogger.swift in Sources */,
 				E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */,
 				E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */,
 				E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */,
@@ -643,12 +655,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/Frameworks",
+					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = "2.0.0-legacy";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
 				PRODUCT_NAME = Harbour;
 				SDKROOT = iphoneos;
@@ -684,12 +697,13 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
-				LD_RUNPATH_SEARCH_PATHS = (
+				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"@executable_path/Frameworks",
+					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = "2.0.0-legacy";
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
 				PRODUCT_NAME = Harbour;
 				SDKROOT = iphoneos;

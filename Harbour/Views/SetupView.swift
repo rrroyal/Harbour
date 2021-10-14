@@ -41,8 +41,8 @@ fileprivate struct WelcomeView: View {
 			
 			VStack(spacing: 20) {
 				FeatureCell(image: "power", headline: Localization.SETUP_FEATURE1_TITLE.localizedString, description: Localization.SETUP_FEATURE1_DESCRIPTION.localizedString)
-				FeatureCell(image: "doc.plaintext", headline: Localization.SETUP_FEATURE2_TITLE.localizedString, description: Localization.SETUP_FEATURE2_DESCRIPTION.localizedString)
-				FeatureCell(image: "terminal", headline: Localization.SETUP_FEATURE3_TITLE.localizedString, description: Localization.SETUP_FEATURE3_DESCRIPTION.localizedString)
+				FeatureCell(image: "doc.plaintext.fill", headline: Localization.SETUP_FEATURE2_TITLE.localizedString, description: Localization.SETUP_FEATURE2_DESCRIPTION.localizedString)
+				FeatureCell(image: "terminal.fill", headline: Localization.SETUP_FEATURE3_TITLE.localizedString, description: Localization.SETUP_FEATURE3_DESCRIPTION.localizedString)
 			}
 			
 			Spacer()
@@ -73,9 +73,7 @@ fileprivate extension WelcomeView {
 			HStack(spacing: 10) {
 				Image(systemName: image)
 					.font(.title.weight(.semibold))
-					.foregroundStyle(Color.accentColor)
-					.symbolVariant(.fill)
-					.symbolRenderingMode(.hierarchical)
+					.foregroundColor(Color.accentColor)
 					.frame(width: imageWidth)
 				
 				VStack(alignment: .leading, spacing: 2) {
@@ -85,7 +83,7 @@ fileprivate extension WelcomeView {
 					
 					Text(LocalizedStringKey(description))
 						.font(.subheadline)
-						.foregroundStyle(.secondary)
+						.foregroundColor(.secondary)
 						.frame(maxWidth: .infinity, alignment: .leading)
 				}
 			}

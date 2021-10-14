@@ -16,19 +16,13 @@ struct ContainerLogsView: View {
 	@State private var logs: String = ""
 	
 	@State private var tail: Int = 100 {
-		didSet {
-			Task { await refresh() }
-		}
+		didSet { refresh() }
 	}
 	@State private var since: TimeInterval = 0 {
-		didSet {
-			Task { await refresh() }
-		}
+		didSet { refresh() }
 	}
 	@State private var displayTimestamps: Bool = false {
-		didSet {
-			Task { await refresh() }
-		}
+		didSet { refresh() }
 	}
 	
 	let logsLabelID: String = "LogsLabel"
@@ -49,7 +43,6 @@ struct ContainerLogsView: View {
 					Text(logs)
 						.font(.system(.footnote, design: .monospaced))
 						.lineLimit(nil)
-						.textSelection(.enabled)
 						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 						.id(logsLabelID)
 				}
@@ -119,9 +112,7 @@ struct ContainerLogsView: View {
 							// Refresh
 							Button(action: {
 								UIDevice.current.generateHaptic(.light)
-								Task {
-									await refresh()
-								}
+								refresh()
 							}) {
 								Label("Refresh", systemImage: "arrow.clockwise")
 							}
@@ -138,19 +129,21 @@ struct ContainerLogsView: View {
 		.toolbar {
 			ToolbarTitle(title: "Logs", subtitle: loading ? "Refreshing..." : nil)
 		}
-		.task { await refresh() }
+		.onAppear(perform: refresh)
 	}
 	
-	private func refresh() async {
+	private func refresh() {
 		loading = true
 		
-		do {
-			let logs = try await portainer.getLogs(from: container, since: since, tail: tail, displayTimestamps: displayTimestamps)
-			self.logs = logs
-		} catch {
-			AppState.shared.handle(error)
+		portainer.getLogs(from: container, since: since, tail: tail, displayTimestamps: displayTimestamps) { result in
+			loading = false
+			
+			switch result {
+				case .success(let logs):
+					self.logs = logs
+				case .failure(let error):
+					AppState.shared.handle(error)
+			}
 		}
-		
-		loading = false
 	}
 }
