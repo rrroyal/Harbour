@@ -106,7 +106,7 @@ struct ContainerContextMenu: View {
 				do {
 					UIDevice.current.generateHaptic(.light)
 					try Portainer.shared.attach(to: container)
-					AppState.shared.isContainerConsoleSheetPresented = true
+					NotificationCenter.default.post(name: .ShowAttachedContainer, object: nil)
 				} catch {
 					AppState.shared.handle(error)
 				}
@@ -133,9 +133,7 @@ struct ContainerContextMenu: View {
 					Portainer.shared.refreshCurrentContainerPassthroughSubject.send()
 				}
 				
-				if let endpointID = Portainer.shared.selectedEndpoint?.id {
-					try await Portainer.shared.getContainers(endpointID: endpointID)
-				}
+				try await Portainer.shared.getContainers()
 			} catch {
 				AppState.shared.handle(error)
 			}

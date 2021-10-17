@@ -10,6 +10,7 @@ import SwiftUI
 struct DecreasesOnPressButtonStyle: ButtonStyle {
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
+			.contentShape(Rectangle())
 			.multilineTextAlignment(.center)
 			// .compositingGroup()
 			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)

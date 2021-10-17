@@ -16,6 +16,7 @@ class Preferences: ObservableObject {
 	@AppStorage(Preferences.Key.endpointURL.rawValue, store: .group) public var endpointURL: String?
 	@AppStorage(Preferences.Key.selectedEndpointID.rawValue, store: .group) public var selectedEndpointID: Int?
 
+	@AppStorage(Preferences.Key.enableBackgroundRefresh.rawValue, store: .group) public var enableBackgroundRefresh: Bool = false
 	@AppStorage(Preferences.Key.autoRefreshInterval.rawValue, store: .group) public var autoRefreshInterval: Double = 0
 	
 	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .group) public var enableHaptics: Bool = true
@@ -23,7 +24,21 @@ class Preferences: ObservableObject {
 	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .group) public var persistAttachedContainer: Bool = true
 	@AppStorage(Preferences.Key.displayContainerDismissedPrompt.rawValue, store: .group) public var displayContainerDismissedPrompt: Bool = true
 
-	public let ud: UserDefaults = .group
+	#if DEBUG
+	var lastBackgroundTaskDate: Date? {
+		get {
+			let time = Self.ud.double(forKey: Preferences.Key.lastBackgroundTaskDate.rawValue)
+			if time > 0 {
+				return Date(timeIntervalSinceReferenceDate: time)
+			} else {
+				return nil
+			}
+		}
+		set { Self.ud.set(newValue?.timeIntervalSinceReferenceDate, forKey: Preferences.Key.lastBackgroundTaskDate.rawValue) }
+	}
+	#endif
+	
+	public static let ud: UserDefaults = .group
 
 	private init() {}
 }
@@ -35,15 +50,20 @@ extension Preferences {
 		case endpointURL = "EndpointURL"
 		case selectedEndpointID = "SelectedEndpointID"
 		
+		case enableBackgroundRefresh = "EnableBackgroundRefresh"
 		case autoRefreshInterval = "AutoRefreshInterval"
 		
 		case enableHaptics = "EnableHaptics"
 		case useGridView = "UseGridView"
 		case persistAttachedContainer = "PersistAttachedContainer"
 		case displayContainerDismissedPrompt = "DisplayContainerDismissedPrompt"
+		
+		#if DEBUG
+		case lastBackgroundTaskDate = "LastBackgroundTaskDate"
+		#endif
 	}
 }
 
 extension UserDefaults {
-	static var group: UserDefaults = UserDefaults(suiteName: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)")!
+	static var group: UserDefaults = UserDefaults(suiteName: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.mainBundleIdentifier)")!
 }

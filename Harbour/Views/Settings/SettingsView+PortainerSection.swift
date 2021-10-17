@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UserNotifications
 
 extension SettingsView {
 	struct PortainerSection: View {
@@ -29,6 +30,10 @@ extension SettingsView {
 		
 		@ViewBuilder
 		var loggedInView: some View {
+			/// Refresh containers in background
+			ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localizedString, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localizedString, isOn: preferences.$enableBackgroundRefresh)
+				.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
+			
 			/// Auto-refresh interval
 			SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localizedString, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
 				.disabled(!Portainer.shared.isLoggedIn)
@@ -74,6 +79,24 @@ extension SettingsView {
 			.transition(.opacity)
 			.sheet(isPresented: $isLoginSheetPresented) {
 				LoginView()
+			}
+		}
+		
+		private func setupBackgroundRefresh(isOn: Bool) {
+			guard isOn else {
+				AppState.shared.cancelBackgroundRefreshTask()
+				return
+			}
+			
+			Task {
+				do {
+					try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+					AppState.shared.scheduleBackgroundRefreshTask()
+				} catch {
+					AppState.shared.cancelBackgroundRefreshTask()
+					preferences.enableBackgroundRefresh = false
+					AppState.shared.handle(error)
+				}
 			}
 		}
 		

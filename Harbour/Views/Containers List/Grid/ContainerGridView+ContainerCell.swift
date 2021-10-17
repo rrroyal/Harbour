@@ -50,7 +50,7 @@ extension ContainerGridView {
 					.font(.headline)
 					.foregroundColor(container.displayName != nil ? .primary : .secondary)
 					.lineLimit(2)
-					.minimumScaleFactor(0.6)
+					// .minimumScaleFactor(0.6)
 					.multilineTextAlignment(.leading)
 					.frame(maxWidth: .infinity, alignment: .leading)
 			}

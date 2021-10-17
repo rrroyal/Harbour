@@ -10,13 +10,26 @@
 import SwiftUI
 import OSLog
 import Indicators
+import BackgroundTasks
 
 struct DebugView: View {
+	@State private var pendingBackgroundTasks: [BGTaskRequest] = []
+	
     var body: some View {
 		List {
 			Section("Build info") {
-				Labeled(label: "Bundle ID", content: Bundle.main.bundleIdentifier, monospace: true)
+				Labeled(label: "Bundle ID", content: Bundle.main.mainBundleIdentifier, monospace: true)
 				Labeled(label: "App prefix", content: Bundle.main.appIdentifierPrefix, monospace: true)
+			}
+			
+			Section("Background Tasks") {
+				Labeled(label: "Last task", content: Preferences.shared.lastBackgroundTaskDate?.formatted())
+				ForEach(pendingBackgroundTasks, id: \.identifier) { task in
+					Text(task.identifier)
+				}
+			}
+			.onAppear {
+				Task { pendingBackgroundTasks = await BGTaskScheduler.shared.pendingTaskRequests() }
 			}
 			
 			Section("UserDefaults") {
@@ -27,7 +40,7 @@ struct DebugView: View {
 				
 				Button("Reset all") {
 					UIDevice.current.generateHaptic(.heavy)
-					Preferences.Key.allCases.forEach { Preferences.shared.ud.removeObject(forKey: $0.rawValue) }
+					Preferences.Key.allCases.forEach { Preferences.ud.removeObject(forKey: $0.rawValue) }
 					exit(0)
 				}
 				.accentColor(.red)
@@ -87,15 +100,17 @@ extension DebugView {
 		}
 		
 		func getLogs() {
-			do {
-				let logStore = try OSLogStore(scope: .currentProcessIdentifier)
-				let entries = try logStore.getEntries()
-				logs = entries
-					.compactMap { $0 as? OSLogEntryLog }
-					.filter { $0.subsystem.contains(Bundle.main.bundleIdentifier!) }
-					.map { "[\($0.level.rawValue)] \($0.date): \($0.category): \($0.composedMessage)" }
-			} catch {
-				logs = [String(describing: error)]
+			DispatchQueue.main.async {
+				do {
+					let logStore = try OSLogStore(scope: .currentProcessIdentifier)
+					let entries = try logStore.getEntries()
+					logs = entries
+						.compactMap { $0 as? OSLogEntryLog }
+						.filter { $0.subsystem.contains(Bundle.main.mainBundleIdentifier) }
+						.map { "[\($0.level.rawValue)] \($0.date) [\($0.category)] \($0.composedMessage)" }
+				} catch {
+					logs = [String(describing: error)]
+				}
 			}
 		}
 	}

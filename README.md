@@ -16,7 +16,6 @@
 - Build it yourself
 
 ## Coming up
-- [ ] Container list view (instead of cells)
 - [ ] Widgets
 - [ ] Siri/Shortcuts
 - [ ] watchOS app

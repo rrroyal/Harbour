@@ -22,11 +22,11 @@ final class Portainer: ObservableObject {
 	
 	// MARK: Endpoint
 	
-	@Published public var selectedEndpoint: PortainerKit.Endpoint? = nil {
+	@Published public var selectedEndpointID: Int? = nil {
 		didSet {
-			Preferences.shared.selectedEndpointID = selectedEndpoint?.id
+			Preferences.shared.selectedEndpointID = selectedEndpointID
 			
-			if let endpointID = selectedEndpoint?.id {
+			if let endpointID = selectedEndpointID {
 				Task {
 					do {
 						try await getContainers(endpointID: endpointID)
@@ -42,16 +42,16 @@ final class Portainer: ObservableObject {
 
 	@Published public private(set) var endpoints: [PortainerKit.Endpoint] = [] {
 		didSet {
-			if endpoints.contains(where: { $0.id == selectedEndpoint?.id }) {
+			if endpoints.contains(where: { $0.id == selectedEndpointID }) {
 				return
 			}
 			
 			if let storedEndpointID = Preferences.shared.selectedEndpointID, let storedEndpoint = endpoints.first(where: { $0.id == storedEndpointID }) {
-				selectedEndpoint = storedEndpoint
+				selectedEndpointID = storedEndpoint.id
 			} else if endpoints.count == 1 {
-				selectedEndpoint = endpoints.first
+				selectedEndpointID = endpoints.first?.id
 			} else if endpoints.isEmpty {
-				selectedEndpoint = nil
+				selectedEndpointID = nil
 			}
 		}
 	}
@@ -69,8 +69,8 @@ final class Portainer: ObservableObject {
 	// MARK: - Private util
 	
 	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer")
-	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)").synchronizable(true).accessibility(.afterFirstUnlock)
-	private let ud: UserDefaults = Preferences.shared.ud
+	private let keychain: Keychain = Keychain(service: Bundle.main.mainBundleIdentifier, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.mainBundleIdentifier)").synchronizable(true).accessibility(.afterFirstUnlock)
+	private let ud: UserDefaults = Preferences.ud
 	private var api: PortainerKit?
 	
 	// MARK: - init
@@ -134,7 +134,7 @@ final class Portainer: ObservableObject {
 		
 		DispatchQueue.main.async {
 			self.isLoggedIn = false
-			self.selectedEndpoint = nil
+			self.selectedEndpointID = nil
 			self.endpoints = []
 			self.containers = []
 			self.attachedContainer = nil
@@ -169,10 +169,12 @@ final class Portainer: ObservableObject {
 	/// - Parameter endpointID: Endpoint ID
 	/// - Returns: `[PortainerKit.Container]`
 	@discardableResult
-	public func getContainers(endpointID: Int) async throws -> [PortainerKit.Container] {
-		logger.debug("Getting containers for endpointID: \(endpointID)...")
+	public func getContainers(endpointID: Int? = nil) async throws -> [PortainerKit.Container] {
+		let endpointID = endpointID ?? self.selectedEndpointID
+		logger.debug("Getting containers for endpointID: \(endpointID ?? -1)...")
 		
 		guard let api = api else { throw PortainerError.noAPI }
+		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 
 		do {
 			let containers = try await api.getContainers(for: endpointID)
@@ -192,11 +194,13 @@ final class Portainer: ObservableObject {
 	/// Fetches container details.
 	/// - Parameter container: Container to be inspected
 	/// - Returns: `PortainerKit.ContainerDetails`
-	public func inspectContainer(_ container: PortainerKit.Container) async throws -> PortainerKit.ContainerDetails {
-		logger.debug("Inspecting container with ID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
+	public func inspectContainer(_ container: PortainerKit.Container, endpointID: Int? = nil) async throws -> PortainerKit.ContainerDetails {
+		let endpointID = endpointID ?? self.selectedEndpointID
+		
+		logger.debug("Inspecting container with ID: \(container.id), endpointID: \(endpointID ?? -1)...")
 		
 		guard let api = api else { throw PortainerError.noAPI }
-		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
+		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 		
 		do {
 			let containerDetails = try await api.inspectContainer(container.id, endpointID: endpointID)
@@ -212,11 +216,13 @@ final class Portainer: ObservableObject {
 	/// - Parameters:
 	///   - action: Action to be executed
 	///   - container: Container, where the action will be executed
-	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container) async throws {
-		logger.debug("Executing action \(action.rawValue) for containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
+	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container, endpointID: Int? = nil) async throws {
+		let endpointID = endpointID ?? self.selectedEndpointID
+		
+		logger.debug("Executing action \"\(action.rawValue)\" for containerID: \(container.id), endpointID: \(endpointID ?? -1)...")
 		
 		guard let api = api else { throw PortainerError.noAPI }
-		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
+		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 		
 		do {
 			try await api.execute(action, containerID: container.id, endpointID: endpointID)
@@ -234,15 +240,17 @@ final class Portainer: ObservableObject {
 	///   - tail: Number of lines
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
-	public func getLogs(from container: PortainerKit.Container, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
-		logger.debug("Getting logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
+	public func getLogs(from container: PortainerKit.Container, endpointID: Int? = nil, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
+		let endpointID = endpointID ?? self.selectedEndpointID
+		
+		logger.debug("Getting logs from containerID: \(container.id), endpointID: \(endpointID ?? -1)...")
 		
 		guard let api = api else { throw PortainerError.noAPI }
-		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
+		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 
 		do {
 			let logs = try await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
-			logger.debug("Got logs from containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
+			logger.debug("Got logs from containerID: \(container.id), endpointID: \(endpointID)!")
 			return logs
 		} catch {
 			handle(error)
@@ -254,19 +262,21 @@ final class Portainer: ObservableObject {
 	/// - Parameter container: Container to attach to
 	/// - Returns: Result containing `AttachedContainer` or error.
 	@discardableResult
-	public func attach(to container: PortainerKit.Container) throws -> AttachedContainer {
+	public func attach(to container: PortainerKit.Container, endpointID: Int? = nil) throws -> AttachedContainer {
 		if let attachedContainer = attachedContainer, attachedContainer.container.id == container.id {
 			return attachedContainer
 		}
 		
-		logger.debug("Attaching to containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)...")
+		let endpointID = endpointID ?? self.selectedEndpointID
+		
+		logger.debug("Attaching to containerID: \(container.id), endpointID: \(endpointID ?? -1)...")
 		
 		guard let api = api else { throw PortainerError.noAPI }
-		guard let endpointID = selectedEndpoint?.id else { throw PortainerError.noEndpoint }
+		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 		
 		do {
 			let messagePassthroughSubject = try api.attach(to: container.id, endpointID: endpointID)
-			logger.debug("Attached to containerID: \(container.id), endpointID: \(self.selectedEndpoint?.id ?? -1)!")
+			logger.debug("Attached to containerID: \(container.id), endpointID: \(endpointID)!")
 			
 			let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
 			self.attachedContainer = attachedContainer

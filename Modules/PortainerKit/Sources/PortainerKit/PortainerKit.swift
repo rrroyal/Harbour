@@ -41,7 +41,7 @@ public class PortainerKit {
 		configuration.timeoutIntervalForRequest = 30
 		configuration.timeoutIntervalForResource = 60
 		
-		self.session = URLSession(configuration: configuration)
+		self.session = URLSession(configuration: configuration, delegate: PortainerKit.URLSessionDelegate(), delegateQueue: nil)
 		self.token = token
 	}
 	
@@ -128,16 +128,26 @@ public class PortainerKit {
 	public func execute(_ action: ExecuteAction, containerID: String, endpointID: Int) async throws {
 		var request = try request(for: .executeAction(action, containerID: containerID, endpointID: endpointID))
 		request.httpMethod = "POST"
+		request.httpBody = "{}".data(using: .utf8)
 		
 		let response = try await session.data(for: request)
-		if let statusCode = (response.1 as? HTTPURLResponse)?.statusCode {
-			if !(200...304 ~= statusCode) {
-				throw APIError.responseCodeUnacceptable(statusCode)
+		
+		if let urlResponse = response.1 as? HTTPURLResponse {
+			if !(200...304 ~= urlResponse.statusCode) {
+				if let decoded = try? JSONDecoder().decode([String: String].self, from: response.0), let message = decoded["message"] {
+					throw APIError.fromMessage(message)
+				} else {
+					throw APIError.responseCodeUnacceptable(urlResponse.statusCode)
+				}
 			}
 		} else {
 			// It shouldn't happen, but we should gracefully handle it anyways.
 			// For now, we're hoping it worked ¯\_(ツ)_/¯.
 			assertionFailure("Response isn't HTTPURLResponse 🤨 [\(#fileID):\(#line)]")
+			
+			if let decoded = try? JSONDecoder().decode([String: String].self, from: response.0), let message = decoded["message"] {
+				throw APIError.fromMessage(message)
+			}
 		}
 	}
 	
@@ -165,7 +175,7 @@ public class PortainerKit {
 	public func attach(to containerID: String, endpointID: Int) throws -> WebSocketPassthroughSubject {
 		let url: URL? = {
 			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
-			components.scheme = components.scheme?.replacingOccurrences(of: "http", with: "ws") ?? "ws"
+			components.scheme = "ws"
 			components.queryItems = [
 				URLQueryItem(name: "token", value: token),
 				URLQueryItem(name: "endpointId", value: String(endpointID)),

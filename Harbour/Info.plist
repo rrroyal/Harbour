@@ -4,17 +4,22 @@
 <dict>
 	<key>AppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).refresh</string>
+	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<false/>
 	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
-		<string>processing</string>
 	</array>
 </dict>
 </plist>

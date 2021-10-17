@@ -19,8 +19,9 @@ extension ContainerListView {
 		var containerStatusSubheadline: some View {
 			Group {
 				if let status = container.status,
-				   let state = container.state {
-					Text("\(status) • \(state.rawValue.capitalizingFirstLetter())")
+				   let state = container.state?.rawValue.capitalizingFirstLetter(),
+				   status != state {
+					Text("\(status) • \(state)")
 				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter() {
 					Text(fallback)
 				}

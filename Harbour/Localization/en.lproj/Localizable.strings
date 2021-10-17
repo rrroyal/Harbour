@@ -29,6 +29,8 @@
 
 // MARK: Settings
 
+"%SETTINGS_BACKGROUND_REFRESH_TITLE%" = "Refresh in the background";
+"%SETTINGS_BACKGROUND_REFRESH_DESCRIPTION%" = "App will send you a notification if something bad happens";
 "%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
 
 "%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable Haptics";

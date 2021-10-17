@@ -12,6 +12,7 @@ struct ContentView: View {
 	@EnvironmentObject var appState: AppState
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
+	@Binding var isSettingsSheetPresented: Bool
 	
 	@State private var searchQuery: String = ""
 	
@@ -21,10 +22,10 @@ struct ContentView: View {
 				ForEach(portainer.endpoints) { endpoint in
 					Button(action: {
 						UIDevice.current.generateHaptic(.light)
-						portainer.selectedEndpoint = endpoint
+						portainer.selectedEndpointID = endpoint.id
 					}) {
 						Text(endpoint.displayName)
-						if portainer.selectedEndpoint?.id == endpoint.id {
+						if portainer.selectedEndpointID == endpoint.id {
 							Image(systemName: "checkmark")
 						}
 					}
@@ -41,9 +42,7 @@ struct ContentView: View {
 				Task {
 					do {
 						try await portainer.getEndpoints()
-						if let endpointID = portainer.selectedEndpoint?.id {
-							try await portainer.getContainers(endpointID: endpointID)
-						}
+						try await portainer.getContainers()
 					} catch {
 						AppState.shared.handle(error)
 					}
@@ -54,14 +53,14 @@ struct ContentView: View {
 			}
 		}) {
 			Image(systemName: "tag")
-				.symbolVariant(portainer.selectedEndpoint != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
+				.symbolVariant(portainer.selectedEndpointID != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
 		}
 		.disabled(!portainer.isLoggedIn)
 	}
 	
 	@ViewBuilder
 	var loggedInView: some View {
-		if portainer.selectedEndpoint != nil {
+		if portainer.selectedEndpointID != nil {
 			if !portainer.containers.isEmpty {
 				Group {
 					if preferences.useGridView {
@@ -87,7 +86,7 @@ struct ContentView: View {
 				if portainer.isLoggedIn {
 					loggedInView
 						.refreshable {
-							if let endpointID = portainer.selectedEndpoint?.id {
+							if let endpointID = portainer.selectedEndpointID {
 								appState.fetchingMainScreenData = true
 								
 								do {
@@ -110,7 +109,7 @@ struct ContentView: View {
 				ToolbarItem(placement: .navigation) {
 					Button(action: {
 						UIDevice.current.generateHaptic(.soft)
-						appState.isSettingsSheetPresented = true
+						isSettingsSheetPresented = true
 					}) {
 						Image(systemName: "gear")
 					}
@@ -123,8 +122,8 @@ struct ContentView: View {
 		}
 		.transition(.opacity)
 		.animation(.easeInOut, value: portainer.isLoggedIn)
-		.animation(.easeInOut, value: portainer.selectedEndpoint != nil)
-		.animation(.easeInOut, value: portainer.containers.count)
+		.animation(.easeInOut, value: portainer.selectedEndpointID)
+		.animation(.easeInOut, value: portainer.containers)
 		/* .onAppear {
 		 	if let endpointID = portainer.selectedEndpoint?.id {
 		 		await portainer.getContainers(endpointID: endpointID)
@@ -135,7 +134,7 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-		ContentView()
+		ContentView(isSettingsSheetPresented: .constant(false))
 			.environmentObject(Portainer.shared)
 	}
 }

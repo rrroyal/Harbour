@@ -11,6 +11,9 @@
 		E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7272E8926736CCF00228494 /* PortainerKit+.swift */; };
 		E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C552674236700A55B5C /* ContainerContextMenu.swift */; };
 		E7339C582674262500A55B5C /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C572674262500A55B5C /* String+.swift */; };
+		E748BD46271CA2AD007C4F15 /* AppState+Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD45271CA2AD007C4F15 /* AppState+Errors.swift */; };
+		E748BD48271CA421007C4F15 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD47271CA421007C4F15 /* AppDelegate.swift */; };
+		E748BD4A271CB749007C4F15 /* AppState+BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */; };
 		E74AC7F326768543003411AA /* Portainer+PortainerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F226768543003411AA /* Portainer+PortainerError.swift */; };
 		E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */; };
 		E751F054270B0B5000980DCA /* Indicators in Frameworks */ = {isa = PBXBuildFile; productRef = E751F053270B0B5000980DCA /* Indicators */; };
@@ -77,6 +80,9 @@
 		E7272E8926736CCF00228494 /* PortainerKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerKit+.swift"; sourceTree = "<group>"; };
 		E7339C552674236700A55B5C /* ContainerContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerContextMenu.swift; sourceTree = "<group>"; };
 		E7339C572674262500A55B5C /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
+		E748BD45271CA2AD007C4F15 /* AppState+Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+Errors.swift"; sourceTree = "<group>"; };
+		E748BD47271CA421007C4F15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+BackgroundTasks.swift"; sourceTree = "<group>"; };
 		E74AC7F226768543003411AA /* Portainer+PortainerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+PortainerError.swift"; sourceTree = "<group>"; };
 		E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+AttachedContainer.swift"; sourceTree = "<group>"; };
 		E751F052270B096B00980DCA /* Indicators */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Indicators; sourceTree = "<group>"; };
@@ -161,6 +167,16 @@
 			path = Container;
 			sourceTree = "<group>";
 		};
+		E748BD44271CA2A0007C4F15 /* AppState */ = {
+			isa = PBXGroup;
+			children = (
+				E75A51D7267384E100857D2B /* AppState.swift */,
+				E748BD45271CA2AD007C4F15 /* AppState+Errors.swift */,
+				E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */,
+			);
+			path = AppState;
+			sourceTree = "<group>";
+		};
 		E74AC7F126768532003411AA /* Portainer */ = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +244,7 @@
 			isa = PBXGroup;
 			children = (
 				E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */,
+				E748BD47271CA421007C4F15 /* AppDelegate.swift */,
 				E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */,
 				E7BF9E762672E15700AAB6A1 /* Data */,
 				E7BF9E832672EF4200AAB6A1 /* Views */,
@@ -305,8 +322,8 @@
 		E7BF9E762672E15700AAB6A1 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				E748BD44271CA2A0007C4F15 /* AppState */,
 				E74AC7F126768532003411AA /* Portainer */,
-				E75A51D7267384E100857D2B /* AppState.swift */,
 				E75A51DF26739ED100857D2B /* Preferences.swift */,
 			);
 			path = Data;
@@ -455,6 +472,7 @@
 				E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */,
 				E7EAE5CC270B6234008CFD20 /* CustomSection.swift in Sources */,
 				E75A51F02673CE3500857D2B /* View+.swift in Sources */,
+				E748BD48271CA421007C4F15 /* AppDelegate.swift in Sources */,
 				E75A51E62673A75700857D2B /* ContainerMountsDetailsView.swift in Sources */,
 				E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */,
 				E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */,
@@ -463,6 +481,7 @@
 				E75A51E22673A1C100857D2B /* Bundle+.swift in Sources */,
 				E7339C582674262500A55B5C /* String+.swift in Sources */,
 				E7BF9E8A2672F2F600AAB6A1 /* UIDevice+.swift in Sources */,
+				E748BD46271CA2AD007C4F15 /* AppState+Errors.swift in Sources */,
 				E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */,
 				E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */,
 				E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */,
@@ -485,6 +504,7 @@
 				E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */,
 				E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */,
 				E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */,
+				E748BD4A271CB749007C4F15 /* AppState+BackgroundTasks.swift in Sources */,
 				E751F05D270B315B00980DCA /* ContainerGridView.swift in Sources */,
 				E75A51E026739ED100857D2B /* Preferences.swift in Sources */,
 				E75A51DE26738A2000857D2B /* ContainerDetailView.swift in Sources */,
@@ -626,7 +646,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
@@ -638,7 +658,6 @@
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -667,7 +686,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = NO;
 				ENABLE_PREVIEWS = YES;
@@ -679,7 +698,6 @@
 				INFOPLIST_KEY_CFBundleVersion = 1;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
-				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

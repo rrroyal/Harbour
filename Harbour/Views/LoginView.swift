@@ -42,7 +42,7 @@ struct LoginView: View {
 					
 					if !endpoint.starts(with: "http") {
 						UIDevice.current.generateHaptic(.selectionChanged)
-						endpoint = "http://\(endpoint)"
+						endpoint = "https://\(endpoint)"
 					}
 					
 					focusedField = .username
