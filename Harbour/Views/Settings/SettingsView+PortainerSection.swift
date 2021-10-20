@@ -31,11 +31,11 @@ extension SettingsView {
 		@ViewBuilder
 		var loggedInView: some View {
 			/// Refresh containers in background
-			ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localizedString, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localizedString, isOn: preferences.$enableBackgroundRefresh)
+			ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, isOn: preferences.$enableBackgroundRefresh)
 				.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
 			
 			/// Auto-refresh interval
-			SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localizedString, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
+			SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
 				.disabled(!Portainer.shared.isLoggedIn)
 			
 			Button("Log out", role: .destructive) {

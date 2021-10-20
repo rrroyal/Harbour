@@ -229,9 +229,9 @@ public class PortainerKit {
 	/// - Parameter request: Request
 	/// - Parameter decoder: JSONDecoder
 	/// - Returns: Output
-	private func fetch<Output: Codable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {
+	private func fetch<Output: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {
 		let response = try await session.data(for: request)
-		
+				
 		do {
 			let decoded = try decoder.decode(Output.self, from: response.0)
 			return decoded

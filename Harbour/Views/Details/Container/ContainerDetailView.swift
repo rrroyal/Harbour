@@ -42,13 +42,13 @@ struct ContainerDetailView: View {
 	@ViewBuilder
 	var generalSection: some View {
 		if let details = container.details {
-			LabeledSection(label: "ID", content: details.id, monospace: true)
-			LabeledSection(label: "Created", content: details.created.formatted())
-			LabeledSection(label: "PID", content: "\(details.state.pid)", monospace: true)
-			LabeledSection(label: "Status", content: container.status ?? details.state.status.rawValue, monospace: true)
-			LabeledSection(label: "Error", content: details.state.error, monospace: true)
-			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted())
-			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted())
+			LabeledSection(label: "ID", content: details.id, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Created", content: details.created.formatted(), hideIfEmpty: false)
+			LabeledSection(label: "PID", content: "\(details.state.pid)", monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Status", content: container.status ?? details.state.status.rawValue, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Error", content: details.state.error, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted(), hideIfEmpty: false)
+			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted(), hideIfEmpty: false)
 		} else {
 			ProgressView()
 				.padding()
@@ -91,7 +91,7 @@ struct ContainerDetailView: View {
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
 		.animation(.easeInOut, value: lastLogsSnippet)
-		.animation(.easeInOut, value: container.details)
+		.animation(.easeInOut, value: container.details?.id)
 		.navigationTitle(container.displayName ?? container.id)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
@@ -152,20 +152,6 @@ struct ContainerDetailView: View {
 }
 
 fileprivate extension ContainerDetailView {
-	struct DisclosureSection<Content>: View where Content: View {
-		let label: String
-		@ViewBuilder let content: () -> Content
-				
-		var body: some View {
-			DisclosureGroup(content: {
-				VStack(spacing: 20, content: content)
-					.padding(.top, .medium)
-			}) {
-				Text(LocalizedStringKey(label))
-			}
-		}
-	}
-	
 	struct GeneralSection: View {
 		let details: PortainerKit.ContainerDetails
 		

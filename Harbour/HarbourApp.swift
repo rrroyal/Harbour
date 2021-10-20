@@ -75,7 +75,7 @@ struct HarbourApp: App {
 		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
 		
 		let indicatorID: String = "ContainerDismissedIndicator"
-		let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localizedString, subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localizedString, dismissType: .after(5), onTap: {
+		let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localized, subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localized, dismissType: .after(5), onTap: {
 			showAttachedContainer()
 			appState.indicators.dismiss(matching: indicatorID)
 		})

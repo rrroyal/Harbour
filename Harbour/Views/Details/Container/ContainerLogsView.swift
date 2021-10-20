@@ -132,7 +132,7 @@ struct ContainerLogsView: View {
 				}
 			}
 		}
-		.background(emptyDisclaimer)
+		.overlay(emptyDisclaimer)
 		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {

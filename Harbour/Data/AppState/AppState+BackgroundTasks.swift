@@ -39,16 +39,17 @@ extension AppState {
 		
 		WidgetCenter.shared.reloadAllTimelines()
 		Preferences.shared.lastBackgroundTaskDate = Date()
-		scheduleBackgroundRefreshTask()
 
 		Task {
 			do {
 				let savedState = Portainer.shared.containers.reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }
-				let currentState = (try await Portainer.shared.getContainers()).reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }
-				let differences = currentState.filter { savedState[$0.key] != $0.value }
 				
-				if savedState.count != currentState.count || !differences.isEmpty {
-					logger.info("(Background refresh) savedState.count (\(savedState.count)) != currentState.count (\(currentState.count)) || differences.count (\(differences.count)) > 0!")
+				let newContainers = try await Portainer.shared.getContainers()
+				let newState = newContainers.reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }
+				let differences = newState.filter { savedState[$0.key] != $0.value }
+				
+				if differences.isEmpty {
+					logger.info("(Background refresh) differences.count (\(differences.count)) > 0!")
 					
 					let notificationID = "ContainerStatusNotification-\(Date().timeIntervalSinceReferenceDate)"
 					let content = UNMutableNotificationContent()
@@ -57,11 +58,11 @@ extension AppState {
 					content.sound = .default
 					
 					if differences.count == 1 {
-						let container = Portainer.shared.containers.first(where: { $0.id == differences.first?.key })
+						let container = newContainers.first(where: { $0.id == differences.first?.key })
 						content.title = container?.displayName ?? container?.id ?? differences.first?.key ?? "Unknown container"
 						content.body = container?.status ?? differences.first?.value ?? "unknown"
 					} else {
-						let containers = Portainer.shared.containers.filter({ differences.keys.contains($0.id) }).map({ $0.displayName ?? $0.id })
+						let containers = newContainers.filter({ differences.keys.contains($0.id) }).map({ $0.displayName ?? $0.id })
 						content.title = "\(differences.count) containers changed!"
 						content.body = ListFormatter.localizedString(byJoining: containers)
 					}

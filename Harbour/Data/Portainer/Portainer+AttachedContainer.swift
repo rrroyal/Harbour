@@ -67,7 +67,7 @@ extension Portainer {
 				case .failure(let error):
 					update(String(describing: error))
 					
-					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localizedString, subheadline: error.localizedDescription, dismissType: .after(5))
+					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localized, subheadline: error.localizedDescription, dismissType: .after(5))
 					AppState.shared.handle(error, indicator: indicator)
 			}
 		}

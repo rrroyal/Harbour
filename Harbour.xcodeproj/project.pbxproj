@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E720D0202720B838004A21FD /* DisclosureSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E720D01F2720B838004A21FD /* DisclosureSection.swift */; };
 		E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72112E9267F496B00D6004D /* LabeledSection.swift */; };
 		E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7272E8926736CCF00228494 /* PortainerKit+.swift */; };
 		E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C552674236700A55B5C /* ContainerContextMenu.swift */; };
@@ -76,6 +77,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E720D01F2720B838004A21FD /* DisclosureSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureSection.swift; sourceTree = "<group>"; };
 		E72112E9267F496B00D6004D /* LabeledSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledSection.swift; sourceTree = "<group>"; };
 		E7272E8926736CCF00228494 /* PortainerKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerKit+.swift"; sourceTree = "<group>"; };
 		E7339C552674236700A55B5C /* ContainerContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerContextMenu.swift; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 				E75A51E32673A4F000857D2B /* NavigationLinkLabel.swift */,
 				E7339C552674236700A55B5C /* ContainerContextMenu.swift */,
 				E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */,
+				E720D01F2720B838004A21FD /* DisclosureSection.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -494,6 +497,7 @@
 				E7B10B7426CD82A2005B82BC /* SettingsView+PortainerSection.swift in Sources */,
 				E751F05B270B315200980DCA /* ContainerListView+ContainerCell.swift in Sources */,
 				E7B10B7626CD82D5005B82BC /* SettingsView+InterfaceSection.swift in Sources */,
+				E720D0202720B838004A21FD /* DisclosureSection.swift in Sources */,
 				E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */,
 				E75A51E42673A4F000857D2B /* NavigationLinkLabel.swift in Sources */,
 				E75A51EC2673A7F300857D2B /* ContainerConfigDetailsView.swift in Sources */,

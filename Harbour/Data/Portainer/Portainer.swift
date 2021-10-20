@@ -116,9 +116,9 @@ final class Portainer: ObservableObject {
 			Preferences.shared.endpointURL = url.absoluteString
 		}
 		
-		try keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localizedString).label("Harbour (token)").set(token, key: KeychainKeys.token)
+		try keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localized).label("Harbour (token)").set(token, key: KeychainKeys.token)
 		if savePassword {
-			let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localizedString)
+			let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localized)
 			try keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
 			try keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
 		}

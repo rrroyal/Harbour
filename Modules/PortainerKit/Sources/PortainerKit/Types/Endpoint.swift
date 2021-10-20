@@ -9,7 +9,7 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	class Endpoint: Identifiable, Codable {
+	class Endpoint: Identifiable, Decodable {
 		enum CodingKeys: String, CodingKey {
 			case authorizedTeams = "AuthorizedTeams"
 			case authorizedUsers = "AuthorizedUsers"

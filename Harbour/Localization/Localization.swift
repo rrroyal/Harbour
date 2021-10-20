@@ -37,5 +37,5 @@ enum Localization: String {
 	
 	case WEBSOCKET_DISCONNECTED_TITLE = "%WEBSOCKET_DISCONNECTED_TITLE%"
 	
-	var localizedString: String { NSLocalizedString(self.rawValue, comment: "") }
+	var localized: String { NSLocalizedString(self.rawValue, comment: "") }
 }
