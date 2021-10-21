@@ -17,10 +17,10 @@ public class PortainerKit {
 	/// Endpoint URL
 	public let url: URL
 	
-	// MARK: Private properties
+	/// Used `URLSession`
+	public let session: URLSession
 	
-	/// Module-private `URLSession`
-	private let session: URLSession
+	// MARK: Private properties
 	
 	/// Authorization token
 	public var token: String?

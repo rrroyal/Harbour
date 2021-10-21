@@ -16,6 +16,30 @@ struct ContentView: View {
 	
 	@State private var searchQuery: String = ""
 	
+	var currentState: ContentViewDataState {
+		guard !appState.fetchingMainScreenData else {
+			return .fetching
+		}
+		
+		guard portainer.isLoggedIn || preferences.endpointURL != nil else {
+			return .notLoggedIn
+		}
+		
+		if portainer.endpoints.isEmpty {
+			if portainer.selectedEndpointID != nil {
+				return .noContainers
+			} else {
+				if portainer.endpoints.isEmpty {
+					return .noEndpointsAvailable
+				} else {
+					return .noEndpointSelected
+				}
+			}
+		} else {
+			return .finished
+		}
+	}
+	
 	var toolbarMenu: some View {
 		Menu(content: {
 			if !portainer.endpoints.isEmpty {
@@ -59,9 +83,9 @@ struct ContentView: View {
 	}
 	
 	@ViewBuilder
-	var loggedInView: some View {
-		if portainer.selectedEndpointID != nil {
-			if !portainer.containers.isEmpty {
+	var content: some View {
+		switch currentState {
+			case .finished:
 				Group {
 					if preferences.useGridView {
 						ContainerGridView(containers: portainer.containers.filtered(query: searchQuery))
@@ -70,65 +94,64 @@ struct ContentView: View {
 					}
 				}
 				.searchable(text: $searchQuery)
-			} else {
-				Text("No containers")
-					.opacity(Globals.Views.secondaryOpacity)
-			}
-		} else {
-			Text("Select endpoint")
-				.opacity(Globals.Views.secondaryOpacity)
+			default:
+				Text(currentState.label ?? "")
+					.foregroundStyle(.tertiary)
 		}
 	}
 	
 	var body: some View {
 		NavigationView {
-			Group {
-				if portainer.isLoggedIn {
-					loggedInView
-						.refreshable {
-							if let endpointID = portainer.selectedEndpointID {
-								appState.fetchingMainScreenData = true
-								
-								do {
-									try await portainer.getContainers(endpointID: endpointID)
-								} catch {
-									AppState.shared.handle(error)
-								}
-								
-								appState.fetchingMainScreenData = false
-							}
+			content
+				.navigationTitle("Harbour")
+				.navigationBarTitleDisplayMode(.inline)
+				.toolbar {
+					ToolbarItem(placement: .navigation) {
+						Button(action: {
+							UIDevice.current.generateHaptic(.soft)
+							isSettingsSheetPresented = true
+						}) {
+							Image(systemName: "gear")
 						}
-				} else {
-					Text("Not logged in")
-						.opacity(Globals.Views.secondaryOpacity)
-				}
-			}
-			.navigationTitle("Harbour")
-			.navigationBarTitleDisplayMode(.inline)
-			.toolbar {
-				ToolbarItem(placement: .navigation) {
-					Button(action: {
-						UIDevice.current.generateHaptic(.soft)
-						isSettingsSheetPresented = true
-					}) {
-						Image(systemName: "gear")
 					}
+					
+					ToolbarTitle(title: "Harbour", subtitle: appState.fetchingMainScreenData ? "Refreshing..." : nil)
+					
+					ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 				}
-				
-				ToolbarTitle(title: "Harbour", subtitle: appState.fetchingMainScreenData ? "Refreshing..." : nil)
-				
-				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
-			}
 		}
 		.transition(.opacity)
 		.animation(.easeInOut, value: portainer.isLoggedIn)
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
-		/* .onAppear {
-		 	if let endpointID = portainer.selectedEndpoint?.id {
-		 		await portainer.getContainers(endpointID: endpointID)
-		 	}
-		 } */
+		.animation(.easeInOut, value: currentState)
+		.onAppear {
+			if !portainer.isLoggedIn {
+				appState.fetchingMainScreenData = preferences.endpointURL != nil
+			}
+		}
+	}
+}
+
+extension ContentView {
+	enum ContentViewDataState {
+		case fetching
+		case notLoggedIn
+		case noEndpointSelected
+		case noEndpointsAvailable
+		case noContainers
+		case finished
+		
+		var label: String? {
+			switch self {
+				case .fetching: return "Loading..."
+				case .notLoggedIn: return "Not logged in"
+				case .noEndpointSelected: return "No endpoint selected"
+				case .noEndpointsAvailable: return "No endpoints available"
+				case .noContainers: return "No containers"
+				case .finished: return nil
+			}
+		}
 	}
 }
 

@@ -16,7 +16,7 @@ struct ContainerConfigDetailsView: View {
 	var emptyDisclaimer: some View {
 		if config == nil /* && hostConfig == nil */ {
 			Text("No config")
-				.opacity(Globals.Views.secondaryOpacity)
+				.foregroundStyle(.tertiary)
 		}
 	}
 	

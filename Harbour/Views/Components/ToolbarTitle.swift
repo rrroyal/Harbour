@@ -22,7 +22,7 @@ struct ToolbarTitle: ToolbarContent {
 				if let subtitle = subtitle {
 					Text(subtitle)
 						.font(.footnote)
-						.opacity(Globals.Views.secondaryOpacity)
+						.foregroundStyle(.tertiary)
 						.fixedSize(horizontal: true, vertical: true)
 						.transition(.move(edge: .bottom).combined(with: .opacity))
 				}

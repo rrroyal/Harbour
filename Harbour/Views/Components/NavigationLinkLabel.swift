@@ -30,8 +30,7 @@ struct NavigationLinkLabel: View {
 			
 			Image(systemName: "chevron.forward")
 				.font(.subheadline.weight(.bold))
-				.foregroundStyle(.secondary)
-				.opacity(Globals.Views.secondaryOpacity)
+				.foregroundStyle(.tertiary)
 		}
 		.padding(.medium)
 		.background(

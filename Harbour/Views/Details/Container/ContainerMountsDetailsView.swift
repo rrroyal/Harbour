@@ -16,7 +16,7 @@ struct ContainerMountsDetailsView: View {
 	var emptyDisclaimer: some View {
 		if mounts?.isEmpty ?? true && details?.isEmpty ?? true {
 			Text("No mounts")
-				.opacity(Globals.Views.secondaryOpacity)
+				.foregroundStyle(.tertiary)
 		}
 	}
 	

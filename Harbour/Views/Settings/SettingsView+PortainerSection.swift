@@ -28,58 +28,52 @@ extension SettingsView {
 			return formatter.string(from: preferences.autoRefreshInterval) ?? "\(preferences.autoRefreshInterval) second(s)"
 		}
 		
-		@ViewBuilder
-		var loggedInView: some View {
-			/// Refresh containers in background
-			ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, isOn: preferences.$enableBackgroundRefresh)
-				.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
-			
-			/// Auto-refresh interval
-			SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
-				.disabled(!Portainer.shared.isLoggedIn)
-			
-			Button("Log out", role: .destructive) {
-				UIDevice.current.generateHaptic(.warning)
-				isLogoutWarningPresented = true
-			}
-			.alert(isPresented: $isLogoutWarningPresented) {
-				Alert(title: Text("Are you sure?"),
-					  primaryButton: .destructive(Text("Yes"), action: {
-					UIDevice.current.generateHaptic(.heavy)
-					portainer.logOut()
-				}),
-					  secondaryButton: .cancel()
-				)
-			}
-		}
-		
-		var notLoggedInView: some View {
-			Button("Log in") {
-				UIDevice.current.generateHaptic(.soft)
-				isLoginSheetPresented = true
-			}
-		}
-		
 		var body: some View {
-			Section("Portainer") {
-				/// Endpoint URL
-				if let endpointURL = Preferences.shared.endpointURL {
-					Labeled(label: "URL", content: endpointURL, monospace: true, lineLimit: 1)
+			Group {
+				Section("Portainer") {
+					/// Endpoint URL
+					if let endpointURL = Preferences.shared.endpointURL {
+						Labeled(label: "URL", content: endpointURL, monospace: true, lineLimit: 1)
+					}
+					
+					if preferences.endpointURL != nil {
+						Button("Log out", role: .destructive) {
+							UIDevice.current.generateHaptic(.warning)
+							isLogoutWarningPresented = true
+						}
+						.alert(isPresented: $isLogoutWarningPresented) {
+							Alert(title: Text("Are you sure?"),
+								  primaryButton: .destructive(Text("Yes"), action: {
+								UIDevice.current.generateHaptic(.heavy)
+								portainer.logOut()
+							}),
+								  secondaryButton: .cancel()
+							)
+						}
+					} else {
+						Button("Log in") {
+							UIDevice.current.generateHaptic(.soft)
+							isLoginSheetPresented = true
+						}
+					}
+				}
+				.sheet(isPresented: $isLoginSheetPresented) {
+					LoginView()
 				}
 				
-				/// Logged in/not logged in label
-				if portainer.isLoggedIn {
-					loggedInView
-				} else {
-					notLoggedInView
+				if preferences.endpointURL != nil {
+					Section("Data") {
+						/// Refresh containers in background
+						ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, isOn: preferences.$enableBackgroundRefresh)
+							.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
+						
+						/// Auto-refresh interval
+						SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
+					}
 				}
 			}
-			.animation(.easeInOut, value: portainer.isLoggedIn)
-			.animation(.easeInOut, value: Preferences.shared.endpointURL)
 			.transition(.opacity)
-			.sheet(isPresented: $isLoginSheetPresented) {
-				LoginView()
-			}
+			.animation(.easeInOut, value: preferences.endpointURL)
 		}
 		
 		private func setupBackgroundRefresh(isOn: Bool) {

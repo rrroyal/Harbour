@@ -16,10 +16,8 @@ final class Portainer: ObservableObject {
 
 	public static let shared: Portainer = Portainer()
 	
-	// MARK: Miscellaneous
-	
-	@Published public var isLoggedIn: Bool = false
-	
+	@Published public private(set) var isLoggedIn: Bool = false
+			
 	// MARK: Endpoint
 	
 	@Published public var selectedEndpointID: Int? = nil {
@@ -82,8 +80,9 @@ final class Portainer: ObservableObject {
 			if let token = try? keychain.get(KeychainKeys.token) {
 				logger.debug("Has token, cool! Using it 😊")
 				api = PortainerKit(url: url, token: token)
+				isLoggedIn = true
 				DispatchQueue.main.async {
-					 Task {
+					Task {
 						AppState.shared.fetchingMainScreenData = true
 						_ = try? await self.getEndpoints()
 						AppState.shared.fetchingMainScreenData = false
@@ -130,7 +129,9 @@ final class Portainer: ObservableObject {
 		
 		try? keychain.removeAll()
 		
-		self.api = nil
+		api = nil
+		
+		Preferences.shared.endpointURL = nil
 		
 		DispatchQueue.main.async {
 			self.isLoggedIn = false
@@ -155,7 +156,6 @@ final class Portainer: ObservableObject {
 			logger.debug("Got \(endpoints.count) endpoint(s).")
 			DispatchQueue.main.async { [weak self] in
 				self?.endpoints = endpoints
-				self?.isLoggedIn = true
 			}
 			
 			return endpoints

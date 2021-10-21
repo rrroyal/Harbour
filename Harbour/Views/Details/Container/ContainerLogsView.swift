@@ -38,7 +38,7 @@ struct ContainerLogsView: View {
 	var emptyDisclaimer: some View {
 		if logs.isEmpty {
 			Text("Empty")
-				.opacity(Globals.Views.secondaryOpacity)
+				.foregroundStyle(.tertiary)
 		}
 	}
 	
