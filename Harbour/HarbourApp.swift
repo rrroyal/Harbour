@@ -16,32 +16,17 @@ struct HarbourApp: App {
 	@StateObject var portainer: Portainer = .shared
 	@StateObject var preferences: Preferences = .shared
 	
-	@State var isSettingsSheetPresented: Bool = false
-	@State var isSetupSheetPresented: Bool = !Preferences.shared.finishedSetup
-	@State var isContainerConsoleSheetPresented: Bool = false
-
 	var body: some Scene {
 		WindowGroup {
-			ContentView(isSettingsSheetPresented: $isSettingsSheetPresented)
-				.indicatorOverlay(model: appState.indicators)
-				.sheet(isPresented: $isSettingsSheetPresented) {
-					SettingsView()
-						.environmentObject(portainer)
-						.environmentObject(preferences)
-				}
-				.sheet(isPresented: $isSetupSheetPresented, onDismiss: { Preferences.shared.finishedSetup = true }) {
-					SetupView()
-				}
-				.sheet(isPresented: $isContainerConsoleSheetPresented, onDismiss: onContainerConsoleViewDismissed) {
-					ContainerConsoleView()
-				}
+			ContentView()
 				.onChange(of: scenePhase, perform: onScenePhaseChange)
 				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
-				.onReceive(NotificationCenter.default.publisher(for: .ShowAttachedContainer, object: nil), perform: { _ in showAttachedContainer() })
 				.defaultAppStorage(.group)
 				.environmentObject(appState)
 				.environmentObject(portainer)
 				.environmentObject(preferences)
+				.environment(\.useContainerGridView, preferences.useGridView)
+				.environment(\.useColoredContainerCells, preferences.useColoredContainerCells)
 		}
 	}
 	
@@ -62,32 +47,7 @@ struct HarbourApp: App {
 	
 	private func onDeviceDidShake(_: Notification) {
 		if portainer.attachedContainer != nil {
-			showAttachedContainer()
+			appState.showAttachedContainer()
 		}
-	}
-	
-	private func onContainerConsoleViewDismissed() {
-		guard preferences.persistAttachedContainer else {
-			portainer.attachedContainer = nil
-			return
-		}
-		
-		guard preferences.displayContainerDismissedPrompt && portainer.attachedContainer != nil else { return }
-		
-		let indicatorID: String = "ContainerDismissedIndicator"
-		let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localized, subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localized, dismissType: .after(5), onTap: {
-			showAttachedContainer()
-			appState.indicators.dismiss(matching: indicatorID)
-		})
-		appState.indicators.display(indicator)
-	}
-	
-	private func showAttachedContainer() {
-		guard portainer.attachedContainer != nil else {
-			return
-		}
-		
-		UIDevice.current.generateHaptic(.light)
-		isContainerConsoleSheetPresented = true
 	}
 }

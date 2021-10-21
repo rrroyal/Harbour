@@ -9,18 +9,24 @@
 // MARK: Generics
 
 "Refresh" = "Refresh";
+"Loading..." = "Loading...";
 "Are you sure?" = "Are you sure?";
-"Yes" = "Yes";
+"Yup!" = "Yup!";
+"Nevermind" = "Nevermind";
 "Log in" = "Log in";
 "Log out" = "Log out";
 "Not logged in" = "Not logged in";
 
+"No endpoints" = "No endpoints";
+"Not logged in" = "Not logged in";
+"No endpoint selected" = "No endpoint selected";
+"No endpoints available" = "No endpoints available";
+"No containers" = "No containers";
+"Select container" = "Select container";
+
 // MARK: Docker
 
 "Endpoint" = "Endpoint";
-"No endpoints" = "No endpoints";
-"No containers" = "No containers";
-"Select endpoint" = "Select endpoint";
 
 "Mounts" = "Mounts";
 "Network" = "Network";
@@ -29,16 +35,22 @@
 
 // MARK: Settings
 
+"Data" = "Data";
+"Interface" = "Interface";
+"Other" = "Other";
+
+"%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
+"%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connected to the attached container after dismissing it";
 "%SETTINGS_BACKGROUND_REFRESH_TITLE%" = "Refresh in the background";
-"%SETTINGS_BACKGROUND_REFRESH_DESCRIPTION%" = "App will send you a notification if something bad happens";
+"%SETTINGS_BACKGROUND_REFRESH_DESCRIPTION%" = "App will send you a notification if something bad happens 🤞";
 "%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
 
-"%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable Haptics";
+"%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
 "%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
-"%SETTINGS_USE_GRID_VIEW_TITLE%" = "Use Grid View";
+"%SETTINGS_USE_GRID_VIEW_TITLE%" = "Use grid view";
 "%SETTINGS_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility";
-"%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
-"%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connection to the attached container after dismissing";
+"%SETTINGS_USE_COLORED_CONTAINER_CELLS_TITLE%" = "Use colorful container cells";
+"%SETTINGS_USE_COLORED_CONTAINER_CELLS_DESCRIPTION%" = "✨ Add some sparkle ✨";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container";
 

@@ -76,7 +76,7 @@ struct ContainerDetailView: View {
 	
 	var body: some View {
 		ScrollView {
-			LazyVStack(spacing: 20) {
+			LazyVStack(spacing: 20) {				
 				buttonsSection
 				generalSection
 				logsSection
@@ -91,7 +91,6 @@ struct ContainerDetailView: View {
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
 		.animation(.easeInOut, value: lastLogsSnippet)
-		.animation(.easeInOut, value: container.details?.id)
 		.navigationTitle(container.displayName ?? container.id)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
@@ -121,7 +120,8 @@ struct ContainerDetailView: View {
 		}
 		.refreshable { await refresh() }
 		.task { await refresh() }
-		.onReceive(portainer.refreshCurrentContainerPassthroughSubject) {
+		.onReceive(portainer.refreshContainerPassthroughSubject) { containerID in
+			guard containerID == container.id else { return }
 			Task { await refresh() }
 		}
 	}

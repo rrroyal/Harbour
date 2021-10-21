@@ -21,6 +21,7 @@ class Preferences: ObservableObject {
 	
 	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .group) public var enableHaptics: Bool = true
 	@AppStorage(Preferences.Key.useGridView.rawValue, store: .group) public var useGridView: Bool = false
+	@AppStorage(Preferences.Key.useColoredContainerCells.rawValue, store: .group) public var useColoredContainerCells: Bool = false
 	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .group) public var persistAttachedContainer: Bool = true
 	@AppStorage(Preferences.Key.displayContainerDismissedPrompt.rawValue, store: .group) public var displayContainerDismissedPrompt: Bool = true
 
@@ -55,6 +56,7 @@ extension Preferences {
 		
 		case enableHaptics = "EnableHaptics"
 		case useGridView = "UseGridView"
+		case useColoredContainerCells = "UseColoredContainerCells"
 		case persistAttachedContainer = "PersistAttachedContainer"
 		case displayContainerDismissedPrompt = "DisplayContainerDismissedPrompt"
 		

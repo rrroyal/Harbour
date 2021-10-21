@@ -56,7 +56,7 @@ final class Portainer: ObservableObject {
 	
 	// MARK: Containers
 	
-	public let refreshCurrentContainerPassthroughSubject: PassthroughSubject<Void, Never> = .init()
+	public let refreshContainerPassthroughSubject: PassthroughSubject<String, Never> = .init()
 	@Published public var attachedContainer: AttachedContainer? = nil
 	@Published public private(set) var containers: [PortainerKit.Container] = []
 	

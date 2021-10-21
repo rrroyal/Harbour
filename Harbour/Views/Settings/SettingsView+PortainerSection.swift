@@ -41,14 +41,15 @@ extension SettingsView {
 							UIDevice.current.generateHaptic(.warning)
 							isLogoutWarningPresented = true
 						}
-						.alert(isPresented: $isLogoutWarningPresented) {
-							Alert(title: Text("Are you sure?"),
-								  primaryButton: .destructive(Text("Yes"), action: {
+						.confirmationDialog("Are you sure?", isPresented: $isLogoutWarningPresented, titleVisibility: .visible) {
+							Button("Yup!", role: .destructive) {
 								UIDevice.current.generateHaptic(.heavy)
 								portainer.logOut()
-							}),
-								  secondaryButton: .cancel()
-							)
+							}
+							
+							Button("Nevermind", role: .cancel) {
+								UIDevice.current.generateHaptic(.soft)
+							}
 						}
 					} else {
 						Button("Log in") {
@@ -63,6 +64,9 @@ extension SettingsView {
 				
 				if preferences.endpointURL != nil {
 					Section("Data") {
+						/// Persist attached container
+						ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE.localized, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION.localized, isOn: $preferences.persistAttachedContainer)
+						
 						/// Refresh containers in background
 						ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, isOn: preferences.$enableBackgroundRefresh)
 							.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
@@ -96,7 +100,6 @@ extension SettingsView {
 		
 		private func setupAutoRefreshTimer(isEditing: Bool) {
 			guard !isEditing else { return }
-			
 			AppState.shared.setupAutoRefreshTimer(interval: preferences.autoRefreshInterval)
 		}
 	}

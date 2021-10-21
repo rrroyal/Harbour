@@ -19,8 +19,8 @@ extension SettingsView {
 				/// Use Grid View
 				ToggleOption(label: Localization.SETTINGS_USE_GRID_VIEW_TITLE.localized, description: Localization.SETTINGS_USE_GRID_VIEW_DESCRIPTION.localized, isOn: $preferences.useGridView)
 				
-				/// Persist attached container
-				ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE.localized, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION.localized, isOn: $preferences.persistAttachedContainer)
+				/// Use Colored Container Cells
+				ToggleOption(label: Localization.SETTINGS_USE_COLORED_CONTAINER_CELLS_TITLE.localized, description: Localization.SETTINGS_USE_COLORED_CONTAINER_CELLS_DESCRIPTION.localized, isOn: $preferences.useColoredContainerCells)
 				
 				/// Display "Container dismissed" prompt
 				ToggleOption(label: Localization.SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE.localized, description: Localization.SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION.localized, isOn: $preferences.displayContainerDismissedPrompt)
