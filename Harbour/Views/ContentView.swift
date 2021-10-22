@@ -123,11 +123,11 @@ struct ContentView: View {
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
 		.animation(.easeInOut, value: currentState)
-		.onAppear {
+		/* .onAppear {
 			if !portainer.isLoggedIn {
-				appState.fetchingMainScreenData = preferences.endpointURL != nil
+				appState.fetchingMainScreenData = preferences.hasSavedCredentials
 			}
-		}
+		} */
 		.indicatorOverlay(model: sceneState.indicators)
 		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()

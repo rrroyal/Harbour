@@ -12,6 +12,7 @@ class Preferences: ObservableObject {
 	public static let shared: Preferences = Preferences()
 
 	@AppStorage(Preferences.Key.finishedSetup.rawValue, store: .group) public var finishedSetup: Bool = false
+	@AppStorage(Preferences.Key.hasSavedCredentials.rawValue, store: .group) public var hasSavedCredentials: Bool = false
 	
 	@AppStorage(Preferences.Key.endpointURL.rawValue, store: .group) public var endpointURL: String?
 	@AppStorage(Preferences.Key.selectedEndpointID.rawValue, store: .group) public var selectedEndpointID: Int?
@@ -47,6 +48,7 @@ class Preferences: ObservableObject {
 extension Preferences {
 	enum Key: String, CaseIterable {
 		case finishedSetup = "FinishedSetup"
+		case hasSavedCredentials = "HasSavedCredentials"
 		
 		case endpointURL = "EndpointURL"
 		case selectedEndpointID = "SelectedEndpointID"

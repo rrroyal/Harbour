@@ -37,7 +37,7 @@ extension SettingsView {
 						Labeled(label: "URL", content: endpointURL, monospace: true, lineLimit: 1)
 					}
 					
-					if preferences.endpointURL != nil {
+					if preferences.hasSavedCredentials {
 						Button("Log out", role: .destructive) {
 							UIDevice.current.generateHaptic(.warning)
 							isLogoutWarningPresented = true
@@ -45,7 +45,7 @@ extension SettingsView {
 						.confirmationDialog("Are you sure?", isPresented: $isLogoutWarningPresented, titleVisibility: .visible) {
 							Button("Yup!", role: .destructive) {
 								UIDevice.current.generateHaptic(.heavy)
-								portainer.logOut()
+								portainer.logOut(removeEndpointURL: true)
 							}
 							
 							Button("Nevermind", role: .cancel) {

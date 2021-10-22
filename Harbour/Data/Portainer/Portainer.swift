@@ -85,7 +85,7 @@ final class Portainer: ObservableObject {
 				DispatchQueue.main.async {
 					Task {
 						AppState.shared.fetchingMainScreenData = true
-						_ = try? await self.getEndpoints()
+						try await self.getEndpoints()
 						AppState.shared.fetchingMainScreenData = false
 					}
 				}
@@ -103,36 +103,40 @@ final class Portainer: ObservableObject {
 	///   - savePassword: Should password be saved?
 	/// - Returns: Result containing JWT token or error.
 	public func login(url: URL, username: String, password: String, savePassword: Bool) async throws {
-		logger.debug("Logging in! URL: \(url.absoluteString, privacy: .sensitive)")
+		logger.debug("Logging in, URL: \(url.absoluteString, privacy: .sensitive)...")
 		let api = PortainerKit(url: url)
 		self.api = api
 		
-		let token = try await api.login(username: username, password: password)
-		
-		logger.debug("Successfully logged in!")
-		
-		DispatchQueue.main.async {
-			self.isLoggedIn = true
-			Preferences.shared.endpointURL = url.absoluteString
-		}
-		
-		try keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localized).label("Harbour (token)").set(token, key: KeychainKeys.token)
-		if savePassword {
-			let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localized)
-			try keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
-			try keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
+		do {
+			let token = try await api.login(username: username, password: password)
+			
+			logger.debug("Successfully logged in!")
+			
+			DispatchQueue.main.async {
+				self.isLoggedIn = true
+				Preferences.shared.endpointURL = url.absoluteString
+				Preferences.shared.hasSavedCredentials = true
+			}
+			
+			try keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localized).label("Harbour (token)").set(token, key: KeychainKeys.token)
+			if savePassword {
+				let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localized)
+				try keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
+				try keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
+			}
+		} catch {
+			handle(error)
+			throw error
 		}
 	}
 	
 	/// Logs out, removing all local authentication.
-	public func logOut() {
+	public func logOut(removeEndpointURL: Bool = false) {
 		logger.info("Logging out")
 		
 		try? keychain.removeAll()
 		
 		api = nil
-		
-		Preferences.shared.endpointURL = nil
 		
 		DispatchQueue.main.async {
 			self.isLoggedIn = false
@@ -140,6 +144,12 @@ final class Portainer: ObservableObject {
 			self.endpoints = []
 			self.containers = []
 			self.attachedContainer = nil
+			Preferences.shared.hasSavedCredentials = false
+			AppState.shared.fetchingMainScreenData = false
+			
+			if removeEndpointURL {
+				Preferences.shared.endpointURL = nil
+			}
 		}
 	}
 	
@@ -296,29 +306,38 @@ final class Portainer: ObservableObject {
 	private func handle(_ error: Error, _function: StaticString = #function, _fileID: StaticString = #fileID, _line: Int = #line) {
 		logger.error("\(String(describing: error)) (\(_function) [\(_fileID):\(_line)])")
 		
+		// PortainerKit
 		if let error = error as? PortainerKit.APIError {
-			// PortainerKit
 			switch error {
-				case .invalidJWTToken:
-					// Check if has stored creds
-					if let url = api?.url, let username = try? keychain.get(KeychainKeys.username), let password = try? keychain.get(KeychainKeys.password) {
-						logger.debug("Received `invalidJWTToken`, but has credentials!")
+				case .invalidJWTToken: do {
+					try? keychain.remove(KeychainKeys.token)
+					
+					if let urlString = api?.url.absoluteString ?? Preferences.shared.endpointURL,
+					   let url = URL(string: urlString),
+					   let username = try? keychain.get(KeychainKeys.username),
+					   let password = try? keychain.get(KeychainKeys.password) {
+						logger.debug("Received `invalidJWTToken`, but has credentials! Trying to refresh...")
+						
 						Task {
 							do {
 								try await login(url: url, username: username, password: password, savePassword: true)
 								try await self.getEndpoints()
 							} catch {
-								logger.debug("Credentials invalid, logging out :(")
-								logOut()
+								if let error = error as? PortainerKit.APIError, error == .invalidCredentials {
+									logger.debug("Credentials invalid, logging out :(")
+									logOut()
+								} else {
+									throw error
+								}
 							}
 						}
 					}
+				}
+				
 				default:
 					break
 			}
 		}
-		
-		// AppState.shared.handle(error, _fileID: _fileID, _line: _line)
 	}
 }
 

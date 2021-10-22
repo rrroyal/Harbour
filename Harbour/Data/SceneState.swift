@@ -19,10 +19,6 @@ class SceneState: ObservableObject {
 	
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
 	
-	init() {
-		logger.info("Initialized SceneState")
-	}
-	
 	// MARK: - Attached container
 	
 	func onContainerConsoleViewDismissed() {
@@ -37,10 +33,15 @@ class SceneState: ObservableObject {
 				
 		if Preferences.shared.displayContainerDismissedPrompt && attachedContainer.isConnected {
 			let indicatorID: String = "ContainerDismissedIndicator"
-			let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localized, subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localized, dismissType: .after(5), onTap: {
-				self.showAttachedContainer()
-				self.indicators.dismiss(matching: indicatorID)
-			})
+			let indicator: Indicators.Indicator = .init(id: indicatorID,
+														icon: "terminal.fill",
+														headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localized,
+														subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localized,
+														dismissType: .after(5),
+														onTap: { [weak self] in
+															self?.showAttachedContainer()
+															self?.indicators.dismiss(matching: indicatorID)
+														})
 			indicators.display(indicator)
 		}
 	}

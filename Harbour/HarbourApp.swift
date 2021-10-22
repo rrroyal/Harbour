@@ -33,7 +33,9 @@ struct HarbourApp: App {
 		switch scenePhase {
 			case .active:
 				Task {
-					try? await portainer.getContainers()
+					if portainer.isLoggedIn || preferences.hasSavedCredentials {
+						try await portainer.getContainers()
+					}
 				}
 			case .background:
 				if preferences.enableBackgroundRefresh {

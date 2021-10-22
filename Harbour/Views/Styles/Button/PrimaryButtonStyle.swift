@@ -25,7 +25,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.foregroundColor(isEnabled ? foregroundColor : .secondary)
 			.font(font)
 			.padding()
-			// .frame(maxWidth: Globals.Views.maxButtonWidth, alignment: .center)
+			.frame(maxWidth: .infinity, alignment: .center)
 			.background(isEnabled ? backgroundColor : Color(uiColor: .systemGray5))
 			.cornerRadius(Globals.Views.cornerRadius)
 			// .compositingGroup()

@@ -41,11 +41,10 @@ class AppState: ObservableObject {
 		
 		autoRefreshTimer = Timer.publish(every: interval, on: .current, in: .common)
 			.autoconnect()
+			.receive(on: DispatchQueue.main)
 			.sink { _ in
 				Task { [weak self] in
-					DispatchQueue.main.async { [weak self] in
-						self?.fetchingMainScreenData = true
-					}
+					self?.fetchingMainScreenData = true
 					
 					do {
 						try await Portainer.shared.getContainers()
@@ -53,9 +52,7 @@ class AppState: ObservableObject {
 						self?.handle(error)
 					}
 					
-					DispatchQueue.main.async { [weak self] in
-						self?.fetchingMainScreenData = false
-					}
+					self?.fetchingMainScreenData = false
 				}
 			}
 	}
