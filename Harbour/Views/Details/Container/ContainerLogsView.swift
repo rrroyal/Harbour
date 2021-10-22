@@ -9,6 +9,7 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerLogsView: View {
+	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	let container: PortainerKit.Container
 
@@ -148,7 +149,7 @@ struct ContainerLogsView: View {
 			let logs = try await portainer.getLogs(from: container, since: since, tail: tail, displayTimestamps: displayTimestamps)
 			self.logs = logs
 		} catch {
-			AppState.shared.handle(error)
+			sceneState.handle(error)
 		}
 		
 		loading = false

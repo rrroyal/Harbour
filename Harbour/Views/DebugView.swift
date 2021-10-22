@@ -13,6 +13,7 @@ import Indicators
 import BackgroundTasks
 
 struct DebugView: View {
+	@EnvironmentObject var sceneState: SceneState
 	@State private var pendingBackgroundTasks: [BGTaskRequest] = []
 	
     var body: some View {
@@ -50,13 +51,13 @@ struct DebugView: View {
 				Button("Display manual indicator") {
 					let indicator: Indicators.Indicator = .init(id: "manual", icon: "bolt", headline: "Headline", subheadline: "Subheadline", expandedText: "Expanded text that is really long and should be truncated normally", dismissType: .manual)
 					UIDevice.current.generateHaptic(.light)
-					AppState.shared.indicators.display(indicator)
+					sceneState.indicators.display(indicator)
 				}
 				
 				Button("Display automatic indicator") {
 					let indicator: Indicators.Indicator = .init(id: "automatic", icon: "bolt", headline: "Headline", subheadline: "Subheadline", expandedText: "Expanded text that is really long and should be truncated normally", dismissType: .after(5))
 					UIDevice.current.generateHaptic(.light)
-					AppState.shared.indicators.display(indicator)
+					sceneState.indicators.display(indicator)
 				}
 			}
 			

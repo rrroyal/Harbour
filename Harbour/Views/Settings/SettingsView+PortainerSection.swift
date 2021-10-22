@@ -10,6 +10,7 @@ import UserNotifications
 
 extension SettingsView {
 	struct PortainerSection: View {
+		@EnvironmentObject var sceneState: SceneState
 		@EnvironmentObject var portainer: Portainer
 		@EnvironmentObject var preferences: Preferences
 		
@@ -93,7 +94,7 @@ extension SettingsView {
 				} catch {
 					AppState.shared.cancelBackgroundRefreshTask()
 					preferences.enableBackgroundRefresh = false
-					AppState.shared.handle(error)
+					sceneState.handle(error)
 				}
 			}
 		}

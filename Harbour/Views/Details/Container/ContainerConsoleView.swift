@@ -11,11 +11,16 @@ import SwiftUI
 
 struct ContainerConsoleView: View {
 	@ObservedObject var attachedContainer: Portainer.AttachedContainer
+	
+	init(attachedContainer: Portainer.AttachedContainer, sceneErrorHandler: @escaping Portainer.AttachedContainer.ErrorHandler) {
+		self.attachedContainer = attachedContainer
+		self.attachedContainer.errorHandler = sceneErrorHandler
+	}
 
 	var body: some View {
 		ScrollView {
 			LazyVStack {
-				Text(attachedContainer.attributedString)
+				Text(attachedContainer.buffer)
 					.font(.system(.footnote, design: .monospaced))
 					.lineLimit(nil)
 					.textSelection(.enabled)

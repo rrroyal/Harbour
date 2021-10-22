@@ -15,7 +15,6 @@
 		E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7272E8926736CCF00228494 /* PortainerKit+.swift */; };
 		E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C552674236700A55B5C /* ContainerContextMenu.swift */; };
 		E7339C582674262500A55B5C /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C572674262500A55B5C /* String+.swift */; };
-		E748BD46271CA2AD007C4F15 /* AppState+Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD45271CA2AD007C4F15 /* AppState+Errors.swift */; };
 		E748BD48271CA421007C4F15 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD47271CA421007C4F15 /* AppDelegate.swift */; };
 		E748BD4A271CB749007C4F15 /* AppState+BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */; };
 		E74AC7F326768543003411AA /* Portainer+PortainerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F226768543003411AA /* Portainer+PortainerError.swift */; };
@@ -45,6 +44,7 @@
 		E77C5FB5267E9D1A000B4994 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77C5FB4267E9D1A000B4994 /* SetupView.swift */; };
 		E77C5FB9267EA4E5000B4994 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E77C5FBB267EA4E5000B4994 /* Localizable.strings */; };
 		E7992A4426BF3BA3007335CA /* ToolbarTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */; };
+		E7ABFB952722BD2500054FB7 /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ABFB942722BD2500054FB7 /* SceneState.swift */; };
 		E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */; };
 		E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */; };
 		E7B10B7426CD82A2005B82BC /* SettingsView+PortainerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7326CD82A2005B82BC /* SettingsView+PortainerSection.swift */; };
@@ -88,7 +88,6 @@
 		E7272E8926736CCF00228494 /* PortainerKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerKit+.swift"; sourceTree = "<group>"; };
 		E7339C552674236700A55B5C /* ContainerContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerContextMenu.swift; sourceTree = "<group>"; };
 		E7339C572674262500A55B5C /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
-		E748BD45271CA2AD007C4F15 /* AppState+Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+Errors.swift"; sourceTree = "<group>"; };
 		E748BD47271CA421007C4F15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+BackgroundTasks.swift"; sourceTree = "<group>"; };
 		E74AC7F226768543003411AA /* Portainer+PortainerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+PortainerError.swift"; sourceTree = "<group>"; };
@@ -118,6 +117,7 @@
 		E77C5FB4267E9D1A000B4994 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		E77C5FBA267EA4E5000B4994 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarTitle.swift; sourceTree = "<group>"; };
+		E7ABFB942722BD2500054FB7 /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
 		E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+Components.swift"; sourceTree = "<group>"; };
 		E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+OtherSection.swift"; sourceTree = "<group>"; };
 		E7B10B7326CD82A2005B82BC /* SettingsView+PortainerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+PortainerSection.swift"; sourceTree = "<group>"; };
@@ -179,7 +179,6 @@
 			isa = PBXGroup;
 			children = (
 				E75A51D7267384E100857D2B /* AppState.swift */,
-				E748BD45271CA2AD007C4F15 /* AppState+Errors.swift */,
 				E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */,
 			);
 			path = AppState;
@@ -189,8 +188,8 @@
 			isa = PBXGroup;
 			children = (
 				E7BF9E772672E17D00AAB6A1 /* Portainer.swift */,
-				E74AC7F226768543003411AA /* Portainer+PortainerError.swift */,
 				E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */,
+				E74AC7F226768543003411AA /* Portainer+PortainerError.swift */,
 			);
 			path = Portainer;
 			sourceTree = "<group>";
@@ -334,6 +333,7 @@
 				E748BD44271CA2A0007C4F15 /* AppState */,
 				E74AC7F126768532003411AA /* Portainer */,
 				E75A51DF26739ED100857D2B /* Preferences.swift */,
+				E7ABFB942722BD2500054FB7 /* SceneState.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -476,6 +476,7 @@
 				E751F063270B37DA00980DCA /* Array+.swift in Sources */,
 				E7BF9E882672F29200AAB6A1 /* LoginView.swift in Sources */,
 				E751F05F270B316400980DCA /* ContainerGridView+ContainerCell.swift in Sources */,
+				E7ABFB952722BD2500054FB7 /* SceneState.swift in Sources */,
 				E7992A4426BF3BA3007335CA /* ToolbarTitle.swift in Sources */,
 				E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */,
 				E75A51EA2673A79700857D2B /* ContainerLogsView.swift in Sources */,
@@ -494,7 +495,6 @@
 				E75A51E22673A1C100857D2B /* Bundle+.swift in Sources */,
 				E7339C582674262500A55B5C /* String+.swift in Sources */,
 				E7BF9E8A2672F2F600AAB6A1 /* UIDevice+.swift in Sources */,
-				E748BD46271CA2AD007C4F15 /* AppState+Errors.swift in Sources */,
 				E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */,
 				E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */,
 				E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */,

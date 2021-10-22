@@ -16,8 +16,6 @@ class AppState: ObservableObject {
 	
 	@Published public var fetchingMainScreenData: Bool = false
 	
-	public let indicators: Indicators = Indicators()
-
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
 	
 	internal var autoRefreshTimer: AnyCancellable? = nil
@@ -30,33 +28,6 @@ class AppState: ObservableObject {
 		if Preferences.shared.endpointURL != nil && Preferences.shared.autoRefreshInterval > 0 {
 			setupAutoRefreshTimer()
 		}
-	}
-	
-	// MARK: - Attached container
-	
-	func onContainerConsoleViewDismissed() {
-		guard Preferences.shared.persistAttachedContainer else {
-			Portainer.shared.attachedContainer = nil
-			return
-		}
-		
-		if Preferences.shared.displayContainerDismissedPrompt && Portainer.shared.attachedContainer != nil {
-			let indicatorID: String = "ContainerDismissedIndicator"
-			let indicator: Indicators.Indicator = .init(id: indicatorID, icon: "terminal.fill", headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localized, subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localized, dismissType: .after(5), onTap: {
-				self.showAttachedContainer()
-				self.indicators.dismiss(matching: indicatorID)
-			})
-			indicators.display(indicator)
-		}
-	}
-	
-	func showAttachedContainer() {
-		guard Portainer.shared.attachedContainer != nil else {
-			return
-		}
-		
-		UIDevice.current.generateHaptic(.light)
-		NotificationCenter.default.post(name: .ShowAttachedContainer, object: nil)
 	}
 	
 	// MARK: - Auto refresh
@@ -87,5 +58,11 @@ class AppState: ObservableObject {
 					}
 				}
 			}
+	}
+	
+	// MARK: - Error handling
+	
+	private func handle(_ error: Error, _fileID: StaticString = #fileID, _line: Int = #line) {
+		
 	}
 }

@@ -9,5 +9,4 @@ import Foundation
 
 extension Notification.Name {
 	static let DeviceDidShake = Notification.Name(rawValue: "DeviceDidShake")
-	static let ShowAttachedContainer = Notification.Name(rawValue: "ShowAttachedContainer")
 }

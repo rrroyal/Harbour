@@ -20,7 +20,6 @@ struct HarbourApp: App {
 		WindowGroup {
 			ContentView()
 				.onChange(of: scenePhase, perform: onScenePhaseChange)
-				.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
 				.defaultAppStorage(.group)
 				.environmentObject(appState)
 				.environmentObject(portainer)
@@ -42,12 +41,6 @@ struct HarbourApp: App {
 				}
 			default:
 				break
-		}
-	}
-	
-	private func onDeviceDidShake(_: Notification) {
-		if portainer.attachedContainer != nil {
-			appState.showAttachedContainer()
 		}
 	}
 }

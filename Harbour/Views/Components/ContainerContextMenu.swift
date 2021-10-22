@@ -10,6 +10,7 @@ import PortainerKit
 import Indicators
 
 struct ContainerContextMenu: View {
+	@EnvironmentObject var sceneState: SceneState
 	@ObservedObject var container: PortainerKit.Container
 	
 	var resumeButton: some View {
@@ -105,9 +106,9 @@ struct ContainerContextMenu: View {
 			do {
 				UIDevice.current.generateHaptic(.light)
 				try Portainer.shared.attach(to: container)
-				NotificationCenter.default.post(name: .ShowAttachedContainer, object: nil)
+				sceneState.isContainerConsoleSheetPresented = true
 			} catch {
-				AppState.shared.handle(error)
+				sceneState.handle(error)
 			}
 		}) {
 			Label("Attach", systemImage: "terminal")
@@ -120,7 +121,7 @@ struct ContainerContextMenu: View {
 		
 		let style: Indicators.Indicator.Style = .init(subheadlineColor: action.color, subheadlineStyle: .primary, iconColor: action.color, iconStyle: .primary, iconVariants: .fill)
 		let indicator: Indicators.Indicator = .init(id: "ContainerActionExecution-\(container.id)", icon: action.icon, headline: container.displayName ?? "Container", subheadline: action.label, dismissType: .after(3), style: style)
-		AppState.shared.indicators.display(indicator)
+		sceneState.indicators.display(indicator)
 
 		Task {
 			do {
@@ -133,7 +134,7 @@ struct ContainerContextMenu: View {
 				
 				// try await Portainer.shared.getContainers()
 			} catch {
-				AppState.shared.handle(error)
+				sceneState.handle(error)
 			}
 		}
 	}

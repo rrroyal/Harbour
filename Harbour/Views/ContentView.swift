@@ -13,10 +13,8 @@ struct ContentView: View {
 	@EnvironmentObject var appState: AppState
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
-		
-	@State private var isSettingsSheetPresented: Bool = false
-	@State private var isSetupSheetPresented: Bool = !Preferences.shared.finishedSetup
-	@State private var isContainerConsoleSheetPresented: Bool = false
+	
+	@StateObject var sceneState: SceneState = SceneState()
 	
 	@State private var searchQuery: String = ""
 	
@@ -72,7 +70,7 @@ struct ContentView: View {
 						try await portainer.getContainers()
 						appState.fetchingMainScreenData = false
 					} catch {
-						AppState.shared.handle(error)
+						sceneState.handle(error)
 					}
 				}
 			}) {
@@ -106,7 +104,7 @@ struct ContentView: View {
 					ToolbarItem(placement: .navigation) {
 						Button(action: {
 							UIDevice.current.generateHaptic(.soft)
-							isSettingsSheetPresented = true
+							sceneState.isSettingsSheetPresented = true
 						}) {
 							Image(systemName: "gear")
 						}
@@ -130,19 +128,34 @@ struct ContentView: View {
 				appState.fetchingMainScreenData = preferences.endpointURL != nil
 			}
 		}
-		.indicatorOverlay(model: appState.indicators)
-		.sheet(isPresented: $isSettingsSheetPresented) {
+		.indicatorOverlay(model: sceneState.indicators)
+		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
 		}
-		.sheet(isPresented: $isContainerConsoleSheetPresented, onDismiss: appState.onContainerConsoleViewDismissed) {
+		.sheet(isPresented: $sceneState.isContainerConsoleSheetPresented, onDismiss: sceneState.onContainerConsoleViewDismissed) {
 			if let attachedContainer = portainer.attachedContainer {
-				ContainerConsoleView(attachedContainer: attachedContainer)
+				ContainerConsoleView(attachedContainer: attachedContainer, sceneErrorHandler: sceneErrorHandler)
 			}
 		}
-		.sheet(isPresented: $isSetupSheetPresented, onDismiss: { Preferences.shared.finishedSetup = true }) {
+		.sheet(isPresented: $sceneState.isSetupSheetPresented, onDismiss: { Preferences.shared.finishedSetup = true }) {
 			SetupView()
 		}
-		.onReceive(NotificationCenter.default.publisher(for: .ShowAttachedContainer, object: nil), perform: { _ in isContainerConsoleSheetPresented = true })
+		.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
+		.environmentObject(sceneState)
+	}
+	
+	private func onDeviceDidShake(_: Notification) {
+		if portainer.attachedContainer != nil {
+			sceneState.showAttachedContainer()
+		}
+	}
+	
+	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?) {
+		if let indicator = indicator {
+			sceneState.handle(error, indicator: indicator)
+		} else {
+			sceneState.handle(error)
+		}
 	}
 }
 

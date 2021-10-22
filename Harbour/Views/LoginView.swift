@@ -10,6 +10,7 @@ import PortainerKit
 
 struct LoginView: View {
 	@Environment(\.presentationMode) var presentationMode
+	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	
 	@State private var endpoint: String = Preferences.shared.endpointURL ?? ""
@@ -170,7 +171,7 @@ struct LoginView: View {
 				do {
 					try await portainer.getEndpoints()
 				} catch {
-					AppState.shared.handle(error)
+					sceneState.handle(error)
 				}
 			} catch {
 				UIDevice.current.generateHaptic(.error)

@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import Indicators
 
 extension EnvironmentValues {
+	// MARK: UseContainerGridView
 	private struct UseContainerGridView: EnvironmentKey {
 		static let defaultValue: Bool = false
 	}
@@ -17,6 +19,7 @@ extension EnvironmentValues {
 		set { self[UseContainerGridView.self] = newValue }
 	}
 	
+	// MARK: UseColoredCOntainerCells
 	private struct UseColoredContainerCells: EnvironmentKey {
 		static let defaultValue: Bool = false
 	}

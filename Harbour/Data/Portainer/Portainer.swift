@@ -12,6 +12,7 @@ import PortainerKit
 import SwiftUI
 
 final class Portainer: ObservableObject {
+	
 	// MARK: - Public properties
 
 	public static let shared: Portainer = Portainer()
@@ -29,7 +30,7 @@ final class Portainer: ObservableObject {
 					do {
 						try await getContainers(endpointID: endpointID)
 					} catch {
-						AppState.shared.handle(error)
+						// AppState.shared.handle(error)
 					}
 				}
 			} else {
@@ -317,7 +318,7 @@ final class Portainer: ObservableObject {
 			}
 		}
 		
-		AppState.shared.handle(error, _fileID: _fileID, _line: _line)
+		// AppState.shared.handle(error, _fileID: _fileID, _line: _line)
 	}
 }
 
