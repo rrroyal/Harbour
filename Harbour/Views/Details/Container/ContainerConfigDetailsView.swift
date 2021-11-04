@@ -47,8 +47,10 @@ extension ContainerConfigDetailsView {
 	struct ConfigSection: View {
 		let config: PortainerKit.ContainerConfig
 		
+		// @State var isExpanded: Bool = true
+		
 		var body: some View {
-			// DisclosureSection(label: "Config") {
+			// DisclosureSection(label: "Config", isExpanded: $isExpanded) {
 			Group {
 				Group {
 					LabeledSection(label: "Hostname", content: config.hostname, monospace: true)
@@ -93,13 +95,15 @@ extension ContainerConfigDetailsView {
 		}
 	}
 	
-	struct HostConfigSection: View {
+	/* struct HostConfigSection: View {
 		let config: PortainerKit.HostConfig
 		
+		@State var isExpanded: Bool = true
+		
 		var body: some View {
-			DisclosureSection(label: "Host config") {
+			DisclosureSection(label: "Host config", isExpanded: $isExpanded) {
 				LabeledSection(label: "", content: nil)
 			}
 		}
-	}
+	} */
 }

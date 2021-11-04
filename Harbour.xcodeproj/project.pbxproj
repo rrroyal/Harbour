@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		E70A5CEF27220C4300FF6672 /* EnvironmentValues+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70A5CEE27220C4300FF6672 /* EnvironmentValues+.swift */; };
 		E70A5CF127220D2900FF6672 /* ContainersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70A5CF027220D2900FF6672 /* ContainersView.swift */; };
-		E70A5CF8272210DA00FF6672 /* ContainerCellView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70A5CF7272210DA00FF6672 /* ContainerCellView+.swift */; };
+		E70A5CF8272210DA00FF6672 /* ContainerCellBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70A5CF7272210DA00FF6672 /* ContainerCellBackground.swift */; };
 		E720D0202720B838004A21FD /* DisclosureSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E720D01F2720B838004A21FD /* DisclosureSection.swift */; };
 		E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72112E9267F496B00D6004D /* LabeledSection.swift */; };
 		E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7272E8926736CCF00228494 /* PortainerKit+.swift */; };
@@ -44,6 +44,7 @@
 		E77C5FB5267E9D1A000B4994 /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77C5FB4267E9D1A000B4994 /* SetupView.swift */; };
 		E77C5FB9267EA4E5000B4994 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E77C5FBB267EA4E5000B4994 /* Localizable.strings */; };
 		E7992A4426BF3BA3007335CA /* ToolbarTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */; };
+		E7A661FC27230EC000B872EA /* AppState+UserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A661FB27230EC000B872EA /* AppState+UserActivity.swift */; };
 		E7ABFB952722BD2500054FB7 /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ABFB942722BD2500054FB7 /* SceneState.swift */; };
 		E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */; };
 		E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */; };
@@ -82,7 +83,7 @@
 /* Begin PBXFileReference section */
 		E70A5CEE27220C4300FF6672 /* EnvironmentValues+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+.swift"; sourceTree = "<group>"; };
 		E70A5CF027220D2900FF6672 /* ContainersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainersView.swift; sourceTree = "<group>"; };
-		E70A5CF7272210DA00FF6672 /* ContainerCellView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerCellView+.swift"; sourceTree = "<group>"; };
+		E70A5CF7272210DA00FF6672 /* ContainerCellBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerCellBackground.swift; sourceTree = "<group>"; };
 		E720D01F2720B838004A21FD /* DisclosureSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisclosureSection.swift; sourceTree = "<group>"; };
 		E72112E9267F496B00D6004D /* LabeledSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledSection.swift; sourceTree = "<group>"; };
 		E7272E8926736CCF00228494 /* PortainerKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerKit+.swift"; sourceTree = "<group>"; };
@@ -117,6 +118,7 @@
 		E77C5FB4267E9D1A000B4994 /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		E77C5FBA267EA4E5000B4994 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarTitle.swift; sourceTree = "<group>"; };
+		E7A661FB27230EC000B872EA /* AppState+UserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+UserActivity.swift"; sourceTree = "<group>"; };
 		E7ABFB942722BD2500054FB7 /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
 		E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+Components.swift"; sourceTree = "<group>"; };
 		E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+OtherSection.swift"; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 			children = (
 				E75A51D7267384E100857D2B /* AppState.swift */,
 				E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */,
+				E7A661FB27230EC000B872EA /* AppState+UserActivity.swift */,
 			);
 			path = AppState;
 			sourceTree = "<group>";
@@ -332,8 +335,8 @@
 			children = (
 				E748BD44271CA2A0007C4F15 /* AppState */,
 				E74AC7F126768532003411AA /* Portainer */,
-				E75A51DF26739ED100857D2B /* Preferences.swift */,
 				E7ABFB942722BD2500054FB7 /* SceneState.swift */,
+				E75A51DF26739ED100857D2B /* Preferences.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -343,7 +346,6 @@
 			children = (
 				E751F062270B37DA00980DCA /* Array+.swift */,
 				E75A51E12673A1C100857D2B /* Bundle+.swift */,
-				E70A5CF7272210DA00FF6672 /* ContainerCellView+.swift */,
 				E70A5CEE27220C4300FF6672 /* EnvironmentValues+.swift */,
 				E7748E7E267E835600456BFD /* Notification+.swift */,
 				E7339C572674262500A55B5C /* String+.swift */,
@@ -386,6 +388,7 @@
 				E7EAE5CB270B6234008CFD20 /* CustomSection.swift */,
 				E75A51E32673A4F000857D2B /* NavigationLinkLabel.swift */,
 				E7339C552674236700A55B5C /* ContainerContextMenu.swift */,
+				E70A5CF7272210DA00FF6672 /* ContainerCellBackground.swift */,
 				E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */,
 				E720D01F2720B838004A21FD /* DisclosureSection.swift */,
 			);
@@ -515,11 +518,12 @@
 				E74AC7F326768543003411AA /* Portainer+PortainerError.swift in Sources */,
 				E75A51EE2673B17B00857D2B /* Labeled.swift in Sources */,
 				E75A51E82673A78300857D2B /* ContainerNetworkDetailsView.swift in Sources */,
-				E70A5CF8272210DA00FF6672 /* ContainerCellView+.swift in Sources */,
+				E70A5CF8272210DA00FF6672 /* ContainerCellBackground.swift in Sources */,
 				E75A51D8267384E100857D2B /* AppState.swift in Sources */,
 				E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */,
 				E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */,
 				E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */,
+				E7A661FC27230EC000B872EA /* AppState+UserActivity.swift in Sources */,
 				E748BD4A271CB749007C4F15 /* AppState+BackgroundTasks.swift in Sources */,
 				E751F05D270B315B00980DCA /* ContainerGridView.swift in Sources */,
 				E75A51E026739ED100857D2B /* Preferences.swift in Sources */,
@@ -687,10 +691,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
 				PRODUCT_NAME = Harbour;
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 			};
 			name = Debug;
 		};
@@ -727,10 +731,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
 				PRODUCT_NAME = Harbour;
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,6";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

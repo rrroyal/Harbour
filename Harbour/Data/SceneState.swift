@@ -11,9 +11,13 @@ import UIKit.UIDevice
 import Indicators
 
 class SceneState: ObservableObject {
+	public typealias ErrorHandler = (Error, Indicators.Indicator?, StaticString, Int) -> ()
+	
 	@Published public var isSettingsSheetPresented: Bool = false
 	@Published public var isSetupSheetPresented: Bool = !Preferences.shared.finishedSetup
 	@Published public var isContainerConsoleSheetPresented: Bool = false
+	
+	@Published public var activeContainerID: String? = nil
 	
 	public let indicators = Indicators()
 	

@@ -21,10 +21,6 @@ class AppState: ObservableObject {
 	internal var autoRefreshTimer: AnyCancellable? = nil
 
 	private init() {
-		#if DEBUG
-		UserDefaults.standard.set(false, forKey: "_UIConstraintBasedLayoutLogUnsatisfiable")
-		#endif
-		
 		if Preferences.shared.endpointURL != nil && Preferences.shared.autoRefreshInterval > 0 {
 			setupAutoRefreshTimer()
 		}

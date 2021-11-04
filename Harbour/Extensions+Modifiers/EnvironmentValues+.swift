@@ -9,6 +9,16 @@ import SwiftUI
 import Indicators
 
 extension EnvironmentValues {
+	// MARK: SceneErrorHandler
+	private struct SceneErrorHandler: EnvironmentKey {
+		static let defaultValue: SceneState.ErrorHandler? = nil
+	}
+	
+	var sceneErrorHandler: SceneState.ErrorHandler? {
+		get { self[SceneErrorHandler.self] }
+		set { self[SceneErrorHandler.self] = newValue }
+	}
+	
 	// MARK: UseContainerGridView
 	private struct UseContainerGridView: EnvironmentKey {
 		static let defaultValue: Bool = false

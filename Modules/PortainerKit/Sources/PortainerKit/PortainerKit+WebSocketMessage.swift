@@ -9,12 +9,11 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	enum MessageSource {
-		case server
-		case client
-	}
-
 	struct WebSocketMessage {
+		public enum MessageSource {
+			case server, client
+		}
+		
 		public let message: URLSessionWebSocketTask.Message
 		public let source: MessageSource
 	}

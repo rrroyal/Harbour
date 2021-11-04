@@ -9,6 +9,8 @@ import SwiftUI
 import PortainerKit
 
 struct ContainerGridView: View {
+	@EnvironmentObject var portainer: Portainer
+	@EnvironmentObject var sceneState: SceneState
 	let containers: [PortainerKit.Container]
 	
 	let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
@@ -17,11 +19,16 @@ struct ContainerGridView: View {
 		ScrollView {
 			LazyVGrid(columns: columns) {
 				ForEach(containers) { container in
-					NavigationLink(destination: ContainerDetailView(container: container)) {
+					NavigationLink(tag: container.id, selection: $sceneState.activeContainerID, destination: {
+						ContainerDetailView(container: container)
+							.environmentObject(sceneState)
+							.environmentObject(portainer)
+					}) {
 						ContainerCell(container: container)
 							.contextMenu {
 								ContainerContextMenu(container: container)
 							}
+							.onDrag { ContainersView.containerDragProvider(container: container) }
 					}
 					.buttonStyle(DecreasesOnPressButtonStyle())
 				}

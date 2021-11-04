@@ -7,11 +7,7 @@
 
 import Foundation
 
-public extension Bundle {
-	var mainBundleIdentifier: String {
-		"xyz.shameful.Harbour"
-	}
-	
+public extension Bundle {	
 	var buildVersion: String {
 		Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
 	}

@@ -19,6 +19,10 @@ struct ContainersView: View {
 			ContainerListView(containers: containers)
 		}
     }
+	
+	static func containerDragProvider(container: PortainerKit.Container) -> NSItemProvider {
+		return NSItemProvider()
+	}
 }
 
 struct ContainersView_Previews: PreviewProvider {

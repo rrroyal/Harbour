@@ -13,7 +13,7 @@ import PortainerKit
 
 extension AppState {
 	enum BackgroundTask {
-		static var refresh = "\(Bundle.main.mainBundleIdentifier).refresh"
+		static var refresh = "\(Bundle.main.bundleIdentifier!).BackgroundRefresh"
 	}
 	
 	public func scheduleBackgroundRefreshTask() {

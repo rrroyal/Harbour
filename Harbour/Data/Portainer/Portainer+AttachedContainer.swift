@@ -13,16 +13,14 @@ import PortainerKit
 import Indicators
 
 extension Portainer {
-	class AttachedContainer: ObservableObject {
-		public typealias ErrorHandler = (Error, Indicators.Indicator?) -> ()
-		
+	class AttachedContainer: ObservableObject {		
 		public let container: PortainerKit.Container
 		public let messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject
 		
 		@Published public private(set) var buffer: AttributedString = ""
 		
 		public private(set) var isConnected: Bool = true
-		public var errorHandler: ErrorHandler?
+		public var errorHandler: SceneState.ErrorHandler?
 		
 		private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer.AttachedContainer")
 		private var messageCancellable: AnyCancellable? = nil
@@ -56,7 +54,7 @@ extension Portainer {
 				case .failure(let error):
 					let string = "Session ended, reason: \(String(describing: error))"
 					update(string)
-					errorHandler?(error, nil)
+					errorHandler?(error, nil, #fileID, #line)
 			}
 		}
 		
@@ -78,7 +76,7 @@ extension Portainer {
 					update(String(describing: error))
 					
 					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localized, subheadline: error.localizedDescription, dismissType: .after(5))
-					errorHandler?(error, indicator)
+					errorHandler?(error, indicator, #fileID, #line)
 			}
 		}
 	

@@ -1,5 +1,5 @@
 //
-//  PortainerKit+GenericTypes.swift
+//  Other.swift
 //  PortianerKit
 //
 //  Created by royal on 11/06/2021.

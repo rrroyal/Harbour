@@ -11,8 +11,9 @@ import SwiftUI
 
 struct ContainerConsoleView: View {
 	@ObservedObject var attachedContainer: Portainer.AttachedContainer
+	@Environment(\.sceneErrorHandler) var sceneErrorHandler
 	
-	init(attachedContainer: Portainer.AttachedContainer, sceneErrorHandler: @escaping Portainer.AttachedContainer.ErrorHandler) {
+	init(attachedContainer: Portainer.AttachedContainer) {
 		self.attachedContainer = attachedContainer
 		self.attachedContainer.errorHandler = sceneErrorHandler
 	}

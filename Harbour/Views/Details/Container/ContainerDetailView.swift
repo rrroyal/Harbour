@@ -121,9 +121,18 @@ struct ContainerDetailView: View {
 		}
 		.refreshable { await refresh() }
 		.task { await refresh() }
+		.userActivity(AppState.UserActivity.viewingContainer, isActive: sceneState.activeContainerID == container.id) { activity in
+			activity.requiredUserInfoKeys = ["ContainerID"]
+			activity.userInfo = ["ContainerID": container.id]
+			activity.title = container.displayName ?? container.id
+			activity.persistentIdentifier = container.id
+			activity.isEligibleForPrediction = true
+			activity.isEligibleForHandoff = true
+		}
 		.onReceive(portainer.refreshContainerPassthroughSubject) { containerID in
-			guard containerID == container.id else { return }
-			Task { await refresh() }
+			if containerID == container.id {
+				Task { await refresh() }
+			}
 		}
 	}
 	
@@ -157,7 +166,7 @@ fileprivate extension ContainerDetailView {
 		let details: PortainerKit.ContainerDetails
 		
 		var body: some View {
-			DisclosureSection(label: "General") {
+			DisclosureSection(label: "General", isExpanded: Preferences.shared.$cdvExpandGeneral) {
 				Group {
 					LabeledSection(label: "Name", content: details.name, monospace: true)
 					LabeledSection(label: "Image", content: details.image, monospace: true)
@@ -193,7 +202,7 @@ fileprivate extension ContainerDetailView {
 		let state: PortainerKit.ContainerState
 
 		var body: some View {
-			DisclosureSection(label: "State") {
+			DisclosureSection(label: "State", isExpanded: Preferences.shared.$cdvExpandState) {
 				LabeledSection(label: "State", content: state.status.rawValue, monospace: true)
 				LabeledSection(label: "Running", content: "\(state.running)", monospace: true)
 				LabeledSection(label: "Paused", content: "\(state.paused)", monospace: true)
@@ -208,7 +217,7 @@ fileprivate extension ContainerDetailView {
 		let graphDriver: PortainerKit.GraphDriver
 
 		var body: some View {
-			DisclosureSection(label: "GraphDriver") {
+			DisclosureSection(label: "GraphDriver", isExpanded: Preferences.shared.$cdvExpandGraphDriver) {
 				LabeledSection(label: "Name", content: graphDriver.name, monospace: true)
 				LabeledSection(label: "Lower dir", content: graphDriver.data.lowerDir, monospace: true)
 				LabeledSection(label: "Merged dir", content: graphDriver.data.mergedDir, monospace: true)

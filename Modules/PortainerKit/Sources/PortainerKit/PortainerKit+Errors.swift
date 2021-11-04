@@ -48,6 +48,8 @@ public extension PortainerKit {
 				default:						return .custom(reason)
 			}
 		}
+		
+		internal static let errorMessageKey: String = "message"
 	}
 	
 	enum DateError: Error {

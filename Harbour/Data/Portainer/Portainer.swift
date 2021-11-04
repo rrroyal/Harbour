@@ -68,7 +68,7 @@ final class Portainer: ObservableObject {
 	// MARK: - Private util
 	
 	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer")
-	private let keychain: Keychain = Keychain(service: Bundle.main.mainBundleIdentifier, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.mainBundleIdentifier)").synchronizable(true).accessibility(.afterFirstUnlock)
+	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)").synchronizable(true).accessibility(.afterFirstUnlock)
 	private let ud: UserDefaults = Preferences.ud
 	private var api: PortainerKit?
 	

@@ -69,7 +69,7 @@ public class PortainerKit {
 			token = jwt
 			return jwt
 		} else {
-			throw APIError.fromMessage(decoded["message"])
+			throw APIError.fromMessage(decoded[APIError.errorMessageKey])
 		}
 	}
 	
@@ -84,7 +84,10 @@ public class PortainerKit {
 	/// - Parameter endpointID: Endpoint ID
 	/// - Returns: `[Container]`
 	public func getContainers(for endpointID: Int) async throws -> [Container] {
-		let request = try request(for: .containers(endpointID: endpointID))
+		let queryItems = [
+			URLQueryItem(name: "all", value: String(describing: true))
+		]
+		let request = try request(for: .containers(endpointID: endpointID), queryItems: queryItems)
 		return try await fetch(request: request)
 	}
 	
@@ -126,7 +129,7 @@ public class PortainerKit {
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
 	public func execute(_ action: ExecuteAction, containerID: String, endpointID: Int) async throws {
-		var request = try request(for: .executeAction(action, containerID: containerID, endpointID: endpointID))
+		var request = try request(for: .executeAction(containerID: containerID, endpointID: endpointID, action: action))
 		request.httpMethod = "POST"
 		request.httpBody = "{}".data(using: .utf8)
 		
@@ -134,7 +137,7 @@ public class PortainerKit {
 		
 		if let urlResponse = response.1 as? HTTPURLResponse {
 			if !(200...304 ~= urlResponse.statusCode) {
-				if let decoded = try? JSONDecoder().decode([String: String].self, from: response.0), let message = decoded["message"] {
+				if let decoded = try? JSONDecoder().decode([String: String].self, from: response.0), let message = decoded[APIError.errorMessageKey] {
 					throw APIError.fromMessage(message)
 				} else {
 					throw APIError.responseCodeUnacceptable(urlResponse.statusCode)
@@ -145,7 +148,7 @@ public class PortainerKit {
 			// For now, we're hoping it worked ¯\_(ツ)_/¯.
 			assertionFailure("Response isn't HTTPURLResponse 🤨 [\(#fileID):\(#line)]")
 			
-			if let decoded = try? JSONDecoder().decode([String: String].self, from: response.0), let message = decoded["message"] {
+			if let decoded = try? JSONDecoder().decode([String: String].self, from: response.0), let message = decoded[APIError.errorMessageKey] {
 				throw APIError.fromMessage(message)
 			}
 		}
@@ -160,7 +163,14 @@ public class PortainerKit {
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
 	public func getLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
-		let request = try request(for: .logs(containerID: containerID, endpointID: endpointID, since: since, tail: tail, timestamps: displayTimestamps))
+		let queryItems = [
+			URLQueryItem(name: "since", value: String(describing: since)),
+			URLQueryItem(name: "stderr", value: String(describing: true)),
+			URLQueryItem(name: "stdout", value: String(describing: true)),
+			URLQueryItem(name: "tail", value: String(describing: tail)),
+			URLQueryItem(name: "timestamps", value: String(describing: displayTimestamps))
+		]
+		let request = try request(for: .logs(containerID: containerID, endpointID: endpointID), queryItems: queryItems)
 		
 		let (data, _) = try await session.data(for: request)
 		guard let string = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) else { throw APIError.decodingFailed }
@@ -173,7 +183,7 @@ public class PortainerKit {
 	///   - endpointID: Endpoint ID
 	/// - Returns: `WebSocketPassthroughSubject`
 	public func attach(to containerID: String, endpointID: Int) throws -> WebSocketPassthroughSubject {
-		let url: URL? = {
+		guard let url: URL = {
 			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
 			components.scheme = "ws"
 			components.queryItems = [
@@ -182,15 +192,15 @@ public class PortainerKit {
 				URLQueryItem(name: "id", value: containerID)
 			]
 			return components.url
-		}()
-						
-		guard let url = url else { throw APIError.invalidURL }
+		}() else { throw APIError.invalidURL }
+		
 		let task = session.webSocketTask(with: url)
 		let passthroughSubject = WebSocketPassthroughSubject()
 		
 		func setReceiveHandler() {
 			DispatchQueue.main.async { [weak self] in
 				guard self != nil else { return }
+				
 				task.receive {
 					do {
 						let message = WebSocketMessage(message: try $0.get(), source: .server)
@@ -213,11 +223,19 @@ public class PortainerKit {
 	
 	/// Creates a authorized URLRequest.
 	/// - Parameter path: Request path
+	/// - Parameter queryItems: Optional query items
 	/// - Returns: `URLRequest` with authorization header set.
-	private func request(for path: RequestPath, overrideURL: URL? = nil) throws -> URLRequest {
-		guard let url = URL(string: (overrideURL ?? url).absoluteString + path.path) else { throw APIError.invalidURL }
-		var request = URLRequest(url: url)
-		
+	private func request(for path: RequestPath, queryItems: [URLQueryItem]? = nil) throws -> URLRequest {
+		var request: URLRequest
+		if let queryItems = queryItems {
+			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(path.path), resolvingAgainstBaseURL: true) else { throw APIError.invalidURL }
+			components.queryItems = queryItems
+			guard let url = components.url else { throw APIError.invalidURL }
+			request = URLRequest(url: url)
+		} else {
+			request = URLRequest(url: self.url.appendingPathComponent(path.path))
+		}
+				
 		if let token = token {
 			request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 		}
@@ -236,8 +254,7 @@ public class PortainerKit {
 			let decoded = try decoder.decode(Output.self, from: response.0)
 			return decoded
 		} catch {
-			if let errorJson = try? decoder.decode([String: String].self, from: response.0),
-			   let message = errorJson["message"] {
+			if let errorJson = try? decoder.decode([String: String].self, from: response.0), let message = errorJson[APIError.errorMessageKey] {
 				throw APIError.fromMessage(message)
 			} else {
 				throw error

@@ -17,7 +17,7 @@ struct ContentView: View {
 	@StateObject var sceneState: SceneState = SceneState()
 	
 	@State private var searchQuery: String = ""
-	
+		
 	var currentState: ContentViewDataState {
 		if portainer.containers.isEmpty {
 			guard !appState.fetchingMainScreenData else {
@@ -77,7 +77,7 @@ struct ContentView: View {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
 		}) {
-			Image(systemName: "tag")
+			Label(portainer.endpoints.first(where: { $0.id == portainer.selectedEndpointID })?.name ?? "Endpoint", systemImage: "tag")
 				.symbolVariant(portainer.selectedEndpointID != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
 		}
 		.disabled(!portainer.isLoggedIn)
@@ -123,38 +123,43 @@ struct ContentView: View {
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
 		.animation(.easeInOut, value: currentState)
-		/* .onAppear {
-			if !portainer.isLoggedIn {
-				appState.fetchingMainScreenData = preferences.hasSavedCredentials
-			}
-		} */
-		.indicatorOverlay(model: sceneState.indicators)
 		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
 		}
 		.sheet(isPresented: $sceneState.isContainerConsoleSheetPresented, onDismiss: sceneState.onContainerConsoleViewDismissed) {
 			if let attachedContainer = portainer.attachedContainer {
-				ContainerConsoleView(attachedContainer: attachedContainer, sceneErrorHandler: sceneErrorHandler)
+				ContainerConsoleView(attachedContainer: attachedContainer)
 			}
 		}
 		.sheet(isPresented: $sceneState.isSetupSheetPresented, onDismiss: { Preferences.shared.finishedSetup = true }) {
 			SetupView()
 		}
+		.indicatorOverlay(model: sceneState.indicators)
+		.onContinueUserActivity(AppState.UserActivity.viewingContainer, perform: handleContinueContainerViewingUserActivity)
 		.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
 		.environmentObject(sceneState)
+		.environment(\.sceneErrorHandler, sceneErrorHandler)
 	}
 	
-	private func onDeviceDidShake(_: Notification) {
+	private func handleContinueContainerViewingUserActivity(_ activity: NSUserActivity) {
+		sceneState.logger.debug("Continuing UserActivity \"\(activity.activityType)\"")
+		
+		if let containerID = activity.userInfo?["ContainerID"] as? String {
+			sceneState.activeContainerID = containerID
+		}
+	}
+	
+	private func onDeviceDidShake(notification: Notification) {
 		if portainer.attachedContainer != nil {
 			sceneState.showAttachedContainer()
 		}
 	}
 	
-	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?) {
+	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?, _fileID: StaticString = #fileID, _line: Int = #line) {
 		if let indicator = indicator {
-			sceneState.handle(error, indicator: indicator)
+			sceneState.handle(error, indicator: indicator, _fileID: _fileID, _line: _line)
 		} else {
-			sceneState.handle(error)
+			sceneState.handle(error, _fileID: _fileID, _line: _line)
 		}
 	}
 }
