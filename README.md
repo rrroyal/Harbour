@@ -7,6 +7,8 @@
 ## Features
 - Real-time data
 - See all of the container details (logs too!)
+- Handoff & background refresh
+- iOS & iPadOS support
 - Built in SwiftUI
 
 ## Installation
@@ -21,8 +23,6 @@
 - [ ] watchOS app
 - [ ] Creating new containers
 - [ ] Attaching to containers (including ANSI escape codes & input)
-- [ ] Handoff
-- [ ] Background refresh (+notifications?)
 
 ## Credits
 - [kishikawakatsumi/KeychainAccess](https://github.com/kishikawakatsumi/KeychainAccess) - Keychain wrapper
