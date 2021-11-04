@@ -38,7 +38,9 @@ extension AppState {
 		logger.debug("(Background refresh) Handling background refresh for task \"\(task.identifier)\"")
 		
 		WidgetCenter.shared.reloadAllTimelines()
+		#if DEBUG
 		Preferences.shared.lastBackgroundTaskDate = Date()
+		#endif
 
 		Task {
 			do {
