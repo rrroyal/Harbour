@@ -5,15 +5,15 @@
 //  Created by royal on 04/10/2021.
 //
 
-import PortainerKit
 import SwiftUI
+import PortainerKit
 
 extension ContainerGridView {
 	struct ContainerCell: View {
 		@ObservedObject var container: PortainerKit.Container
 		
 		let circleSize: Double = 10
-		let backgroundRectangle: some Shape = RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
+		let backgroundShape = RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
 		
 		var body: some View {
 			VStack(alignment: .leading) {
@@ -50,14 +50,17 @@ extension ContainerGridView {
 					.font(.headline)
 					.foregroundColor(container.displayName != nil ? .primary : .secondary)
 					.lineLimit(2)
-					.minimumScaleFactor(0.6)
+					// .minimumScaleFactor(0.6)
 					.multilineTextAlignment(.leading)
 					.frame(maxWidth: .infinity, alignment: .leading)
 			}
 			.padding(.medium)
 			.aspectRatio(1, contentMode: .fill)
-			.background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
-			.contentShape(backgroundRectangle)
+			// .background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
+			// .background(container.state?.color.opacity(0.15) ?? Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
+			// .contentShape(backgroundRectangle)
+			.background(ContainerCellBackground(state: container.state))
+			.containerShape(backgroundShape)
 			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.displayName)

@@ -11,10 +11,12 @@ struct LabeledSection: View {
 	let label: String
 	let content: String?
 	let monospace: Bool
+	let hideIfEmpty: Bool
 	
-	public init(label: String, content: String?, monospace: Bool = false) {
+	public init(label: String, content: String?, monospace: Bool = false, hideIfEmpty: Bool = true) {
 		self.label = label
 		self.monospace = monospace
+		self.hideIfEmpty = true
 		
 		if let content = content, !content.isReallyEmpty {
 			self.content = content
@@ -24,13 +26,15 @@ struct LabeledSection: View {
 	}
 	
 	var body: some View {
-		CustomSection(label: label) {
-			Text(content ?? "none")
-				.font(.system(.callout, design: monospace ? .monospaced : .default))
-				.foregroundColor(content != nil ? .primary : .secondary)
-				.lineLimit(nil)
-				.contentShape(Rectangle())
-				.textSelection(.enabled)
+		if (hideIfEmpty && !(self.content?.isReallyEmpty ?? true)) || !hideIfEmpty {
+			CustomSection(label: label) {
+				Text(content ?? "none")
+					.font(.system(.callout, design: monospace ? .monospaced : .default))
+					.foregroundColor(content != nil ? .primary : .secondary)
+					.lineLimit(nil)
+					.contentShape(Rectangle())
+					.textSelection(.enabled)
+			}
 		}
 	}
 }

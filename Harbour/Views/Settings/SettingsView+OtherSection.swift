@@ -12,13 +12,13 @@ extension SettingsView {
 		var madeWithLove: some View {
 			Link(destination: URL(string: "https://github.com/rrroyal/Harbour")!) {
 				VStack(spacing: 5) {
-					Text(Localization.SETTINGS_FOOTER.localizedString)
+					Text(Localization.SETTINGS_FOOTER.localized)
 					Text("Harbour v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
 				}
 				.font(.subheadline.weight(.semibold))
-				.foregroundColor(.secondary)
 				.opacity(Globals.Views.secondaryOpacity)
 			}
+			.tint(.secondary)
 			.frame(maxWidth: .infinity, alignment: .center)
 			.padding(.top)
 		}

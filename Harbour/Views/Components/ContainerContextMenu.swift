@@ -10,6 +10,7 @@ import PortainerKit
 import Indicators
 
 struct ContainerContextMenu: View {
+	@EnvironmentObject var sceneState: SceneState
 	@ObservedObject var container: PortainerKit.Container
 	
 	var resumeButton: some View {
@@ -55,66 +56,64 @@ struct ContainerContextMenu: View {
 	}
 	
 	var body: some View {
-		Group {
-			Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter() ?? "Unknown", systemImage: container.state.icon)
-			
-			Divider()
-						
-			switch container.state {
-				case .created:
-					pauseButton
-					stopButton
-					restartButton
-					Divider()
-					killButton
-				case .running:
-					pauseButton
-					stopButton
-					restartButton
-					Divider()
-					killButton
-				case .paused:
-					resumeButton
-					stopButton
-					restartButton
-					Divider()
-					killButton
-				case .restarting:
-					pauseButton
-					stopButton
-					Divider()
-					killButton
-				case .removing:
-					killButton
-				case .exited:
-					startButton
-				case .dead:
-					startButton
-				case .none:
-					resumeButton
-					startButton
-					restartButton
-					pauseButton
-					stopButton
-					Divider()
-					killButton
-			}
-			
-			Divider()
-			
-			Button(action: {
-				do {
-					UIDevice.current.generateHaptic(.light)
-					try Portainer.shared.attach(to: container)
-					AppState.shared.isContainerConsoleSheetPresented = true
-				} catch {
-					AppState.shared.handle(error)
-				}
-			}) {
-				Label("Attach", systemImage: "terminal")
-			}
-			.disabled(container.state != .running)
+		Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter() ?? "Unknown", systemImage: container.state.icon)
+		
+		Divider()
+					
+		switch container.state {
+			case .created:
+				pauseButton
+				stopButton
+				restartButton
+				Divider()
+				killButton
+			case .running:
+				pauseButton
+				stopButton
+				restartButton
+				Divider()
+				killButton
+			case .paused:
+				resumeButton
+				stopButton
+				restartButton
+				Divider()
+				killButton
+			case .restarting:
+				pauseButton
+				stopButton
+				Divider()
+				killButton
+			case .removing:
+				killButton
+			case .exited:
+				startButton
+			case .dead:
+				startButton
+			case .none:
+				resumeButton
+				startButton
+				restartButton
+				pauseButton
+				stopButton
+				Divider()
+				killButton
 		}
+		
+		Divider()
+		
+		Button(action: {
+			do {
+				UIDevice.current.generateHaptic(.light)
+				try Portainer.shared.attach(to: container)
+				sceneState.isContainerConsoleSheetPresented = true
+			} catch {
+				sceneState.handle(error)
+			}
+		}) {
+			Label("Attach", systemImage: "terminal")
+		}
+		.disabled(container.state != .running)
 	}
 	
 	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) {
@@ -122,7 +121,7 @@ struct ContainerContextMenu: View {
 		
 		let style: Indicators.Indicator.Style = .init(subheadlineColor: action.color, subheadlineStyle: .primary, iconColor: action.color, iconStyle: .primary, iconVariants: .fill)
 		let indicator: Indicators.Indicator = .init(id: "ContainerActionExecution-\(container.id)", icon: action.icon, headline: container.displayName ?? "Container", subheadline: action.label, dismissType: .after(3), style: style)
-		AppState.shared.indicators.display(indicator)
+		sceneState.indicators.display(indicator)
 
 		Task {
 			do {
@@ -130,14 +129,12 @@ struct ContainerContextMenu: View {
 				
 				DispatchQueue.main.async {
 					container.state = action.expectedState
-					Portainer.shared.refreshCurrentContainerPassthroughSubject.send()
+					Portainer.shared.refreshContainerPassthroughSubject.send(container.id)
 				}
 				
-				if let endpointID = Portainer.shared.selectedEndpoint?.id {
-					try await Portainer.shared.getContainers(endpointID: endpointID)
-				}
+				// try await Portainer.shared.getContainers()
 			} catch {
-				AppState.shared.handle(error)
+				sceneState.handle(error)
 			}
 		}
 	}

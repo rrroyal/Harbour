@@ -10,6 +10,7 @@ import PortainerKit
 
 struct LoginView: View {
 	@Environment(\.presentationMode) var presentationMode
+	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	
 	@State private var endpoint: String = Preferences.shared.endpointURL ?? ""
@@ -42,7 +43,7 @@ struct LoginView: View {
 					
 					if !endpoint.starts(with: "http") {
 						UIDevice.current.generateHaptic(.selectionChanged)
-						endpoint = "http://\(endpoint)"
+						endpoint = "https://\(endpoint)"
 					}
 					
 					focusedField = .username
@@ -90,7 +91,7 @@ struct LoginView: View {
 					} else {
 						Group {
 							if let buttonLabel = buttonLabel {
-								Text(NSLocalizedString(buttonLabel, comment: "").capitalizingFirstLetter())
+								Text(buttonLabel.localized.capitalizingFirstLetter())
 							} else {
 								Text("Log in")
 							}
@@ -170,7 +171,7 @@ struct LoginView: View {
 				do {
 					try await portainer.getEndpoints()
 				} catch {
-					AppState.shared.handle(error)
+					sceneState.handle(error)
 				}
 			} catch {
 				UIDevice.current.generateHaptic(.error)

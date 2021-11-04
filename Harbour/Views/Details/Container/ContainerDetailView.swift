@@ -8,13 +8,16 @@
 import PortainerKit
 import SwiftUI
 
-struct ContainerDetailView: View {
+struct ContainerDetailView: View, Identifiable {
+	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	@ObservedObject var container: PortainerKit.Container
 	
 	@State private var loading: Bool = false
 	
 	@State private var lastLogsSnippet: String? = nil
+	
+	var id: String { container.id }
 	
 	let lastLogsTailCount: Int = 5
 		
@@ -42,13 +45,13 @@ struct ContainerDetailView: View {
 	@ViewBuilder
 	var generalSection: some View {
 		if let details = container.details {
-			LabeledSection(label: "ID", content: details.id, monospace: true)
-			LabeledSection(label: "Created", content: details.created.formatted())
-			LabeledSection(label: "PID", content: "\(details.state.pid)", monospace: true)
-			LabeledSection(label: "Status", content: container.status ?? details.state.status.rawValue, monospace: true)
-			LabeledSection(label: "Error", content: details.state.error, monospace: true)
-			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted())
-			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted())
+			LabeledSection(label: "ID", content: details.id, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Created", content: details.created.formatted(), hideIfEmpty: false)
+			LabeledSection(label: "PID", content: "\(details.state.pid)", monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Status", content: container.status ?? details.state.status.rawValue, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Error", content: details.state.error, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted(), hideIfEmpty: false)
+			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted(), hideIfEmpty: false)
 		} else {
 			ProgressView()
 				.padding()
@@ -76,7 +79,7 @@ struct ContainerDetailView: View {
 	
 	var body: some View {
 		ScrollView {
-			LazyVStack(spacing: 20) {
+			LazyVStack(spacing: 20) {				
 				buttonsSection
 				generalSection
 				logsSection
@@ -91,7 +94,6 @@ struct ContainerDetailView: View {
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
 		.animation(.easeInOut, value: lastLogsSnippet)
-		.animation(.easeInOut, value: container.details)
 		.navigationTitle(container.displayName ?? container.id)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
@@ -121,8 +123,18 @@ struct ContainerDetailView: View {
 		}
 		.refreshable { await refresh() }
 		.task { await refresh() }
-		.onReceive(portainer.refreshCurrentContainerPassthroughSubject) {
-			Task { await refresh() }
+		.userActivity(AppState.UserActivity.viewingContainer, isActive: sceneState.activeContainerID == container.id) { activity in
+			activity.requiredUserInfoKeys = ["ContainerID"]
+			activity.userInfo = ["ContainerID": container.id]
+			activity.title = container.displayName ?? container.id
+			activity.persistentIdentifier = container.id
+			activity.isEligibleForPrediction = true
+			activity.isEligibleForHandoff = true
+		}
+		.onReceive(portainer.refreshContainerPassthroughSubject) { containerID in
+			if containerID == container.id {
+				Task { await refresh() }
+			}
 		}
 	}
 	
@@ -134,7 +146,7 @@ struct ContainerDetailView: View {
 				let logs = try await portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true)
 				self.lastLogsSnippet = logs.trimmingCharacters(in: .whitespacesAndNewlines)
 			} catch {
-				AppState.shared.handle(error)
+				sceneState.handle(error)
 			}
 		}
 		
@@ -144,7 +156,7 @@ struct ContainerDetailView: View {
 				container.update(from: containerDetails)
 			}
 		} catch {
-			AppState.shared.handle(error)
+			sceneState.handle(error)
 		}
 		
 		loading = false
@@ -152,25 +164,11 @@ struct ContainerDetailView: View {
 }
 
 fileprivate extension ContainerDetailView {
-	struct DisclosureSection<Content>: View where Content: View {
-		let label: String
-		@ViewBuilder let content: () -> Content
-				
-		var body: some View {
-			DisclosureGroup(content: {
-				VStack(spacing: 20, content: content)
-					.padding(.top, .medium)
-			}) {
-				Text(LocalizedStringKey(label))
-			}
-		}
-	}
-	
 	struct GeneralSection: View {
 		let details: PortainerKit.ContainerDetails
 		
 		var body: some View {
-			DisclosureSection(label: "General") {
+			DisclosureSection(label: "General", isExpanded: Preferences.shared.$cdvExpandGeneral) {
 				Group {
 					LabeledSection(label: "Name", content: details.name, monospace: true)
 					LabeledSection(label: "Image", content: details.image, monospace: true)
@@ -206,7 +204,7 @@ fileprivate extension ContainerDetailView {
 		let state: PortainerKit.ContainerState
 
 		var body: some View {
-			DisclosureSection(label: "State") {
+			DisclosureSection(label: "State", isExpanded: Preferences.shared.$cdvExpandState) {
 				LabeledSection(label: "State", content: state.status.rawValue, monospace: true)
 				LabeledSection(label: "Running", content: "\(state.running)", monospace: true)
 				LabeledSection(label: "Paused", content: "\(state.paused)", monospace: true)
@@ -221,7 +219,7 @@ fileprivate extension ContainerDetailView {
 		let graphDriver: PortainerKit.GraphDriver
 
 		var body: some View {
-			DisclosureSection(label: "GraphDriver") {
+			DisclosureSection(label: "GraphDriver", isExpanded: Preferences.shared.$cdvExpandGraphDriver) {
 				LabeledSection(label: "Name", content: graphDriver.name, monospace: true)
 				LabeledSection(label: "Lower dir", content: graphDriver.data.lowerDir, monospace: true)
 				LabeledSection(label: "Merged dir", content: graphDriver.data.mergedDir, monospace: true)

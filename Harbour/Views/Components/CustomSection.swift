@@ -15,7 +15,7 @@ struct CustomSection<Content: View>: View {
 		
 	var body: some View {
 		VStack(alignment: .leading, spacing: 6) {
-			Text(LocalizedStringKey(label))
+			Text(label)
 				.font(.footnote)
 				.foregroundStyle(.secondary)
 				.textCase(.uppercase)

@@ -1,5 +1,5 @@
 //
-//  PortainerKit+GenericTypes.swift
+//  Other.swift
 //  PortianerKit
 //
 //  Created by royal on 11/06/2021.
@@ -11,7 +11,7 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	enum ContainerStatus: String, Codable {
+	enum ContainerStatus: String, Decodable {
 		case created
 		case running
 		case paused
@@ -21,12 +21,12 @@ public extension PortainerKit {
 		case dead
 	}
 	
-	enum EndpointStatus: Int, Codable {
+	enum EndpointStatus: Int, Decodable {
 		case up = 1
 		case down
 	}
 	
-	enum EndpointType: Int, Codable {
+	enum EndpointType: Int, Decodable {
 		case docker = 1
 		case agent
 		case azure
@@ -52,14 +52,14 @@ public extension PortainerKit {
 		}
 	}
 	
-	enum MountConsistency: String, Codable, Hashable {
+	enum MountConsistency: String, Decodable, Hashable {
 		case `default`
 		case consistent
 		case cached
 		case delegated
 	}
 	
-	enum MountType: String, Codable, Hashable {
+	enum MountType: String, Decodable, Hashable {
 		case bind
 		case volume
 		case tmpfs
@@ -70,7 +70,7 @@ public extension PortainerKit {
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	struct AccessPolicy: Codable {
+	struct AccessPolicy: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case roleID = "RoleID"
 		}
@@ -78,7 +78,7 @@ public extension PortainerKit {
 		public let roleID: Int?
 	}
 	
-	struct AzureCredentials: Codable {
+	struct AzureCredentials: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case applicationID = "ApplicationID"
 			case authenticationKey = "AuthenticationKey"
@@ -90,12 +90,12 @@ public extension PortainerKit {
 		public let tenantID: String?
 	}
 	
-	struct BindOptions: Codable, Hashable {
+	struct BindOptions: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case propagation = "Propagation"
 		}
 		
-		public enum Propagation: String, Codable {
+		public enum Propagation: String, Decodable {
 			case `private`
 			case rprivate
 			case shared
@@ -107,7 +107,7 @@ public extension PortainerKit {
 		public let propagation: Propagation?
 	}
 	
-	struct ContainerConfig: Codable {
+	struct ContainerConfig: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case hostname = "Hostname"
 			case domainName = "DomainName"
@@ -163,7 +163,7 @@ public extension PortainerKit {
 		public let shell: [String]?
 	}
 	
-	struct ContainerState: Codable {
+	struct ContainerState: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case status = "Status"
 			case running = "Running"
@@ -189,7 +189,7 @@ public extension PortainerKit {
 		public let finishedAt: Date?
 	}
 	
-	struct DockerSnapshot: Codable {
+	struct DockerSnapshot: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case dockerVersion = "DockerVersion"
 			case healthyContainerCount = "HealthyContainerCount"
@@ -221,7 +221,7 @@ public extension PortainerKit {
 		public let volumeCount: Int?
 	}
 	
-	struct DriverConfig: Codable, Hashable {
+	struct DriverConfig: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case name = "Name"
 			case options = "Options"
@@ -231,7 +231,7 @@ public extension PortainerKit {
 		public let options: [String: String]?
 	}
 	
-	struct EndpointExtension: Codable {
+	struct EndpointExtension: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case type = "Type"
 			case url = "URL"
@@ -241,7 +241,7 @@ public extension PortainerKit {
 		public let url: String?
 	}
 	
-	struct HealthConfig: Codable {
+	struct HealthConfig: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case test = "Test"
 			case interval = "Interval"
@@ -257,8 +257,8 @@ public extension PortainerKit {
 		public let startPeriod: Int
 	}
 	
-	struct GraphDriver: Codable {
-		public struct GraphDriverData: Codable {
+	struct GraphDriver: Decodable {
+		public struct GraphDriverData: Decodable {
 			enum CodingKeys: String, CodingKey {
 				case lowerDir = "LowerDir"
 				case mergedDir = "MergedDir"
@@ -281,125 +281,105 @@ public extension PortainerKit {
 		public let data: GraphDriverData
 	}
 	
-	struct HostConfig: Codable {
-		enum CodingKeys: String, CodingKey {
-			case networkMode = "NetworkMode"
+	struct HostConfig: Decodable {
+		/*
+		{
+			"AutoRemove": false,
+			"Binds": null,
+			"BlkioDeviceReadBps": null,
+			"BlkioDeviceReadIOps": null,
+			"BlkioDeviceWriteBps": null,
+			"BlkioDeviceWriteIOps": null,
+			"BlkioWeight": 0,
+			"BlkioWeightDevice": [],
+			"CapAdd": null,
+			"CapDrop": null,
+			"Cgroup": "",
+			"CgroupParent": "",
+			"CgroupnsMode": "host",
+			"ConsoleSize": [
+				0,
+				0
+			],
+			"ContainerIDFile": "",
+			"CpuCount": 0,
+			"CpuPercent": 0,
+			"CpuPeriod": 0,
+			"CpuQuota": 0,
+			"CpuRealtimePeriod": 0,
+			"CpuRealtimeRuntime": 0,
+			"CpuShares": 0,
+			"CpusetCpus": "",
+			"CpusetMems": "",
+			"DeviceCgroupRules": null,
+			"DeviceRequests": null,
+			"Devices": [],
+			"Dns": [],
+			"DnsOptions": [],
+			"DnsSearch": [],
+			"ExtraHosts": null,
+			"GroupAdd": null,
+			"IOMaximumBandwidth": 0,
+			"IOMaximumIOps": 0,
+			"IpcMode": "private",
+			"Isolation": "",
+			"KernelMemory": 0,
+			"KernelMemoryTCP": 0,
+			"Links": null,
+			"LogConfig": {
+				"Config": {},
+				"Type": "json-file"
+			},
+			"MaskedPaths": [
+				"/proc/asound",
+				"/proc/acpi",
+				"/proc/kcore",
+				"/proc/keys",
+				"/proc/latency_stats",
+				"/proc/timer_list",
+				"/proc/timer_stats",
+				"/proc/sched_debug",
+				"/proc/scsi",
+				"/sys/firmware"
+			],
+			"Memory": 0,
+			"MemoryReservation": 0,
+			"MemorySwap": 0,
+			"MemorySwappiness": null,
+			"NanoCpus": 0,
+			"NetworkMode": "default",
+			"OomKillDisable": null,
+			"OomScoreAdj": 0,
+			"PidMode": "",
+			"PidsLimit": null,
+			"PortBindings": {},
+			"Privileged": false,
+			"PublishAllPorts": false,
+			"ReadonlyPaths": [
+				"/proc/bus",
+				"/proc/fs",
+				"/proc/irq",
+				"/proc/sys",
+				"/proc/sysrq-trigger"
+			],
+			"ReadonlyRootfs": false,
+			"RestartPolicy": {
+				"MaximumRetryCount": 0,
+				"Name": "no"
+			},
+			"Runtime": "runc",
+			"SecurityOpt": null,
+			"ShmSize": 67108864,
+			"UTSMode": "",
+			"Ulimits": null,
+			"UsernsMode": "",
+			"VolumeDriver": "",
+			"VolumesFrom": null
 		}
-		
-		/* "HostConfig": {
-		 	"AutoRemove": false,
-		 	"Binds": [
-		 		"portainer_data:/data",
-		 		"/run/host-services/docker.proxy.sock:/var/run/docker.sock"
-		 	],
-		 	"BlkioDeviceReadBps": null,
-		 	"BlkioDeviceReadIOps": null,
-		 	"BlkioDeviceWriteBps": null,
-		 	"BlkioDeviceWriteIOps": null,
-		 	"BlkioWeight": 0,
-		 	"BlkioWeightDevice": [],
-		 	"CapAdd": null,
-		 	"CapDrop": null,
-		 	"Cgroup": "",
-		 	"CgroupParent": "",
-		 	"CgroupnsMode": "host",
-		 	"ConsoleSize": [
-		 		0,
-		 		0
-		 	],
-		 	"ContainerIDFile": "",
-		 	"CpuCount": 0,
-		 	"CpuPercent": 0,
-		 	"CpuPeriod": 0,
-		 	"CpuQuota": 0,
-		 	"CpuRealtimePeriod": 0,
-		 	"CpuRealtimeRuntime": 0,
-		 	"CpuShares": 0,
-		 	"CpusetCpus": "",
-		 	"CpusetMems": "",
-		 	"DeviceCgroupRules": null,
-		 	"DeviceRequests": null,
-		 	"Devices": [],
-		 	"Dns": [],
-		 	"DnsOptions": [],
-		 	"DnsSearch": [],
-		 	"ExtraHosts": null,
-		 	"GroupAdd": null,
-		 	"IOMaximumBandwidth": 0,
-		 	"IOMaximumIOps": 0,
-		 	"IpcMode": "private",
-		 	"Isolation": "",
-		 	"KernelMemory": 0,
-		 	"KernelMemoryTCP": 0,
-		 	"Links": null,
-		 	"LogConfig": {
-		 		"Config": {},
-		 		"Type": "json-file"
-		 	},
-		 	"MaskedPaths": [
-		 		"/proc/asound",
-		 		"/proc/acpi",
-		 		"/proc/kcore",
-		 		"/proc/keys",
-		 		"/proc/latency_stats",
-		 		"/proc/timer_list",
-		 		"/proc/timer_stats",
-		 		"/proc/sched_debug",
-		 		"/proc/scsi",
-		 		"/sys/firmware"
-		 	],
-		 	"Memory": 0,
-		 	"MemoryReservation": 0,
-		 	"MemorySwap": 0,
-		 	"MemorySwappiness": null,
-		 	"NanoCpus": 0,
-		 	"NetworkMode": "default",
-		 	"OomKillDisable": false,
-		 	"OomScoreAdj": 0,
-		 	"PidMode": "",
-		 	"PidsLimit": null,
-		 	"PortBindings": {
-		 		"8000/tcp": [
-		 			{
-		 			"HostIp": "",
-		 			"HostPort": "8000"
-		 		}
-		 		],
-		 		"9000/tcp": [
-		 			{
-		 			"HostIp": "",
-		 			"HostPort": "9000"
-		 		}
-		 		]
-		 	},
-		 	"Privileged": false,
-		 	"PublishAllPorts": false,
-		 	"ReadonlyPaths": [
-		 		"/proc/bus",
-		 		"/proc/fs",
-		 		"/proc/irq",
-		 		"/proc/sys",
-		 		"/proc/sysrq-trigger"
-		 	],
-		 	"ReadonlyRootfs": false,
-		 	"RestartPolicy": {
-		 		"MaximumRetryCount": 0,
-		 		"Name": "always"
-		 	},
-		 	"Runtime": "runc",
-		 	"SecurityOpt": null,
-		 	"ShmSize": 67108864,
-		 	"UTSMode": "",
-		 	"Ulimits": null,
-		 	"UsernsMode": "",
-		 	"VolumeDriver": "",
-		 	"VolumesFrom": null
-		 } */
-		
-		public let networkMode: String?
+		 */
 	}
 	
-	struct IPAMConfig: Codable {
+	struct IPAMConfig: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case ipv4Address = "IPv4Address"
 			case ipv6Address = "IPv6Address"
@@ -411,7 +391,7 @@ public extension PortainerKit {
 		public let linkLocalIPs: [String]?
 	}
 	
-	struct KubernetesConfiguration: Codable {
+	struct KubernetesConfiguration: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case ingressClasses = "IngressClasses"
 			case storageClasses = "StorageClasses"
@@ -425,7 +405,7 @@ public extension PortainerKit {
 		public let useServerMetrics: Bool?
 	}
 	
-	struct KubernetesData: Codable {
+	struct KubernetesData: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case configuration = "Configuration"
 			case snapshots = "Snapshots"
@@ -435,7 +415,7 @@ public extension PortainerKit {
 		public let snapshots: [KubernetesSnapshot]?
 	}
 	
-	struct KubernetesIngressClassConfig: Codable {
+	struct KubernetesIngressClassConfig: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case name = "Name"
 			case type = "Type"
@@ -445,7 +425,7 @@ public extension PortainerKit {
 		public let type: String
 	}
 	
-	struct KubernetesSnapshot: Codable {
+	struct KubernetesSnapshot: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case kubernetesVersion = "KubernetesVersion"
 			case nodeCount = "NodeCount"
@@ -461,7 +441,7 @@ public extension PortainerKit {
 		public let totalMemory: Int?
 	}
 	
-	struct KubernetesStorageClassConfig: Codable {
+	struct KubernetesStorageClassConfig: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case accessModes = "AccessModes"
 			case allowVolumeExpansion = "AllowVolumeExpansion"
@@ -475,7 +455,7 @@ public extension PortainerKit {
 		public let provisioner: String?
 	}
 	
-	struct Mount: Codable, Hashable {
+	struct Mount: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case target = "Target"
 			case source = "Source"
@@ -501,7 +481,7 @@ public extension PortainerKit {
 		}
 	}
 	
-	struct MountPoint: Codable, Hashable {
+	struct MountPoint: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case type = "Type"
 			case name = "Name"
@@ -523,7 +503,7 @@ public extension PortainerKit {
 		public let propagation: String
 	}
 	
-	struct Network: Codable {
+	struct Network: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case ipamConfig = "IPAMConfig"
 			case links = "Links"
@@ -553,7 +533,7 @@ public extension PortainerKit {
 		public let macAddress: String?
 	}
 
-	struct Port: Codable, Hashable {
+	struct Port: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case ip = "IP"
 			case privatePort = "PrivatePort"
@@ -561,7 +541,7 @@ public extension PortainerKit {
 			case type = "Type"
 		}
 		
-		public enum PortType: String, Codable {
+		public enum PortType: String, Decodable {
 			case tcp
 			case udp
 		}
@@ -572,7 +552,7 @@ public extension PortainerKit {
 		public let type: PortType?
 	}
 	
-	struct TmpfsOptions: Codable, Hashable {
+	struct TmpfsOptions: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case sizeBytes = "SizeBytes"
 			case mode = "Mode"
@@ -582,7 +562,7 @@ public extension PortainerKit {
 		public let mode: Int?
 	}
 	
-	struct TLSConfiguration: Codable {
+	struct TLSConfiguration: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case tls = "TLS"
 			case tlsCACert = "TLSCACert"
@@ -598,7 +578,7 @@ public extension PortainerKit {
 		public let tlsSkipVerify: Bool?
 	}
 	
-	struct VolumeOptions: Codable, Hashable {
+	struct VolumeOptions: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case noCopy = "NoCopy"
 			case labels = "Labels"

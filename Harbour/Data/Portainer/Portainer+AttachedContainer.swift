@@ -6,23 +6,28 @@
 //
 
 import Combine
+import SwiftUI
 import Foundation
 import os.log
 import PortainerKit
 import Indicators
 
 extension Portainer {
-	class AttachedContainer: ObservableObject {
+	class AttachedContainer: ObservableObject {		
 		public let container: PortainerKit.Container
 		public let messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject
 		
-		@Published public private(set) var attributedString: AttributedString = ""
+		@Published public private(set) var buffer: AttributedString = ""
+		
+		public private(set) var isConnected: Bool = true
+		public var errorHandler: SceneState.ErrorHandler?
 		
 		private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer.AttachedContainer")
 		private var messageCancellable: AnyCancellable? = nil
 		
 		public init(container: PortainerKit.Container, messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject) {
 			logger.info("Attached to container with ID \(container.id)")
+			
 			self.container = container
 			self.messagePassthroughSubject = messagePassthroughSubject
 						
@@ -40,6 +45,8 @@ extension Portainer {
 		}
 		
 		private func passthroughSubjectCompletion(_ completion: Subscribers.Completion<Error>) {
+			isConnected = false
+			
 			switch completion {
 				case .finished:
 					let string = "Session ended."
@@ -47,7 +54,7 @@ extension Portainer {
 				case .failure(let error):
 					let string = "Session ended, reason: \(String(describing: error))"
 					update(string)
-					AppState.shared.handle(error)
+					errorHandler?(error, nil, #fileID, #line)
 			}
 		}
 		
@@ -65,17 +72,18 @@ extension Portainer {
 							logger.debug("\(string)")
 					}
 				case .failure(let error):
+					isConnected = false
 					update(String(describing: error))
 					
-					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localizedString, subheadline: error.localizedDescription, dismissType: .after(5))
-					AppState.shared.handle(error, indicator: indicator)
+					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localized, subheadline: error.localizedDescription, dismissType: .after(5))
+					errorHandler?(error, indicator, #fileID, #line)
 			}
 		}
 	
 		private func update(_ string: String) {
 			let attributedString: AttributedString = AttributedString(string)
 			DispatchQueue.main.async { [weak self] in
-				self?.attributedString.append(attributedString)
+				self?.buffer.append(attributedString)
 			}
 		}
 	}

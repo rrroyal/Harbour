@@ -10,23 +10,24 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerConsoleView: View {
-	@EnvironmentObject var portainer: Portainer
+	@ObservedObject var attachedContainer: Portainer.AttachedContainer
+	@Environment(\.sceneErrorHandler) var sceneErrorHandler
+	
+	init(attachedContainer: Portainer.AttachedContainer) {
+		self.attachedContainer = attachedContainer
+		self.attachedContainer.errorHandler = sceneErrorHandler
+	}
 
 	var body: some View {
-		if let attachedContainer = portainer.attachedContainer {
-			ScrollView {
-				LazyVStack {
-					Text(attachedContainer.attributedString)
-						.font(.system(.footnote, design: .monospaced))
-						.lineLimit(nil)
-						.textSelection(.enabled)
-						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-				}
-				.padding(.small)
+		ScrollView {
+			LazyVStack {
+				Text(attachedContainer.buffer)
+					.font(.system(.footnote, design: .monospaced))
+					.lineLimit(nil)
+					.textSelection(.enabled)
+					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 			}
-		} else {
-			Text("how did you get here? ಠ_ಠ")
-				.foregroundStyle(.secondary)
+			.padding(.small)
 		}
 	}
 }

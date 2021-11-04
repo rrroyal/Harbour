@@ -7,13 +7,39 @@
 
 import PortainerKit
 import SwiftUI
+import Indicators
 
 struct ContentView: View {
 	@EnvironmentObject var appState: AppState
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
 	
+	@StateObject var sceneState: SceneState = SceneState()
+	
 	@State private var searchQuery: String = ""
+		
+	var currentState: ContentViewDataState {
+		if portainer.containers.isEmpty {
+			guard !appState.fetchingMainScreenData else {
+				return .fetching
+			}
+			
+			guard portainer.isLoggedIn || preferences.endpointURL != nil else {
+				return .notLoggedIn
+			}
+			if portainer.selectedEndpointID != nil {
+				return .noContainers
+			} else {
+				if portainer.endpoints.isEmpty {
+					return .noEndpointsAvailable
+				} else {
+					return .noEndpointSelected
+				}
+			}
+		} else {
+			return .finished
+		}
+	}
 	
 	var toolbarMenu: some View {
 		Menu(content: {
@@ -21,10 +47,10 @@ struct ContentView: View {
 				ForEach(portainer.endpoints) { endpoint in
 					Button(action: {
 						UIDevice.current.generateHaptic(.light)
-						portainer.selectedEndpoint = endpoint
+						portainer.selectedEndpointID = endpoint.id
 					}) {
 						Text(endpoint.displayName)
-						if portainer.selectedEndpoint?.id == endpoint.id {
+						if portainer.selectedEndpointID == endpoint.id {
 							Image(systemName: "checkmark")
 						}
 					}
@@ -41,95 +67,123 @@ struct ContentView: View {
 				Task {
 					do {
 						try await portainer.getEndpoints()
-						if let endpointID = portainer.selectedEndpoint?.id {
-							try await portainer.getContainers(endpointID: endpointID)
-						}
+						try await portainer.getContainers()
+						appState.fetchingMainScreenData = false
 					} catch {
-						AppState.shared.handle(error)
+						sceneState.handle(error)
 					}
 				}
-				appState.fetchingMainScreenData = false
 			}) {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
 		}) {
-			Image(systemName: "tag")
-				.symbolVariant(portainer.selectedEndpoint != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
+			Label(portainer.endpoints.first(where: { $0.id == portainer.selectedEndpointID })?.name ?? "Endpoint", systemImage: "tag")
+				.symbolVariant(portainer.selectedEndpointID != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
 		}
 		.disabled(!portainer.isLoggedIn)
 	}
 	
 	@ViewBuilder
-	var loggedInView: some View {
-		if portainer.selectedEndpoint != nil {
-			if !portainer.containers.isEmpty {
-				Group {
-					if preferences.useGridView {
-						ContainerGridView(containers: portainer.containers.filtered(query: searchQuery))
-					} else {
-						ContainerListView(containers: portainer.containers.filtered(query: searchQuery))
-					}
-				}
-				.searchable(text: $searchQuery)
-			} else {
-				Text("No containers")
-					.opacity(Globals.Views.secondaryOpacity)
-			}
-		} else {
-			Text("Select endpoint")
-				.opacity(Globals.Views.secondaryOpacity)
+	var content: some View {
+		switch currentState {
+			case .finished:
+				ContainersView(containers: portainer.containers.filtered(query: searchQuery))
+					.searchable(text: $searchQuery)
+			default:
+				Text(currentState.label ?? "")
+					.foregroundStyle(.tertiary)
 		}
 	}
 	
 	var body: some View {
 		NavigationView {
-			Group {
-				if portainer.isLoggedIn {
-					loggedInView
-						.refreshable {
-							if let endpointID = portainer.selectedEndpoint?.id {
-								appState.fetchingMainScreenData = true
-								
-								do {
-									try await portainer.getContainers(endpointID: endpointID)
-								} catch {
-									AppState.shared.handle(error)
-								}
-								
-								appState.fetchingMainScreenData = false
-							}
+			content
+				.navigationTitle("Harbour")
+				.navigationBarTitleDisplayMode(.inline)
+				.toolbar {
+					ToolbarItem(placement: .navigation) {
+						Button(action: {
+							UIDevice.current.generateHaptic(.soft)
+							sceneState.isSettingsSheetPresented = true
+						}) {
+							Image(systemName: "gear")
 						}
-				} else {
-					Text("Not logged in")
-						.opacity(Globals.Views.secondaryOpacity)
-				}
-			}
-			.navigationTitle("Harbour")
-			.navigationBarTitleDisplayMode(.inline)
-			.toolbar {
-				ToolbarItem(placement: .navigation) {
-					Button(action: {
-						UIDevice.current.generateHaptic(.soft)
-						appState.isSettingsSheetPresented = true
-					}) {
-						Image(systemName: "gear")
 					}
+					
+					ToolbarTitle(title: "Harbour", subtitle: appState.fetchingMainScreenData ? "Refreshing..." : nil)
+					
+					ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 				}
-				
-				ToolbarTitle(title: "Harbour", subtitle: appState.fetchingMainScreenData ? "Refreshing..." : nil)
-				
-				ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
-			}
+			
+			Text("Select container")
+				.foregroundStyle(.tertiary)
 		}
 		.transition(.opacity)
 		.animation(.easeInOut, value: portainer.isLoggedIn)
-		.animation(.easeInOut, value: portainer.selectedEndpoint != nil)
-		.animation(.easeInOut, value: portainer.containers.count)
-		/* .onAppear {
-		 	if let endpointID = portainer.selectedEndpoint?.id {
-		 		await portainer.getContainers(endpointID: endpointID)
-		 	}
-		 } */
+		.animation(.easeInOut, value: portainer.selectedEndpointID)
+		.animation(.easeInOut, value: portainer.containers)
+		.animation(.easeInOut, value: currentState)
+		.navigationViewStyle(useColumns: preferences.clUseColumns)
+		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
+			SettingsView()
+		}
+		.sheet(isPresented: $sceneState.isContainerConsoleSheetPresented, onDismiss: sceneState.onContainerConsoleViewDismissed) {
+			if let attachedContainer = portainer.attachedContainer {
+				ContainerConsoleView(attachedContainer: attachedContainer)
+			}
+		}
+		.sheet(isPresented: $sceneState.isSetupSheetPresented, onDismiss: { Preferences.shared.finishedSetup = true }) {
+			SetupView()
+		}
+		.indicatorOverlay(model: sceneState.indicators)
+		.onContinueUserActivity(AppState.UserActivity.viewingContainer, perform: handleContinueContainerViewingUserActivity)
+		.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
+		.environmentObject(sceneState)
+		.environment(\.sceneErrorHandler, sceneErrorHandler)
+	}
+	
+	private func handleContinueContainerViewingUserActivity(_ activity: NSUserActivity) {
+		sceneState.logger.debug("Continuing UserActivity \"\(activity.activityType)\"")
+		
+		if let containerID = activity.userInfo?["ContainerID"] as? String {
+			sceneState.activeContainerID = containerID
+		}
+	}
+	
+	private func onDeviceDidShake(notification: Notification) {
+		if portainer.attachedContainer != nil {
+			sceneState.showAttachedContainer()
+		}
+	}
+	
+	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?, _fileID: StaticString = #fileID, _line: Int = #line) {
+		if let indicator = indicator {
+			sceneState.handle(error, indicator: indicator, _fileID: _fileID, _line: _line)
+		} else {
+			sceneState.handle(error, _fileID: _fileID, _line: _line)
+		}
+	}
+}
+
+extension ContentView {
+	enum ContentViewDataState {
+		case fetching
+		case notLoggedIn
+		case noEndpointSelected
+		case noEndpointsAvailable
+		case noContainers
+		case finished
+		
+		var label: String? {
+			switch self {
+				case .fetching: return "Loading..."
+				case .notLoggedIn: return "Not logged in"
+				case .noEndpointSelected: return "No endpoint selected"
+				case .noEndpointsAvailable: return "No endpoints available"
+				case .noContainers: return "No containers"
+				case .finished: return nil
+			}
+		}
 	}
 }
 

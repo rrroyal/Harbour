@@ -16,7 +16,7 @@ struct ContainerMountsDetailsView: View {
 	var emptyDisclaimer: some View {
 		if mounts?.isEmpty ?? true && details?.isEmpty ?? true {
 			Text("No mounts")
-				.opacity(Globals.Views.secondaryOpacity)
+				.foregroundStyle(.tertiary)
 		}
 	}
 	
@@ -54,7 +54,7 @@ struct ContainerMountsDetailsView: View {
 					Labeled(label: "Mode", content: mount.mode, monospace: true)
 					Labeled(label: "Type", content: mount.type, monospace: true)
 					Labeled(label: "Propagation", content: mount.propagation, monospace: true)
-					Labeled(label: "RW?", bool: mount.rw)
+					Labeled(label: "R/W?", bool: mount.rw)
 				}
 			}
 		}
@@ -123,8 +123,8 @@ fileprivate extension ContainerMountsDetailsView {
 		var body: some View {
 			if let tmpfsOptions = tmpfsOptions {
 				DisclosureGroup("tmpfs options") {
-					Labeled(label: "Mode", content: tmpfsOptions.mode != nil ? "\(tmpfsOptions.mode ?? 0)" : nil, monospace: true)
-					Labeled(label: "Size (B)", content: tmpfsOptions.sizeBytes != nil ? "\(tmpfsOptions.sizeBytes ?? 0)" : nil, monospace: true)
+					Labeled(label: "Mode", content: tmpfsOptions.mode?.description, monospace: true)
+					Labeled(label: "Size (B)", content: tmpfsOptions.sizeBytes?.description, monospace: true)
 				}
 			} else {
 				Labeled(label: "tmpfs options", content: nil, monospace: true)

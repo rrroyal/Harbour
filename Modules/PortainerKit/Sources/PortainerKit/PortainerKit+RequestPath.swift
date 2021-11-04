@@ -14,8 +14,8 @@ internal extension PortainerKit {
 		case endpoints
 		case containers(endpointID: Int)
 		case containerDetails(containerID: String, endpointID: Int)
-		case executeAction(_ action: ExecuteAction, containerID: String, endpointID: Int)
-		case logs(containerID: String, endpointID: Int, since: TimeInterval, tail: Int, timestamps: Bool)
+		case executeAction(containerID: String, endpointID: Int, action: ExecuteAction)
+		case logs(containerID: String, endpointID: Int)
 		case attach
 
 		var path: String {
@@ -25,13 +25,13 @@ internal extension PortainerKit {
 				case .endpoints:
 					return "/api/endpoints"
 				case .containers(let endpointID):
-					return "/api/endpoints/\(endpointID)/docker/containers/json?all=true"
+					return "/api/endpoints/\(endpointID)/docker/containers/json"
 				case .containerDetails(let containerID, let endpointID):
 					return "/api/endpoints/\(endpointID)/docker/containers/\(containerID)/json"
-				case .executeAction(let action, let containerID, let endpointID):
+				case .executeAction(let containerID, let endpointID, let action):
 					return "/api/endpoints/\(endpointID)/docker/containers/\(containerID)/\(action.rawValue)"
-				case .logs(let containerID, let endpointID, let since, let tail, let timestamps):
-					return "/api/endpoints/\(endpointID)/docker/containers/\(containerID)/logs?since=\(since)&stderr=true&stdout=true&tail=\(tail)&timestamps=\(timestamps)"
+				case .logs(let containerID, let endpointID):
+					return "/api/endpoints/\(endpointID)/docker/containers/\(containerID)/logs"
 				case .attach:
 					return "/api/websocket/attach"
 			}

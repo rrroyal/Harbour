@@ -40,9 +40,9 @@ fileprivate struct WelcomeView: View {
 			Spacer()
 			
 			VStack(spacing: 20) {
-				FeatureCell(image: "power", headline: Localization.SETUP_FEATURE1_TITLE.localizedString, description: Localization.SETUP_FEATURE1_DESCRIPTION.localizedString)
-				FeatureCell(image: "doc.plaintext", headline: Localization.SETUP_FEATURE2_TITLE.localizedString, description: Localization.SETUP_FEATURE2_DESCRIPTION.localizedString)
-				FeatureCell(image: "terminal", headline: Localization.SETUP_FEATURE3_TITLE.localizedString, description: Localization.SETUP_FEATURE3_DESCRIPTION.localizedString)
+				FeatureCell(image: "power", headline: Localization.SETUP_FEATURE1_TITLE.localized, description: Localization.SETUP_FEATURE1_DESCRIPTION.localized)
+				FeatureCell(image: "doc.plaintext", headline: Localization.SETUP_FEATURE2_TITLE.localized, description: Localization.SETUP_FEATURE2_DESCRIPTION.localized)
+				FeatureCell(image: "terminal", headline: Localization.SETUP_FEATURE3_TITLE.localized, description: Localization.SETUP_FEATURE3_DESCRIPTION.localized)
 			}
 			
 			Spacer()

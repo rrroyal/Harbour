@@ -13,14 +13,15 @@ extension ContainerListView {
 		@ObservedObject var container: PortainerKit.Container
 		
 		let circleSize: Double = 10
-		let backgroundRectangle: some Shape = RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
+		let backgroundShape = RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
 
 		@ViewBuilder
 		var containerStatusSubheadline: some View {
 			Group {
 				if let status = container.status,
-				   let state = container.state {
-					Text("\(status) • \(state.rawValue.capitalizingFirstLetter())")
+				   let state = container.state?.rawValue.capitalizingFirstLetter(),
+				   status != state {
+					Text("\(status) • \(state)")
 				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter() {
 					Text(fallback)
 				}
@@ -55,8 +56,11 @@ extension ContainerListView {
 					.animation(.easeInOut, value: container.state.color)
 			}
 			.padding()
-			.background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
-			.contentShape(backgroundRectangle)
+			// .background(useColoredContainerCells: useColoredContainerCells)
+			// .background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
+			// .contentShape(backgroundRectangle)
+			.background(ContainerCellBackground(state: container.state))
+			.containerShape(backgroundShape)
 			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.displayName)

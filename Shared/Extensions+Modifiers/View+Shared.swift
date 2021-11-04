@@ -10,15 +10,6 @@ import SwiftUI
 // MARK: View+
 
 extension View {
-	@ViewBuilder
-	func hidden(_ hidden: Bool) -> some View {
-		if hidden {
-			self.hidden()
-		} else {
-			self
-		}
-	}
-
 	func padding(_ edges: Edge.Set, _ length: PaddingSize) -> some View {
 		padding(edges, length.rawValue)
 	}

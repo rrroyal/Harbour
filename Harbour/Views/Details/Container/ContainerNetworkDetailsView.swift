@@ -17,7 +17,7 @@ struct ContainerNetworkDetailsView: View {
 	var emptyDisclaimer: some View {
 		if networkSettings == nil && details == nil && ports?.isEmpty ?? true {
 			Text("No network details")
-				.opacity(Globals.Views.secondaryOpacity)
+				.foregroundStyle(.tertiary)
 		}
 	}
 	
