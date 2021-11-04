@@ -35,7 +35,7 @@
 		E75A51EA2673A79700857D2B /* ContainerLogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51E92673A79700857D2B /* ContainerLogsView.swift */; };
 		E75A51EC2673A7F300857D2B /* ContainerConfigDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EB2673A7F300857D2B /* ContainerConfigDetailsView.swift */; };
 		E75A51EE2673B17B00857D2B /* Labeled.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51ED2673B17B00857D2B /* Labeled.swift */; };
-		E75A51F02673CE3500857D2B /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EF2673CE3500857D2B /* View+.swift */; };
+		E75A51F02673CE3500857D2B /* View+Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = E75A51EF2673CE3500857D2B /* View+Shared.swift */; };
 		E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7685BBE26769B2500CD592E /* PortainerKit */; };
 		E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */; };
 		E7748E7D267E831B00456BFD /* UIWindow+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7748E7C267E831B00456BFD /* UIWindow+.swift */; };
@@ -61,6 +61,7 @@
 		E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */; };
 		E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */; };
 		E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */; };
+		E7C303C52734205000D8FE8F /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C303C42734205000D8FE8F /* View+.swift */; };
 		E7C84B792708BB170071DE06 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C84B782708BB170071DE06 /* Localization.swift */; };
 		E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */; };
 		E7DD4CC6267650CB002709F0 /* ContainerConsoleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */; };
@@ -109,7 +110,7 @@
 		E75A51E92673A79700857D2B /* ContainerLogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerLogsView.swift; sourceTree = "<group>"; };
 		E75A51EB2673A7F300857D2B /* ContainerConfigDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConfigDetailsView.swift; sourceTree = "<group>"; };
 		E75A51ED2673B17B00857D2B /* Labeled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Labeled.swift; sourceTree = "<group>"; };
-		E75A51EF2673CE3500857D2B /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
+		E75A51EF2673CE3500857D2B /* View+Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Shared.swift"; sourceTree = "<group>"; };
 		E7685BB726769B0900CD592E /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PortainerKit; sourceTree = "<group>"; };
 		E76B26EC267518AA000F437D /* RoundedTextFieldStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedTextFieldStyle.swift; sourceTree = "<group>"; };
 		E7748E7C267E831B00456BFD /* UIWindow+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+.swift"; sourceTree = "<group>"; };
@@ -135,6 +136,7 @@
 		E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecreasesOnPressButtonStyle.swift; sourceTree = "<group>"; };
 		E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 		E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
+		E7C303C42734205000D8FE8F /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		E7C84B782708BB170071DE06 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
 		E7DC3BA72708FB8A00F32F8B /* TransparentButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransparentButtonStyle.swift; sourceTree = "<group>"; };
 		E7DD4CC5267650CB002709F0 /* ContainerConsoleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerConsoleView.swift; sourceTree = "<group>"; };
@@ -269,8 +271,8 @@
 		E77C5FB6267EA454000B4994 /* Localization */ = {
 			isa = PBXGroup;
 			children = (
-				E77C5FBB267EA4E5000B4994 /* Localizable.strings */,
 				E7C84B782708BB170071DE06 /* Localization.swift */,
+				E77C5FBB267EA4E5000B4994 /* Localizable.strings */,
 			);
 			path = Localization;
 			sourceTree = "<group>";
@@ -299,7 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				E7272E8926736CCF00228494 /* PortainerKit+.swift */,
-				E75A51EF2673CE3500857D2B /* View+.swift */,
+				E75A51EF2673CE3500857D2B /* View+Shared.swift */,
 			);
 			path = "Extensions+Modifiers";
 			sourceTree = "<group>";
@@ -351,6 +353,7 @@
 				E7339C572674262500A55B5C /* String+.swift */,
 				E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */,
 				E7748E7C267E831B00456BFD /* UIWindow+.swift */,
+				E7C303C42734205000D8FE8F /* View+.swift */,
 			);
 			path = "Extensions+Modifiers";
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				E751F063270B37DA00980DCA /* Array+.swift in Sources */,
 				E7BF9E882672F29200AAB6A1 /* LoginView.swift in Sources */,
 				E751F05F270B316400980DCA /* ContainerGridView+ContainerCell.swift in Sources */,
+				E7C303C52734205000D8FE8F /* View+.swift in Sources */,
 				E7ABFB952722BD2500054FB7 /* SceneState.swift in Sources */,
 				E7992A4426BF3BA3007335CA /* ToolbarTitle.swift in Sources */,
 				E76B26ED267518AA000F437D /* RoundedTextFieldStyle.swift in Sources */,
@@ -487,7 +491,7 @@
 				E751F059270B314700980DCA /* ContainerListView.swift in Sources */,
 				E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */,
 				E7EAE5CC270B6234008CFD20 /* CustomSection.swift in Sources */,
-				E75A51F02673CE3500857D2B /* View+.swift in Sources */,
+				E75A51F02673CE3500857D2B /* View+Shared.swift in Sources */,
 				E748BD48271CA421007C4F15 /* AppDelegate.swift in Sources */,
 				E75A51E62673A75700857D2B /* ContainerMountsDetailsView.swift in Sources */,
 				E74AC7F526768564003411AA /* Portainer+AttachedContainer.swift in Sources */,

@@ -24,8 +24,8 @@ struct HarbourApp: App {
 				.environmentObject(appState)
 				.environmentObject(portainer)
 				.environmentObject(preferences)
-				.environment(\.useContainerGridView, preferences.useGridView)
-				.environment(\.useColoredContainerCells, preferences.useColoredContainerCells)
+				.environment(\.useContainerGridView, preferences.clUseGridView)
+				.environment(\.useColoredContainerCells, preferences.clUseColoredContainerCells)
 		}
 	}
 	

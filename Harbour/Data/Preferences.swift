@@ -21,8 +21,11 @@ class Preferences: ObservableObject {
 	@AppStorage(Preferences.Key.autoRefreshInterval.rawValue, store: .group) public var autoRefreshInterval: Double = 0
 	
 	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .group) public var enableHaptics: Bool = true
-	@AppStorage(Preferences.Key.useGridView.rawValue, store: .group) public var useGridView: Bool = false
-	@AppStorage(Preferences.Key.useColoredContainerCells.rawValue, store: .group) public var useColoredContainerCells: Bool = false
+	
+	@AppStorage(Preferences.Key.clUseGridView.rawValue, store: .group) public var clUseGridView: Bool = false
+	@AppStorage(Preferences.Key.clUseColumns.rawValue, store: .group) public var clUseColumns: Bool = true
+	@AppStorage(Preferences.Key.clUseColoredContainerCells.rawValue, store: .group) public var clUseColoredContainerCells: Bool = false
+	
 	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .group) public var persistAttachedContainer: Bool = true
 	@AppStorage(Preferences.Key.displayContainerDismissedPrompt.rawValue, store: .group) public var displayContainerDismissedPrompt: Bool = true
 
@@ -61,8 +64,11 @@ extension Preferences {
 		case autoRefreshInterval = "AutoRefreshInterval"
 		
 		case enableHaptics = "EnableHaptics"
-		case useGridView = "UseGridView"
-		case useColoredContainerCells = "UseColoredContainerCells"
+		
+		case clUseGridView = "CLUseGridView"
+		case clUseColumns = "CLUseColumns"
+		case clUseColoredContainerCells = "CLUseColoredContainerCells"
+		
 		case persistAttachedContainer = "PersistAttachedContainer"
 		case displayContainerDismissedPrompt = "DisplayContainerDismissedPrompt"
 		

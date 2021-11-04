@@ -8,7 +8,7 @@
 import PortainerKit
 import SwiftUI
 
-struct ContainerDetailView: View {
+struct ContainerDetailView: View, Identifiable {
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	@ObservedObject var container: PortainerKit.Container
@@ -16,6 +16,8 @@ struct ContainerDetailView: View {
 	@State private var loading: Bool = false
 	
 	@State private var lastLogsSnippet: String? = nil
+	
+	var id: String { container.id }
 	
 	let lastLogsTailCount: Int = 5
 		

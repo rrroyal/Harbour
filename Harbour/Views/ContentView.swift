@@ -123,6 +123,7 @@ struct ContentView: View {
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
 		.animation(.easeInOut, value: currentState)
+		.navigationViewStyle(useColumns: preferences.clUseColumns)
 		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
 		}

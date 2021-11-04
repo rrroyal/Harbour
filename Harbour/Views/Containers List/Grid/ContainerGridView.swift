@@ -11,13 +11,17 @@ import PortainerKit
 struct ContainerGridView: View {
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var sceneState: SceneState
+	@EnvironmentObject var preferences: Preferences
+	@Environment(\.horizontalSizeClass) var horizontalSizeClass
 	let containers: [PortainerKit.Container]
 	
-	let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
+	var columnCount: Int {
+		horizontalSizeClass == .regular ? 6 : 3
+	}
     
 	var body: some View {
 		ScrollView {
-			LazyVGrid(columns: columns) {
+			LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: columnCount)) {
 				ForEach(containers) { container in
 					NavigationLink(tag: container.id, selection: $sceneState.activeContainerID, destination: {
 						ContainerDetailView(container: container)

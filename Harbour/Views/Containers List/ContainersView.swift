@@ -21,7 +21,15 @@ struct ContainersView: View {
     }
 	
 	static func containerDragProvider(container: PortainerKit.Container) -> NSItemProvider {
-		return NSItemProvider()
+		let activity = NSUserActivity(activityType: AppState.UserActivity.viewingContainer)
+		activity.requiredUserInfoKeys = ["ContainerID"]
+		activity.userInfo = ["ContainerID": container.id]
+		activity.title = container.displayName ?? container.id
+		activity.persistentIdentifier = container.id
+		activity.isEligibleForPrediction = true
+		activity.isEligibleForHandoff = true
+		
+		return NSItemProvider(object: activity)
 	}
 }
 

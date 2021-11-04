@@ -47,10 +47,14 @@
 
 "%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
 "%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
-"%SETTINGS_USE_GRID_VIEW_TITLE%" = "Use grid view";
-"%SETTINGS_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility";
-"%SETTINGS_USE_COLORED_CONTAINER_CELLS_TITLE%" = "Use colorful container cells";
-"%SETTINGS_USE_COLORED_CONTAINER_CELLS_DESCRIPTION%" = "✨ Add some sparkle ✨";
+
+"%SETTINGS_CL_USE_GRID_VIEW_TITLE%" = "Use grid view";
+"%SETTINGS_CL_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility";
+"%SETTINGS_CL_USE_COLUMNS_TITLE%" = "Use columns";
+"%SETTINGS_CL_USE_COLUMNS_DESCRIPTION%" = "Use multiple columns on iPad";
+"%SETTINGS_CL_USE_COLORED_CONTAINER_CELLS_TITLE%" = "Use colorful container cells";
+"%SETTINGS_CL_USE_COLORED_CONTAINER_CELLS_DESCRIPTION%" = "✨ Add some sparkle ✨";
+
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_TITLE%" = "Display prompt when dismissing container";
 "%SETTINGS_CONTAINER_DISCONNECTED_PROMPT_DESCRIPTION%" = "Tap it or shake the device to open the attached container";
 
