@@ -56,6 +56,6 @@ class AppState: ObservableObject {
 	// MARK: - Error handling
 	
 	private func handle(_ error: Error, _fileID: StaticString = #fileID, _line: Int = #line) {
-		
+		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 	}
 }

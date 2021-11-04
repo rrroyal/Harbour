@@ -79,7 +79,7 @@ struct ContainerDetailView: View, Identifiable {
 	
 	var body: some View {
 		ScrollView {
-			LazyVStack(spacing: 20) {				
+			LazyVStack(spacing: 20) {
 				buttonsSection
 				generalSection
 				logsSection

@@ -13,7 +13,7 @@ import PortainerKit
 import Indicators
 
 extension Portainer {
-	class AttachedContainer: ObservableObject {		
+	class AttachedContainer: ObservableObject {
 		public let container: PortainerKit.Container
 		public let messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject
 		
