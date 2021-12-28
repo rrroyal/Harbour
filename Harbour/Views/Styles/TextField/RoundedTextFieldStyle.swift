@@ -20,7 +20,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 			.multilineTextAlignment(.center)
 			.padding(.medium)
 			.background(
-				RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)
+				RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .continuous)
 					.fill(Color(uiColor: .secondarySystemBackground))
 			)
 	}

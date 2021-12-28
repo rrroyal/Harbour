@@ -21,3 +21,9 @@ extension Array where Element == PortainerKit.Container {
 		}
 	}
 }
+
+extension Array where Element: Equatable {
+	mutating func remove(_ item: Element) {
+		removeAll(where: { $0 == item })
+	}
+}

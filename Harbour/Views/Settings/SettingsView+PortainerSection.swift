@@ -10,6 +10,7 @@ import UserNotifications
 
 extension SettingsView {
 	struct PortainerSection: View {
+		@EnvironmentObject var appState: AppState
 		@EnvironmentObject var sceneState: SceneState
 		@EnvironmentObject var portainer: Portainer
 		@EnvironmentObject var preferences: Preferences
@@ -32,53 +33,77 @@ extension SettingsView {
 		var body: some View {
 			Group {
 				Section("Portainer") {
-					/// Endpoint URL
-					if let endpointURL = Preferences.shared.endpointURL {
-						Labeled(label: "URL", content: endpointURL, monospace: true, lineLimit: 1)
-					}
-					
-					if preferences.hasSavedCredentials {
-						Button("Log out", role: .destructive) {
-							UIDevice.generateHaptic(.warning)
-							isLogoutWarningPresented = true
-						}
-						.confirmationDialog("Are you sure?", isPresented: $isLogoutWarningPresented, titleVisibility: .visible) {
-							Button("Yup!", role: .destructive) {
-								UIDevice.generateHaptic(.heavy)
-								portainer.logOut(removeEndpointURL: true)
+					Menu(content: {
+						ForEach(portainer.servers, id: \.absoluteString) { server in
+							Menu(server.absoluteString) {
+								if portainer.serverURL == server {
+									Label("In use", systemImage: "checkmark")
+										.symbolVariant(.circle.fill)
+								} else {
+									Button(action: {
+										UIDevice.generateHaptic(.selectionChanged)
+										do {
+											try portainer.setup(with: server)
+										} catch {
+											UIDevice.generateHaptic(.error)
+											sceneState.handle(error)
+										}
+									}) {
+										Label("Use", systemImage: "checkmark")
+											.symbolVariant(.circle)
+									}
+								}
+								
+								Divider()
+								
+								Button(role: .destructive, action: {
+									UIDevice.generateHaptic(.heavy)
+									do {
+										try portainer.removeServer(url: server)
+									} catch {
+										UIDevice.generateHaptic(.error)
+										sceneState.handle(error)
+									}
+								}) {
+									Label("Delete", systemImage: "trash")
+								}
 							}
-							
-							Button("Nevermind", role: .cancel) {
-								UIDevice.generateHaptic(.soft)
-							}
 						}
-					} else {
-						Button("Log in") {
+						
+						Divider()
+						
+						Button(action: {
 							UIDevice.generateHaptic(.soft)
 							isLoginSheetPresented = true
+						}) {
+							Label("Add", systemImage: "plus")
 						}
+					}) {
+						Text(preferences.selectedServer?.absoluteString ?? "No server selected")
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.transition(.identity)
+							.id("SelectedServerLabel:\(preferences.selectedServer?.absoluteString ?? "")")
+						
+						Image(systemName: "chevron.down")
 					}
+					.id("ServerSelectionMenu:\(portainer.servers.hashValue)")
 				}
 				.sheet(isPresented: $isLoginSheetPresented) {
 					LoginView()
 				}
 				
-				if preferences.endpointURL != nil {
-					Section("Data") {
-						/// Persist attached container
-						ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE.localized, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION.localized, isOn: $preferences.persistAttachedContainer)
-						
-						/// Refresh containers in background
-						ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, isOn: preferences.$enableBackgroundRefresh)
-							.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
-						
-						/// Auto-refresh interval
-						SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
-					}
+				Section("Data") {
+					/// Persist attached container
+					ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE.localized, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION.localized, isOn: $preferences.persistAttachedContainer)
+					
+					/// Refresh containers in background
+					ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, isOn: preferences.$enableBackgroundRefresh)
+						.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
+					
+					/// Auto-refresh interval
+					SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
 				}
 			}
-			.transition(.opacity)
-			.animation(.easeInOut, value: preferences.endpointURL)
 		}
 		
 		private func setupBackgroundRefresh(isOn: Bool) {

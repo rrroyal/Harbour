@@ -15,6 +15,7 @@
 		E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7272E8926736CCF00228494 /* PortainerKit+.swift */; };
 		E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C552674236700A55B5C /* ContainerContextMenu.swift */; };
 		E7339C582674262500A55B5C /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7339C572674262500A55B5C /* String+.swift */; };
+		E737EC7B277B4ADC00E5701D /* Keychain in Frameworks */ = {isa = PBXBuildFile; productRef = E737EC7A277B4ADC00E5701D /* Keychain */; };
 		E748BD48271CA421007C4F15 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD47271CA421007C4F15 /* AppDelegate.swift */; };
 		E748BD4A271CB749007C4F15 /* AppState+BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */; };
 		E74AC7F326768543003411AA /* Portainer+PortainerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74AC7F226768543003411AA /* Portainer+PortainerError.swift */; };
@@ -54,12 +55,11 @@
 		E7BF9E602672B5B100AAB6A1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E512672B5B000AAB6A1 /* ContentView.swift */; };
 		E7BF9E622672B5B100AAB6A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */; };
 		E7BF9E782672E17D00AAB6A1 /* Portainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E772672E17D00AAB6A1 /* Portainer.swift */; };
-		E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */; };
 		E7BF9E862672EF5600AAB6A1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E852672EF5600AAB6A1 /* SettingsView.swift */; };
 		E7BF9E882672F29200AAB6A1 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E872672F29200AAB6A1 /* LoginView.swift */; };
 		E7BF9E8A2672F2F600AAB6A1 /* UIDevice+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */; };
 		E7BF9E8D2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */; };
-		E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */; };
+		E7BF9E8F2672F4C700AAB6A1 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E8E2672F4C700AAB6A1 /* Constants.swift */; };
 		E7BF9E912672F55700AAB6A1 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */; };
 		E7C303C52734205000D8FE8F /* View+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C303C42734205000D8FE8F /* View+.swift */; };
 		E7C84B792708BB170071DE06 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C84B782708BB170071DE06 /* Localization.swift */; };
@@ -90,6 +90,7 @@
 		E7272E8926736CCF00228494 /* PortainerKit+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerKit+.swift"; sourceTree = "<group>"; };
 		E7339C552674236700A55B5C /* ContainerContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerContextMenu.swift; sourceTree = "<group>"; };
 		E7339C572674262500A55B5C /* String+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+.swift"; sourceTree = "<group>"; };
+		E737EC79277B494000E5701D /* Keychain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Keychain; sourceTree = "<group>"; };
 		E748BD47271CA421007C4F15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E748BD49271CB749007C4F15 /* AppState+BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+BackgroundTasks.swift"; sourceTree = "<group>"; };
 		E74AC7F226768543003411AA /* Portainer+PortainerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+PortainerError.swift"; sourceTree = "<group>"; };
@@ -134,7 +135,7 @@
 		E7BF9E872672F29200AAB6A1 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+.swift"; sourceTree = "<group>"; };
 		E7BF9E8C2672F4B300AAB6A1 /* DecreasesOnPressButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecreasesOnPressButtonStyle.swift; sourceTree = "<group>"; };
-		E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
+		E7BF9E8E2672F4C700AAB6A1 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E7BF9E902672F55700AAB6A1 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		E7C303C42734205000D8FE8F /* View+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+.swift"; sourceTree = "<group>"; };
 		E7C84B782708BB170071DE06 /* Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
@@ -149,8 +150,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E751F054270B0B5000980DCA /* Indicators in Frameworks */,
+				E737EC7B277B4ADC00E5701D /* Keychain in Frameworks */,
 				E7685BBF26769B2500CD592E /* PortainerKit in Frameworks */,
-				E7BF9E7B2672E38900AAB6A1 /* KeychainAccess in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -160,6 +161,7 @@
 		E72F350626769ABD00A38910 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				E737EC79277B494000E5701D /* Keychain */,
 				E7685BB726769B0900CD592E /* PortainerKit */,
 				E751F052270B096B00980DCA /* Indicators */,
 			);
@@ -258,11 +260,10 @@
 			children = (
 				E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */,
 				E748BD47271CA421007C4F15 /* AppDelegate.swift */,
-				E7BF9E8E2672F4C700AAB6A1 /* Globals.swift */,
+				E7BF9E8E2672F4C700AAB6A1 /* Constants.swift */,
 				E7BF9E762672E15700AAB6A1 /* Data */,
 				E7BF9E832672EF4200AAB6A1 /* Views */,
 				E7BF9E7E2672E60E00AAB6A1 /* Extensions+Modifiers */,
-				E77C5FB6267EA454000B4994 /* Localization */,
 				E7BF9E522672B5B100AAB6A1 /* Assets.xcassets */,
 			);
 			path = Harbour;
@@ -292,6 +293,7 @@
 		E7B970EF26ED37DE00358FB9 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				E77C5FB6267EA454000B4994 /* Localization */,
 				E7B970F026ED37EB00358FB9 /* Extensions+Modifiers */,
 			);
 			path = Shared;
@@ -416,9 +418,9 @@
 			);
 			name = Harbour;
 			packageProductDependencies = (
-				E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */,
 				E7685BBE26769B2500CD592E /* PortainerKit */,
 				E751F053270B0B5000980DCA /* Indicators */,
+				E737EC7A277B4ADC00E5701D /* Keychain */,
 			);
 			productName = "Harbour (iOS)";
 			productReference = E7BF9E572672B5B100AAB6A1 /* Harbour.app */;
@@ -450,7 +452,6 @@
 			);
 			mainGroup = E7BF9E4A2672B5B000AAB6A1;
 			packageReferences = (
-				E7BF9E792672E38900AAB6A1 /* XCRemoteSwiftPackageReference "KeychainAccess" */,
 			);
 			productRefGroup = E7BF9E582672B5B100AAB6A1 /* Products */;
 			projectDirPath = "";
@@ -526,7 +527,7 @@
 				E75A51D8267384E100857D2B /* AppState.swift in Sources */,
 				E7BF9E5E2672B5B100AAB6A1 /* HarbourApp.swift in Sources */,
 				E72112EA267F496B00D6004D /* LabeledSection.swift in Sources */,
-				E7BF9E8F2672F4C700AAB6A1 /* Globals.swift in Sources */,
+				E7BF9E8F2672F4C700AAB6A1 /* Constants.swift in Sources */,
 				E7A661FC27230EC000B872EA /* AppState+UserActivity.swift in Sources */,
 				E748BD4A271CB749007C4F15 /* AppState+BackgroundTasks.swift in Sources */,
 				E751F05D270B315B00980DCA /* ContainerGridView.swift in Sources */,
@@ -699,7 +700,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -740,7 +741,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -768,18 +769,11 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		E7BF9E792672E38900AAB6A1 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kishikawakatsumi/KeychainAccess.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
 /* Begin XCSwiftPackageProductDependency section */
+		E737EC7A277B4ADC00E5701D /* Keychain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Keychain;
+		};
 		E751F053270B0B5000980DCA /* Indicators */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Indicators;
@@ -787,11 +781,6 @@
 		E7685BBE26769B2500CD592E /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PortainerKit;
-		};
-		E7BF9E7A2672E38900AAB6A1 /* KeychainAccess */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E7BF9E792672E38900AAB6A1 /* XCRemoteSwiftPackageReference "KeychainAccess" */;
-			productName = KeychainAccess;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

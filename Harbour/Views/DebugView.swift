@@ -23,6 +23,15 @@ struct DebugView: View {
 				Labeled(label: "App prefix", content: Bundle.main.appIdentifierPrefix, monospace: true)
 			}
 			
+			Section("Portainer") {
+				Button("Reset servers") {
+					UIDevice.generateHaptic(.light)
+					Preferences.shared.selectedServer = nil
+					Preferences.shared.selectedEndpointID = nil
+					Portainer.shared.cleanup()
+				}
+			}
+			
 			Section("Background Tasks") {
 				Labeled(label: "Last task", content: Preferences.shared.lastBackgroundTaskDate?.formatted())
 				ForEach(pendingBackgroundTasks, id: \.identifier) { task in

@@ -35,11 +35,9 @@ public class PortainerKit {
 		self.url = url
 		
 		let configuration = URLSessionConfiguration.default
-		configuration.httpAdditionalHeaders = ["Accept-Encoding": "gzip"]
+		configuration.httpAdditionalHeaders = ["Accept-Encoding": "gzip, deflate"]
 		configuration.shouldUseExtendedBackgroundIdleMode = true
 		configuration.networkServiceType = .responsiveData
-		configuration.timeoutIntervalForRequest = 30
-		configuration.timeoutIntervalForResource = 60
 		
 		self.session = URLSession(configuration: configuration, delegate: PortainerKit.URLSessionDelegate(), delegateQueue: nil)
 		self.token = token

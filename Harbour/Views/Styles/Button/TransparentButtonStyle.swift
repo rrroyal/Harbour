@@ -12,11 +12,11 @@ struct TransparentButtonStyle: ButtonStyle {
 		configuration.label
 			.multilineTextAlignment(.center)
 			.padding()
-			.background(Color(uiColor: .systemGray5).opacity(configuration.isPressed ? Globals.Views.secondaryOpacity : 0))
-			.cornerRadius(Globals.Views.cornerRadius)
-			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)
-			.scaleEffect(configuration.isPressed ? Globals.Buttons.pressedSize : 1)
-			.animation(Globals.Views.springAnimation, value: configuration.isPressed)
+			.background(Color(uiColor: .systemGray5).opacity(configuration.isPressed ? Constants.secondaryOpacity : 0))
+			.cornerRadius(Constants.cornerRadius)
+			.opacity(configuration.isPressed ? Constants.buttonPressedOpacity : 1)
+			.scaleEffect(configuration.isPressed ? Constants.buttonPressedSize : 1)
+			.animation(Constants.springAnimation, value: configuration.isPressed)
 	}
 }
 

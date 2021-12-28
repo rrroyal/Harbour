@@ -13,7 +13,7 @@ extension ContainerGridView {
 		@ObservedObject var container: PortainerKit.Container
 		
 		let circleSize: Double = 10
-		let backgroundShape = RoundedRectangle(cornerRadius: Globals.Views.largeCornerRadius, style: .continuous)
+		let backgroundShape = RoundedRectangle(cornerRadius: Constants.largeCornerRadius, style: .continuous)
 		
 		var body: some View {
 			VStack(alignment: .leading) {

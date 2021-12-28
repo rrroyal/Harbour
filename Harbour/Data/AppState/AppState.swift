@@ -21,7 +21,7 @@ class AppState: ObservableObject {
 	internal var autoRefreshTimer: AnyCancellable? = nil
 
 	private init() {
-		if Preferences.shared.endpointURL != nil && Preferences.shared.autoRefreshInterval > 0 {
+		if Preferences.shared.selectedServer != nil && Preferences.shared.autoRefreshInterval > 0 {
 			setupAutoRefreshTimer()
 		}
 	}

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import os.log
 import PortainerKit
-import KeychainAccess
+import Keychain
 
 final class Portainer: ObservableObject {
 	public typealias ContainerInspection = (general: PortainerKit.Container?, details: PortainerKit.ContainerDetails)
@@ -18,7 +18,12 @@ final class Portainer: ObservableObject {
 
 	public static let shared: Portainer = Portainer()
 	
+	@Published public private(set) var servers: [URL]
 	@Published public private(set) var isLoggedIn: Bool = false
+	
+	public var serverURL: URL? {
+		get { self.api?.url }
+	}
 			
 	// MARK: Endpoint
 	
@@ -27,11 +32,12 @@ final class Portainer: ObservableObject {
 			Preferences.shared.selectedEndpointID = selectedEndpointID
 			
 			if let endpointID = selectedEndpointID {
-				Task {
+				Task { [weak self] in
+					guard let self = self else { return }
 					do {
-						try await getContainers(endpointID: endpointID)
+						try await self.getContainers(endpointID: endpointID)
 					} catch {
-						handle(error)
+						self.handle(error)
 					}
 				}
 			} else {
@@ -42,10 +48,6 @@ final class Portainer: ObservableObject {
 
 	@Published public private(set) var endpoints: [PortainerKit.Endpoint] = [] {
 		didSet {
-			if endpoints.contains(where: { $0.id == selectedEndpointID }) {
-				return
-			}
-			
 			if let storedEndpointID = Preferences.shared.selectedEndpointID, let storedEndpoint = endpoints.first(where: { $0.id == storedEndpointID }) {
 				selectedEndpointID = storedEndpoint.id
 			} else if endpoints.count == 1 {
@@ -63,38 +65,51 @@ final class Portainer: ObservableObject {
 	@Published public private(set) var containers: [PortainerKit.Container] = []
 	
 	// MARK: - Private variables
-	
-	private var activeActions: Set<String> = []
-	
-	// MARK: - Private util
-	
+			
+	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)")
 	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer")
-	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)").synchronizable(true).accessibility(.afterFirstUnlock)
 	private let ud: UserDefaults = Preferences.ud
 	private var api: PortainerKit?
 	
 	// MARK: - init
 	
 	private init() {
-		if let urlString = Preferences.shared.endpointURL, let url = URL(string: urlString) {
-			logger.debug("Has saved URL: \(url, privacy: .sensitive)")
-			
-			if let token = try? keychain.get(KeychainKeys.token) {
-				logger.debug("Has token, cool! Using it 😊")
-				api = PortainerKit(url: url, token: token)
-				isLoggedIn = true
-				DispatchQueue.main.async {
-					Task {
-						AppState.shared.fetchingMainScreenData = true
-						try await self.getEndpoints()
-						AppState.shared.fetchingMainScreenData = false
-					}
+		self.servers = (try? keychain.getURLs()) ?? []
+		
+		if let url = Preferences.shared.selectedServer {
+			do {
+				if !self.servers.contains(url) {
+					self.servers.append(url)
 				}
+				
+				try setup(with: url)
+			} catch {
+				handle(error)
 			}
 		}
 	}
 	
 	// MARK: - Public functions
+	
+	public func setup(with url: URL) throws {
+		logger.debug("Setting up, URL: \(url.absoluteString, privacy: .sensitive)")
+		
+		guard let token = try? keychain.getToken(server: url) else {
+			throw PortainerError.noToken
+		}
+				
+		api = PortainerKit(url: url, token: token)
+		isLoggedIn = true
+		Preferences.shared.selectedServer = url
+		
+		DispatchQueue.main.async { [weak self] in
+			Task { [weak self] in
+				AppState.shared.fetchingMainScreenData = true
+				try await self?.getEndpoints()
+				AppState.shared.fetchingMainScreenData = false
+			}
+		}
+	}
 	
 	/// Logs in to Portainer.
 	/// - Parameters:
@@ -104,26 +119,33 @@ final class Portainer: ObservableObject {
 	///   - savePassword: Should password be saved?
 	/// - Returns: Result containing JWT token or error.
 	public func login(url: URL, username: String, password: String, savePassword: Bool) async throws {
-		logger.debug("Logging in, URL: \(url.absoluteString, privacy: .sensitive)...")
-		let api = PortainerKit(url: url)
-		self.api = api
+		logger.debug("Logging in with credentials, URL: \(url.absoluteString, privacy: .sensitive)...")
+		
+		if api?.url != url {
+			self.api = PortainerKit(url: url)
+		}
+		guard let api = api else {
+			throw PortainerError.noAPI
+		}
 		
 		do {
 			let token = try await api.login(username: username, password: password)
 			
 			logger.debug("Successfully logged in!")
 			
-			DispatchQueue.main.async {
-				self.isLoggedIn = true
-				Preferences.shared.endpointURL = url.absoluteString
-				Preferences.shared.hasSavedCredentials = true
+			try keychain.saveToken(server: url, username: username, token: token, comment: Localization.KEYCHAIN_TOKEN_COMMENT.localized, hasPassword: savePassword)
+			if savePassword {
+				try keychain.saveCredentials(server: url, username: username, password: password, comment: Localization.KEYCHAIN_CREDS_COMMENT.localized)
 			}
 			
-			try keychain.comment(Localization.KEYCHAIN_TOKEN_COMMENT.localized).label("Harbour (token)").set(token, key: KeychainKeys.token)
-			if savePassword {
-				let keychain = self.keychain.comment(Localization.KEYCHAIN_CREDS_COMMENT.localized)
-				try keychain.label("Harbour (username)").set(username, key: KeychainKeys.username)
-				try keychain.label("Harbour (password)").set(password, key: KeychainKeys.password)
+			DispatchQueue.main.async { [weak self] in
+				guard let self = self else { return }
+				
+				self.isLoggedIn = true
+				Preferences.shared.selectedServer = url
+				if !self.servers.contains(url) {
+					self.servers.append(url)
+				}
 			}
 		} catch {
 			handle(error)
@@ -131,26 +153,43 @@ final class Portainer: ObservableObject {
 		}
 	}
 	
-	/// Logs out, removing all local authentication.
-	public func logOut(removeEndpointURL: Bool = false) {
-		logger.info("Logging out")
+	public func logout() throws {
+		logger.info("Logging out!")
+		cleanup()
 		
-		try? keychain.removeAll()
+		if let url = serverURL {
+			try removeServer(url: url)
+		}
+	}
+	
+	/// Cleans up local data (used after logged out)
+	public func cleanup() {
+		logger.info("Cleaning up!")
 		
 		api = nil
 		
-		DispatchQueue.main.async {
+		DispatchQueue.main.async { [weak self] in
+			guard let self = self else { return }
 			self.isLoggedIn = false
 			self.selectedEndpointID = nil
 			self.endpoints = []
 			self.containers = []
 			self.attachedContainer = nil
-			Preferences.shared.hasSavedCredentials = false
 			AppState.shared.fetchingMainScreenData = false
-			
-			if removeEndpointURL {
-				Preferences.shared.endpointURL = nil
-			}
+		}
+	}
+	
+	public func removeServer(url: URL) throws {
+		try keychain.removeCredentials(server: url)
+		try keychain.removeToken(server: url)
+		servers.remove(url)
+		
+		if Preferences.shared.selectedServer == url {
+			Preferences.shared.selectedServer = nil
+		}
+		
+		if serverURL == url {
+			cleanup()
 		}
 	}
 	
@@ -323,22 +362,21 @@ final class Portainer: ObservableObject {
 		if let error = error as? PortainerKit.APIError {
 			switch error {
 				case .invalidJWTToken: do {
-					try? keychain.remove(KeychainKeys.token)
+					guard let url = serverURL ?? Preferences.shared.selectedServer else { return }
 					
-					if let urlString = api?.url.absoluteString ?? Preferences.shared.endpointURL,
-					   let url = URL(string: urlString),
-					   let username = try? keychain.get(KeychainKeys.username),
-					   let password = try? keychain.get(KeychainKeys.password) {
+					try? keychain.removeToken(server: url)
+					if let url = serverURL ?? Preferences.shared.selectedServer,
+					   let creds = try? keychain.getCredentials(server: url) {
 						logger.debug("Received `invalidJWTToken`, but has credentials! Trying to refresh...")
 						
 						Task {
 							do {
-								try await login(url: url, username: username, password: password, savePassword: true)
+								try await login(url: url, username: creds.username, password: creds.password, savePassword: true)
 								try await self.getEndpoints()
 							} catch {
 								if let error = error as? PortainerKit.APIError, error == .invalidCredentials {
 									logger.debug("Credentials invalid, logging out :(")
-									logOut()
+									try removeServer(url: url)
 								} else {
 									throw error
 								}

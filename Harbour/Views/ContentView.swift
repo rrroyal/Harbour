@@ -24,7 +24,7 @@ struct ContentView: View {
 				return .fetching
 			}
 			
-			guard portainer.isLoggedIn || preferences.endpointURL != nil else {
+			guard portainer.isLoggedIn else {
 				return .notLoggedIn
 			}
 			if portainer.selectedEndpointID != nil {

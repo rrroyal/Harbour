@@ -36,7 +36,7 @@ struct HarbourApp: App {
 		switch scenePhase {
 			case .active:
 				Task {
-					if portainer.isLoggedIn || preferences.hasSavedCredentials {
+					if portainer.isLoggedIn && portainer.selectedEndpointID != nil {
 						try await portainer.getContainers()
 					}
 				}

@@ -13,9 +13,9 @@ struct DecreasesOnPressButtonStyle: ButtonStyle {
 			.contentShape(Rectangle())
 			.multilineTextAlignment(.center)
 			// .compositingGroup()
-			.opacity(configuration.isPressed ? Globals.Buttons.pressedOpacity : 1)
-			.scaleEffect(configuration.isPressed ? Globals.Buttons.pressedSize : 1)
-			.animation(Globals.Views.springAnimation, value: configuration.isPressed)
+			.opacity(configuration.isPressed ? Constants.buttonPressedOpacity : 1)
+			.scaleEffect(configuration.isPressed ? Constants.buttonPressedSize : 1)
+			.animation(Constants.springAnimation, value: configuration.isPressed)
 	}
 }
 

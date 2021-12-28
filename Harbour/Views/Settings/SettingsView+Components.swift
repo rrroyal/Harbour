@@ -33,7 +33,7 @@ extension SettingsView {
 							.foregroundStyle(.secondary)
 					}
 				}
-				.opacity(isEnabled ? 1 : Globals.Views.secondaryOpacity)
+				.opacity(isEnabled ? 1 : Constants.secondaryOpacity)
 				
 				Slider(value: $value, in: range, step: step, onEditingChanged: onEditingChanged)
 					.onChange(of: value) {
@@ -67,7 +67,7 @@ extension SettingsView {
 					}
 				}
 				.padding(.vertical, .small)
-				.opacity(isEnabled ? 1 : Globals.Views.secondaryOpacity)
+				.opacity(isEnabled ? 1 : Constants.secondaryOpacity)
 			}
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 		}

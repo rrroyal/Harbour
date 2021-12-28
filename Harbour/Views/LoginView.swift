@@ -13,7 +13,7 @@ struct LoginView: View {
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	
-	@State private var endpoint: String = Preferences.shared.endpointURL ?? ""
+	@State private var endpoint: String = ""
 	@State private var username: String = ""
 	@State private var password: String = ""
 	
@@ -117,7 +117,7 @@ struct LoginView: View {
 						Text("Save password")
 					}
 					.font(.callout.weight(.semibold))
-					.opacity(savePassword ? 1 : Globals.Views.secondaryOpacity)
+					.opacity(savePassword ? 1 : Constants.secondaryOpacity)
 				}
 				.buttonStyle(.customTransparent)
 				.animation(.easeInOut, value: savePassword)

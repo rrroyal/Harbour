@@ -16,7 +16,7 @@ extension SettingsView {
 					Text("Harbour v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
 				}
 				.font(.subheadline.weight(.semibold))
-				.opacity(Globals.Views.secondaryOpacity)
+				.opacity(Constants.secondaryOpacity)
 			}
 			.tint(.secondary)
 			.frame(maxWidth: .infinity, alignment: .center)

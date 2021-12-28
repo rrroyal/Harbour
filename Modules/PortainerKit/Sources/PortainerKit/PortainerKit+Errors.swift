@@ -43,11 +43,16 @@ public extension PortainerKit {
 			guard let reason = string?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() else { return .unknownError }
 			
 			switch reason {
-				case "invalid credentials":		return .invalidCredentials
-				case "invalid jwt token":		return .invalidJWTToken
-				case "unauthorized":			return .unauthorized
-				case "invalid request payload":	return .invalidPayload
-				default:						return .custom(reason)
+				case "invalid credentials":
+					return .invalidCredentials
+				case "invalid jwt token", "a valid authorisation token is missing":
+					return .invalidJWTToken
+				case "unauthorized":
+					return .unauthorized
+				case "invalid request payload":
+					return .invalidPayload
+				default:
+					return .custom(reason)
 			}
 		}
 		

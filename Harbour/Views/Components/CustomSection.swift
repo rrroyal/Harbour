@@ -25,7 +25,7 @@ struct CustomSection<Content: View>: View {
 				.padding(.medium)
 				.frame(maxWidth: .infinity, alignment: .leading)
 				.background(
-					RoundedRectangle(cornerRadius: Globals.Views.cornerRadius, style: .continuous)
+					RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .continuous)
 						.fill(Color(uiColor: .secondarySystemGroupedBackground))
 				)
 		}
