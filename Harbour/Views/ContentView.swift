@@ -14,11 +14,11 @@ struct ContentView: View {
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
 	
-	@StateObject var sceneState: SceneState = SceneState()
+	@StateObject private var sceneState: SceneState = SceneState()
 	
 	@State private var searchQuery: String = ""
 		
-	var currentState: ContentViewDataState {
+	private var currentState: DataState {
 		if portainer.containers.isEmpty {
 			guard !appState.fetchingMainScreenData else {
 				return .fetching
@@ -46,10 +46,10 @@ struct ContentView: View {
 			if !portainer.endpoints.isEmpty {
 				ForEach(portainer.endpoints) { endpoint in
 					Button(action: {
-						UIDevice.current.generateHaptic(.light)
+						UIDevice.generateHaptic(.light)
 						portainer.selectedEndpointID = endpoint.id
 					}) {
-						Text(endpoint.displayName)
+						Text(endpoint.name ?? "\(endpoint.id)")
 						if portainer.selectedEndpointID == endpoint.id {
 							Image(systemName: "checkmark")
 						}
@@ -62,7 +62,7 @@ struct ContentView: View {
 			Divider()
 			
 			Button(action: {
-				UIDevice.current.generateHaptic(.light)
+				UIDevice.generateHaptic(.light)
 				appState.fetchingMainScreenData = true
 				Task {
 					do {
@@ -103,7 +103,7 @@ struct ContentView: View {
 				.toolbar {
 					ToolbarItem(placement: .navigation) {
 						Button(action: {
-							UIDevice.current.generateHaptic(.soft)
+							UIDevice.generateHaptic(.soft)
 							sceneState.isSettingsSheetPresented = true
 						}) {
 							Image(systemName: "gear")
@@ -165,8 +165,8 @@ struct ContentView: View {
 	}
 }
 
-extension ContentView {
-	enum ContentViewDataState {
+private extension ContentView {
+	enum DataState {
 		case fetching
 		case notLoggedIn
 		case noEndpointSelected

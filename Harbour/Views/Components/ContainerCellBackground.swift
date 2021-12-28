@@ -19,6 +19,7 @@ struct ContainerCellBackground: View {
 			ContainerRelativeShape()
 				.fill(state?.color.opacity(0.15) ?? fallback)
 				.background(Color(uiColor: .systemBackground))
+				.id(state)
 		} else {
 			ContainerRelativeShape()
 				.fill(fallback)

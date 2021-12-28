@@ -48,14 +48,14 @@ fileprivate struct WelcomeView: View {
 			Spacer()
 			
 			Button("Beam me up, Scotty!") {
-				UIDevice.current.generateHaptic(.soft)
+				UIDevice.generateHaptic(.soft)
 				if Portainer.shared.isLoggedIn {
 					presentationMode.wrappedValue.dismiss()
 				} else {
 					withAnimation { selection = 1 }
 				}
 			}
-			.buttonStyle(PrimaryButtonStyle())
+			.buttonStyle(.customPrimary)
 		}
 		.padding()
 	}

@@ -1,5 +1,5 @@
 //
-//  Other.swift
+//  Common.swift
 //  PortianerKit
 //
 //  Created by royal on 11/06/2021.

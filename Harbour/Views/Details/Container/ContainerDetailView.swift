@@ -8,13 +8,13 @@
 import PortainerKit
 import SwiftUI
 
+#warning("Animate changes")
 struct ContainerDetailView: View, Identifiable {
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	@ObservedObject var container: PortainerKit.Container
 	
 	@State private var loading: Bool = false
-	
 	@State private var lastLogsSnippet: String? = nil
 	
 	var id: String { container.id }
@@ -39,7 +39,7 @@ struct ContainerDetailView: View, Identifiable {
 				NavigationLinkLabel(label: "Logs", symbolName: "text.alignleft")
 			}
 		}
-		.buttonStyle(DecreasesOnPressButtonStyle())
+		.buttonStyle(.decreasesOnPress)
 	}
 	
 	@ViewBuilder
@@ -62,8 +62,9 @@ struct ContainerDetailView: View, Identifiable {
 	var logsSection: some View {
 		CustomSection(label: "Logs (last \(lastLogsTailCount) lines)") {
 			if let logs = lastLogsSnippet {
-				Text(logs)
+				Text(logs.isReallyEmpty ? "empty" : logs)
 					.font(.system(.footnote, design: .monospaced))
+					.foregroundStyle(logs.isReallyEmpty ? .secondary : .primary)
 					.lineLimit(nil)
 					.contentShape(Rectangle())
 					.frame(maxWidth: .infinity, alignment: .topLeading)
@@ -93,7 +94,6 @@ struct ContainerDetailView: View, Identifiable {
 			.padding()
 		}
 		.background(Color(uiColor: .systemGroupedBackground).edgesIgnoringSafeArea(.all))
-		.animation(.easeInOut, value: lastLogsSnippet)
 		.navigationTitle(container.displayName ?? container.id)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
@@ -106,7 +106,7 @@ struct ContainerDetailView: View, Identifiable {
 					Divider()
 					
 					Button(action: {
-						UIDevice.current.generateHaptic(.light)
+						UIDevice.generateHaptic(.light)
 						Task {
 							await refresh()
 						}
@@ -121,6 +121,7 @@ struct ContainerDetailView: View, Identifiable {
 				}
 			}
 		}
+		.animation(.easeInOut, value: lastLogsSnippet)
 		.refreshable { await refresh() }
 		.task { await refresh() }
 		.userActivity(AppState.UserActivity.viewingContainer, isActive: sceneState.activeContainerID == container.id) { activity in
@@ -132,6 +133,8 @@ struct ContainerDetailView: View, Identifiable {
 			activity.isEligibleForHandoff = true
 		}
 		.onReceive(portainer.refreshContainerPassthroughSubject) { containerID in
+			#warning("Gets called even though it's not focused")
+			
 			if containerID == container.id {
 				Task { await refresh() }
 			}
@@ -152,8 +155,10 @@ struct ContainerDetailView: View, Identifiable {
 		
 		do {
 			let containerDetails = try await portainer.inspectContainer(container)
-			withAnimation {
-				container.update(from: containerDetails)
+			DispatchQueue.main.async {
+				withAnimation {
+					container.update(from: containerDetails)
+				}
 			}
 		} catch {
 			sceneState.handle(error)
@@ -168,7 +173,7 @@ fileprivate extension ContainerDetailView {
 		let details: PortainerKit.ContainerDetails
 		
 		var body: some View {
-			DisclosureSection(label: "General", isExpanded: Preferences.shared.$cdvExpandGeneral) {
+			DisclosureSection(label: "General") {
 				Group {
 					LabeledSection(label: "Name", content: details.name, monospace: true)
 					LabeledSection(label: "Image", content: details.image, monospace: true)
@@ -204,7 +209,7 @@ fileprivate extension ContainerDetailView {
 		let state: PortainerKit.ContainerState
 
 		var body: some View {
-			DisclosureSection(label: "State", isExpanded: Preferences.shared.$cdvExpandState) {
+			DisclosureSection(label: "State") {
 				LabeledSection(label: "State", content: state.status.rawValue, monospace: true)
 				LabeledSection(label: "Running", content: "\(state.running)", monospace: true)
 				LabeledSection(label: "Paused", content: "\(state.paused)", monospace: true)
@@ -219,7 +224,7 @@ fileprivate extension ContainerDetailView {
 		let graphDriver: PortainerKit.GraphDriver
 
 		var body: some View {
-			DisclosureSection(label: "GraphDriver", isExpanded: Preferences.shared.$cdvExpandGraphDriver) {
+			DisclosureSection(label: "GraphDriver") {
 				LabeledSection(label: "Name", content: graphDriver.name, monospace: true)
 				LabeledSection(label: "Lower dir", content: graphDriver.data.lowerDir, monospace: true)
 				LabeledSection(label: "Merged dir", content: graphDriver.data.mergedDir, monospace: true)

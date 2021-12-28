@@ -19,3 +19,7 @@ struct TransparentButtonStyle: ButtonStyle {
 			.animation(Globals.Views.springAnimation, value: configuration.isPressed)
 	}
 }
+
+extension ButtonStyle where Self == TransparentButtonStyle {
+	static var customTransparent: TransparentButtonStyle { .init() }
+}

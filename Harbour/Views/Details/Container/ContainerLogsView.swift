@@ -60,7 +60,7 @@ struct ContainerLogsView: View {
 						Menu(content: {
 							// Scroll to top
 							Button(action: {
-								UIDevice.current.generateHaptic(.soft)
+								UIDevice.generateHaptic(.soft)
 								withAnimation { scroll.scrollTo(logsLabelID, anchor: .top) }
 							}) {
 								Label("Scroll to top", systemImage: "arrow.up.to.line")
@@ -68,7 +68,7 @@ struct ContainerLogsView: View {
 							
 							// Scroll to bottom
 							Button(action: {
-								UIDevice.current.generateHaptic(.soft)
+								UIDevice.generateHaptic(.soft)
 								withAnimation { scroll.scrollTo(logsLabelID, anchor: .bottom) }
 							}) {
 								Label("Scroll to bottom", systemImage: "arrow.down.to.line")
@@ -80,7 +80,7 @@ struct ContainerLogsView: View {
 							Menu("Lines") {
 								ForEach(tailAmounts, id: \.self) { count in
 									Button(action: {
-										UIDevice.current.generateHaptic(.light)
+										UIDevice.generateHaptic(.light)
 										tail = count
 									}) {
 										Text("\(count)")
@@ -94,19 +94,19 @@ struct ContainerLogsView: View {
 							// Since
 							Menu("Since") {
 								Button("Creation") {
-									UIDevice.current.generateHaptic(.light)
+									UIDevice.generateHaptic(.light)
 									since = 0
 								}
 								
 								Button("Now") {
-									UIDevice.current.generateHaptic(.light)
+									UIDevice.generateHaptic(.light)
 									since = Date().timeIntervalSince1970
 								}
 							}
 							
 							// Timestamps
 							Button(action: {
-								UIDevice.current.generateHaptic(.light)
+								UIDevice.generateHaptic(.light)
 								displayTimestamps.toggle()
 							}) {
 								Text("Timestamps")
@@ -119,7 +119,7 @@ struct ContainerLogsView: View {
 							
 							// Refresh
 							Button(action: {
-								UIDevice.current.generateHaptic(.light)
+								UIDevice.generateHaptic(.light)
 								Task {
 									await refresh()
 								}

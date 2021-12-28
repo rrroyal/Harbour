@@ -28,10 +28,6 @@ class Preferences: ObservableObject {
 	
 	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .group) public var persistAttachedContainer: Bool = true
 	@AppStorage(Preferences.Key.displayContainerDismissedPrompt.rawValue, store: .group) public var displayContainerDismissedPrompt: Bool = true
-
-	@AppStorage(Preferences.Key.cdvExpandGeneral.rawValue, store: .group) public var cdvExpandGeneral: Bool = false
-	@AppStorage(Preferences.Key.cdvExpandState.rawValue, store: .group) public var cdvExpandState: Bool = false
-	@AppStorage(Preferences.Key.cdvExpandGraphDriver.rawValue, store: .group) public var cdvExpandGraphDriver: Bool = false
 	
 	#if DEBUG
 	var lastBackgroundTaskDate: Date? {
@@ -71,10 +67,6 @@ extension Preferences {
 		
 		case persistAttachedContainer = "PersistAttachedContainer"
 		case displayContainerDismissedPrompt = "DisplayContainerDismissedPrompt"
-		
-		case cdvExpandGeneral = "CDVExpandGeneral"
-		case cdvExpandState = "CDVExpandState"
-		case cdvExpandGraphDriver = "CDVExpandGraphDriver"
 		
 		#if DEBUG
 		case lastBackgroundTaskDate = "LastBackgroundTaskDate"

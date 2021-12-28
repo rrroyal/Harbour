@@ -20,7 +20,6 @@ struct LoginView: View {
 	@State private var savePassword: Bool = false
 	
 	@FocusState private var focusedField: FocusField?
-	// @State private var showLoginHelpMessage: Bool = false
 	@State private var loading: Bool = false
 	
 	@State private var buttonLabel: String? = nil
@@ -42,7 +41,7 @@ struct LoginView: View {
 					guard !endpoint.isReallyEmpty else { return }
 					
 					if !endpoint.starts(with: "http") {
-						UIDevice.current.generateHaptic(.selectionChanged)
+						UIDevice.generateHaptic(.selectionChanged)
 						endpoint = "https://\(endpoint)"
 					}
 					
@@ -57,7 +56,7 @@ struct LoginView: View {
 				TextField("garyhost", text: $username, onCommit: {
 					guard !username.isEmpty else { return }
 					
-					UIDevice.current.generateHaptic(.selectionChanged)
+					UIDevice.generateHaptic(.selectionChanged)
 					focusedField = .password
 				})
 				.keyboardType(.default)
@@ -69,7 +68,7 @@ struct LoginView: View {
 				SecureField("hunter2", text: $password, onCommit: {
 					guard !(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty) else { return }
 					
-					UIDevice.current.generateHaptic(.light)
+					UIDevice.generateHaptic(.light)
 					login()
 				})
 				.keyboardType(.default)
@@ -83,7 +82,7 @@ struct LoginView: View {
 			
 			VStack {
 				Button(action: {
-					UIDevice.current.generateHaptic(.light)
+					UIDevice.generateHaptic(.light)
 					login()
 				}) {
 					if loading {
@@ -101,13 +100,13 @@ struct LoginView: View {
 				}
 				.keyboardShortcut(.defaultAction)
 				.foregroundColor(.white)
-				.buttonStyle(PrimaryButtonStyle(backgroundColor: buttonColor ?? .accentColor))
+				.buttonStyle(.customPrimary(backgroundColor: buttonColor ?? .accentColor))
 				.animation(.easeInOut, value: loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 				.animation(.easeInOut, value: buttonColor)
 				.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 				
 				Button(action: {
-					UIDevice.current.generateHaptic(.selectionChanged)
+					UIDevice.generateHaptic(.selectionChanged)
 					savePassword.toggle()
 				}) {
 					HStack {
@@ -120,37 +119,31 @@ struct LoginView: View {
 					.font(.callout.weight(.semibold))
 					.opacity(savePassword ? 1 : Globals.Views.secondaryOpacity)
 				}
-				.buttonStyle(TransparentButtonStyle())
+				.buttonStyle(.customTransparent)
 				.animation(.easeInOut, value: savePassword)
+				.padding(.leading)
 			}
-			
-			/* if showLoginHelpMessage {
-				Link(destination: URL(string: "https://harbour.shameful.xyz/docs/setup")!) {
-					HStack {
-						Image(systemName: "globe")
-						Text("Trouble logging in?")
-					}
-					.font(.callout.weight(.semibold))
-					.opacity(Globals.Views.secondaryOpacity)
-				}
-				.buttonStyle(TransparentButtonStyle())
-				.frame(maxWidth: .infinity, alignment: .topTrailing)
-			} */
 		}
 		.padding()
 		.animation(.easeInOut, value: buttonLabel)
-		// .animation(.easeInOut, value: showLoginHelpMessage)
-		// .onAppear(perform: setupLoginHelpMessageTimer)
 		.onDisappear {
 			errorTimer?.invalidate()
 		}
 	}
 	
+	@Sendable
 	func login() {
-		guard let url = URL(string: endpoint) else {
-			UIDevice.current.generateHaptic(.error)
+		let url: URL? = {
+			guard var components = URLComponents(string: endpoint) else { return nil }
+			components.path = components.path.split(separator: "/").joined(separator: "/")	// #HB-8
+			return components.url
+		}()
+		
+		guard let url = url else {
+			UIDevice.generateHaptic(.error)
 			buttonLabel = "Invalid URL"
 			buttonColor = .red
+			focusedField = .endpoint
 			return
 		}
 		
@@ -161,7 +154,7 @@ struct LoginView: View {
 				loading = true
 				try await portainer.login(url: url, username: username, password: password, savePassword: savePassword)
 				
-				UIDevice.current.generateHaptic(.success)
+				UIDevice.generateHaptic(.success)
 				
 				loading = false
 				buttonColor = .green
@@ -174,7 +167,7 @@ struct LoginView: View {
 					sceneState.handle(error)
 				}
 			} catch {
-				UIDevice.current.generateHaptic(.error)
+				UIDevice.generateHaptic(.error)
 				
 				loading = false
 				buttonColor = .red

@@ -35,12 +35,12 @@ struct DebugView: View {
 			
 			Section("UserDefaults") {
 				Button("Reset finishedSetup") {
-					UIDevice.current.generateHaptic(.light)
+					UIDevice.generateHaptic(.light)
 					Preferences.shared.finishedSetup = false
 				}
 				
 				Button("Reset all") {
-					UIDevice.current.generateHaptic(.heavy)
+					UIDevice.generateHaptic(.heavy)
 					Preferences.Key.allCases.forEach { Preferences.ud.removeObject(forKey: $0.rawValue) }
 					exit(0)
 				}
@@ -50,13 +50,13 @@ struct DebugView: View {
 			Section("Indicators") {
 				Button("Display manual indicator") {
 					let indicator: Indicators.Indicator = .init(id: "manual", icon: "bolt", headline: "Headline", subheadline: "Subheadline", expandedText: "Expanded text that is really long and should be truncated normally", dismissType: .manual)
-					UIDevice.current.generateHaptic(.light)
+					UIDevice.generateHaptic(.light)
 					sceneState.indicators.display(indicator)
 				}
 				
 				Button("Display automatic indicator") {
 					let indicator: Indicators.Indicator = .init(id: "automatic", icon: "bolt", headline: "Headline", subheadline: "Subheadline", expandedText: "Expanded text that is really long and should be truncated normally", dismissType: .after(5))
-					UIDevice.current.generateHaptic(.light)
+					UIDevice.generateHaptic(.light)
 					sceneState.indicators.display(indicator)
 				}
 			}
@@ -90,7 +90,7 @@ extension DebugView {
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
 					Button(action: {
-						UIDevice.current.generateHaptic(.light)
+						UIDevice.generateHaptic(.light)
 						getLogs()
 					}) {
 						Image(systemName: "arrow.clockwise")

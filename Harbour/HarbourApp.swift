@@ -8,7 +8,10 @@
 import SwiftUI
 import Indicators
 
+#warning("TODO: Annotate every view/object")
+
 @main
+/// Main entry point for Harbour
 struct HarbourApp: App {
 	@Environment(\.scenePhase) var scenePhase
 	@UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate: AppDelegate

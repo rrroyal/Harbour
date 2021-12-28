@@ -56,9 +56,6 @@ extension ContainerGridView {
 			}
 			.padding(.medium)
 			.aspectRatio(1, contentMode: .fill)
-			// .background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
-			// .background(container.state?.color.opacity(0.15) ?? Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
-			// .contentShape(backgroundRectangle)
 			.background(ContainerCellBackground(state: container.state))
 			.containerShape(backgroundShape)
 			.animation(.easeInOut, value: container.state)

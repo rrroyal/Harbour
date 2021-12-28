@@ -7,8 +7,8 @@ internal extension Indicators {
 		@State var isExpanded: Bool = false
 		@State var dragOffset: CGSize = .zero
 		
-		let dragInWrongDirectionMultiplier: CGFloat = 0.015
-		let dragThreshold: CGFloat = 30
+		let dragInWrongDirectionMultiplier: Double = 0.015
+		let dragThreshold: Double = 30
 		let transition: AnyTransition = .asymmetric(insertion: .move(edge: .top), removal: .move(edge: .top).combined(with: .opacity))
 		let animation: Animation = .interpolatingSpring(mass: 0.5, stiffness: 45, damping: 45, initialVelocity: 15)
 		
@@ -21,8 +21,8 @@ internal extension Indicators {
 				.onEnded {
 					dragOffset = .zero
 					
-					guard let indicator = model.activeIndicator else { return }
-					if $0.translation.height > 0 && indicator.expandedText != nil {
+					guard let indicator = model.activeIndicator, indicator.expandedText != nil else { return }
+					if $0.translation.height > 0 {
 						UIImpactFeedbackGenerator(style: .soft).impactOccurred()
 						isExpanded.toggle()
 						

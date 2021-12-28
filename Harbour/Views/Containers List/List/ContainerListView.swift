@@ -28,7 +28,7 @@ struct ContainerListView: View {
 							}
 							.onDrag { ContainersView.containerDragProvider(container: container) }
 					}
-					.buttonStyle(DecreasesOnPressButtonStyle())
+					.buttonStyle(.decreasesOnPress)
 				}
 			}
 			.padding(.horizontal)

@@ -17,7 +17,7 @@ extension Portainer {
 		public let container: PortainerKit.Container
 		public let messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject
 		
-		@Published public private(set) var buffer: AttributedString = ""
+		@Published public private(set) var buffer: String = ""
 		
 		public private(set) var isConnected: Bool = true
 		public var errorHandler: SceneState.ErrorHandler?
@@ -81,9 +81,8 @@ extension Portainer {
 		}
 	
 		private func update(_ string: String) {
-			let attributedString: AttributedString = AttributedString(string)
 			DispatchQueue.main.async { [weak self] in
-				self?.buffer.append(attributedString)
+				self?.buffer.append(string)
 			}
 		}
 	}

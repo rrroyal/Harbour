@@ -23,7 +23,7 @@ public class PortainerKit {
 	// MARK: Private properties
 	
 	/// Authorization token
-	public var token: String?
+	public private(set) var token: String?
 	
 	// MARK: - init
 	
@@ -82,12 +82,21 @@ public class PortainerKit {
 	
 	/// Fetches available containers for supplied endpoint ID.
 	/// - Parameter endpointID: Endpoint ID
+	/// - Parameter filters: Query filters
 	/// - Returns: `[Container]`
-	public func getContainers(for endpointID: Int) async throws -> [Container] {
-		let queryItems = [
-			URLQueryItem(name: "all", value: String(describing: true))
+	public func getContainers(for endpointID: Int, filters: [String: [String]] = [:]) async throws -> [Container] {
+		var queryItems = [
+			URLQueryItem(name: "all", value: "true")
 		]
-		let request = try request(for: .containers(endpointID: endpointID), queryItems: queryItems)
+		if !filters.isEmpty {
+			let filtersEncoded = try JSONEncoder().encode(filters)
+			guard let queryItemString = String(data: filtersEncoded, encoding: .utf8) else {
+				throw APIError.encodingFailed
+			}
+			let queryItem = URLQueryItem(name: "filters", value: queryItemString)
+			queryItems.append(queryItem)
+		}
+		let request = try request(for: .containers(endpointID: endpointID), query: queryItems)
 		return try await fetch(request: request)
 	}
 	
@@ -164,13 +173,13 @@ public class PortainerKit {
 	/// - Returns: `String` logs
 	public func getLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
 		let queryItems = [
-			URLQueryItem(name: "since", value: String(describing: since)),
-			URLQueryItem(name: "stderr", value: String(describing: true)),
-			URLQueryItem(name: "stdout", value: String(describing: true)),
-			URLQueryItem(name: "tail", value: String(describing: tail)),
-			URLQueryItem(name: "timestamps", value: String(describing: displayTimestamps))
+			URLQueryItem(name: "since", value: "\(since)"),
+			URLQueryItem(name: "stderr", value: "true"),
+			URLQueryItem(name: "stdout", value: "true"),
+			URLQueryItem(name: "tail", value: "\(tail)"),
+			URLQueryItem(name: "timestamps", value: "\(displayTimestamps)")
 		]
-		let request = try request(for: .logs(containerID: containerID, endpointID: endpointID), queryItems: queryItems)
+		let request = try request(for: .logs(containerID: containerID, endpointID: endpointID), query: queryItems)
 		
 		let (data, _) = try await session.data(for: request)
 		guard let string = String(data: data, encoding: .utf8) ?? String(data: data, encoding: .ascii) else { throw APIError.decodingFailed }
@@ -223,17 +232,17 @@ public class PortainerKit {
 	
 	/// Creates a authorized URLRequest.
 	/// - Parameter path: Request path
-	/// - Parameter queryItems: Optional query items
+	/// - Parameter query: Optional URL query items
 	/// - Returns: `URLRequest` with authorization header set.
-	private func request(for path: RequestPath, queryItems: [URLQueryItem]? = nil) throws -> URLRequest {
+	private func request(for path: RequestPath, query: [URLQueryItem]? = nil) throws -> URLRequest {
 		var request: URLRequest
-		if let queryItems = queryItems {
-			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(path.path), resolvingAgainstBaseURL: true) else { throw APIError.invalidURL }
-			components.queryItems = queryItems
+		if let query = query {
+			guard var components: URLComponents = URLComponents(url: url.appendingPathComponent(path.path), resolvingAgainstBaseURL: true) else { throw APIError.invalidURL }
+			components.queryItems = query
 			guard let url = components.url else { throw APIError.invalidURL }
 			request = URLRequest(url: url)
 		} else {
-			request = URLRequest(url: self.url.appendingPathComponent(path.path))
+			request = URLRequest(url: url.appendingPathComponent(path.path))
 		}
 				
 		if let token = token {
@@ -244,7 +253,7 @@ public class PortainerKit {
 	}
 	
 	/// Fetches & decodes data for supplied request.
-	/// - Parameter request: Request
+	/// - Parameter request: URLRequest
 	/// - Parameter decoder: JSONDecoder
 	/// - Returns: Output
 	private func fetch<Output: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {

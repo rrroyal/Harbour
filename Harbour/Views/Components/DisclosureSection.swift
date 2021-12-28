@@ -9,11 +9,11 @@ import SwiftUI
 
 struct DisclosureSection<Content>: View where Content: View {
 	let label: String
-	@Binding var isExpanded: Bool
+	// @Binding var isExpanded: Bool
 	@ViewBuilder let content: () -> Content
 	
 	var body: some View {
-		DisclosureGroup(isExpanded: $isExpanded, content: {
+		DisclosureGroup(content: {
 			VStack(spacing: 20, content: content)
 				.padding(.top, .medium)
 		}, label: {

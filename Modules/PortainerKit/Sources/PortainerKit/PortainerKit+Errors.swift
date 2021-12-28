@@ -14,6 +14,7 @@ public extension PortainerKit {
 		case responseCodeUnacceptable(_ code: Int)
 		case unknownError
 		
+		case encodingFailed
 		case decodingFailed
 		
 		case invalidCredentials
@@ -28,6 +29,7 @@ public extension PortainerKit {
 				case .custom(let reason):					return reason
 				case .responseCodeUnacceptable(let code):	return "Response unacceptable (\(code))"
 				case .unknownError:							return "Unknown error"
+				case .encodingFailed:						return "Encoding failed"
 				case .decodingFailed:						return "Decoding failed"
 				case .invalidCredentials:					return "Invalid credentials"
 				case .invalidJWTToken:						return "Invalid token"

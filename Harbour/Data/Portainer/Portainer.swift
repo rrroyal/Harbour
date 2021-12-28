@@ -5,13 +5,14 @@
 //  Created by royal on 11/06/2021.
 //
 
+import Foundation
 import Combine
-import KeychainAccess
 import os.log
 import PortainerKit
-import SwiftUI
+import KeychainAccess
 
 final class Portainer: ObservableObject {
+	public typealias ContainerInspection = (general: PortainerKit.Container?, details: PortainerKit.ContainerDetails)
 	
 	// MARK: - Public properties
 
@@ -30,7 +31,7 @@ final class Portainer: ObservableObject {
 					do {
 						try await getContainers(endpointID: endpointID)
 					} catch {
-						// AppState.shared.handle(error)
+						handle(error)
 					}
 				}
 			} else {
@@ -204,8 +205,9 @@ final class Portainer: ObservableObject {
 	
 	/// Fetches container details.
 	/// - Parameter container: Container to be inspected
-	/// - Returns: `PortainerKit.ContainerDetails`
-	public func inspectContainer(_ container: PortainerKit.Container, endpointID: Int? = nil) async throws -> PortainerKit.ContainerDetails {
+	/// - Parameter endpointID: Endpoint ID to inspect
+	/// - Returns: `ContainerInspection`
+	public func inspectContainer(_ container: PortainerKit.Container, endpointID: Int? = nil) async throws -> ContainerInspection {
 		let endpointID = endpointID ?? self.selectedEndpointID
 		
 		logger.debug("Inspecting container with ID: \(container.id), endpointID: \(endpointID ?? -1)...")
@@ -214,9 +216,20 @@ final class Portainer: ObservableObject {
 		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 		
 		do {
-			let containerDetails = try await api.inspectContainer(container.id, endpointID: endpointID)
+			async let general = api.getContainers(for: endpointID, filters: ["id": [container.id]]).first(where: { $0.id == container.id })
+			async let details = api.inspectContainer(container.id, endpointID: endpointID)
+			let result: ContainerInspection = (try await general, try await details)
 			logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
-			return containerDetails
+			
+			if let general = result.general {
+				DispatchQueue.main.async { [weak self] in
+					if let index = self?.containers.firstIndex(of: container) {
+						self?.containers[index] = general
+					}
+				}
+			}
+			
+			return result
 		} catch {
 			handle(error)
 			throw error

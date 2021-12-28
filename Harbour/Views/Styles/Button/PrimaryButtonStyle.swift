@@ -35,3 +35,8 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.animation(.easeInOut, value: isEnabled)
 	}
 }
+
+extension ButtonStyle where Self == PrimaryButtonStyle {
+	static var customPrimary: PrimaryButtonStyle { .init() }
+	static func customPrimary(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) -> PrimaryButtonStyle { .init(foregroundColor: foregroundColor, backgroundColor: backgroundColor, font: font) }
+}

@@ -104,7 +104,7 @@ struct ContainerContextMenu: View {
 		
 		Button(action: {
 			do {
-				UIDevice.current.generateHaptic(.light)
+				UIDevice.generateHaptic(.light)
 				try Portainer.shared.attach(to: container)
 				sceneState.isContainerConsoleSheetPresented = true
 			} catch {
@@ -117,7 +117,7 @@ struct ContainerContextMenu: View {
 	}
 	
 	private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) {
-		UIDevice.current.generateHaptic(haptic)
+		UIDevice.generateHaptic(haptic)
 		
 		let style: Indicators.Indicator.Style = .init(subheadlineColor: action.color, subheadlineStyle: .primary, iconColor: action.color, iconStyle: .primary, iconVariants: .fill)
 		let indicator: Indicators.Indicator = .init(id: "ContainerActionExecution-\(container.id)", icon: action.icon, headline: container.displayName ?? "Container", subheadline: action.label, dismissType: .after(3), style: style)

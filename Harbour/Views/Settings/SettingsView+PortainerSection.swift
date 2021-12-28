@@ -39,22 +39,22 @@ extension SettingsView {
 					
 					if preferences.hasSavedCredentials {
 						Button("Log out", role: .destructive) {
-							UIDevice.current.generateHaptic(.warning)
+							UIDevice.generateHaptic(.warning)
 							isLogoutWarningPresented = true
 						}
 						.confirmationDialog("Are you sure?", isPresented: $isLogoutWarningPresented, titleVisibility: .visible) {
 							Button("Yup!", role: .destructive) {
-								UIDevice.current.generateHaptic(.heavy)
+								UIDevice.generateHaptic(.heavy)
 								portainer.logOut(removeEndpointURL: true)
 							}
 							
 							Button("Nevermind", role: .cancel) {
-								UIDevice.current.generateHaptic(.soft)
+								UIDevice.generateHaptic(.soft)
 							}
 						}
 					} else {
 						Button("Log in") {
-							UIDevice.current.generateHaptic(.soft)
+							UIDevice.generateHaptic(.soft)
 							isLoginSheetPresented = true
 						}
 					}

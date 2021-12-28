@@ -55,7 +55,7 @@ class SceneState: ObservableObject {
 			return
 		}
 		
-		UIDevice.current.generateHaptic(.light)
+		UIDevice.generateHaptic(.light)
 		isContainerConsoleSheetPresented = true
 	}
 	
@@ -70,7 +70,7 @@ class SceneState: ObservableObject {
 	}
 	
 	public func handle(_ error: Error, displayIndicator: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
-		UIDevice.current.generateHaptic(.error)
+		UIDevice.generateHaptic(.error)
 		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		
 		if displayIndicator {

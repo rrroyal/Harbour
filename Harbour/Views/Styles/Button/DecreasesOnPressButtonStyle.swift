@@ -18,3 +18,7 @@ struct DecreasesOnPressButtonStyle: ButtonStyle {
 			.animation(Globals.Views.springAnimation, value: configuration.isPressed)
 	}
 }
+
+extension ButtonStyle where Self == DecreasesOnPressButtonStyle {
+	static var decreasesOnPress: DecreasesOnPressButtonStyle { .init() }
+}

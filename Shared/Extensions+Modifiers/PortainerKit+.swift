@@ -8,14 +8,19 @@
 import PortainerKit
 import SwiftUI
 
-extension PortainerKit.Endpoint {
-	var displayName: String { name ?? "\(id)" }
-}
-
 extension PortainerKit.Container {
 	var displayName: String? {
 		guard let name: String = names?.first?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
 		return name.starts(with: "/") ? String(name.dropFirst()) : name
+	}
+	
+	@MainActor
+	func update(from inspection: Portainer.ContainerInspection) {
+		if let general = inspection.general {
+			self.status = general.status
+		}
+		self.details = inspection.details
+		self.state = inspection.details.state.status
 	}
 }
 

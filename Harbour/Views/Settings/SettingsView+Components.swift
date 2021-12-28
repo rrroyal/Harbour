@@ -38,7 +38,7 @@ extension SettingsView {
 				Slider(value: $value, in: range, step: step, onEditingChanged: onEditingChanged)
 					.onChange(of: value) {
 						if $0 > range.lowerBound && $0 < range.upperBound {
-							UIDevice.current.generateHaptic(.selectionChanged)
+							UIDevice.generateHaptic(.selectionChanged)
 						}
 					}
 			}

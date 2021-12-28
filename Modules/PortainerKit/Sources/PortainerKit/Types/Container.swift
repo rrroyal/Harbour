@@ -55,7 +55,7 @@ public extension PortainerKit {
 		
 		public var details: ContainerDetails? = nil
 		
-		public required init(from decoder: Decoder) throws {
+		/* public required init(from decoder: Decoder) throws {
 			let container = try decoder.container(keyedBy: CodingKeys.self)
 			
 			self.id = try container.decode(String.self, forKey: .id)
@@ -73,7 +73,7 @@ public extension PortainerKit {
 			self.hostConfig = try container.decodeIfPresent(HostConfig.self, forKey: .hostConfig)
 			self.networkSettings = try container.decodeIfPresent(NetworkSettings.self, forKey: .networkSettings)
 			self.mounts = try container.decodeIfPresent([Mount].self, forKey: .mounts)
-		}
+		} */
 
 		public static func == (lhs: PortainerKit.Container, rhs: PortainerKit.Container) -> Bool {
 			lhs.id == rhs.id &&
@@ -81,15 +81,6 @@ public extension PortainerKit {
 				lhs.status == rhs.status &&
 				lhs.names == rhs.names &&
 				lhs.labels == rhs.labels
-		}
-		
-		// TODO: Update other properties
-		public func update(from details: PortainerKit.ContainerDetails) {
-			DispatchQueue.main.async { [weak self] in
-				self?.details = details
-				self?.state = details.state.status
-				#warning("TODO: Update self.status")
-			}
 		}
 	}
 }
