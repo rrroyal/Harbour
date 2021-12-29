@@ -25,49 +25,28 @@ extension SettingsView {
 		
 		var body: some View {
 			Section(header: Text("Other"), footer: madeWithLove) {
-				NavigationLink("Libraries") {
-					LibrariesView()
-				}
-				
 				#if DEBUG
-				NavigationLink("🤫") {
+				NavigationLinkOption(label: "🤫", iconSymbolName: "eyes", iconColor: .orange) {
 					DebugView()
 				}
 				#endif
 				
 				Link(destination: URL(string: "https://harbour.shameful.xyz/docs")!) {
 					HStack {
+						OptionIcon(symbolName: "globe", color: .blue)
+						
 						Text("Docs")
+							.font(standaloneLabelFont)
+						
 						Spacer()
-						Image(systemName: "globe")
+						
+						Image(systemName: "link")
+							.font(.subheadline.weight(.semibold))
+							.foregroundStyle(.tertiary)
 					}
 				}
-				.accentColor(.primary)
+				.foregroundStyle(.primary)
 			}
-		}
-	}
-}
-
-extension SettingsView.OtherSection {
-	struct LibrariesView: View {
-		typealias Library = (url: URL, label: String)
-		
-		let libraries: [Library] = [
-			(URL(string: "https://github.com/kishikawakatsumi/KeychainAccess")!, "kishikawakatsumi/KeychainAccess")
-		]
-		
-		var body: some View {
-			List(libraries, id: \.url) { library in
-				Link(destination: library.url) {
-					HStack {
-						Text(library.label)
-						Spacer()
-						Image(systemName: "globe")
-					}
-				}
-				.accentColor(.primary)
-			}
-			.navigationTitle("Libraries")
 		}
 	}
 }

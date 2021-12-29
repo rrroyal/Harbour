@@ -8,17 +8,35 @@
 import SwiftUI
 
 struct SettingsView: View {
+	@Environment(\.presentationMode) var presentationMode
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
+	
+	let listRowInsets = EdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15)
 	
 	var body: some View {
 		NavigationView {
 			List {
 				PortainerSection()
+					.listRowInsets(listRowInsets)
+
 				InterfaceSection()
+					.listRowInsets(listRowInsets)
+
 				OtherSection()
+					.listRowInsets(listRowInsets)
 			}
 			.navigationTitle("Settings")
+			#if targetEnvironment(macCatalyst)
+			.toolbar {
+				ToolbarItem(placement: .automatic) {
+					Button("Close") {
+						UIDevice.generateHaptic(.soft)
+						presentationMode.wrappedValue.dismiss()
+					}
+				}
+			}
+			#endif
 		}
 	}
 }

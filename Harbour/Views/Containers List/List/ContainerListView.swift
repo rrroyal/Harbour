@@ -19,10 +19,12 @@ struct ContainerListView: View {
 				ForEach(containers) { container in
 					NavigationLink(tag: container.id, selection: $sceneState.activeContainerID, destination: {
 						ContainerDetailView(container: container)
+							.equatable()
 							.environmentObject(sceneState)
 							.environmentObject(portainer)
 					}) {
 						ContainerCell(container: container)
+							.equatable()
 							.contextMenu {
 								ContainerContextMenu(container: container)
 							}

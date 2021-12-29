@@ -17,10 +17,12 @@ extension Portainer {
 		public let container: PortainerKit.Container
 		public let messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject
 		
+		public var errorHandler: SceneState.ErrorHandler?
+		public internal(set) var endpointID: PortainerKit.Endpoint.ID? = nil
+		public private(set) var isConnected: Bool = true
 		@Published public private(set) var buffer: String = ""
 		
-		public private(set) var isConnected: Bool = true
-		public var errorHandler: SceneState.ErrorHandler?
+		internal var onDisconnect: (() -> Void)? = nil
 		
 		private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer.AttachedContainer")
 		private var messageCancellable: AnyCancellable? = nil
@@ -40,8 +42,14 @@ extension Portainer {
 		}
 		
 		deinit {
-			messageCancellable?.cancel()
 			logger.info("Deinitialized")
+			messageCancellable?.cancel()
+		}
+		
+		public func disconnect() {
+			isConnected = false
+			messageCancellable?.cancel()
+			onDisconnect?()
 		}
 		
 		private func passthroughSubjectCompletion(_ completion: Subscribers.Completion<Error>) {

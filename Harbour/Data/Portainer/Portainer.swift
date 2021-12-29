@@ -11,6 +11,7 @@ import os.log
 import PortainerKit
 import Keychain
 
+@MainActor
 final class Portainer: ObservableObject {
 	public typealias ContainerInspection = (general: PortainerKit.Container?, details: PortainerKit.ContainerDetails)
 	
@@ -19,15 +20,22 @@ final class Portainer: ObservableObject {
 	public static let shared: Portainer = Portainer()
 	
 	@Published public private(set) var servers: [URL]
-	@Published public private(set) var isLoggedIn: Bool = false
+	@Published public private(set) var isReady: Bool = false
+	
+	@Published public private(set) var fetchingEndpoints: Bool = false
+	@Published public private(set) var fetchingContainers: Bool = false
 	
 	public var serverURL: URL? {
-		get { self.api?.url }
+		get { api?.url }
+	}
+	
+	public var hasSavedCredentials: Bool {
+		get { !((try? keychain.getURLs()) ?? []).isEmpty }
 	}
 			
 	// MARK: Endpoint
 	
-	@Published public var selectedEndpointID: Int? = nil {
+	@Published public var selectedEndpointID: Int? = Preferences.shared.selectedEndpointID {
 		didSet {
 			Preferences.shared.selectedEndpointID = selectedEndpointID
 			
@@ -48,9 +56,14 @@ final class Portainer: ObservableObject {
 
 	@Published public private(set) var endpoints: [PortainerKit.Endpoint] = [] {
 		didSet {
-			if let storedEndpointID = Preferences.shared.selectedEndpointID, let storedEndpoint = endpoints.first(where: { $0.id == storedEndpointID }) {
-				selectedEndpointID = storedEndpoint.id
-			} else if endpoints.count == 1 {
+			if selectedEndpointID == nil,
+			   let storedEndpointID = Preferences.shared.selectedEndpointID,
+			   endpoints.contains(where: { $0.id == storedEndpointID }) {
+				selectedEndpointID = storedEndpointID
+				return
+			}
+						
+			if endpoints.count == 1 {
 				selectedEndpointID = endpoints.first?.id
 			} else if endpoints.isEmpty {
 				selectedEndpointID = nil
@@ -82,7 +95,7 @@ final class Portainer: ObservableObject {
 					self.servers.append(url)
 				}
 				
-				try setup(with: url)
+				try setup(with: url, fetchEndpoints: false)
 			} catch {
 				handle(error)
 			}
@@ -91,22 +104,20 @@ final class Portainer: ObservableObject {
 	
 	// MARK: - Public functions
 	
-	public func setup(with url: URL) throws {
+	public func setup(with url: URL, fetchEndpoints: Bool = false) throws {
 		logger.debug("Setting up, URL: \(url.absoluteString, privacy: .sensitive)")
 		
 		guard let token = try? keychain.getToken(server: url) else {
 			throw PortainerError.noToken
 		}
+		
+		isReady = true
 				
 		api = PortainerKit(url: url, token: token)
-		isLoggedIn = true
 		Preferences.shared.selectedServer = url
-		
-		DispatchQueue.main.async { [weak self] in
-			Task { [weak self] in
-				AppState.shared.fetchingMainScreenData = true
-				try await self?.getEndpoints()
-				AppState.shared.fetchingMainScreenData = false
+		if fetchEndpoints {
+			Task {
+				try await getEndpoints()
 			}
 		}
 	}
@@ -141,7 +152,7 @@ final class Portainer: ObservableObject {
 			DispatchQueue.main.async { [weak self] in
 				guard let self = self else { return }
 				
-				self.isLoggedIn = true
+				self.isReady = true
 				Preferences.shared.selectedServer = url
 				if !self.servers.contains(url) {
 					self.servers.append(url)
@@ -170,12 +181,11 @@ final class Portainer: ObservableObject {
 		
 		DispatchQueue.main.async { [weak self] in
 			guard let self = self else { return }
-			self.isLoggedIn = false
+			self.isReady = false
 			self.selectedEndpointID = nil
 			self.endpoints = []
 			self.containers = []
 			self.attachedContainer = nil
-			AppState.shared.fetchingMainScreenData = false
 		}
 	}
 	
@@ -200,17 +210,21 @@ final class Portainer: ObservableObject {
 		logger.debug("Getting endpoints...")
 		
 		guard let api = api else { throw PortainerError.noAPI }
+		fetchingEndpoints = true
 		
 		do {
 			let endpoints = try await api.getEndpoints()
 			
 			logger.debug("Got \(endpoints.count) endpoint(s).")
 			DispatchQueue.main.async { [weak self] in
+				self?.isReady = true
 				self?.endpoints = endpoints
+				self?.fetchingEndpoints = false
 			}
 			
 			return endpoints
 		} catch {
+			fetchingEndpoints = false
 			handle(error)
 			throw error
 		}
@@ -227,16 +241,21 @@ final class Portainer: ObservableObject {
 		guard let api = api else { throw PortainerError.noAPI }
 		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 
+		fetchingContainers = true
+		
 		do {
 			let containers = try await api.getContainers(for: endpointID)
 			
 			logger.debug("Got \(containers.count) container(s) for endpointID: \(endpointID).")
 			DispatchQueue.main.async { [weak self] in
+				self?.isReady = true
 				self?.containers = containers
+				self?.fetchingContainers = false
 			}
 			
 			return containers
 		} catch {
+			fetchingContainers = false
 			handle(error)
 			throw error
 		}
@@ -342,6 +361,10 @@ final class Portainer: ObservableObject {
 			logger.debug("Attached to containerID: \(container.id), endpointID: \(endpointID)!")
 			
 			let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
+			attachedContainer.endpointID = endpointID
+			attachedContainer.onDisconnect = { [weak self] in
+				self?.attachedContainer = nil
+			}
 			self.attachedContainer = attachedContainer
 			
 			return attachedContainer

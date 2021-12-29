@@ -47,6 +47,7 @@
 		E7992A4426BF3BA3007335CA /* ToolbarTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */; };
 		E7A661FC27230EC000B872EA /* AppState+UserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A661FB27230EC000B872EA /* AppState+UserActivity.swift */; };
 		E7ABFB952722BD2500054FB7 /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ABFB942722BD2500054FB7 /* SceneState.swift */; };
+		E7ABFD2B277CA6D300D475C0 /* UIApplication+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ABFD2A277CA6D300D475C0 /* UIApplication+.swift */; };
 		E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */; };
 		E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */; };
 		E7B10B7426CD82A2005B82BC /* SettingsView+PortainerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7326CD82A2005B82BC /* SettingsView+PortainerSection.swift */; };
@@ -122,6 +123,7 @@
 		E7992A4326BF3BA3007335CA /* ToolbarTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolbarTitle.swift; sourceTree = "<group>"; };
 		E7A661FB27230EC000B872EA /* AppState+UserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+UserActivity.swift"; sourceTree = "<group>"; };
 		E7ABFB942722BD2500054FB7 /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
+		E7ABFD2A277CA6D300D475C0 /* UIApplication+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+.swift"; sourceTree = "<group>"; };
 		E7B10B6F26CD80C3005B82BC /* SettingsView+Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+Components.swift"; sourceTree = "<group>"; };
 		E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+OtherSection.swift"; sourceTree = "<group>"; };
 		E7B10B7326CD82A2005B82BC /* SettingsView+PortainerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+PortainerSection.swift"; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 				E70A5CEE27220C4300FF6672 /* EnvironmentValues+.swift */,
 				E7748E7E267E835600456BFD /* Notification+.swift */,
 				E7339C572674262500A55B5C /* String+.swift */,
+				E7ABFD2A277CA6D300D475C0 /* UIApplication+.swift */,
 				E7BF9E892672F2F600AAB6A1 /* UIDevice+.swift */,
 				E7748E7C267E831B00456BFD /* UIWindow+.swift */,
 				E7C303C42734205000D8FE8F /* View+.swift */,
@@ -509,6 +512,7 @@
 				E7B10B7026CD80C3005B82BC /* SettingsView+Components.swift in Sources */,
 				E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */,
 				E7DC3BA82708FB8A00F32F8B /* TransparentButtonStyle.swift in Sources */,
+				E7ABFD2B277CA6D300D475C0 /* UIApplication+.swift in Sources */,
 				E7272E8A26736CCF00228494 /* PortainerKit+.swift in Sources */,
 				E77C5FB3267E9B99000B4994 /* DebugView.swift in Sources */,
 				E70A5CF127220D2900FF6672 /* ContainersView.swift in Sources */,

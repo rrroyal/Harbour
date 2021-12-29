@@ -15,7 +15,7 @@ struct SetupView: View {
 			WelcomeView(selection: $selection)
 				.tag(0)
 			
-			if !Portainer.shared.isLoggedIn {
+			if !Portainer.shared.isReady {
 				LoginView()
 					.environmentObject(Portainer.shared)
 					.tag(1)
@@ -49,7 +49,7 @@ fileprivate struct WelcomeView: View {
 			
 			Button("Beam me up, Scotty!") {
 				UIDevice.generateHaptic(.soft)
-				if Portainer.shared.isLoggedIn {
+				if Portainer.shared.isReady {
 					presentationMode.wrappedValue.dismiss()
 				} else {
 					withAnimation { selection = 1 }

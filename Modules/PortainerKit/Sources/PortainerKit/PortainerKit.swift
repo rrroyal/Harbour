@@ -192,7 +192,7 @@ public class PortainerKit {
 	public func attach(to containerID: String, endpointID: Int) throws -> WebSocketPassthroughSubject {
 		guard let url: URL = {
 			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
-			components.scheme = "ws"
+			components.scheme = self.url.scheme == "https" ? "wss" : "ws"
 			components.queryItems = [
 				URLQueryItem(name: "token", value: token),
 				URLQueryItem(name: "endpointId", value: String(endpointID)),

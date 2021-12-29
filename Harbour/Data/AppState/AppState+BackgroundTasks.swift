@@ -44,7 +44,7 @@ extension AppState {
 
 		Task {
 			do {
-				let savedState = Portainer.shared.containers.reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }
+				let savedState = await Portainer.shared.containers.reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }
 				
 				let newContainers = try await Portainer.shared.getContainers()
 				let newState = newContainers.reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }

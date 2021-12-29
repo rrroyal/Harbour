@@ -14,8 +14,6 @@ import Indicators
 class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
 	
-	@Published public var fetchingMainScreenData: Bool = false
-	
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
 	
 	internal var autoRefreshTimer: AnyCancellable? = nil
@@ -40,15 +38,11 @@ class AppState: ObservableObject {
 			.receive(on: DispatchQueue.main)
 			.sink { _ in
 				Task { [weak self] in
-					self?.fetchingMainScreenData = true
-					
 					do {
 						try await Portainer.shared.getContainers()
 					} catch {
 						self?.handle(error)
-					}
-					
-					self?.fetchingMainScreenData = false
+					}					
 				}
 			}
 	}

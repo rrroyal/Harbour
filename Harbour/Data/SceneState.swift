@@ -23,9 +23,32 @@ class SceneState: ObservableObject {
 	
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
 	
+	// MARK: - User activity
+	@MainActor public func handleContinueUserActivity(_ activity: NSUserActivity) {
+		logger.debug("Continuing UserActivity \"\(activity.activityType)\"")
+		
+		do {
+			switch activity.activityType {
+				case AppState.UserActivity.attachedToContainer:
+					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String,
+					   let container = Portainer.shared.containers.first(where: { $0.id == containerID }) {
+						try Portainer.shared.attach(to: container, endpointID: activity.userInfo?[AppState.UserActivity.endpointIDKey] as? Int)
+					}
+				case AppState.UserActivity.viewingContainer:
+					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String {
+						activeContainerID = containerID
+					}
+				default:
+					break
+			}
+		} catch {
+			handle(error)
+		}
+	}
+	
 	// MARK: - Attached container
 	
-	func onContainerConsoleViewDismissed() {
+	@MainActor public func onContainerConsoleViewDismissed() {
 		guard Preferences.shared.persistAttachedContainer else {
 			Portainer.shared.attachedContainer = nil
 			return
@@ -35,7 +58,7 @@ class SceneState: ObservableObject {
 			return
 		}
 				
-		if Preferences.shared.displayContainerDismissedPrompt && attachedContainer.isConnected {
+		if attachedContainer.isConnected {
 			let indicatorID: String = "ContainerDismissedIndicator"
 			let indicator: Indicators.Indicator = .init(id: indicatorID,
 														icon: "terminal.fill",
@@ -50,7 +73,7 @@ class SceneState: ObservableObject {
 		}
 	}
 	
-	func showAttachedContainer() {
+	@MainActor public func showAttachedContainer() {
 		guard Portainer.shared.attachedContainer?.isConnected ?? false else {
 			return
 		}

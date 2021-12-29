@@ -53,7 +53,7 @@ struct DebugView: View {
 					Preferences.Key.allCases.forEach { Preferences.ud.removeObject(forKey: $0.rawValue) }
 					exit(0)
 				}
-				.accentColor(.red)
+				.foregroundStyle(.red)
 			}
 			
 			Section("Indicators") {

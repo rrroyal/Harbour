@@ -10,5 +10,9 @@ import Foundation
 extension AppState {
 	enum UserActivity {
 		static let viewingContainer = "\(Bundle.main.bundleIdentifier!).ViewingContainer"
+		static let attachedToContainer = "\(Bundle.main.bundleIdentifier!).AttachedToContainer"
+		
+		static let containerIDKey = "ContainerID"
+		static let endpointIDKey = "EndpointID"
 	}
 }

@@ -30,63 +30,73 @@ extension SettingsView {
 			return formatter.string(from: preferences.autoRefreshInterval) ?? "\(preferences.autoRefreshInterval) second(s)"
 		}
 		
-		var body: some View {
-			Group {
-				Section("Portainer") {
-					Menu(content: {
-						ForEach(portainer.servers, id: \.absoluteString) { server in
-							Menu(server.absoluteString) {
-								if portainer.serverURL == server {
-									Label("In use", systemImage: "checkmark")
-										.symbolVariant(.circle.fill)
-								} else {
-									Button(action: {
-										UIDevice.generateHaptic(.selectionChanged)
-										do {
-											try portainer.setup(with: server)
-										} catch {
-											UIDevice.generateHaptic(.error)
-											sceneState.handle(error)
-										}
-									}) {
-										Label("Use", systemImage: "checkmark")
-											.symbolVariant(.circle)
-									}
+		var serverMenu: some View {
+			Menu(content: {
+				ForEach(portainer.servers, id: \.absoluteString) { server in
+					Menu(server.readableString) {
+						if portainer.serverURL == server {
+							Label("In use", systemImage: "checkmark")
+								.symbolVariant(.circle.fill)
+						} else {
+							Button(action: {
+								UIDevice.generateHaptic(.selectionChanged)
+								do {
+									try portainer.setup(with: server, fetchEndpoints: true)
+								} catch {
+									UIDevice.generateHaptic(.error)
+									sceneState.handle(error)
 								}
-								
-								Divider()
-								
-								Button(role: .destructive, action: {
-									UIDevice.generateHaptic(.heavy)
-									do {
-										try portainer.removeServer(url: server)
-									} catch {
-										UIDevice.generateHaptic(.error)
-										sceneState.handle(error)
-									}
-								}) {
-									Label("Delete", systemImage: "trash")
-								}
+							}) {
+								Label("Use", systemImage: "checkmark")
+									.symbolVariant(.circle)
 							}
 						}
 						
 						Divider()
 						
-						Button(action: {
-							UIDevice.generateHaptic(.soft)
-							isLoginSheetPresented = true
+						Button(role: .destructive, action: {
+							UIDevice.generateHaptic(.heavy)
+							do {
+								try portainer.removeServer(url: server)
+							} catch {
+								UIDevice.generateHaptic(.error)
+								sceneState.handle(error)
+							}
 						}) {
-							Label("Add", systemImage: "plus")
+							Label("Delete", systemImage: "trash")
 						}
-					}) {
-						Text(preferences.selectedServer?.absoluteString ?? "No server selected")
-							.frame(maxWidth: .infinity, alignment: .leading)
-							.transition(.identity)
-							.id("SelectedServerLabel:\(preferences.selectedServer?.absoluteString ?? "")")
-						
-						Image(systemName: "chevron.down")
 					}
-					.id("ServerSelectionMenu:\(portainer.servers.hashValue)")
+				}
+				
+				Divider()
+				
+				Button(action: {
+					UIDevice.generateHaptic(.soft)
+					isLoginSheetPresented = true
+				}) {
+					Label("Add", systemImage: "plus")
+				}
+			}) {
+				HStack {
+					OptionIcon(symbolName: "server.rack", color: .accentColor)
+					
+					Text(preferences.selectedServer?.readableString ?? "No server selected")
+						.transition(.identity)
+						.id("SelectedServerLabel:\(preferences.selectedServer?.absoluteString ?? "")")
+					
+					Spacer()
+					
+					Image(systemName: "chevron.down")
+				}
+			}
+			.id("ServerSelectionMenu:\(portainer.servers.hashValue)")
+			.font(standaloneLabelFont)
+		}
+		
+		var body: some View {
+			Group {
+				Section("Portainer") {
+					serverMenu
 				}
 				.sheet(isPresented: $isLoginSheetPresented) {
 					LoginView()
@@ -94,14 +104,14 @@ extension SettingsView {
 				
 				Section("Data") {
 					/// Persist attached container
-					ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE.localized, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION.localized, isOn: $preferences.persistAttachedContainer)
+					ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE.localized, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION.localized, iconSymbolName: "bolt", iconColor: .red, isOn: $preferences.persistAttachedContainer)
 					
 					/// Refresh containers in background
-					ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, isOn: preferences.$enableBackgroundRefresh)
+					ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, iconSymbolName: "arrow.clockwise", iconColor: .green, isOn: preferences.$enableBackgroundRefresh)
 						.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
 					
 					/// Auto-refresh interval
-					SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
+					SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, iconSymbolName: "clock.arrow.2.circlepath", iconColor: .cyan, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
 				}
 			}
 		}
@@ -127,6 +137,17 @@ extension SettingsView {
 		private func setupAutoRefreshTimer(isEditing: Bool) {
 			guard !isEditing else { return }
 			AppState.shared.setupAutoRefreshTimer(interval: preferences.autoRefreshInterval)
+		}
+	}
+}
+
+private extension URL {
+	var readableString: String {
+		guard let host = self.host else { return self.absoluteString }
+		if let port = self.port {
+			return "\(host):\(port)\(self.path)"
+		} else {
+			return "\(host)\(self.path)"
 		}
 	}
 }

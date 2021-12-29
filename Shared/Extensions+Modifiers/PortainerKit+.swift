@@ -8,7 +8,7 @@
 import PortainerKit
 import SwiftUI
 
-extension PortainerKit.Container {
+extension PortainerKit.Container {	
 	var displayName: String? {
 		guard let name: String = names?.first?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
 		return name.starts(with: "/") ? String(name.dropFirst()) : name

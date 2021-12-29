@@ -20,25 +20,34 @@ struct ContentView: View {
 		
 	private var currentState: DataState {
 		if portainer.containers.isEmpty {
-			guard !appState.fetchingMainScreenData else {
+			guard !(portainer.fetchingEndpoints || portainer.fetchingContainers) else {
 				return .fetching
 			}
 			
-			guard portainer.isLoggedIn else {
+			guard portainer.isReady else {
 				return .notLoggedIn
 			}
-			if portainer.selectedEndpointID != nil {
-				return .noContainers
+			if portainer.endpoints.isEmpty {
+				return .noEndpointsAvailable
 			} else {
-				if portainer.endpoints.isEmpty {
-					return .noEndpointsAvailable
-				} else {
-					return .noEndpointSelected
+				if portainer.selectedEndpointID != nil {
+					return .noContainers
 				}
+				return .noEndpointSelected
 			}
 		} else {
 			return .finished
 		}
+	}
+	
+	private var endpointButtonSymbolVariant: SymbolVariants {
+		if portainer.isReady && !portainer.endpoints.isEmpty && portainer.selectedEndpointID != nil {
+			return .fill
+		}
+		if !portainer.endpoints.isEmpty {
+			return .none
+		}
+		return .slash
 	}
 	
 	var toolbarMenu: some View {
@@ -63,12 +72,10 @@ struct ContentView: View {
 			
 			Button(action: {
 				UIDevice.generateHaptic(.light)
-				appState.fetchingMainScreenData = true
 				Task {
 					do {
 						try await portainer.getEndpoints()
 						try await portainer.getContainers()
-						appState.fetchingMainScreenData = false
 					} catch {
 						sceneState.handle(error)
 					}
@@ -78,9 +85,9 @@ struct ContentView: View {
 			}
 		}) {
 			Label(portainer.endpoints.first(where: { $0.id == portainer.selectedEndpointID })?.name ?? "Endpoint", systemImage: "tag")
-				.symbolVariant(portainer.selectedEndpointID != nil ? .fill : (!portainer.endpoints.isEmpty ? .none : .slash))
+				.symbolVariant(endpointButtonSymbolVariant)
 		}
-		.disabled(!portainer.isLoggedIn)
+		.disabled(!portainer.isReady)
 	}
 	
 	@ViewBuilder
@@ -89,15 +96,19 @@ struct ContentView: View {
 			case .finished:
 				ContainersView(containers: portainer.containers.filtered(query: searchQuery))
 					.searchable(text: $searchQuery)
+			case .fetching:
+				ProgressView()
 			default:
 				Text(currentState.label ?? "")
 					.foregroundStyle(.tertiary)
+					.id(currentState)
 		}
 	}
 	
 	var body: some View {
 		NavigationView {
 			content
+				.transition(.opacity)
 				.navigationTitle("Harbour")
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbar {
@@ -110,7 +121,7 @@ struct ContentView: View {
 						}
 					}
 					
-					ToolbarTitle(title: "Harbour", subtitle: appState.fetchingMainScreenData ? "Refreshing..." : nil)
+					ToolbarTitle(title: "Harbour", subtitle: (portainer.fetchingEndpoints || portainer.fetchingContainers) ? "Refreshing..." : nil)
 					
 					ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 				}
@@ -119,7 +130,7 @@ struct ContentView: View {
 				.foregroundStyle(.tertiary)
 		}
 		.transition(.opacity)
-		.animation(.easeInOut, value: portainer.isLoggedIn)
+		.animation(.easeInOut, value: portainer.isReady)
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
 		.animation(.easeInOut, value: currentState)
@@ -127,7 +138,11 @@ struct ContentView: View {
 		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
 		}
-		.sheet(isPresented: $sceneState.isContainerConsoleSheetPresented, onDismiss: sceneState.onContainerConsoleViewDismissed) {
+		.sheet(isPresented: $sceneState.isContainerConsoleSheetPresented, onDismiss: {
+			DispatchQueue.main.async {
+				sceneState.onContainerConsoleViewDismissed()
+			}
+		}) {
 			if let attachedContainer = portainer.attachedContainer {
 				ContainerConsoleView(attachedContainer: attachedContainer)
 			}
@@ -136,18 +151,19 @@ struct ContentView: View {
 			SetupView()
 		}
 		.indicatorOverlay(model: sceneState.indicators)
-		.onContinueUserActivity(AppState.UserActivity.viewingContainer, perform: handleContinueContainerViewingUserActivity)
+		.onContinueUserActivity(AppState.UserActivity.viewingContainer) { activity in
+			DispatchQueue.main.async {
+				sceneState.handleContinueUserActivity(activity)
+			}
+		}
+		.onContinueUserActivity(AppState.UserActivity.attachedToContainer) { activity in
+			DispatchQueue.main.async {
+				sceneState.handleContinueUserActivity(activity)
+			}
+		}
 		.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
 		.environmentObject(sceneState)
 		.environment(\.sceneErrorHandler, sceneErrorHandler)
-	}
-	
-	private func handleContinueContainerViewingUserActivity(_ activity: NSUserActivity) {
-		sceneState.logger.debug("Continuing UserActivity \"\(activity.activityType)\"")
-		
-		if let containerID = activity.userInfo?["ContainerID"] as? String {
-			sceneState.activeContainerID = containerID
-		}
 	}
 	
 	private func onDeviceDidShake(notification: Notification) {

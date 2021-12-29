@@ -26,7 +26,6 @@ class Preferences: ObservableObject {
 	@AppStorage(Preferences.Key.clUseColoredContainerCells.rawValue, store: .group) public var clUseColoredContainerCells: Bool = false
 	
 	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .group) public var persistAttachedContainer: Bool = true
-	@AppStorage(Preferences.Key.displayContainerDismissedPrompt.rawValue, store: .group) public var displayContainerDismissedPrompt: Bool = true
 	
 	#if DEBUG
 	var lastBackgroundTaskDate: Date? {
@@ -64,7 +63,6 @@ extension Preferences {
 		case clUseColoredContainerCells = "CLUseColoredContainerCells"
 		
 		case persistAttachedContainer = "PersistAttachedContainer"
-		case displayContainerDismissedPrompt = "DisplayContainerDismissedPrompt"
 		
 		#if DEBUG
 		case lastBackgroundTaskDate = "LastBackgroundTaskDate"

@@ -60,7 +60,7 @@ internal extension Indicators {
 			}
 			.padding(padding)
 			.padding(.horizontal, padding)
-			.background(Material.regular, in: backgroundShape)
+			.background(.regularMaterial, in: backgroundShape)
 			// .background(backgroundShape.fill(Color(uiColor: .secondarySystemGroupedBackground)).shadow(color: Color.black.opacity(0.1), radius: 14, x: 0, y: 0))
 			.frame(maxWidth: isExpanded ? nil : maxWidth)
 			.animation(.easeInOut, value: indicator.icon)

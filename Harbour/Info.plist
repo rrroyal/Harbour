@@ -32,6 +32,7 @@
 	</dict>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).AttachedToContainer</string>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).ViewingContainer</string>
 	</array>
 	<key>UIBackgroundModes</key>

@@ -68,3 +68,14 @@ extension ContainerListView {
 		}
 	}
 }
+
+extension ContainerListView.ContainerCell: Identifiable, Equatable {
+	var id: String { container.id }
+	
+	static func == (lhs: ContainerListView.ContainerCell, rhs: ContainerListView.ContainerCell) -> Bool {
+		lhs.container.id == rhs.container.id &&
+		lhs.container.status == rhs.container.status &&
+		lhs.container.state == rhs.container.state &&
+		lhs.container.displayName == rhs.container.displayName
+	}
+}

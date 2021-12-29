@@ -9,16 +9,14 @@ import PortainerKit
 import SwiftUI
 
 #warning("Animate changes")
-struct ContainerDetailView: View, Identifiable {
+struct ContainerDetailView: View {
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 	@ObservedObject var container: PortainerKit.Container
-	
+		
 	@State private var loading: Bool = false
 	@State private var lastLogsSnippet: String? = nil
-	
-	var id: String { container.id }
-	
+		
 	let lastLogsTailCount: Int = 5
 		
 	var buttonsSection: some View {
@@ -52,7 +50,7 @@ struct ContainerDetailView: View, Identifiable {
 			LabeledSection(label: "Error", content: details.state.error, monospace: true, hideIfEmpty: false)
 			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted(), hideIfEmpty: false)
 			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted(), hideIfEmpty: false)
-		} else {
+		} else if loading {
 			ProgressView()
 				.padding()
 				.frame(maxWidth: .infinity, alignment: .center)
@@ -69,13 +67,14 @@ struct ContainerDetailView: View, Identifiable {
 					.contentShape(Rectangle())
 					.frame(maxWidth: .infinity, alignment: .topLeading)
 					.textSelection(.enabled)
-			} else {
+			} else if loading {
 				ProgressView()
 					.padding()
 					.frame(maxWidth: .infinity, alignment: .center)
 			}
 		}
-		.transition(.opacity)
+		.frame(maxWidth: .infinity, alignment: .center)
+		.id("LastLogsSnippetLabel:\(lastLogsSnippet?.hashValue ?? -1)")
 	}
 	
 	var body: some View {
@@ -125,39 +124,39 @@ struct ContainerDetailView: View, Identifiable {
 		.refreshable { await refresh() }
 		.task { await refresh() }
 		.userActivity(AppState.UserActivity.viewingContainer, isActive: sceneState.activeContainerID == container.id) { activity in
-			activity.requiredUserInfoKeys = ["ContainerID"]
-			activity.userInfo = ["ContainerID": container.id]
-			activity.title = container.displayName ?? container.id
-			activity.persistentIdentifier = container.id
+			activity.requiredUserInfoKeys = [AppState.UserActivity.containerIDKey]
+			activity.userInfo = [
+				AppState.UserActivity.containerIDKey: container.id,
+				AppState.UserActivity.endpointIDKey: portainer.selectedEndpointID as Any
+			]
+			activity.title = "View details for \(container.displayName ?? container.id)".localized
+			activity.persistentIdentifier = "\(AppState.UserActivity.viewingContainer):\(container.id)"
 			activity.isEligibleForPrediction = true
 			activity.isEligibleForHandoff = true
 		}
-		.onReceive(portainer.refreshContainerPassthroughSubject) { containerID in
+		#warning("TODO: Fix portainer.refreshContainerPassthroughSubject (retains view)")
+		/* .onReceive(portainer.refreshContainerPassthroughSubject) { containerID in
 			#warning("Gets called even though it's not focused")
-			
 			if containerID == container.id {
 				Task { await refresh() }
 			}
-		}
+		} */
 	}
 	
 	private func refresh() async {
 		loading = true
 		
-		Task {
-			do {
-				let logs = try await portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true)
-				self.lastLogsSnippet = logs.trimmingCharacters(in: .whitespacesAndNewlines)
-			} catch {
-				sceneState.handle(error)
-			}
-		}
-		
 		do {
-			let containerDetails = try await portainer.inspectContainer(container)
+			async let logs = portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true)
+			async let containerDetails = portainer.inspectContainer(container)
+			
+			let logsAwaited = try await logs
+			let containerDetailsAwaited = try await containerDetails
+			
 			DispatchQueue.main.async {
 				withAnimation {
-					container.update(from: containerDetails)
+					self.lastLogsSnippet = logsAwaited.trimmingCharacters(in: .whitespacesAndNewlines)
+					container.update(from: containerDetailsAwaited)
 				}
 			}
 		} catch {
@@ -165,6 +164,16 @@ struct ContainerDetailView: View, Identifiable {
 		}
 		
 		loading = false
+	}
+}
+
+extension ContainerDetailView: Identifiable, Equatable {
+	var id: String {
+		container.id
+	}
+	
+	static func == (lhs: ContainerDetailView, rhs: ContainerDetailView) -> Bool {
+		lhs.container == rhs.container
 	}
 }
 
