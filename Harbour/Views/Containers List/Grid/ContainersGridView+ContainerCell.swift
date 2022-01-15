@@ -1,5 +1,5 @@
 //
-//  ContainerGridView+ContainerCell.swift
+//  ContainersGridView+ContainerCell.swift
 //  Harbour
 //
 //  Created by royal on 04/10/2021.
@@ -8,12 +8,12 @@
 import SwiftUI
 import PortainerKit
 
-extension ContainerGridView {
+extension ContainersGridView {
 	struct ContainerCell: View {
 		@ObservedObject var container: PortainerKit.Container
 		
 		let circleSize: Double = 10
-		let backgroundShape = RoundedRectangle(cornerRadius: Constants.largeCornerRadius, style: .continuous)
+		static let backgroundShape = RoundedRectangle(cornerRadius: Constants.largeCornerRadius, style: .continuous)
 		
 		var body: some View {
 			VStack(alignment: .leading) {
@@ -57,7 +57,7 @@ extension ContainerGridView {
 			.padding(.medium)
 			.aspectRatio(1, contentMode: .fill)
 			.background(ContainerCellBackground(state: container.state))
-			.containerShape(backgroundShape)
+			.containerShape(Self.backgroundShape)
 			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.displayName)
@@ -66,10 +66,10 @@ extension ContainerGridView {
 	}
 }
 
-extension ContainerGridView.ContainerCell: Identifiable, Equatable {
+extension ContainersGridView.ContainerCell: Identifiable, Equatable {
 	var id: String { container.id }
 	
-	static func == (lhs: ContainerGridView.ContainerCell, rhs: ContainerGridView.ContainerCell) -> Bool {
+	static func == (lhs: ContainersGridView.ContainerCell, rhs: ContainersGridView.ContainerCell) -> Bool {
 		lhs.container.id == rhs.container.id &&
 		lhs.container.status == rhs.container.status &&
 		lhs.container.state == rhs.container.state &&

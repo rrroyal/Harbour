@@ -11,7 +11,7 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	enum ContainerStatus: String, Decodable {
+	enum ContainerStatus: String, Decodable, Comparable {
 		case created
 		case running
 		case paused
@@ -19,6 +19,13 @@ public extension PortainerKit {
 		case removing
 		case exited
 		case dead
+		
+		public static func < (lhs: PortainerKit.ContainerStatus, rhs: PortainerKit.ContainerStatus) -> Bool {
+			let sorted: [Self] = [.created, .running, .paused, .restarting, .removing, .exited, .dead]
+			let lhsIndex = sorted.firstIndex(of: lhs) ?? -1
+			let rhsIndex = sorted.firstIndex(of: rhs) ?? -1
+			return lhsIndex < rhsIndex
+		}
 	}
 	
 	enum EndpointStatus: Int, Decodable {

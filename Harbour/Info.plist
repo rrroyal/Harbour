@@ -6,7 +6,7 @@
 	<string>$(AppIdentifierPrefix)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER).BackgroundRefresh</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).BackgroundRefreshTask</string>
 	</array>
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -32,8 +32,8 @@
 	</dict>
 	<key>NSUserActivityTypes</key>
 	<array>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER).AttachedToContainer</string>
-		<string>$(PRODUCT_BUNDLE_IDENTIFIER).ViewingContainer</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).AttachToContainer</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).ViewContainer</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

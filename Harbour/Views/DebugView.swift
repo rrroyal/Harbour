@@ -18,11 +18,6 @@ struct DebugView: View {
 	
     var body: some View {
 		List {
-			Section("Build info") {
-				Labeled(label: "Bundle ID", content: Bundle.main.bundleIdentifier!, monospace: true)
-				Labeled(label: "App prefix", content: Bundle.main.appIdentifierPrefix, monospace: true)
-			}
-			
 			Section("Portainer") {
 				Button("Reset servers") {
 					UIDevice.generateHaptic(.light)
@@ -33,9 +28,12 @@ struct DebugView: View {
 			}
 			
 			Section("Background Tasks") {
-				Labeled(label: "Last task", content: Preferences.shared.lastBackgroundTaskDate?.formatted())
-				ForEach(pendingBackgroundTasks, id: \.identifier) { task in
-					Text(task.identifier)
+				Labeled(label: "Last task", content: Preferences.shared.lastBackgroundTaskDate?.formatted(), hideIfEmpty: false)
+				
+				DisclosureGroup("Scheduled tasks") {
+					ForEach(pendingBackgroundTasks, id: \.identifier) { task in
+						Text(task.identifier)
+					}
 				}
 			}
 			.onAppear {

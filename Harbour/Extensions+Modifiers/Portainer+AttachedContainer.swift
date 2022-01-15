@@ -13,7 +13,7 @@ import PortainerKit
 import Indicators
 
 extension Portainer {
-	class AttachedContainer: ObservableObject {
+	final class AttachedContainer: ObservableObject {
 		public let container: PortainerKit.Container
 		public let messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject
 		
@@ -89,8 +89,8 @@ extension Portainer {
 		}
 	
 		private func update(_ string: String) {
-			DispatchQueue.main.async { [weak self] in
-				self?.buffer.append(string)
+			DispatchQueue.main.async {
+				self.buffer.append(string)
 			}
 		}
 	}

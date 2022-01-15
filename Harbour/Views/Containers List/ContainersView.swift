@@ -10,18 +10,27 @@ import PortainerKit
 
 struct ContainersView: View {
 	@Environment(\.useContainerGridView) var useContainerGridView: Bool
-	let containers: [PortainerKit.Container]
+	let containers: [ContainersStack]
 	
     var body: some View {
-		if useContainerGridView {
-			ContainerGridView(containers: containers)
-		} else {
-			ContainerListView(containers: containers)
+		Self._printChanges()
+		return Group {
+			if useContainerGridView {
+				ContainersGridView(containers: containers)
+					.equatable()
+			} else {
+				ContainersListView(containers: containers)
+					.equatable()
+			}
 		}
     }
+}
+
+extension ContainersView {
+	static let stackBackground: Color = Color(uiColor: .systemGray6).opacity(0.5)
 	
 	static func containerDragProvider(container: PortainerKit.Container) -> NSItemProvider {
-		let activity = NSUserActivity(activityType: AppState.UserActivity.viewingContainer)
+		let activity = NSUserActivity(activityType: AppState.UserActivity.viewContainer)
 		activity.requiredUserInfoKeys = ["ContainerID"]
 		activity.userInfo = ["ContainerID": container.id]
 		activity.title = container.displayName ?? container.id
@@ -33,8 +42,21 @@ struct ContainersView: View {
 	}
 }
 
+extension ContainersView {
+	struct ContainersStack: Equatable {
+		let stack: String?
+		let containers: [PortainerKit.Container]
+	}
+}
+
+extension ContainersView: Equatable {
+	static func == (lhs: ContainersView, rhs: ContainersView) -> Bool {
+		lhs.containers == rhs.containers
+	}
+}
+
 struct ContainersView_Previews: PreviewProvider {
     static var previews: some View {
-        ContainersView(containers: [])
+		ContainersView(containers: [])
     }
 }

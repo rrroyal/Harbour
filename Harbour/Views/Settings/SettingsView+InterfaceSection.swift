@@ -15,7 +15,7 @@ extension SettingsView {
 		var body: some View {
 			Section("Interface") {
 				/// Enable haptics
-				ToggleOption(label: Localization.SETTINGS_ENABLE_HAPTICS_TITLE.localized, description: Localization.SETTINGS_ENABLE_HAPTICS_DESCRIPTION.localized, iconSymbolName: "waveform", iconColor: .purple, isOn: $preferences.enableHaptics)
+				ToggleOption(label: Localization.SETTINGS_ENABLE_HAPTICS_TITLE.localized, description: Localization.SETTINGS_ENABLE_HAPTICS_DESCRIPTION.localized, iconSymbolName: "alternatingcurrent", iconColor: .purple, isOn: $preferences.enableHaptics)
 				
 				/// Use Grid View
 				ToggleOption(label: Localization.SETTINGS_CL_USE_GRID_VIEW_TITLE.localized, description: Localization.SETTINGS_CL_USE_GRID_VIEW_DESCRIPTION.localized, iconSymbolName: "square.grid.2x2", iconColor: .mint, isOn: $preferences.clUseGridView)
@@ -55,10 +55,10 @@ extension SettingsView {
 							Image("App Icons/\(icon ?? "Default")")
 								.resizable()
 								.aspectRatio(1, contentMode: .fit)
-								.cornerRadius(Constants.largeCornerRadius)
+								.clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
 						}
 						.buttonStyle(.decreasesOnPress)
-						.padding()
+						.padding(10)
 					}
 				}
 			}

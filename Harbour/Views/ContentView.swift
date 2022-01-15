@@ -17,36 +17,20 @@ struct ContentView: View {
 	@StateObject private var sceneState: SceneState = SceneState()
 	
 	@State private var searchQuery: String = ""
-		
+	
 	private var currentState: DataState {
-		if portainer.containers.isEmpty {
-			guard !(portainer.fetchingEndpoints || portainer.fetchingContainers) else {
-				return .fetching
-			}
-			
-			guard portainer.isReady else {
-				return .notLoggedIn
-			}
-			if portainer.endpoints.isEmpty {
-				return .noEndpointsAvailable
-			} else {
-				if portainer.selectedEndpointID != nil {
-					return .noContainers
-				}
-				return .noEndpointSelected
-			}
-		} else {
-			return .finished
-		}
+		guard !(portainer.fetchingEndpoints || portainer.fetchingContainers) else { return .fetching }
+		guard portainer.isSetup && portainer.isLoggedIn else { return .notLoggedIn }
+		guard !portainer.endpoints.isEmpty else { return .noEndpointsAvailable }
+		guard portainer.selectedEndpointID != nil else { return .noEndpointSelected }
+		guard !portainer.containers.isEmpty else { return .noContainers }
+		return .finished
 	}
 	
 	private var endpointButtonSymbolVariant: SymbolVariants {
-		if portainer.isReady && !portainer.endpoints.isEmpty && portainer.selectedEndpointID != nil {
-			return .fill
-		}
-		if !portainer.endpoints.isEmpty {
-			return .none
-		}
+		guard portainer.isSetup && portainer.isLoggedIn else { return .slash }
+		if !portainer.endpoints.isEmpty && portainer.selectedEndpointID != nil { return .fill }
+		if !portainer.endpoints.isEmpty { return .none }
 		return .slash
 	}
 	
@@ -77,6 +61,7 @@ struct ContentView: View {
 						try await portainer.getEndpoints()
 						try await portainer.getContainers()
 					} catch {
+						print("HANDLING")
 						sceneState.handle(error)
 					}
 				}
@@ -87,21 +72,24 @@ struct ContentView: View {
 			Label(portainer.endpoints.first(where: { $0.id == portainer.selectedEndpointID })?.name ?? "Endpoint", systemImage: "tag")
 				.symbolVariant(endpointButtonSymbolVariant)
 		}
-		.disabled(!portainer.isReady)
+		.disabled(!portainer.isSetup)
 	}
 	
 	@ViewBuilder
 	var content: some View {
-		switch currentState {
-			case .finished:
-				ContainersView(containers: portainer.containers.filtered(query: searchQuery))
-					.searchable(text: $searchQuery)
-			case .fetching:
-				ProgressView()
-			default:
-				Text(currentState.label ?? "")
-					.foregroundStyle(.tertiary)
-					.id(currentState)
+		if portainer.containers.isEmpty {
+			switch currentState {
+				case .fetching:
+					ProgressView()
+				default:
+					Text(currentState.label)
+						.foregroundStyle(.tertiary)
+						.id(currentState)
+			}
+		} else {
+			ContainersView(containers: portainer.containers.filtered(query: searchQuery).groupedByStack())
+				.equatable()
+				.searchable(text: $searchQuery)
 		}
 	}
 	
@@ -130,7 +118,7 @@ struct ContentView: View {
 				.foregroundStyle(.tertiary)
 		}
 		.transition(.opacity)
-		.animation(.easeInOut, value: portainer.isReady)
+		.animation(.easeInOut, value: portainer.isSetup)
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
 		.animation(.easeInOut, value: currentState)
@@ -151,25 +139,22 @@ struct ContentView: View {
 			SetupView()
 		}
 		.indicatorOverlay(model: sceneState.indicators)
-		.onContinueUserActivity(AppState.UserActivity.viewingContainer) { activity in
-			DispatchQueue.main.async {
-				sceneState.handleContinueUserActivity(activity)
-			}
-		}
-		.onContinueUserActivity(AppState.UserActivity.attachedToContainer) { activity in
-			DispatchQueue.main.async {
-				sceneState.handleContinueUserActivity(activity)
-			}
-		}
+		.onContinueUserActivity(AppState.UserActivity.viewContainer, perform: handleContinueUserActivity)
+		.onContinueUserActivity(AppState.UserActivity.attachToContainer, perform: handleContinueUserActivity)
 		.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
 		.environmentObject(sceneState)
 		.environment(\.sceneErrorHandler, sceneErrorHandler)
 	}
 	
-	private func onDeviceDidShake(notification: Notification) {
-		if portainer.attachedContainer != nil {
-			sceneState.showAttachedContainer()
+	private func handleContinueUserActivity(_ activity: NSUserActivity) {
+		DispatchQueue.main.async {
+			sceneState.handleContinueUserActivity(activity)
 		}
+	}
+	
+	private func onDeviceDidShake(_ notification: Notification) {
+		guard portainer.attachedContainer != nil else { return }
+		sceneState.showAttachedContainer()
 	}
 	
 	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?, _fileID: StaticString = #fileID, _line: Int = #line) {
@@ -183,21 +168,21 @@ struct ContentView: View {
 
 private extension ContentView {
 	enum DataState {
+		case finished
 		case fetching
 		case notLoggedIn
 		case noEndpointSelected
 		case noEndpointsAvailable
 		case noContainers
-		case finished
 		
-		var label: String? {
+		var label: String {
 			switch self {
 				case .fetching: return "Loading..."
 				case .notLoggedIn: return "Not logged in"
 				case .noEndpointSelected: return "No endpoint selected"
 				case .noEndpointsAvailable: return "No endpoints available"
 				case .noContainers: return "No containers"
-				case .finished: return nil
+				case .finished: return "Finished! If you see this, please let me know on Twitter - @destroystokyo 😶"
 			}
 		}
 	}

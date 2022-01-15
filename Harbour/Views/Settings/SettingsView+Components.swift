@@ -24,8 +24,8 @@ extension SettingsView {
 				.symbolVariant(.fill)
 				.font(font.weight(.bold))
 				.frame(width: uiFont.pointSize * 2, height: uiFont.pointSize * 2, alignment: .center)
-				.foregroundStyle(color)
-				.background(color.opacity(Constants.candyOpacity))
+				.foregroundStyle(Color.accentColor)
+				.background(Color.accentColor.opacity(Constants.candyOpacity))
 				.cornerRadius(6)
 		}
 	}

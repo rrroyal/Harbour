@@ -48,7 +48,11 @@ struct ContainerConsoleView: View {
 						UIDevice.generateHaptic(.soft)
 						presentationMode.wrappedValue.dismiss()
 					}) {
-						Label("Dismiss", systemImage: "xmark")
+						if Preferences.shared.persistAttachedContainer {
+							Label("Dismiss", systemImage: "chevron.down")
+						} else {
+							Label("Close", systemImage: "xmark")
+						}
 					}
 				}
 				
@@ -64,16 +68,18 @@ struct ContainerConsoleView: View {
 				}
 			}
 		}
-		.userActivity(AppState.UserActivity.attachedToContainer, isActive: attachedContainer.isConnected && presentationMode.wrappedValue.isPresented) { activity in
+		.userActivity(AppState.UserActivity.attachToContainer, isActive: attachedContainer.isConnected && presentationMode.wrappedValue.isPresented) { activity in
 			activity.requiredUserInfoKeys = [AppState.UserActivity.containerIDKey]
 			activity.userInfo = [
 				AppState.UserActivity.containerIDKey: attachedContainer.container.id,
 				AppState.UserActivity.endpointIDKey: attachedContainer.endpointID
 			]
 			activity.title = "Attach to \(attachedContainer.container.displayName ?? attachedContainer.container.id)".localized
-			activity.persistentIdentifier = "\(AppState.UserActivity.attachedToContainer):\(attachedContainer.container.id)"
+			activity.suggestedInvocationPhrase = activity.title
+			activity.persistentIdentifier = "\(AppState.UserActivity.attachToContainer):\(attachedContainer.container.id)"
 			activity.isEligibleForPrediction = true
 			activity.isEligibleForHandoff = true
+			activity.isEligibleForSearch = true
 		}
 	}
 }

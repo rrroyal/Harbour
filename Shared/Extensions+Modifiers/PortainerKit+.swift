@@ -14,6 +14,20 @@ extension PortainerKit.Container {
 		return name.starts(with: "/") ? String(name.dropFirst()) : name
 	}
 	
+	var stack: String? {
+		if let label = labels?.first(where: { $0.key == "com.docker.compose.project" })?.value {
+			return label
+		}
+		
+		let split = displayName?.split(separator: "_") ?? []
+		if split.count >= 2, let first = split.first {
+			return String(first)
+		}
+		
+		return nil
+		// labels?.first(where: { $0.key == "com.docker.compose.project" })?.value
+	}
+	
 	@MainActor
 	func update(from inspection: Portainer.ContainerInspection) {
 		if let general = inspection.general {
@@ -88,7 +102,7 @@ extension PortainerKit.ContainerStatus {
 extension Optional where Wrapped == PortainerKit.ContainerStatus {
 	var color: Color {
 		if let color = self?.color { return color }
-		return .clear
+		return Color(uiColor: .systemGray5)
 	}
 	
 	var icon: String {

@@ -8,7 +8,7 @@
 import Foundation
 
 internal extension PortainerKit {
-	class URLSessionDelegate: NSObject, Foundation.URLSessionDelegate {
+	final class URLSessionDelegate: NSObject, Foundation.URLSessionDelegate {
 		func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
 			if let trust = challenge.protectionSpace.serverTrust {
 				return (.useCredential, URLCredential(trust: trust))

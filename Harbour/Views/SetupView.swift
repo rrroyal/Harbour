@@ -8,60 +8,66 @@
 import SwiftUI
 
 struct SetupView: View {
-	@State private var selection: Int = 0
+	@State private var presentedView: PresentedView = .welcome
 	
     var body: some View {
-		TabView(selection: $selection) {
-			WelcomeView(selection: $selection)
-				.tag(0)
+		TabView(selection: $presentedView) {
+			WelcomeView(presentedView: $presentedView)
+				.tag(PresentedView.welcome)
 			
-			if !Portainer.shared.isReady {
+			if !Portainer.shared.isSetup {
 				LoginView()
 					.environmentObject(Portainer.shared)
-					.tag(1)
+					.tag(PresentedView.setup)
 			}
 		}
 		.tabViewStyle(.page(indexDisplayMode: .never))
     }
 }
 
-fileprivate struct WelcomeView: View {
-	@Environment(\.presentationMode) var presentationMode
-	@Binding var selection: Int
+extension SetupView {
+	enum PresentedView {
+		case welcome, setup
+	}
 	
-	var body: some View {
-		VStack {
-			Spacer()
-			
-			Text("Hi! Welcome to \(Text("Harbour").foregroundColor(.accentColor))!")
-				.font(.largeTitle.bold())
-				.multilineTextAlignment(.center)
-			
-			Spacer()
-			
-			VStack(spacing: 20) {
-				FeatureCell(image: "power", headline: Localization.SETUP_FEATURE1_TITLE.localized, description: Localization.SETUP_FEATURE1_DESCRIPTION.localized)
-				FeatureCell(image: "doc.plaintext", headline: Localization.SETUP_FEATURE2_TITLE.localized, description: Localization.SETUP_FEATURE2_DESCRIPTION.localized)
-				FeatureCell(image: "terminal", headline: Localization.SETUP_FEATURE3_TITLE.localized, description: Localization.SETUP_FEATURE3_DESCRIPTION.localized)
-			}
-			
-			Spacer()
-			
-			Button("Beam me up, Scotty!") {
-				UIDevice.generateHaptic(.soft)
-				if Portainer.shared.isReady {
-					presentationMode.wrappedValue.dismiss()
-				} else {
-					withAnimation { selection = 1 }
+	struct WelcomeView: View {
+		@Environment(\.presentationMode) var presentationMode
+		@Binding var presentedView: PresentedView
+		
+		var body: some View {
+			VStack {
+				Spacer()
+				
+				Text("Hi! Welcome to \(Text("Harbour").foregroundColor(.accentColor))!")
+					.font(.largeTitle.bold())
+					.multilineTextAlignment(.center)
+				
+				Spacer()
+				
+				VStack(spacing: 20) {
+					FeatureCell(image: "power", headline: Localization.SETUP_FEATURE1_TITLE.localized, description: Localization.SETUP_FEATURE1_DESCRIPTION.localized)
+					FeatureCell(image: "doc.plaintext", headline: Localization.SETUP_FEATURE2_TITLE.localized, description: Localization.SETUP_FEATURE2_DESCRIPTION.localized)
+					FeatureCell(image: "terminal", headline: Localization.SETUP_FEATURE3_TITLE.localized, description: Localization.SETUP_FEATURE3_DESCRIPTION.localized)
 				}
+				
+				Spacer()
+				
+				Button("Beam me up, Scotty!") {
+					UIDevice.generateHaptic(.soft)
+					if Portainer.shared.isSetup {
+						presentationMode.wrappedValue.dismiss()
+					} else {
+						withAnimation { presentedView = .setup }
+					}
+				}
+				.buttonStyle(.customPrimary)
 			}
-			.buttonStyle(.customPrimary)
+			.padding()
 		}
-		.padding()
 	}
 }
 
-fileprivate extension WelcomeView {
+private extension SetupView.WelcomeView {
 	struct FeatureCell: View {
 		let image: String
 		let headline: String

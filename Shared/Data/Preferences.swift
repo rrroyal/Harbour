@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class Preferences: ObservableObject {
+final class Preferences: ObservableObject {
 	public static let shared: Preferences = Preferences()
 
 	@AppStorage(Preferences.Key.finishedSetup.rawValue, store: .group) public var finishedSetup: Bool = false

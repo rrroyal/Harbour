@@ -41,7 +41,10 @@ extension SettingsView {
 							Button(action: {
 								UIDevice.generateHaptic(.selectionChanged)
 								do {
-									try portainer.setup(with: server, fetchEndpoints: true)
+									try portainer.setup(with: server)
+									Task {
+										try await portainer.getEndpoints()
+									}
 								} catch {
 									UIDevice.generateHaptic(.error)
 									sceneState.handle(error)
@@ -87,6 +90,7 @@ extension SettingsView {
 					Spacer()
 					
 					Image(systemName: "chevron.down")
+						.font(.body.weight(.semibold))
 				}
 			}
 			.id("ServerSelectionMenu:\(portainer.servers.hashValue)")

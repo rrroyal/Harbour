@@ -20,10 +20,11 @@ struct LoginView: View {
 	@State private var savePassword: Bool = false
 	
 	@FocusState private var focusedField: FocusField?
-	@State private var loading: Bool = false
 	
 	@State private var buttonLabel: String? = nil
 	@State private var buttonColor: Color? = nil
+	
+	@State private var loginTask: Task<Bool, Error>? = nil
 	
 	@State private var errorTimer: Timer? = nil
 	
@@ -37,7 +38,9 @@ struct LoginView: View {
 			Spacer()
 			
 			VStack {
-				TextField("http://172.17.0.2", text: $endpoint, onCommit: {
+				TextField("http://172.17.0.2", text: $endpoint, onEditingChanged: { finished in
+					if finished { loginTask?.cancel() }
+				}, onCommit: {
 					guard !endpoint.isReallyEmpty else { return }
 					
 					if !endpoint.starts(with: "http") {
@@ -53,7 +56,9 @@ struct LoginView: View {
 				.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
 				.focused($focusedField, equals: .endpoint)
 				
-				TextField("garyhost", text: $username, onCommit: {
+				TextField("garyhost", text: $username, onEditingChanged: { finished in
+					if finished { loginTask?.cancel() }
+				}, onCommit: {
 					guard !username.isEmpty else { return }
 					
 					UIDevice.generateHaptic(.selectionChanged)
@@ -66,7 +71,7 @@ struct LoginView: View {
 				.focused($focusedField, equals: .username)
 					
 				SecureField("hunter2", text: $password, onCommit: {
-					guard !(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty) else { return }
+					guard endpoint.isReallyEmpty || username.isEmpty || password.isEmpty else { return }
 					
 					UIDevice.generateHaptic(.light)
 					login()
@@ -85,7 +90,7 @@ struct LoginView: View {
 					UIDevice.generateHaptic(.light)
 					login()
 				}) {
-					if loading {
+					if !(loginTask?.isCancelled ?? true) {
 						ProgressView()
 					} else {
 						Group {
@@ -101,9 +106,9 @@ struct LoginView: View {
 				.keyboardShortcut(.defaultAction)
 				.foregroundColor(.white)
 				.buttonStyle(.customPrimary(backgroundColor: buttonColor ?? .accentColor))
-				.animation(.easeInOut, value: loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
+				.animation(.easeInOut, value: !(loginTask?.isCancelled ?? true) || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 				.animation(.easeInOut, value: buttonColor)
-				.disabled(loading || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
+				.disabled(!(loginTask?.isCancelled ?? true) || endpoint.isReallyEmpty || username.isEmpty || password.isEmpty)
 				
 				Button(action: {
 					UIDevice.generateHaptic(.selectionChanged)
@@ -121,7 +126,6 @@ struct LoginView: View {
 				}
 				.buttonStyle(.customTransparent)
 				.animation(.easeInOut, value: savePassword)
-				.padding(.leading)
 			}
 		}
 		.padding()
@@ -149,27 +153,29 @@ struct LoginView: View {
 		
 		focusedField = nil
 		
-		Task {
+		loginTask?.cancel()
+		loginTask = Task {
 			do {
-				loading = true
 				try await portainer.login(url: url, username: username, password: password, savePassword: savePassword)
 				
 				UIDevice.generateHaptic(.success)
 				
-				loading = false
 				buttonColor = .green
 				buttonLabel = "Success!"
 				presentationMode.wrappedValue.dismiss()
 				
-				do {
-					try await portainer.getEndpoints()
-				} catch {
-					sceneState.handle(error)
+				Task {
+					do {
+						try await portainer.getEndpoints()
+					} catch {
+						sceneState.handle(error)
+					}
 				}
+				
+				return true
 			} catch {
 				UIDevice.generateHaptic(.error)
 				
-				loading = false
 				buttonColor = .red
 				if let error = error as? PortainerKit.APIError {
 					buttonLabel = error.description
@@ -182,6 +188,8 @@ struct LoginView: View {
 					buttonLabel = nil
 					buttonColor = nil
 				}
+				
+				throw error
 			}
 		}
 	}

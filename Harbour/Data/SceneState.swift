@@ -9,8 +9,9 @@ import Foundation
 import os.log
 import UIKit.UIDevice
 import Indicators
+import PortainerKit
 
-class SceneState: ObservableObject {
+final class SceneState: ObservableObject {
 	public typealias ErrorHandler = (Error, Indicators.Indicator?, StaticString, Int) -> ()
 	
 	@Published public var isSettingsSheetPresented: Bool = false
@@ -29,12 +30,12 @@ class SceneState: ObservableObject {
 		
 		do {
 			switch activity.activityType {
-				case AppState.UserActivity.attachedToContainer:
+				case AppState.UserActivity.attachToContainer:
 					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String,
 					   let container = Portainer.shared.containers.first(where: { $0.id == containerID }) {
 						try Portainer.shared.attach(to: container, endpointID: activity.userInfo?[AppState.UserActivity.endpointIDKey] as? Int)
 					}
-				case AppState.UserActivity.viewingContainer:
+				case AppState.UserActivity.viewContainer:
 					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String {
 						activeContainerID = containerID
 					}
@@ -93,6 +94,8 @@ class SceneState: ObservableObject {
 	}
 	
 	public func handle(_ error: Error, displayIndicator: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
+		if error as? PortainerKit.APIError == PortainerKit.APIError.invalidJWTToken { return }
+		
 		UIDevice.generateHaptic(.error)
 		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
 		

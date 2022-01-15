@@ -77,7 +77,7 @@ struct ContainerLogsView: View {
 							Divider()
 							
 							// Lines
-							Menu("Lines") {
+							Menu("Lines count?") {
 								ForEach(tailAmounts, id: \.self) { count in
 									Button(action: {
 										UIDevice.generateHaptic(.light)
@@ -92,7 +92,7 @@ struct ContainerLogsView: View {
 							}
 							
 							// Since
-							Menu("Since") {
+							Menu("Since?") {
 								Button("Creation") {
 									UIDevice.generateHaptic(.light)
 									since = 0
@@ -109,7 +109,7 @@ struct ContainerLogsView: View {
 								UIDevice.generateHaptic(.light)
 								displayTimestamps.toggle()
 							}) {
-								Text("Timestamps")
+								Text("Timestamps?")
 								if displayTimestamps {
 									Image(systemName: "checkmark")
 								}

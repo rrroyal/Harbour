@@ -33,7 +33,7 @@ extension SettingsView {
 				
 				Link(destination: URL(string: "https://harbour.shameful.xyz/docs")!) {
 					HStack {
-						OptionIcon(symbolName: "globe", color: .blue)
+						OptionIcon(symbolName: "doc.append", color: .blue)
 						
 						Text("Docs")
 							.font(standaloneLabelFont)

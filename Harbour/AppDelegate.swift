@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import BackgroundTasks
 
-class AppDelegate: NSObject, UIApplicationDelegate {
+final class AppDelegate: NSObject, UIApplicationDelegate {
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 		#if DEBUG
 		let defaults: [String: Any] = [

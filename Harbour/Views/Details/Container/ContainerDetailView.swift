@@ -123,16 +123,18 @@ struct ContainerDetailView: View {
 		.animation(.easeInOut, value: lastLogsSnippet)
 		.refreshable { await refresh() }
 		.task { await refresh() }
-		.userActivity(AppState.UserActivity.viewingContainer, isActive: sceneState.activeContainerID == container.id) { activity in
+		.userActivity(AppState.UserActivity.viewContainer, isActive: sceneState.activeContainerID == container.id) { activity in
 			activity.requiredUserInfoKeys = [AppState.UserActivity.containerIDKey]
 			activity.userInfo = [
 				AppState.UserActivity.containerIDKey: container.id,
 				AppState.UserActivity.endpointIDKey: portainer.selectedEndpointID as Any
 			]
 			activity.title = "View details for \(container.displayName ?? container.id)".localized
-			activity.persistentIdentifier = "\(AppState.UserActivity.viewingContainer):\(container.id)"
+			activity.suggestedInvocationPhrase = activity.title
+			activity.persistentIdentifier = "\(AppState.UserActivity.viewContainer):\(container.id)"
 			activity.isEligibleForPrediction = true
 			activity.isEligibleForHandoff = true
+			activity.isEligibleForSearch = true
 		}
 		#warning("TODO: Fix portainer.refreshContainerPassthroughSubject (retains view)")
 		/* .onReceive(portainer.refreshContainerPassthroughSubject) { containerID in

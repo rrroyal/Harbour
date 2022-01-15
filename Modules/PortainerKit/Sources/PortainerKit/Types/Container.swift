@@ -78,7 +78,6 @@ public extension PortainerKit {
 		public static func == (lhs: PortainerKit.Container, rhs: PortainerKit.Container) -> Bool {
 			lhs.id == rhs.id &&
 				lhs.state == rhs.state &&
-				lhs.status == rhs.status &&
 				lhs.names == rhs.names &&
 				lhs.labels == rhs.labels
 		}

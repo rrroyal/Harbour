@@ -11,7 +11,7 @@ import UIKit.UIDevice
 import os.log
 import Indicators
 
-class AppState: ObservableObject {
+final class AppState: ObservableObject {
 	public static let shared: AppState = AppState()
 	
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")

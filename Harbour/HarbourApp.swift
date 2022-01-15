@@ -35,10 +35,10 @@ struct HarbourApp: App {
 	private func onScenePhaseChange(_ scenePhase: ScenePhase) {
 		switch scenePhase {
 			case .active:
-				if portainer.isReady || portainer.hasSavedCredentials {
+				if portainer.isSetup || portainer.hasSavedCredentials {
 					Task {
 						try await portainer.getEndpoints()
-						try await portainer.getContainers()
+						// try await portainer.getContainers()
 					}
 				}
 			case .background:

@@ -58,7 +58,7 @@ public class PortainerKit {
 			"Username": username,
 			"Password": password
 		]
-		request.httpBody = try JSONSerialization.data(withJSONObject: body)
+		request.httpBody = try JSONEncoder().encode(body)
 		
 		let (data, _) = try await session.data(for: request)
 		let decoded = try JSONDecoder().decode([String: String].self, from: data)
@@ -208,9 +208,9 @@ public class PortainerKit {
 			DispatchQueue.main.async { [weak self] in
 				guard self != nil else { return }
 				
-				task.receive {
+				task.receive { result in
 					do {
-						let message = WebSocketMessage(message: try $0.get(), source: .server)
+						let message = WebSocketMessage(message: try result.get(), source: .server)
 						passthroughSubject.send(.success(message))
 						setReceiveHandler()
 					} catch {
@@ -261,7 +261,7 @@ public class PortainerKit {
 			let decoded = try decoder.decode(Output.self, from: response.0)
 			return decoded
 		} catch {
-			if let errorJson = try? decoder.decode([String: String].self, from: response.0), let message = errorJson[APIError.errorMessageKey] {
+			if let errorJson = try? decoder.decode([String: String?].self, from: response.0), let message = errorJson[APIError.errorMessageKey] {
 				throw APIError.fromMessage(message)
 			} else {
 				throw error

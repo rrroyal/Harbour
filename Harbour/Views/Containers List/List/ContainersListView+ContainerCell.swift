@@ -1,5 +1,5 @@
 //
-//  ContainerListView+ContainerCell.swift
+//  ContainersListView+ContainerCell.swift
 //  Harbour
 //
 //  Created by royal on 04/10/2021.
@@ -8,12 +8,12 @@
 import SwiftUI
 import PortainerKit
 
-extension ContainerListView {
+extension ContainersListView {
 	struct ContainerCell: View {
 		@ObservedObject var container: PortainerKit.Container
 		
 		let circleSize: Double = 10
-		let backgroundShape = RoundedRectangle(cornerRadius: Constants.largeCornerRadius, style: .continuous)
+		static let backgroundShape = RoundedRectangle(cornerRadius: Constants.largeCornerRadius, style: .continuous)
 
 		@ViewBuilder
 		var containerStatusSubheadline: some View {
@@ -56,11 +56,8 @@ extension ContainerListView {
 					.animation(.easeInOut, value: container.state.color)
 			}
 			.padding()
-			// .background(useColoredContainerCells: useColoredContainerCells)
-			// .background(Color(uiColor: .secondarySystemBackground), in: backgroundRectangle)
-			// .contentShape(backgroundRectangle)
 			.background(ContainerCellBackground(state: container.state))
-			.containerShape(backgroundShape)
+			.containerShape(Self.backgroundShape)
 			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.displayName)
@@ -69,10 +66,10 @@ extension ContainerListView {
 	}
 }
 
-extension ContainerListView.ContainerCell: Identifiable, Equatable {
+extension ContainersListView.ContainerCell: Identifiable, Equatable {
 	var id: String { container.id }
 	
-	static func == (lhs: ContainerListView.ContainerCell, rhs: ContainerListView.ContainerCell) -> Bool {
+	static func == (lhs: ContainersListView.ContainerCell, rhs: ContainersListView.ContainerCell) -> Bool {
 		lhs.container.id == rhs.container.id &&
 		lhs.container.status == rhs.container.status &&
 		lhs.container.state == rhs.container.state &&

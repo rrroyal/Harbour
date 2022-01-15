@@ -13,7 +13,7 @@ import PortainerKit
 
 extension AppState {
 	enum BackgroundTask {
-		static var refresh = "\(Bundle.main.bundleIdentifier!).BackgroundRefresh"
+		static var refresh = "\(Bundle.main.bundleIdentifier!).BackgroundRefreshTask"
 	}
 	
 	public func scheduleBackgroundRefreshTask() {
@@ -44,13 +44,14 @@ extension AppState {
 
 		Task {
 			do {
-				let savedState = await Portainer.shared.containers.reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }
+				// ID - state
+				let savedState: [String: PortainerKit.ContainerStatus] = await Portainer.shared.containers.reduce(into: [:]) { $0[$1.id] = $1.state }
 				
 				let newContainers = try await Portainer.shared.getContainers()
-				let newState = newContainers.reduce(into: [:]) { $0[$1.id] = $1.state?.rawValue }
+				let newState: [String: PortainerKit.ContainerStatus] = newContainers.reduce(into: [:]) { $0[$1.id] = $1.state }
 				let differences = newState.filter { savedState[$0.key] != $0.value }
 				
-				if differences.isEmpty {
+				if !differences.isEmpty {
 					logger.info("(Background refresh) differences.count (\(differences.count)) > 0!")
 					
 					let notificationID = "ContainerStatusNotification-\(Date().timeIntervalSinceReferenceDate)"
@@ -62,8 +63,8 @@ extension AppState {
 					if differences.count == 1 {
 						let container = newContainers.first(where: { $0.id == differences.first?.key })
 						content.title = container?.displayName ?? container?.id ?? differences.first?.key ?? "Unknown container"
-						content.body = container?.status ?? differences.first?.value ?? "unknown"
-					} else {
+						content.body = container?.status ?? differences.first?.value.rawValue ?? "unknown"
+					} else if differences.count > 1 {
 						let containers = newContainers.filter({ differences.keys.contains($0.id) }).map({ $0.displayName ?? $0.id })
 						content.title = "\(differences.count) containers changed!"
 						content.body = ListFormatter.localizedString(byJoining: containers)
