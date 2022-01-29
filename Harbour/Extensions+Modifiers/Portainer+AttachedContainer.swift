@@ -28,7 +28,7 @@ extension Portainer {
 		private var messageCancellable: AnyCancellable? = nil
 		
 		public init(container: PortainerKit.Container, messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject) {
-			logger.info("Attached to container with ID \(container.id)")
+			logger.info("Attached to container with ID \(container.id, privacy: .sensitive(mask: .hash)) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			
 			self.container = container
 			self.messagePassthroughSubject = messagePassthroughSubject
@@ -42,7 +42,7 @@ extension Portainer {
 		}
 		
 		deinit {
-			logger.info("Deinitialized")
+			logger.info("Deinitialized [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			messageCancellable?.cancel()
 		}
 		
@@ -60,9 +60,9 @@ extension Portainer {
 					let string = "Session ended."
 					update(string)
 				case .failure(let error):
-					let string = "Session ended, reason: \(String(describing: error))"
+					let string = "Session ended, reason: \(error.readableDescription)"
 					update(string)
-					errorHandler?(error, nil, #fileID, #line)
+					errorHandler?(error, nil, #fileID, #line, #function)
 			}
 		}
 		
@@ -77,14 +77,14 @@ extension Portainer {
 						@unknown default:
 							let string = "Unhandled WebSocketMessage: \(String(describing: result))"
 							update(string)
-							logger.debug("\(string)")
+							logger.warning("\(string, privacy: .public) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 					}
 				case .failure(let error):
 					isConnected = false
-					update(String(describing: error))
+					update(error.readableDescription)
 					
-					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localized, subheadline: error.localizedDescription, dismissType: .after(5))
-					errorHandler?(error, indicator, #fileID, #line)
+					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localized, subheadline: error.readableDescription, dismissType: .after(5))
+					errorHandler?(error, indicator, #fileID, #line, #function)
 			}
 		}
 	

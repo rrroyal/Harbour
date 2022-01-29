@@ -61,7 +61,6 @@ struct ContentView: View {
 						try await portainer.getEndpoints()
 						try await portainer.getContainers()
 					} catch {
-						print("HANDLING")
 						sceneState.handle(error)
 					}
 				}
@@ -141,9 +140,14 @@ struct ContentView: View {
 		.indicatorOverlay(model: sceneState.indicators)
 		.onContinueUserActivity(AppState.UserActivity.viewContainer, perform: handleContinueUserActivity)
 		.onContinueUserActivity(AppState.UserActivity.attachToContainer, perform: handleContinueUserActivity)
+		.onOpenURL(perform: onOpenURL)
 		.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
 		.environmentObject(sceneState)
 		.environment(\.sceneErrorHandler, sceneErrorHandler)
+	}
+	
+	private func onOpenURL(_ url: URL) {
+		sceneState.onOpenURL(url)
 	}
 	
 	private func handleContinueUserActivity(_ activity: NSUserActivity) {
@@ -157,11 +161,11 @@ struct ContentView: View {
 		sceneState.showAttachedContainer()
 	}
 	
-	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?, _fileID: StaticString = #fileID, _line: Int = #line) {
+	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?, _fileID: StaticString = #fileID, _line: Int = #line, _function: StaticString = #function) {
 		if let indicator = indicator {
-			sceneState.handle(error, indicator: indicator, _fileID: _fileID, _line: _line)
+			sceneState.handle(error, indicator: indicator, _fileID: _fileID, _line: _line, _function: _function)
 		} else {
-			sceneState.handle(error, _fileID: _fileID, _line: _line)
+			sceneState.handle(error, _fileID: _fileID, _line: _line, _function: _function)
 		}
 	}
 }

@@ -20,4 +20,8 @@ struct Constants {
 
 	static let buttonPressedOpacity: Double = 0.75
 	static let buttonPressedSize: Double = 0.975
+	
+	enum Widgets {
+		public static let statusWidgetKind: String = "StatusWidgets"
+	}
 }

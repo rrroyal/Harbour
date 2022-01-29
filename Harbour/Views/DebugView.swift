@@ -11,6 +11,7 @@ import SwiftUI
 import OSLog
 import Indicators
 import BackgroundTasks
+import WidgetKit
 
 struct DebugView: View {
 	@EnvironmentObject var sceneState: SceneState
@@ -18,9 +19,14 @@ struct DebugView: View {
 	
     var body: some View {
 		List {
+			Section("Build") {
+				Labeled(label: "Bundle ID", content: Bundle.main.mainBundleIdentifier, monospace: true, hideIfEmpty: false)
+				Labeled(label: "AppIdentifierPrefix", content: Bundle.main.appIdentifierPrefix, monospace: true, hideIfEmpty: false)
+			}
+			
 			Section("Portainer") {
 				Button("Reset servers") {
-					UIDevice.generateHaptic(.light)
+					UIDevice.generateHaptic(.heavy)
 					Preferences.shared.selectedServer = nil
 					Preferences.shared.selectedEndpointID = nil
 					Portainer.shared.cleanup()
@@ -38,6 +44,13 @@ struct DebugView: View {
 			}
 			.onAppear {
 				Task { pendingBackgroundTasks = await BGTaskScheduler.shared.pendingTaskRequests() }
+			}
+			
+			Section("Widgets") {
+				Button("Reload all timelines") {
+					UIDevice.generateHaptic(.light)
+					WidgetCenter.shared.reloadAllTimelines()
+				}
 			}
 			
 			Section("UserDefaults") {
@@ -80,28 +93,46 @@ struct DebugView: View {
 
 extension DebugView {
 	struct LogsView: View {
-		@State private var logs: [String] = []
+		@State private var logs: [LogEntry] = []
 		
 		var body: some View {
 			List(logs, id: \.self) { entry in
-				Text(entry)
-					.lineLimit(nil)
-					.frame(maxWidth: .infinity, alignment: .topLeading)
-					.contentShape(Rectangle())
-					.textSelection(.enabled)
+				Section(content: {
+					Text(entry.message)
+						.font(.system(.callout, design: .monospaced))
+						.multilineTextAlignment(.leading)
+						.lineLimit(nil)
+						.textSelection(.enabled)
+				}, header: {
+					Text("\(entry.category ?? "<none>") - \(entry.date?.ISO8601Format() ?? "<none>") [\(entry.level?.rawValue ?? -1)]")
+						.font(.system(.footnote, design: .monospaced))
+						.textCase(.none)
+				})
 			}
-			.font(.system(.footnote, design: .monospaced))
-			.listStyle(.plain)
 			.navigationTitle("Logs")
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar {
 				ToolbarItem(placement: .navigationBarTrailing) {
-					Button(action: {
-						UIDevice.generateHaptic(.light)
-						getLogs()
-					}) {
-						Image(systemName: "arrow.clockwise")
-					}
+					Menu(content: {
+						Button(action: {
+							UIDevice.generateHaptic(.selectionChanged)
+							UIPasteboard.general.string = logs.map(\.debugDescription).joined(separator: "\n")
+						}) {
+							Label("Copy", systemImage: "doc.on.doc")
+						}
+						
+						Divider()
+						
+						Button(action: {
+							UIDevice.generateHaptic(.light)
+							getLogs()
+						}) {
+							Label("Refresh", systemImage: "arrow.clockwise")
+						}
+					}, label: {
+						Image(systemName: "ellipsis")
+							.symbolVariant(.circle)
+					})
 				}
 			}
 			.onAppear(perform: getLogs)
@@ -111,14 +142,25 @@ extension DebugView {
 			DispatchQueue.main.async {
 				do {
 					let logStore = try OSLogStore(scope: .currentProcessIdentifier)
-					let entries = try logStore.getEntries()
+					let position = logStore.position(date: Date().addingTimeInterval(-(6 * 60 * 60)))
+					let entries = try logStore.getEntries(with: [], at: position, matching: NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier))
 					logs = entries
 						.compactMap { $0 as? OSLogEntryLog }
-						.filter { $0.subsystem.contains(Bundle.main.bundleIdentifier!) }
-						.map { "[\($0.level.rawValue)] \($0.date) [\($0.category)] \($0.composedMessage)" }
+						.map { LogEntry(message: $0.composedMessage, level: $0.level, date: $0.date, category: $0.category) }
 				} catch {
-					logs = [String(describing: error)]
+					logs = [LogEntry(message: error.readableDescription, level: nil, date: nil, category: nil)]
 				}
+			}
+		}
+		
+		struct LogEntry: Hashable, CustomDebugStringConvertible {
+			let message: String
+			let level: OSLogEntryLog.Level?
+			let date: Date?
+			let category: String?
+			
+			var debugDescription: String {
+				"(\(level?.rawValue ?? -1)) \(date?.ISO8601Format() ?? "<none>") [\(category ?? "<none>")] \(message)"
 			}
 		}
 	}

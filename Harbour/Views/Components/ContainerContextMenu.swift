@@ -56,7 +56,7 @@ struct ContainerContextMenu: View {
 	}
 	
 	var body: some View {
-		Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter() ?? "Unknown", systemImage: container.state.icon)
+		Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter ?? "Unknown", systemImage: container.state.icon)
 		
 		Divider()
 					
@@ -125,7 +125,7 @@ struct ContainerContextMenu: View {
 
 		Task {
 			do {
-				try await Portainer.shared.execute(action, on: container)
+				try await Portainer.shared.execute(action, on: container.id)
 				
 				DispatchQueue.main.async {
 					container.state = action.expectedState

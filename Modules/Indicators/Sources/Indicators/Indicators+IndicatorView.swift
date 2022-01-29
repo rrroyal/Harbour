@@ -1,25 +1,13 @@
 import SwiftUI
 
 internal extension Indicators {
-	struct IndicatorView: View {
+	struct IndicatorView: View, Identifiable {
 		let indicator: Indicator
 		@Binding var isExpanded: Bool
 		
 		let maxWidth: Double = 300
 		let padding: Double = 10
 		let backgroundShape: some Shape = RoundedRectangle(cornerRadius: 32, style: .circular)
-		
-		var subheadline: String? {
-			guard let subheadline = indicator.subheadline else {
-				return nil
-			}
-
-			if let expandedText = indicator.expandedText {
-				return isExpanded ? expandedText : subheadline
-			} else {
-				return subheadline
-			}
-		}
 		
 		var body: some View {
 			HStack {
@@ -42,14 +30,16 @@ internal extension Indicators {
 						.foregroundColor(indicator.style.headlineColor)
 						.animation(.easeInOut, value: indicator.style.headlineColor)
 					
-					if let subheadline = subheadline {
+					if let subheadline = isExpanded ? indicator.expandedText : indicator.subheadline {
 						Text(subheadline)
 							.font(.footnote)
 							.fontWeight(.medium)
 							.lineLimit(isExpanded ? nil : 1)
 							.foregroundStyle(indicator.style.subheadlineStyle)
 							.foregroundColor(indicator.style.subheadlineColor)
+							.transition(.opacity)
 							.animation(.easeInOut, value: indicator.style.subheadlineColor)
+							.id("IndicatorViewSubheadline-\(indicator.id)")
 					}
 				}
 				.padding(.trailing, indicator.icon != nil ? padding : 0)
@@ -61,14 +51,15 @@ internal extension Indicators {
 			.padding(padding)
 			.padding(.horizontal, padding)
 			.background(.regularMaterial, in: backgroundShape)
-			// .background(backgroundShape.fill(Color(uiColor: .secondarySystemGroupedBackground)).shadow(color: Color.black.opacity(0.1), radius: 14, x: 0, y: 0))
 			.frame(maxWidth: isExpanded ? nil : maxWidth)
 			.animation(.easeInOut, value: indicator.icon)
 			.animation(.easeInOut, value: indicator.headline)
-			// .animation(.easeInOut, value: subheadline)
-			// .animation(.easeInOut, value: isExpanded)
+//			.animation(.easeInOut, value: isExpanded ? indicator.expandedText : indicator.subheadline)
+//			.animation(.interactiveSpring(), value: isExpanded)
 			.optionalTapGesture(indicator.onTap)
 		}
+		
+		var id: String { indicator.id }
 	}
 }
 

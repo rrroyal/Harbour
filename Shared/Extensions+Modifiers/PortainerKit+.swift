@@ -8,26 +8,10 @@
 import PortainerKit
 import SwiftUI
 
-extension PortainerKit.Container {	
-	var displayName: String? {
-		guard let name: String = names?.first?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
-		return name.starts(with: "/") ? String(name.dropFirst()) : name
-	}
-	
-	var stack: String? {
-		if let label = labels?.first(where: { $0.key == "com.docker.compose.project" })?.value {
-			return label
-		}
-		
-		let split = displayName?.split(separator: "_") ?? []
-		if split.count >= 2, let first = split.first {
-			return String(first)
-		}
-		
-		return nil
-		// labels?.first(where: { $0.key == "com.docker.compose.project" })?.value
-	}
-	
+// MARK: - PortainerKit.Container
+
+#if IOS
+extension PortainerKit.Container {
 	@MainActor
 	func update(from inspection: Portainer.ContainerInspection) {
 		if let general = inspection.general {
@@ -37,41 +21,9 @@ extension PortainerKit.Container {
 		self.state = inspection.details.state.status
 	}
 }
+#endif
 
-extension PortainerKit.ExecuteAction {
-	var color: Color {
-		switch self {
-			case .start:	return .green
-			case .stop:		return Color(uiColor: .darkGray)
-			case .restart:	return .blue
-			case .kill:		return .red
-			case .pause:	return .orange
-			case .unpause:	return .green
-		}
-	}
-	
-	var icon: String {
-		switch self {
-			case .start:	return "play"
-			case .stop:		return "stop"
-			case .restart:	return "restart"
-			case .kill:		return "bolt"
-			case .pause:	return "pause"
-			case .unpause:	return "wake"
-		}
-	}
-	
-	var label: String {
-		switch self {
-			case .start:	return "Start"
-			case .stop:		return "Stop"
-			case .restart:	return "Restart"
-			case .kill:		return "Kill"
-			case .pause:	return "Pause"
-			case .unpause:	return "Resume"
-		}
-	}
-}
+// MARK: - PortainerKit.ContainerStatus
 
 extension PortainerKit.ContainerStatus {
 	var color: Color {
@@ -108,5 +60,42 @@ extension Optional where Wrapped == PortainerKit.ContainerStatus {
 	var icon: String {
 		if let icon = self?.icon { return icon }
 		return "questionmark"
+	}
+}
+
+// MARK: - PortainerKit.ExecuteAction
+
+extension PortainerKit.ExecuteAction {
+	var color: Color {
+		switch self {
+			case .start:	return .green
+			case .stop:		return Color(uiColor: .darkGray)
+			case .restart:	return .blue
+			case .kill:		return .red
+			case .pause:	return .orange
+			case .unpause:	return .green
+		}
+	}
+	
+	var icon: String {
+		switch self {
+			case .start:	return "play"
+			case .stop:		return "stop"
+			case .restart:	return "restart"
+			case .kill:		return "bolt"
+			case .pause:	return "pause"
+			case .unpause:	return "wake"
+		}
+	}
+	
+	var label: String {
+		switch self {
+			case .start:	return "Start"
+			case .stop:		return "Stop"
+			case .restart:	return "Restart"
+			case .kill:		return "Kill"
+			case .pause:	return "Pause"
+			case .unpause:	return "Resume"
+		}
 	}
 }

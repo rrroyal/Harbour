@@ -41,15 +41,17 @@ internal extension Indicators {
 			Group {
 				if let indicator = model.activeIndicator {
 					Indicators.IndicatorView(indicator: indicator, isExpanded: $isExpanded)
+						.shadow(color: .black.opacity(0.115), radius: 10, x: 0, y: 0)
 						.offset(dragOffset)
 						.gesture(dragGesture)
 						.transition(transition)
+						.animation(animation, value: isExpanded)
 				}
 			}
 			.frame(maxHeight: .infinity, alignment: .top)
 			.padding(.horizontal)
 			.padding(.top, 5)
-			.animation(animation, value: model.activeIndicator?.id)
+			.animation(animation, value: model.activeIndicator != nil)
 			.animation(animation, value: dragOffset)
 		}
 	}

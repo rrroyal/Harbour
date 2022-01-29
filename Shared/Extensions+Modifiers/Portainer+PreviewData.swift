@@ -11,12 +11,12 @@ import PortainerKit
 
 let containerData = """
 {
-	"Command": "",
+	"Command": "COMMAND",
 	"Created": 0,
 	"HostConfig": {},
-	"Id": "",
-	"Image": "",
-	"ImageID": "",
+	"Id": "ID",
+	"Image": "IMAGE",
+	"ImageID": "IMAGEID",
 	"Labels": {},
 	"Mounts": [],
 	"Names": ["/Containy"],

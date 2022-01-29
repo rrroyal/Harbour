@@ -95,7 +95,7 @@ struct LoginView: View {
 					} else {
 						Group {
 							if let buttonLabel = buttonLabel {
-								Text(buttonLabel.localized.capitalizingFirstLetter())
+								Text(buttonLabel.localized.capitalizingFirstLetter)
 							} else {
 								Text("Log in")
 							}
@@ -117,7 +117,7 @@ struct LoginView: View {
 					HStack {
 						Image(systemName: savePassword ? "checkmark" : "circle.dashed")
 							.symbolVariant(savePassword ? .circle.fill : .none)
-							.id("SavePasswordIcon:\(savePassword)")
+							.id("SavePasswordIcon-\(savePassword)")
 						
 						Text("Save password")
 					}
@@ -177,11 +177,7 @@ struct LoginView: View {
 				UIDevice.generateHaptic(.error)
 				
 				buttonColor = .red
-				if let error = error as? PortainerKit.APIError {
-					buttonLabel = error.description
-				} else {
-					buttonLabel = error.localizedDescription
-				}
+				buttonLabel = error.readableDescription
 				
 				errorTimer?.invalidate()
 				errorTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in

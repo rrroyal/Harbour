@@ -10,7 +10,7 @@ import Combine
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	class Container: Identifiable, Decodable, Equatable, ObservableObject {
+	class Container: Identifiable, Decodable, ObservableObject {
 		public struct NetworkSettings: Decodable {
 			enum CodingKeys: String, CodingKey {
 				case network = "Networks"
@@ -74,12 +74,34 @@ public extension PortainerKit {
 			self.networkSettings = try container.decodeIfPresent(NetworkSettings.self, forKey: .networkSettings)
 			self.mounts = try container.decodeIfPresent([Mount].self, forKey: .mounts)
 		} */
+	}
+}
 
-		public static func == (lhs: PortainerKit.Container, rhs: PortainerKit.Container) -> Bool {
-			lhs.id == rhs.id &&
-				lhs.state == rhs.state &&
-				lhs.names == rhs.names &&
-				lhs.labels == rhs.labels
-		}
+public extension PortainerKit.Container {
+	var displayName: String? {
+		guard let name: String = names?.first?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
+		return name.starts(with: "/") ? String(name.dropFirst()) : name
+	}
+	
+	var stack: String? {
+		labels?.first(where: { $0.key == "com.docker.compose.project" })?.value
+	}
+}
+
+extension PortainerKit.Container: Equatable, Hashable {
+	
+	// MARK: Equatable
+	
+	public static func == (lhs: PortainerKit.Container, rhs: PortainerKit.Container) -> Bool {
+		lhs.id == rhs.id &&
+		lhs.state == rhs.state &&
+		lhs.names == rhs.names &&
+		lhs.labels == rhs.labels
+	}
+	
+	// MARK: Hashable
+	
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
 	}
 }

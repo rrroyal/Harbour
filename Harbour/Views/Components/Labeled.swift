@@ -44,11 +44,12 @@ struct Labeled: View {
 		if (hideIfEmpty && !(content?.isReallyEmpty ?? true)) || !hideIfEmpty {
 			HStack {
 				Text(label)
+					.font(.body)
 				
 				Spacer()
 				
 				Text(content ?? "none")
-					.font(.system(.subheadline, design: monospace ? .monospaced : .default))
+					.font(.system(.body, design: monospace ? .monospaced : .default))
 					.foregroundColor(content != nil ? .primary : .secondary)
 					.lineLimit(lineLimit)
 					.multilineTextAlignment(.trailing)

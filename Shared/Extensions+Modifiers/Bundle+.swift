@@ -16,7 +16,11 @@ public extension Bundle {
 		Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
 	}
 	
-	var appIdentifierPrefix: String {
-		Bundle.main.infoDictionary?["AppIdentifierPrefix"] as? String ?? ""
+	var mainBundleIdentifier: String {
+		"xyz.shameful.Harbour"
+	}
+	
+	var appIdentifierPrefix: String? {
+		Bundle.main.infoDictionary?["AppIdentifierPrefix"] as? String
 	}
 }

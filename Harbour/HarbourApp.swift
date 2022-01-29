@@ -7,8 +7,7 @@
 
 import SwiftUI
 import Indicators
-
-#warning("TODO: Annotate every view/object")
+import PortainerKit
 
 @main
 /// Main entry point for Harbour
@@ -23,7 +22,6 @@ struct HarbourApp: App {
 		WindowGroup {
 			ContentView()
 				.onChange(of: scenePhase, perform: onScenePhaseChange)
-				.defaultAppStorage(.group)
 				.environmentObject(appState)
 				.environmentObject(portainer)
 				.environmentObject(preferences)
@@ -35,15 +33,15 @@ struct HarbourApp: App {
 	private func onScenePhaseChange(_ scenePhase: ScenePhase) {
 		switch scenePhase {
 			case .active:
-				if portainer.isSetup || portainer.hasSavedCredentials {
+				if (portainer.isSetup || portainer.hasSavedCredentials) && portainer.serverURL != nil {
 					Task {
 						try await portainer.getEndpoints()
-						// try await portainer.getContainers()
+						try await portainer.getContainers()
 					}
 				}
 			case .background:
 				if preferences.enableBackgroundRefresh {
-					appState.scheduleBackgroundRefreshTask()
+					BackgroundTasks.scheduleBackgroundRefreshTask()
 				}
 			default:
 				break

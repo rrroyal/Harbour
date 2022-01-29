@@ -20,10 +20,10 @@ public class PortainerKit {
 	/// Used `URLSession`
 	public let session: URLSession
 	
-	// MARK: Private properties
+	// MARK: Public variables
 	
 	/// Authorization token
-	public private(set) var token: String?
+	public var token: String?
 	
 	// MARK: - init
 	

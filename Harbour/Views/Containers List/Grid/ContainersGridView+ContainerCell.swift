@@ -12,14 +12,14 @@ extension ContainersGridView {
 	struct ContainerCell: View {
 		@ObservedObject var container: PortainerKit.Container
 		
-		let circleSize: Double = 10
+		let circleSize: Double = 8
 		static let backgroundShape = RoundedRectangle(cornerRadius: Constants.largeCornerRadius, style: .continuous)
 		
 		var body: some View {
-			VStack(alignment: .leading) {
-				HStack(alignment: .top) {
+			VStack {
+				HStack(alignment: .center) {
 					if let state = container.state {
-						Text(state.rawValue.capitalizingFirstLetter())
+						Text(state.rawValue.capitalizingFirstLetter)
 							.font(.footnote.weight(.medium))
 							.foregroundStyle(.secondary)
 							.lineLimit(1)
@@ -44,13 +44,14 @@ extension ContainersGridView {
 						.minimumScaleFactor(0.8)
 						.multilineTextAlignment(.leading)
 						.frame(maxWidth: .infinity, alignment: .leading)
+						.id("ContainerGridCell.containerStatus:\(container.id):\(status)")
 				}
 				
-				Text(container.displayName ?? "Unnamed")
+				Text(container.displayName ?? container.id)
 					.font(.headline)
 					.foregroundColor(container.displayName != nil ? .primary : .secondary)
 					.lineLimit(2)
-					// .minimumScaleFactor(0.6)
+					.minimumScaleFactor(0.6)
 					.multilineTextAlignment(.leading)
 					.frame(maxWidth: .infinity, alignment: .leading)
 			}

@@ -8,7 +8,7 @@
 import PortainerKit
 import SwiftUI
 
-#warning("Animate changes")
+#warning("TODO: Rework view")
 struct ContainerDetailView: View {
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
@@ -74,7 +74,7 @@ struct ContainerDetailView: View {
 			}
 		}
 		.frame(maxWidth: .infinity, alignment: .center)
-		.id("LastLogsSnippetLabel:\(lastLogsSnippet?.hashValue ?? -1)")
+		.id("LastLogsSnippetLabel-\(lastLogsSnippet?.hashValue ?? -1)")
 	}
 	
 	var body: some View {
@@ -123,7 +123,7 @@ struct ContainerDetailView: View {
 		.animation(.easeInOut, value: lastLogsSnippet)
 		.refreshable { await refresh() }
 		.task { await refresh() }
-		.userActivity(AppState.UserActivity.viewContainer, isActive: sceneState.activeContainerID == container.id) { activity in
+		.userActivity(AppState.UserActivity.viewContainer, isActive: sceneState.activeContainer == container) { activity in
 			activity.requiredUserInfoKeys = [AppState.UserActivity.containerIDKey]
 			activity.userInfo = [
 				AppState.UserActivity.containerIDKey: container.id,
@@ -149,7 +149,7 @@ struct ContainerDetailView: View {
 		loading = true
 		
 		do {
-			async let logs = portainer.getLogs(from: container, tail: lastLogsTailCount, displayTimestamps: true)
+			async let logs = portainer.getLogs(from: container.id, tail: lastLogsTailCount, displayTimestamps: true)
 			async let containerDetails = portainer.inspectContainer(container)
 			
 			let logsAwaited = try await logs

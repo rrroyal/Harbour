@@ -11,21 +11,21 @@ import SwiftUI
 final class Preferences: ObservableObject {
 	public static let shared: Preferences = Preferences()
 
-	@AppStorage(Preferences.Key.finishedSetup.rawValue, store: .group) public var finishedSetup: Bool = false
+	@AppStorage(Preferences.Key.finishedSetup.rawValue, store: .standard) public var finishedSetup: Bool = false
 	
 	@AppStorage(Preferences.Key.selectedServer.rawValue, store: .group) public var selectedServer: URL?
 	@AppStorage(Preferences.Key.selectedEndpointID.rawValue, store: .group) public var selectedEndpointID: Int?
 
 	@AppStorage(Preferences.Key.enableBackgroundRefresh.rawValue, store: .group) public var enableBackgroundRefresh: Bool = false
-	@AppStorage(Preferences.Key.autoRefreshInterval.rawValue, store: .group) public var autoRefreshInterval: Double = 0
+	@AppStorage(Preferences.Key.autoRefreshInterval.rawValue, store: .standard) public var autoRefreshInterval: Double = 0
 	
-	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .group) public var enableHaptics: Bool = true
+	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .standard) public var enableHaptics: Bool = true
 	
-	@AppStorage(Preferences.Key.clUseGridView.rawValue, store: .group) public var clUseGridView: Bool = false
-	@AppStorage(Preferences.Key.clUseColumns.rawValue, store: .group) public var clUseColumns: Bool = true
+	@AppStorage(Preferences.Key.clUseGridView.rawValue, store: .standard) public var clUseGridView: Bool = false
+	@AppStorage(Preferences.Key.clUseColumns.rawValue, store: .standard) public var clUseColumns: Bool = true
 	@AppStorage(Preferences.Key.clUseColoredContainerCells.rawValue, store: .group) public var clUseColoredContainerCells: Bool = false
 	
-	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .group) public var persistAttachedContainer: Bool = true
+	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .standard) public var persistAttachedContainer: Bool = true
 	
 	#if DEBUG
 	var lastBackgroundTaskDate: Date? {
@@ -71,5 +71,5 @@ extension Preferences {
 }
 
 extension UserDefaults {
-	static var group: UserDefaults = UserDefaults(suiteName: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)")!
+	static var group: UserDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier)")!
 }

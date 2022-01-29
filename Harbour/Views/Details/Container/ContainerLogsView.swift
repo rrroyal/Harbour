@@ -146,7 +146,7 @@ struct ContainerLogsView: View {
 		loading = true
 		
 		do {
-			let logs = try await portainer.getLogs(from: container, since: since, tail: tail, displayTimestamps: displayTimestamps)
+			let logs = try await portainer.getLogs(from: container.id, since: since, tail: tail, displayTimestamps: displayTimestamps)
 			self.logs = logs
 		} catch {
 			sceneState.handle(error)

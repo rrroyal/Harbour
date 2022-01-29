@@ -9,8 +9,8 @@ import Foundation
 import PortainerKit
 
 extension Array where Element == PortainerKit.Container {
-	func filtered(query: String) -> Self {
-		guard !query.isReallyEmpty else { return self }
+	func filtered(query: String?) -> Self {
+		guard let query = query?.trimmingCharacters(in: .whitespacesAndNewlines), !query.isEmpty else { return self }
 		
 		let lowercasedQuery = query.lowercased()
 		return filter {

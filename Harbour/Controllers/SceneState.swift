@@ -11,22 +11,41 @@ import UIKit.UIDevice
 import Indicators
 import PortainerKit
 
+@MainActor
 final class SceneState: ObservableObject {
-	public typealias ErrorHandler = (Error, Indicators.Indicator?, StaticString, Int) -> ()
+	public typealias ErrorHandler = (Error, Indicators.Indicator?, StaticString, Int, StaticString) -> ()
 	
 	@Published public var isSettingsSheetPresented: Bool = false
 	@Published public var isSetupSheetPresented: Bool = !Preferences.shared.finishedSetup
 	@Published public var isContainerConsoleSheetPresented: Bool = false
 	
-	@Published public var activeContainerID: String? = nil
+	@Published public var activeContainer: PortainerKit.Container? = nil {
+		didSet {
+			guard let container = activeContainer else { return }
+			AppState.shared.updateQuickActions(lastOpenedContainer: container)
+		}
+	}
 	
 	public let indicators = Indicators()
 	
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
 	
+	public func onOpenURL(_ url: URL) {
+		guard let action = HarbourURLScheme.fromURL(url) else { return }
+
+		logger.notice("Opening URL with URL \"\(action.url?.absoluteString ?? "<none>", privacy: .public)\" [\(#fileID, privacy: .public) \(#function, privacy: .public)]")
+
+		switch action {
+			case .openContainer(let containerID):
+				if let container = Portainer.shared.containers.first(where: { $0.id == containerID }) {
+					activeContainer = container
+				}
+		}
+	}
+	
 	// MARK: - User activity
 	@MainActor public func handleContinueUserActivity(_ activity: NSUserActivity) {
-		logger.debug("Continuing UserActivity \"\(activity.activityType)\"")
+		logger.notice("Continuing UserActivity \"\(activity.activityType, privacy: .public)\" [\(#fileID, privacy: .public) \(#function, privacy: .public)]")
 		
 		do {
 			switch activity.activityType {
@@ -36,8 +55,9 @@ final class SceneState: ObservableObject {
 						try Portainer.shared.attach(to: container, endpointID: activity.userInfo?[AppState.UserActivity.endpointIDKey] as? Int)
 					}
 				case AppState.UserActivity.viewContainer:
-					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String {
-						activeContainerID = containerID
+					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String,
+					   let container = Portainer.shared.containers.first(where: { $0.id == containerID }) {
+						activeContainer = container
 					}
 				default:
 					break
@@ -85,23 +105,26 @@ final class SceneState: ObservableObject {
 	
 	// MARK: - Error handling
 	
-	public func handle(_ error: Error, indicator: Indicators.Indicator, _fileID: StaticString = #fileID, _line: Int = #line) {
-		handle(error, displayIndicator: false, _fileID: _fileID, _line: _line)
+	public func handle(_ error: Error, indicator: Indicators.Indicator, _fileID: StaticString = #fileID, _line: Int = #line, _function: StaticString = #function) {
+		handle(error, displayIndicator: false, _fileID: _fileID, _line: _line, _function: _function)
 		
 		DispatchQueue.main.async {
 			self.indicators.display(indicator)
 		}
 	}
 	
-	public func handle(_ error: Error, displayIndicator: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line) {
-		if error as? PortainerKit.APIError == PortainerKit.APIError.invalidJWTToken { return }
+	public func handle(_ error: Error, displayIndicator: Bool = true, _fileID: StaticString = #fileID, _line: Int = #line, _function: StaticString = #function) {
+//		if error as? PortainerKit.APIError == PortainerKit.APIError.invalidJWTToken { return }
 		
 		UIDevice.generateHaptic(.error)
-		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
+		logger.error("\(String(describing: error), privacy: .public) [\(_fileID, privacy: .public):\(_line, privacy: .public) \(_function, privacy: .public)]")
+		
+		let errorDescription = error.readableDescription
+		let recoverySuggestion = (error as? LocalizedError)?.recoverySuggestion
 		
 		if displayIndicator {
 			let style: Indicators.Indicator.Style = .init(subheadlineColor: .red, subheadlineStyle: .primary, iconColor: .red, iconStyle: .primary)
-			let indicator: Indicators.Indicator = .init(id: UUID().uuidString, icon: "exclamationmark.triangle.fill", headline: "Error!", subheadline: error.localizedDescription, expandedText: error.localizedDescription, dismissType: .after(5), style: style)
+			let indicator: Indicators.Indicator = .init(id: UUID().uuidString, icon: "exclamationmark.triangle.fill", headline: "Error!", subheadline: errorDescription, expandedText: recoverySuggestion ?? errorDescription, dismissType: .after(5), style: style)
 			DispatchQueue.main.async {
 				self.indicators.display(indicator)
 			}

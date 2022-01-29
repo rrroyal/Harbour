@@ -10,6 +10,7 @@ import Combine
 import os.log
 import PortainerKit
 import Keychain
+import WidgetKit
 
 @MainActor
 final class Portainer: ObservableObject {
@@ -26,18 +27,26 @@ final class Portainer: ObservableObject {
 	@Published public internal(set) var fetchingEndpoints: Bool = false
 	@Published public internal(set) var fetchingContainers: Bool = false
 
-	public var serverURL: URL? {
-		get { api?.url }
-	}
+	@Published public internal(set) var containers: [PortainerKit.Container] = []
 
-	public var hasSavedCredentials: Bool {
-		get { !((try? keychain.getURLs()) ?? []).isEmpty }
+#if IOS
+	@Published public var attachedContainer: AttachedContainer? = nil
+#endif
+
+	@Published public internal(set) var endpoints: [PortainerKit.Endpoint] = [] {
+		didSet {
+			if selectedEndpointID == nil,
+			   let storedEndpointID = Preferences.shared.selectedEndpointID,
+			   endpoints.contains(where: { $0.id == storedEndpointID }) {
+				selectedEndpointID = storedEndpointID
+			}
+		}
 	}
-			
-	// MARK: Endpoint
 
 	@Published public var selectedEndpointID: Int? = Preferences.shared.selectedEndpointID {
 		didSet {
+			logger.info("Selected endpoint with ID \(self.selectedEndpointID ?? -1, privacy: .sensitive(mask: .hash)) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+			
 			Preferences.shared.selectedEndpointID = selectedEndpointID
 			
 			if let endpointID = selectedEndpointID {
@@ -54,56 +63,42 @@ final class Portainer: ObservableObject {
 		}
 	}
 
-	@Published public internal(set) var endpoints: [PortainerKit.Endpoint] = [] {
-		didSet {
-			if selectedEndpointID == nil,
-			   let storedEndpointID = Preferences.shared.selectedEndpointID,
-			   endpoints.contains(where: { $0.id == storedEndpointID }) {
-				selectedEndpointID = storedEndpointID
-				return
-			}
-						
-			if endpoints.count == 1 {
-				selectedEndpointID = endpoints.first?.id
-			} else if endpoints.isEmpty {
-				selectedEndpointID = nil
-			}
-		}
+	public var serverURL: URL? {
+		get { api?.url }
 	}
 
-	// MARK: Containers
+	public var hasSavedCredentials: Bool {
+		get { !((try? keychain.getURLs()) ?? []).isEmpty }
+	}
 
 	public let refreshContainerPassthroughSubject: PassthroughSubject<String, Never> = .init()
-	
-	#if IOS
-	@Published public var attachedContainer: AttachedContainer? = nil
-	#endif
-	
-	@Published public internal(set) var containers: [PortainerKit.Container] = []
 
 	// MARK: - Private variables
-			
-	private let keychain: Keychain = Keychain(service: Bundle.main.bundleIdentifier!, accessGroup: "\(Bundle.main.appIdentifierPrefix)group.\(Bundle.main.bundleIdentifier!)")
+
+	private let keychain: Keychain = Keychain(service: Bundle.main.mainBundleIdentifier, accessGroup: "\(Bundle.main.appIdentifierPrefix!)group.\(Bundle.main.mainBundleIdentifier)")
 	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer")
-	private let ud: UserDefaults = Preferences.ud
 	private var api: PortainerKit?
 
 	// MARK: - init
 
-	internal init() {
+	private init() {
 		self.servers = (try? keychain.getURLs()) ?? []
 		
 		if let url = Preferences.shared.selectedServer {
-			do {
-				if !self.servers.contains(url) {
-					self.servers.append(url)
+			Task {
+				do {
+					if !self.servers.contains(url) {
+						self.servers.append(url)
+					}
+					
+					try await setup(with: url)
+				} catch {
+					handle(error)
 				}
-				
-				try setup(with: url)
-			} catch {
-				handle(error)
 			}
 		}
+		
+		#warning("TODO: Load cached containers from CoreData")
 	}
 
 	// MARK: - Public functions
@@ -111,16 +106,20 @@ final class Portainer: ObservableObject {
 	/// Sets up Portainer with supplied server URL
 	/// - Parameters:
 	///   - url: Server URL
-	public func setup(with url: URL) throws {
-		logger.debug("Setting up, URL: \(url.absoluteString, privacy: .sensitive)")
-		
-		guard let token = try? keychain.getToken(server: url) else {
-			throw PortainerError.noToken
+	public func setup(with url: URL) async throws {
+		logger.info("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash)) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+				
+		if let token = try? keychain.getToken(server: url) {
+			api = PortainerKit(url: url, token: token)
+		} else if let credentials = try? keychain.getCredentials(server: url) {
+			logger.notice("No token stored, but got credentials [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+			try await login(url: url, username: credentials.username, password: credentials.password, savePassword: true)
+		} else {
+			logger.notice("No credentials, logging out [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+			throw PortainerError.noCredentials
 		}
 		
 		isSetup = true
-				
-		api = PortainerKit(url: url, token: token)
 		Preferences.shared.selectedServer = url
 	}
 
@@ -132,15 +131,16 @@ final class Portainer: ObservableObject {
 	///   - savePassword: Should password be saved?
 	/// - Returns: Result containing JWT token or error.
 	public func login(url: URL, username: String, password: String, savePassword: Bool) async throws {
-		logger.debug("Logging in with credentials, URL: \(url.absoluteString, privacy: .sensitive)...")
+		logger.info("Logging in with credentials, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		let api = PortainerKit(url: url)
 		
 		do {
 			let token = try await api.login(username: username, password: password)
 			
-			logger.debug("Successfully logged in!")
+			logger.info("Successfully logged in! [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			self.api = api
+			self.isSetup = true
 			
 			try? keychain.saveToken(server: url, username: username, token: token, comment: Localization.KEYCHAIN_TOKEN_COMMENT.localized, hasPassword: savePassword)
 			if savePassword {
@@ -159,20 +159,10 @@ final class Portainer: ObservableObject {
 			throw error
 		}
 	}
-	
-	/// Logs out from server and cleans up
-	public func logout() throws {
-		logger.info("Logging out!")
-		cleanup()
-		
-		if let url = serverURL {
-			try removeServer(url: url)
-		}
-	}
 
 	/// Cleans up local data (used after logging out)
 	public func cleanup() {
-		logger.info("Cleaning up!")
+		logger.info("Cleaning up! [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		api = nil
 		
@@ -190,7 +180,9 @@ final class Portainer: ObservableObject {
 	
 	/// Removes credentials for supplied server URL
 	/// - Parameter url: URL to remove credentials for
-	public func removeServer(url: URL) throws {
+	public func logout(from url: URL) throws {
+		logger.info("Logging out from \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\" [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+
 		try keychain.removeCredentials(server: url)
 		try keychain.removeToken(server: url)
 		servers.remove(url)
@@ -208,7 +200,7 @@ final class Portainer: ObservableObject {
 	/// - Returns: `[PortainerKit.Endpoint]`
 	@discardableResult
 	public func getEndpoints() async throws -> [PortainerKit.Endpoint] {
-		logger.debug("Getting endpoints...")
+		logger.info("Getting endpoints... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		guard let api = api else { throw PortainerError.noAPI }
 		fetchingEndpoints = true
@@ -217,7 +209,7 @@ final class Portainer: ObservableObject {
 		do {
 			let endpoints = try await api.getEndpoints()
 			
-			logger.debug("Got \(endpoints.count) endpoint(s).")
+			logger.info("Got \(endpoints.count, privacy: .public) endpoint(s). [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			DispatchQueue.main.async {
 				self.isLoggedIn = true
 				self.endpoints = endpoints
@@ -236,9 +228,9 @@ final class Portainer: ObservableObject {
 	///   - containerID: Search for container with this ID
 	/// - Returns: `[PortainerKit.Container]`
 	@discardableResult
-	public func getContainers(endpointID: Int? = nil, containerID: String? = nil) async throws -> [PortainerKit.Container] {
+	public func getContainers(endpointID: Int? = nil, containerID: PortainerKit.Container.ID? = nil) async throws -> [PortainerKit.Container] {
 		let endpointID = endpointID ?? self.selectedEndpointID
-		logger.debug("Getting containers for endpointID: \(endpointID ?? -1)...")
+		logger.info("Getting containers for endpointID: \(endpointID ?? -1, privacy: .public)... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		guard let api = api else { throw PortainerError.noAPI }
 		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
@@ -256,7 +248,11 @@ final class Portainer: ObservableObject {
 		do {
 			let containers = try await api.getContainers(for: endpointID, filters: filters ?? [:])
 			
-			logger.debug("Got \(containers.count) container(s) for endpointID: \(endpointID).")
+			#if IOS
+			WidgetCenter.shared.reloadTimelines(ofKind: Constants.Widgets.statusWidgetKind)
+			#endif
+			
+			logger.info("Got \(containers.count, privacy: .public) container(s) for endpointID: \(endpointID, privacy: .sensitive(mask: .hash)). [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			DispatchQueue.main.async {
 				self.isLoggedIn = true
 				self.containers = containers
@@ -276,7 +272,7 @@ final class Portainer: ObservableObject {
 	public func inspectContainer(_ container: PortainerKit.Container, endpointID: Int? = nil) async throws -> ContainerInspection {
 		let endpointID = endpointID ?? self.selectedEndpointID
 		
-		logger.debug("Inspecting container with ID: \(container.id), endpointID: \(endpointID ?? -1)...")
+		logger.info("Inspecting container with ID: \(container.id, privacy: .sensitive(mask: .hash)), endpointID: \(endpointID ?? -1, privacy: .sensitive(mask: .hash))... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		guard let api = api else { throw PortainerError.noAPI }
 		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
@@ -285,7 +281,7 @@ final class Portainer: ObservableObject {
 			async let general = api.getContainers(for: endpointID, filters: ["id": [container.id]]).first(where: { $0.id == container.id })
 			async let details = api.inspectContainer(container.id, endpointID: endpointID)
 			let result: ContainerInspection = (try await general, try await details)
-			logger.debug("Got details for containerID: \(container.id), endpointID: \(endpointID).")
+			logger.info("Got details for containerID: \(container.id, privacy: .sensitive(mask: .hash)), endpointID: \(endpointID, privacy: .sensitive(mask: .hash)). [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			
 			if let general = result.general,
 			   let index = self.containers.firstIndex(of: container) {
@@ -305,17 +301,17 @@ final class Portainer: ObservableObject {
 	/// - Parameters:
 	///   - action: Action to be executed
 	///   - container: Container, where the action will be executed
-	public func execute(_ action: PortainerKit.ExecuteAction, on container: PortainerKit.Container, endpointID: Int? = nil) async throws {
+	public func execute(_ action: PortainerKit.ExecuteAction, on containerID: PortainerKit.Container.ID, endpointID: Int? = nil) async throws {
 		let endpointID = endpointID ?? self.selectedEndpointID
 		
-		logger.debug("Executing action \"\(action.rawValue)\" for containerID: \(container.id), endpointID: \(endpointID ?? -1)...")
+		logger.info("Executing action \"\(action.rawValue, privacy: .public)\" for containerID: \(containerID), endpointID: \(endpointID ?? -1, privacy: .sensitive(mask: .hash))... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		guard let api = api else { throw PortainerError.noAPI }
 		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 		
 		do {
-			try await api.execute(action, containerID: container.id, endpointID: endpointID)
-			logger.debug("Executed action \(action.rawValue) for containerID: \(container.id), endpointID: \(endpointID).")
+			try await api.execute(action, containerID: containerID, endpointID: endpointID)
+			logger.info("Executed action \(action.rawValue, privacy: .public) for containerID: \(containerID), endpointID: \(endpointID, privacy: .sensitive(mask: .hash)). [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		} catch {
 			handle(error)
 			throw error
@@ -329,17 +325,17 @@ final class Portainer: ObservableObject {
 	///   - tail: Number of lines
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
-	public func getLogs(from container: PortainerKit.Container, endpointID: Int? = nil, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
+	public func getLogs(from containerID: PortainerKit.Container.ID, endpointID: Int? = nil, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
 		let endpointID = endpointID ?? self.selectedEndpointID
 		
-		logger.debug("Getting logs from containerID: \(container.id), endpointID: \(endpointID ?? -1)...")
+		logger.info("Getting logs from containerID: \(containerID, privacy: .sensitive(mask: .hash)), endpointID: \(endpointID ?? -1, privacy: .sensitive(mask: .hash))... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		guard let api = api else { throw PortainerError.noAPI }
 		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 
 		do {
-			let logs = try await api.getLogs(containerID: container.id, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
-			logger.debug("Got logs from containerID: \(container.id), endpointID: \(endpointID)!")
+			let logs = try await api.getLogs(containerID: containerID, endpointID: endpointID, since: since, tail: tail, displayTimestamps: displayTimestamps)
+			logger.info("Got logs from containerID: \(containerID, privacy: .sensitive(mask: .hash)), endpointID: \(endpointID, privacy: .sensitive(mask: .hash))! [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			return logs
 		} catch {
 			handle(error)
@@ -359,14 +355,14 @@ final class Portainer: ObservableObject {
 		
 		let endpointID = endpointID ?? self.selectedEndpointID
 		
-		logger.debug("Attaching to containerID: \(container.id), endpointID: \(endpointID ?? -1)...")
+		logger.info("Attaching to containerID: \(container.id, privacy: .sensitive(mask: .hash)), endpointID: \(endpointID ?? -1, privacy: .sensitive(mask: .hash))... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 		
 		guard let api = api else { throw PortainerError.noAPI }
 		guard let endpointID = endpointID else { throw PortainerError.noEndpoint }
 		
 		do {
 			let messagePassthroughSubject = try api.attach(to: container.id, endpointID: endpointID)
-			logger.debug("Attached to containerID: \(container.id), endpointID: \(endpointID)!")
+			logger.info("Attached to containerID: \(container.id, privacy: .sensitive(mask: .hash)), endpointID: \(endpointID, privacy: .sensitive(mask: .hash))! [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 			
 			let attachedContainer = AttachedContainer(container: container, messagePassthroughSubject: messagePassthroughSubject)
 			attachedContainer.endpointID = endpointID
@@ -399,7 +395,7 @@ final class Portainer: ObservableObject {
 					try? keychain.removeToken(server: url)
 					if let url = serverURL ?? Preferences.shared.selectedServer,
 					   let creds = try? keychain.getCredentials(server: url) {
-						logger.debug("Received `invalidJWTToken`, but has credentials! Trying to refresh...")
+						logger.notice("Received `invalidJWTToken`, but has credentials! Trying to refresh... [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 						
 						Task {
 							do {
@@ -407,8 +403,8 @@ final class Portainer: ObservableObject {
 								try await self.getEndpoints()
 							} catch {
 								if let error = error as? PortainerKit.APIError, error == .invalidCredentials {
-									logger.debug("Credentials invalid, logging out :(")
-									try removeServer(url: url)
+									logger.notice("Credentials invalid, logging out :( [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+									try logout(from: url)
 								} else {
 									throw error
 								}

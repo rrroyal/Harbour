@@ -76,17 +76,6 @@
 "Invalid URL" = "Invalid URL";
 "Success!" = "Success!";
 
-// MARK: Errors
-
-"Response unacceptable (%@)" = "Response unacceptable (%@)";
-"Unknown error" = "Unknown error";
-"Decoding failed" = "Decoding failed";
-"Invalid credentials" = "Invalid credentials";
-"Invalid token" = "Invalid token";
-"Unauthorized" = "Unauthorized";
-"Invalid payload" = "Invalid payload";
-"Invalid URL" = "Invalid URL";
-
 // MARK: - Indicators
 
 "%CONTAINER_DISMISSED_INDICATOR_TITLE%" = "Container dismissed!";
@@ -98,3 +87,16 @@
 
 "%KEYCHAIN_TOKEN_COMMENT%" = "This is your authorization token for Portainer - if you delete it, you will be logged out of Harbour.";
 "%KEYCHAIN_CREDS_COMMENT%" = "This keychain entry is here because \"Save password\" was on when logging in. This is only used to renew JWT token during authorization. To read more, visit https://harbour.shameful.xyz/docs/faq#save-password";
+
+// MARK: - Widgets
+
+"%WIDGET_STATUS_NAME%" = "Status Widget";
+"%WIDGET_STATUS_DESCRIPTION%" = "See status of your favorite container right on your home screen :)";
+
+// MARK: Errors
+
+"%PORTAINERERROR_NO_SERVER%" = "No server URL";
+"%PORTAINERERROR_NO_API%" = "No API";
+"%PORTAINERERROR_NO_ENDPOINT%" = "No endpoint";
+"%PORTAINERERROR_NO_TOKEN%" = "No token";
+"%PORTAINERERROR_NO_CREDENTIALS%" = "No credentials";

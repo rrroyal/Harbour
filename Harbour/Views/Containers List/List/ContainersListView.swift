@@ -49,7 +49,7 @@ private extension ContainersListView {
 		var body: some View {
 			LazyVStack(spacing: spacing) {
 				ForEach(containers) { container in
-					NavigationLink(tag: container.id, selection: $sceneState.activeContainerID, destination: {
+					NavigationLink(tag: container, selection: $sceneState.activeContainer, destination: {
 						ContainerDetailView(container: container)
 							.equatable()
 							.environmentObject(sceneState)

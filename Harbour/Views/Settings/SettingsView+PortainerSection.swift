@@ -40,14 +40,14 @@ extension SettingsView {
 						} else {
 							Button(action: {
 								UIDevice.generateHaptic(.selectionChanged)
-								do {
-									try portainer.setup(with: server)
-									Task {
+								Task {
+									do {
+										try await portainer.setup(with: server)
 										try await portainer.getEndpoints()
+									} catch {
+										UIDevice.generateHaptic(.error)
+										sceneState.handle(error)
 									}
-								} catch {
-									UIDevice.generateHaptic(.error)
-									sceneState.handle(error)
 								}
 							}) {
 								Label("Use", systemImage: "checkmark")
@@ -60,7 +60,7 @@ extension SettingsView {
 						Button(role: .destructive, action: {
 							UIDevice.generateHaptic(.heavy)
 							do {
-								try portainer.removeServer(url: server)
+								try portainer.logout(from: server)
 							} catch {
 								UIDevice.generateHaptic(.error)
 								sceneState.handle(error)
@@ -85,7 +85,7 @@ extension SettingsView {
 					
 					Text(preferences.selectedServer?.readableString ?? "No server selected")
 						.transition(.identity)
-						.id("SelectedServerLabel:\(preferences.selectedServer?.absoluteString ?? "")")
+						.id("SelectedServerLabel-\(preferences.selectedServer?.absoluteString ?? "")")
 					
 					Spacer()
 					
@@ -93,7 +93,7 @@ extension SettingsView {
 						.font(.body.weight(.semibold))
 				}
 			}
-			.id("ServerSelectionMenu:\(portainer.servers.hashValue)")
+			.id("ServerSelectionMenu-\(portainer.servers.hashValue)")
 			.font(standaloneLabelFont)
 		}
 		
@@ -122,16 +122,16 @@ extension SettingsView {
 		
 		private func setupBackgroundRefresh(isOn: Bool) {
 			guard isOn else {
-				AppState.shared.cancelBackgroundRefreshTask()
+				BackgroundTasks.cancelBackgroundRefreshTask()
 				return
 			}
 			
 			Task {
 				do {
 					try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
-					AppState.shared.scheduleBackgroundRefreshTask()
+					BackgroundTasks.scheduleBackgroundRefreshTask()
 				} catch {
-					AppState.shared.cancelBackgroundRefreshTask()
+					BackgroundTasks.cancelBackgroundRefreshTask()
 					preferences.enableBackgroundRefresh = false
 					sceneState.handle(error)
 				}

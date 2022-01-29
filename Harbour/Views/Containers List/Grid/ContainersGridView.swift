@@ -9,7 +9,6 @@ import SwiftUI
 import PortainerKit
 
 #warning("TODO: Unnecessary environment updates")
-#warning("TODO: GridCells are not removed (reference cycle?)")
 
 struct ContainersGridView: View {
 	@EnvironmentObject var portainer: Portainer
@@ -56,6 +55,8 @@ private extension ContainersGridView {
 		
 		#warning("TODO: Move this to ViewController or something so that it's not recomputed on every access but only on changes")
 		private var gridCells: [GridCell] {
+			print("gridCells")
+			
 			// Map containers to GridCells
 			let cells: [GridCell] = containers.enumerated()
 				.map { GridCell(stack: $1.stack, index: $0, line: $0 / columns, position: .init(index: $0, columns: columns)) }
@@ -89,7 +90,7 @@ private extension ContainersGridView {
 			Self._printChanges()
 			return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: columns), spacing: 0) {
 				ForEach(containersEnumerated, id: \.container.id) { pair in
-					NavigationLink(tag: pair.container.id, selection: $sceneState.activeContainerID, destination: {
+					NavigationLink(tag: pair.container, selection: $sceneState.activeContainer, destination: {
 						ContainerDetailView(container: pair.container)
 							.equatable()
 							.environmentObject(sceneState)

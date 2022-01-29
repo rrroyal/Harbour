@@ -72,7 +72,7 @@ struct ContainerConsoleView: View {
 			activity.requiredUserInfoKeys = [AppState.UserActivity.containerIDKey]
 			activity.userInfo = [
 				AppState.UserActivity.containerIDKey: attachedContainer.container.id,
-				AppState.UserActivity.endpointIDKey: attachedContainer.endpointID
+				AppState.UserActivity.endpointIDKey: attachedContainer.endpointID as Any
 			]
 			activity.title = "Attach to \(attachedContainer.container.displayName ?? attachedContainer.container.id)".localized
 			activity.suggestedInvocationPhrase = activity.title

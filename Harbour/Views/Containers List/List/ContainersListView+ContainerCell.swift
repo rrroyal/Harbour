@@ -19,10 +19,10 @@ extension ContainersListView {
 		var containerStatusSubheadline: some View {
 			Group {
 				if let status = container.status,
-				   let state = container.state?.rawValue.capitalizingFirstLetter(),
+				   let state = container.state?.rawValue.capitalizingFirstLetter,
 				   status != state {
 					Text("\(status) • \(state)")
-				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter() {
+				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter {
 					Text(fallback)
 				}
 			}
@@ -37,7 +37,7 @@ extension ContainersListView {
 		var body: some View {
 			HStack {
 				VStack(alignment: .leading, spacing: 5) {
-					Text(container.displayName ?? "Unnamed")
+					Text(container.displayName ?? container.id)
 						.font(.headline)
 						.foregroundColor(container.displayName != nil ? .primary : .secondary)
 						.lineLimit(2)

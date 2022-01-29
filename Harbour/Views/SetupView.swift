@@ -15,7 +15,7 @@ struct SetupView: View {
 			WelcomeView(presentedView: $presentedView)
 				.tag(PresentedView.welcome)
 			
-			if !Portainer.shared.isSetup {
+			if !(Portainer.shared.isSetup && Portainer.shared.hasSavedCredentials) {
 				LoginView()
 					.environmentObject(Portainer.shared)
 					.tag(PresentedView.setup)

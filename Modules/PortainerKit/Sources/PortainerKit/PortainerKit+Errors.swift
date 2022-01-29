@@ -9,7 +9,7 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	enum APIError: Error, Comparable {
+	enum APIError: LocalizedError, Comparable {
 		case custom(_ reason: String)
 		case responseCodeUnacceptable(_ code: Int)
 		case unknownError
@@ -24,7 +24,7 @@ public extension PortainerKit {
 		case invalidPayload
 		case invalidURL
 		
-		public var description: String {
+		public var errorDescription: String {
 			switch self {
 				case .custom(let reason):					return reason
 				case .responseCodeUnacceptable(let code):	return "Response unacceptable (\(code))"
@@ -36,6 +36,15 @@ public extension PortainerKit {
 				case .unauthorized:							return "Unauthorized"
 				case .invalidPayload:						return "Invalid payload"
 				case .invalidURL:							return "Invalid URL"
+			}
+		}
+		
+		public var recoverySuggestion: String? {
+			switch self {
+				case .invalidCredentials, .invalidJWTToken, .unauthorized:
+					return "Try logging out and logging in back again."
+				default:
+					return nil
 			}
 		}
 		
