@@ -137,7 +137,7 @@ struct ContainerLogsView: View {
 		.navigationTitle("Logs")
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
-			ToolbarTitle(title: "Logs", subtitle: loading ? "Refreshing..." : nil)
+			ToolbarTitle(title: "Logs", subtitle: loading ? Localization.Generic.fetching : nil)
 		}
 		.task { await refresh() }
 	}

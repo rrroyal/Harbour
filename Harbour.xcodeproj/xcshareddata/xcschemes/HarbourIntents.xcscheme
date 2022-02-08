@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E79F4C9E27935DD1007FBAF6"
-               BuildableName = "Siri Intents.appex"
-               BlueprintName = "Siri Intents"
+               BuildableName = "HarbourIntents.appex"
+               BlueprintName = "HarbourIntents"
                ReferencedContainer = "container:Harbour.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

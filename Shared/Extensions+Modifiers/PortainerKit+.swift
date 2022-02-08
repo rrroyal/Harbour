@@ -5,10 +5,61 @@
 //  Created by royal on 11/06/2021.
 //
 
-import PortainerKit
 import SwiftUI
+import CoreData
+import PortainerKit
 
 // MARK: - PortainerKit.Container
+
+extension PortainerKit.Container {
+	func toCoreData(context: NSManagedObjectContext) -> PKStoredContainer {
+		let entity = PKStoredContainer(context: context)
+		entity.id = id
+		entity.imageID = imageID
+		entity.displayName = displayName
+		entity.stack = stack
+		entity.created = created
+
+		return entity
+	}
+
+	convenience init?(entity: PKStoredContainer) {
+		guard let id = entity.id,
+			  let imageID = entity.imageID else {
+			return nil
+		}
+
+		let names: [String]?
+		if let displayName = entity.displayName {
+			names = [displayName]
+		} else {
+			names = nil
+		}
+
+		let labels: [String: String]?
+		if let stack = entity.stack {
+			labels = [PortainerKit.Container.stackLabelID: stack]
+		} else {
+			labels = nil
+		}
+
+		self.init(id: id,
+				  names: names,
+				  image: nil,
+				  imageID: imageID,
+				  command: nil,
+				  created: entity.created,
+				  ports: nil,
+				  sizeRW: nil,
+				  sizeRootFS: nil,
+				  labels: labels,
+				  state: nil,
+				  status: nil,
+				  hostConfig: nil,
+				  networkSettings: nil,
+				  mounts: nil)
+	}
+}
 
 #if IOS
 extension PortainerKit.Container {

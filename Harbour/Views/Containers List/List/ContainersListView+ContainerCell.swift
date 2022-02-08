@@ -22,16 +22,21 @@ extension ContainersListView {
 				   let state = container.state?.rawValue.capitalizingFirstLetter,
 				   status != state {
 					Text("\(status) • \(state)")
+						.foregroundStyle(.secondary)
 				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter {
 					Text(fallback)
+						.foregroundStyle(.secondary)
+				} else {
+					Text(Localization.Generic.unknown)
+						.foregroundStyle(.tertiary)
 				}
 			}
 			.font(.subheadline.weight(.medium))
-			.foregroundStyle(.secondary)
 			.lineLimit(1)
 			.minimumScaleFactor(0.8)
 			.multilineTextAlignment(.leading)
 			.frame(maxWidth: .infinity, alignment: .leading)
+			.id("ContainerCell.containerStatus:\(container.id)")
 		}
 		
 		var body: some View {

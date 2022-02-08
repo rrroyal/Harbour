@@ -91,6 +91,6 @@ final class AppState: ObservableObject {
 	// MARK: - Error handling
 	
 	private func handle(_ error: Error, _fileID: StaticString = #fileID, _line: Int = #line, _function: StaticString = #function) {
-		logger.error("\(String(describing: error), privacy: .public) [\(_fileID, privacy: .public):\(_line, privacy: .public) \(_function, privacy: .public) ]")
+		logger.error("\(String(describing: error), privacy: .public)")
 	}
 }

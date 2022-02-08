@@ -20,10 +20,9 @@ extension Portainer {
 		public var errorHandler: SceneState.ErrorHandler?
 		public internal(set) var endpointID: PortainerKit.Endpoint.ID? = nil
 		public private(set) var isConnected: Bool = true
-		@Published public private(set) var buffer: String = ""
 		
-		internal var onDisconnect: (() -> Void)? = nil
-		
+		@Published public private(set) var attributedString: AttributedString = ""
+
 		private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Portainer.AttachedContainer")
 		private var messageCancellable: AnyCancellable? = nil
 		
@@ -49,19 +48,17 @@ extension Portainer {
 		public func disconnect() {
 			isConnected = false
 			messageCancellable?.cancel()
-			onDisconnect?()
 		}
 		
 		private func passthroughSubjectCompletion(_ completion: Subscribers.Completion<Error>) {
 			isConnected = false
-			
+
+			update(completion: completion)
+
 			switch completion {
 				case .finished:
-					let string = "Session ended."
-					update(string)
+					break
 				case .failure(let error):
-					let string = "Session ended, reason: \(error.readableDescription)"
-					update(string)
 					errorHandler?(error, nil, #fileID, #line, #function)
 			}
 		}
@@ -75,22 +72,59 @@ extension Portainer {
 						case .data(let data):
 							update(String(describing: data))
 						@unknown default:
-							let string = "Unhandled WebSocketMessage: \(String(describing: result))"
-							update(string)
-							logger.warning("\(string, privacy: .public) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+							let error = AttachedContainerError.unhandledMessage(String(describing: result))
+							update(error)
+
+							logger.warning("Unhandled WebSocketMessage: \(String(describing: result), privacy: .public) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
 					}
 				case .failure(let error):
 					isConnected = false
-					update(error.readableDescription)
+					update(error)
 					
-					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.WEBSOCKET_DISCONNECTED_TITLE.localized, subheadline: error.readableDescription, dismissType: .after(5))
+					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.Indicator.WebSocketDisconnected.title, subheadline: error.readableDescription, dismissType: .after(5))
 					errorHandler?(error, indicator, #fileID, #line, #function)
 			}
 		}
-	
+
 		private func update(_ string: String) {
-			DispatchQueue.main.async {
-				self.buffer.append(string)
+			self.attributedString.append(AttributedString(string))
+		}
+
+		private func update(completion: Subscribers.Completion<Error>) {
+			var attributes = AttributeContainer()
+
+			let string: String
+			switch completion {
+				case .finished:
+					attributes.foregroundColor = .secondaryLabel
+					string = Localization.Portainer.AttachedContainer.finished
+				case .failure(let error):
+					attributes.foregroundColor = .red
+					string = error.readableDescription
+			}
+
+			let attributedString = AttributedString(string, attributes: attributes)
+			self.attributedString.append(attributedString)
+		}
+
+		private func update(_ error: Error) {
+			var attributes = AttributeContainer()
+			attributes.foregroundColor = .red
+
+			let attributedString = AttributedString(error.readableDescription, attributes: attributes)
+			self.attributedString.append(attributedString)
+		}
+	}
+}
+
+private extension Portainer.AttachedContainer {
+	enum AttachedContainerError: LocalizedError {
+		case unhandledMessage(String)
+
+		var errorDescription: String {
+			switch self {
+				case .unhandledMessage(let message):
+					return Localization.Portainer.AttachedContainer.unhandledMessage(message)
 			}
 		}
 	}

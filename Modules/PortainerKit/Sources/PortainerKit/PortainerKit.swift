@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 @available(iOS 15, macOS 12, *)
-public class PortainerKit {
+public final class PortainerKit {
 	public typealias WebSocketPassthroughSubject = PassthroughSubject<Result<WebSocketMessage, Error>, Error>
 	
 	// MARK: Public properties
@@ -70,10 +70,15 @@ public class PortainerKit {
 			throw APIError.fromMessage(decoded[APIError.errorMessageKey])
 		}
 	}
+
+	public func fetchMotd() async throws -> Motd {
+		let request = try request(for: .motd)
+		return try await fetch(request: request)
+	}
 	
 	/// Fetches available endpoints.
 	/// - Returns: `[Endpoint]`
-	public func getEndpoints() async throws -> [Endpoint] {
+	public func fetchEndpoints() async throws -> [Endpoint] {
 		let request = try request(for: .endpoints)
 		return try await fetch(request: request)
 	}
@@ -82,7 +87,7 @@ public class PortainerKit {
 	/// - Parameter endpointID: Endpoint ID
 	/// - Parameter filters: Query filters
 	/// - Returns: `[Container]`
-	public func getContainers(for endpointID: Int, filters: [String: [String]] = [:]) async throws -> [Container] {
+	public func fetchContainers(for endpointID: Int, filters: [String: [String]] = [:]) async throws -> [Container] {
 		var queryItems = [
 			URLQueryItem(name: "all", value: "true")
 		]
@@ -109,9 +114,6 @@ public class PortainerKit {
 		let decoder = JSONDecoder()
 		let dateFormatter = ISO8601DateFormatter()
 		
-		/// Dear Docker/Portainer developers -
-		/// WHY THE HELL DO YOU RETURN FRACTIONAL SECONDS ONLY SOMETIMES
-		/// Sincerely, deeply upset me.
 		decoder.dateDecodingStrategy = .custom { decoder -> Date in
 			let container = try decoder.singleValueContainer()
 			let str = try container.decode(String.self)
@@ -169,7 +171,7 @@ public class PortainerKit {
 	///   - tail: Number of lines, counting from the end
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
-	public func getLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
+	public func fetchLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
 		let queryItems = [
 			URLQueryItem(name: "since", value: "\(since)"),
 			URLQueryItem(name: "stderr", value: "true"),
@@ -244,9 +246,9 @@ public class PortainerKit {
 		}
 				
 		if let token = token {
-			request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+			request.setValue(token, forHTTPHeaderField: "X-API-Key")
 		}
-		
+
 		return request
 	}
 	

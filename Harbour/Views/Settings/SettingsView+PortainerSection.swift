@@ -32,7 +32,7 @@ extension SettingsView {
 		
 		var serverMenu: some View {
 			Menu(content: {
-				ForEach(portainer.servers, id: \.absoluteString) { server in
+				ForEach(portainer.servers.sorted(by: { $0.absoluteString < $1.absoluteString }), id: \.absoluteString) { server in
 					Menu(server.readableString) {
 						if portainer.serverURL == server {
 							Label("In use", systemImage: "checkmark")
@@ -45,7 +45,6 @@ extension SettingsView {
 										try await portainer.setup(with: server)
 										try await portainer.getEndpoints()
 									} catch {
-										UIDevice.generateHaptic(.error)
 										sceneState.handle(error)
 									}
 								}
@@ -62,7 +61,6 @@ extension SettingsView {
 							do {
 								try portainer.logout(from: server)
 							} catch {
-								UIDevice.generateHaptic(.error)
 								sceneState.handle(error)
 							}
 						}) {
@@ -108,14 +106,14 @@ extension SettingsView {
 				
 				Section("Data") {
 					/// Persist attached container
-					ToggleOption(label: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE.localized, description: Localization.SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION.localized, iconSymbolName: "bolt", iconColor: .red, isOn: $preferences.persistAttachedContainer)
+					ToggleOption(label: Localization.Settings.Setting.PersistAttachedContainer.title, description: Localization.Settings.Setting.PersistAttachedContainer.description, iconSymbolName: "bolt", iconColor: .red, isOn: $preferences.persistAttachedContainer)
 					
 					/// Refresh containers in background
-					ToggleOption(label: Localization.SETTINGS_BACKGROUND_REFRESH_TITLE.localized, description: Localization.SETTINGS_BACKGROUND_REFRESH_DESCRIPTION.localized, iconSymbolName: "arrow.clockwise", iconColor: .green, isOn: preferences.$enableBackgroundRefresh)
+					ToggleOption(label: Localization.Settings.Setting.RefreshInBackground.title, description: Localization.Settings.Setting.RefreshInBackground.description, iconSymbolName: "arrow.clockwise", iconColor: .green, isOn: preferences.$enableBackgroundRefresh)
 						.onChange(of: preferences.enableBackgroundRefresh, perform: setupBackgroundRefresh)
 					
 					/// Auto-refresh interval
-					SliderOption(label: Localization.SETTINGS_AUTO_REFRESH_TITLE.localized, description: autoRefreshIntervalDescription, iconSymbolName: "clock.arrow.2.circlepath", iconColor: .cyan, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
+					SliderOption(label: Localization.Settings.Setting.AutoRefresh.title, description: autoRefreshIntervalDescription, iconSymbolName: "clock.arrow.2.circlepath", iconColor: .cyan, value: $preferences.autoRefreshInterval, range: 0...60, step: 1, onEditingChanged: setupAutoRefreshTimer)
 				}
 			}
 		}

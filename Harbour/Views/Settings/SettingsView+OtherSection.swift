@@ -12,7 +12,7 @@ extension SettingsView {
 		var madeWithLove: some View {
 			Link(destination: URL(string: "https://github.com/rrroyal/Harbour")!) {
 				VStack(spacing: 5) {
-					Text(Localization.SETTINGS_FOOTER.localized)
+					Text(Localization.Settings.Footer.label)
 					Text("Harbour v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
 				}
 				.font(.subheadline.weight(.semibold))
@@ -25,7 +25,7 @@ extension SettingsView {
 		
 		var body: some View {
 			Section(header: Text("Other"), footer: madeWithLove) {
-				#if DEBUG
+				#if TESTFLIGHT
 				NavigationLinkOption(label: "🤫", iconSymbolName: "eyes", iconColor: .orange) {
 					DebugView()
 				}
@@ -40,7 +40,8 @@ extension SettingsView {
 						
 						Spacer()
 						
-						Image(systemName: "link")
+						Image(systemName: "arrow.up.right")
+//							.symbolVariant(.square)
 							.font(.subheadline.weight(.semibold))
 							.foregroundStyle(.tertiary)
 					}

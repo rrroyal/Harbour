@@ -19,8 +19,9 @@ struct CustomSection<Content: View>: View {
 				.font(.footnote)
 				.foregroundStyle(.secondary)
 				.textCase(.uppercase)
+				.multilineTextAlignment(.leading)
 				.padding(.horizontal)
-			
+
 			content()
 				.padding(.medium)
 				.frame(maxWidth: .infinity, alignment: .leading)
@@ -29,6 +30,7 @@ struct CustomSection<Content: View>: View {
 						.fill(Color(uiColor: .secondarySystemGroupedBackground))
 				)
 		}
+		.frame(maxWidth: .infinity, alignment: .leading)
 	}
 }
 

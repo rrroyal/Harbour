@@ -36,7 +36,9 @@ struct HarbourApp: App {
 				if (portainer.isSetup || portainer.hasSavedCredentials) && portainer.serverURL != nil {
 					Task {
 						try await portainer.getEndpoints()
-						try await portainer.getContainers()
+						if portainer.selectedEndpointID != nil {
+							try await portainer.getContainers()
+						}
 					}
 				}
 			case .background:

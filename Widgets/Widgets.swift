@@ -13,12 +13,11 @@ import os.log
 @main
 struct Widgets: Widget {
     var body: some WidgetConfiguration {
-		IntentConfiguration(kind: Constants.Widgets.statusWidgetKind, intent: GetContainerStatusIntent.self, provider: GetContainerStatusWidget.Provider()) { entry in
-			GetContainerStatusWidget.WidgetView(entry: entry)
-				.widgetURL(entry.configuration.container?.identifier != nil ? HarbourURLScheme.openContainer(containerID: entry.configuration.container?.identifier ?? "").url : nil)
+		IntentConfiguration(kind: Constants.Widgets.statusWidgetKind, intent: ContainerStatusIntent.self, provider: ContainerStatusWidget.Provider()) { entry in
+			ContainerStatusWidget.WidgetView(entry: entry)
         }
-		.configurationDisplayName(Localization.WIDGET_STATUS_NAME.localized)
-		.description(Localization.WIDGET_STATUS_DESCRIPTION.localized)
+		.configurationDisplayName(Localization.Widgets.StatusWidget.name)
+		.description(Localization.Widgets.StatusWidget.description)
 		.supportedFamilies([.systemSmall])
     }
 }

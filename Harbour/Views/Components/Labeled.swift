@@ -48,7 +48,7 @@ struct Labeled: View {
 				
 				Spacer()
 				
-				Text(content ?? "none")
+				Text(content ?? Localization.Generic.none)
 					.font(.system(.body, design: monospace ? .monospaced : .default))
 					.foregroundColor(content != nil ? .primary : .secondary)
 					.lineLimit(lineLimit)

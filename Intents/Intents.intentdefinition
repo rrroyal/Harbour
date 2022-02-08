@@ -186,11 +186,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>BwGT6v</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>21D5039d</string>
+	<string>21E5196i</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>13C100</string>
+	<string>13E5086k</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>13.2.1</string>
+	<string>13.3</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -219,7 +219,7 @@
 				</dict>
 			</dict>
 			<key>INIntentName</key>
-			<string>GetContainerStatus</string>
+			<string>ContainerStatus</string>
 			<key>INIntentParameterCombinations</key>
 			<dict>
 				<key>container</key>
@@ -405,7 +405,7 @@
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Get Container Status</string>
+			<string>Container Status</string>
 			<key>INIntentTitleID</key>
 			<string>xIHvpf</string>
 			<key>INIntentType</key>

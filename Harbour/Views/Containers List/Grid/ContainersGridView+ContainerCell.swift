@@ -18,13 +18,12 @@ extension ContainersGridView {
 		var body: some View {
 			VStack {
 				HStack(alignment: .center) {
-					if let state = container.state {
-						Text(state.rawValue.capitalizingFirstLetter)
-							.font(.footnote.weight(.medium))
-							.foregroundStyle(.secondary)
-							.lineLimit(1)
-							.frame(maxWidth: .infinity, alignment: .leading)
-					}
+					Text(container.state?.rawValue.capitalizingFirstLetter ?? Localization.Generic.unknown)
+						.font(.footnote.weight(.medium))
+						.foregroundStyle(container.state != nil ? .secondary : .tertiary)
+						.lineLimit(1)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.animation(.easeInOut, value: container.state)
 					
 					Spacer()
 					
@@ -44,7 +43,7 @@ extension ContainersGridView {
 						.minimumScaleFactor(0.8)
 						.multilineTextAlignment(.leading)
 						.frame(maxWidth: .infinity, alignment: .leading)
-						.id("ContainerGridCell.containerStatus:\(container.id):\(status)")
+						.id("ContainerCell.containerStatus:\(container.id)")
 				}
 				
 				Text(container.displayName ?? container.id)
@@ -59,7 +58,6 @@ extension ContainersGridView {
 			.aspectRatio(1, contentMode: .fill)
 			.background(ContainerCellBackground(state: container.state))
 			.containerShape(Self.backgroundShape)
-			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.displayName)
 			.transition(.opacity)

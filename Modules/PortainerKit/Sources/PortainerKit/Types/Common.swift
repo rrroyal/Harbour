@@ -461,6 +461,20 @@ public extension PortainerKit {
 		public let name: String?
 		public let provisioner: String?
 	}
+
+	struct Motd: Decodable {
+		enum CodingKeys: String, CodingKey {
+			case title = "Title"
+			case message = "Message"
+			case style = "Style"
+			case hash = "Hash"
+		}
+
+		let title: String
+		let message: String
+		let style: String
+		let hash: String?
+	}
 	
 	struct Mount: Decodable, Hashable {
 		enum CodingKeys: String, CodingKey {

@@ -10,7 +10,7 @@ import Combine
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	class Container: Identifiable, Decodable, ObservableObject {
+	final class Container: Identifiable, Decodable, ObservableObject {
 		public struct NetworkSettings: Decodable {
 			enum CodingKeys: String, CodingKey {
 				case network = "Networks"
@@ -39,7 +39,7 @@ public extension PortainerKit {
 
 		public let id: String
 		public let names: [String]?
-		public let image: String
+		public let image: String?
 		public let imageID: String
 		public let command: String?
 		public let created: Date?
@@ -54,37 +54,54 @@ public extension PortainerKit {
 		public let mounts: [Mount]?
 		
 		public var details: ContainerDetails? = nil
-		
-		/* public required init(from decoder: Decoder) throws {
-			let container = try decoder.container(keyedBy: CodingKeys.self)
-			
-			self.id = try container.decode(String.self, forKey: .id)
-			self.names = try container.decodeIfPresent([String].self, forKey: .names)
-			self.image = try container.decode(String.self, forKey: .image)
-			self.imageID = try container.decode(String.self, forKey: .imageID)
-			self.command = try container.decodeIfPresent(String.self, forKey: .command)
-			self.created = try container.decodeIfPresent(Date.self, forKey: .created)
-			self.ports = try container.decodeIfPresent([Port].self, forKey: .ports)
-			self.sizeRW = try container.decodeIfPresent(Int64.self, forKey: .sizeRW)
-			self.sizeRootFS = try container.decodeIfPresent(Int64.self, forKey: .sizeRootFS)
-			self.labels = try container.decodeIfPresent([String: String].self, forKey: .labels)
-			self.state = try container.decodeIfPresent(ContainerStatus.self, forKey: .state)
-			self.status = try container.decodeIfPresent(String.self, forKey: .status)
-			self.hostConfig = try container.decodeIfPresent(HostConfig.self, forKey: .hostConfig)
-			self.networkSettings = try container.decodeIfPresent(NetworkSettings.self, forKey: .networkSettings)
-			self.mounts = try container.decodeIfPresent([Mount].self, forKey: .mounts)
-		} */
+
+		public init(id: String,
+					names: [String]?,
+					image: String?,
+					imageID: String,
+					command: String?,
+					created: Date?,
+					ports: [PortainerKit.Port]?,
+					sizeRW: Int64?,
+					sizeRootFS: Int64?,
+					labels: [String : String]?,
+					state: ContainerStatus?,
+					status: String?,
+					hostConfig: PortainerKit.HostConfig?,
+					networkSettings: PortainerKit.Container.NetworkSettings?,
+					mounts: [PortainerKit.Mount]?,
+					details: PortainerKit.ContainerDetails? = nil
+		) {
+			self.id = id
+			self.names = names
+			self.image = image
+			self.imageID = imageID
+			self.command = command
+			self.created = created
+			self.ports = ports
+			self.sizeRW = sizeRW
+			self.sizeRootFS = sizeRootFS
+			self.labels = labels
+			self.state = state
+			self.status = status
+			self.hostConfig = hostConfig
+			self.networkSettings = networkSettings
+			self.mounts = mounts
+			self.details = details
+		}
 	}
 }
 
 public extension PortainerKit.Container {
+	static let stackLabelID = "com.docker.compose.project"
+
 	var displayName: String? {
 		guard let name: String = names?.first?.trimmingCharacters(in: .whitespacesAndNewlines) else { return nil }
 		return name.starts(with: "/") ? String(name.dropFirst()) : name
 	}
 	
 	var stack: String? {
-		labels?.first(where: { $0.key == "com.docker.compose.project" })?.value
+		labels?.first(where: { $0.key == Self.stackLabelID })?.value
 	}
 }
 

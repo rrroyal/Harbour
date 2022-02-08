@@ -45,9 +45,9 @@ extension SetupView {
 				Spacer()
 				
 				VStack(spacing: 20) {
-					FeatureCell(image: "power", headline: Localization.SETUP_FEATURE1_TITLE.localized, description: Localization.SETUP_FEATURE1_DESCRIPTION.localized)
-					FeatureCell(image: "doc.plaintext", headline: Localization.SETUP_FEATURE2_TITLE.localized, description: Localization.SETUP_FEATURE2_DESCRIPTION.localized)
-					FeatureCell(image: "terminal", headline: Localization.SETUP_FEATURE3_TITLE.localized, description: Localization.SETUP_FEATURE3_DESCRIPTION.localized)
+					FeatureCell(image: "power", headline: Localization.Setup.Feature1.title, description: Localization.Setup.Feature1.description)
+					FeatureCell(image: "doc.plaintext", headline: Localization.Setup.Feature2.title, description: Localization.Setup.Feature2.description)
+					FeatureCell(image: "terminal", headline: Localization.Setup.Feature3.title, description: Localization.Setup.Feature3.description)
 				}
 				
 				Spacer()

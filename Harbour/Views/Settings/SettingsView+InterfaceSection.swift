@@ -15,18 +15,18 @@ extension SettingsView {
 		var body: some View {
 			Section("Interface") {
 				/// Enable haptics
-				ToggleOption(label: Localization.SETTINGS_ENABLE_HAPTICS_TITLE.localized, description: Localization.SETTINGS_ENABLE_HAPTICS_DESCRIPTION.localized, iconSymbolName: "alternatingcurrent", iconColor: .purple, isOn: $preferences.enableHaptics)
+				ToggleOption(label: Localization.Settings.Setting.EnableHaptics.title, description: Localization.Settings.Setting.EnableHaptics.description, iconSymbolName: "alternatingcurrent", iconColor: .purple, isOn: $preferences.enableHaptics)
 				
 				/// Use Grid View
-				ToggleOption(label: Localization.SETTINGS_CL_USE_GRID_VIEW_TITLE.localized, description: Localization.SETTINGS_CL_USE_GRID_VIEW_DESCRIPTION.localized, iconSymbolName: "square.grid.2x2", iconColor: .mint, isOn: $preferences.clUseGridView)
+				ToggleOption(label: Localization.Settings.Setting.UseGridView.title, description: Localization.Settings.Setting.UseGridView.description, iconSymbolName: "square.grid.2x2", iconColor: .mint, isOn: $preferences.clUseGridView)
 				
 				/// Use Two Panels
 				if UIApplication.isMacCatalyst || horizontalSizeClass == .regular {
-					ToggleOption(label: Localization.SETTINGS_CL_USE_COLUMNS_TITLE.localized, description: Localization.SETTINGS_CL_USE_COLUMNS_DESCRIPTION.localized, iconSymbolName: "rectangle.leftthird.inset.filled", iconColor: .teal, isOn: $preferences.clUseColumns)
+					ToggleOption(label: Localization.Settings.Setting.UseColumns.title, description: Localization.Settings.Setting.UseColumns.description, iconSymbolName: "rectangle.leftthird.inset.filled", iconColor: .teal, isOn: $preferences.clUseColumns)
 				}
 				
 				/// Use Colored Container Cells
-				ToggleOption(label: Localization.SETTINGS_CL_USE_COLORED_CONTAINER_CELLS_TITLE.localized, description: Localization.SETTINGS_CL_USE_COLORED_CONTAINER_CELLS_DESCRIPTION.localized, iconSymbolName: "sparkles", iconColor: .pink, isOn: $preferences.clUseColoredContainerCells)
+				ToggleOption(label: Localization.Settings.Setting.UseColorfulCells.title, description: Localization.Settings.Setting.UseColorfulCells.description, iconSymbolName: "sparkles", iconColor: .pink, isOn: $preferences.clUseColoredContainerCells)
 				
 				/// App icon
 				#if !targetEnvironment(macCatalyst)

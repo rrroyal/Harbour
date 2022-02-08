@@ -55,7 +55,7 @@ private extension ContainersGridView {
 		
 		#warning("TODO: Move this to ViewController or something so that it's not recomputed on every access but only on changes")
 		private var gridCells: [GridCell] {
-			print("gridCells")
+//			print("gridCells")
 			
 			// Map containers to GridCells
 			let cells: [GridCell] = containers.enumerated()

@@ -8,95 +8,115 @@
 
 // MARK: Generics
 
-"Refresh" = "Refresh";
-"Loading..." = "Loading...";
-"Are you sure?" = "Are you sure?";
-"Yup!" = "Yup!";
-"Nevermind" = "Nevermind";
-"Log in" = "Log in";
-"Log out" = "Log out";
-"Not logged in" = "Not logged in";
+"Generic.Refresh" = "Refresh";
+"Generic.Loading" = "Loading...";
+"Generic.Fetching" = "Fetching...";
+"Generic.AreYouSure" = "Are you sure?";
+"Generic.Yup" = "Yup!";
+"Generic.Nevermind" = "Nevermind";
+"Generic.NotLoggedIn" = "Not logged in";
+"Generic.Success" = "Success!";
+"Generic.Unknown" = "Unknown";
+"Generic.None" = "None";
+"Generic.Attach" = "Attach";
 
-"No endpoints" = "No endpoints";
-"Not logged in" = "Not logged in";
-"No endpoint selected" = "No endpoint selected";
-"No endpoints available" = "No endpoints available";
-"No containers" = "No containers";
-"Select container" = "Select container";
+// MARK: Home
+
+"Home.NoEndpoints" = "No endpoints";
+"Home.NoEndpointSelected" = "No endpoint selected";
+"Home.NoContainers" = "No containers";
+"Home.SelectContainer" = "Select container";
+"Home.FinishedDebugDisclaimer" = "Finished! If you see this, please let me know on Twitter - @destroystokyo 😶";
+
+// MARK: Login
+"Login.Login" = "Log in";
+"Login.Logout" = "Log out";
+"Login.HowToLogin" = "How to log in?";
+"Login.Placeholder.Token" = "token";
 
 // MARK: Docker
 
-"Endpoint" = "Endpoint";
+"Docker.Container" = "Container";
 
-"Mounts" = "Mounts";
-"Network" = "Network";
-"Host" = "Host";
-"Logs" = "Logs";
+"Docker.Container.Endpoint" = "Endpoint";
+"Docker.Container.Mounts" = "Mounts";
+"Docker.Container.Network" = "Network";
+"Docker.Container.Host" = "Host";
+"Docker.Container.Logs" = "Logs";
+"Docker.Container.Config" = "Config";
+
+// MARK: Portainer
+"Portainer.AttachedContainer.Finished" = "Session finished.";
+"Portainer.AttachedContainer.UnhandledMessage" = "Unhandled message: %@";
 
 // MARK: Settings
 
-"Data" = "Data";
-"Interface" = "Interface";
-"Other" = "Other";
+"Settings.Section.Data" = "Data";
+"Settings.Section.Interface" = "Interface";
+"Settings.Section.Other" = "Other";
 
-"%SETTINGS_PERSIST_ATTACHED_CONTAINER_TITLE%" = "Persist attached container";
-"%SETTINGS_PERSIST_ATTACHED_CONTAINER_DESCRIPTION%" = "Keep connected to the attached container after dismissing it";
-"%SETTINGS_BACKGROUND_REFRESH_TITLE%" = "Refresh in the background";
-"%SETTINGS_BACKGROUND_REFRESH_DESCRIPTION%" = "App will send you a notification if something bad happens 🤞";
-"%SETTINGS_AUTO_REFRESH_TITLE%" = "Auto refresh";
+"Settings.Footer.Label" = "Made with ❤️ (and ☕️) by @rrroyal";
 
-"%SETTINGS_ENABLE_HAPTICS_TITLE%" = "Enable haptics";
-"%SETTINGS_ENABLE_HAPTICS_DESCRIPTION%" = "You can tone them down if you don't like them as much as I do :]";
+"Settings.Setting.PersistAttachedContainer.Title" = "Persist attached container";
+"Settings.Setting.PersistAttachedContainer.Description" = "Keep connected to the attached container after dismissing it";
 
-"%SETTINGS_CL_USE_GRID_VIEW_TITLE%" = "Use grid view";
-"%SETTINGS_CL_USE_GRID_VIEW_DESCRIPTION%" = "You can fit more containers, but it's worse for accessibility";
-"%SETTINGS_CL_USE_COLUMNS_TITLE%" = "Use columns";
-"%SETTINGS_CL_USE_COLUMNS_DESCRIPTION%" = "Use multiple-columns layout (only available on iPadOS and macOS)";
-"%SETTINGS_CL_USE_COLORED_CONTAINER_CELLS_TITLE%" = "Use colorful container cells";
-"%SETTINGS_CL_USE_COLORED_CONTAINER_CELLS_DESCRIPTION%" = "✨ Add some sparkle ✨";
+"Settings.Setting.RefreshInBackground.Title" = "Refresh in the background";
+"Settings.Setting.RefreshInBackground.Description" = "App will send you a notification if something bad happens 🤞";
 
-"%SETTINGS_FOOTER%" = "Made with ❤️ (and ☕️) by @rrroyal";
+"Settings.Setting.AutoRefresh.Title" = "Auto refresh";
+
+"Settings.Setting.EnableHaptics.Title" = "Enable haptics";
+"Settings.Setting.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
+
+"Settings.Setting.UseGridView.Title" = "Use grid view";
+"Settings.Setting.UseGridView.Description" = "You can fit more containers, but it's worse for accessibility";
+
+"Settings.Setting.UseColumns.Title" = "Use columns";
+"Settings.Setting.UseColumns.Description" = "Use multiple-columns layout (only available on iPadOS and macOS)";
+
+"Settings.Setting.UseColorfulCells.Title" = "Use colorful container cells";
+"Settings.Setting.UseColorfulCells.Description" = "✨ Add some sparkle ✨";
 
 // MARK: Setup
 
-"Hi! Welcome to %@!" = "Hi! Welcome to %@!";
-"Beam me up, Scotty!" = "Beam me up, Scotty!";
+"Setup.WelcomeHeadline" = "Hi! Welcome to %@!";
+"Setup.NextButtonLabel" = "Beam me up, Scotty!";
 
-"%SETUP_FEATURE1_TITLE%" = "Control your containers";
-"%SETUP_FEATURE1_DESCRIPTION%" = "Your Minecraft server is taking up too much ram? Quickly restart it from your phone.";
+"Setup.Feature1.Title" = "Control your containers";
+"Setup.Feature1.Description" = "Your Minecraft server is taking up too much ram? Quickly restart it from your phone.";
 
-"%SETUP_FEATURE2_TITLE%" = "See all of the details";
-"%SETUP_FEATURE2_DESCRIPTION%" = "You can check logs, mounts, network config - everything!";
+"Setup.Feature2.Title" = "See all of the details";
+"Setup.Feature2.Description" = "You can check logs, mounts, network config - everything!";
+"Setup.Feature3.Title" = "Attach to them too";
+"Setup.Feature3.Description" = "Yeah. I spent way too much time on that one.";
 
-"%SETUP_FEATURE3_TITLE%" = "Attach to them too";
-"%SETUP_FEATURE3_DESCRIPTION%" = "Yeah. I spent way too much time on that one.";
 
-// MARK: Login
+// MARK: Indicators
 
-"Invalid URL" = "Invalid URL";
-"Success!" = "Success!";
+"Indicator.ContainerDismissed.Title" = "Container dismissed!";
+"Indicator.ContainerDismissed.Description" = "Tap me to open it again";
 
-// MARK: - Indicators
+"Indicator.WebSocketDisconnected.Title" = "WebSocket disconnected!";
 
-"%CONTAINER_DISMISSED_INDICATOR_TITLE%" = "Container dismissed!";
-"%CONTAINER_DISMISSED_INDICATOR_DESCRIPTION%" = "Tap me to open it again";
+// MARK: Keychain
 
-"%WEBSOCKET_DISCONNECTED_TITLE%" = "WebSocket disconnected!";
+"Keychain.TokenComment" = "This is your authorization token for Portainer - if you delete it, you will be logged out of Harbour (%@).";
 
-// MARK: - Keychain
+// MARK: Widgets
 
-"%KEYCHAIN_TOKEN_COMMENT%" = "This is your authorization token for Portainer - if you delete it, you will be logged out of Harbour.";
-"%KEYCHAIN_CREDS_COMMENT%" = "This keychain entry is here because \"Save password\" was on when logging in. This is only used to renew JWT token during authorization. To read more, visit https://harbour.shameful.xyz/docs/faq#save-password";
+"Widgets.SelectContainer" = "Select a container";
+"Widgets.Unreachable" = "Unreachable";
 
-// MARK: - Widgets
-
-"%WIDGET_STATUS_NAME%" = "Status Widget";
-"%WIDGET_STATUS_DESCRIPTION%" = "See status of your favorite container right on your home screen :)";
+"Widgets.StatusWidget.Name" = "Status Widget";
+"Widgets.StatusWidget.Description" = "See status of your favorite container right on your home screen :)";
 
 // MARK: Errors
 
-"%PORTAINERERROR_NO_SERVER%" = "No server URL";
-"%PORTAINERERROR_NO_API%" = "No API";
-"%PORTAINERERROR_NO_ENDPOINT%" = "No endpoint";
-"%PORTAINERERROR_NO_TOKEN%" = "No token";
-"%PORTAINERERROR_NO_CREDENTIALS%" = "No credentials";
+"Error.InvalidURL" = "Invalid URL";
+"Error.NoServerURL" = "No server URL";
+"Error.NoAPI" = "Not ready";
+"Error.NoEndpoint" = "No endpoint";
+"Error.NoToken" = "No token";
+"Error.NoCredentials" = "No credentials";
+
+"ErrorRecoverySuggestion.Relogin" = "Try logging out and logging in back again.";

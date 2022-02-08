@@ -28,7 +28,7 @@ struct LabeledSection: View {
 	var body: some View {
 		if (hideIfEmpty && !(self.content?.isReallyEmpty ?? true)) || !hideIfEmpty {
 			CustomSection(label: label) {
-				Text(content ?? "none")
+				Text(content ?? Localization.Generic.none)
 					.font(.system(.callout, design: monospace ? .monospaced : .default))
 					.foregroundColor(content != nil ? .primary : .secondary)
 					.lineLimit(nil)

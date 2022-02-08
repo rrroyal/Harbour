@@ -18,14 +18,14 @@ struct BackgroundTasks {
 	public static func scheduleBackgroundRefreshTask() {
 		let task = BackgroundTask.refresh
 		
-		logger.info("(Background refresh) Scheduling background refresh task with identifier \"\(task, privacy: .public)\" [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+		logger.info("(Background refresh) Scheduling background refresh task with identifier \"\(task, privacy: .public)\"")
 		
 		let request = BGAppRefreshTaskRequest(identifier: task)
 		
 		do {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
-			logger.error("(Background refresh) Could not schedule app refresh: \(String(describing: error), privacy: .public) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+			logger.error("(Background refresh) Could not schedule app refresh: \(String(describing: error), privacy: .public)")
 		}
 	}
 	
@@ -36,7 +36,7 @@ struct BackgroundTasks {
 	public static func handleBackgroundRefreshTask(task: BGAppRefreshTask?, old: [PortainerKit.Container]? = nil, new: [PortainerKit.Container]? = nil) {
 		guard Preferences.shared.enableBackgroundRefresh else { return }
 		
-		logger.notice("(Background refresh) Handling background refresh for task \"\(task?.identifier ?? "<none>", privacy: .public)\" [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+		logger.notice("(Background refresh) Handling background refresh for task \"\(task?.identifier ?? "<none>", privacy: .public)\"")
 		
 #if DEBUG
 		Preferences.shared.lastBackgroundTaskDate = Date()
@@ -65,7 +65,7 @@ struct BackgroundTasks {
 				let differences = newState.filter { savedState[$0.key] != $0.value }
 				
 				if !differences.isEmpty {
-					logger.info("(Background refresh) differences.count (\(differences.count, privacy: .public)) > 0! [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+					logger.info("(Background refresh) differences.count (\(differences.count, privacy: .public)) > 0!")
 					
 					let notificationID = "ContainerStatusNotification-\(Date().timeIntervalSinceReferenceDate)"
 					let content = UNMutableNotificationContent()
@@ -95,7 +95,7 @@ struct BackgroundTasks {
 				
 				task?.setTaskCompleted(success: true)
 			} catch {
-				logger.error("(Background refresh) Error handling background refresh: \(String(describing: error), privacy: .public) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+				logger.error("(Background refresh) Error handling background refresh: \(String(describing: error), privacy: .public)")
 				task?.setTaskCompleted(success: false)
 			}
 			

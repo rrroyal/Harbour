@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E788E1F327957DC300F24CAB"
-               BuildableName = "Widgets.appex"
-               BlueprintName = "Widgets"
+               BuildableName = "HarbourWidgets.appex"
+               BlueprintName = "HarbourWidgets"
                ReferencedContainer = "container:Harbour.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -57,8 +57,18 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.springboard">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "E788E1F327957DC300F24CAB"
+            BuildableName = "HarbourWidgets.appex"
+            BlueprintName = "HarbourWidgets"
+            ReferencedContainer = "container:Harbour.xcodeproj">
+         </BuildableReference>
+      </RemoteRunnable>
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E7BF9E562672B5B100AAB6A1"
@@ -66,7 +76,7 @@
             BlueprintName = "Harbour"
             ReferencedContainer = "container:Harbour.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "_XCWidgetKind"

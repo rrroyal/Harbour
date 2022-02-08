@@ -10,9 +10,7 @@ import PortainerKit
 
 enum HarbourURLScheme {
 	private static let scheme = "harbour"
-	private static let queryContainerID = "containerID"
-	private static let pathOpen = "open"
-	
+
 	case openContainer(containerID: PortainerKit.Container.ID)
 	
 	public var url: URL? {
@@ -21,9 +19,9 @@ enum HarbourURLScheme {
 		
 		switch self {
 			case .openContainer(let containerID):
-				components.path = Self.pathOpen
+				components.path = Path.open
 				components.queryItems = [
-					URLQueryItem(name: Self.queryContainerID, value: containerID)
+					URLQueryItem(name: Query.containerID, value: containerID)
 				]
 		}
 		
@@ -33,10 +31,10 @@ enum HarbourURLScheme {
 	public static func fromURL(_ url: URL) -> Self? {
 		guard isValidURL(url) else { return nil }
 		let components = URLComponents(string: url.absoluteString.lowercased())
-		
+
 		switch components?.path {
-			case Self.pathOpen:
-				guard let containerID = components?.queryItems?.first(where: { $0.name == Self.pathOpen })?.value else { return nil }
+			case Path.open:
+				guard let containerID = components?.queryItems?.first(where: { $0.name == Query.containerID })?.value else { return nil }
 				return .openContainer(containerID: containerID)
 			default:
 				return nil
@@ -44,6 +42,14 @@ enum HarbourURLScheme {
 	}
 	
 	public static func isValidURL(_ url: URL) -> Bool {
-		return url.scheme?.lowercased() == scheme.lowercased()
+		return url.scheme?.lowercased() == scheme
+	}
+
+	enum Path {
+		static let open = "open"
+	}
+
+	enum Query {
+		static let containerID = "containerid"
 	}
 }

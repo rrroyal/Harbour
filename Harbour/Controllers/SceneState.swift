@@ -31,9 +31,11 @@ final class SceneState: ObservableObject {
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
 	
 	public func onOpenURL(_ url: URL) {
+		logger.notice("Opening URL \"\(url.absoluteString, privacy: .public)\"")
+
 		guard let action = HarbourURLScheme.fromURL(url) else { return }
 
-		logger.notice("Opening URL with URL \"\(action.url?.absoluteString ?? "<none>", privacy: .public)\" [\(#fileID, privacy: .public) \(#function, privacy: .public)]")
+		print(action)
 
 		switch action {
 			case .openContainer(let containerID):
@@ -45,7 +47,7 @@ final class SceneState: ObservableObject {
 	
 	// MARK: - User activity
 	@MainActor public func handleContinueUserActivity(_ activity: NSUserActivity) {
-		logger.notice("Continuing UserActivity \"\(activity.activityType, privacy: .public)\" [\(#fileID, privacy: .public) \(#function, privacy: .public)]")
+		logger.notice("Continuing UserActivity \"\(activity.activityType, privacy: .public)\"")
 		
 		do {
 			switch activity.activityType {
@@ -83,8 +85,8 @@ final class SceneState: ObservableObject {
 			let indicatorID: String = "ContainerDismissedIndicator"
 			let indicator: Indicators.Indicator = .init(id: indicatorID,
 														icon: "terminal.fill",
-														headline: Localization.CONTAINER_DISMISSED_INDICATOR_TITLE.localized,
-														subheadline: Localization.CONTAINER_DISMISSED_INDICATOR_DESCRIPTION.localized,
+														headline: Localization.Indicator.ContainerDismissed.title,
+														subheadline: Localization.Indicator.ContainerDismissed.description,
 														dismissType: .after(5),
 														onTap: { [weak self] in
 															self?.showAttachedContainer()

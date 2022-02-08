@@ -35,8 +35,6 @@ extension ContainersListView: Equatable {
 	static func == (lhs: ContainersListView, rhs: ContainersListView) -> Bool {
 		lhs.containers == rhs.containers
 	}
-	
-	
 }
 
 private extension ContainersListView {

@@ -1,5 +1,5 @@
 //
-//  GetContainerStatusWidget+WidgetView.swift
+//  ContainerStatusWidget+WidgetView.swift
 //  Widgets
 //
 //  Created by royal on 17/01/2022.
@@ -9,45 +9,44 @@ import WidgetKit
 import SwiftUI
 import PortainerKit
 
-extension GetContainerStatusWidget {
+extension ContainerStatusWidget {
 	struct WidgetView: View {
-		let entry: GetContainerStatusWidget.Entry
+		let entry: ContainerStatusWidget.Entry
 		
 		@ViewBuilder
 		var errorOverlay: some View {
 			if let error = entry.error {
-				Text(error.readableDescription)
-					.font(.system(.body, design: .monospaced))
+				Text("Error: \(error.readableDescription)")
+					.font(.system(.footnote, design: .monospaced))
 					.lineLimit(nil)
 					.multilineTextAlignment(.center)
 					.minimumScaleFactor(0.7)
 					.padding()
 					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-					.background(.thinMaterial)
+					.background(.ultraThinMaterial)
 			}
 		}
 		
 		var body: some View {
-			Group {
-				if entry.configuration.container != nil {
-					ContainerView(entry: entry)
-				} else {
-					NoContainerView(entry: entry)
-				}
+			if let containerID = entry.configuration.container?.identifier {
+				ContainerView(entry: entry)
+					.overlay(errorOverlay)
+					.widgetURL(HarbourURLScheme.openContainer(containerID: containerID).url)
+			} else {
+				NoContainerView(entry: entry)
 			}
-			.overlay(errorOverlay)
 		}
 	}
 }
 
-private extension GetContainerStatusWidget.WidgetView {
+private extension ContainerStatusWidget.WidgetView {
 	struct ContainerView: View {
-		let entry: GetContainerStatusWidget.Entry
+		let entry: ContainerStatusWidget.Entry
 		let containerLabel: String?
 		
 		let circleSize: Double = 8
 		
-		init(entry: GetContainerStatusWidget.Entry) {
+		init(entry: ContainerStatusWidget.Entry) {
 			self.entry = entry
 			self.containerLabel = entry.container?.displayName ?? entry.configuration.container?.displayString
 		}
@@ -55,7 +54,7 @@ private extension GetContainerStatusWidget.WidgetView {
 		var body: some View {
 			VStack(spacing: 0) {
 				HStack(alignment: .center) {
-					Text(entry.container?.state?.rawValue.capitalizingFirstLetter ?? "Unknown")
+					Text(entry.container?.state?.rawValue.capitalizingFirstLetter ?? Localization.Generic.unknown)
 						.font(.subheadline.weight(.medium))
 						.foregroundStyle(entry.container?.state.color ?? Color(uiColor: .tertiaryLabel))
 						.lineLimit(1)
@@ -76,7 +75,7 @@ private extension GetContainerStatusWidget.WidgetView {
 				
 				Spacer()
 				
-				Text(entry.container?.status ?? "Unreachable")
+				Text(entry.container?.status ?? Localization.Widgets.unreachable)
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(.secondary)
 					.lineLimit(1)
@@ -84,7 +83,7 @@ private extension GetContainerStatusWidget.WidgetView {
 					.multilineTextAlignment(.leading)
 					.frame(maxWidth: .infinity, alignment: .leading)
 				
-				Text(containerLabel ?? "Unknown")
+				Text(containerLabel ?? Localization.Generic.unknown)
 					.font(.title3.weight(.semibold))
 					.foregroundColor(containerLabel != nil ? .primary : .secondary)
 					.lineLimit(2)
@@ -97,10 +96,10 @@ private extension GetContainerStatusWidget.WidgetView {
 	}
 	
 	struct NoContainerView: View {
-		let entry: GetContainerStatusWidget.Provider.Entry
+		let entry: ContainerStatusWidget.Provider.Entry
 		
 		var body: some View {
-			Text("Select a container")
+			Text(Localization.Widgets.selectContainer)
 				.font(.headline)
 				.multilineTextAlignment(.center)
 				.padding()
@@ -121,19 +120,19 @@ private extension GetContainerStatusWidget.WidgetView {
 	}
 }
 
-struct GetContainerStatusWidget_WidgetView_Previews: PreviewProvider {
-	static var entry: GetContainerStatusWidget.Entry = {
-		let container: PortainerKit.Container? = Portainer.PreviewData.container
+struct ContainerStatusWidget_WidgetView_Previews: PreviewProvider {
+	static var entry: ContainerStatusWidget.Entry = {
+		let container: PortainerKit.Container? = nil
 		
-		let configuration = GetContainerStatusIntent()
+		let configuration = ContainerStatusIntent()
 		configuration.container = Container(identifier: "ID", display: container?.displayName ?? container?.id ?? "DisplayName")
 		
-		let entry = GetContainerStatusWidget.Entry(date: Date().addingTimeInterval(-1000), configuration: configuration, container: container)
+		let entry = ContainerStatusWidget.Entry(date: Date().addingTimeInterval(-1000), configuration: configuration, container: container)
 		return entry
 	}()
 	
     static var previews: some View {
-		GetContainerStatusWidget.WidgetView(entry: entry)
+		ContainerStatusWidget.WidgetView(entry: entry)
 			.previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

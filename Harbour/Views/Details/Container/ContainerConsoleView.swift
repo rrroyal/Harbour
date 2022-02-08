@@ -24,11 +24,11 @@ struct ContainerConsoleView: View {
 			ScrollView {
 				LazyVStack {
 					Group {
-						if attachedContainer.buffer.isEmpty {
+						if attachedContainer.attributedString.unicodeScalars.isEmpty {
 							Text("Attached to \(attachedContainer.container.displayName ?? attachedContainer.container.id)!")
 								.foregroundStyle(.secondary)
 						} else {
-							Text(attachedContainer.buffer)
+							Text(attachedContainer.attributedString)
 								.lineLimit(nil)
 								.textSelection(.enabled)
 						}
@@ -38,7 +38,6 @@ struct ContainerConsoleView: View {
 				.font(.system(.footnote, design: .monospaced))
 				.padding(.small)
 			}
-			.animation(.easeInOut, value: attachedContainer.buffer.isEmpty)
 			.transition(.opacity)
 			.navigationTitle(attachedContainer.container.displayName ?? attachedContainer.container.id)
 			.navigationBarTitleDisplayMode(.inline)

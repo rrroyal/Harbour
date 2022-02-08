@@ -17,22 +17,20 @@ public extension PortainerKit {
 		case encodingFailed
 		case decodingFailed
 		
-		case invalidCredentials
-		case invalidJWTToken
+		case invalidToken
 		case unauthorized
 		
 		case invalidPayload
 		case invalidURL
 		
-		public var errorDescription: String {
+		public var errorDescription: String? {
 			switch self {
 				case .custom(let reason):					return reason
 				case .responseCodeUnacceptable(let code):	return "Response unacceptable (\(code))"
 				case .unknownError:							return "Unknown error"
 				case .encodingFailed:						return "Encoding failed"
 				case .decodingFailed:						return "Decoding failed"
-				case .invalidCredentials:					return "Invalid credentials"
-				case .invalidJWTToken:						return "Invalid token"
+				case .invalidToken:							return "Invalid token"
 				case .unauthorized:							return "Unauthorized"
 				case .invalidPayload:						return "Invalid payload"
 				case .invalidURL:							return "Invalid URL"
@@ -41,7 +39,7 @@ public extension PortainerKit {
 		
 		public var recoverySuggestion: String? {
 			switch self {
-				case .invalidCredentials, .invalidJWTToken, .unauthorized:
+				case .invalidToken, .unauthorized:
 					return "Try logging out and logging in back again."
 				default:
 					return nil
@@ -52,10 +50,8 @@ public extension PortainerKit {
 			guard let reason = string?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() else { return .unknownError }
 			
 			switch reason {
-				case "invalid credentials":
-					return .invalidCredentials
 				case "invalid jwt token", "a valid authorisation token is missing":
-					return .invalidJWTToken
+					return .invalidToken
 				case "unauthorized":
 					return .unauthorized
 				case "invalid request payload":

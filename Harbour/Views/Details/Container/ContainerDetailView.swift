@@ -22,19 +22,19 @@ struct ContainerDetailView: View {
 	var buttonsSection: some View {
 		LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 2)) {
 			NavigationLink(destination: ContainerMountsDetailsView(mounts: container.mounts, details: container.details?.mounts)) {
-				NavigationLinkLabel(label: "Mounts", symbolName: "externaldrive.fill")
+				NavigationLinkLabel(label: Localization.Docker.Container.mounts, symbolName: "externaldrive.fill")
 			}
 			
 			NavigationLink(destination: ContainerNetworkDetailsView(networkSettings: container.networkSettings, details: container.details?.networkSettings, ports: container.ports)) {
-				NavigationLinkLabel(label: "Network", symbolName: "network")
+				NavigationLinkLabel(label: Localization.Docker.Container.network, symbolName: "network")
 			}
 			
 			NavigationLink(destination: ContainerConfigDetailsView(config: container.details?.config, hostConfig: container.details?.hostConfig ?? container.hostConfig)) {
-				NavigationLinkLabel(label: "Config", symbolName: "server.rack")
+				NavigationLinkLabel(label: Localization.Docker.Container.config, symbolName: "server.rack")
 			}
 			
 			NavigationLink(destination: ContainerLogsView(container: container)) {
-				NavigationLinkLabel(label: "Logs", symbolName: "text.alignleft")
+				NavigationLinkLabel(label: Localization.Docker.Container.logs, symbolName: "text.alignleft")
 			}
 		}
 		.buttonStyle(.decreasesOnPress)
@@ -73,7 +73,6 @@ struct ContainerDetailView: View {
 					.frame(maxWidth: .infinity, alignment: .center)
 			}
 		}
-		.frame(maxWidth: .infinity, alignment: .center)
 		.id("LastLogsSnippetLabel-\(lastLogsSnippet?.hashValue ?? -1)")
 	}
 	
@@ -96,7 +95,7 @@ struct ContainerDetailView: View {
 		.navigationTitle(container.displayName ?? container.id)
 		.navigationBarTitleDisplayMode(.inline)
 		.toolbar {
-			ToolbarTitle(title: container.displayName ?? container.id, subtitle: loading ? "Refreshing..." : nil)
+			ToolbarTitle(title: container.displayName ?? container.id, subtitle: loading ? Localization.Generic.fetching : nil)
 			
 			ToolbarItem(placement: .primaryAction) {
 				Menu(content: {
@@ -110,7 +109,7 @@ struct ContainerDetailView: View {
 							await refresh()
 						}
 					}) {
-						Label("Refresh", systemImage: "arrow.clockwise")
+						Label(Localization.Generic.refresh, systemImage: "arrow.clockwise")
 					}
 				}) {
 					Image(systemName: container.state.icon)

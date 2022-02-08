@@ -35,7 +35,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 }
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem) async -> Bool {
 		#warning("TODO: Handle UIApplicationShortcutItem")
 		return true

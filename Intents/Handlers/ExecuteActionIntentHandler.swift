@@ -10,10 +10,12 @@ import Intents
 import PortainerKit
 
 final class ExecuteActionIntentHandler: NSObject, ExecuteActionIntentHandling {
+	private let portainer = Portainer.shared
+
 	func provideContainerOptionsCollection(for intent: ExecuteActionIntent) async throws -> INObjectCollection<Container> {
 		IntentHandler.logger.info("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)")
 
-		let portainer = try await Portainer.setup()
+		try await portainer.setup()
 		let containers = try await portainer.getContainers()
 		let items = containers.map { Container(identifier: $0.id, display: $0.displayName ?? $0.id) }
 		
@@ -27,7 +29,7 @@ final class ExecuteActionIntentHandler: NSObject, ExecuteActionIntentHandling {
 		guard let containerID = intent.container?.identifier else { return .needsValue() }
 		
 		do {
-			let portainer = try await Portainer.setup()
+			try await portainer.setup()
 			let containers = try await portainer.getContainers(containerID: containerID)
 			let filteredContainers = containers
 				.filter { $0.id == intent.container?.identifier }
@@ -57,7 +59,7 @@ final class ExecuteActionIntentHandler: NSObject, ExecuteActionIntentHandling {
 		guard let containerID = intent.container?.identifier else { return .failure(error: "Invalid container") }
 		
 		do {
-			let portainer = try await Portainer.setup()
+			try await portainer.setup()
 			try await portainer.execute(action, on: containerID)
 			return .success(newStatus: action.expectedState.asContainerStatus)
 		} catch {

@@ -1,5 +1,5 @@
 //
-//  GetContainerStatusIntentHandler.swift
+//  ContainerStatusIntentHandler.swift
 //  Siri Intents
 //
 //  Created by royal on 15/01/2022.
@@ -10,11 +10,13 @@ import Intents
 import PortainerKit
 import Keychain
 
-final class GetContainerStatusIntentHandler: NSObject, GetContainerStatusIntentHandling {
-	func provideContainerOptionsCollection(for intent: GetContainerStatusIntent) async throws -> INObjectCollection<Container> {
+final class ContainerStatusIntentHandler: NSObject, ContainerStatusIntentHandling {
+	private let portainer = Portainer.shared
+
+	func provideContainerOptionsCollection(for intent: ContainerStatusIntent) async throws -> INObjectCollection<Container> {
 		IntentHandler.logger.info("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)")
 
-		let portainer = try await Portainer.setup()
+		try await portainer.setup()
 		let containers = try await portainer.getContainers()
 		let items = containers.map { Container(identifier: $0.id, display: $0.displayName ?? $0.id) }
 		
@@ -22,13 +24,13 @@ final class GetContainerStatusIntentHandler: NSObject, GetContainerStatusIntentH
 		return collection
 	}
 
-	func resolveContainer(for intent: GetContainerStatusIntent) async -> GetContainerStatusContainerResolutionResult {
+	func resolveContainer(for intent: ContainerStatusIntent) async -> ContainerStatusContainerResolutionResult {
 		IntentHandler.logger.info("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(intent.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash)))")
 
 		guard let containerID = intent.container?.identifier else { return .needsValue() }
 
 		do {
-			let portainer = try await Portainer.setup()
+			try await portainer.setup()
 			let containers = try await portainer.getContainers(containerID: containerID)
 			let filteredContainers = containers
 				.filter { $0.id == intent.container?.identifier }
@@ -46,16 +48,16 @@ final class GetContainerStatusIntentHandler: NSObject, GetContainerStatusIntentH
 		}
 	}
 	
-	func handle(intent: GetContainerStatusIntent) async -> GetContainerStatusIntentResponse {
+	func handle(intent: ContainerStatusIntent) async -> ContainerStatusIntentResponse {
 		IntentHandler.logger.info("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(intent.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash)))")
 
 		guard let containerID = intent.container?.identifier else { return .failure(error: "Invalid container") }
 		
 		do {
-			let portainer = try await Portainer.setup()
+			try await portainer.setup()
 			let container = try await portainer.getContainers(containerID: containerID).first
 			if let container = container {
-				let response = GetContainerStatusIntentResponse(code: .success, userActivity: nil)
+				let response = ContainerStatusIntentResponse(code: .success, userActivity: nil)
 				response.container = intent.container
 				response.state = container.state?.asContainerStatus ?? .unknown
 				response.status = container.status

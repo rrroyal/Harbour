@@ -8,18 +8,25 @@
 import Foundation
 
 public extension Keychain {
-	enum KeychainError: Error {
+	enum KeychainError: LocalizedError {
 		case encodingFailed
 		case decodingFailed
+
+		public var errorDescription: String? {
+			switch self {
+				case .encodingFailed: return "Encoding failed"
+				case .decodingFailed: return "Decoding failed"
+			}
+		}
 	}
 	
-	struct SecError: Error, CustomStringConvertible {
+	struct SecError: LocalizedError {
 		public let status: OSStatus
-		
-		public var description: String {
-			"\(SecCopyErrorMessageString(self.status, nil) as String? ?? "Unknown error") (\(self.status))"
+
+		public var errorDescription: String? {
+			"\(SecCopyErrorMessageString(status, nil) as String? ?? "Unknown error") (\(self.status))"
 		}
-		
+
 		internal init(_ status: OSStatus) {
 			self.status = status
 		}

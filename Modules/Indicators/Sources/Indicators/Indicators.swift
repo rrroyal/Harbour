@@ -1,6 +1,6 @@
 import Foundation
 
-public class Indicators: ObservableObject {
+public final class Indicators: ObservableObject {
 	@Published public private(set) var activeIndicator: Indicator?
 	
 	internal var timer: Timer? = nil

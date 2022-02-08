@@ -1,5 +1,5 @@
 //
-//  GetContainerStatusWidget.swift
+//  ContainerStatusWidget.swift
 //  Widgets
 //
 //  Created by royal on 17/01/2022.
@@ -8,18 +8,20 @@
 import WidgetKit
 import PortainerKit
 
-struct GetContainerStatusWidget {
+struct ContainerStatusWidget {
 	struct Provider: IntentTimelineProvider {
+		private let portainer = Portainer.shared
+
 		func placeholder(in context: Context) -> Entry {
 			let container = Portainer.PreviewData.container
 
-			let configuration = GetContainerStatusIntent()
+			let configuration = ContainerStatusIntent()
 			configuration.container = Container(identifier: container.id, display: container.displayName ?? container.id, pronunciationHint: nil)
 			
 			return Entry(date: Date(), configuration: configuration, container: container)
 		}
 				
-		func getSnapshot(for configuration: GetContainerStatusIntent, in context: Context, completion: @escaping (Entry) -> ()) {
+		func getSnapshot(for configuration: ContainerStatusIntent, in context: Context, completion: @escaping (Entry) -> ()) {
 			Widgets.logger.notice("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash)))")
 
 			if context.isPreview {
@@ -34,12 +36,12 @@ struct GetContainerStatusWidget {
 				do {
 					guard let containerID = configuration.container?.identifier else { throw ProviderError.noContainerID }
 
-					let portainer = try await Portainer.setup()
+					try await portainer.setup()
 					let containers = try await portainer.getContainers()
 					
-					if Preferences.shared.enableBackgroundRefresh {
-						portainer.checkDifferences()
-					}
+//					if Preferences.shared.enableBackgroundRefresh {
+//						portainer.checkDifferences()
+//					}
 					
 					let container = containers.first(where: { $0.id == containerID })
 					Widgets.logger.info("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash))) Container: \(container.debugDescription, privacy: .sensitive(mask: .hash))")
@@ -55,7 +57,7 @@ struct GetContainerStatusWidget {
 			}
 		}
 		
-		func getTimeline(for configuration: GetContainerStatusIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
+		func getTimeline(for configuration: ContainerStatusIntent, in context: Context, completion: @escaping (Timeline<Entry>) -> ()) {
 			Widgets.logger.notice("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash)))")
 			
 			Task {
@@ -64,12 +66,12 @@ struct GetContainerStatusWidget {
 				do {
 					guard let containerID = configuration.container?.identifier else { throw ProviderError.noContainerID }
 					
-					let portainer = try await Portainer.setup()
+					try await portainer.setup()
 					let containers = try await portainer.getContainers()
 					
-					if Preferences.shared.enableBackgroundRefresh {
-						portainer.checkDifferences()
-					}
+//					if Preferences.shared.enableBackgroundRefresh {
+//						portainer.checkDifferences()
+//					}
 					
 					let container = containers.first(where: { $0.id == containerID })
 					Widgets.logger.info("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash))) Container: \(container.debugDescription, privacy: .public)")
@@ -90,11 +92,11 @@ struct GetContainerStatusWidget {
 	
 	struct Entry: TimelineEntry {
 		let date: Date
-		let configuration: GetContainerStatusIntent
+		let configuration: ContainerStatusIntent
 		let container: PortainerKit.Container?
 		let error: Error?
 		
-		internal init(date: Date, configuration: GetContainerStatusIntent, container: PortainerKit.Container?, error: Error? = nil) {
+		internal init(date: Date, configuration: ContainerStatusIntent, container: PortainerKit.Container?, error: Error? = nil) {
 			self.date = date
 			self.configuration = configuration
 			self.container = container

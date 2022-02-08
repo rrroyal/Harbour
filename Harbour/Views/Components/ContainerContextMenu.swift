@@ -56,7 +56,7 @@ struct ContainerContextMenu: View {
 	}
 	
 	var body: some View {
-		Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter ?? "Unknown", systemImage: container.state.icon)
+		Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter ?? Localization.Generic.unknown, systemImage: container.state.icon)
 		
 		Divider()
 					
@@ -111,7 +111,7 @@ struct ContainerContextMenu: View {
 				sceneState.handle(error)
 			}
 		}) {
-			Label("Attach", systemImage: "terminal")
+			Label(Localization.Generic.attach, systemImage: "terminal")
 		}
 		.disabled(container.state != .running)
 	}
@@ -120,7 +120,7 @@ struct ContainerContextMenu: View {
 		UIDevice.generateHaptic(haptic)
 		
 		let style: Indicators.Indicator.Style = .init(subheadlineColor: action.color, subheadlineStyle: .primary, iconColor: action.color, iconStyle: .primary, iconVariants: .fill)
-		let indicator: Indicators.Indicator = .init(id: "ContainerActionExecution-\(container.id)", icon: action.icon, headline: container.displayName ?? "Container", subheadline: action.label, dismissType: .after(3), style: style)
+		let indicator: Indicators.Indicator = .init(id: "ContainerActionExecution-\(container.id)", icon: action.icon, headline: container.displayName ?? Localization.Docker.container, subheadline: action.label, dismissType: .after(3), style: style)
 		sceneState.indicators.display(indicator)
 
 		Task {

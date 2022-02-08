@@ -19,9 +19,9 @@ struct ContentView: View {
 	@State private var searchQuery: String = ""
 	
 	private var currentState: DataState {
-		guard !(portainer.fetchingEndpoints || portainer.fetchingContainers) else { return .fetching }
+		guard !(portainer.fetchingEndpoints || portainer.fetchingContainers || portainer.loggingIn) else { return .fetching }
 		guard portainer.isSetup && portainer.isLoggedIn else { return .notLoggedIn }
-		guard !portainer.endpoints.isEmpty else { return .noEndpointsAvailable }
+		guard !portainer.endpoints.isEmpty else { return .noEndpoints }
 		guard portainer.selectedEndpointID != nil else { return .noEndpointSelected }
 		guard !portainer.containers.isEmpty else { return .noContainers }
 		return .finished
@@ -108,7 +108,7 @@ struct ContentView: View {
 						}
 					}
 					
-					ToolbarTitle(title: "Harbour", subtitle: (portainer.fetchingEndpoints || portainer.fetchingContainers) ? "Refreshing..." : nil)
+					ToolbarTitle(title: "Harbour", subtitle: (portainer.fetchingEndpoints || portainer.fetchingContainers || portainer.loggingIn) ? Localization.Generic.fetching : nil)
 					
 					ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 				}
@@ -176,17 +176,17 @@ private extension ContentView {
 		case fetching
 		case notLoggedIn
 		case noEndpointSelected
-		case noEndpointsAvailable
+		case noEndpoints
 		case noContainers
 		
 		var label: String {
 			switch self {
-				case .fetching: return "Loading..."
-				case .notLoggedIn: return "Not logged in"
-				case .noEndpointSelected: return "No endpoint selected"
-				case .noEndpointsAvailable: return "No endpoints available"
-				case .noContainers: return "No containers"
-				case .finished: return "Finished! If you see this, please let me know on Twitter - @destroystokyo 😶"
+				case .fetching: return Localization.Generic.fetching
+				case .notLoggedIn: return Localization.Generic.notLoggedIn
+				case .noEndpointSelected: return Localization.Home.noEndpointSelected
+				case .noEndpoints: return Localization.Home.noEndpoints
+				case .noContainers: return Localization.Home.noContainers
+				case .finished: return Localization.Home.finishedDebugDisclaimer
 			}
 		}
 	}

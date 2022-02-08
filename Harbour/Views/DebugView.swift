@@ -5,7 +5,7 @@
 //  Created by royal on 19/06/2021.
 //
 
-#if DEBUG
+#if TESTFLIGHT
 
 import SwiftUI
 import OSLog
@@ -19,10 +19,12 @@ struct DebugView: View {
 	
     var body: some View {
 		List {
+			#if DEBUG
 			Section("Build") {
 				Labeled(label: "Bundle ID", content: Bundle.main.mainBundleIdentifier, monospace: true, hideIfEmpty: false)
 				Labeled(label: "AppIdentifierPrefix", content: Bundle.main.appIdentifierPrefix, monospace: true, hideIfEmpty: false)
 			}
+			#endif
 			
 			Section("Portainer") {
 				Button("Reset servers") {
@@ -66,6 +68,14 @@ struct DebugView: View {
 				}
 				.foregroundStyle(.red)
 			}
+
+			Section("CoreData") {
+				Button("Reset all") {
+					UIDevice.generateHaptic(.heavy)
+					Persistence.shared.reset()
+				}
+				.foregroundStyle(.red)
+			}
 			
 			Section("Indicators") {
 				Button("Display manual indicator") {
@@ -99,7 +109,7 @@ extension DebugView {
 			List(logs, id: \.self) { entry in
 				Section(content: {
 					Text(entry.message)
-						.font(.system(.callout, design: .monospaced))
+						.font(.system(.subheadline, design: .monospaced))
 						.multilineTextAlignment(.leading)
 						.lineLimit(nil)
 						.textSelection(.enabled)
@@ -108,6 +118,7 @@ extension DebugView {
 						.font(.system(.footnote, design: .monospaced))
 						.textCase(.none)
 				})
+				.listRowBackground(entry.color?.opacity(0.1))
 			}
 			.navigationTitle("Logs")
 			.navigationBarTitleDisplayMode(.inline)
@@ -161,6 +172,26 @@ extension DebugView {
 			
 			var debugDescription: String {
 				"(\(level?.rawValue ?? -1)) \(date?.ISO8601Format() ?? "<none>") [\(category ?? "<none>")] \(message)"
+			}
+
+			var color: Color? {
+				guard let level = level else { return nil }
+				switch level {
+					case .undefined:
+						return nil
+					case .debug:
+						return .blue
+					case .info:
+						return nil
+					case .notice:
+						return .yellow
+					case .error:
+						return .red
+					case .fault:
+						return .red
+					@unknown default:
+						return nil
+				}
 			}
 		}
 	}
