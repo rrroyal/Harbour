@@ -155,7 +155,7 @@ public final class PortainerKit {
 		} else {
 			// It shouldn't happen, but we should gracefully handle it anyways.
 			// For now, we're hoping it worked ¯\_(ツ)_/¯.
-			assertionFailure("Response isn't HTTPURLResponse 🤨 [\(#fileID):\(#line)]")
+			assertionFailure("Response isn't HTTPURLResponse 🤨 [\(#fileID):\(#line)] \(response.1)")
 			
 			if let decoded = try? JSONDecoder().decode([String: String].self, from: response.0), let message = decoded[APIError.errorMessageKey] {
 				throw APIError.fromMessage(message)

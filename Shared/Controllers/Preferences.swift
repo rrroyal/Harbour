@@ -1,5 +1,5 @@
 //
-//  Preferences.swift
+//  Preferences.shared.swift
 //  Harbour
 //
 //  Created by royal on 11/06/2021.
@@ -11,33 +11,33 @@ import SwiftUI
 final class Preferences: ObservableObject {
 	public static let shared: Preferences = Preferences()
 
-	@AppStorage(Preferences.Key.finishedSetup.rawValue, store: .standard) public var finishedSetup: Bool = false
+	@AppStorage(Key.finishedSetup.rawValue, store: .standard) public var finishedSetup: Bool = false
 	
-	@AppStorage(Preferences.Key.selectedServer.rawValue, store: .group) public var selectedServer: URL?
-	@AppStorage(Preferences.Key.selectedEndpointID.rawValue, store: .group) public var selectedEndpointID: Int?
+	@AppStorage(Key.selectedServer.rawValue, store: .group) public var selectedServer: URL?
+	@AppStorage(Key.selectedEndpointID.rawValue, store: .group) public var selectedEndpointID: Int?
 
-	@AppStorage(Preferences.Key.enableBackgroundRefresh.rawValue, store: .group) public var enableBackgroundRefresh: Bool = false
-	@AppStorage(Preferences.Key.autoRefreshInterval.rawValue, store: .standard) public var autoRefreshInterval: Double = 0
+	@AppStorage(Key.enableBackgroundRefresh.rawValue, store: .group) public var enableBackgroundRefresh: Bool = false
+	@AppStorage(Key.autoRefreshInterval.rawValue, store: .standard) public var autoRefreshInterval: Double = 0
 	
-	@AppStorage(Preferences.Key.enableHaptics.rawValue, store: .standard) public var enableHaptics: Bool = true
+	@AppStorage(Key.enableHaptics.rawValue, store: .standard) public var enableHaptics: Bool = true
 	
-	@AppStorage(Preferences.Key.clUseGridView.rawValue, store: .standard) public var clUseGridView: Bool = false
-	@AppStorage(Preferences.Key.clUseColumns.rawValue, store: .standard) public var clUseColumns: Bool = true
-	@AppStorage(Preferences.Key.clUseColoredContainerCells.rawValue, store: .group) public var clUseColoredContainerCells: Bool = false
+	@AppStorage(Key.clUseGridView.rawValue, store: .standard) public var clUseGridView: Bool = false
+	@AppStorage(Key.clUseColumns.rawValue, store: .standard) public var clUseColumns: Bool = true
+	@AppStorage(Key.clUseColoredContainerCells.rawValue, store: .group) public var clUseColoredContainerCells: Bool = false
 	
-	@AppStorage(Preferences.Key.persistAttachedContainer.rawValue, store: .standard) public var persistAttachedContainer: Bool = true
+	@AppStorage(Key.persistAttachedContainer.rawValue, store: .standard) public var persistAttachedContainer: Bool = true
 	
 	#if DEBUG
 	var lastBackgroundTaskDate: Date? {
 		get {
-			let time = Self.ud.double(forKey: Preferences.Key.lastBackgroundTaskDate.rawValue)
+			let time = Self.ud.double(forKey: Key.lastBackgroundTaskDate.rawValue)
 			if time > 0 {
 				return Date(timeIntervalSinceReferenceDate: time)
 			} else {
 				return nil
 			}
 		}
-		set { Self.ud.set(newValue?.timeIntervalSinceReferenceDate, forKey: Preferences.Key.lastBackgroundTaskDate.rawValue) }
+		set { Self.ud.set(newValue?.timeIntervalSinceReferenceDate, forKey: Key.lastBackgroundTaskDate.rawValue) }
 	}
 	#endif
 	

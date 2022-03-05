@@ -9,15 +9,15 @@ import Foundation
 import PortainerKit
 
 extension Array where Element == PortainerKit.Container {
-	func filtered(query: String?) -> Self {
-		guard let query = query?.trimmingCharacters(in: .whitespacesAndNewlines), !query.isEmpty else { return self }
+	func sortedAndFiltered(query: String?) -> Self {
+		let sorted = sorted { ($0.displayName ?? "", $0.id) < ($1.displayName ?? "", $1.id) }
+		guard let query = query?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased(), !query.isEmpty else { return sorted }
 		
-		let lowercasedQuery = query.lowercased()
-		return filter {
-			($0.displayName ?? "").lowercased().contains(lowercasedQuery) ||
-			$0.id.lowercased().contains(lowercasedQuery) ||
-			$0.imageID.contains(lowercasedQuery) ||
-			($0.names ?? []).contains(where: { $0.lowercased().contains(lowercasedQuery) })
+		return sorted.filter {
+			($0.displayName ?? "").lowercased().contains(query) ||
+			$0.id.lowercased().contains(query) ||
+			$0.imageID.contains(query) ||
+			($0.names ?? []).contains(where: { $0.lowercased().contains(query) })
 		}
 	}
 }

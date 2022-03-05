@@ -27,7 +27,7 @@ extension Portainer {
 		private var messageCancellable: AnyCancellable? = nil
 		
 		public init(container: PortainerKit.Container, messagePassthroughSubject: PortainerKit.WebSocketPassthroughSubject) {
-			logger.info("Attached to container with ID \(container.id, privacy: .sensitive(mask: .hash)) [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+			logger.info("Attached to container with ID \(container.id, privacy: .sensitive(mask: .hash))")
 			
 			self.container = container
 			self.messagePassthroughSubject = messagePassthroughSubject
@@ -41,7 +41,7 @@ extension Portainer {
 		}
 		
 		deinit {
-			logger.info("Deinitialized [\(#fileID, privacy: .public):\(#line, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public)]")
+			logger.info("Deinitialized!")
 			messageCancellable?.cancel()
 		}
 		

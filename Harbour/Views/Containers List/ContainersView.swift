@@ -10,25 +10,20 @@ import PortainerKit
 
 struct ContainersView: View {
 	@Environment(\.useContainerGridView) var useContainerGridView: Bool
-	let containers: [ContainersStack]
+	let containers: [PortainerKit.Container]
 	
     var body: some View {
-		Self._printChanges()
-		return Group {
-			if useContainerGridView {
-				ContainersGridView(containers: containers)
-					.equatable()
-			} else {
-				ContainersListView(containers: containers)
-					.equatable()
-			}
+		if useContainerGridView {
+			ContainersGridView(containers: containers)
+				.equatable()
+		} else {
+			ContainersListView(containers: containers)
+				.equatable()
 		}
     }
 }
 
 extension ContainersView {
-	static let stackBackground: Color = Color(uiColor: .systemGray6).opacity(0.5)
-	
 	static func containerDragProvider(container: PortainerKit.Container) -> NSItemProvider {
 		let activity = NSUserActivity(activityType: AppState.UserActivity.viewContainer)
 		activity.requiredUserInfoKeys = ["ContainerID"]
@@ -39,13 +34,6 @@ extension ContainersView {
 		activity.isEligibleForHandoff = true
 		
 		return NSItemProvider(object: activity)
-	}
-}
-
-extension ContainersView {
-	struct ContainersStack: Equatable {
-		let stack: String?
-		let containers: [PortainerKit.Container]
 	}
 }
 

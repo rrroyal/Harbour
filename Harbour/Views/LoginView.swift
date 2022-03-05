@@ -19,8 +19,6 @@ struct LoginView: View {
 	@State private var buttonLabel: String? = nil
 	@State private var buttonColor: Color? = nil
 
-	@State private var canLogin: Bool = false
-	
 	@State private var loginTask: Task<Bool, Error>? = nil
 	@State private var errorTimer: Timer? = nil
 
@@ -90,9 +88,9 @@ struct LoginView: View {
 				.keyboardShortcut(.defaultAction)
 				.foregroundColor(.white)
 				.buttonStyle(.customPrimary(backgroundColor: buttonColor ?? .accentColor))
-//				.animation(.easeInOut, value: !(loginTask?.isCancelled ?? true) || !canLogin)
+//				.animation(.easeInOut, value: !(loginTask?.isCancelled ?? true) || url.isReallyEmpty || token.isReallyEmpty)
 				.animation(.easeInOut, value: buttonColor)
-				.disabled(!(loginTask?.isCancelled ?? true) || canLogin)
+				.disabled(!(loginTask?.isCancelled ?? true) || url.isReallyEmpty || token.isReallyEmpty)
 
 				Link(destination: URL(string: "https://harbour.shameful.xyz/docs/setup")!) {
 					HStack {

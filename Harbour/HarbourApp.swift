@@ -33,7 +33,7 @@ struct HarbourApp: App {
 	private func onScenePhaseChange(_ scenePhase: ScenePhase) {
 		switch scenePhase {
 			case .active:
-				if (portainer.isSetup || portainer.hasSavedCredentials) && portainer.serverURL != nil {
+				if (portainer.isReady || portainer.hasSavedCredentials) && portainer.serverURL != nil {
 					Task {
 						try await portainer.getEndpoints()
 						if portainer.selectedEndpointID != nil {

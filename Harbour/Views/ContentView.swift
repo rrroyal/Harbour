@@ -20,7 +20,7 @@ struct ContentView: View {
 	
 	private var currentState: DataState {
 		guard !(portainer.fetchingEndpoints || portainer.fetchingContainers || portainer.loggingIn) else { return .fetching }
-		guard portainer.isSetup && portainer.isLoggedIn else { return .notLoggedIn }
+		guard portainer.isReady && portainer.isLoggedIn else { return .notLoggedIn }
 		guard !portainer.endpoints.isEmpty else { return .noEndpoints }
 		guard portainer.selectedEndpointID != nil else { return .noEndpointSelected }
 		guard !portainer.containers.isEmpty else { return .noContainers }
@@ -28,7 +28,7 @@ struct ContentView: View {
 	}
 	
 	private var endpointButtonSymbolVariant: SymbolVariants {
-		guard portainer.isSetup && portainer.isLoggedIn else { return .slash }
+		guard portainer.isReady && portainer.isLoggedIn else { return .slash }
 		if !portainer.endpoints.isEmpty && portainer.selectedEndpointID != nil { return .fill }
 		if !portainer.endpoints.isEmpty { return .none }
 		return .slash
@@ -71,7 +71,7 @@ struct ContentView: View {
 			Label(portainer.endpoints.first(where: { $0.id == portainer.selectedEndpointID })?.name ?? "Endpoint", systemImage: "tag")
 				.symbolVariant(endpointButtonSymbolVariant)
 		}
-		.disabled(!portainer.isSetup)
+		.disabled(!portainer.isReady)
 	}
 	
 	@ViewBuilder
@@ -86,7 +86,7 @@ struct ContentView: View {
 						.id(currentState)
 			}
 		} else {
-			ContainersView(containers: portainer.containers.filtered(query: searchQuery).groupedByStack())
+			ContainersView(containers: portainer.containers.sortedAndFiltered(query: searchQuery))
 				.equatable()
 				.searchable(text: $searchQuery)
 		}
@@ -117,7 +117,7 @@ struct ContentView: View {
 				.foregroundStyle(.tertiary)
 		}
 		.transition(.opacity)
-		.animation(.easeInOut, value: portainer.isSetup)
+		.animation(.easeInOut, value: portainer.isReady)
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
 		.animation(.easeInOut, value: currentState)

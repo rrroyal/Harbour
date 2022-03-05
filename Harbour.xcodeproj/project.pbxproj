@@ -99,7 +99,6 @@
 		E7B10B7226CD80EB005B82BC /* SettingsView+OtherSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7126CD80EB005B82BC /* SettingsView+OtherSection.swift */; };
 		E7B10B7426CD82A2005B82BC /* SettingsView+PortainerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7326CD82A2005B82BC /* SettingsView+PortainerSection.swift */; };
 		E7B10B7626CD82D5005B82BC /* SettingsView+InterfaceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10B7526CD82D5005B82BC /* SettingsView+InterfaceSection.swift */; };
-		E7BD39322792259800D3A7E6 /* Array+PortainerKit.Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BD39312792259800D3A7E6 /* Array+PortainerKit.Container.swift */; };
 		E7BD393D27922DB800D3A7E6 /* Portainer+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BD393C27922DB800D3A7E6 /* Portainer+.swift */; };
 		E7BF1FCE27B29F95009AB829 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF1FCD27B29F95009AB829 /* Persistence.swift */; };
 		E7BF1FCF27B29F95009AB829 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BF1FCD27B29F95009AB829 /* Persistence.swift */; };
@@ -231,7 +230,6 @@
 		E7B10B7526CD82D5005B82BC /* SettingsView+InterfaceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+InterfaceSection.swift"; sourceTree = "<group>"; };
 		E7BD390D2792238100D3A7E6 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E7BD390F2792238100D3A7E6 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
-		E7BD39312792259800D3A7E6 /* Array+PortainerKit.Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+PortainerKit.Container.swift"; sourceTree = "<group>"; };
 		E7BD393C27922DB800D3A7E6 /* Portainer+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer+.swift"; sourceTree = "<group>"; };
 		E7BF1FCD27B29F95009AB829 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		E7BF9E502672B5B000AAB6A1 /* HarbourApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourApp.swift; sourceTree = "<group>"; };
@@ -540,7 +538,6 @@
 		E7BF9E7E2672E60E00AAB6A1 /* Extensions+Modifiers */ = {
 			isa = PBXGroup;
 			children = (
-				E7BD39312792259800D3A7E6 /* Array+PortainerKit.Container.swift */,
 				E70A5CEE27220C4300FF6672 /* EnvironmentValues+.swift */,
 				E7748E7E267E835600456BFD /* Notification+.swift */,
 				E74AC7F426768564003411AA /* Portainer+AttachedContainer.swift */,
@@ -903,7 +900,6 @@
 				E751F05B270B315200980DCA /* ContainersListView+ContainerCell.swift in Sources */,
 				E7B10B7626CD82D5005B82BC /* SettingsView+InterfaceSection.swift in Sources */,
 				E7BD393D27922DB800D3A7E6 /* Portainer+.swift in Sources */,
-				E7BD39322792259800D3A7E6 /* Array+PortainerKit.Container.swift in Sources */,
 				E720D0202720B838004A21FD /* DisclosureSection.swift in Sources */,
 				E7339C562674236700A55B5C /* ContainerContextMenu.swift in Sources */,
 				E74C8FEF27B29E6A00CC1DF3 /* Harbour.xcdatamodeld in Sources */,
