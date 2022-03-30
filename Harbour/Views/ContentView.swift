@@ -13,14 +13,16 @@ struct ContentView: View {
 	@EnvironmentObject var appState: AppState
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
+	@Environment(\.scenePhase) var scenePhase
+	@Environment(\.useColumns) var useColumns
 	
 	@StateObject private var sceneState: SceneState = SceneState()
 	
 	@State private var searchQuery: String = ""
 	
 	private var currentState: DataState {
-		guard !(portainer.fetchingEndpoints || portainer.fetchingContainers || portainer.loggingIn) else { return .fetching }
-		guard portainer.isReady && portainer.isLoggedIn else { return .notLoggedIn }
+		guard !(portainer.isFetchingEndpoints || portainer.isFetchingContainers || portainer.isSettingUp) else { return .fetching }
+		guard portainer.isSetup && portainer.isLoggedIn else { return .notLoggedIn }
 		guard !portainer.endpoints.isEmpty else { return .noEndpoints }
 		guard portainer.selectedEndpointID != nil else { return .noEndpointSelected }
 		guard !portainer.containers.isEmpty else { return .noContainers }
@@ -28,7 +30,7 @@ struct ContentView: View {
 	}
 	
 	private var endpointButtonSymbolVariant: SymbolVariants {
-		guard portainer.isReady && portainer.isLoggedIn else { return .slash }
+		guard portainer.isSetup && portainer.isLoggedIn else { return .slash }
 		if !portainer.endpoints.isEmpty && portainer.selectedEndpointID != nil { return .fill }
 		if !portainer.endpoints.isEmpty { return .none }
 		return .slash
@@ -39,8 +41,7 @@ struct ContentView: View {
 			if !portainer.endpoints.isEmpty {
 				ForEach(portainer.endpoints) { endpoint in
 					Button(action: {
-						UIDevice.generateHaptic(.light)
-						portainer.selectedEndpointID = endpoint.id
+						setSelectedEndpoint(endpoint)
 					}) {
 						Text(endpoint.name ?? "\(endpoint.id)")
 						if portainer.selectedEndpointID == endpoint.id {
@@ -54,24 +55,14 @@ struct ContentView: View {
 			
 			Divider()
 			
-			Button(action: {
-				UIDevice.generateHaptic(.light)
-				Task {
-					do {
-						try await portainer.getEndpoints()
-						try await portainer.getContainers()
-					} catch {
-						sceneState.handle(error)
-					}
-				}
-			}) {
+			Button(action: refresh) {
 				Label("Refresh", systemImage: "arrow.clockwise")
 			}
 		}) {
 			Label(portainer.endpoints.first(where: { $0.id == portainer.selectedEndpointID })?.name ?? "Endpoint", systemImage: "tag")
 				.symbolVariant(endpointButtonSymbolVariant)
 		}
-		.disabled(!portainer.isReady)
+		.disabled(!portainer.isSetup)
 	}
 	
 	@ViewBuilder
@@ -108,7 +99,7 @@ struct ContentView: View {
 						}
 					}
 					
-					ToolbarTitle(title: "Harbour", subtitle: (portainer.fetchingEndpoints || portainer.fetchingContainers || portainer.loggingIn) ? Localization.Generic.fetching : nil)
+					ToolbarTitle(title: "Harbour", subtitle: (portainer.isFetchingEndpoints || portainer.isFetchingContainers || portainer.isSettingUp) ? Localization.Generic.fetching : nil)
 					
 					ToolbarItem(placement: .primaryAction, content: { toolbarMenu })
 				}
@@ -117,11 +108,11 @@ struct ContentView: View {
 				.foregroundStyle(.tertiary)
 		}
 		.transition(.opacity)
-		.animation(.easeInOut, value: portainer.isReady)
+		.animation(.easeInOut, value: portainer.isSetup)
 		.animation(.easeInOut, value: portainer.selectedEndpointID)
 		.animation(.easeInOut, value: portainer.containers)
 		.animation(.easeInOut, value: currentState)
-		.navigationViewStyle(useColumns: preferences.clUseColumns)
+		.navigationViewStyle(useColumns: useColumns)
 		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
 		}
@@ -138,30 +129,81 @@ struct ContentView: View {
 			SetupView()
 		}
 		.indicatorOverlay(model: sceneState.indicators)
-		.onContinueUserActivity(AppState.UserActivity.viewContainer, perform: handleContinueUserActivity)
-		.onContinueUserActivity(AppState.UserActivity.attachToContainer, perform: handleContinueUserActivity)
+		.onChange(of: scenePhase, perform: onScenePhaseChange)
+		.onContinueUserActivity(UserActivity.ViewContainer.activityType, perform: handleContinueUserActivity)
+		.onContinueUserActivity(UserActivity.AttachToContainer.activityType, perform: handleContinueUserActivity)
 		.onOpenURL(perform: onOpenURL)
 		.onReceive(NotificationCenter.default.publisher(for: .DeviceDidShake, object: nil), perform: onDeviceDidShake)
+		.environment(\.sceneErrorHandler, handleError)
 		.environmentObject(sceneState)
-		.environment(\.sceneErrorHandler, sceneErrorHandler)
 	}
-	
+}
+
+private extension ContentView {
+	private func refresh() {
+		UIDevice.generateHaptic(.light)
+		Task {
+			do {
+				try await portainer.getEndpoints()
+				try await portainer.getContainers()
+			} catch {
+				sceneState.handle(error)
+			}
+		}
+	}
+
+	private func setSelectedEndpoint(_ endpoint: PortainerKit.Endpoint) {
+		UIDevice.generateHaptic(.light)
+		Task {
+			do {
+				try await portainer.setSelectedEndpoint(endpoint.id)
+			} catch {
+				handleError(error)
+			}
+		}
+	}
+
 	private func onOpenURL(_ url: URL) {
 		sceneState.onOpenURL(url)
 	}
-	
+
+	private func onScenePhaseChange(_ scenePhase: ScenePhase) {
+		switch scenePhase {
+			case .active:
+				Task {
+					do {
+						if !portainer.isSetup {
+							try await portainer.setup()
+							try await portainer.getEndpoints()
+							if portainer.selectedEndpointID != nil {
+								try await portainer.getContainers()
+							}
+						}
+					} catch {
+						handleError(error)
+					}
+				}
+			case .background:
+				if preferences.enableBackgroundRefresh {
+					BackgroundTasks.scheduleBackgroundRefreshTask()
+				}
+			default:
+				break
+		}
+	}
+
+	private func onDeviceDidShake(_ notification: Notification) {
+		guard portainer.attachedContainer != nil else { return }
+		sceneState.showAttachedContainer()
+	}
+
 	private func handleContinueUserActivity(_ activity: NSUserActivity) {
 		DispatchQueue.main.async {
 			sceneState.handleContinueUserActivity(activity)
 		}
 	}
-	
-	private func onDeviceDidShake(_ notification: Notification) {
-		guard portainer.attachedContainer != nil else { return }
-		sceneState.showAttachedContainer()
-	}
-	
-	private func sceneErrorHandler(error: Error, indicator: Indicators.Indicator?, _fileID: StaticString = #fileID, _line: Int = #line, _function: StaticString = #function) {
+
+	private func handleError(_ error: Error, indicator: Indicators.Indicator? = nil, _fileID: StaticString = #fileID, _line: Int = #line, _function: StaticString = #function) {
 		if let indicator = indicator {
 			sceneState.handle(error, indicator: indicator, _fileID: _fileID, _line: _line, _function: _function)
 		} else {

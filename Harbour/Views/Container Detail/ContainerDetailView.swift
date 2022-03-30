@@ -73,6 +73,7 @@ struct ContainerDetailView: View {
 					.frame(maxWidth: .infinity, alignment: .center)
 			}
 		}
+		.frame(maxWidth: .infinity)
 		.id("LastLogsSnippetLabel-\(lastLogsSnippet?.hashValue ?? -1)")
 	}
 	
@@ -122,15 +123,15 @@ struct ContainerDetailView: View {
 		.animation(.easeInOut, value: lastLogsSnippet)
 		.refreshable { await refresh() }
 		.task { await refresh() }
-		.userActivity(AppState.UserActivity.viewContainer, isActive: sceneState.activeContainer == container) { activity in
-			activity.requiredUserInfoKeys = [AppState.UserActivity.containerIDKey]
+		.userActivity(UserActivity.ViewContainer.activityType, isActive: sceneState.activeContainer == container) { activity in
+			activity.requiredUserInfoKeys = UserActivity.ViewContainer.requiredUserInfoKeys
 			activity.userInfo = [
-				AppState.UserActivity.containerIDKey: container.id,
-				AppState.UserActivity.endpointIDKey: portainer.selectedEndpointID as Any
+				UserActivity.UserInfoKey.containerID: container.id,
+				UserActivity.UserInfoKey.endpointID: portainer.selectedEndpointID as Any
 			]
-			activity.title = "View details for \(container.displayName ?? container.id)".localized
+			activity.title = Localization.UserActivity.ViewContainer.title(container.displayName ?? container.id)
 			activity.suggestedInvocationPhrase = activity.title
-			activity.persistentIdentifier = "\(AppState.UserActivity.viewContainer):\(container.id)"
+			activity.persistentIdentifier = "\(activity.activityType):\(container.id)"
 			activity.isEligibleForPrediction = true
 			activity.isEligibleForHandoff = true
 			activity.isEligibleForSearch = true
@@ -150,14 +151,12 @@ struct ContainerDetailView: View {
 		do {
 			async let logs = portainer.getLogs(from: container.id, tail: lastLogsTailCount, displayTimestamps: true)
 			async let containerDetails = portainer.inspectContainer(container)
-			
-			let logsAwaited = try await logs
-			let containerDetailsAwaited = try await containerDetails
+			let result = (logs: try await logs, details: try await containerDetails)
 			
 			DispatchQueue.main.async {
 				withAnimation {
-					self.lastLogsSnippet = logsAwaited.trimmingCharacters(in: .whitespacesAndNewlines)
-					container.update(from: containerDetailsAwaited)
+					self.lastLogsSnippet = result.logs.trimmingCharacters(in: .whitespacesAndNewlines)
+					container.update(from: result.details)
 				}
 			}
 		} catch {

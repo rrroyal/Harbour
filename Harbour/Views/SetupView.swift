@@ -15,7 +15,7 @@ struct SetupView: View {
 			WelcomeView(presentedView: $presentedView)
 				.tag(PresentedView.welcome)
 			
-			if !(Portainer.shared.isReady && Portainer.shared.hasSavedCredentials) {
+			if !(Portainer.shared.isSetup && Portainer.shared.hasSavedCredentials) {
 				LoginView()
 					.environmentObject(Portainer.shared)
 					.tag(PresentedView.setup)
@@ -54,7 +54,7 @@ extension SetupView {
 				
 				Button("Beam me up, Scotty!") {
 					UIDevice.generateHaptic(.soft)
-					if Portainer.shared.isReady {
+					if Portainer.shared.isSetup {
 						presentationMode.wrappedValue.dismiss()
 					} else {
 						withAnimation { presentedView = .setup }

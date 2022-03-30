@@ -69,8 +69,8 @@ final class AppState: ObservableObject {
 		}
 		
 		let shortcutItems: [UIApplicationShortcutItem] = lastOpenedContainers.map { container in
-			let userInfo: [String: NSSecureCoding] = [AppState.UserActivity.containerIDKey: container.id as NSSecureCoding]
-			return UIApplicationShortcutItem(type: AppState.UserActivity.viewContainer, localizedTitle: container.displayName ?? container.id, localizedSubtitle: nil, icon: nil, userInfo: userInfo)
+			let userInfo: [String: NSSecureCoding] = [UserActivity.UserInfoKey.containerID: container.id as NSSecureCoding]
+			return UIApplicationShortcutItem(type: UserActivity.ViewContainer.activityType, localizedTitle: container.displayName ?? container.id, localizedSubtitle: nil, icon: nil, userInfo: userInfo)
 		}
 		UIApplication.shared.shortcutItems = shortcutItems
 	}
@@ -82,7 +82,7 @@ final class AppState: ObservableObject {
 		let containerIDs = containers.map(\.id)
 		let shortcutItems = UIApplication.shared.shortcutItems?
 			.filter {
-				guard let containerID = $0.userInfo?[AppState.UserActivity.containerIDKey] as? String else { return false }
+				guard let containerID = $0.userInfo?[UserActivity.UserInfoKey.containerID] as? String else { return false }
 				return containerIDs.contains(containerID)
 			}
 		UIApplication.shared.shortcutItems = shortcutItems

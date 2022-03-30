@@ -67,15 +67,15 @@ struct ContainerConsoleView: View {
 				}
 			}
 		}
-		.userActivity(AppState.UserActivity.attachToContainer, isActive: attachedContainer.isConnected && presentationMode.wrappedValue.isPresented) { activity in
-			activity.requiredUserInfoKeys = [AppState.UserActivity.containerIDKey]
+		.userActivity(UserActivity.AttachToContainer.activityType, isActive: attachedContainer.isConnected && presentationMode.wrappedValue.isPresented) { activity in
+			activity.requiredUserInfoKeys = UserActivity.AttachToContainer.requiredUserInfoKeys
 			activity.userInfo = [
-				AppState.UserActivity.containerIDKey: attachedContainer.container.id,
-				AppState.UserActivity.endpointIDKey: attachedContainer.endpointID as Any
+				UserActivity.UserInfoKey.containerID: attachedContainer.container.id,
+				UserActivity.UserInfoKey.endpointID: attachedContainer.endpointID as Any
 			]
-			activity.title = "Attach to \(attachedContainer.container.displayName ?? attachedContainer.container.id)".localized
+			activity.title = Localization.UserActivity.AttachToContainer.title(attachedContainer.container.displayName ?? attachedContainer.container.id)
 			activity.suggestedInvocationPhrase = activity.title
-			activity.persistentIdentifier = "\(AppState.UserActivity.attachToContainer):\(attachedContainer.container.id)"
+			activity.persistentIdentifier = "\(activity.activityType):\(attachedContainer.container.id)"
 			activity.isEligibleForPrediction = true
 			activity.isEligibleForHandoff = true
 			activity.isEligibleForSearch = true

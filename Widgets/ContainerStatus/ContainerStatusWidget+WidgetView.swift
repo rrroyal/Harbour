@@ -54,7 +54,7 @@ private extension ContainerStatusWidget.WidgetView {
 		var body: some View {
 			VStack(spacing: 0) {
 				HStack(alignment: .center) {
-					Text(entry.container?.state?.rawValue.capitalizingFirstLetter ?? Localization.Generic.unknown)
+					Text(entry.container?.state?.rawValue.capitalizingFirstLetter() ?? Localization.Generic.unknown)
 						.font(.subheadline.weight(.medium))
 						.foregroundStyle(entry.container?.state.color ?? Color(uiColor: .tertiaryLabel))
 						.lineLimit(1)

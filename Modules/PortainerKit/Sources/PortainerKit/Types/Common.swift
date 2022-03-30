@@ -11,7 +11,7 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	enum ContainerStatus: String, Decodable, Comparable {
+	enum ContainerStatus: String, Decodable, Comparable, Sendable, Hashable {
 		case created
 		case running
 		case paused
@@ -28,18 +28,19 @@ public extension PortainerKit {
 		}
 	}
 	
-	enum EndpointStatus: Int, Decodable {
+	enum EndpointStatus: Int, Decodable, Sendable, Hashable {
 		case up = 1
 		case down
 	}
 	
-	enum EndpointType: Int, Decodable {
+	enum EndpointType: Int, Decodable, Sendable, Hashable {
 		case docker = 1
 		case agent
 		case azure
+		case edgeAgent
 	}
 	
-	enum ExecuteAction: String {
+	enum ExecuteAction: String, Sendable, Hashable {
 		case start
 		case stop
 		case restart
@@ -59,14 +60,14 @@ public extension PortainerKit {
 		}
 	}
 	
-	enum MountConsistency: String, Decodable, Hashable {
+	enum MountConsistency: String, Decodable, Sendable, Hashable {
 		case `default`
 		case consistent
 		case cached
 		case delegated
 	}
 	
-	enum MountType: String, Decodable, Hashable {
+	enum MountType: String, Decodable, Sendable, Hashable {
 		case bind
 		case volume
 		case tmpfs
@@ -77,7 +78,7 @@ public extension PortainerKit {
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	struct AccessPolicy: Decodable {
+	struct AccessPolicy: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case roleID = "RoleID"
 		}
@@ -85,7 +86,7 @@ public extension PortainerKit {
 		public let roleID: Int?
 	}
 	
-	struct AzureCredentials: Decodable {
+	struct AzureCredentials: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case applicationID = "ApplicationID"
 			case authenticationKey = "AuthenticationKey"
@@ -97,12 +98,12 @@ public extension PortainerKit {
 		public let tenantID: String?
 	}
 	
-	struct BindOptions: Decodable, Hashable {
+	struct BindOptions: Decodable, Sendable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case propagation = "Propagation"
 		}
 		
-		public enum Propagation: String, Decodable {
+		public enum Propagation: String, Decodable, Sendable {
 			case `private`
 			case rprivate
 			case shared
@@ -114,7 +115,7 @@ public extension PortainerKit {
 		public let propagation: Propagation?
 	}
 	
-	struct ContainerConfig: Decodable {
+	struct ContainerConfig: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case hostname = "Hostname"
 			case domainName = "DomainName"
@@ -170,7 +171,7 @@ public extension PortainerKit {
 		public let shell: [String]?
 	}
 	
-	struct ContainerState: Decodable {
+	struct ContainerState: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case status = "Status"
 			case running = "Running"
@@ -196,7 +197,7 @@ public extension PortainerKit {
 		public let finishedAt: Date?
 	}
 	
-	struct DockerSnapshot: Decodable {
+	struct DockerSnapshot: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case dockerVersion = "DockerVersion"
 			case healthyContainerCount = "HealthyContainerCount"
@@ -228,7 +229,7 @@ public extension PortainerKit {
 		public let volumeCount: Int?
 	}
 	
-	struct DriverConfig: Decodable, Hashable {
+	struct DriverConfig: Decodable, Sendable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case name = "Name"
 			case options = "Options"
@@ -238,7 +239,7 @@ public extension PortainerKit {
 		public let options: [String: String]?
 	}
 	
-	struct EndpointExtension: Decodable {
+	struct EndpointExtension: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case type = "Type"
 			case url = "URL"
@@ -248,7 +249,7 @@ public extension PortainerKit {
 		public let url: String?
 	}
 	
-	struct HealthConfig: Decodable {
+	struct HealthConfig: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case test = "Test"
 			case interval = "Interval"
@@ -264,8 +265,8 @@ public extension PortainerKit {
 		public let startPeriod: Int
 	}
 	
-	struct GraphDriver: Decodable {
-		public struct GraphDriverData: Decodable {
+	struct GraphDriver: Decodable, Sendable {
+		public struct GraphDriverData: Decodable, Sendable {
 			enum CodingKeys: String, CodingKey {
 				case lowerDir = "LowerDir"
 				case mergedDir = "MergedDir"
@@ -288,7 +289,7 @@ public extension PortainerKit {
 		public let data: GraphDriverData
 	}
 	
-	struct HostConfig: Decodable {
+	struct HostConfig: Decodable, Sendable {
 		/*
 		{
 			"AutoRemove": false,
@@ -386,7 +387,7 @@ public extension PortainerKit {
 		 */
 	}
 	
-	struct IPAMConfig: Decodable {
+	struct IPAMConfig: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case ipv4Address = "IPv4Address"
 			case ipv6Address = "IPv6Address"
@@ -398,7 +399,7 @@ public extension PortainerKit {
 		public let linkLocalIPs: [String]?
 	}
 	
-	struct KubernetesConfiguration: Decodable {
+	struct KubernetesConfiguration: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case ingressClasses = "IngressClasses"
 			case storageClasses = "StorageClasses"
@@ -412,7 +413,7 @@ public extension PortainerKit {
 		public let useServerMetrics: Bool?
 	}
 	
-	struct KubernetesData: Decodable {
+	struct KubernetesData: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case configuration = "Configuration"
 			case snapshots = "Snapshots"
@@ -422,7 +423,7 @@ public extension PortainerKit {
 		public let snapshots: [KubernetesSnapshot]?
 	}
 	
-	struct KubernetesIngressClassConfig: Decodable {
+	struct KubernetesIngressClassConfig: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case name = "Name"
 			case type = "Type"
@@ -432,7 +433,7 @@ public extension PortainerKit {
 		public let type: String
 	}
 	
-	struct KubernetesSnapshot: Decodable {
+	struct KubernetesSnapshot: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case kubernetesVersion = "KubernetesVersion"
 			case nodeCount = "NodeCount"
@@ -448,7 +449,7 @@ public extension PortainerKit {
 		public let totalMemory: Int?
 	}
 	
-	struct KubernetesStorageClassConfig: Decodable {
+	struct KubernetesStorageClassConfig: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case accessModes = "AccessModes"
 			case allowVolumeExpansion = "AllowVolumeExpansion"
@@ -461,22 +462,8 @@ public extension PortainerKit {
 		public let name: String?
 		public let provisioner: String?
 	}
-
-	struct Motd: Decodable {
-		enum CodingKeys: String, CodingKey {
-			case title = "Title"
-			case message = "Message"
-			case style = "Style"
-			case hash = "Hash"
-		}
-
-		let title: String
-		let message: String
-		let style: String
-		let hash: String?
-	}
 	
-	struct Mount: Decodable, Hashable {
+	struct Mount: Decodable, Sendable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case target = "Target"
 			case source = "Source"
@@ -502,7 +489,7 @@ public extension PortainerKit {
 		}
 	}
 	
-	struct MountPoint: Decodable, Hashable {
+	struct MountPoint: Decodable, Sendable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case type = "Type"
 			case name = "Name"
@@ -524,7 +511,7 @@ public extension PortainerKit {
 		public let propagation: String
 	}
 	
-	struct Network: Decodable {
+	struct Network: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case ipamConfig = "IPAMConfig"
 			case links = "Links"
@@ -554,7 +541,7 @@ public extension PortainerKit {
 		public let macAddress: String?
 	}
 
-	struct Port: Decodable, Hashable {
+	struct Port: Decodable, Sendable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case ip = "IP"
 			case privatePort = "PrivatePort"
@@ -562,7 +549,7 @@ public extension PortainerKit {
 			case type = "Type"
 		}
 		
-		public enum PortType: String, Decodable {
+		public enum PortType: String, Decodable, Sendable, Hashable {
 			case tcp
 			case udp
 		}
@@ -573,7 +560,7 @@ public extension PortainerKit {
 		public let type: PortType?
 	}
 	
-	struct TmpfsOptions: Decodable, Hashable {
+	struct TmpfsOptions: Decodable, Sendable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case sizeBytes = "SizeBytes"
 			case mode = "Mode"
@@ -583,7 +570,7 @@ public extension PortainerKit {
 		public let mode: Int?
 	}
 	
-	struct TLSConfiguration: Decodable {
+	struct TLSConfiguration: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case tls = "TLS"
 			case tlsCACert = "TLSCACert"
@@ -599,7 +586,7 @@ public extension PortainerKit {
 		public let tlsSkipVerify: Bool?
 	}
 	
-	struct VolumeOptions: Decodable, Hashable {
+	struct VolumeOptions: Decodable, Sendable, Hashable {
 		enum CodingKeys: String, CodingKey {
 			case noCopy = "NoCopy"
 			case labels = "Labels"

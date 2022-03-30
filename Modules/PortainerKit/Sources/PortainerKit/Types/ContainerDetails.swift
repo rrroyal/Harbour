@@ -9,8 +9,8 @@ import Foundation
 
 @available(iOS 15, macOS 12, *)
 public extension PortainerKit {
-	struct ContainerDetails: Identifiable, Decodable {
-		public struct NetworkSettings: Decodable {
+	struct ContainerDetails: Identifiable, Decodable, Sendable {
+		public struct NetworkSettings: Decodable, Sendable {
 			enum CodingKeys: String, CodingKey {
 				case bridge = "Bridge"
 				case gateway = "Gateway"

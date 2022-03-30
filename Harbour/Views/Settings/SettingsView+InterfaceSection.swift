@@ -9,8 +9,8 @@ import SwiftUI
 
 extension SettingsView {
 	struct InterfaceSection: View {
-		@Environment(\.horizontalSizeClass) var horizontalSizeClass
 		@EnvironmentObject var preferences: Preferences
+		@Environment(\.horizontalSizeClass) var horizontalSizeClass
 		
 		var body: some View {
 			Section("Interface") {

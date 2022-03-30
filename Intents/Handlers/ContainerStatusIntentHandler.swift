@@ -61,7 +61,7 @@ final class ContainerStatusIntentHandler: NSObject, ContainerStatusIntentHandlin
 				response.container = intent.container
 				response.state = container.state?.asContainerStatus ?? .unknown
 				response.status = container.status
-				response.readableStatus = "\((container.state?.rawValue ?? "unknown").capitalizingFirstLetter) (\(container.status ?? "unknown"))"
+				response.readableStatus = "\((container.state?.rawValue ?? "unknown").capitalizingFirstLetter()) (\(container.status ?? "unknown"))"
 				return response
 			} else {
 				return .failure(error: "Container not found")

@@ -9,7 +9,7 @@ import SwiftUI
 import PortainerKit
 
 struct ContainersView: View {
-	@Environment(\.useContainerGridView) var useContainerGridView: Bool
+	@Environment(\.useContainerGridView) var useContainerGridView
 	let containers: [PortainerKit.Container]
 	
     var body: some View {
@@ -21,20 +21,6 @@ struct ContainersView: View {
 				.equatable()
 		}
     }
-}
-
-extension ContainersView {
-	static func containerDragProvider(container: PortainerKit.Container) -> NSItemProvider {
-		let activity = NSUserActivity(activityType: AppState.UserActivity.viewContainer)
-		activity.requiredUserInfoKeys = ["ContainerID"]
-		activity.userInfo = ["ContainerID": container.id]
-		activity.title = container.displayName ?? container.id
-		activity.persistentIdentifier = container.id
-		activity.isEligibleForPrediction = true
-		activity.isEligibleForHandoff = true
-		
-		return NSItemProvider(object: activity)
-	}
 }
 
 extension ContainersView: Equatable {

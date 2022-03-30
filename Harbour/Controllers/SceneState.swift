@@ -35,8 +35,6 @@ final class SceneState: ObservableObject {
 
 		guard let action = HarbourURLScheme.fromURL(url) else { return }
 
-		print(action)
-
 		switch action {
 			case .openContainer(let containerID):
 				if let container = Portainer.shared.containers.first(where: { $0.id == containerID }) {
@@ -51,16 +49,14 @@ final class SceneState: ObservableObject {
 		
 		do {
 			switch activity.activityType {
-				case AppState.UserActivity.attachToContainer:
-					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String,
-					   let container = Portainer.shared.containers.first(where: { $0.id == containerID }) {
-						try Portainer.shared.attach(to: container, endpointID: activity.userInfo?[AppState.UserActivity.endpointIDKey] as? Int)
-					}
-				case AppState.UserActivity.viewContainer:
-					if let containerID = activity.userInfo?[AppState.UserActivity.containerIDKey] as? String,
-					   let container = Portainer.shared.containers.first(where: { $0.id == containerID }) {
-						activeContainer = container
-					}
+				case UserActivity.ViewContainer.activityType:
+					guard let activity = UserActivity.ViewContainer(from: activity) else { return }
+					guard let container = Portainer.shared.containers.first(where: { $0.id == activity.containerID }) else { return }
+					activeContainer = container
+				case UserActivity.AttachToContainer.activityType:
+					guard let activity = UserActivity.AttachToContainer(from: activity) else { return }
+					guard let container = Portainer.shared.containers.first(where: { $0.id == activity.containerID }) else { return }
+					try Portainer.shared.attach(to: container, endpointID: activity.endpointID)
 				default:
 					break
 			}

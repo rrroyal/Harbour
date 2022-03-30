@@ -9,7 +9,7 @@ import SwiftUI
 import PortainerKit
 
 struct ContainerCellBackground: View {
-	@Environment(\.useColoredContainerCells) var useColoredContainerCells: Bool
+	@Environment(\.useColoredContainerCells) var useColoredContainerCells
 	let state: PortainerKit.ContainerStatus?
 	
 	let fallback = Color(uiColor: .secondarySystemBackground)

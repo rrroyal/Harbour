@@ -216,6 +216,21 @@ internal enum Localization {
     }
   }
 
+  internal enum UserActivity {
+    internal enum AttachToContainer {
+      /// Attach to %@
+      internal static func title(_ p1: Any) -> String {
+        return Localization.tr("Localizable", "UserActivity.AttachToContainer.Title", String(describing: p1))
+      }
+    }
+    internal enum ViewContainer {
+      /// View details for %@
+      internal static func title(_ p1: Any) -> String {
+        return Localization.tr("Localizable", "UserActivity.ViewContainer.Title", String(describing: p1))
+      }
+    }
+  }
+
   internal enum Widgets {
     /// Select a container
     internal static let selectContainer = Localization.tr("Localizable", "Widgets.SelectContainer")

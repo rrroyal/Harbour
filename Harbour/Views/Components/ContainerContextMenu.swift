@@ -56,7 +56,7 @@ struct ContainerContextMenu: View {
 	}
 	
 	var body: some View {
-		Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter ?? Localization.Generic.unknown, systemImage: container.state.icon)
+		Label(container.status ?? container.state?.rawValue.capitalizingFirstLetter() ?? Localization.Generic.unknown, systemImage: container.state.icon)
 		
 		Divider()
 					

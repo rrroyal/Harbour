@@ -70,11 +70,6 @@ public final class PortainerKit {
 			throw APIError.fromMessage(decoded[APIError.errorMessageKey])
 		}
 	}
-
-	public func fetchMotd() async throws -> Motd {
-		let request = try request(for: .motd)
-		return try await fetch(request: request)
-	}
 	
 	/// Fetches available endpoints.
 	/// - Returns: `[Endpoint]`

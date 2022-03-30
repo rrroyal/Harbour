@@ -19,11 +19,11 @@ extension ContainersListView {
 		var containerStatusSubheadline: some View {
 			Group {
 				if let status = container.status,
-				   let state = container.state?.rawValue.capitalizingFirstLetter,
+				   let state = container.state?.rawValue.capitalizingFirstLetter(),
 				   status != state {
 					Text("\(status) • \(state)")
 						.foregroundStyle(.secondary)
-				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter {
+				} else if let fallback = container.status ?? container.state?.rawValue.capitalizingFirstLetter() {
 					Text(fallback)
 						.foregroundStyle(.secondary)
 				} else {
