@@ -77,7 +77,7 @@ struct LoginView: View {
 					} else {
 						Group {
 							if let buttonLabel = buttonLabel {
-								Text(buttonLabel.localized.capitalizingFirstLetter)
+								Text(NSLocalizedString(buttonLabel, comment: "").capitalizingFirstLetter())
 							} else {
 								Text(Localization.Login.login)
 							}
@@ -128,7 +128,7 @@ struct LoginView: View {
 		loginTask?.cancel()
 		loginTask = Task {
 			do {
-				try await portainer.login(url: url, token: token)
+				try await portainer.setup(url: url, token: token)
 
 				UIDevice.generateHaptic(.success)
 

@@ -9,6 +9,14 @@ import Foundation
 import PortainerKit
 
 enum HarbourURLScheme {
+	enum Path {
+		static let open = "open"
+	}
+
+	enum Query {
+		static let containerID = "containerid"
+	}
+	
 	private static let scheme = "harbour"
 
 	case openContainer(containerID: PortainerKit.Container.ID)
@@ -43,13 +51,5 @@ enum HarbourURLScheme {
 	
 	public static func isValidURL(_ url: URL) -> Bool {
 		return url.scheme?.lowercased() == scheme
-	}
-
-	enum Path {
-		static let open = "open"
-	}
-
-	enum Query {
-		static let containerID = "containerid"
 	}
 }

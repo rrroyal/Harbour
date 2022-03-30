@@ -18,6 +18,16 @@ extension EnvironmentValues {
 		get { self[SceneErrorHandler.self] }
 		set { self[SceneErrorHandler.self] = newValue }
 	}
+
+	// MARK: UseColumns
+	private struct UseColumns: EnvironmentKey {
+		static let defaultValue: Bool = true
+	}
+
+	var useColumns: Bool {
+		get { self[UseColumns.self] }
+		set { self[UseColumns.self] = newValue }
+	}
 	
 	// MARK: UseContainerGridView
 	private struct UseContainerGridView: EnvironmentKey {
@@ -29,7 +39,7 @@ extension EnvironmentValues {
 		set { self[UseContainerGridView.self] = newValue }
 	}
 	
-	// MARK: UseColoredCOntainerCells
+	// MARK: UseColoredContainerCells
 	private struct UseColoredContainerCells: EnvironmentKey {
 		static let defaultValue: Bool = false
 	}

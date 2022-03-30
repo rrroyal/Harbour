@@ -18,7 +18,7 @@ extension ContainersGridView {
 		var body: some View {
 			VStack {
 				HStack(alignment: .center) {
-					Text(container.state?.rawValue.capitalizingFirstLetter ?? Localization.Generic.unknown)
+					Text(container.state?.rawValue.capitalizingFirstLetter() ?? Localization.Generic.unknown)
 						.font(.footnote.weight(.medium))
 						.foregroundStyle(container.state != nil ? .secondary : .tertiary)
 						.lineLimit(1)

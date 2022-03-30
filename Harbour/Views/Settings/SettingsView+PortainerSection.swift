@@ -42,7 +42,7 @@ extension SettingsView {
 								UIDevice.generateHaptic(.selectionChanged)
 								Task {
 									do {
-										try await portainer.setup(with: server)
+										try await portainer.setup(url: server)
 										try await portainer.getEndpoints()
 									} catch {
 										sceneState.handle(error)

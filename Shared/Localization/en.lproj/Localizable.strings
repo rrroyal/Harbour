@@ -87,9 +87,13 @@
 
 "Setup.Feature2.Title" = "See all of the details";
 "Setup.Feature2.Description" = "You can check logs, mounts, network config - everything!";
+
 "Setup.Feature3.Title" = "Attach to them too";
 "Setup.Feature3.Description" = "Yeah. I spent way too much time on that one.";
 
+// MARK: UserActivity
+"UserActivity.ViewContainer.Title" = "View details for %@";
+"UserActivity.AttachToContainer.Title" = "Attach to %@";
 
 // MARK: Indicators
 

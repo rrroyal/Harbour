@@ -34,7 +34,8 @@ struct DebugView: View {
 					Portainer.shared.cleanup()
 				}
 			}
-			
+
+			#if DEBUG
 			Section("Background Tasks") {
 				Labeled(label: "Last task", content: Preferences.shared.lastBackgroundTaskDate?.formatted(), hideIfEmpty: false)
 				
@@ -47,6 +48,7 @@ struct DebugView: View {
 			.onAppear {
 				Task { pendingBackgroundTasks = await BGTaskScheduler.shared.pendingTaskRequests() }
 			}
+			#endif
 			
 			Section("Widgets") {
 				Button("Reload all timelines") {

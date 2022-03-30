@@ -31,7 +31,7 @@ extension SettingsView {
 	}
 	
 	struct SliderOption: View {
-		@Environment(\.isEnabled) var isEnabled: Bool
+		@Environment(\.isEnabled) var isEnabled
 		let label: String
 		let description: String?
 		let iconSymbolName: String
@@ -74,7 +74,7 @@ extension SettingsView {
 	}
 	
 	struct ToggleOption: View {
-		@Environment(\.isEnabled) var isEnabled: Bool
+		@Environment(\.isEnabled) var isEnabled
 		let label: String
 		let description: String?
 		let iconSymbolName: String

@@ -16,18 +16,17 @@ struct ToolbarTitle: ToolbarContent {
 			VStack(spacing: 1) {
 				Text(title)
 					.font(.headline)
-					.fixedSize(horizontal: true, vertical: true)
 					.transition(.move(edge: .bottom))
 				
 				if let subtitle = subtitle {
 					Text(subtitle)
 						.font(.footnote)
 						.foregroundStyle(.tertiary)
-						.fixedSize(horizontal: true, vertical: true)
 						.transition(.move(edge: .bottom).combined(with: .opacity))
 				}
 			}
 			.animation(.easeInOut, value: subtitle)
+			.mask(Rectangle())
 		}
 	}
 }

@@ -34,7 +34,10 @@ struct ContainersGridView: View {
 						ContainerCell(container: container)
 							.equatable()
 							.contextMenu { ContainerContextMenu(container: container) }
-							.onDrag { ContainersView.containerDragProvider(container: container) }
+							.onDrag {
+								let activity = UserActivity.ViewContainer(container: container).activity()
+								return NSItemProvider(object: activity)
+							}
 					}
 					.buttonStyle(.decreasesOnPress)
 				}

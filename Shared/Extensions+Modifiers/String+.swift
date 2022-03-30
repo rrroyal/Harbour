@@ -8,15 +8,11 @@
 import Foundation
 
 extension String {
-	var capitalizingFirstLetter: String {
+	func capitalizingFirstLetter() -> String {
 		prefix(1).capitalized + dropFirst()
 	}
 
 	var isReallyEmpty: Bool {
 		trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-	}
-	
-	var localized: String {
-		NSLocalizedString(self, comment: "")
 	}
 }

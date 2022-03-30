@@ -11,7 +11,6 @@ import Foundation
 internal extension PortainerKit {
 	enum RequestPath {
 		case login
-		case motd
 		case endpoints
 		case containers(endpointID: Int)
 		case containerDetails(containerID: String, endpointID: Int)
@@ -23,8 +22,6 @@ internal extension PortainerKit {
 			switch self {
 				case .login:
 					return "/api/auth"
-				case .motd:
-					return "/api/motd"
 				case .endpoints:
 					return "/api/endpoints"
 				case .containers(let endpointID):

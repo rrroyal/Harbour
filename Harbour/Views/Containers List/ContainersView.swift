@@ -5,6 +5,8 @@
 //  Created by royal on 21/10/2021.
 //
 
+// TODO: Add `.equatable()` back when compiler starts working lmao
+
 import SwiftUI
 import PortainerKit
 
@@ -15,31 +17,17 @@ struct ContainersView: View {
     var body: some View {
 		if useContainerGridView {
 			ContainersGridView(containers: containers)
-				.equatable()
+//				.equatable()
 		} else {
 			ContainersListView(containers: containers)
-				.equatable()
+//				.equatable()
 		}
     }
 }
 
-extension ContainersView {
-	static func containerDragProvider(container: PortainerKit.Container) -> NSItemProvider {
-		let activity = NSUserActivity(activityType: AppState.UserActivity.viewContainer)
-		activity.requiredUserInfoKeys = ["ContainerID"]
-		activity.userInfo = ["ContainerID": container.id]
-		activity.title = container.displayName ?? container.id
-		activity.persistentIdentifier = container.id
-		activity.isEligibleForPrediction = true
-		activity.isEligibleForHandoff = true
-		
-		return NSItemProvider(object: activity)
-	}
-}
-
 extension ContainersView: Equatable {
 	static func == (lhs: ContainersView, rhs: ContainersView) -> Bool {
-		lhs.containers == rhs.containers
+		lhs.containers == rhs.containers && lhs.useContainerGridView == rhs.useContainerGridView
 	}
 }
 

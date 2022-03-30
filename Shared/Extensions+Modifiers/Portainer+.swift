@@ -10,7 +10,7 @@ import PortainerKit
 
 extension Portainer {
 	enum PortainerError: LocalizedError {
-		case noServer
+		case noServerURL
 		case noAPI
 		case noEndpoint
 		case noToken
@@ -18,7 +18,7 @@ extension Portainer {
 
 		public var errorDescription: String? {
 			switch self {
-				case .noServer: return Localization.Error.noServerURL
+				case .noServerURL: return Localization.Error.noServerURL
 				case .noAPI: return Localization.Error.noAPI
 				case .noEndpoint: return Localization.Error.noEndpoint
 				case .noToken: return Localization.Error.noToken
