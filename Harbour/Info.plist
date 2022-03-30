@@ -34,8 +34,8 @@
 	<array>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).AttachToContainer</string>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER).ViewContainer</string>
-		<string>ExecuteActionIntent</string>
-		<string>GetContainerStatusIntent</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).ExecuteActionIntent</string>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER).GetContainerStatusIntent</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
