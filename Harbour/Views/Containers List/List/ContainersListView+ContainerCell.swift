@@ -61,7 +61,7 @@ extension ContainersListView {
 					.animation(.easeInOut, value: container.state.color)
 			}
 			.padding()
-			.background(ContainerCellBackground(state: container.state))
+			.background(Color(uiColor: .systemBackground))
 			.containerShape(Self.backgroundShape)
 			.animation(.easeInOut, value: container.state)
 			.animation(.easeInOut, value: container.status)

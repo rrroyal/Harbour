@@ -5,10 +5,11 @@
 //  Created by royal on 11/06/2021.
 //
 
+// TODO: Rework this view
+
 import PortainerKit
 import SwiftUI
 
-#warning("TODO: Rework view")
 struct ContainerDetailView: View {
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
@@ -40,54 +41,23 @@ struct ContainerDetailView: View {
 		.buttonStyle(.decreasesOnPress)
 	}
 	
-	@ViewBuilder
-	var generalSection: some View {
-		if let details = container.details {
-			LabeledSection(label: "ID", content: details.id, monospace: true, hideIfEmpty: false)
-			LabeledSection(label: "Created", content: details.created.formatted(), hideIfEmpty: false)
-			LabeledSection(label: "PID", content: "\(details.state.pid)", monospace: true, hideIfEmpty: false)
-			LabeledSection(label: "Status", content: container.status ?? details.state.status.rawValue, monospace: true, hideIfEmpty: false)
-			LabeledSection(label: "Error", content: details.state.error, monospace: true, hideIfEmpty: false)
-			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted(), hideIfEmpty: false)
-			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted(), hideIfEmpty: false)
-		} else if loading {
-			ProgressView()
-				.padding()
-				.frame(maxWidth: .infinity, alignment: .center)
-		}
-	}
-	
-	var logsSection: some View {
-		CustomSection(label: "Logs (last \(lastLogsTailCount) lines)") {
-			if let logs = lastLogsSnippet {
-				Text(logs.isReallyEmpty ? "empty" : logs)
-					.font(.system(.footnote, design: .monospaced))
-					.foregroundStyle(logs.isReallyEmpty ? .secondary : .primary)
-					.lineLimit(nil)
-					.contentShape(Rectangle())
-					.frame(maxWidth: .infinity, alignment: .topLeading)
-					.textSelection(.enabled)
-			} else if loading {
-				ProgressView()
-					.padding()
-					.frame(maxWidth: .infinity, alignment: .center)
-			}
-		}
-		.frame(maxWidth: .infinity)
-		.id("LastLogsSnippetLabel-\(lastLogsSnippet?.hashValue ?? -1)")
-	}
-	
 	var body: some View {
 		ScrollView {
 			LazyVStack(spacing: 20) {
 				buttonsSection
-				generalSection
-				logsSection
-				
-				if let containerDetails = container.details {
-					GeneralSection(details: containerDetails)
-					StateSection(state: containerDetails.state)
-					GraphDriverSection(graphDriver: containerDetails.graphDriver)
+
+				if let details = container.details {
+					GeneralSection(container: container, details: details)
+				}
+
+				if let lastLogsSnippet = lastLogsSnippet {
+					LogsSection(logs: lastLogsSnippet, tailCount: lastLogsTailCount)
+				}
+
+				if let details = container.details {
+					DetailsSection(details: details)
+					StateSection(state: details.state)
+					GraphDriverSection(graphDriver: details.graphDriver)
 				}
 			}
 			.padding()
@@ -120,7 +90,9 @@ struct ContainerDetailView: View {
 				}
 			}
 		}
-		.animation(.easeInOut, value: lastLogsSnippet)
+		.animation(.easeInOut, value: loading)
+		.animation(.easeInOut, value: container.details != nil)
+		.animation(.easeInOut, value: lastLogsSnippet != nil)
 		.refreshable { await refresh() }
 		.task { await refresh() }
 		.userActivity(UserActivity.ViewContainer.activityType, isActive: sceneState.activeContainer == container) { activity in
@@ -147,6 +119,7 @@ struct ContainerDetailView: View {
 	
 	private func refresh() async {
 		loading = true
+		defer { loading = false }
 		
 		do {
 			async let logs = portainer.getLogs(from: container.id, tail: lastLogsTailCount, displayTimestamps: true)
@@ -162,8 +135,6 @@ struct ContainerDetailView: View {
 		} catch {
 			sceneState.handle(error)
 		}
-		
-		loading = false
 	}
 }
 
@@ -173,12 +144,45 @@ extension ContainerDetailView: Identifiable, Equatable {
 	}
 	
 	static func == (lhs: ContainerDetailView, rhs: ContainerDetailView) -> Bool {
-		lhs.container == rhs.container
+		lhs.container.id == rhs.container.id
 	}
 }
 
 fileprivate extension ContainerDetailView {
 	struct GeneralSection: View {
+		let container: PortainerKit.Container
+		let details: PortainerKit.ContainerDetails
+
+		var body: some View {
+			LabeledSection(label: "ID", content: details.id, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Created", content: details.created.formatted(), hideIfEmpty: false)
+			LabeledSection(label: "PID", content: "\(details.state.pid)", monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Status", content: container.status ?? details.state.status.rawValue, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Error", content: details.state.error, monospace: true, hideIfEmpty: false)
+			LabeledSection(label: "Started at", content: details.state.startedAt?.formatted(), hideIfEmpty: false)
+			LabeledSection(label: "Finished at", content: details.state.finishedAt?.formatted(), hideIfEmpty: false)
+		}
+	}
+
+	struct LogsSection: View {
+		let logs: String
+		let tailCount: Int
+
+		var body: some View {
+			CustomSection(label: "Logs (last \(tailCount) lines)") {
+				Text(logs.isReallyEmpty ? "empty" : logs)
+					.font(.system(.footnote, design: .monospaced))
+					.foregroundStyle(logs.isReallyEmpty ? .secondary : .primary)
+					.lineLimit(nil)
+					.contentShape(Rectangle())
+					.frame(maxWidth: .infinity, alignment: .topLeading)
+					.textSelection(.enabled)
+			}
+			.frame(maxWidth: .infinity)
+		}
+	}
+
+	struct DetailsSection: View {
 		let details: PortainerKit.ContainerDetails
 		
 		var body: some View {

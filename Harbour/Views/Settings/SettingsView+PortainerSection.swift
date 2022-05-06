@@ -59,7 +59,7 @@ extension SettingsView {
 						Button(role: .destructive, action: {
 							UIDevice.generateHaptic(.heavy)
 							do {
-								try portainer.logout(from: server)
+								try portainer.deleteServer(url: server)
 							} catch {
 								sceneState.handle(error)
 							}

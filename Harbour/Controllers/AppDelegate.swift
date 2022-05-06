@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import BackgroundTasks
+import PortainerKit
 
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 		
@@ -18,6 +19,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
 		]
 		UserDefaults.standard.register(defaults: defaults)
 		#endif
+
+		Preferences.shared.enableDebugLogging = false
 		
 		BGTaskScheduler.shared.register(forTaskWithIdentifier: BackgroundTasks.BackgroundTask.refresh, using: nil) { task in
 			BackgroundTasks.scheduleBackgroundRefreshTask()

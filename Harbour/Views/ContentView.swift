@@ -64,6 +64,10 @@ struct ContentView: View {
 		}
 		.disabled(!portainer.isSetup)
 	}
+
+	var background: some View {
+		Color(uiColor: .systemGroupedBackground)
+	}
 	
 	@ViewBuilder
 	var content: some View {
@@ -86,6 +90,8 @@ struct ContentView: View {
 	var body: some View {
 		NavigationView {
 			content
+				.maxSize()
+				.background(background.ignoresSafeArea())
 				.transition(.opacity)
 				.navigationTitle("Harbour")
 				.navigationBarTitleDisplayMode(.inline)

@@ -10,7 +10,7 @@ import PortainerKit
 
 extension Portainer {
 	enum PortainerError: LocalizedError {
-		case noServerURL
+		case noServerURL(URL?)
 		case noAPI
 		case noEndpoint
 		case noToken

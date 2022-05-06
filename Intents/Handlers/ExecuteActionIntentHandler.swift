@@ -63,7 +63,7 @@ final class ExecuteActionIntentHandler: NSObject, ExecuteActionIntentHandling {
 			try await portainer.execute(action, on: containerID)
 			return .success(newStatus: action.expectedState.asContainerStatus)
 		} catch {
-			return .failure(error: error.readableDescription)
+			return .failure(error: error.localizedDescription)
 		}
 	}
 }

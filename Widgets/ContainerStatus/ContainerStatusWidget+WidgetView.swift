@@ -16,13 +16,13 @@ extension ContainerStatusWidget {
 		@ViewBuilder
 		var errorOverlay: some View {
 			if let error = entry.error {
-				Text("Error: \(error.readableDescription)")
+				Text("Error: \(error.localizedDescription)")
 					.font(.system(.footnote, design: .monospaced))
 					.lineLimit(nil)
 					.multilineTextAlignment(.center)
 					.minimumScaleFactor(0.7)
 					.padding()
-					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+					.maxSize()
 					.background(.ultraThinMaterial)
 			}
 		}

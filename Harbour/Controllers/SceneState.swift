@@ -117,7 +117,7 @@ final class SceneState: ObservableObject {
 		UIDevice.generateHaptic(.error)
 		logger.error("\(String(describing: error), privacy: .public) [\(_fileID, privacy: .public):\(_line, privacy: .public) \(_function, privacy: .public)]")
 		
-		let errorDescription = error.readableDescription
+		let errorDescription = error.localizedDescription
 		let recoverySuggestion = (error as? LocalizedError)?.recoverySuggestion
 		
 		if displayIndicator {

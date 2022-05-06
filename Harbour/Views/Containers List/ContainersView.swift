@@ -17,10 +17,10 @@ struct ContainersView: View {
     var body: some View {
 		if useContainerGridView {
 			ContainersGridView(containers: containers)
-//				.equatable()
+				.equatable()
 		} else {
 			ContainersListView(containers: containers)
-//				.equatable()
+				.equatable()
 		}
     }
 }

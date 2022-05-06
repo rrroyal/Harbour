@@ -7,10 +7,16 @@
 
 import Combine
 import Foundation
+import os.log
 
 @available(iOS 15, macOS 12, *)
 public final class PortainerKit {
+
+	// MARK: Static properties
+
 	public typealias WebSocketPassthroughSubject = PassthroughSubject<Result<WebSocketMessage, Error>, Error>
+
+	public static let userDefaultsLoggingKey = "EnableDebugLogging"
 	
 	// MARK: Public properties
 	
@@ -19,13 +25,15 @@ public final class PortainerKit {
 	
 	/// Used `URLSession`
 	public let session: URLSession
-	
-	// MARK: Public variables
-	
+
 	/// Authorization token
 	public var token: String?
+
+	// MARK: Private properties
+
+	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "xyz.shameful.PortainerKit", category: "PortainerKit")
 	
-	// MARK: - init
+	// MARK: init
 	
 	/// Initializes PortainerKit with endpoint URL and optional authorization token.
 	/// - Parameters:
@@ -44,32 +52,6 @@ public final class PortainerKit {
 	}
 	
 	// MARK: - Public functions
-	
-	/// Logs in to Portainer.
-	/// - Parameters:
-	///   - username: Username
-	///   - password: Password
-	/// - Returns: JWT token
-	public func login(username: String, password: String) async throws -> String {
-		var request = try request(for: .login)
-		request.httpMethod = "POST"
-		
-		let body = [
-			"Username": username,
-			"Password": password
-		]
-		request.httpBody = try JSONEncoder().encode(body)
-		
-		let (data, _) = try await session.data(for: request)
-		let decoded = try JSONDecoder().decode([String: String].self, from: data)
-		
-		if let jwt: String = decoded["jwt"] {
-			token = jwt
-			return jwt
-		} else {
-			throw APIError.fromMessage(decoded[APIError.errorMessageKey])
-		}
-	}
 	
 	/// Fetches available endpoints.
 	/// - Returns: `[Endpoint]`
@@ -253,6 +235,16 @@ public final class PortainerKit {
 	/// - Returns: Output
 	private func fetch<Output: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {
 		let response = try await session.data(for: request)
+
+		if UserDefaults.standard.bool(forKey: Self.userDefaultsLoggingKey) {
+			logger.warning("Logging is enabled! All of the data for this request will be logged to the console. To disable it, set \(Self.userDefaultsLoggingKey) to false.")
+			let obj: [String: Any] = [
+				"data": response.0.base64EncodedString()
+			]
+			let json = try? JSONSerialization.data(withJSONObject: obj)
+			let str = json?.base64EncodedString() ?? "<none>"
+			logger.debug("\(request.url?.absoluteString ?? "<none>"): \(str)")
+		}
 		
 		do {
 			let decoded = try decoder.decode(Output.self, from: response.0)

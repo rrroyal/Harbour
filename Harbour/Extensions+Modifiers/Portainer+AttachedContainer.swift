@@ -81,7 +81,7 @@ extension Portainer {
 					isConnected = false
 					update(error)
 					
-					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.Indicator.WebSocketDisconnected.title, subheadline: error.readableDescription, dismissType: .after(5))
+					let indicator: Indicators.Indicator = .init(id: "ContainerWebSocketDisconnected-\(container.id)", icon: "bolt.fill", headline: Localization.Indicator.WebSocketDisconnected.title, subheadline: error.localizedDescription, dismissType: .after(5))
 					errorHandler?(error, indicator, #fileID, #line, #function)
 			}
 		}
@@ -100,7 +100,7 @@ extension Portainer {
 					string = Localization.Portainer.AttachedContainer.finished
 				case .failure(let error):
 					attributes.foregroundColor = .red
-					string = error.readableDescription
+					string = error.localizedDescription
 			}
 
 			let attributedString = AttributedString(string, attributes: attributes)
@@ -111,7 +111,7 @@ extension Portainer {
 			var attributes = AttributeContainer()
 			attributes.foregroundColor = .red
 
-			let attributedString = AttributedString(error.readableDescription, attributes: attributes)
+			let attributedString = AttributedString(error.localizedDescription, attributes: attributes)
 			self.attributedString.append(attributedString)
 		}
 	}
@@ -121,7 +121,7 @@ private extension Portainer.AttachedContainer {
 	enum AttachedContainerError: LocalizedError {
 		case unhandledMessage(String)
 
-		var errorDescription: String {
+		var errorDescription: String? {
 			switch self {
 				case .unhandledMessage(let message):
 					return Localization.Portainer.AttachedContainer.unhandledMessage(message)

@@ -17,6 +17,10 @@ extension View {
 	func padding(_ size: PaddingSize) -> some View {
 		padding(size.rawValue)
 	}
+
+	func maxSize(width: Bool = true, height: Bool = true, alignment: Alignment = .center) -> some View {
+		frame(maxWidth: width ? .infinity : nil, maxHeight: height ? .infinity : nil, alignment: alignment)
+	}
 }
 
 // MARK: PaddingSize

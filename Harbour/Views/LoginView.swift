@@ -9,7 +9,7 @@ import SwiftUI
 import PortainerKit
 
 struct LoginView: View {
-	@Environment(\.presentationMode) var presentationMode
+	@Environment(\.dismiss) var dismiss
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: Portainer
 
@@ -111,34 +111,24 @@ struct LoginView: View {
 	}
 
 	@Sendable
-	func login() {
-		let url: URL? = {
-			guard var components = URLComponents(string: self.url) else { return nil }
-			components.path = components.path.split(separator: "/").joined(separator: "/")	// #HB-8
-			return components.url
-		}()
-
-		guard let url = url else {
-			UIDevice.generateHaptic(.error)
-			buttonLabel = "Invalid URL"
-			buttonColor = .red
-			return
-		}
-
+	private func login() {
 		loginTask?.cancel()
 		loginTask = Task {
 			do {
+				guard let url = URL(string: url) else {
+					throw GenericError.invalidURL
+				}
+
 				try await portainer.setup(url: url, token: token)
 
 				UIDevice.generateHaptic(.success)
 
 				buttonColor = .green
 				buttonLabel = "Success!"
-				presentationMode.wrappedValue.dismiss()
+				dismiss()
 
 				Task {
 					do {
-						try await portainer.getEndpoints()
 						if portainer.selectedEndpointID != nil {
 							try await portainer.getContainers()
 						}
@@ -153,7 +143,7 @@ struct LoginView: View {
 				loginTask?.cancel()
 
 				buttonColor = .red
-				buttonLabel = error.readableDescription
+				buttonLabel = error.localizedDescription
 
 				errorTimer?.invalidate()
 				errorTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in

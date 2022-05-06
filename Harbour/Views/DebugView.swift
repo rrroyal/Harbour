@@ -12,6 +12,7 @@ import OSLog
 import Indicators
 import BackgroundTasks
 import WidgetKit
+import PortainerKit
 
 struct DebugView: View {
 	@EnvironmentObject var sceneState: SceneState
@@ -32,6 +33,10 @@ struct DebugView: View {
 					Preferences.shared.selectedServer = nil
 					Preferences.shared.selectedEndpointID = nil
 					Portainer.shared.cleanup()
+				}
+
+				Button("\(Preferences.shared.enableDebugLogging ? "Disable" : "Enable") debug logging") {
+					Preferences.shared.enableDebugLogging.toggle()
 				}
 			}
 
@@ -65,7 +70,7 @@ struct DebugView: View {
 				
 				Button("Reset all") {
 					UIDevice.generateHaptic(.heavy)
-					Preferences.Key.allCases.forEach { Preferences.ud.removeObject(forKey: $0.rawValue) }
+					Preferences.Keys.allCases.forEach { Preferences.ud.removeObject(forKey: $0.rawValue) }
 					exit(0)
 				}
 				.foregroundStyle(.red)
@@ -161,7 +166,7 @@ extension DebugView {
 						.compactMap { $0 as? OSLogEntryLog }
 						.map { LogEntry(message: $0.composedMessage, level: $0.level, date: $0.date, category: $0.category) }
 				} catch {
-					logs = [LogEntry(message: error.readableDescription, level: nil, date: nil, category: nil)]
+					logs = [LogEntry(message: error.localizedDescription, level: nil, date: nil, category: nil)]
 				}
 			}
 		}

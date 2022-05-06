@@ -35,9 +35,10 @@ public extension PortainerKit {
 	
 	enum EndpointType: Int, Decodable, Sendable, Hashable {
 		case docker = 1
-		case agent
-		case azure
-		case edgeAgent
+		case agent = 2
+		case azure = 3
+		case edgeAgent = 4
+		case edgeAgentK8s = 7
 	}
 	
 	enum ExecuteAction: String, Sendable, Hashable {
@@ -171,7 +172,7 @@ public extension PortainerKit {
 		public let shell: [String]?
 	}
 	
-	struct ContainerState: Decodable, Sendable {
+	struct ContainerState: Decodable {
 		enum CodingKeys: String, CodingKey {
 			case status = "Status"
 			case running = "Running"

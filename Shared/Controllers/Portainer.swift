@@ -14,6 +14,7 @@ import Keychain
 import PortainerKit
 
 @MainActor
+/// Main Portainer-related data store
 final class Portainer: ObservableObject {
 	public typealias ContainerInspection = (general: PortainerKit.Container?, details: PortainerKit.ContainerDetails)
 
@@ -83,9 +84,10 @@ final class Portainer: ObservableObject {
 	/// - Parameters:
 	///   - url: Server URL
 	///   - token: Access token
-	@Sendable @MainActor public func setup(url: URL? = Preferences.shared.selectedServer, token: String? = nil) async throws {
+	@Sendable @MainActor
+	public func setup(url: URL? = Preferences.shared.selectedServer, token: String? = nil) async throws {
 		do {
-			guard let url = url else { throw PortainerError.noServerURL }
+			guard let url = url else { throw PortainerError.noServerURL(nil) }
 			guard url != serverURL else { return }
 			guard let token = try? (token ?? keychain.getToken(server: url)) else { throw PortainerError.noToken }
 
@@ -95,12 +97,16 @@ final class Portainer: ObservableObject {
 			defer { isSettingUp = false }
 
 			let api = PortainerKit(url: url, token: token)
+			let endpoints = try await api.fetchEndpoints()
 
-			try keychain.saveToken(server: url, token: token, comment: Localization.Keychain.tokenComment(Bundle.main.mainBundleIdentifier))
 			self.api = api
+			self.endpoints = endpoints
 
 			isSetup = true
+			try? keychain.saveToken(server: url, token: token, comment: Localization.Keychain.tokenComment(Bundle.main.mainBundleIdentifier))
 			Preferences.shared.selectedServer = url
+
+			servers = (try? keychain.getURLs()) ?? []
 		} catch {
 			handle(error)
 			throw error
@@ -109,8 +115,9 @@ final class Portainer: ObservableObject {
 
 	/// Removes credentials for supplied server URL
 	/// - Parameter url: URL to remove credentials for
-	@Sendable @MainActor public func logout(from url: URL) throws {
-		logger.info("Logging out from \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\" ")
+	@Sendable @MainActor
+	public func deleteServer(url: URL) throws {
+		logger.info("Deleting server with URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\" ")
 
 		try keychain.removeToken(server: url)
 		servers.remove(url)
@@ -122,10 +129,13 @@ final class Portainer: ObservableObject {
 		if serverURL == url {
 			cleanup()
 		}
+
+		servers = (try? keychain.getURLs()) ?? []
 	}
 
 	/// Cleans up local data (used after logging out)
-	@Sendable @MainActor public func cleanup() {
+	@Sendable @MainActor
+	public func cleanup() {
 		logger.info("Cleaning up!")
 		
 		api = nil
@@ -144,7 +154,8 @@ final class Portainer: ObservableObject {
 
 	/// Sets selectedEndpointID and fetches containers
 	/// - Parameter endpointID: Endpoint ID
-	@Sendable @MainActor public func setSelectedEndpoint(_ endpointID: PortainerKit.Endpoint.ID?) async throws {
+	@Sendable @MainActor
+	public func setSelectedEndpoint(_ endpointID: PortainerKit.Endpoint.ID?) async throws {
 		logger.info("Selected endpoint with ID \(endpointID?.description ?? "<none>")")
 		selectedEndpointID = endpointID
 
@@ -163,8 +174,8 @@ final class Portainer: ObservableObject {
 
 	/// Fetches available endpoints.
 	/// - Returns: `[PortainerKit.Endpoint]`
-	@discardableResult
-	@Sendable @MainActor public func getEndpoints() async throws -> [PortainerKit.Endpoint] {
+	@discardableResult @Sendable @MainActor
+	public func getEndpoints() async throws -> [PortainerKit.Endpoint] {
 		do {
 			guard let api = api else { throw PortainerError.noAPI }
 
@@ -191,8 +202,8 @@ final class Portainer: ObservableObject {
 	///   - endpointID: Endpoint ID to search
 	///   - containerID: Search for container with this ID
 	/// - Returns: `[PortainerKit.Container]`
-	@discardableResult
-	@Sendable @MainActor public func getContainers(endpointID: Int? = nil, containerID: PortainerKit.Container.ID? = nil) async throws -> [PortainerKit.Container] {
+	@discardableResult @Sendable @MainActor
+	public func getContainers(endpointID: Int? = nil, containerID: PortainerKit.Container.ID? = nil) async throws -> [PortainerKit.Container] {
 		do {
 			guard let api = api else { throw PortainerError.noAPI }
 			guard let endpointID = endpointID ?? self.selectedEndpointID else { throw PortainerError.noEndpoint }
@@ -218,9 +229,9 @@ final class Portainer: ObservableObject {
 			isLoggedIn = true
 			self.containers = containers
 
-			#if IOS
+//			#if IOS
 //			Task { try? storeContainers(containers: containers) }
-			#endif
+//			#endif
 
 			return containers
 		} catch {
@@ -233,7 +244,8 @@ final class Portainer: ObservableObject {
 	/// - Parameter container: Container to be inspected
 	/// - Parameter endpointID: Endpoint ID to inspect
 	/// - Returns: `ContainerInspection`
-	@Sendable @MainActor public func inspectContainer(_ container: PortainerKit.Container, endpointID: Int? = nil) async throws -> ContainerInspection {
+	@Sendable @MainActor
+	public func inspectContainer(_ container: PortainerKit.Container, endpointID: Int? = nil) async throws -> ContainerInspection {
 		do {
 			guard let api = api else { throw PortainerError.noAPI }
 			guard let endpointID = endpointID ?? self.selectedEndpointID else { throw PortainerError.noEndpoint }
@@ -262,7 +274,8 @@ final class Portainer: ObservableObject {
 	/// - Parameters:
 	///   - action: Action to be executed
 	///   - container: Container, where the action will be executed
-	@Sendable public func execute(_ action: PortainerKit.ExecuteAction, on containerID: PortainerKit.Container.ID, endpointID: Int? = nil) async throws {
+	@Sendable
+	public func execute(_ action: PortainerKit.ExecuteAction, on containerID: PortainerKit.Container.ID, endpointID: Int? = nil) async throws {
 		do {
 			guard let api = api else { throw PortainerError.noAPI }
 			guard let endpointID = endpointID ?? self.selectedEndpointID else { throw PortainerError.noEndpoint }
@@ -284,7 +297,8 @@ final class Portainer: ObservableObject {
 	///   - tail: Number of lines
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
-	@Sendable public func getLogs(from containerID: PortainerKit.Container.ID, endpointID: Int? = nil, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
+	@Sendable
+	public func getLogs(from containerID: PortainerKit.Container.ID, endpointID: Int? = nil, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
 		do {
 			guard let api = api else { throw PortainerError.noAPI }
 			guard let endpointID = endpointID ?? self.selectedEndpointID else { throw PortainerError.noEndpoint }
@@ -357,7 +371,8 @@ final class Portainer: ObservableObject {
 	}
 
 	/// Loads stored containers
-	@MainActor private func loadStoredContainers() throws {
+	@MainActor
+	private func loadStoredContainers() throws {
 		logger.info("(Persistence) Fetching stored containers...")
 
 		let context = Persistence.shared.backgroundContext
@@ -386,26 +401,31 @@ final class Portainer: ObservableObject {
 	private func handle(_ error: Error, _function: StaticString = #function, _fileID: StaticString = #fileID, _line: Int = #line) {
 		logger.error("\(String(describing: error)) (\(_function) [\(_fileID):\(_line)])")
 
-		// PortainerKit
-		if let error = error as? PortainerKit.APIError {
-			switch error {
-				case .invalidToken:
-					cleanup()
-				default:
-					break
+		switch error {
+			case let error as Portainer.PortainerError: do {
+				switch error {
+					case .noServerURL(let url):
+						if let url = url {
+							try? keychain.removeToken(server: url)
+						}
+						if Preferences.shared.selectedServer == url {
+							Preferences.shared.selectedServer = nil
+						}
+						break
+					default:
+						break
+				}
 			}
-		} else if let error = error as? URLError {
-			switch error.code {
-				case .cannotConnectToHost, .cannotFindHost, .dnsLookupFailed, .networkConnectionLost, .notConnectedToInternet, .timedOut:
-					endpoints = []
-					containers = []
-					isLoggedIn = false
-					#if IOS
-					attachedContainer = nil
-					#endif
-				default:
-					break
+			case let error as PortainerKit.APIError: do {
+				switch error {
+					case .invalidToken:
+						cleanup()
+					default:
+						break
+				}
 			}
+			default:
+				break
 		}
 	}
 }

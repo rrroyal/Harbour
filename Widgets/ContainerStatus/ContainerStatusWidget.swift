@@ -49,7 +49,7 @@ struct ContainerStatusWidget {
 					let entry = Entry(date: now, configuration: configuration, container: container)
 					completion(entry)
 				} catch {
-					Widgets.logger.error("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash))) Error! \(error.readableDescription, privacy: .public)")
+					Widgets.logger.error("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash))) Error! \(error.localizedDescription, privacy: .public)")
 
 					let entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 					completion(entry)
@@ -80,7 +80,7 @@ struct ContainerStatusWidget {
 					let timeline = Timeline(entries: [entry], policy: .atEnd)
 					completion(timeline)
 				} catch {
-					Widgets.logger.error("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash))) Error! \(error.readableDescription, privacy: .public)")
+					Widgets.logger.error("\(#fileID, privacy: .public):\(#line, privacy: .public) \(#function, privacy: .public) (\(configuration.container?.identifier ?? "<none>", privacy: .sensitive(mask: .hash))) Error! \(error.localizedDescription, privacy: .public)")
 
 					let entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 					let timeline = Timeline(entries: [entry], policy: .atEnd)

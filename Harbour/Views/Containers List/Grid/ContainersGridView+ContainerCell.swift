@@ -56,7 +56,7 @@ extension ContainersGridView {
 			}
 			.padding(.medium)
 			.aspectRatio(1, contentMode: .fill)
-			.background(ContainerCellBackground(state: container.state))
+			.background(Color(uiColor: .systemBackground))
 			.containerShape(Self.backgroundShape)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.displayName)

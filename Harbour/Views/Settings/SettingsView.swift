@@ -11,7 +11,7 @@ struct SettingsView: View {
 	@EnvironmentObject var portainer: Portainer
 	@EnvironmentObject var preferences: Preferences
 	@Environment(\.presentationMode) var presentationMode
-	
+
 	let listRowInsets = EdgeInsets(top: 10, leading: 15, bottom: 10, trailing: 15)
 	
 	var body: some View {

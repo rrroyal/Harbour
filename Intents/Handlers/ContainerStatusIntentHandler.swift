@@ -67,7 +67,7 @@ final class ContainerStatusIntentHandler: NSObject, ContainerStatusIntentHandlin
 				return .failure(error: "Container not found")
 			}
 		} catch {
-			return .failure(error: error.readableDescription)
+			return .failure(error: error.localizedDescription)
 		}
 	}
 }
