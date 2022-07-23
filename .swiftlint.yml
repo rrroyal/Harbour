@@ -1,0 +1,48 @@
+disabled_rules:
+  - cyclomatic_complexity
+  - identifier_name
+  - indentation_width
+  - inclusive_language
+  - vertical_parameter_alignment
+  - vertical_parameter_alignment_on_call
+opt_in_rules:
+  - capture_variable
+  - closure_end_indentation
+  - collection_alignment
+  - contains_over_filter_count
+  - contains_over_first_not_nil
+  - contains_over_range_nil_comparison
+  - convenience_type
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - empty_xctest_method
+  - fallthrough
+  - fatal_error_message
+  - file_header
+  # - file_name
+  - file_name_no_space
+  # - file_types_order
+  - first_where
+  - force_unwrapping
+  - last_where
+  - modifier_order
+  - redundant_nil_coalescing
+  - toggle_bool
+  - unused_declaration
+  - unused_import
+line_length:
+  warning: 180
+  error: 220
+nesting:
+  type_level: 3
+  function_level: 2
+switch_case_alignment:  
+  indented_cases: true
+force_cast: error
+force_try: error
+custom_rules:
+  tabs_not_spaces:
+    name: "Tabs"
+    regex: "^ {2,4}"
+    message: "Use tabs, not spaces"

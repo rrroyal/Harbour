@@ -1,0 +1,22 @@
+//
+//  View+padding.swift
+//  Harbour
+//
+//  Created by royal on 23/07/2022.
+//
+
+import SwiftUI
+
+enum ViewPaddingSize: Double {
+	case small = 5
+}
+
+extension View {
+	func padding(_ edges: Edge.Set, _ size: ViewPaddingSize) -> some View {
+		padding(edges, size.rawValue)
+	}
+
+	func padding(_ size: ViewPaddingSize) -> some View {
+		padding(size.rawValue)
+	}
+}

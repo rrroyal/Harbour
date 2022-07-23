@@ -1,0 +1,36 @@
+/* 
+  Localizable.strings
+  Harbour
+
+  Created by royal on 17/07/2022.
+  en_US
+*/
+
+"Harbour" = "Harbour";
+
+// MARK: - Settings
+
+"Settings.Title" = "Settings";
+
+// MARK: Settings - Portainer
+
+"Settings.Portainer.Title" = "Portainer";
+
+// MARK: Settings - General
+
+"Settings.General.Title" = "General";
+
+// MARK: Settings - Interface
+
+"Settings.Interface.Title" = "Interface";
+
+"Settings.Interface.EnableHaptics.Title" = "Enable Haptics";
+"Settings.Interface.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
+
+"Settings.Interface.UseGridView.Title" = "Use Grid view";
+"Settings.Interface.UseGridView.Description" = "You can fit more containers, but it's worse for accessibility";
+
+// MARK: Settings - Other
+
+"Settings.Other.Title" = "Other";
+"Settings.Other.Footer" = "Made with ❤️ (and ☕) by @rrroyal";

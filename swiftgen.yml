@@ -1,0 +1,11 @@
+## Generate constants for your localized strings.
+##   Be sure that SwiftGen only parses ONE locale (typically Base.lproj, or en.lproj, or whichever your development region is); otherwise it will generate the same keys multiple times.
+##   SwiftGen will parse all `.strings` files found in that folder.
+strings:
+  inputs:
+    - ${PROJECT_DIR}/Localization/en.lproj
+  outputs:
+    - templateName: structured-swift5
+      output: ${OUTPUT_DIR}/Localizable.swift
+      params:
+        enumName: Localizable

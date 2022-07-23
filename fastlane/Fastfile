@@ -1,0 +1,47 @@
+default_platform(:ios)
+
+REPOSITORY = "rrroyal/Harbour"
+OUTPUT_DIR = "./fastlane/out"
+OUTPUT_IPA = "Harbour.ipa"
+OUTPUT_IPA_PATH = OUTPUT_DIR + "/" + OUTPUT_IPA
+
+platform :ios do
+  desc "Build .ipa, create new GitHub release & submit a build to TestFlight"
+  lane :release do
+    build_number = app_store_build_number(live: false) + 1
+    changelog = File.read("./CHANGELOG.md")
+
+    increment_build_number(
+      build_number: build_number,
+      xcodeproj: "Harbour.xcodeproj"
+    )
+
+    build_app(
+      scheme: "Harbour",
+      silent: true,
+      include_symbols: true,
+      include_bitcode: true,
+      output_directory: OUTPUT_DIR,
+      output_name: OUTPUT_IPA
+    )
+
+    version = get_ipa_info_plist_value(ipa: OUTPUT_IPA_PATH, key: "CFBundleShortVersionString")
+
+    github_release = set_github_release(
+      repository_name: REPOSITORY,
+      api_token: ENV["GITHUB_TOKEN"],
+      name: "v" + version + " (" + build_number.to_s + ")",
+      tag_name: "v" + version + "-" + build_number.to_s,
+      description: changelog,
+      commitish: "main",
+      upload_assets: [OUTPUT_IPA_PATH],
+      is_draft: true
+    )
+
+    upload_to_testflight(
+      skip_submission: true,
+      changelog: changelog,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
