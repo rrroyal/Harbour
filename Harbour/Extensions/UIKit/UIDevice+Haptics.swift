@@ -14,6 +14,7 @@ extension UIDevice {
 		case error, success, warning, light, medium, heavy, soft, rigid, selectionChanged
 
 		static let sheetPresentation: FeedbackStyle = .soft
+		static let buttonPress: FeedbackStyle = .light
 	}
 
 	/// Generates a haptic feedback/vibration.

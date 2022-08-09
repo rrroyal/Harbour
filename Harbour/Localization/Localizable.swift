@@ -11,7 +11,12 @@ import Foundation
 // swiftlint:disable nesting type_body_length type_name vertical_whitespace_opening_braces
 internal enum Localizable {
   /// Harbour
-  internal static let harbour = Localizable.tr("Localizable", "Harbour")
+  internal static let appName = Localizable.tr("Localizable", "AppName")
+
+  internal enum Generic {
+    /// Loading...
+    internal static let loading = Localizable.tr("Localizable", "Generic.Loading")
+  }
 
   internal enum Settings {
     /// Settings
@@ -45,6 +50,31 @@ internal enum Localizable {
     internal enum Portainer {
       /// Portainer
       internal static let title = Localizable.tr("Localizable", "Settings.Portainer.Title")
+    }
+  }
+
+  internal enum Welcome {
+    /// Beam me up, Scotty!
+    internal static let continueButton = Localizable.tr("Localizable", "Welcome.ContinueButton")
+    /// Hi! Welcome to
+    internal static let titlePrefix = Localizable.tr("Localizable", "Welcome.TitlePrefix")
+    internal enum Feature1 {
+      /// Feature1_Description
+      internal static let description = Localizable.tr("Localizable", "Welcome.Feature1.Description")
+      /// Feature1_Title
+      internal static let title = Localizable.tr("Localizable", "Welcome.Feature1.Title")
+    }
+    internal enum Feature2 {
+      /// Feature2_Description
+      internal static let description = Localizable.tr("Localizable", "Welcome.Feature2.Description")
+      /// Feature2_Title
+      internal static let title = Localizable.tr("Localizable", "Welcome.Feature2.Title")
+    }
+    internal enum Feature3 {
+      /// Feature3_Description
+      internal static let description = Localizable.tr("Localizable", "Welcome.Feature3.Description")
+      /// Feature3_Title
+      internal static let title = Localizable.tr("Localizable", "Welcome.Feature3.Title")
     }
   }
 }

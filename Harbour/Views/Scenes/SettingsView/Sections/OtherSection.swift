@@ -26,11 +26,11 @@ private extension SettingsView.OtherSection {
 			Link(destination: githubURL) {
 				VStack(alignment: .center, spacing: 5) {
 					Text(Localizable.Settings.Other.footer)
-					Text("\(Localizable.harbour) v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
+					Text("\(Localizable.appName) v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
 				}
 			}
 			.font(.subheadline.weight(.semibold))
-			.foregroundColor(.primary)
+			.foregroundStyle(.primary)
 			.opacity(.secondary)
 			.frame(maxWidth: .infinity)
 			.padding(.vertical)

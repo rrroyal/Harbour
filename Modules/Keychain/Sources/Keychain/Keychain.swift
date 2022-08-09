@@ -11,19 +11,13 @@ import Security
 public final class Keychain {
 	private typealias QueryDictionary = [CFString: Any]
 
-	internal static let tokenItemDescription = "Harbour - Token"
-
 	let service: String
 	let accessGroup: String?
 
 	private let baseQuery: QueryDictionary
 	private let textEncoding: String.Encoding = .utf8
+	private let tokenItemDescription = "Harbour - Token"
 
-	private var tokenQuery: QueryDictionary {
-		var query = baseQuery
-		query[kSecClass] = kSecClassInternetPassword
-		return query
-	}
 
 	// MARK: - init
 
@@ -38,7 +32,9 @@ public final class Keychain {
 		self.baseQuery = [
 			kSecAttrAccessGroup: accessGroup,
 			kSecAttrSynchronizable: true,
-			kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock
+			kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
+			kSecClass: kSecClassInternetPassword,
+			kSecAttrService: service
 		]
 	}
 
@@ -48,21 +44,20 @@ public final class Keychain {
 	/// - Parameters:
 	///   - server: Service URL
 	///   - token: Account token
-	///   - comment: Item comment
-	public func saveToken(server: URL, token: String, comment: String? = nil) throws {
-		var query = tokenQuery
+	public func saveToken(for server: URL, token: String) throws {
+		var query = baseQuery
 		query[kSecAttrServer] = server.host
 		//		query[kSecAttrAccount] = server.absoluteString
 
-		guard let tokenData = token.data(using: self.textEncoding) else {
-			throw KeychainError.encodingFailed
-		}
+//		guard let tokenData = token.data(using: self.textEncoding) else {
+//			throw KeychainError.encodingFailed
+//		}
 		let attributes: QueryDictionary = [
-			kSecValueData: tokenData,
-			kSecAttrComment: comment as Any,
+			kSecValueData: token,
+//			kSecAttrComment: comment as Any,
 			kSecAttrPath: server.path,
 			kSecAttrLabel: server.absoluteString,
-			kSecAttrDescription: Self.tokenItemDescription
+			kSecAttrDescription: tokenItemDescription
 		]
 		try addOrUpdate(query: query, attributes: attributes)
 	}
@@ -70,9 +65,10 @@ public final class Keychain {
 	/// Retrieves token
 	/// - Parameter server: Service URL
 	/// - Returns: Token
-	public func getToken(server: URL) throws -> String {
-		var query = tokenQuery
+	public func getToken(for server: URL) throws -> String {
+		var query = baseQuery
 		query[kSecAttrServer] = server.host
+		query[kSecMatchLimit] = kSecMatchLimitOne
 		query[kSecReturnData] = true
 
 		var item: CFTypeRef?
@@ -92,7 +88,7 @@ public final class Keychain {
 	/// Deletes token  for supplied URL
 	/// - Parameter server: Service URL
 	public func removeToken(server: URL) throws {
-		var query = tokenQuery
+		var query = baseQuery
 		query[kSecAttrServer] = server.host
 		let status = SecItemDelete(query as CFDictionary)
 		guard status == errSecSuccess || status == errSecItemNotFound else { throw SecError(status) }
@@ -102,8 +98,7 @@ public final class Keychain {
 	/// - Returns: Array of URLs
 	public func getURLs() throws -> [URL] {
 		var query = baseQuery
-		query[kSecClass] = kSecClassInternetPassword
-		query[kSecAttrDescription] = Self.tokenItemDescription
+//		query[kSecAttrDescription] = Self.tokenItemDescription
 		query[kSecMatchLimit] = kSecMatchLimitAll
 		query[kSecReturnAttributes] = true
 		query[kSecReturnData] = false
@@ -123,6 +118,7 @@ public final class Keychain {
 			return URL(string: string)
 		}
 
+		// TODO: Check if it works without `kSecAttrDescription`
 		return urls
 	}
 

@@ -7,12 +7,15 @@
 
 import Foundation
 import os.log
+import PortainerKit
 
 final class PortainerStore: ObservableObject {
 	static let shared: PortainerStore = PortainerStore()
 
 	// swiftlint:disable:next force_unwrapping
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PortainerStore")
+
+	@Published private(set) var endpoints: [Endpoint] = []
 
 	private init() {
 

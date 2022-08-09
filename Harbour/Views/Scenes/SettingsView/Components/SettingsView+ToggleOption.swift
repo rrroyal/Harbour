@@ -32,7 +32,7 @@ internal extension SettingsView {
 					OptionIcon(symbolName: iconSymbolName, color: iconColor)
 						.alignmentGuide(SettingsView.optionTitleAlignment) { $0[VerticalAlignment.center] }
 
-					VStack(alignment: .listRowSeparatorLeading, spacing: 5) {
+					VStack(alignment: .listRowSeparatorLeading, spacing: vstackSpacing) {
 						Text(label)
 							.font(.headline)
 							.alignmentGuide(SettingsView.optionTitleAlignment) { $0[VerticalAlignment.center] }

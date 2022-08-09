@@ -6,7 +6,22 @@
   en_US
 */
 
-"Harbour" = "Harbour";
+"AppName" = "Harbour";
+
+// MARK: - Generic
+
+"Generic.Loading" = "Loading...";
+
+// MARK: - Welcome
+
+"Welcome.TitlePrefix" = "Hi! Welcome to";
+"Welcome.Feature1.Title" = "Feature1_Title";
+"Welcome.Feature1.Description" = "Feature1_Description";
+"Welcome.Feature2.Title" = "Feature2_Title";
+"Welcome.Feature2.Description" = "Feature2_Description";
+"Welcome.Feature3.Title" = "Feature3_Title";
+"Welcome.Feature3.Description" = "Feature3_Description";
+"Welcome.ContinueButton" = "Beam me up, Scotty!";
 
 // MARK: - Settings
 
