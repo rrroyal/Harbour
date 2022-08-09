@@ -147,8 +147,10 @@ struct LoginView: View {
 
 				errorTimer?.invalidate()
 				errorTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { _ in
-					buttonLabel = nil
-					buttonColor = nil
+					DispatchQueue.main.async {
+						buttonLabel = nil
+						buttonColor = nil
+					}
 				}
 
 				throw error
