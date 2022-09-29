@@ -77,7 +77,6 @@ struct ContentView: View {
 		}) {
 			LandingView()
 		}
-		.onAppear { onAppear() }
 		.environment(\.sceneErrorHandler, sceneState.handle)
 		.environmentObject(sceneState)
 		.animation(.easeInOut, value: isLoading)
@@ -88,19 +87,14 @@ struct ContentView: View {
 
 private extension ContentView {
 	@MainActor
-	func selectEndpoint(_ endpoint: Endpoint?) {
-		UIDevice.generateHaptic(.light)
-		portainerStore.selectedEndpoint = endpoint
-	}
-
-	@MainActor
 	func onLandingDismiss() {
 		preferences.landingDisplayed = true
 	}
 
 	@MainActor
-	func onAppear() {
-		portainerStore.refreshEndpoints(errorHandler: sceneState.handle)
+	func selectEndpoint(_ endpoint: Endpoint?) {
+		UIDevice.generateHaptic(.light)
+		portainerStore.selectEndpoint(endpoint)
 	}
 }
 

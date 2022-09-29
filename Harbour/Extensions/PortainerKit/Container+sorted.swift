@@ -10,6 +10,6 @@ import PortainerKit
 
 extension [Container] {
 	func sorted() -> Self {
-		sorted { ($0.displayName ?? "", $0.id) > ($1.displayName ?? "", $1.id) }
+		sorted { ($0.displayName ?? "", $0.id) < ($1.displayName ?? "", $1.id) }
 	}
 }

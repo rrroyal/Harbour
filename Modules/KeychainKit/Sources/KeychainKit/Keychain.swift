@@ -29,7 +29,7 @@ public final class Keychain {
 			kSecAttrAccessGroup: accessGroup,
 			kSecAttrSynchronizable: true,
 			kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
-			kSecClass: kSecClassInternetPassword,
+			kSecClass: kSecClassInternetPassword
 //			kSecAttrService: service
 		]
 	}
