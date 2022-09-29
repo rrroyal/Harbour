@@ -77,7 +77,12 @@ struct ContainersView: View {
 private extension ContainersView {
 	@Sendable
 	func refresh() async {
-		refreshTask?.cancel()
-		refreshTask = portainerStore.refreshContainers(errorHandler: sceneErrorHandler)
+		do {
+			refreshTask?.cancel()
+			refreshTask = portainerStore.refresh(errorHandler: sceneErrorHandler)
+			try await refreshTask?.value
+		} catch {
+			sceneErrorHandler?(error, String.debugInfo())
+		}
 	}
 }

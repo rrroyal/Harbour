@@ -33,7 +33,7 @@ final class PortainerStore: ObservableObject {
 
 	@Published private(set) var isSetup: Bool = false
 
-	@Published var selectedEndpoint: Endpoint? {
+	@Published private(set) var selectedEndpoint: Endpoint? {
 		didSet { onSelectedEndpointChange(selectedEndpoint) }
 	}
 
@@ -89,6 +89,21 @@ final class PortainerStore: ObservableObject {
 		}
 	}
 
+	@MainActor
+	public func selectEndpoint(_ endpoint: Endpoint?) {
+		logger.info("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive)\" (\(endpoint?.id.description ?? "<none>")) [\(String.debugInfo(), privacy: .public)]")
+		self.selectedEndpoint = endpoint
+
+		if endpoint != nil {
+			refreshContainers()
+		} else {
+			containersTask?.cancel()
+			containersTask = Task {
+				containers = []
+			}
+		}
+	}
+
 	@Sendable
 	public func getEndpoints() async throws {
 		logger.info("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
@@ -136,12 +151,31 @@ final class PortainerStore: ObservableObject {
 
 extension PortainerStore {
 	@discardableResult
+	func refresh(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<Void, Error> {
+		let task = Task {
+			do {
+				let endpointsTask = refreshEndpoints(errorHandler: errorHandler, _debugInfo: _debugInfo)
+				try await endpointsTask.value
+				if selectedEndpoint != nil {
+					let containersTask = refreshContainers(errorHandler: errorHandler, _debugInfo: _debugInfo)
+					try await containersTask.value
+				}
+			} catch {
+				errorHandler?(error, _debugInfo)
+				throw error
+			}
+		}
+		return task
+	}
+
+	@discardableResult
 	func refreshEndpoints(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<Void, Error> {
 		endpointsTask?.cancel()
 		let task = Task {
 			do {
 				try await getEndpoints()
 			} catch {
+				if Task.isCancelled { return }
 				errorHandler?(error, _debugInfo)
 				throw error
 			}
@@ -158,6 +192,7 @@ extension PortainerStore {
 			do {
 				try await getContainers()
 			} catch {
+				if Task.isCancelled { return }
 				errorHandler?(error, _debugInfo)
 				throw error
 			}
@@ -172,19 +207,7 @@ extension PortainerStore {
 
 private extension PortainerStore {
 	func onSelectedEndpointChange(_ selectedEndpoint: Endpoint?) {
-		// swiftlint:disable:next line_length
-		logger.info("Selected endpoint: \"\(selectedEndpoint?.name ?? "<none>", privacy: .sensitive)\" (\(selectedEndpoint?.id.description ?? "<none>")) [\(String.debugInfo(), privacy: .public)]")
-
 		Preferences.shared.selectedEndpointID = selectedEndpoint?.id
-
-		if selectedEndpoint != nil {
-			refreshContainers()
-		} else {
-			containersTask?.cancel()
-			containersTask = Task {
-				containers = []
-			}
-		}
 	}
 
 	func onEndpointsChange(_ endpoints: [Endpoint]) {
