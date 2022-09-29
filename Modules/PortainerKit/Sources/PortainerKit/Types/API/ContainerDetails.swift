@@ -16,18 +16,9 @@ public struct ContainerDetails: Identifiable, Decodable, Sendable {
 		case args = "Args"
 		case state = "State"
 		case image = "Image"
-		case resolvConfPath = "ResolvConfPath"
-		case hostnamePath = "HostnamePath"
-		case hostsPath = "HostsPath"
-		case logPath = "LogPath"
 		case name = "Name"
 		case restartCount = "RestartCount"
-		case driver = "Driver"
 		case mountLabel = "MountLabel"
-		case processLabel = "ProcessLabel"
-		case appArmorProfile = "AppArmorProfile"
-		case sizeRW = "SizeRw"
-		case sizeRootFS = "SizeRootFs"
 		case mounts = "Mounts"
 		case config = "Config"
 		case networkSettings = "NetworkSettings"
@@ -40,22 +31,10 @@ public struct ContainerDetails: Identifiable, Decodable, Sendable {
 	public let args: [String]
 	public let state: ContainerState
 	public let image: String
-	public let resolvConfPath: String
-	public let hostnamePath: String
-	public let hostsPath: String
-	public let logPath: String
-	// public let node: Any
 	public let name: String
 	public let restartCount: Int
-	public let driver: String
 	public let mountLabel: String
-	public let processLabel: String
-	public let appArmorProfile: String
 	public let config: ContainerConfig?
-	//	public let hostConfig: HostConfig?
-	//	public let graphDriver: GraphDriver
-	public let sizeRW: Int64?
-	public let sizeRootFS: Int64?
 	public let mounts: [MountPoint]
 	public let networkSettings: NetworkSettings
 }

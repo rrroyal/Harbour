@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Container
 
-public struct Container: Identifiable, Decodable {
+public struct Container: Identifiable, Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case id = "Id"
 		case names = "Names"
@@ -18,8 +18,6 @@ public struct Container: Identifiable, Decodable {
 		case command = "Command"
 		case created = "Created"
 		case ports = "Ports"
-		case sizeRW = "SizeRw"
-		case sizeRootFS = "SizeRootFs"
 		case labels = "Labels"
 		case state = "State"
 		case status = "Status"
@@ -30,29 +28,61 @@ public struct Container: Identifiable, Decodable {
 	public let id: String
 	public let names: [String]?
 	public let image: String?
-	public let imageID: String
+	public let imageID: String?
 	public let command: String?
 	public let created: Date?
 	public let ports: [Port]?
-	public let sizeRW: Int64?
-	public let sizeRootFS: Int64?
 	public let labels: [String: String]?
 	public var state: ContainerStatus?
 	public var status: String?
-	//	public let hostConfig: HostConfig?
 	public let networkSettings: NetworkSettings?
 	public let mounts: [Mount]?
+
+	public init(id: String,
+		 names: [String]? = nil,
+		 image: String? = nil,
+		 imageID: String? = nil,
+		 command: String? = nil,
+		 created: Date? = nil,
+		 ports: [Port]? = nil,
+		 labels: [String: String]? = nil,
+		 state: ContainerStatus? = nil,
+		 status: String? = nil,
+		 networkSettings: NetworkSettings? = nil,
+		 mounts: [Mount]? = nil) {
+		self.id = id
+		self.names = names
+		self.image = image
+		self.imageID = imageID
+		self.command = command
+		self.created = created
+		self.ports = ports
+		self.labels = labels
+		self.state = state
+		self.status = status
+		self.networkSettings = networkSettings
+		self.mounts = mounts
+	}
 }
 
 // MARK: - Container+NetworkSettings
 
 public extension Container {
-	struct NetworkSettings: Decodable {
+	struct NetworkSettings: Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case network = "Networks"
 		}
 
 		public let network: Network?
+	}
+}
+
+// MARK: - Container+displayName
+
+public extension Container {
+	var displayName: String? {
+		guard let firstName = names?.first else { return nil }
+		return firstName.starts(with: "/") ? String(firstName.dropFirst()) : firstName
 	}
 }
 

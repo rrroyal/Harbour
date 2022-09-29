@@ -7,7 +7,6 @@
 
 public struct Network: Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
-		case ipamConfig = "IPAMConfig"
 		case links = "Links"
 		case aliases = "Aliases"
 		case networkID = "NetworkID"
@@ -21,7 +20,6 @@ public struct Network: Decodable, Sendable {
 		case macAddress = "MacAddress"
 	}
 
-	public let ipamConfig: IPAMConfig?
 	public let links: [String]?
 	public let aliases: [String]?
 	public let networkID: String?

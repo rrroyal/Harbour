@@ -1,5 +1,5 @@
 //
-//  PortainerKit.swift
+//  Portainer.swift
 //  PortainerKit
 //
 //  Created by royal on 10/06/2021.
@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import os.log
 
-public final class PortainerKit {
+public final class Portainer {
 
 	// MARK: Static properties
 
@@ -30,8 +30,8 @@ public final class PortainerKit {
 
 	// MARK: Private properties
 
-	private let logger: Logger = Logger(subsystem: PortainerKit.bundleIdentifier, category: "PortainerKit")
-	private let wsQueue: DispatchQueue = DispatchQueue(label: PortainerKit.bundleIdentifier.appending("WebSocket"), qos: .userInteractive)
+	private let logger: Logger = Logger(subsystem: Portainer.bundleIdentifier, category: "PortainerKit")
+	private let wsQueue: DispatchQueue = DispatchQueue(label: Portainer.bundleIdentifier.appending("WebSocket"), qos: .userInteractive)
 
 	// MARK: init
 
@@ -39,6 +39,7 @@ public final class PortainerKit {
 	/// - Parameters:
 	///   - url: Endpoint URL
 	///   - token: Authorization JWT token
+	@Sendable
 	public init(url: URL, token: String? = nil) {
 		self.url = url
 
@@ -48,7 +49,7 @@ public final class PortainerKit {
 		]
 		configuration.shouldUseExtendedBackgroundIdleMode = true
 
-		let delegate = PortainerKit.URLSessionDelegate()
+		let delegate = Portainer.URLSessionDelegate()
 		self.session = URLSession(configuration: configuration, delegate: delegate, delegateQueue: nil)
 		self.token = token
 	}
@@ -57,6 +58,7 @@ public final class PortainerKit {
 
 	/// Fetches available endpoints.
 	/// - Returns: `[Endpoint]`
+	@Sendable
 	public func fetchEndpoints() async throws -> [Endpoint] {
 		let request = try request(for: .endpoints)
 		return try await fetch(request: request)
@@ -66,6 +68,7 @@ public final class PortainerKit {
 	/// - Parameter endpointID: Endpoint ID
 	/// - Parameter filters: Query filters
 	/// - Returns: `[Container]`
+	@Sendable
 	public func fetchContainers(for endpointID: Int, filters: [String: [String]] = [:]) async throws -> [Container] {
 		var queryItems = [
 			URLQueryItem(name: "all", value: "true")
@@ -87,6 +90,7 @@ public final class PortainerKit {
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
 	/// - Returns: `ContainerDetails`
+	@Sendable
 	public func inspectContainer(_ containerID: String, endpointID: Int) async throws -> ContainerDetails {
 		let request = try request(for: .inspect(containerID: containerID, endpointID: endpointID))
 
@@ -114,6 +118,7 @@ public final class PortainerKit {
 	///   - action: Executed action
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
+	@Sendable
 	public func execute(_ action: ExecuteAction, containerID: String, endpointID: Int) async throws {
 		var request = try request(for: .executeAction(containerID: containerID, endpointID: endpointID, action: action))
 		request.httpMethod = "POST"
@@ -148,6 +153,7 @@ public final class PortainerKit {
 	///   - tail: Number of lines, counting from the end
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
+	@Sendable
 	public func fetchLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
 		let queryItems = [
 			URLQueryItem(name: "since", value: "\(since)"),
@@ -168,6 +174,7 @@ public final class PortainerKit {
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
 	/// - Returns: `WebSocketPassthroughSubject`
+	@Sendable
 	public func attach(to containerID: String, endpointID: Int) throws -> WebSocketPassthroughSubject {
 		guard let url: URL = {
 			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
@@ -183,6 +190,7 @@ public final class PortainerKit {
 		let task = session.webSocketTask(with: url)
 		let passthroughSubject = WebSocketPassthroughSubject()
 
+		@Sendable
 		func setReceiveHandler() {
 			wsQueue.async {
 				task.receive { result in
@@ -209,6 +217,7 @@ public final class PortainerKit {
 	/// - Parameter path: Request path
 	/// - Parameter query: Optional URL query items
 	/// - Returns: `URLRequest` with authorization header set.
+	@Sendable
 	private func request(for path: RequestPath, query: [URLQueryItem]? = nil) throws -> URLRequest {
 		var request: URLRequest
 		if let query {
@@ -228,9 +237,10 @@ public final class PortainerKit {
 	}
 
 	/// Fetches & decodes data for supplied request.
-	/// - Parameter request: URLRequest
-	/// - Parameter decoder: JSONDecoder
-	/// - Returns: Output
+	/// - Parameter request: `URLRequest`
+	/// - Parameter decoder: `JSONDecoder`
+	/// - Returns: `Output`
+	@Sendable
 	private func fetch<Output: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {
 		let response = try await session.data(for: request)
 

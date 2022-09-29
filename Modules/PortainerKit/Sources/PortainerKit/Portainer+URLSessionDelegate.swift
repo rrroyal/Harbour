@@ -1,5 +1,5 @@
 //
-//  PortainerKit+URLSessionDelegate.swift
+//  Portainer+URLSessionDelegate.swift
 //  PortainerKit
 //
 //  Created by royal on 17/10/2021.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-internal extension PortainerKit {
+internal extension Portainer {
 	final class URLSessionDelegate: NSObject, Foundation.URLSessionDelegate {
 		func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge) async -> (URLSession.AuthChallengeDisposition, URLCredential?) {
 			if let trust = challenge.protectionSpace.serverTrust {

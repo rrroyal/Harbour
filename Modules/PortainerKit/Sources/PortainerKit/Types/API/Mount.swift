@@ -13,8 +13,6 @@ public struct Mount: Decodable, Sendable {
 		case readOnly = "ReadOnly"
 		case consistency = "Consistency"
 		case bindOptions = "BindOptions"
-		//		case volumeOptions = "VolumeOptions"
-		//		case tmpfsOptions = "TmpfsOptions"
 	}
 
 	public let target: String?
@@ -23,8 +21,6 @@ public struct Mount: Decodable, Sendable {
 	public let readOnly: Bool?
 	public let consistency: Consistency?
 	public let bindOptions: BindOptions?
-	//	public let volumeOptions: VolumeOptions?
-	//	public let tmpfsOptions: TmpfsOptions?
 }
 
 public extension Mount {

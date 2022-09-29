@@ -10,13 +10,8 @@ public struct ContainerConfig: Decodable, Sendable {
 		case hostname = "Hostname"
 		case domainName = "DomainName"
 		case user = "User"
-		case attachStdin = "AttachStdin"
-		case attachStdout = "AttachStdout"
-		case attachStderr = "AttachStderr"
 		case exposedPorts = "ExposedPorts"
 		case tty = "Tty"
-		case openStdin = "OpenStdin"
-		case stdinOnce = "StdinOnce"
 		case env = "Env"
 		case cmd = "Cmd"
 		case healthCheck = "HealthCheck"
@@ -27,7 +22,6 @@ public struct ContainerConfig: Decodable, Sendable {
 		case entrypoint = "Entrypoint"
 		case networkDisabled = "NetworkDisabled"
 		case macAddress = "MacAddress"
-		case onBuild = "OnBuild"
 		case labels = "Labels"
 		case stopSignal = "StopSignal"
 		case stopTimeout = "StopTimeout"
@@ -37,13 +31,8 @@ public struct ContainerConfig: Decodable, Sendable {
 	public let hostname: String
 	public let domainName: String?
 	public let user: String
-	public let attachStdin: Bool
-	public let attachStdout: Bool
-	public let attachStderr: Bool
 	public let exposedPorts: [String: [String: String]]?
 	public let tty: Bool
-	public let openStdin: Bool
-	public let stdinOnce: Bool
 	public let env: [String]
 	public let cmd: [String]?
 	public let healthCheck: HealthConfig?
@@ -54,7 +43,6 @@ public struct ContainerConfig: Decodable, Sendable {
 	public let entrypoint: [String]?
 	public let networkDisabled: Bool?
 	public let macAddress: String?
-	public let onBuild: [String]?
 	public let labels: [String: String]
 	public let stopSignal: String?
 	public let stopTimeout: Int?
