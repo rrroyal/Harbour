@@ -13,10 +13,6 @@ struct PrimaryButtonStyle: ButtonStyle {
 	let backgroundColor: Color
 	let font: Font
 
-	let pressedOpacity: Double = 0.75
-	let pressedScale: Double = 0.975
-	let pressAnimation: Animation = .interpolatingSpring(stiffness: 250, damping: 30)
-
 	public init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) {
 		self.foregroundColor = foregroundColor
 		self.backgroundColor = backgroundColor
@@ -32,9 +28,9 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.frame(maxWidth: .infinity, alignment: .center)
 			.background(isEnabled ? backgroundColor : Color(uiColor: .systemGray5))
 			.cornerRadius(Constants.cornerRadius)
-			.opacity(configuration.isPressed ? pressedOpacity : 1)
-			.scaleEffect(configuration.isPressed ? pressedScale : 1)
-			.animation(pressAnimation, value: configuration.isPressed)
+			.opacity(configuration.isPressed ? Constants.Buttons.pressedOpacity : 1)
+			.scaleEffect(configuration.isPressed ? Constants.Buttons.pressedScale : 1)
+			.animation(Constants.Buttons.pressAnimation, value: configuration.isPressed)
 			.animation(.easeInOut, value: isEnabled)
 	}
 }

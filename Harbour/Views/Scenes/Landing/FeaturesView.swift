@@ -1,5 +1,5 @@
 //
-//  WelcomeView.swift
+//  FeaturesView.swift
 //  Harbour
 //
 //  Created by royal on 28/07/2022.
@@ -7,36 +7,38 @@
 
 import SwiftUI
 
-// MARK: - WelcomeView
+// MARK: - FeaturesView
 
-struct WelcomeView: View {
+struct FeaturesView: View {
+	let continueAction: () -> Void
 
 	var body: some View {
 		VStack {
 			Spacer()
 
-			Text("\(Localizable.Welcome.titlePrefix) \(Text(Localizable.appName).foregroundColor(.accentColor))!")
+			Text("\(Localizable.Landing.titlePrefix) \(Text(Localizable.appName).foregroundColor(.accentColor))!")
 				.font(.largeTitle.bold())
 				.multilineTextAlignment(.center)
 
 			Spacer()
 
 			VStack(spacing: 20) {
-				FeatureCell(headline: Localizable.Welcome.Feature1.title,
-							subheadline: Localizable.Welcome.Feature1.description,
+				FeatureCell(headline: Localizable.Landing.Feature1.title,
+							subheadline: Localizable.Landing.Feature1.description,
 							icon: "globe")
-				FeatureCell(headline: Localizable.Welcome.Feature2.title,
-							subheadline: Localizable.Welcome.Feature2.description,
+				FeatureCell(headline: Localizable.Landing.Feature2.title,
+							subheadline: Localizable.Landing.Feature2.description,
 							icon: "globe")
-				FeatureCell(headline: Localizable.Welcome.Feature3.title,
-							subheadline: Localizable.Welcome.Feature3.description,
+				FeatureCell(headline: Localizable.Landing.Feature3.title,
+							subheadline: Localizable.Landing.Feature3.description,
 							icon: "globe")
 			}
 
 			Spacer()
 
-			Button(Localizable.Welcome.continueButton) {
+			Button(Localizable.Landing.continueButton) {
 				UIDevice.generateHaptic(.buttonPress)
+				continueAction()
 			}
 			.buttonStyle(.customPrimary)
 		}
@@ -44,9 +46,9 @@ struct WelcomeView: View {
 	}
 }
 
-// MARK: - WelcomeView+FeatureCell
+// MARK: - FeaturesView+FeatureCell
 
-extension WelcomeView {
+extension FeaturesView {
 	struct FeatureCell: View {
 		let headline: String
 		let subheadline: String
@@ -80,12 +82,12 @@ extension WelcomeView {
 
 // MARK: - Previews
 
-struct WelcomeView_Previews: PreviewProvider {
+struct FeaturesView_Previews: PreviewProvider {
 	static var previews: some View {
-		WelcomeView()
-			.previewDisplayName("WelcomeView")
+		FeaturesView(continueAction: {})
+			.previewDisplayName("FeaturesView")
 
-		WelcomeView.FeatureCell(headline: "Headline", subheadline: "Subheadline", icon: "globe")
+		FeaturesView.FeatureCell(headline: "Headline", subheadline: "Subheadline", icon: "globe")
 			.previewLayout(.sizeThatFits)
 			.padding()
 			.previewDisplayName("FeatureCell")
