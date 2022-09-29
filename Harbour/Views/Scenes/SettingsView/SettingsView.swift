@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingsView: View {
-	let listRowInsets: EdgeInsets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+//	let listRowInsets: EdgeInsets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
 
 	var body: some View {
 		NavigationStack {
@@ -19,7 +19,7 @@ struct SettingsView: View {
 					InterfaceSection()
 					OtherSection()
 				}
-				.listRowInsets(listRowInsets)
+//				.listRowInsets(listRowInsets)
 				.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			}
 			.navigationTitle(Localizable.Settings.title)

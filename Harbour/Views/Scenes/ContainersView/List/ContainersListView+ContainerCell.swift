@@ -29,13 +29,13 @@ extension ContainersListView {
 		private var nameAndStatusLabels: some View {
 			VStack(alignment: .leading, spacing: 2) {
 				Text(container.displayName ?? Localizable.ContainerCell.unnamed)
-					.font(.headline)
+					.font(.headline.weight(.semibold))
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.displayName)
 
 				Text(subheadline ?? Localizable.ContainerCell.unknownState)
-					.font(.subheadline)
+					.font(.subheadline.weight(.medium))
 					.foregroundStyle(subheadline != nil ? .secondary : .tertiary)
 					.transition(.opacity)
 					.animation(.easeInOut, value: subheadline)

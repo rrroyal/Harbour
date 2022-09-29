@@ -11,7 +11,7 @@ import PortainerKit
 // MARK: - ContainersGridView
 
 struct ContainersGridView: View {
-	private static let cellSpacing: Double = 12
+	private static let cellSpacing: Double = 8
 
 	@EnvironmentObject var sceneState: SceneState
 
