@@ -6,7 +6,8 @@
 //
 
 import SwiftUI
-import Indicators
+import PortainerKit
+import IndicatorsKit
 
 // MARK: - ContentView
 
@@ -16,18 +17,45 @@ struct ContentView: View {
 	@EnvironmentObject var preferences: Preferences
 	@StateObject var sceneState = SceneState()
 
+	@State private var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+
+	private var isLoading: Bool {
+		let setupCancelled = portainerStore.setupTask?.isCancelled ?? true
+		let endpointsCancelled = portainerStore.endpointsTask?.isCancelled ?? true
+		let containersCancelled = portainerStore.containersTask?.isCancelled ?? true
+		return !setupCancelled || !endpointsCancelled || !containersCancelled
+	}
+
+	@ViewBuilder
+	private var titleMenu: some View {
+		ForEach(portainerStore.endpoints) { endpoint in
+			Button(action: {
+				selectEndpoint(endpoint)
+			}) {
+				Text(endpoint.name ?? endpoint.id.description)
+				if portainerStore.selectedEndpoint == endpoint {
+					Image(systemName: "checkmark")
+				}
+			}
+		}
+	}
+
 	var body: some View {
 		NavigationStack(path: $sceneState.navigationPath) {
-			ContainersView()
-//				.equatable()
+			ContainersView(isLoading: isLoading)
 				.navigationTitle(Localizable.appName)
 				.navigationBarTitleDisplayMode(.inline)
-				// TODO: Hide menu if no endpoints
 				.toolbarTitleMenu(isVisible: !portainerStore.endpoints.isEmpty) {
-					// TODO: Switch endpoints here
-					Text("TODO")
+					titleMenu
 				}
 				.toolbar {
+					ToolbarItem(placement: .navigationBarLeading) {
+						if isLoading {
+							ProgressView()
+								.transition(.opacity)
+						}
+					}
+
 					ToolbarTitle(title: Localizable.appName, subtitle: sceneState.isLoadingMainScreenData ? Localizable.Generic.loading : nil)
 
 					ToolbarItem(placement: .navigationBarTrailing) {
@@ -44,10 +72,35 @@ struct ContentView: View {
 		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
 		}
-		.sheet(isPresented: .constant(!preferences.finishedSetup)) {
-			SetupView()
+		.sheet(isPresented: $isLandingSheetPresented, onDismiss: {
+			onLandingDismiss()
+		}) {
+			LandingView()
 		}
+		.onAppear { onAppear() }
+		.environment(\.sceneErrorHandler, sceneState.handle)
 		.environmentObject(sceneState)
+		.animation(.easeInOut, value: isLoading)
+	}
+}
+
+// MARK: - ContentView+Actions
+
+private extension ContentView {
+	@MainActor
+	func selectEndpoint(_ endpoint: Endpoint?) {
+		UIDevice.generateHaptic(.light)
+		portainerStore.selectedEndpoint = endpoint
+	}
+
+	@MainActor
+	func onLandingDismiss() {
+		preferences.landingDisplayed = true
+	}
+
+	@MainActor
+	func onAppear() {
+		portainerStore.refreshEndpoints(errorHandler: sceneState.handle)
 	}
 }
 
