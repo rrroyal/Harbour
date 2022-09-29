@@ -4,15 +4,15 @@
 import PackageDescription
 
 let package = Package(
-	name: "Indicators",
+	name: "IndicatorsKit",
 	platforms: [
 		.iOS(.v16)
 	],
 	products: [
-		.library(name: "Indicators", targets: ["Indicators"])
+		.library(name: "IndicatorsKit", targets: ["IndicatorsKit"])
 	],
 	dependencies: [],
 	targets: [
-		.target(name: "Indicators", dependencies: [])
+		.target(name: "IndicatorsKit", dependencies: [])
 	]
 )

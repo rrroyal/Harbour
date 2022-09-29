@@ -1,6 +1,6 @@
 //
 //  Indicator.swift
-//  Indicators
+//  IndicatorsKit
 //
 //  Created by royal on 17/07/2022.
 //
@@ -38,16 +38,6 @@ public struct Indicator {
 		self.style = style
 		self.onTap = onTap
 	}
-
-	public init(error: Error) {
-		let style = Style(headlineColor: Color.red, iconColor: Color.red)
-		self.init(id: error.localizedDescription.hashValue.description,
-				  headline: error.localizedDescription,
-				  subheadline: (error as? LocalizedError)?.recoverySuggestion,
-				  expandedText: error.localizedDescription,
-				  dismissType: .automatic,
-				  style: style)
-	}
 }
 
 // MARK: - Indicator+Identifiable
@@ -73,7 +63,7 @@ public extension Indicator {
 		case manual
 		case after(TimeInterval)
 
-		static let automatic: DismissType = .after(5)
+		public static let automatic: DismissType = .after(5)
 	}
 
 	struct Style {

@@ -1,6 +1,6 @@
 //
 //  Indicators.swift
-//  Indicators
+//  IndicatorsKit
 //
 //  Created by royal on 17/07/2022.
 //
