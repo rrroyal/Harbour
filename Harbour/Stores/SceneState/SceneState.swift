@@ -8,7 +8,7 @@
 import Foundation
 import os.log
 import PortainerKit
-import Indicators
+import IndicatorsKit
 
 // MARK: - SceneState
 
@@ -27,7 +27,7 @@ final class SceneState: ObservableObject {
 	// MARK: Navigation
 
 	@Published public var isSettingsSheetPresented: Bool = false
-	@Published public var navigationPath: [Container.ID] = []
+	@Published public var navigationPath: [ContainersView.ContainerNavigationItem] = []
 
 	// MARK: Data State
 

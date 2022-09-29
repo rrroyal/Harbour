@@ -6,11 +6,13 @@
 //
 
 import Foundation
-import Indicators
+import IndicatorsKit
 
 extension SceneState {
-	func handle(_ error: Error, _fileID: StaticString = #fileID, _line: Int = #line) {
-		logger.error("\(String(describing: error)) [\(_fileID):\(_line)]")
+	typealias ErrorHandler = (Error, String) -> Void
+
+	func handle(_ error: Error, _debugInfo: String = .debugInfo()) {
+		logger.error("Error: \(String(describing: error), privacy: .public) [\(_debugInfo)]")
 
 		let indicator = Indicator(error: error)
 		indicators.display(indicator)
