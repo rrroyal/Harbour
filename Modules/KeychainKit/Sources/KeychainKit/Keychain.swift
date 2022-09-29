@@ -11,22 +11,18 @@ import Security
 public final class Keychain {
 	private typealias QueryDictionary = [CFString: Any]
 
-	let service: String
-	let accessGroup: String?
+	let accessGroup: String
 
 	private let baseQuery: QueryDictionary
 	private let textEncoding: String.Encoding = .utf8
 	private let tokenItemDescription = "Harbour - Token"
 
-
 	// MARK: - init
 
 	/// Initializes Keychain with supplied configuration
 	/// - Parameters:
-	///   - service: Service (i.e. app bundleID)
 	///   - accessGroup: Access group (i.e. app group)
-	public init(service: String, accessGroup: String) {
-		self.service = service
+	public init(accessGroup: String) {
 		self.accessGroup = accessGroup
 
 		self.baseQuery = [
@@ -34,7 +30,7 @@ public final class Keychain {
 			kSecAttrSynchronizable: true,
 			kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlock,
 			kSecClass: kSecClassInternetPassword,
-			kSecAttrService: service
+//			kSecAttrService: service
 		]
 	}
 
@@ -46,19 +42,19 @@ public final class Keychain {
 	///   - token: Account token
 	public func saveToken(for server: URL, token: String) throws {
 		var query = baseQuery
-		query[kSecAttrServer] = server.host
-		//		query[kSecAttrAccount] = server.absoluteString
+		query[kSecAttrServer] = server.host()
 
-//		guard let tokenData = token.data(using: self.textEncoding) else {
-//			throw KeychainError.encodingFailed
-//		}
+		guard let tokenData = token.data(using: self.textEncoding) else {
+			throw KeychainError.encodingFailed
+		}
 		let attributes: QueryDictionary = [
-			kSecValueData: token,
+			kSecValueData: tokenData,
 //			kSecAttrComment: comment as Any,
 			kSecAttrPath: server.path,
 			kSecAttrLabel: server.absoluteString,
 			kSecAttrDescription: tokenItemDescription
 		]
+
 		try addOrUpdate(query: query, attributes: attributes)
 	}
 
@@ -67,7 +63,7 @@ public final class Keychain {
 	/// - Returns: Token
 	public func getToken(for server: URL) throws -> String {
 		var query = baseQuery
-		query[kSecAttrServer] = server.host
+		query[kSecAttrServer] = server.host()
 		query[kSecMatchLimit] = kSecMatchLimitOne
 		query[kSecReturnData] = true
 
@@ -131,6 +127,7 @@ public final class Keychain {
 	private func addOrUpdate(query: QueryDictionary, attributes: QueryDictionary) throws {
 		let addQuery = query.merging(attributes, uniquingKeysWith: { $1 })
 		let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
+		print(addStatus == errSecDuplicateItem ? "duplicate" : addStatus)
 
 		switch addStatus {
 			case errSecSuccess:

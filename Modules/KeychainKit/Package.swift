@@ -4,15 +4,15 @@
 import PackageDescription
 
 let package = Package(
-	name: "Keychain",
+	name: "KeychainKit",
 	platforms: [
 		.iOS(.v16),
 		.macOS(.v13)
 	],
 	products: [
-		.library(name: "Keychain", targets: ["Keychain"])
+		.library(name: "KeychainKit", targets: ["KeychainKit"])
 	],
 	targets: [
-		.target(name: "Keychain", dependencies: [])
+		.target(name: "KeychainKit", dependencies: [])
 	]
 )
