@@ -9,7 +9,7 @@ import SwiftUI
 
 extension View {
 	@ViewBuilder
-	public func toolbarTitleMenu<C: View>(isVisible: Bool, @ViewBuilder content: () -> C) -> some View {
+	public func toolbarTitleMenu<Content: View>(isVisible: Bool, @ViewBuilder content: () -> Content) -> some View {
 		if isVisible {
 			toolbarTitleMenu(content: content)
 		} else {

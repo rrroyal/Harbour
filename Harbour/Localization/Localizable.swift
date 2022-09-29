@@ -13,9 +13,61 @@ internal enum Localizable {
   /// Harbour
   internal static let appName = Localizable.tr("Localizable", "AppName")
 
+  internal enum ContainerCell {
+    ///  • 
+    internal static let stateJoiner = Localizable.tr("Localizable", "ContainerCell.StateJoiner")
+    /// Unknown
+    internal static let unknownState = Localizable.tr("Localizable", "ContainerCell.UnknownState")
+    /// Unnamed
+    internal static let unnamed = Localizable.tr("Localizable", "ContainerCell.Unnamed")
+  }
+
+  internal enum ContainersView {
+    /// Loading...
+    internal static let loadingPlaceholder = Localizable.tr("Localizable", "ContainersView.LoadingPlaceholder")
+    /// No containers
+    internal static let noContainersPlaceholder = Localizable.tr("Localizable", "ContainersView.NoContainersPlaceholder")
+    /// No endpoints
+    internal static let noEndpointsPlaceholder = Localizable.tr("Localizable", "ContainersView.NoEndpointsPlaceholder")
+    /// No endpoint selected
+    internal static let noSelectedEndpointPlaceholder = Localizable.tr("Localizable", "ContainersView.NoSelectedEndpointPlaceholder")
+  }
+
   internal enum Generic {
+    /// Error!
+    internal static let error = Localizable.tr("Localizable", "Generic.Error")
     /// Loading...
     internal static let loading = Localizable.tr("Localizable", "Generic.Loading")
+  }
+
+  internal enum Indicators {
+    /// Expand to read more
+    internal static let expandToReadMore = Localizable.tr("Localizable", "Indicators.ExpandToReadMore")
+  }
+
+  internal enum Landing {
+    /// Beam me up, Scotty!
+    internal static let continueButton = Localizable.tr("Localizable", "Landing.ContinueButton")
+    /// Hi! Welcome to
+    internal static let titlePrefix = Localizable.tr("Localizable", "Landing.TitlePrefix")
+    internal enum Feature1 {
+      /// Feature1_Description
+      internal static let description = Localizable.tr("Localizable", "Landing.Feature1.Description")
+      /// Feature1_Title
+      internal static let title = Localizable.tr("Localizable", "Landing.Feature1.Title")
+    }
+    internal enum Feature2 {
+      /// Feature2_Description
+      internal static let description = Localizable.tr("Localizable", "Landing.Feature2.Description")
+      /// Feature2_Title
+      internal static let title = Localizable.tr("Localizable", "Landing.Feature2.Title")
+    }
+    internal enum Feature3 {
+      /// Feature3_Description
+      internal static let description = Localizable.tr("Localizable", "Landing.Feature3.Description")
+      /// Feature3_Title
+      internal static let title = Localizable.tr("Localizable", "Landing.Feature3.Title")
+    }
   }
 
   internal enum Settings {
@@ -53,28 +105,16 @@ internal enum Localizable {
     }
   }
 
-  internal enum Welcome {
-    /// Beam me up, Scotty!
-    internal static let continueButton = Localizable.tr("Localizable", "Welcome.ContinueButton")
-    /// Hi! Welcome to
-    internal static let titlePrefix = Localizable.tr("Localizable", "Welcome.TitlePrefix")
-    internal enum Feature1 {
-      /// Feature1_Description
-      internal static let description = Localizable.tr("Localizable", "Welcome.Feature1.Description")
-      /// Feature1_Title
-      internal static let title = Localizable.tr("Localizable", "Welcome.Feature1.Title")
-    }
-    internal enum Feature2 {
-      /// Feature2_Description
-      internal static let description = Localizable.tr("Localizable", "Welcome.Feature2.Description")
-      /// Feature2_Title
-      internal static let title = Localizable.tr("Localizable", "Welcome.Feature2.Title")
-    }
-    internal enum Feature3 {
-      /// Feature3_Description
-      internal static let description = Localizable.tr("Localizable", "Welcome.Feature3.Description")
-      /// Feature3_Title
-      internal static let title = Localizable.tr("Localizable", "Welcome.Feature3.Title")
+  internal enum Setup {
+    /// How to log in?
+    internal static let howToLogin = Localizable.tr("Localizable", "Setup.HowToLogin")
+    /// Log in
+    internal static let login = Localizable.tr("Localizable", "Setup.Login")
+    internal enum Button {
+      /// Log in
+      internal static let login = Localizable.tr("Localizable", "Setup.Button.Login")
+      /// Success!
+      internal static let success = Localizable.tr("Localizable", "Setup.Button.Success")
     }
   }
 }

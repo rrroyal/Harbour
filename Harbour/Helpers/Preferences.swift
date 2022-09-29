@@ -14,9 +14,11 @@ final class Preferences: ObservableObject {
 	public static let shared: Preferences = Preferences()
 	public static let ud: UserDefaults = .group
 
-	@AppStorage(Keys.finishedSetup.rawValue) public var finishedSetup: Bool = false
-
+	@AppStorage(Keys.landingDisplayed.rawValue) public var landingDisplayed: Bool = false
 	@AppStorage(Keys.enableHaptics.rawValue) public var enableHaptics: Bool = true
+
+	@AppStorage(Keys.selectedServer.rawValue) public var selectedServer: String?
+	@AppStorage(Keys.selectedEndpointID.rawValue) public var selectedEndpointID: Int?
 
 	@AppStorage(Keys.cvUseGrid.rawValue) public var cvUseGrid: Bool = false
 
@@ -27,9 +29,11 @@ final class Preferences: ObservableObject {
 
 extension Preferences {
 	enum Keys: String, CaseIterable {
-		case finishedSetup = "FinishedSetup"
-
+		case landingDisplayed = "LandingDisplayed"
 		case enableHaptics = "EnableHaptics"
+
+		case selectedServer = "SelectedServer"
+		case selectedEndpointID = "SelectedEndpointID"
 
 		case cvUseGrid = "CVUseGrid"
 	}

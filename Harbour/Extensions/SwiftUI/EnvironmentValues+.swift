@@ -6,18 +6,18 @@
 //
 
 import SwiftUI
-import Indicators
+import IndicatorsKit
 
-// extension EnvironmentValues {
-//	private struct SceneErrorHandler: EnvironmentKey {
-//		static let defaultValue: SceneState.ErrorHandler? = nil
-//	}
-//
-//	var sceneErrorHandler: SceneState.ErrorHandler? {
-//		get { self[SceneErrorHandler.self] }
-//		set { self[SceneErrorHandler.self] = newValue }
-//	}
-// }
+ extension EnvironmentValues {
+	private struct SceneErrorHandler: EnvironmentKey {
+		static let defaultValue: SceneState.ErrorHandler? = nil
+	}
+
+	var sceneErrorHandler: SceneState.ErrorHandler? {
+		get { self[SceneErrorHandler.self] }
+		set { self[SceneErrorHandler.self] = newValue }
+	}
+ }
 
 // MARK: - ContainersListUseGrid
 
