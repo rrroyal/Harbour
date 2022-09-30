@@ -6,16 +6,28 @@
 //
 
 import SwiftUI
+import PortainerKit
 
 struct ContainerDetailsView: View {
+	@Environment(\.sceneErrorHandler) var sceneErrorHandler
+	@EnvironmentObject var portainerStore: PortainerStore
+
 	let item: ContainersView.ContainerNavigationItem
 
+	@State private var details: ContainerDetails?
+
 	var body: some View {
-		Text(item.id)
-			.navigationTitle(item.displayName ?? item.id)
-			.userActivity(HarbourUserActivity.containerDetails, element: item) { item, userActivity in
-				createUserActivity(item, userActivity)
+		VStack {
+			Text(item.id)
+			if let details {
+				Text(String(describing: details))
 			}
+		}
+		.navigationTitle(item.displayName ?? item.id)
+		.userActivity(HarbourUserActivity.containerDetails, element: item) { item, userActivity in
+			createUserActivity(item, userActivity)
+		}
+		.task(getContainerDetails)
 	}
 }
 
@@ -37,6 +49,22 @@ private extension ContainerDetailsView {
 		userActivity.title = Localizable.ContainerDetails.UserActivity.title(displayName)
 
 		try? userActivity.setTypedPayload(item)
+	}
+
+	@Sendable
+	func getContainerDetails() async {
+		do {
+			if !portainerStore.isSetup {
+				await portainerStore.setupTask?.value
+			}
+			if portainerStore.selectedEndpointID == nil {
+				try? await portainerStore.endpointsTask?.value
+			}
+
+			details = try await portainerStore.inspectContainer(item.id)
+		} catch {
+			sceneErrorHandler?(error, String.debugInfo())
+		}
 	}
 }
 

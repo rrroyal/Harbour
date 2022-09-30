@@ -19,7 +19,7 @@ struct HarbourApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environment(\.portainerSelectedEndpoint, portainerStore.selectedEndpoint?.id)
+				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpointID)
 				.environment(\.containersViewUseGrid, preferences.cvUseGrid)
 				.environmentObject(appState)
 				.environmentObject(portainerStore)

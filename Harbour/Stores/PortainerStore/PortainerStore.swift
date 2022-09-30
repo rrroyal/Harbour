@@ -15,6 +15,8 @@ import KeychainKit
 /// Main store for Portainer-related data.
 @MainActor
 final class PortainerStore: ObservableObject {
+
+	/// Singleton for `PortainerStore`
 	static let shared: PortainerStore = PortainerStore()
 
 	// MARK: Private properties
@@ -25,10 +27,6 @@ final class PortainerStore: ObservableObject {
 
 	internal var portainer: Portainer?
 
-	internal var setupTask: Task<Void, Never>?
-	internal var endpointsTask: Task<Void, Error>?
-	internal var containersTask: Task<Void, Error>?
-
 	// MARK: Public properties
 
 	/// Server URL
@@ -36,15 +34,29 @@ final class PortainerStore: ObservableObject {
 		portainer?.url
 	}
 
+	/// Task for `PortainerStore` setup
+	public private(set) var setupTask: Task<Void, Never>?
+
+	/// Task for `endpoints` refresh
+	public private(set) var endpointsTask: Task<Void, Error>?
+
+	/// Task for `containers` refresh
+	public private(set) var containersTask: Task<Void, Error>?
+
+	/// Is `PortainerStore` setup?
 	@Published private(set) var isSetup: Bool = false
 
-	@Published private(set) var selectedEndpoint: Endpoint? {
-		didSet { onSelectedEndpointChange(selectedEndpoint) }
+	/// Currently selected endpoint's ID
+	@Published private(set) var selectedEndpointID: Endpoint.ID? = Preferences.shared.selectedEndpointID {
+		didSet { onSelectedEndpointIDChange(selectedEndpointID) }
 	}
 
+	/// Endpoints
 	@Published private(set) var endpoints: [Endpoint] = [] {
 		didSet { onEndpointsChange(endpoints) }
 	}
+
+	/// Containers of `selectedEndpoint`
 	@Published private(set) var containers: [Container] = [] {
 		didSet { onContainersChange(containers) }
 	}
@@ -54,8 +66,15 @@ final class PortainerStore: ObservableObject {
 	private init() {
 		logger.info("Initialized, loading stored containers... [\(String.debugInfo(), privacy: .public)]")
 		setupTask = Task {
-			containers = loadStoredContainers()
-			loadTokenIfStored()
+			setupIfStored()
+
+			Task {
+				let storedContainers = loadStoredContainers()
+				if containers.isEmpty {
+					self.containers = storedContainers
+				}
+			}
+
 			setupTask?.cancel()
 		}
 	}
@@ -97,7 +116,7 @@ final class PortainerStore: ObservableObject {
 	@MainActor
 	public func selectEndpoint(_ endpoint: Endpoint?) {
 		logger.info("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive)\" (\(endpoint?.id.description ?? "<none>")) [\(String.debugInfo(), privacy: .public)]")
-		self.selectedEndpoint = endpoint
+		self.selectedEndpointID = endpoint?.id
 
 		if endpoint != nil {
 			refreshContainers()
@@ -110,58 +129,39 @@ final class PortainerStore: ObservableObject {
 	}
 
 	@Sendable
-	public func getEndpoints() async throws {
-		logger.info("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
+	public func inspectContainer(_ containerID: Container.ID) async throws -> ContainerDetails {
+		logger.info("Getting details for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
 		do {
-			let portainer = try getPortainer()
-			let endpoints = try await portainer.fetchEndpoints()
-			self.endpoints = endpoints.sorted()
-			logger.notice("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
+			let (portainer, endpointID) = try getPortainerAndEndpoint()
+			let details = try await portainer.inspectContainer(containerID, endpointID: endpointID)
+			logger.notice("Got details for containerID: \(containerID, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
+			return details
 		} catch {
-			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.error("Failed to get container details: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error
 		}
 	}
 
-	@Sendable
-	public func getContainers() async throws {
-		logger.info("Getting containers... [\(String.debugInfo(), privacy: .public)]")
-		do {
-			guard let selectedEndpointID = selectedEndpoint?.id else {
-				throw PortainerError.noSelectedEndpoint
-			}
-
-			let portainer = try getPortainer()
-			let containers = try await portainer.fetchContainers(for: selectedEndpointID)
-			self.containers = containers.sorted()
-			logger.notice("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
-		} catch {
-			logger.error("Failed to get containers: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
-			throw error
-		}
-	}
-
-	// MARK: Private Functions
-
-	/// Returns `Portainer`, or throws an error if there's none.
-	private func getPortainer() throws -> Portainer {
-		guard let portainer else {
-			throw PortainerError.noPortainer
-		}
-		return portainer
-	}
 }
 
 // MARK: - PortainerStore+Refresh
 
 extension PortainerStore {
-	@discardableResult
+
+	@discardableResult @MainActor
+	/// Refreshes endpoints and containers, storing the task and handling errors.
+	/// Used as user-accessible method of refreshing central data.
+	/// - Parameters:
+	///   - errorHandler: `SceneState.ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<Void, Error>` of refresh
 	func refresh(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<Void, Error> {
 		let task = Task {
 			do {
+				await setupTask?.value
+
 				let endpointsTask = refreshEndpoints(errorHandler: errorHandler, _debugInfo: _debugInfo)
 				try await endpointsTask.value
-				if selectedEndpoint != nil {
+				if selectedEndpointID != nil {
 					let containersTask = refreshContainers(errorHandler: errorHandler, _debugInfo: _debugInfo)
 					try await containersTask.value
 				}
@@ -173,7 +173,12 @@ extension PortainerStore {
 		return task
 	}
 
-	@discardableResult
+	@discardableResult @MainActor
+	/// Refreshes endpoints, storing the task and handling errors.
+	/// Used as user-accessible method of refreshing central data.
+	/// - Parameters:
+	///   - errorHandler: `SceneState.ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<Void, Error>` of refresh
 	func refreshEndpoints(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<Void, Error> {
 		endpointsTask?.cancel()
 		let task = Task {
@@ -190,7 +195,12 @@ extension PortainerStore {
 		return task
 	}
 
-	@discardableResult
+	@discardableResult @MainActor
+	/// Refreshes containers, storing the task and handling errors.
+	/// Used as user-accessible method of refreshing central data.
+	/// - Parameters:
+	///   - errorHandler: `SceneState.ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<Void, Error>` of refresh
 	func refreshContainers(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<Void, Error> {
 		containersTask?.cancel()
 		let task = Task {
@@ -206,38 +216,98 @@ extension PortainerStore {
 		containersTask = task
 		return task
 	}
+
 }
 
-// MARK: - PortainerStore+Actions
+// MARK: - PortainerStore+Private
 
 private extension PortainerStore {
-	func onSelectedEndpointChange(_ selectedEndpoint: Endpoint?) {
-		Preferences.shared.selectedEndpointID = selectedEndpoint?.id
+
+	@Sendable
+	func getEndpoints() async throws {
+		logger.info("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
+		do {
+			guard let portainer else {
+				throw PortainerError.noPortainer
+			}
+			let endpoints = try await portainer.fetchEndpoints()
+			self.endpoints = endpoints.sorted()
+			logger.notice("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
+		} catch {
+			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			throw error
+		}
+	}
+
+	@Sendable
+	func getContainers() async throws {
+		logger.info("Getting containers... [\(String.debugInfo(), privacy: .public)]")
+		do {
+			let (portainer, endpointID) = try getPortainerAndEndpoint()
+			let containers = try await portainer.fetchContainers(for: endpointID)
+			self.containers = containers.sorted()
+			logger.notice("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
+		} catch {
+			logger.error("Failed to get containers: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			throw error
+		}
+	}
+
+}
+
+// MARK: - PortainerStore+Helpers
+
+private extension PortainerStore {
+
+	/// Unwraps `portainer` and `selectedEndpoint`, or throws an error if there's none.
+	/// - Returns: Unwrapped `(Portainer, Endpoint.ID)`
+	func getPortainerAndEndpoint() throws -> (Portainer, Endpoint.ID) {
+		guard let portainer else {
+			throw PortainerError.noPortainer
+		}
+		guard let selectedEndpointID else {
+			throw PortainerError.noSelectedEndpoint
+		}
+		return (portainer, selectedEndpointID)
+	}
+
+}
+
+// MARK: - PortainerStore+OnDidChange
+
+private extension PortainerStore {
+
+	func onSelectedEndpointIDChange(_ selectedEndpointID: Endpoint.ID?) {
+		Preferences.shared.selectedEndpointID = selectedEndpointID
 	}
 
 	func onEndpointsChange(_ endpoints: [Endpoint]) {
 		if endpoints.isEmpty {
 			containers = []
-			selectedEndpoint = nil
+			selectedEndpointID = nil
 		} else if endpoints.count == 1 {
-			selectedEndpoint = endpoints.first
+			selectedEndpointID = endpoints.first?.id
 		} else {
 			let storedEndpointID = Preferences.shared.selectedEndpointID
-			let storedEndpoint = endpoints.first(where: { $0.id == storedEndpointID })
-			selectedEndpoint = storedEndpoint
+			if endpoints.contains(where: { $0.id == storedEndpointID }) {
+				selectedEndpointID = storedEndpointID
+			}
 		}
 	}
 
 	func onContainersChange(_ containers: [Container]) {
 		storeContainers(containers)
 	}
+
 }
 
 // MARK: - PortainerStore+Persistence
 
 private extension PortainerStore {
+
 	@discardableResult
-	func loadTokenIfStored() -> Bool {
+	/// Loads authorization token for saved server and initializes `Portainer` with it.
+	func setupIfStored() -> Bool {
 		logger.info("Looking for token... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			guard let selectedServer = Preferences.shared.selectedServer,
@@ -258,6 +328,7 @@ private extension PortainerStore {
 	}
 
 	/// Stores containers to CoreData store.
+	/// - Parameter containers: Containers to store
 	func storeContainers(_ containers: [Container]) {
 		logger.info("Saving \(containers.count, privacy: .public) containers... [\(String.debugInfo(), privacy: .public)]")
 
@@ -304,4 +375,5 @@ private extension PortainerStore {
 			return []
 		}
 	}
+
 }

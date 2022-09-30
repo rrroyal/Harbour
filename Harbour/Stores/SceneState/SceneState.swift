@@ -13,6 +13,7 @@ import IndicatorsKit
 
 // MARK: - SceneState
 
+@MainActor
 final class SceneState: ObservableObject {
 
 	// MARK: Internal properties
@@ -32,7 +33,13 @@ final class SceneState: ObservableObject {
 
 	// MARK: Data State
 
-	@Published public var isLoadingMainScreenData: Bool = false
+	public var isLoading: Bool {
+		let portainerStore = PortainerStore.shared
+		let setupCancelled = portainerStore.setupTask?.isCancelled ?? true
+		let endpointsCancelled = portainerStore.endpointsTask?.isCancelled ?? true
+		let containersCancelled = portainerStore.containersTask?.isCancelled ?? true
+		return !setupCancelled || !endpointsCancelled || !containersCancelled
+	}
 
 	// MARK: init
 

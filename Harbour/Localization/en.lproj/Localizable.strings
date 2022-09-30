@@ -50,7 +50,7 @@
 
 // MARK: - ContainerDetails
 
-"ContainerDetails.UserActivity.Title" = "See details of %@";
+"ContainerDetails.UserActivity.Title" = "See the details of %@";
 "ContainerDetails.UserActivity.UnnamedContainerPlaceholder" = "a container";
 
 // MARK: - Settings

@@ -22,14 +22,14 @@ import IndicatorsKit
 	}
  }
 
-// MARK: - PortainerSelectedEndpoint
+// MARK: - PortainerSelectedEndpointID
 
 extension EnvironmentValues {
 	private struct PortainerSelectedEndpoint: EnvironmentKey {
 		static let defaultValue: Endpoint.ID? = nil
 	}
 
-	var portainerSelectedEndpoint: Endpoint.ID? {
+	var portainerSelectedEndpointID: Endpoint.ID? {
 		get { self[PortainerSelectedEndpoint.self] }
 		set { self[PortainerSelectedEndpoint.self] = newValue }
 	}

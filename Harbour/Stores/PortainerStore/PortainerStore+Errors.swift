@@ -9,10 +9,12 @@ import Foundation
 
 extension PortainerStore {
 	enum PortainerError: LocalizedError {
+
 		/// `Portainer` variable isn't initialized.
 		case noPortainer
 
 		/// No endpoint is selected.
 		case noSelectedEndpoint
+
 	}
 }

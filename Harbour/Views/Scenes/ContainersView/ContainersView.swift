@@ -11,7 +11,7 @@ struct ContainersView: View {
 	@Environment(\.containersViewUseGrid) var useGrid: Bool
 	@Environment(\.sceneErrorHandler) var sceneErrorHandler: SceneState.ErrorHandler?
 	@EnvironmentObject var portainerStore: PortainerStore
-	let isLoading: Bool
+	@EnvironmentObject var sceneState: SceneState
 
 	@State private var searchFilter: String = ""
 	@State private var refreshTask: Task<Void, Error>?
@@ -19,9 +19,9 @@ struct ContainersView: View {
 	@ViewBuilder
 	private var emptyPlaceholder: some View {
 		Group {
-			if isLoading {
+			if sceneState.isLoading {
 				Text(Localizable.ContainersView.loadingPlaceholder)
-			} else if portainerStore.selectedEndpoint == nil {
+			} else if portainerStore.selectedEndpointID == nil {
 				Text(Localizable.ContainersView.noSelectedEndpointPlaceholder)
 			} else if portainerStore.endpoints.isEmpty {
 				Text(Localizable.ContainersView.noEndpointsPlaceholder)
@@ -67,7 +67,7 @@ struct ContainersView: View {
 		}
 		.transition(.opacity)
 		.animation(.easeInOut, value: useGrid)
-		.animation(.easeInOut, value: portainerStore.selectedEndpoint == nil)
+		.animation(.easeInOut, value: portainerStore.selectedEndpointID == nil)
 		.animation(.easeInOut, value: portainerStore.containers.isEmpty)
 	}
 }

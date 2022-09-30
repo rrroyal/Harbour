@@ -24,7 +24,7 @@ internal enum Localizable {
 
   internal enum ContainerDetails {
     internal enum UserActivity {
-      /// See details of %@
+      /// See the details of %@
       internal static func title(_ p1: Any) -> String {
         return Localizable.tr("Localizable", "ContainerDetails.UserActivity.Title", String(describing: p1))
       }

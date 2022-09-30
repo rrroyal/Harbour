@@ -19,13 +19,6 @@ struct ContentView: View {
 
 	@State private var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
-	private var isLoading: Bool {
-		let setupCancelled = portainerStore.setupTask?.isCancelled ?? true
-		let endpointsCancelled = portainerStore.endpointsTask?.isCancelled ?? true
-		let containersCancelled = portainerStore.containersTask?.isCancelled ?? true
-		return !setupCancelled || !endpointsCancelled || !containersCancelled
-	}
-
 	@ViewBuilder
 	private var titleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
@@ -33,7 +26,7 @@ struct ContentView: View {
 				selectEndpoint(endpoint)
 			}) {
 				Text(endpoint.name ?? endpoint.id.description)
-				if portainerStore.selectedEndpoint == endpoint {
+				if portainerStore.selectedEndpointID == endpoint.id {
 					Image(systemName: "checkmark")
 				}
 			}
@@ -41,16 +34,14 @@ struct ContentView: View {
 
 		Divider()
 
-		Button(action: {
-			portainerStore.refresh(errorHandler: sceneState.handle)
-		}) {
+		Button(action: refresh) {
 			Label("Refresh", systemImage: "arrow.clockwise")
 		}
 	}
 
 	var body: some View {
 		NavigationStack(path: $sceneState.navigationPath) {
-			ContainersView(isLoading: isLoading)
+			ContainersView()
 				.navigationTitle(Localizable.appName)
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbarTitleMenu {
@@ -58,13 +49,13 @@ struct ContentView: View {
 				}
 				.toolbar {
 					ToolbarItem(placement: .navigationBarLeading) {
-						if isLoading {
+						if sceneState.isLoading {
 							ProgressView()
 								.transition(.opacity)
 						}
 					}
 
-					ToolbarTitle(title: Localizable.appName, subtitle: sceneState.isLoadingMainScreenData ? Localizable.Generic.loading : nil)
+//					ToolbarTitle(title: Localizable.appName, subtitle: sceneState.isLoadingMainScreenData ? Localizable.Generic.loading : nil)
 
 					ToolbarItem(placement: .navigationBarTrailing) {
 						Button(action: {
@@ -85,8 +76,8 @@ struct ContentView: View {
 		}) {
 			LandingView()
 		}
-		.animation(.easeInOut, value: isLoading)
-		.environment(\.sceneErrorHandler, sceneState.handle)
+		.animation(.easeInOut, value: sceneState.isLoading)
+		.environment(\.sceneErrorHandler, handleError)
 		.environmentObject(sceneState)
 		.onContinueUserActivity(HarbourUserActivity.containerDetails, perform: onContinueContainerDetailsActivity)
 	}
@@ -95,6 +86,10 @@ struct ContentView: View {
 // MARK: - ContentView+Actions
 
 private extension ContentView {
+	func refresh() {
+		portainerStore.refresh(errorHandler: handleError)
+	}
+
 	@MainActor
 	func onLandingDismiss() {
 		preferences.landingDisplayed = true
@@ -111,6 +106,10 @@ private extension ContentView {
 			return
 		}
 		sceneState.navigationPath.append(data)
+	}
+
+	func handleError(_ error: Error, _debugInfo: String) {
+		sceneState.handle(error, _debugInfo: _debugInfo)
 	}
 }
 

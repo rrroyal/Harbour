@@ -13,7 +13,7 @@ import PortainerKit
 struct ContainersListView: View {
 	private static let cellSpacing: Double = 8
 
-	@Environment(\.portainerSelectedEndpoint) var portainerSelectedEndpoint
+	@Environment(\.portainerSelectedEndpointID) var portainerSelectedEndpointID
 	@EnvironmentObject var sceneState: SceneState
 
 	let containers: [Container]
@@ -21,7 +21,7 @@ struct ContainersListView: View {
 	var body: some View {
 		LazyVStack(spacing: Self.cellSpacing) {
 			ForEach(containers) { container in
-				let navigationItem = ContainersView.ContainerNavigationItem(id: container.id, displayName: container.displayName, endpointID: portainerSelectedEndpoint)
+				let navigationItem = ContainersView.ContainerNavigationItem(id: container.id, displayName: container.displayName, endpointID: portainerSelectedEndpointID)
 				NavigationLink(value: navigationItem) {
 					ContainerCell(container: container)
 						.equatable()
