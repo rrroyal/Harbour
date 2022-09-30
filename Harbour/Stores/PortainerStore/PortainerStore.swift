@@ -31,6 +31,11 @@ final class PortainerStore: ObservableObject {
 
 	// MARK: Public properties
 
+	/// Server URL
+	public var serverURL: URL? {
+		portainer?.url
+	}
+
 	@Published private(set) var isSetup: Bool = false
 
 	@Published private(set) var selectedEndpoint: Endpoint? {

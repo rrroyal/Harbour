@@ -38,6 +38,14 @@ struct ContentView: View {
 				}
 			}
 		}
+
+		Divider()
+
+		Button(action: {
+			portainerStore.refresh(errorHandler: sceneState.handle)
+		}) {
+			Label("Refresh", systemImage: "arrow.clockwise")
+		}
 	}
 
 	var body: some View {
@@ -45,7 +53,7 @@ struct ContentView: View {
 			ContainersView(isLoading: isLoading)
 				.navigationTitle(Localizable.appName)
 				.navigationBarTitleDisplayMode(.inline)
-				.toolbarTitleMenu(isVisible: !portainerStore.endpoints.isEmpty) {
+				.toolbarTitleMenu {
 					titleMenu
 				}
 				.toolbar {
@@ -77,9 +85,10 @@ struct ContentView: View {
 		}) {
 			LandingView()
 		}
+		.animation(.easeInOut, value: isLoading)
 		.environment(\.sceneErrorHandler, sceneState.handle)
 		.environmentObject(sceneState)
-		.animation(.easeInOut, value: isLoading)
+		.onContinueUserActivity(HarbourUserActivity.containerDetails, perform: onContinueContainerDetailsActivity)
 	}
 }
 
@@ -95,6 +104,13 @@ private extension ContentView {
 	func selectEndpoint(_ endpoint: Endpoint?) {
 		UIDevice.generateHaptic(.light)
 		portainerStore.selectEndpoint(endpoint)
+	}
+
+	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
+		guard let data = try? userActivity.typedPayload(ContainersView.ContainerNavigationItem.self) else {
+			return
+		}
+		sceneState.navigationPath.append(data)
 	}
 }
 

@@ -48,6 +48,11 @@
 "ContainerCell.UnknownState" = "Unknown";
 "ContainerCell.StateJoiner" = " • ";
 
+// MARK: - ContainerDetails
+
+"ContainerDetails.UserActivity.Title" = "See details of %@";
+"ContainerDetails.UserActivity.UnnamedContainerPlaceholder" = "a container";
+
 // MARK: - Settings
 
 "Settings.Title" = "Settings";

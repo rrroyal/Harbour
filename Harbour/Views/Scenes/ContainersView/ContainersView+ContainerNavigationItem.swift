@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import PortainerKit
 
 extension ContainersView {
-	struct ContainerNavigationItem: Hashable, Identifiable {
-		let id: String
+	struct ContainerNavigationItem: Hashable, Identifiable, Codable {
+		let id: Container.ID
 		let displayName: String?
+		let endpointID: Endpoint.ID?
 	}
 }

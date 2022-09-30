@@ -22,6 +22,17 @@ internal enum Localizable {
     internal static let unnamed = Localizable.tr("Localizable", "ContainerCell.Unnamed")
   }
 
+  internal enum ContainerDetails {
+    internal enum UserActivity {
+      /// See details of %@
+      internal static func title(_ p1: Any) -> String {
+        return Localizable.tr("Localizable", "ContainerDetails.UserActivity.Title", String(describing: p1))
+      }
+      /// a container
+      internal static let unnamedContainerPlaceholder = Localizable.tr("Localizable", "ContainerDetails.UserActivity.UnnamedContainerPlaceholder")
+    }
+  }
+
   internal enum ContainersView {
     /// Loading...
     internal static let loadingPlaceholder = Localizable.tr("Localizable", "ContainersView.LoadingPlaceholder")
