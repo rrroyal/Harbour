@@ -13,9 +13,9 @@ struct SetupView: View {
 	private static let urlPlaceholder: String = "https://172.17.0.2"
 	private static let tokenPlaceholder: String = "hunter2"
 
-	@Environment(\.dismiss) var dismiss
 	@EnvironmentObject var sceneState: SceneState
 	@EnvironmentObject var portainer: PortainerStore
+	@Environment(\.dismiss) var dismiss
 
 	@State private var url: String = ""
 	@State private var token: String = ""

@@ -8,9 +8,11 @@
 import SwiftUI
 import PortainerKit
 
+// MARK: - ContainerDetailsView
+
 struct ContainerDetailsView: View {
-	@Environment(\.sceneErrorHandler) var sceneErrorHandler
 	@EnvironmentObject var portainerStore: PortainerStore
+	@Environment(\.sceneErrorHandler) var sceneErrorHandler
 
 	let item: ContainersView.ContainerNavigationItem
 
@@ -24,31 +26,32 @@ struct ContainerDetailsView: View {
 			}
 		}
 		.navigationTitle(item.displayName ?? item.id)
-		.userActivity(HarbourUserActivity.containerDetails, element: item) { item, userActivity in
-			createUserActivity(item, userActivity)
-		}
+		.userActivity(HarbourUserActivity.containerDetails, element: item, createUserActivity)
 		.task(getContainerDetails)
 	}
 }
 
+// MARK: - ContainerDetailsView+Actions
+
 private extension ContainerDetailsView {
-	@MainActor
-	func createUserActivity(_ item: ContainersView.ContainerNavigationItem, _ userActivity: NSUserActivity) {
-		userActivity.isEligibleForHandoff = true
-		userActivity.isEligibleForPrediction = true
-		userActivity.isEligibleForSearch = true
+	func createUserActivity(for item: ContainersView.ContainerNavigationItem, userActivity: NSUserActivity) {
+		Task {
+			userActivity.isEligibleForHandoff = true
+			userActivity.isEligibleForPrediction = true
+			userActivity.isEligibleForSearch = true
 
-		if let serverURL = PortainerStore.shared.serverURL,
-		   let endpointID = item.endpointID {
-			let portainerURLScheme = PortainerURLScheme(address: serverURL)
-			let portainerURL = portainerURLScheme.containerURL(containerID: item.id, endpointID: endpointID)
-			userActivity.webpageURL = portainerURL
+			if let serverURL = PortainerStore.shared.serverURL,
+			   let endpointID = item.endpointID {
+				let portainerURLScheme = PortainerURLScheme(address: serverURL)
+				let portainerURL = portainerURLScheme.containerURL(containerID: item.id, endpointID: endpointID)
+				userActivity.webpageURL = portainerURL
+			}
+
+			let displayName = item.displayName ?? Localizable.ContainerDetails.UserActivity.unnamedContainerPlaceholder
+			userActivity.title = Localizable.ContainerDetails.UserActivity.title(displayName)
+
+			try? userActivity.setTypedPayload(item)
 		}
-
-		let displayName = item.displayName ?? Localizable.ContainerDetails.UserActivity.unnamedContainerPlaceholder
-		userActivity.title = Localizable.ContainerDetails.UserActivity.title(displayName)
-
-		try? userActivity.setTypedPayload(item)
 	}
 
 	@Sendable
@@ -67,6 +70,8 @@ private extension ContainerDetailsView {
 		}
 	}
 }
+
+// MARK: - Previews
 
 struct ContainerDetailsView_Previews: PreviewProvider {
 	static let item = ContainersView.ContainerNavigationItem(id: "id", displayName: "DisplayName", endpointID: nil)

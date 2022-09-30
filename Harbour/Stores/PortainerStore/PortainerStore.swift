@@ -13,7 +13,6 @@ import KeychainKit
 // MARK: - PortainerStore
 
 /// Main store for Portainer-related data.
-@MainActor
 final class PortainerStore: ObservableObject {
 
 	/// Singleton for `PortainerStore`
@@ -65,14 +64,11 @@ final class PortainerStore: ObservableObject {
 
 	private init() {
 		logger.info("Initialized, loading stored containers... [\(String.debugInfo(), privacy: .public)]")
-		setupTask = Task {
-			setupIfStored()
-
-			Task {
-				let storedContainers = loadStoredContainers()
-				if containers.isEmpty {
-					self.containers = storedContainers
-				}
+		setupIfStored()
+		setupTask = Task { @MainActor in
+			let storedContainers = loadStoredContainers()
+			if containers.isEmpty {
+				self.containers = storedContainers
 			}
 
 			setupTask?.cancel()
@@ -81,7 +77,7 @@ final class PortainerStore: ObservableObject {
 
 	// MARK: Public Functions
 
-	@Sendable @MainActor
+	@Sendable
 	public func login(url: URL, token: String) async throws {
 		logger.info("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String.debugInfo(), privacy: .public)]")
 
@@ -183,7 +179,7 @@ extension PortainerStore {
 		endpointsTask?.cancel()
 		let task = Task {
 			do {
-				try await getEndpoints()
+				self.endpoints = try await getEndpoints()
 			} catch {
 				if Task.isCancelled { return }
 				errorHandler?(error, _debugInfo)
@@ -205,7 +201,7 @@ extension PortainerStore {
 		containersTask?.cancel()
 		let task = Task {
 			do {
-				try await getContainers()
+				self.containers = try await getContainers()
 			} catch {
 				if Task.isCancelled { return }
 				errorHandler?(error, _debugInfo)
@@ -224,15 +220,15 @@ extension PortainerStore {
 private extension PortainerStore {
 
 	@Sendable
-	func getEndpoints() async throws {
+	func getEndpoints() async throws -> [Endpoint] {
 		logger.info("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			guard let portainer else {
 				throw PortainerError.noPortainer
 			}
 			let endpoints = try await portainer.fetchEndpoints()
-			self.endpoints = endpoints.sorted()
 			logger.notice("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
+			return endpoints.sorted()
 		} catch {
 			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error
@@ -240,13 +236,13 @@ private extension PortainerStore {
 	}
 
 	@Sendable
-	func getContainers() async throws {
+	func getContainers() async throws -> [Container] {
 		logger.info("Getting containers... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			let containers = try await portainer.fetchContainers(for: endpointID)
-			self.containers = containers.sorted()
 			logger.notice("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
+			return containers.sorted()
 		} catch {
 			logger.error("Failed to get containers: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error

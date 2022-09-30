@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ContainersView: View {
-	@Environment(\.containersViewUseGrid) var useGrid: Bool
-	@Environment(\.sceneErrorHandler) var sceneErrorHandler: SceneState.ErrorHandler?
 	@EnvironmentObject var portainerStore: PortainerStore
 	@EnvironmentObject var sceneState: SceneState
+	@Environment(\.containersViewUseGrid) var useGrid: Bool
+	@Environment(\.sceneErrorHandler) var sceneErrorHandler: SceneState.ErrorHandler?
 
 	@State private var searchFilter: String = ""
 	@State private var refreshTask: Task<Void, Error>?

@@ -33,8 +33,8 @@ public struct Container: Identifiable, Decodable, Sendable {
 	public let created: Date?
 	public let ports: [Port]?
 	public let labels: [String: String]?
-	public var state: ContainerStatus?
-	public var status: String?
+	public let state: ContainerStatus?
+	public let status: String?
 	public let networkSettings: NetworkSettings?
 	public let mounts: [Mount]?
 
