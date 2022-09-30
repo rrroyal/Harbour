@@ -20,7 +20,7 @@ extension ContainersGridView {
 		@ViewBuilder
 		private var stateHeader: some View {
 			HStack {
-				Text(container.state?.rawValue.capitalized() ?? Localizable.ContainerCell.unknownState)
+				Text(container.state?.rawValue.capitalized ?? Localizable.ContainerCell.unknownState)
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
 					.transition(.opacity)

@@ -6,7 +6,10 @@
 //
 
 import SwiftUI
+import PortainerKit
 import IndicatorsKit
+
+// MARK: - SceneErrorHandler
 
  extension EnvironmentValues {
 	private struct SceneErrorHandler: EnvironmentKey {
@@ -18,6 +21,19 @@ import IndicatorsKit
 		set { self[SceneErrorHandler.self] = newValue }
 	}
  }
+
+// MARK: - PortainerSelectedEndpoint
+
+extension EnvironmentValues {
+	private struct PortainerSelectedEndpoint: EnvironmentKey {
+		static let defaultValue: Endpoint.ID? = nil
+	}
+
+	var portainerSelectedEndpoint: Endpoint.ID? {
+		get { self[PortainerSelectedEndpoint.self] }
+		set { self[PortainerSelectedEndpoint.self] = newValue }
+	}
+}
 
 // MARK: - ContainersListUseGrid
 

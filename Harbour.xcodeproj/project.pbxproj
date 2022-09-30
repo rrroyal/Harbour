@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E71180F228E737D40019774A /* PortainerURLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71180F128E737D40019774A /* PortainerURLScheme.swift */; };
 		E713177B28E59E8200DB82AF /* ContainersListView+ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713177A28E59E8200DB82AF /* ContainersListView+ContainerCell.swift */; };
 		E713178228E5A1DC00DB82AF /* ContainerStatus+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178128E5A1DC00DB82AF /* ContainerStatus+color.swift */; };
 		E713178428E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */; };
@@ -29,7 +30,6 @@
 		E760CDB52892C1C9007280ED /* FeaturesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E760CDB42892C1C9007280ED /* FeaturesView.swift */; };
 		E760CDB72892C1D2007280ED /* SetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E760CDB62892C1D2007280ED /* SetupView.swift */; };
 		E760CDB92892C1E8007280ED /* LandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E760CDB82892C1E8007280ED /* LandingView.swift */; };
-		E760CDBC2892C443007280ED /* View+toolbarTitleMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E760CDBB2892C443007280ED /* View+toolbarTitleMenu.swift */; };
 		E766D91E288C379800F2DB99 /* ContainersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D91D288C379800F2DB99 /* ContainersView.swift */; };
 		E766D922288C37D500F2DB99 /* ContainersGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D921288C37D500F2DB99 /* ContainersGridView.swift */; };
 		E766D925288C37E200F2DB99 /* ContainersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D924288C37E200F2DB99 /* ContainersListView.swift */; };
@@ -37,6 +37,7 @@
 		E766D92F288C38D900F2DB99 /* SceneState+Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D92E288C38D900F2DB99 /* SceneState+Errors.swift */; };
 		E766D933288C3CBF00F2DB99 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D932288C3CBF00F2DB99 /* SettingsView.swift */; };
 		E768A59B28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E768A59A28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift */; };
+		E7779B2E28E75F8F00AD8569 /* HarbourUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */; };
 		E79AD30B2893D9FA002D0CD9 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */; };
 		E79AD30E2893DABF002D0CD9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30D2893DABF002D0CD9 /* Constants.swift */; };
 		E7A8BC19288C0826007AB20B /* PortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A8BC18288C0826007AB20B /* PortainerStore.swift */; };
@@ -72,6 +73,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E71180F128E737D40019774A /* PortainerURLScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerURLScheme.swift; sourceTree = "<group>"; };
 		E713177A28E59E8200DB82AF /* ContainersListView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersListView+ContainerCell.swift"; sourceTree = "<group>"; };
 		E713178128E5A1DC00DB82AF /* ContainerStatus+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerStatus+color.swift"; sourceTree = "<group>"; };
 		E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersView+ContainerNavigationItem.swift"; sourceTree = "<group>"; };
@@ -94,7 +96,6 @@
 		E760CDB42892C1C9007280ED /* FeaturesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeaturesView.swift; sourceTree = "<group>"; };
 		E760CDB62892C1D2007280ED /* SetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupView.swift; sourceTree = "<group>"; };
 		E760CDB82892C1E8007280ED /* LandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingView.swift; sourceTree = "<group>"; };
-		E760CDBB2892C443007280ED /* View+toolbarTitleMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+toolbarTitleMenu.swift"; sourceTree = "<group>"; };
 		E766D91D288C379800F2DB99 /* ContainersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainersView.swift; sourceTree = "<group>"; };
 		E766D921288C37D500F2DB99 /* ContainersGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainersGridView.swift; sourceTree = "<group>"; };
 		E766D924288C37E200F2DB99 /* ContainersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainersListView.swift; sourceTree = "<group>"; };
@@ -103,6 +104,7 @@
 		E766D932288C3CBF00F2DB99 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E766D934288C3D7E00F2DB99 /* Localizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		E768A59A28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Indicator+ErrorInit.swift"; sourceTree = "<group>"; };
+		E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourUserActivity.swift; sourceTree = "<group>"; };
 		E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		E79AD30D2893DABF002D0CD9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E7A8BC18288C0826007AB20B /* PortainerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerStore.swift; sourceTree = "<group>"; };
@@ -156,6 +158,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E71180F428E737E00019774A /* URL Schemes */ = {
+			isa = PBXGroup;
+			children = (
+				E71180F128E737D40019774A /* PortainerURLScheme.swift */,
+				E7BEBA1A28857BF300FCD7DC /* HarbourURLScheme.swift */,
+			);
+			path = "URL Schemes";
+			sourceTree = "<group>";
+		};
+		E71180F528E737E80019774A /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				E72BB34F28DE26BD007991D1 /* GenericError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
 		E713177D28E5A1C900DB82AF /* PortainerKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -268,7 +287,6 @@
 				E766D929288C381900F2DB99 /* EnvironmentValues+.swift */,
 				E7ACE741288C4450000E6FF6 /* View+opacity.swift */,
 				E7ACE743288C44C8000E6FF6 /* View+padding.swift */,
-				E760CDBB2892C443007280ED /* View+toolbarTitleMenu.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -372,8 +390,9 @@
 		E7BEBA1928857BE700FCD7DC /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				E72BB34F28DE26BD007991D1 /* GenericError.swift */,
-				E7BEBA1A28857BF300FCD7DC /* HarbourURLScheme.swift */,
+				E71180F528E737E80019774A /* Errors */,
+				E71180F428E737E00019774A /* URL Schemes */,
+				E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */,
 				E7BEBA2028857CDD00FCD7DC /* Preferences.swift */,
 				E72BB33B28DE0CFB007991D1 /* Persistence.swift */,
 			);
@@ -573,11 +592,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E71180F228E737D40019774A /* PortainerURLScheme.swift in Sources */,
 				E7BEBA1B28857BF300FCD7DC /* HarbourURLScheme.swift in Sources */,
 				E7BEBA2C2885803A00FCD7DC /* Notification+.swift in Sources */,
 				E7A8BC19288C0826007AB20B /* PortainerStore.swift in Sources */,
 				E713179628E5B99600DB82AF /* Endpoint+sorted.swift in Sources */,
-				E760CDBC2892C443007280ED /* View+toolbarTitleMenu.swift in Sources */,
 				E7BEBA2828857F8700FCD7DC /* String+.swift in Sources */,
 				E760CDB92892C1E8007280ED /* LandingView.swift in Sources */,
 				E7BEBA2F2885805D00FCD7DC /* AppState.swift in Sources */,
@@ -597,6 +616,7 @@
 				E7BEBA2128857CDD00FCD7DC /* Preferences.swift in Sources */,
 				E7ACE73A288C41B9000E6FF6 /* GeneralSection.swift in Sources */,
 				E7D6E6282884771200C79732 /* HarbourApp.swift in Sources */,
+				E7779B2E28E75F8F00AD8569 /* HarbourUserActivity.swift in Sources */,
 				E7BEBA2528857D4E00FCD7DC /* Bundle+.swift in Sources */,
 				E766D922288C37D500F2DB99 /* ContainersGridView.swift in Sources */,
 				E7ACE747288C47BA000E6FF6 /* SettingsView+ToggleOption.swift in Sources */,

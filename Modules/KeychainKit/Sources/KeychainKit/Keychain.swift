@@ -114,7 +114,6 @@ public final class Keychain {
 			return URL(string: string)
 		}
 
-		// TODO: Check if it works without `kSecAttrDescription`
 		return urls
 	}
 

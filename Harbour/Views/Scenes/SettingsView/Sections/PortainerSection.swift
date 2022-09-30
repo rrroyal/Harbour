@@ -9,9 +9,16 @@ import SwiftUI
 
 extension SettingsView {
 	struct PortainerSection: View {
+		@State private var isSetupSheetPresented: Bool = false
+
 		var body: some View {
 			Section(Localizable.Settings.Portainer.title) {
-				Text("portainer")
+				Button("Log in") {
+					isSetupSheetPresented = true
+				}
+			}
+			.sheet(isPresented: $isSetupSheetPresented) {
+				SetupView()
 			}
 		}
 	}

@@ -2,10 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>HBMainBundleIdentifier</key>
-	<string>xyz.shameful.Harbour</string>
-	<key>HBAppIdentifierPrefix</key>
-	<string>$(AppIdentifierPrefix)</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -19,6 +15,12 @@
 			</array>
 		</dict>
 	</array>
+	<key>HBAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>HBMainBundleIdentifier</key>
+	<string>xyz.shameful.Harbour</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

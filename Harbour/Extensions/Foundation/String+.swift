@@ -7,14 +7,6 @@
 
 import Foundation
 
-// MARK: - String+capitalized
-
-extension String {
-	func capitalized() -> Self {
-		prefix(1).uppercased() + dropFirst()
-	}
-}
-
 // MARK: - String+isReallyEmpty
 
 extension String {

@@ -10,10 +10,9 @@ import PortainerKit
 
 extension [Container] {
 	func filtered(query: String) -> Self {
-		let lowercasedQuery = query.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-		if lowercasedQuery.isEmpty { return self }
+		if query.isEmpty { return self }
 		return filter {
-			$0.names?.contains(where: { $0.lowercased().contains(lowercasedQuery) }) ?? false
+			$0.names?.contains(where: { $0.localizedCaseInsensitiveContains(query) }) ?? false
 		}
 	}
 }

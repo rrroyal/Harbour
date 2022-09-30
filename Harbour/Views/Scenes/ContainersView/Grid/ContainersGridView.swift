@@ -13,16 +13,19 @@ import PortainerKit
 struct ContainersGridView: View {
 	private static let cellSpacing: Double = 8
 
+	@Environment(\.portainerSelectedEndpoint) var portainerSelectedEndpoint
 	@EnvironmentObject var sceneState: SceneState
 
 	let containers: [Container]
 
+	// TODO: Improve it for iPadOS/macOS
 	private let columns: [GridItem] = .init(repeating: .init(.flexible(), spacing: Self.cellSpacing), count: 3)
 
 	var body: some View {
 		LazyVGrid(columns: columns, spacing: Self.cellSpacing) {
 			ForEach(containers) { container in
-				NavigationLink(value: ContainersView.ContainerNavigationItem(id: container.id, displayName: container.displayName)) {
+				let navigationItem = ContainersView.ContainerNavigationItem(id: container.id, displayName: container.displayName, endpointID: portainerSelectedEndpoint)
+				NavigationLink(value: navigationItem) {
 					ContainerCell(container: container)
 						.equatable()
 						.contextMenu {

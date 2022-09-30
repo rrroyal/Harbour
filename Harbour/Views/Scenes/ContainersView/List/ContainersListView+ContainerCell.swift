@@ -17,7 +17,7 @@ extension ContainersListView {
 		let container: Container
 
 		private var subheadline: String? {
-			let parts = [container.state?.rawValue.capitalized(), container.status].compactMap { $0 }
+			let parts = [container.state?.rawValue.capitalized, container.status].compactMap { $0 }
 			if !parts.isEmpty {
 				return parts.joined(separator: Localizable.ContainerCell.stateJoiner)
 			} else {

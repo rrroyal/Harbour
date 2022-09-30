@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 import os.log
 import PortainerKit
 import IndicatorsKit
@@ -27,7 +28,7 @@ final class SceneState: ObservableObject {
 	// MARK: Navigation
 
 	@Published public var isSettingsSheetPresented: Bool = false
-	@Published public var navigationPath: [ContainersView.ContainerNavigationItem] = []
+	@Published public var navigationPath: NavigationPath = NavigationPath()
 
 	// MARK: Data State
 
