@@ -56,7 +56,7 @@ struct IndicatorView: View, Identifiable {
 		}
 		.padding(padding)
 		.padding(.horizontal, padding)
-		.background(.regularMaterial, in: backgroundShape)
+		.background(.thickMaterial, in: backgroundShape)
 		.frame(maxWidth: isExpanded ? nil : maxWidth)
 		.animation(.easeInOut, value: indicator.icon)
 		.animation(.easeInOut, value: indicator.headline)

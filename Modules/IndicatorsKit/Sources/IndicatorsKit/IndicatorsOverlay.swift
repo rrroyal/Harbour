@@ -43,7 +43,7 @@ struct IndicatorsOverlay: View {
 		ZStack {
 			if let indicator = model.activeIndicator {
 				IndicatorView(indicator: indicator, isExpanded: $isExpanded)
-					.shadow(color: .black.opacity(0.115), radius: 10, x: 0, y: 0)
+					.shadow(color: .black.opacity(0.085), radius: 8, x: 0, y: 0)
 					.offset(dragOffset)
 					.gesture(dragGesture)
 					.transition(transition)
