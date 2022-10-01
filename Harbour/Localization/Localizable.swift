@@ -81,6 +81,33 @@ internal enum Localizable {
     }
   }
 
+  internal enum Notifications {
+    internal enum ContainersChanged {
+      /// Containers changed!
+      internal static let title = Localizable.tr("Localizable", "Notifications.ContainersChanged.Title")
+      /// unknown
+      internal static let unknownPlaceholder = Localizable.tr("Localizable", "Notifications.ContainersChanged.UnknownPlaceholder")
+      internal enum Subtitle {
+        /// "%@" changed it's state to %@.
+        internal static func containerChangedState(_ p1: Any, _ p2: Any) -> String {
+          return Localizable.tr("Localizable", "Notifications.ContainersChanged.Subtitle.ContainerChangedState", String(describing: p1), String(describing: p2))
+        }
+        /// Container "%@" disappeared.
+        internal static func containerDisappeared(_ p1: Any) -> String {
+          return Localizable.tr("Localizable", "Notifications.ContainersChanged.Subtitle.ContainerDisappeared", String(describing: p1))
+        }
+        internal enum ContainersChangedStates {
+          /// %@ changed their states.
+          internal static func readable(_ p1: Any) -> String {
+            return Localizable.tr("Localizable", "Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Readable", String(describing: p1))
+          }
+          /// Multiple containers changed their states.
+          internal static let unreadable = Localizable.tr("Localizable", "Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Unreadable")
+        }
+      }
+    }
+  }
+
   internal enum Settings {
     /// Settings
     internal static let title = Localizable.tr("Localizable", "Settings.Title")

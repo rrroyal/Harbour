@@ -33,7 +33,7 @@ public struct Container: Identifiable, Decodable, Sendable {
 	public let created: Date?
 	public let ports: [Port]?
 	public let labels: [String: String]?
-	public let state: ContainerStatus?
+	public let state: ContainerState?
 	public let status: String?
 	public let networkSettings: NetworkSettings?
 	public let mounts: [Mount]?
@@ -46,7 +46,7 @@ public struct Container: Identifiable, Decodable, Sendable {
 		 created: Date? = nil,
 		 ports: [Port]? = nil,
 		 labels: [String: String]? = nil,
-		 state: ContainerStatus? = nil,
+		 state: ContainerState? = nil,
 		 status: String? = nil,
 		 networkSettings: NetworkSettings? = nil,
 		 mounts: [Mount]? = nil) {

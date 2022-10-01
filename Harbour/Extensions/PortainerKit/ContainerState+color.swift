@@ -1,5 +1,5 @@
 //
-//  ContainerStatus+color.swift
+//  ContainerState+color.swift
 //  Harbour
 //
 //  Created by royal on 29/09/2022.
@@ -8,7 +8,7 @@
 import SwiftUI
 import PortainerKit
 
-extension ContainerStatus {
+extension ContainerState {
 	var color: Color {
 		switch self {
 			case .created:
@@ -29,7 +29,7 @@ extension ContainerStatus {
 	}
 }
 
-extension ContainerStatus? {
+extension ContainerState? {
 	var color: Color {
 		if let self {
 			return self.color

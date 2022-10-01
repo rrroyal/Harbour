@@ -19,11 +19,14 @@ public final class Portainer {
 
 	// MARK: Public properties
 
+	/// Is `Portainer` setup?
+	public private(set) var isSetup: Bool = false
+
 	/// Endpoint URL
-	public let url: URL
+	public var url: URL?
 
 	/// Used `URLSession`
-	public let session: URLSession
+	public var session: URLSession
 
 	/// Authorization token
 	public var token: String?
@@ -40,21 +43,30 @@ public final class Portainer {
 	///   - url: Endpoint URL
 	///   - token: Authorization JWT token
 	@Sendable
-	public init(url: URL, token: String? = nil) {
-		self.url = url
-
+	public init(url: URL? = nil, token: String? = nil) {
 		let configuration = URLSessionConfiguration.default
 		configuration.httpAdditionalHeaders = [
 			"Accept-Encoding": "gzip, deflate"
 		]
-		configuration.shouldUseExtendedBackgroundIdleMode = true
 
 		let delegate = Portainer.URLSessionDelegate()
 		self.session = URLSession(configuration: configuration, delegate: delegate, delegateQueue: nil)
+
+		self.url = url
 		self.token = token
+		if let url, let token {
+			setup(url: url, token: token)
+		}
 	}
 
 	// MARK: - Public functions
+
+	@Sendable
+	public func setup(url: URL, token: String) {
+		self.url = url
+		self.token = token
+		self.isSetup = true
+	}
 
 	/// Fetches available endpoints.
 	/// - Returns: `[Endpoint]`
@@ -176,9 +188,13 @@ public final class Portainer {
 	/// - Returns: `WebSocketPassthroughSubject`
 	@Sendable
 	public func attach(to containerID: String, endpointID: Int) throws -> WebSocketPassthroughSubject {
+		guard let url else {
+			throw PortainerError.notSetup
+		}
+
 		guard let url: URL = {
-			guard var components: URLComponents = URLComponents(url: self.url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
-			components.scheme = self.url.scheme == "https" ? "wss" : "ws"
+			guard var components: URLComponents = URLComponents(url: url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
+			components.scheme = url.scheme == "https" ? "wss" : "ws"
 			components.queryItems = [
 				URLQueryItem(name: "token", value: token),
 				URLQueryItem(name: "endpointId", value: String(endpointID)),
@@ -219,6 +235,10 @@ public final class Portainer {
 	/// - Returns: `URLRequest` with authorization header set.
 	@Sendable
 	private func request(for path: RequestPath, query: [URLQueryItem]? = nil) throws -> URLRequest {
+		guard let url else {
+			throw PortainerError.notSetup
+		}
+
 		var request: URLRequest
 		if let query {
 			guard var components: URLComponents = URLComponents(url: url.appendingPathComponent(path.path), resolvingAgainstBaseURL: true) else { throw APIError.invalidURL }

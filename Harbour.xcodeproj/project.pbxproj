@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		E71180F228E737D40019774A /* PortainerURLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71180F128E737D40019774A /* PortainerURLScheme.swift */; };
 		E713177B28E59E8200DB82AF /* ContainersListView+ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713177A28E59E8200DB82AF /* ContainersListView+ContainerCell.swift */; };
-		E713178228E5A1DC00DB82AF /* ContainerStatus+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178128E5A1DC00DB82AF /* ContainerStatus+color.swift */; };
+		E713178228E5A1DC00DB82AF /* ContainerState+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178128E5A1DC00DB82AF /* ContainerState+color.swift */; };
 		E713178428E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */; };
 		E713178828E5A66D00DB82AF /* ContainerDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178728E5A66D00DB82AF /* ContainerDetailsView.swift */; };
 		E713178A28E5A76A00DB82AF /* Container+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178928E5A76A00DB82AF /* Container+Equatable.swift */; };
@@ -18,7 +18,6 @@
 		E713179628E5B99600DB82AF /* Endpoint+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179528E5B99600DB82AF /* Endpoint+sorted.swift */; };
 		E713179828E5C02F00DB82AF /* ContainersGridView+ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179728E5C02F00DB82AF /* ContainersGridView+ContainerCell.swift */; };
 		E713179E28E5C8F600DB82AF /* Container+filtered.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179D28E5C8F600DB82AF /* Container+filtered.swift */; };
-		E72BB31A28DE0C20007991D1 /* Harbour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E72BB31828DE0C20007991D1 /* Harbour.xcdatamodeld */; };
 		E72BB33C28DE0CFB007991D1 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72BB33B28DE0CFB007991D1 /* Persistence.swift */; };
 		E72BB33F28DE1452007991D1 /* NSManagedObjectContext+saveIfNeeded.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72BB33E28DE1452007991D1 /* NSManagedObjectContext+saveIfNeeded.swift */; };
 		E72BB34228DE19C1007991D1 /* PortainerStore+Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72BB34128DE19C1007991D1 /* PortainerStore+Errors.swift */; };
@@ -37,7 +36,9 @@
 		E766D92F288C38D900F2DB99 /* SceneState+Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D92E288C38D900F2DB99 /* SceneState+Errors.swift */; };
 		E766D933288C3CBF00F2DB99 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D932288C3CBF00F2DB99 /* SettingsView.swift */; };
 		E768A59B28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E768A59A28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift */; };
+		E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = E777698828E9A71300C5AFE9 /* Container+isStored.swift */; };
 		E7779B2E28E75F8F00AD8569 /* HarbourUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */; };
+		E78C660D28E9BA920033D0E4 /* Harbour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E78C660B28E9BA920033D0E4 /* Harbour.xcdatamodeld */; };
 		E79AD30B2893D9FA002D0CD9 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */; };
 		E79AD30E2893DABF002D0CD9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30D2893DABF002D0CD9 /* Constants.swift */; };
 		E7A8BC19288C0826007AB20B /* PortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A8BC18288C0826007AB20B /* PortainerStore.swift */; };
@@ -64,6 +65,9 @@
 		E7BEBA312885806500FCD7DC /* SceneState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA302885806500FCD7DC /* SceneState.swift */; };
 		E7C632DB28E5CD8900C7E0B2 /* IndicatorsKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7C632DA28E5CD8900C7E0B2 /* IndicatorsKit */; };
 		E7C632DD28E5CD8C00C7E0B2 /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7C632DC28E5CD8C00C7E0B2 /* KeychainKit */; };
+		E7C772E928E86FE400143E8C /* SceneState+UserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C772E828E86FE400143E8C /* SceneState+UserActivity.swift */; };
+		E7C772EB28E86FFC00143E8C /* AppState+BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C772EA28E86FFC00143E8C /* AppState+BackgroundTasks.swift */; };
+		E7C772ED28E8705500143E8C /* HarbourBackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C772EC28E8705500143E8C /* HarbourBackgroundTask.swift */; };
 		E7D6E6282884771200C79732 /* HarbourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D6E6272884771200C79732 /* HarbourApp.swift */; };
 		E7D6E62A2884771200C79732 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D6E6292884771200C79732 /* ContentView.swift */; };
 		E7D6E62C2884771400C79732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E62B2884771400C79732 /* Assets.xcassets */; };
@@ -75,7 +79,7 @@
 /* Begin PBXFileReference section */
 		E71180F128E737D40019774A /* PortainerURLScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerURLScheme.swift; sourceTree = "<group>"; };
 		E713177A28E59E8200DB82AF /* ContainersListView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersListView+ContainerCell.swift"; sourceTree = "<group>"; };
-		E713178128E5A1DC00DB82AF /* ContainerStatus+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerStatus+color.swift"; sourceTree = "<group>"; };
+		E713178128E5A1DC00DB82AF /* ContainerState+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerState+color.swift"; sourceTree = "<group>"; };
 		E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersView+ContainerNavigationItem.swift"; sourceTree = "<group>"; };
 		E713178728E5A66D00DB82AF /* ContainerDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerDetailsView.swift; sourceTree = "<group>"; };
 		E713178928E5A76A00DB82AF /* Container+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+Equatable.swift"; sourceTree = "<group>"; };
@@ -84,7 +88,6 @@
 		E713179528E5B99600DB82AF /* Endpoint+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Endpoint+sorted.swift"; sourceTree = "<group>"; };
 		E713179728E5C02F00DB82AF /* ContainersGridView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersGridView+ContainerCell.swift"; sourceTree = "<group>"; };
 		E713179D28E5C8F600DB82AF /* Container+filtered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+filtered.swift"; sourceTree = "<group>"; };
-		E72BB31928DE0C20007991D1 /* Portainer.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Portainer.xcdatamodel; sourceTree = "<group>"; };
 		E72BB33B28DE0CFB007991D1 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		E72BB33E28DE1452007991D1 /* NSManagedObjectContext+saveIfNeeded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+saveIfNeeded.swift"; sourceTree = "<group>"; };
 		E72BB34128DE19C1007991D1 /* PortainerStore+Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PortainerStore+Errors.swift"; sourceTree = "<group>"; };
@@ -104,7 +107,10 @@
 		E766D932288C3CBF00F2DB99 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E766D934288C3D7E00F2DB99 /* Localizable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localizable.swift; sourceTree = "<group>"; };
 		E768A59A28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Indicator+ErrorInit.swift"; sourceTree = "<group>"; };
+		E777698828E9A71300C5AFE9 /* Container+isStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+isStored.swift"; sourceTree = "<group>"; };
 		E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourUserActivity.swift; sourceTree = "<group>"; };
+		E78C660528E9B90D0033D0E4 /* Info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Info.h; sourceTree = "<group>"; };
+		E78C660C28E9BA920033D0E4 /* Harbour.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Harbour.xcdatamodel; sourceTree = "<group>"; };
 		E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		E79AD30D2893DABF002D0CD9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E7A8BC18288C0826007AB20B /* PortainerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerStore.swift; sourceTree = "<group>"; };
@@ -134,6 +140,9 @@
 		E7BEBA302885806500FCD7DC /* SceneState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneState.swift; sourceTree = "<group>"; };
 		E7C632D828E5CD7800C7E0B2 /* IndicatorsKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = IndicatorsKit; sourceTree = "<group>"; };
 		E7C632D928E5CD7F00C7E0B2 /* KeychainKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = KeychainKit; sourceTree = "<group>"; };
+		E7C772E828E86FE400143E8C /* SceneState+UserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneState+UserActivity.swift"; sourceTree = "<group>"; };
+		E7C772EA28E86FFC00143E8C /* AppState+BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppState+BackgroundTasks.swift"; sourceTree = "<group>"; };
+		E7C772EC28E8705500143E8C /* HarbourBackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourBackgroundTask.swift; sourceTree = "<group>"; };
 		E7D6E6242884771200C79732 /* Harbour.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Harbour.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7D6E6272884771200C79732 /* HarbourApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourApp.swift; sourceTree = "<group>"; };
 		E7D6E6292884771200C79732 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -181,8 +190,9 @@
 				E713179528E5B99600DB82AF /* Endpoint+sorted.swift */,
 				E713178928E5A76A00DB82AF /* Container+Equatable.swift */,
 				E713179D28E5C8F600DB82AF /* Container+filtered.swift */,
+				E777698828E9A71300C5AFE9 /* Container+isStored.swift */,
 				E713179228E5B94F00DB82AF /* Container+sorted.swift */,
-				E713178128E5A1DC00DB82AF /* ContainerStatus+color.swift */,
+				E713178128E5A1DC00DB82AF /* ContainerState+color.swift */,
 			);
 			path = PortainerKit;
 			sourceTree = "<group>";
@@ -295,6 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				E7BEBA2E2885805D00FCD7DC /* AppState.swift */,
+				E7C772EA28E86FFC00143E8C /* AppState+BackgroundTasks.swift */,
 			);
 			path = AppState;
 			sourceTree = "<group>";
@@ -304,6 +315,7 @@
 			children = (
 				E7BEBA302885806500FCD7DC /* SceneState.swift */,
 				E766D92E288C38D900F2DB99 /* SceneState+Errors.swift */,
+				E7C772E828E86FE400143E8C /* SceneState+UserActivity.swift */,
 			);
 			path = SceneState;
 			sourceTree = "<group>";
@@ -392,6 +404,7 @@
 			children = (
 				E71180F528E737E80019774A /* Errors */,
 				E71180F428E737E00019774A /* URL Schemes */,
+				E7C772EC28E8705500143E8C /* HarbourBackgroundTask.swift */,
 				E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */,
 				E7BEBA2028857CDD00FCD7DC /* Preferences.swift */,
 				E72BB33B28DE0CFB007991D1 /* Persistence.swift */,
@@ -456,7 +469,8 @@
 				E7D6E62B2884771400C79732 /* Assets.xcassets */,
 				E7BEBA2628857E6F00FCD7DC /* Harbour.entitlements */,
 				E7BEBA1C28857C1C00FCD7DC /* Info.plist */,
-				E72BB31828DE0C20007991D1 /* Harbour.xcdatamodeld */,
+				E78C660528E9B90D0033D0E4 /* Info.h */,
+				E78C660B28E9BA920033D0E4 /* Harbour.xcdatamodeld */,
 				E7D6E62D2884771400C79732 /* Preview Content */,
 			);
 			path = Harbour;
@@ -608,6 +622,8 @@
 				E7ACE73C288C4215000E6FF6 /* InterfaceSection.swift in Sources */,
 				E766D92F288C38D900F2DB99 /* SceneState+Errors.swift in Sources */,
 				E7BEBA2328857D3300FCD7DC /* UserDefaults+group.swift in Sources */,
+				E7C772E928E86FE400143E8C /* SceneState+UserActivity.swift in Sources */,
+				E7C772EB28E86FFC00143E8C /* AppState+BackgroundTasks.swift in Sources */,
 				E713177B28E59E8200DB82AF /* ContainersListView+ContainerCell.swift in Sources */,
 				E713179328E5B94F00DB82AF /* Container+sorted.swift in Sources */,
 				E72BB33F28DE1452007991D1 /* NSManagedObjectContext+saveIfNeeded.swift in Sources */,
@@ -622,15 +638,16 @@
 				E7ACE747288C47BA000E6FF6 /* SettingsView+ToggleOption.swift in Sources */,
 				E7BEBA18288575A800FCD7DC /* ToolbarTitle.swift in Sources */,
 				E713178D28E5A81C00DB82AF /* ContainersView+ContainerContextMenu.swift in Sources */,
+				E7C772ED28E8705500143E8C /* HarbourBackgroundTask.swift in Sources */,
 				E79AD30B2893D9FA002D0CD9 /* PrimaryButtonStyle.swift in Sources */,
 				E713178428E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift in Sources */,
+				E78C660D28E9BA920033D0E4 /* Harbour.xcdatamodeld in Sources */,
 				E72BB34828DE256C007991D1 /* RoundedTextFieldStyle.swift in Sources */,
 				E72BB34228DE19C1007991D1 /* PortainerStore+Errors.swift in Sources */,
 				E713178A28E5A76A00DB82AF /* Container+Equatable.swift in Sources */,
 				E766D925288C37E200F2DB99 /* ContainersListView.swift in Sources */,
 				E7BEBA1F28857CB000FCD7DC /* UIDevice+Haptics.swift in Sources */,
 				E7BEBA312885806500FCD7DC /* SceneState.swift in Sources */,
-				E72BB31A28DE0C20007991D1 /* Harbour.xcdatamodeld in Sources */,
 				E7BEBA2A2885801900FCD7DC /* UIWindow+.swift in Sources */,
 				E72BB33C28DE0CFB007991D1 /* Persistence.swift in Sources */,
 				E7ACE73E288C421C000E6FF6 /* OtherSection.swift in Sources */,
@@ -638,8 +655,9 @@
 				E766D91E288C379800F2DB99 /* ContainersView.swift in Sources */,
 				E7ACE749288C47C7000E6FF6 /* SettingsView+Common.swift in Sources */,
 				E766D92A288C381900F2DB99 /* EnvironmentValues+.swift in Sources */,
+				E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */,
 				E7ACE74D288C48A6000E6FF6 /* SettingsView+NavigationLinkOption.swift in Sources */,
-				E713178228E5A1DC00DB82AF /* ContainerStatus+color.swift in Sources */,
+				E713178228E5A1DC00DB82AF /* ContainerState+color.swift in Sources */,
 				E7ACE744288C44C8000E6FF6 /* View+padding.swift in Sources */,
 				E713179E28E5C8F600DB82AF /* Container+filtered.swift in Sources */,
 				E72BB34C28DE2627007991D1 /* TransparentButtonStyle.swift in Sources */,
@@ -812,6 +830,8 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREFIX_HEADER = Harbour/Info.h;
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -848,6 +868,8 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_PREFIX_HEADER = Harbour/Info.h;
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -909,12 +931,12 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
-		E72BB31828DE0C20007991D1 /* Harbour.xcdatamodeld */ = {
+		E78C660B28E9BA920033D0E4 /* Harbour.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				E72BB31928DE0C20007991D1 /* Portainer.xcdatamodel */,
+				E78C660C28E9BA920033D0E4 /* Harbour.xcdatamodel */,
 			);
-			currentVersion = E72BB31928DE0C20007991D1 /* Portainer.xcdatamodel */;
+			currentVersion = E78C660C28E9BA920033D0E4 /* Harbour.xcdatamodel */;
 			path = Harbour.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -79,7 +79,9 @@ struct ContentView: View {
 		.animation(.easeInOut, value: sceneState.isLoading)
 		.environment(\.sceneErrorHandler, handleError)
 		.environmentObject(sceneState)
-		.onContinueUserActivity(HarbourUserActivity.containerDetails, perform: onContinueContainerDetailsActivity)
+		.onContinueUserActivity(HarbourUserActivity.containerDetails) { userActivity in
+			sceneState.onContinueContainerDetailsActivity(userActivity)
+		}
 	}
 }
 
@@ -99,13 +101,6 @@ private extension ContentView {
 	func selectEndpoint(_ endpoint: Endpoint?) {
 		UIDevice.generateHaptic(.light)
 		portainerStore.selectEndpoint(endpoint)
-	}
-
-	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
-		guard let data = try? userActivity.typedPayload(ContainersView.ContainerNavigationItem.self) else {
-			return
-		}
-		sceneState.navigationPath.append(data)
 	}
 
 	func handleError(_ error: Error, _debugInfo: String) {

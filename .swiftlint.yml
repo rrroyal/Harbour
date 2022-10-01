@@ -35,10 +35,13 @@ opt_in_rules:
 line_length:
   warning: 180
   error: 220
+function_body_length:
+  warning: 60
+  error: 80
 nesting:
   type_level: 3
   function_level: 2
-switch_case_alignment:  
+switch_case_alignment:
   indented_cases: true
 force_cast: error
 force_try: error

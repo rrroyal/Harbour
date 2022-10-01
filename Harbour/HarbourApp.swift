@@ -27,6 +27,7 @@ struct HarbourApp: App {
 		}
 		.defaultAppStorage(Preferences.ud)
 		.onChange(of: scenePhase, perform: onScenePhaseChange)
+		.backgroundTask(.appRefresh(HarbourBackgroundTask.backgroundRefresh), action: appState.handleBackgroundRefresh)
 	}
 }
 
@@ -36,7 +37,7 @@ private extension HarbourApp {
 	func onScenePhaseChange(_ scenePhase: ScenePhase) {
 		switch scenePhase {
 			case .background:
-				break
+				appState.scheduleBackgroundRefresh()
 			case .inactive:
 				break
 			case .active:

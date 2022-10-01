@@ -20,11 +20,11 @@ final class SceneState: ObservableObject {
 
 	// swiftlint:disable:next force_unwrapping
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
+	internal let indicators: Indicators = Indicators()
 
 	// MARK: Public properties
 
 	public let id: String
-	public let indicators: Indicators = Indicators()
 
 	// MARK: Navigation
 
@@ -46,4 +46,5 @@ final class SceneState: ObservableObject {
 	init(id: String = UUID().uuidString) {
 		self.id = id
 	}
+
 }

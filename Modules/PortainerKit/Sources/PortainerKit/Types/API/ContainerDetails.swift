@@ -14,7 +14,7 @@ public struct ContainerDetails: Identifiable, Decodable, Sendable {
 		case platform = "Platform"
 		case path = "Path"
 		case args = "Args"
-		case state = "State"
+		case status = "State"
 		case image = "Image"
 		case name = "Name"
 		case restartCount = "RestartCount"
@@ -29,7 +29,7 @@ public struct ContainerDetails: Identifiable, Decodable, Sendable {
 	public let platform: String
 	public let path: String
 	public let args: [String]
-	public let state: ContainerState
+	public let status: ContainerStatus
 	public let image: String
 	public let name: String
 	public let restartCount: Int

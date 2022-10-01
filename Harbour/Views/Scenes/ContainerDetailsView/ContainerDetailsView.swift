@@ -60,9 +60,9 @@ private extension ContainerDetailsView {
 			if !portainerStore.isSetup {
 				await portainerStore.setupTask?.value
 			}
-			if portainerStore.selectedEndpointID == nil {
-				try? await portainerStore.endpointsTask?.value
-			}
+//			if portainerStore.selectedEndpointID == nil {
+//				_ = try? await portainerStore.endpointsTask?.value
+//			}
 
 			details = try await portainerStore.inspectContainer(item.id)
 		} catch {

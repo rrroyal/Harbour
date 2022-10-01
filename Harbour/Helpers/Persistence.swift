@@ -42,10 +42,10 @@ struct PersistenceController {
 		}
 
 		container.viewContext.automaticallyMergesChangesFromParent = true
-		container.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
+		container.viewContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 
 		backgroundContext = container.newBackgroundContext()
 		backgroundContext.automaticallyMergesChangesFromParent = true
-		backgroundContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
+		backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
 	}
 }

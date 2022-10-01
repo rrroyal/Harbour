@@ -24,23 +24,23 @@ final class PortainerStore: ObservableObject {
 	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PortainerStore")
 	internal let keychain: Keychain = Keychain(accessGroup: Bundle.main.groupIdentifier)
 
-	internal var portainer: Portainer?
+	internal let portainer: Portainer
 
 	// MARK: Public properties
 
 	/// Server URL
 	public var serverURL: URL? {
-		portainer?.url
+		portainer.url
 	}
 
 	/// Task for `PortainerStore` setup
 	public private(set) var setupTask: Task<Void, Never>?
 
 	/// Task for `endpoints` refresh
-	public private(set) var endpointsTask: Task<Void, Error>?
+	public private(set) var endpointsTask: Task<[Endpoint], Error>?
 
 	/// Task for `containers` refresh
-	public private(set) var containersTask: Task<Void, Error>?
+	public private(set) var containersTask: Task<[Container], Error>?
 
 	/// Is `PortainerStore` setup?
 	@Published private(set) var isSetup: Bool = false
@@ -63,8 +63,12 @@ final class PortainerStore: ObservableObject {
 	// MARK: init
 
 	private init() {
+		portainer = Portainer()
+		portainer.session.configuration.shouldUseExtendedBackgroundIdleMode = true
+		portainer.session.configuration.sessionSendsLaunchEvents = true
+
 		logger.info("Initialized, loading stored containers... [\(String.debugInfo(), privacy: .public)]")
-		setupIfStored()
+		self.isSetup = setupIfStored()
 		setupTask = Task { @MainActor in
 			let storedContainers = loadStoredContainers()
 			if containers.isEmpty {
@@ -84,14 +88,13 @@ final class PortainerStore: ObservableObject {
 		do {
 			isSetup = false
 
-			let portainer = Portainer(url: url, token: token)
+			portainer.setup(url: url, token: token)
 
 			logger.debug("Getting endpoints for setup... [\(String.debugInfo(), privacy: .public)]")
 			let endpoints = try await portainer.fetchEndpoints()
 			logger.debug("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
 
 			isSetup = true
-			self.portainer = portainer
 			self.endpoints = endpoints
 
 			Preferences.shared.selectedServer = url.absoluteString
@@ -120,6 +123,8 @@ final class PortainerStore: ObservableObject {
 			containersTask?.cancel()
 			containersTask = Task {
 				containers = []
+				containersTask?.cancel()
+				return []
 			}
 		}
 	}
@@ -156,10 +161,10 @@ extension PortainerStore {
 				await setupTask?.value
 
 				let endpointsTask = refreshEndpoints(errorHandler: errorHandler, _debugInfo: _debugInfo)
-				try await endpointsTask.value
+				_ = try await endpointsTask.value
 				if selectedEndpointID != nil {
 					let containersTask = refreshContainers(errorHandler: errorHandler, _debugInfo: _debugInfo)
-					try await containersTask.value
+					_ = try await containersTask.value
 				}
 			} catch {
 				errorHandler?(error, _debugInfo)
@@ -174,18 +179,20 @@ extension PortainerStore {
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
 	///   - errorHandler: `SceneState.ErrorHandler` used to notify the user of errors
-	/// - Returns: `Task<Void, Error>` of refresh
-	func refreshEndpoints(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<Void, Error> {
+	/// - Returns: `Task<[Endpoint], Error>` of refresh
+	func refreshEndpoints(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<[Endpoint], Error> {
 		endpointsTask?.cancel()
-		let task = Task {
+		let task: Task<[Endpoint], Error> = Task {
 			do {
-				self.endpoints = try await getEndpoints()
+				let endpoints = try await getEndpoints()
+				self.endpoints = endpoints
+				endpointsTask?.cancel()
+				return endpoints
 			} catch {
-				if Task.isCancelled { return }
+				if Task.isCancelled { return self.endpoints }
 				errorHandler?(error, _debugInfo)
 				throw error
 			}
-			endpointsTask?.cancel()
 		}
 		endpointsTask = task
 		return task
@@ -196,18 +203,20 @@ extension PortainerStore {
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
 	///   - errorHandler: `SceneState.ErrorHandler` used to notify the user of errors
-	/// - Returns: `Task<Void, Error>` of refresh
-	func refreshContainers(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<Void, Error> {
+	/// - Returns: `Task<[Container], Error>` of refresh
+	func refreshContainers(errorHandler: SceneState.ErrorHandler? = nil, _debugInfo: String = .debugInfo()) -> Task<[Container], Error> {
 		containersTask?.cancel()
-		let task = Task {
+		let task: Task<[Container], Error> = Task {
 			do {
-				self.containers = try await getContainers()
+				let containers = try await getContainers()
+				self.containers = containers
+				containersTask?.cancel()
+				return containers
 			} catch {
-				if Task.isCancelled { return }
+				if Task.isCancelled { return self.containers }
 				errorHandler?(error, _debugInfo)
 				throw error
 			}
-			containersTask?.cancel()
 		}
 		containersTask = task
 		return task
@@ -223,9 +232,6 @@ private extension PortainerStore {
 	func getEndpoints() async throws -> [Endpoint] {
 		logger.info("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
 		do {
-			guard let portainer else {
-				throw PortainerError.noPortainer
-			}
 			let endpoints = try await portainer.fetchEndpoints()
 			logger.notice("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
 			return endpoints.sorted()
@@ -255,11 +261,11 @@ private extension PortainerStore {
 
 private extension PortainerStore {
 
-	/// Unwraps `portainer` and `selectedEndpoint`, or throws an error if there's none.
+	/// Checks if `portainer` is setup, unwraps `selectedEndpoint`, returns both, or throws an error if there's none.
 	/// - Returns: Unwrapped `(Portainer, Endpoint.ID)`
 	func getPortainerAndEndpoint() throws -> (Portainer, Endpoint.ID) {
-		guard let portainer else {
-			throw PortainerError.noPortainer
+		guard portainer.isSetup else {
+			throw PortainerError.notSetup
 		}
 		guard let selectedEndpointID else {
 			throw PortainerError.noSelectedEndpoint
@@ -301,7 +307,6 @@ private extension PortainerStore {
 
 private extension PortainerStore {
 
-	@discardableResult
 	/// Loads authorization token for saved server and initializes `Portainer` with it.
 	func setupIfStored() -> Bool {
 		logger.info("Looking for token... [\(String.debugInfo(), privacy: .public)]")
@@ -313,7 +318,7 @@ private extension PortainerStore {
 			}
 
 			let token = try keychain.getToken(for: selectedServerURL)
-			self.portainer = Portainer(url: selectedServerURL, token: token)
+			portainer.setup(url: selectedServerURL, token: token)
 
 			logger.notice("Got token for URL: \"\(selectedServerURL.absoluteString, privacy: .sensitive)\" :) [\(String.debugInfo(), privacy: .public)]")
 			return true
@@ -334,6 +339,7 @@ private extension PortainerStore {
 				let storedContainer = StoredContainer(context: context)
 				storedContainer.id = container.id
 				storedContainer.name = container.displayName
+				storedContainer.lastState = container.state?.rawValue
 			}
 
 			let saved = try context.saveIfNeeded()
@@ -360,7 +366,7 @@ private extension PortainerStore {
 					} else {
 						names = nil
 					}
-					return Container(id: $0.id ?? "", names: names)
+					return Container(id: $0.id ?? "", names: names, state: ContainerState(rawValue: $0.lastState ?? ""))
 				}
 				.sorted()
 

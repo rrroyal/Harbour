@@ -17,7 +17,8 @@ extension ContainersListView {
 		let container: Container
 
 		private var subheadline: String? {
-			let parts = [container.state?.rawValue.capitalized, container.status].compactMap { $0 }
+			let state = container.isStored ? Localizable.ContainerCell.unknownState : container.state?.rawValue.capitalized
+			let parts = [state, container.status].compactMap { $0 }
 			if !parts.isEmpty {
 				return parts.joined(separator: Localizable.ContainerCell.stateJoiner)
 			} else {
@@ -52,7 +53,7 @@ extension ContainersListView {
 				Spacer()
 
 				Circle()
-					.fill(container.state.color)
+					.fill(container.isStored ? ContainerState?.none.color : container.state.color)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
