@@ -13,10 +13,6 @@
 "Generic.Loading" = "Loading...";
 "Generic.Error" = "Error!";
 
-// MARK: - Indicators
-
-"Indicators.ExpandToReadMore" = "Expand to read more";
-
 // MARK: - Landing
 
 "Landing.TitlePrefix" = "Hi! Welcome to";
@@ -30,7 +26,7 @@
 
 // MARK: - Setup
 
-"Setup.Login" = "Log in";
+"Setup.Headline" = "Setup";
 "Setup.HowToLogin" = "How to log in?";
 "Setup.Button.Login" = "Log in";
 "Setup.Button.Success" = "Success!";
@@ -61,6 +57,12 @@
 
 "Settings.Portainer.Title" = "Portainer";
 
+"Settings.Portainer.EndpointsMenu.Add" = "Add";
+"Settings.Portainer.EndpointsMenu.NoServerPlaceholder" = "None";
+"Settings.Portainer.EndpointsMenu.Server.InUse" = "In use";
+"Settings.Portainer.EndpointsMenu.Server.Use" = "Use";
+"Settings.Portainer.EndpointsMenu.Server.Delete" = "Delete";
+
 // MARK: Settings - General
 
 "Settings.General.Title" = "General";
@@ -78,7 +80,18 @@
 // MARK: Settings - Other
 
 "Settings.Other.Title" = "Other";
+
+"Settings.Other.Debug" = "Debug";
+
 "Settings.Other.Footer" = "Made with ❤️ (and ☕) by @rrroyal";
+
+// MARK: - Debug
+
+"Debug.Title" = "Debug";
+
+// MARK: - Indicators
+
+"Indicators.ExpandToReadMore" = "Expand to read more";
 
 // MARK: - Notifications
 

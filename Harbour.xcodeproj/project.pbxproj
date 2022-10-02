@@ -39,6 +39,7 @@
 		E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = E777698828E9A71300C5AFE9 /* Container+isStored.swift */; };
 		E7779B2E28E75F8F00AD8569 /* HarbourUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */; };
 		E78C660D28E9BA920033D0E4 /* Harbour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E78C660B28E9BA920033D0E4 /* Harbour.xcdatamodeld */; };
+		E78C661128E9C2030033D0E4 /* DebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78C661028E9C2030033D0E4 /* DebugView.swift */; };
 		E79AD30B2893D9FA002D0CD9 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */; };
 		E79AD30E2893DABF002D0CD9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30D2893DABF002D0CD9 /* Constants.swift */; };
 		E7A8BC19288C0826007AB20B /* PortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A8BC18288C0826007AB20B /* PortainerStore.swift */; };
@@ -111,6 +112,7 @@
 		E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourUserActivity.swift; sourceTree = "<group>"; };
 		E78C660528E9B90D0033D0E4 /* Info.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Info.h; sourceTree = "<group>"; };
 		E78C660C28E9BA920033D0E4 /* Harbour.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Harbour.xcdatamodel; sourceTree = "<group>"; };
+		E78C661028E9C2030033D0E4 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		E79AD30D2893DABF002D0CD9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E7A8BC18288C0826007AB20B /* PortainerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerStore.swift; sourceTree = "<group>"; };
@@ -335,6 +337,7 @@
 				E7ACE745288C47B0000E6FF6 /* Components */,
 				E7ACE736288C4166000E6FF6 /* Sections */,
 				E766D932288C3CBF00F2DB99 /* SettingsView.swift */,
+				E78C661028E9C2030033D0E4 /* DebugView.swift */,
 			);
 			path = SettingsView;
 			sourceTree = "<group>";
@@ -614,6 +617,7 @@
 				E7BEBA2828857F8700FCD7DC /* String+.swift in Sources */,
 				E760CDB92892C1E8007280ED /* LandingView.swift in Sources */,
 				E7BEBA2F2885805D00FCD7DC /* AppState.swift in Sources */,
+				E78C661128E9C2030033D0E4 /* DebugView.swift in Sources */,
 				E713179828E5C02F00DB82AF /* ContainersGridView+ContainerCell.swift in Sources */,
 				E760CDB52892C1C9007280ED /* FeaturesView.swift in Sources */,
 				E766D933288C3CBF00F2DB99 /* SettingsView.swift in Sources */,

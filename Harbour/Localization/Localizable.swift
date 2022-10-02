@@ -44,6 +44,11 @@ internal enum Localizable {
     internal static let noSelectedEndpointPlaceholder = Localizable.tr("Localizable", "ContainersView.NoSelectedEndpointPlaceholder")
   }
 
+  internal enum Debug {
+    /// Debug
+    internal static let title = Localizable.tr("Localizable", "Debug.Title")
+  }
+
   internal enum Generic {
     /// Error!
     internal static let error = Localizable.tr("Localizable", "Generic.Error")
@@ -132,6 +137,8 @@ internal enum Localizable {
       }
     }
     internal enum Other {
+      /// Debug
+      internal static let debug = Localizable.tr("Localizable", "Settings.Other.Debug")
       /// Made with ❤️ (and ☕) by @rrroyal
       internal static let footer = Localizable.tr("Localizable", "Settings.Other.Footer")
       /// Other
@@ -140,14 +147,28 @@ internal enum Localizable {
     internal enum Portainer {
       /// Portainer
       internal static let title = Localizable.tr("Localizable", "Settings.Portainer.Title")
+      internal enum EndpointsMenu {
+        /// Add
+        internal static let add = Localizable.tr("Localizable", "Settings.Portainer.EndpointsMenu.Add")
+        /// None
+        internal static let noServerPlaceholder = Localizable.tr("Localizable", "Settings.Portainer.EndpointsMenu.NoServerPlaceholder")
+        internal enum Server {
+          /// Delete
+          internal static let delete = Localizable.tr("Localizable", "Settings.Portainer.EndpointsMenu.Server.Delete")
+          /// In use
+          internal static let inUse = Localizable.tr("Localizable", "Settings.Portainer.EndpointsMenu.Server.InUse")
+          /// Use
+          internal static let use = Localizable.tr("Localizable", "Settings.Portainer.EndpointsMenu.Server.Use")
+        }
+      }
     }
   }
 
   internal enum Setup {
+    /// Setup
+    internal static let headline = Localizable.tr("Localizable", "Setup.Headline")
     /// How to log in?
     internal static let howToLogin = Localizable.tr("Localizable", "Setup.HowToLogin")
-    /// Log in
-    internal static let login = Localizable.tr("Localizable", "Setup.Login")
     internal enum Button {
       /// Log in
       internal static let login = Localizable.tr("Localizable", "Setup.Button.Login")

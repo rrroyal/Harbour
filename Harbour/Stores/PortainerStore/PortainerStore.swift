@@ -21,16 +21,21 @@ final class PortainerStore: ObservableObject {
 	// MARK: Private properties
 
 	// swiftlint:disable:next force_unwrapping
-	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PortainerStore")
-	internal let keychain: Keychain = Keychain(accessGroup: Bundle.main.groupIdentifier)
+	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PortainerStore")
+	private let keychain: Keychain = Keychain(accessGroup: Bundle.main.groupIdentifier)
 
-	internal let portainer: Portainer
+	private let portainer: Portainer
 
 	// MARK: Public properties
 
-	/// Server URL
+	/// Currently selected server URL
 	public var serverURL: URL? {
 		portainer.url
+	}
+
+	/// URLs with stored tokens
+	public var savedURLs: [URL] {
+		get { (try? keychain.getURLs()) ?? [] }
 	}
 
 	/// Task for `PortainerStore` setup

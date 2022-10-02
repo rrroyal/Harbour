@@ -27,6 +27,7 @@ internal extension SettingsView {
 		var body: some View {
 			Image(systemName: symbolName)
 				.symbolVariant(.fill)
+				.symbolRenderingMode(.hierarchical)
 				.font(font.weight(.bold))
 				.frame(width: backgroundSize, height: backgroundSize, alignment: .center)
 				.foregroundStyle(Color.accentColor)

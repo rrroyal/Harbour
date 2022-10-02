@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: SettingsView+GeneralSection
+
 extension SettingsView {
 	struct GeneralSection: View {
 		var body: some View {
@@ -16,6 +18,8 @@ extension SettingsView {
 		}
 	}
 }
+
+// MARK: - Previews
 
 struct GeneralSection_Previews: PreviewProvider {
 	static var previews: some View {

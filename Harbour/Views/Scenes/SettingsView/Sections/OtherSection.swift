@@ -7,15 +7,21 @@
 
 import SwiftUI
 
+// MARK: - SettingsView+OtherSection
+
 extension SettingsView {
 	struct OtherSection: View {
 		var body: some View {
 			Section(header: Text(Localizable.Settings.Other.title), footer: FooterView()) {
-				Text("other")
+				NavigationLinkOption(label: Localizable.Settings.Other.debug, iconSymbolName: "wrench.and.screwdriver") {
+					DebugView()
+				}
 			}
 		}
 	}
 }
+
+// MARK: - SettingsView.OtherSection+Components
 
 private extension SettingsView.OtherSection {
 	struct FooterView: View {
@@ -37,6 +43,8 @@ private extension SettingsView.OtherSection {
 		}
 	}
 }
+
+// MARK: - Previews
 
 struct OtherSection_Previews: PreviewProvider {
 	static var previews: some View {

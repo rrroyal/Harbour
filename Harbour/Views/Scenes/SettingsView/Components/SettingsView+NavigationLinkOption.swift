@@ -14,7 +14,7 @@ internal extension SettingsView {
 		let iconColor: Color
 		let destination: Destination
 
-		init(label: String, iconSymbolName: String, iconColor: Color, destination: @escaping () -> Destination) {
+		init(label: String, iconSymbolName: String, iconColor: Color = .accentColor, destination: @escaping () -> Destination) {
 			self.label = label
 			self.iconSymbolName = iconSymbolName
 			self.iconColor = iconColor
