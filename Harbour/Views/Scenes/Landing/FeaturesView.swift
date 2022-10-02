@@ -10,33 +10,35 @@ import SwiftUI
 // MARK: - FeaturesView
 
 struct FeaturesView: View {
+	private typealias Localization = Localizable.Landing
+
 	let continueAction: () -> Void
 
 	var body: some View {
 		VStack {
 			Spacer()
 
-			Text("\(Localizable.Landing.titlePrefix) \(Text(Localizable.appName).foregroundColor(.accentColor))!")
+			Text("\(Localization.titlePrefix) \(Text(Localizable.appName).foregroundColor(.accentColor))!")
 				.font(.largeTitle.bold())
 				.multilineTextAlignment(.center)
 
 			Spacer()
 
 			VStack(spacing: 20) {
-				FeatureCell(headline: Localizable.Landing.Feature1.title,
-							subheadline: Localizable.Landing.Feature1.description,
+				FeatureCell(headline: Localization.Feature1.title,
+							subheadline: Localization.Feature1.description,
 							icon: "globe")
-				FeatureCell(headline: Localizable.Landing.Feature2.title,
-							subheadline: Localizable.Landing.Feature2.description,
+				FeatureCell(headline: Localization.Feature2.title,
+							subheadline: Localization.Feature2.description,
 							icon: "globe")
-				FeatureCell(headline: Localizable.Landing.Feature3.title,
-							subheadline: Localizable.Landing.Feature3.description,
+				FeatureCell(headline: Localization.Feature3.title,
+							subheadline: Localization.Feature3.description,
 							icon: "globe")
 			}
 
 			Spacer()
 
-			Button(Localizable.Landing.continueButton) {
+			Button(Localization.continueButton) {
 				UIDevice.generateHaptic(.buttonPress)
 				continueAction()
 			}

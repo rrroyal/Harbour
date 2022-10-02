@@ -11,9 +11,11 @@ import SwiftUI
 
 extension SettingsView {
 	struct OtherSection: View {
+		private typealias Localization = Localizable.Settings.Other
+
 		var body: some View {
-			Section(header: Text(Localizable.Settings.Other.title), footer: FooterView()) {
-				NavigationLinkOption(label: Localizable.Settings.Other.debug, iconSymbolName: "wrench.and.screwdriver") {
+			Section(header: Text(Localization.title), footer: FooterView()) {
+				NavigationLinkOption(label: Localization.debug, iconSymbolName: "wrench.and.screwdriver") {
 					DebugView()
 				}
 			}
@@ -25,13 +27,15 @@ extension SettingsView {
 
 private extension SettingsView.OtherSection {
 	struct FooterView: View {
+		private typealias Localization = Localizable.Settings.Other
+
 		// swiftlint:disable:next force_unwrapping
 		let githubURL: URL = URL(string: "https://github.com/rrroyal/Harbour")!
 
 		var body: some View {
 			Link(destination: githubURL) {
 				VStack(alignment: .center, spacing: 5) {
-					Text(Localizable.Settings.Other.footer)
+					Text(Localization.footer)
 					Text("\(Localizable.appName) v\(Bundle.main.buildVersion) (#\(Bundle.main.buildNumber))")
 				}
 			}

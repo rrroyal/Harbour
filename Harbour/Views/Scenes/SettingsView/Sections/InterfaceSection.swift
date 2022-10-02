@@ -9,19 +9,21 @@ import SwiftUI
 
 extension SettingsView {
 	struct InterfaceSection: View {
+		private typealias Localization = Localizable.Settings.Interface
+
 		@EnvironmentObject var preferences: Preferences
 
 		var body: some View {
-			Section(Localizable.Settings.Interface.title) {
+			Section(Localization.title) {
 				// Enable Haptics
-				ToggleOption(label: Localizable.Settings.Interface.EnableHaptics.title,
-							 description: Localizable.Settings.Interface.EnableHaptics.description,
+				ToggleOption(label: Localization.EnableHaptics.title,
+							 description: Localization.EnableHaptics.description,
 							 iconSymbolName: "alternatingcurrent",
 							 isOn: $preferences.enableHaptics)
 
 				// Use Grid View
-				ToggleOption(label: Localizable.Settings.Interface.UseGridView.title,
-							 description: Localizable.Settings.Interface.UseGridView.description,
+				ToggleOption(label: Localization.UseGridView.title,
+							 description: Localization.UseGridView.description,
 							 iconSymbolName: "square.grid.2x2",
 							 isOn: $preferences.cvUseGrid)
 			}

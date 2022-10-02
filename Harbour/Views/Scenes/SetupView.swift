@@ -10,6 +10,8 @@ import SwiftUI
 // MARK: - SetupView
 
 struct SetupView: View {
+	private typealias Localization = Localizable.Setup
+
 	private static let urlPlaceholder: String = "https://172.17.0.2"
 	private static let tokenPlaceholder: String = "hunter2"
 
@@ -78,7 +80,7 @@ struct SetupView: View {
 					if let buttonLabel {
 						Text(NSLocalizedString(buttonLabel, comment: ""))
 					} else {
-						Text(Localizable.Setup.Button.login)
+						Text(Localization.Button.login)
 					}
 				}
 				.transition(.opacity)
@@ -95,7 +97,7 @@ struct SetupView: View {
 		VStack {
 			Spacer()
 
-			Text(Localizable.Setup.login)
+			Text(Localization.headline)
 				.font(.largeTitle.bold())
 
 			Spacer()
@@ -114,7 +116,7 @@ struct SetupView: View {
 				Link(destination: URL(string: "https://harbour.shameful.xyz/docs/setup")!) {
 					HStack {
 						Image(systemName: "person.fill.questionmark")
-						Text(Localizable.Setup.howToLogin)
+						Text(Localization.howToLogin)
 					}
 					.font(.callout.weight(.medium))
 					.padding(.horizontal, .small)
@@ -152,7 +154,7 @@ private extension SetupView {
 				UIDevice.generateHaptic(.success)
 
 				buttonColor = .green
-				buttonLabel = Localizable.Setup.Button.success
+				buttonLabel = Localization.Button.success
 
 				dismiss()
 			} catch {

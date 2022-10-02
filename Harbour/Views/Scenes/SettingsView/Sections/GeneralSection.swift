@@ -11,8 +11,10 @@ import SwiftUI
 
 extension SettingsView {
 	struct GeneralSection: View {
+		private typealias Localization = Localizable.Settings.General
+
 		var body: some View {
-			Section(Localizable.Settings.General.title) {
+			Section(Localization.title) {
 				Text("general")
 			}
 		}

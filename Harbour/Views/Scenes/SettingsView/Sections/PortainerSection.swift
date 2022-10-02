@@ -11,10 +11,12 @@ import SwiftUI
 
 extension SettingsView {
 	struct PortainerSection: View {
+		private typealias Localization = Localizable.Settings.Portainer
+
 		@State private var isSetupSheetPresented: Bool = false
 
 		var body: some View {
-			Section(Localizable.Settings.Portainer.title) {
+			Section(Localization.title) {
 				EndpointsMenu(isSetupSheetPresented: $isSetupSheetPresented)
 			}
 			.sheet(isPresented: $isSetupSheetPresented) {

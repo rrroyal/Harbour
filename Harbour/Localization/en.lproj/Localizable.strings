@@ -88,6 +88,8 @@
 // MARK: - Debug
 
 "Debug.Title" = "Debug";
+"Debug.LastBackgroundRefresh.Title" = "Last Background Refresh";
+"Debug.LastBackgroundRefresh.Never" = "Never";
 
 // MARK: - Indicators
 

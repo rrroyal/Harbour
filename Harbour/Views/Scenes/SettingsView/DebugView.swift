@@ -10,13 +10,15 @@ import SwiftUI
 // MARK: - DebugView
 
 struct DebugView: View {
+	private typealias Localization = Localizable.Debug
+
 	var body: some View {
 		List {
 			#if DEBUG
 			LastBackgroundRefreshSection()
 			#endif
 		}
-		.navigationTitle(Localizable.Debug.title)
+		.navigationTitle(Localization.title)
 	}
 }
 
@@ -30,11 +32,11 @@ private extension DebugView {
 				if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
 					Text(Date(timeIntervalSince1970: lastBackgroundRefreshDate), format: .dateTime)
 				} else {
-					Text("Never")
+					Text(Localization.LastBackgroundRefresh.never)
 						.foregroundStyle(.secondary)
 				}
 			}, header: {
-				Text("Last background refresh")
+				Text(Localization.LastBackgroundRefresh.title)
 			})
 		}
 	}

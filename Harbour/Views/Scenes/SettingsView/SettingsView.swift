@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+	private typealias Localization = Localizable.Settings
+
 //	let listRowInsets: EdgeInsets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
 
 	var body: some View {
@@ -22,7 +24,7 @@ struct SettingsView: View {
 //				.listRowInsets(listRowInsets)
 				.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			}
-			.navigationTitle(Localizable.Settings.title)
+			.navigationTitle(Localization.title)
 		}
 	}
 }

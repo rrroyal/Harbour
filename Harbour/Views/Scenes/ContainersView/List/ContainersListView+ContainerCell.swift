@@ -12,15 +12,17 @@ import PortainerKit
 
 extension ContainersListView {
 	struct ContainerCell: View {
+		private typealias Localization = Localizable.ContainerCell
+
 		private static let minimumScaleFactor: Double = 0.8
 
 		let container: Container
 
 		private var subheadline: String? {
-			let state = container.isStored ? Localizable.ContainerCell.unknownState : container.state?.rawValue.capitalized
+			let state = container.isStored ? Localization.unknownState : container.state?.rawValue.capitalized
 			let parts = [state, container.status].compactMap { $0 }
 			if !parts.isEmpty {
-				return parts.joined(separator: Localizable.ContainerCell.stateJoiner)
+				return parts.joined(separator: Localization.stateJoiner)
 			} else {
 				return nil
 			}
@@ -29,13 +31,13 @@ extension ContainersListView {
 		@ViewBuilder
 		private var nameAndStatusLabels: some View {
 			VStack(alignment: .leading, spacing: 2) {
-				Text(container.displayName ?? Localizable.ContainerCell.unnamed)
+				Text(container.displayName ?? Localization.unnamed)
 					.font(.headline.weight(.semibold))
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.displayName)
 
-				Text(subheadline ?? Localizable.ContainerCell.unknownState)
+				Text(subheadline ?? Localization.unknownState)
 					.font(.subheadline.weight(.medium))
 					.foregroundStyle(subheadline != nil ? .secondary : .tertiary)
 					.transition(.opacity)

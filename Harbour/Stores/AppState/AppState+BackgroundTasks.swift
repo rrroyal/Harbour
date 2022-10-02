@@ -114,6 +114,8 @@ extension AppState {
 	}
 
 	private nonisolated func notificationContent(for changes: [AppRefreshContainerChange]) -> UNNotificationContent? {
+		typealias Localization = Localizable.Notifications.ContainersChanged
+
 		let notificationContent = UNMutableNotificationContent()
 		notificationContent.categoryIdentifier = Self.containersChangedNotificationIdentifier
 		notificationContent.interruptionLevel = .active
@@ -124,7 +126,7 @@ extension AppState {
 		]
 
 		let emoji: String
-		let title: String = Localizable.Notifications.ContainersChanged.title
+		let title: String = Localization.title
 		let subtitle: String
 
 		switch changes.count {
@@ -135,7 +137,7 @@ extension AppState {
 					case .disappeared(let name):
 						// "😶‍🌫️ Container "<name>" disappeared"
 						emoji = "😶‍🌫️"
-						subtitle = Localizable.Notifications.ContainersChanged.Subtitle.containerDisappeared(name)
+						subtitle = Localization.Subtitle.containerDisappeared(name)
 					case .stateChanged(let name, _, let to):
 						// "<emoji> Container "<name>" changed its state to <to>."
 						switch to {
@@ -156,8 +158,8 @@ extension AppState {
 							case .none:
 								emoji = "❔"
 						}
-						let stateOrUnknown = to?.rawValue ?? Localizable.Notifications.ContainersChanged.unknownPlaceholder
-						subtitle = Localizable.Notifications.ContainersChanged.Subtitle.containerChangedState(name, stateOrUnknown)
+						let stateOrUnknown = to?.rawValue ?? Localization.unknownPlaceholder
+						subtitle = Localization.Subtitle.containerChangedState(name, stateOrUnknown)
 				}
 			case 2...3:
 				// Multiple differences, readable, use plural notification content
@@ -172,12 +174,12 @@ extension AppState {
 				}
 				let namesJoined = names.formatted(.list(type: .and))
 				emoji = "📫" // 🗂️ 👯
-				subtitle = Localizable.Notifications.ContainersChanged.Subtitle.ContainersChangedStates.readable(namesJoined)
+				subtitle = Localization.Subtitle.ContainersChangedStates.readable(namesJoined)
 			case 4...:
 				// Multiple differences, unreadable, use "multiple changes" notification content
 				// "Multiple containers changed their states"
 				emoji = "📫" // 🗂️ 👯
-				subtitle = Localizable.Notifications.ContainersChanged.Subtitle.ContainersChangedStates.unreadable
+				subtitle = Localization.Subtitle.ContainersChangedStates.unreadable
 			default:
 				// What
 				return nil

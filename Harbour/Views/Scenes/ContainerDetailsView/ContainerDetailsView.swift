@@ -35,6 +35,8 @@ struct ContainerDetailsView: View {
 
 private extension ContainerDetailsView {
 	func createUserActivity(for item: ContainersView.ContainerNavigationItem, userActivity: NSUserActivity) {
+		typealias Localization = Localizable.ContainerDetails.UserActivity
+
 		Task {
 			userActivity.isEligibleForHandoff = true
 			userActivity.isEligibleForPrediction = true
@@ -47,8 +49,8 @@ private extension ContainerDetailsView {
 				userActivity.webpageURL = portainerURL
 			}
 
-			let displayName = item.displayName ?? Localizable.ContainerDetails.UserActivity.unnamedContainerPlaceholder
-			userActivity.title = Localizable.ContainerDetails.UserActivity.title(displayName)
+			let displayName = item.displayName ?? Localization.unnamedContainerPlaceholder
+			userActivity.title = Localization.title(displayName)
 
 			try? userActivity.setTypedPayload(item)
 		}

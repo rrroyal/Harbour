@@ -47,6 +47,12 @@ internal enum Localizable {
   internal enum Debug {
     /// Debug
     internal static let title = Localizable.tr("Localizable", "Debug.Title")
+    internal enum LastBackgroundRefresh {
+      /// Never
+      internal static let never = Localizable.tr("Localizable", "Debug.LastBackgroundRefresh.Never")
+      /// Last Background Refresh
+      internal static let title = Localizable.tr("Localizable", "Debug.LastBackgroundRefresh.Title")
+    }
   }
 
   internal enum Generic {

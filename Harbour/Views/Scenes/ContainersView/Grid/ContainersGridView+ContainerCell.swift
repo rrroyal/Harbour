@@ -12,6 +12,8 @@ import PortainerKit
 
 extension ContainersGridView {
 	struct ContainerCell: View {
+		private typealias Localization = Localizable.ContainerCell
+
 		private static let minimumScaleFactor: Double = 0.6
 		private static let paddingSize: Double = 12
 
@@ -20,8 +22,8 @@ extension ContainersGridView {
 		@ViewBuilder
 		private var stateHeader: some View {
 			HStack {
-				let state = container.isStored ? Localizable.ContainerCell.unknownState : container.state?.rawValue.capitalized
-				Text(state ?? Localizable.ContainerCell.unknownState)
+				let state = container.isStored ? Localization.unknownState : container.state?.rawValue.capitalized
+				Text(state ?? Localization.unknownState)
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
 					.transition(.opacity)
@@ -40,12 +42,12 @@ extension ContainersGridView {
 		@ViewBuilder
 		private var nameAndStatusLabels: some View {
 			VStack(alignment: .leading, spacing: 2) {
-				Text(container.displayName ?? Localizable.ContainerCell.unnamed)
+				Text(container.displayName ?? Localization.unnamed)
 					.font(.callout.weight(.semibold))
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.transition(.opacity)
 
-				Text(container.status ?? Localizable.ContainerCell.unknownState)
+				Text(container.status ?? Localization.unknownState)
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
 					.transition(.opacity)

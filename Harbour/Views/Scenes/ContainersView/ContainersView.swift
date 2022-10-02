@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ContainersView: View {
+	private typealias Localization = Localizable.ContainersView
+
 	@EnvironmentObject var portainerStore: PortainerStore
 	@EnvironmentObject var sceneState: SceneState
 	@Environment(\.containersViewUseGrid) var useGrid: Bool
@@ -20,13 +22,13 @@ struct ContainersView: View {
 	private var emptyPlaceholder: some View {
 		Group {
 			if sceneState.isLoading {
-				Text(Localizable.ContainersView.loadingPlaceholder)
+				Text(Localization.loadingPlaceholder)
 			} else if portainerStore.selectedEndpointID == nil {
-				Text(Localizable.ContainersView.noSelectedEndpointPlaceholder)
+				Text(Localization.noSelectedEndpointPlaceholder)
 			} else if portainerStore.endpoints.isEmpty {
-				Text(Localizable.ContainersView.noEndpointsPlaceholder)
+				Text(Localization.noEndpointsPlaceholder)
 			} else if portainerStore.containers.isEmpty {
-				Text(Localizable.ContainersView.noContainersPlaceholder)
+				Text(Localization.noContainersPlaceholder)
 			}
 		}
 		.foregroundStyle(.secondary)
