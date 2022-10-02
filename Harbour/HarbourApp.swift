@@ -11,7 +11,7 @@ import SwiftUI
 
 @main
 struct HarbourApp: App {
-	@Environment(\.scenePhase) var scenePhase
+	@Environment(\.scenePhase) private var scenePhase: ScenePhase
 	@StateObject var appState: AppState = .shared
 	@StateObject var portainerStore: PortainerStore = .shared
 	@StateObject var preferences: Preferences = .shared

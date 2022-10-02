@@ -10,6 +10,8 @@ import PortainerKit
 
 extension ContainersView {
 	struct ContainerContextMenu: View {
+		@EnvironmentObject private var portainerStore: PortainerStore
+
 		let container: Container
 
 		// TODO: Context menu

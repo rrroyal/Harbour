@@ -13,8 +13,8 @@ import PortainerKit
 struct ContainersGridView: View {
 	private static let cellSpacing: Double = 8
 
-	@EnvironmentObject var sceneState: SceneState
-	@Environment(\.portainerSelectedEndpointID) var portainerSelectedEndpointID
+	@EnvironmentObject private var sceneState: SceneState
+	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
 	let containers: [Container]
 

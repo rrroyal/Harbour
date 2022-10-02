@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PrimaryButtonStyle: ButtonStyle {
-	@Environment(\.isEnabled) var isEnabled
+	@Environment(\.isEnabled) private var isEnabled: Bool
 	let foregroundColor: Color
 	let backgroundColor: Color
 	let font: Font

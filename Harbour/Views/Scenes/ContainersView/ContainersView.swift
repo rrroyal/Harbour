@@ -10,10 +10,10 @@ import SwiftUI
 struct ContainersView: View {
 	private typealias Localization = Localizable.ContainersView
 
-	@EnvironmentObject var portainerStore: PortainerStore
-	@EnvironmentObject var sceneState: SceneState
-	@Environment(\.containersViewUseGrid) var useGrid: Bool
-	@Environment(\.sceneErrorHandler) var sceneErrorHandler: SceneState.ErrorHandler?
+	@EnvironmentObject private var portainerStore: PortainerStore
+	@EnvironmentObject private var sceneState: SceneState
+	@Environment(\.containersViewUseGrid) private var useGrid: Bool
+	@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneState.ErrorHandler?
 
 	@State private var searchFilter: String = ""
 	@State private var refreshTask: Task<Void, Error>?

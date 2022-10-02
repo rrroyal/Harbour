@@ -12,9 +12,9 @@ import IndicatorsKit
 // MARK: - ContentView
 
 struct ContentView: View {
-	@EnvironmentObject var appState: AppState
-	@EnvironmentObject var portainerStore: PortainerStore
-	@EnvironmentObject var preferences: Preferences
+	@EnvironmentObject private var appState: AppState
+	@EnvironmentObject private var portainerStore: PortainerStore
+	@EnvironmentObject private var preferences: Preferences
 	@StateObject var sceneState = SceneState()
 
 	@State private var isLandingSheetPresented = !Preferences.shared.landingDisplayed

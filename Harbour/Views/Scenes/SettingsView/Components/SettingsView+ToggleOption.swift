@@ -11,7 +11,7 @@ import SwiftUI
 
 internal extension SettingsView {
 	struct ToggleOption: View {
-		@Environment(\.isEnabled) var isEnabled: Bool
+		@Environment(\.isEnabled) private var isEnabled: Bool
 		let label: String
 		let description: String?
 		let iconSymbolName: String

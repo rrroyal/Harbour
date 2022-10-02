@@ -11,7 +11,7 @@ extension SettingsView {
 	struct InterfaceSection: View {
 		private typealias Localization = Localizable.Settings.Interface
 
-		@EnvironmentObject var preferences: Preferences
+		@EnvironmentObject private var preferences: Preferences
 
 		var body: some View {
 			Section(Localization.title) {

@@ -32,7 +32,7 @@ private extension SettingsView.PortainerSection {
 	struct EndpointsMenu: View {
 		private typealias Localization = Localizable.Settings.Portainer.EndpointsMenu
 
-		@EnvironmentObject var portainerStore: PortainerStore
+		@EnvironmentObject private var portainerStore: PortainerStore
 		@Binding var isSetupSheetPresented: Bool
 
 		private var serverURLLabel: String? {

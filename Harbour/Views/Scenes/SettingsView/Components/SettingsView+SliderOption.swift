@@ -9,7 +9,7 @@ import SwiftUI
 
 internal extension SettingsView {
 	struct SliderOption: View {
-		@Environment(\.isEnabled) var isEnabled
+		@Environment(\.isEnabled) private var isEnabled: Bool
 		let label: String
 		let description: String?
 		let iconSymbolName: String

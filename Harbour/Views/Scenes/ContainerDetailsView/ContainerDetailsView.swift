@@ -11,8 +11,8 @@ import PortainerKit
 // MARK: - ContainerDetailsView
 
 struct ContainerDetailsView: View {
-	@EnvironmentObject var portainerStore: PortainerStore
-	@Environment(\.sceneErrorHandler) var sceneErrorHandler
+	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneState.ErrorHandler?
 
 	let item: ContainersView.ContainerNavigationItem
 

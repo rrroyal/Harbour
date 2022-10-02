@@ -13,8 +13,8 @@ import PortainerKit
 struct ContainersListView: View {
 	private static let cellSpacing: Double = 8
 
-	@Environment(\.portainerSelectedEndpointID) var portainerSelectedEndpointID
-	@EnvironmentObject var sceneState: SceneState
+	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
+	@EnvironmentObject private var sceneState: SceneState
 
 	let containers: [Container]
 
