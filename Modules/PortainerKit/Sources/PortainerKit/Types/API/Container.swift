@@ -33,23 +33,23 @@ public struct Container: Identifiable, Decodable, Sendable {
 	public let created: Date?
 	public let ports: [Port]?
 	public let labels: [String: String]?
-	public let state: ContainerState?
+	public var state: ContainerState?
 	public let status: String?
 	public let networkSettings: NetworkSettings?
 	public let mounts: [Mount]?
 
 	public init(id: String,
-		 names: [String]? = nil,
-		 image: String? = nil,
-		 imageID: String? = nil,
-		 command: String? = nil,
-		 created: Date? = nil,
-		 ports: [Port]? = nil,
-		 labels: [String: String]? = nil,
-		 state: ContainerState? = nil,
-		 status: String? = nil,
-		 networkSettings: NetworkSettings? = nil,
-		 mounts: [Mount]? = nil) {
+				names: [String]? = nil,
+				image: String? = nil,
+				imageID: String? = nil,
+				command: String? = nil,
+				created: Date? = nil,
+				ports: [Port]? = nil,
+				labels: [String: String]? = nil,
+				state: ContainerState? = nil,
+				status: String? = nil,
+				networkSettings: NetworkSettings? = nil,
+				mounts: [Mount]? = nil) {
 		self.id = id
 		self.names = names
 		self.image = image

@@ -12,7 +12,7 @@ struct PersistenceController {
 	static let shared = PersistenceController()
 
 	// swiftlint:disable:next force_unwrapping
-	private static let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Persistence")
+	private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Persistence")
 
 	let container: NSPersistentContainer
 	let backgroundContext: NSManagedObjectContext
@@ -24,7 +24,7 @@ struct PersistenceController {
 			container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
 		}
 
-		container.loadPersistentStores { (storeDescription, error) in
+		container.loadPersistentStores { storeDescription, error in
 			if let error = error as NSError? {
 				/*
 				 Typical reasons for an error here include:

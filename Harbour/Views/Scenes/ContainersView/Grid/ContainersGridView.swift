@@ -14,12 +14,15 @@ struct ContainersGridView: View {
 	private static let cellSpacing: Double = 8
 
 	@EnvironmentObject private var sceneState: SceneState
+	@Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
 	let containers: [Container]
 
-	// TODO: Improve it for iPadOS/macOS
-	private let columns: [GridItem] = .init(repeating: .init(.flexible(), spacing: Self.cellSpacing), count: 3)
+	private var columns: [GridItem] {
+		let count = horizontalSizeClass == .regular ? 6 : 3
+		return .init(repeating: .init(.flexible(), spacing: Self.cellSpacing), count: count)
+	}
 
 	var body: some View {
 		LazyVGrid(columns: columns, spacing: Self.cellSpacing) {

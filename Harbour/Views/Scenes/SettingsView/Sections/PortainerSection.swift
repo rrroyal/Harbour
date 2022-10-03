@@ -13,7 +13,7 @@ extension SettingsView {
 	struct PortainerSection: View {
 		private typealias Localization = Localizable.Settings.Portainer
 
-		@State private var isSetupSheetPresented: Bool = false
+		@State private var isSetupSheetPresented = false
 
 		var body: some View {
 			Section(Localization.title) {
@@ -55,7 +55,7 @@ private extension SettingsView.PortainerSection {
 				}) {
 					Label(Localization.add, systemImage: "plus")
 				}
-			}, label: {
+			}) {
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
 					Text(serverURLLabel ?? Localization.noServerPlaceholder)
@@ -66,7 +66,7 @@ private extension SettingsView.PortainerSection {
 					Image(systemName: "chevron.down")
 						.fontWeight(.medium)
 				}
-			})
+			}
 		}
 
 		private func selectServer(_ url: URL) {
@@ -96,10 +96,10 @@ private extension SettingsView.PortainerSection {
 					Button(action: {
 						UIDevice.generateHaptic(.buttonPress)
 						selectServer(url)
-					}, label: {
+					}) {
 						Label(Localization.Server.use, systemImage: "checkmark")
 							.symbolVariant(.circle)
-					})
+					}
 				}
 
 				Divider()
@@ -107,9 +107,9 @@ private extension SettingsView.PortainerSection {
 				Button(role: .destructive, action: {
 					UIDevice.generateHaptic(.buttonPress)
 					deleteServer(url)
-				}, label: {
+				}) {
 					Label(Localization.Server.delete, systemImage: "trash")
-				})
+				}
 			})
 		}
 	}

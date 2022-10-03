@@ -13,7 +13,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 	let backgroundColor: Color
 	let font: Font
 
-	public init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) {
+	init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) {
 		self.foregroundColor = foregroundColor
 		self.backgroundColor = backgroundColor
 		self.font = font

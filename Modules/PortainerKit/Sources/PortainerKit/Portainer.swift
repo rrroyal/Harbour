@@ -20,7 +20,7 @@ public final class Portainer {
 	// MARK: Public properties
 
 	/// Is `Portainer` setup?
-	public private(set) var isSetup: Bool = false
+	public private(set) var isSetup = false
 
 	/// Endpoint URL
 	public var url: URL?
@@ -33,8 +33,8 @@ public final class Portainer {
 
 	// MARK: Private properties
 
-	private let logger: Logger = Logger(subsystem: Portainer.bundleIdentifier, category: "PortainerKit")
-	private let wsQueue: DispatchQueue = DispatchQueue(label: Portainer.bundleIdentifier.appending("WebSocket"), qos: .userInteractive)
+	private let logger = Logger(subsystem: Portainer.bundleIdentifier, category: "PortainerKit")
+	private let wsQueue = DispatchQueue(label: Portainer.bundleIdentifier.appending("WebSocket"), qos: .userInteractive)
 
 	// MARK: init
 
@@ -193,7 +193,7 @@ public final class Portainer {
 		}
 
 		guard let url: URL = {
-			guard var components: URLComponents = URLComponents(url: url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
+			guard var components = URLComponents(url: url.appendingPathComponent(RequestPath.attach.path), resolvingAgainstBaseURL: true) else { return nil }
 			components.scheme = url.scheme == "https" ? "wss" : "ws"
 			components.queryItems = [
 				URLQueryItem(name: "token", value: token),
@@ -241,7 +241,7 @@ public final class Portainer {
 
 		var request: URLRequest
 		if let query {
-			guard var components: URLComponents = URLComponents(url: url.appendingPathComponent(path.path), resolvingAgainstBaseURL: true) else { throw APIError.invalidURL }
+			guard var components = URLComponents(url: url.appendingPathComponent(path.path), resolvingAgainstBaseURL: true) else { throw APIError.invalidURL }
 			components.queryItems = query
 			guard let url = components.url else { throw APIError.invalidURL }
 			request = URLRequest(url: url)
@@ -264,15 +264,15 @@ public final class Portainer {
 	private func fetch<Output: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {
 		let response = try await session.data(for: request)
 
-		if UserDefaults.standard.bool(forKey: Self.userDefaultsLoggingKey) {
-			logger.warning("Logging is enabled! All of the data for this request will be logged to the console. To disable it, set \(Self.userDefaultsLoggingKey) to false.")
-			let obj: [String: Any] = [
-				"data": response.0.base64EncodedString()
-			]
-			let json = try? JSONSerialization.data(withJSONObject: obj)
-			let str = json?.base64EncodedString() ?? "<none>"
-			logger.debug("\(request.url?.absoluteString ?? "<none>"): \(str)")
-		}
+//		if UserDefaults.standard.bool(forKey: Self.userDefaultsLoggingKey) {
+//			logger.warning("Logging is enabled! All of the data for this request will be logged to the console. To disable it, set \(Self.userDefaultsLoggingKey) to false.")
+//			let obj: [String: Any] = [
+//				"data": response.0.base64EncodedString()
+//			]
+//			let json = try? JSONSerialization.data(withJSONObject: obj)
+//			let str = json?.base64EncodedString() ?? "<none>"
+//			logger.debug("\(request.url?.absoluteString ?? "<none>"): \(str)")
+//		}
 
 		do {
 			let decoded = try decoder.decode(Output.self, from: response.0)

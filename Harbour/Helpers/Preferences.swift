@@ -10,12 +10,12 @@ import SwiftUI
 // MARK: - Preferences
 
 /// UserDefaults wrapper; main preferences store
-final class Preferences: ObservableObject {
-	public static let shared: Preferences = Preferences()
+public final class Preferences: ObservableObject {
+	public static let shared = Preferences()
 	public static let ud: UserDefaults = .group
 
-	@AppStorage(Keys.landingDisplayed.rawValue) public var landingDisplayed: Bool = false
-	@AppStorage(Keys.enableHaptics.rawValue) public var enableHaptics: Bool = true
+	@AppStorage(Keys.landingDisplayed.rawValue) public var landingDisplayed = false
+	@AppStorage(Keys.enableHaptics.rawValue) public var enableHaptics = true
 
 	#if DEBUG
 	@AppStorage(Keys.lastBackgroundRefreshDate.rawValue) public var lastBackgroundRefreshDate: TimeInterval?
@@ -24,7 +24,7 @@ final class Preferences: ObservableObject {
 	@AppStorage(Keys.selectedServer.rawValue) public var selectedServer: String?
 	@AppStorage(Keys.selectedEndpointID.rawValue) public var selectedEndpointID: Int?
 
-	@AppStorage(Keys.cvUseGrid.rawValue) public var cvUseGrid: Bool = false
+	@AppStorage(Keys.cvUseGrid.rawValue) public var cvUseGrid = false
 
 	private init() {}
 }

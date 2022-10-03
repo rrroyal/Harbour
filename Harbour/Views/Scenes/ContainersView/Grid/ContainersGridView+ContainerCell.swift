@@ -74,11 +74,19 @@ extension ContainersGridView {
 	}
 }
 
+// MARK: - ContainersGridView.ContainerCell+Identifiable
+
+extension ContainersGridView.ContainerCell: Identifiable {
+	var id: String { container.id }
+}
+
 // MARK: - ContainersGridView.ContainerCell+Equatable
 
 extension ContainersGridView.ContainerCell: Equatable {
 	static func == (lhs: ContainersGridView.ContainerCell, rhs: ContainersGridView.ContainerCell) -> Bool {
-		lhs.container.id == rhs.container.id && lhs.container.state == rhs.container.state && lhs.container.status == rhs.container.status
+		lhs.container.id == rhs.container.id &&
+		lhs.container.state == rhs.container.state &&
+		lhs.container.status == rhs.container.status
 	}
 }
 

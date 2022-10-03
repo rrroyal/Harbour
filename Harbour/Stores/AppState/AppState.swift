@@ -15,12 +15,12 @@ final class AppState: ObservableObject {
 
 	// MARK: Static properties
 
-	static let shared: AppState = AppState()
+	static let shared = AppState()
 
 	// MARK: Internal properties
 
 	// swiftlint:disable:next force_unwrapping
-	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
+	internal let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
 
 	// MARK: init
 

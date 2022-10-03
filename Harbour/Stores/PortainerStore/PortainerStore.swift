@@ -7,22 +7,23 @@
 
 import Foundation
 import os.log
+import CoreData
 import PortainerKit
 import KeychainKit
 
 // MARK: - PortainerStore
 
 /// Main store for Portainer-related data.
-final class PortainerStore: ObservableObject {
+public final class PortainerStore: ObservableObject {
 
 	/// Singleton for `PortainerStore`
-	static let shared: PortainerStore = PortainerStore()
+	static let shared = PortainerStore()
 
 	// MARK: Private properties
 
 	// swiftlint:disable:next force_unwrapping
-	private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PortainerStore")
-	private let keychain: Keychain = Keychain(accessGroup: Bundle.main.groupIdentifier)
+	private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PortainerStore")
+	private let keychain = Keychain(accessGroup: Bundle.main.groupIdentifier)
 
 	private let portainer: Portainer
 
@@ -35,7 +36,7 @@ final class PortainerStore: ObservableObject {
 
 	/// URLs with stored tokens
 	public var savedURLs: [URL] {
-		get { (try? keychain.getURLs()) ?? [] }
+		(try? keychain.getURLs()) ?? []
 	}
 
 	/// Task for `PortainerStore` setup
@@ -48,7 +49,7 @@ final class PortainerStore: ObservableObject {
 	public private(set) var containersTask: Task<[Container], Error>?
 
 	/// Is `PortainerStore` setup?
-	@Published private(set) var isSetup: Bool = false
+	@Published private(set) var isSetup = false
 
 	/// Currently selected endpoint's ID
 	@Published private(set) var selectedEndpointID: Endpoint.ID? = Preferences.shared.selectedEndpointID {
@@ -72,7 +73,7 @@ final class PortainerStore: ObservableObject {
 		portainer.session.configuration.shouldUseExtendedBackgroundIdleMode = true
 		portainer.session.configuration.sessionSendsLaunchEvents = true
 
-		logger.info("Initialized, loading stored containers... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Initialized, loading stored containers... [\(String.debugInfo(), privacy: .public)]")
 		self.isSetup = setupIfStored()
 		setupTask = Task { @MainActor in
 			let storedContainers = loadStoredContainers()
@@ -86,7 +87,7 @@ final class PortainerStore: ObservableObject {
 
 	// MARK: Public Functions
 
-	@Sendable
+	@Sendable @MainActor
 	public func login(url: URL, token: String) async throws {
 		logger.info("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String.debugInfo(), privacy: .public)]")
 
@@ -96,21 +97,25 @@ final class PortainerStore: ObservableObject {
 			portainer.setup(url: url, token: token)
 
 			logger.debug("Getting endpoints for setup... [\(String.debugInfo(), privacy: .public)]")
-			let endpoints = try await portainer.fetchEndpoints()
-			logger.debug("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
+
+			let endpointsTask = refreshEndpoints()
+			_ = try await endpointsTask.value
+
+//			let endpoints = try await portainer.fetchEndpoints()
+//			logger.debug("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
+//			self.endpoints = endpoints
 
 			isSetup = true
-			self.endpoints = endpoints
 
 			Preferences.shared.selectedServer = url.absoluteString
 
 			do {
 				try keychain.saveToken(for: url, token: token)
 			} catch {
-				logger.error("Unable to save token to Keychain: \(String(describing: error), privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+				logger.error("Unable to save token to Keychain: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			}
 
-			logger.notice("Setup with URL: \"\(url.absoluteString, privacy: .sensitive)\" sucessfully! [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("Setup with URL: \"\(url.absoluteString, privacy: .sensitive)\" sucessfully! [\(String.debugInfo(), privacy: .public)]")
 		} catch {
 			logger.error("Failed to setup: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error
@@ -136,11 +141,11 @@ final class PortainerStore: ObservableObject {
 
 	@Sendable
 	public func inspectContainer(_ containerID: Container.ID) async throws -> ContainerDetails {
-		logger.info("Getting details for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Getting details for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			let details = try await portainer.inspectContainer(containerID, endpointID: endpointID)
-			logger.notice("Got details for containerID: \(containerID, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("Got details for containerID: \(containerID, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
 			return details
 		} catch {
 			logger.error("Failed to get container details: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
@@ -235,10 +240,10 @@ private extension PortainerStore {
 
 	@Sendable
 	func getEndpoints() async throws -> [Endpoint] {
-		logger.info("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let endpoints = try await portainer.fetchEndpoints()
-			logger.notice("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("Got \(endpoints.count, privacy: .public) endpoints. [\(String.debugInfo(), privacy: .public)]")
 			return endpoints.sorted()
 		} catch {
 			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
@@ -248,11 +253,11 @@ private extension PortainerStore {
 
 	@Sendable
 	func getContainers() async throws -> [Container] {
-		logger.info("Getting containers... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Getting containers... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			let containers = try await portainer.fetchContainers(for: endpointID)
-			logger.notice("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
 			return containers.sorted()
 		} catch {
 			logger.error("Failed to get containers: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
@@ -314,21 +319,21 @@ private extension PortainerStore {
 
 	/// Loads authorization token for saved server and initializes `Portainer` with it.
 	func setupIfStored() -> Bool {
-		logger.info("Looking for token... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Looking for token... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			guard let selectedServer = Preferences.shared.selectedServer,
 				  let selectedServerURL = URL(string: selectedServer) else {
-				logger.info("No selectedServer. [\(String.debugInfo(), privacy: .public)]")
+				logger.debug("No selectedServer. [\(String.debugInfo(), privacy: .public)]")
 				return false
 			}
 
 			let token = try keychain.getToken(for: selectedServerURL)
 			portainer.setup(url: selectedServerURL, token: token)
 
-			logger.notice("Got token for URL: \"\(selectedServerURL.absoluteString, privacy: .sensitive)\" :) [\(String.debugInfo(), privacy: .public)]")
+			logger.info("Got token for URL: \"\(selectedServerURL.absoluteString, privacy: .sensitive)\" :) [\(String.debugInfo(), privacy: .public)]")
 			return true
 		} catch {
-			logger.error("Failed to load token: \(String(describing: error), privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.warning("Failed to load token: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			return false
 		}
 	}
@@ -336,10 +341,19 @@ private extension PortainerStore {
 	/// Stores containers to CoreData store.
 	/// - Parameter containers: Containers to store
 	func storeContainers(_ containers: [Container]) {
-		logger.info("Saving \(containers.count, privacy: .public) containers... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Saving \(containers.count, privacy: .public) containers... [\(String.debugInfo(), privacy: .public)]")
 
 		do {
 			let context = PersistenceController.shared.backgroundContext
+
+			let fetchRequest: NSFetchRequest<NSFetchRequestResult> = StoredContainer.fetchRequest()
+
+			let newContainersIDs = containers.map(\.id)
+			fetchRequest.predicate = NSPredicate(format: "NOT (id IN %@)", newContainersIDs)
+
+			let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+			_ = try? context.execute(deleteRequest)
+
 			containers.forEach { container in
 				let storedContainer = StoredContainer(context: context)
 				storedContainer.id = container.id
@@ -348,7 +362,7 @@ private extension PortainerStore {
 			}
 
 			let saved = try context.saveIfNeeded()
-			logger.notice("Inserted \(self.containers.count, privacy: .public) containers, needed to save: \(saved, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
+			logger.info("Inserted \(self.containers.count, privacy: .public) containers, needed to save: \(saved, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
 		} catch {
 			logger.error("Failed to store containers: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 		}
@@ -357,7 +371,7 @@ private extension PortainerStore {
 	/// Fetches stored containers and returns them.
 	/// - Returns: Mapped [Container] from CoreData store.
 	func loadStoredContainers() -> [Container] {
-		logger.info("Loading stored containers... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Loading stored containers... [\(String.debugInfo(), privacy: .public)]")
 
 		do {
 			let context = PersistenceController.shared.backgroundContext
@@ -375,10 +389,10 @@ private extension PortainerStore {
 				}
 				.sorted()
 
-			logger.notice("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
+			logger.info("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
 			return containers
 		} catch {
-			logger.error("Failed to fetch stored containers: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.warning("Failed to fetch stored containers: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			return []
 		}
 	}

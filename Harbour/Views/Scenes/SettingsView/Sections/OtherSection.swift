@@ -30,7 +30,7 @@ private extension SettingsView.OtherSection {
 		private typealias Localization = Localizable.Settings.Other
 
 		// swiftlint:disable:next force_unwrapping
-		let githubURL: URL = URL(string: "https://github.com/rrroyal/Harbour")!
+		let githubURL = URL(string: "https://github.com/rrroyal/Harbour")!
 
 		var body: some View {
 			Link(destination: githubURL) {

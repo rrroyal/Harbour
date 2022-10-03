@@ -14,13 +14,13 @@ import IndicatorsKit
 // MARK: - SceneState
 
 @MainActor
-final class SceneState: ObservableObject {
+public final class SceneState: ObservableObject {
 
 	// MARK: Internal properties
 
 	// swiftlint:disable:next force_unwrapping
-	internal let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
-	internal let indicators: Indicators = Indicators()
+	internal let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
+	internal let indicators = Indicators()
 
 	// MARK: Public properties
 
@@ -28,8 +28,8 @@ final class SceneState: ObservableObject {
 
 	// MARK: Navigation
 
-	@Published public var isSettingsSheetPresented: Bool = false
-	@Published public var navigationPath: NavigationPath = NavigationPath()
+	@Published public var isSettingsSheetPresented = false
+	@Published public var navigationPath = NavigationPath()
 
 	// MARK: Data State
 

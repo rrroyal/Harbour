@@ -61,9 +61,9 @@ struct ContentView: View {
 						Button(action: {
 							UIDevice.generateHaptic(.sheetPresentation)
 							sceneState.isSettingsSheetPresented = true
-						}, label: {
+						}) {
 							Image(systemName: "gear")
-						})
+						}
 					}
 				}
 		}

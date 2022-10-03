@@ -33,7 +33,7 @@ extension AppState {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
 			// swiftlint:disable:next line_length
-			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(String(describing: error), privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 		}
 	}
 
@@ -48,12 +48,13 @@ extension AppState {
 		case stateChanged(name: String, from: ContainerState?, to: ContainerState?)
 	}
 
+	private static let logPrefix = "BackgroundRefresh"
 	private static let containersChangedNotificationIdentifier = "ContainersChanged"
 
 	@Sendable
 	nonisolated func handleBackgroundRefresh() async {
 		do {
-			logger.info("Handling background refresh... [\(String.debugInfo(), privacy: .public)]")
+			logger.info("[\(Self.logPrefix, privacy: .public)] Handling background refresh... [\(String.debugInfo(), privacy: .public)]")
 
 			#if DEBUG
 			Preferences.shared.lastBackgroundRefreshDate = Date().timeIntervalSince1970
@@ -73,6 +74,7 @@ extension AppState {
 
 			// Find differences
 			let differences: [AppRefreshContainerChange] = storedContainersStates
+				.sorted { $0.key < $1.key }
 				.compactMap { id, oldState in
 					guard let newState = newContainersStates[id] else { return .disappeared(name: oldState.name) }
 					if newState.state != oldState.state {
@@ -93,23 +95,24 @@ extension AppState {
 
 			// Handle differences
 			if differences.isEmpty {
-				logger.info("Differences are empty. [\(String.debugInfo(), privacy: .public)]")
+				logger.debug("[\(Self.logPrefix, privacy: .public)] Differences are empty. [\(String.debugInfo(), privacy: .public)]")
 				return
 			}
 
-			logger.info("Differences count: \(differences.count, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("[\(Self.logPrefix, privacy: .public)] Differences count: \(differences.count, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
 
 			if let notificationContent = notificationContent(for: differences) {
 				let notificationIdentifier = "\(Self.containersChangedNotificationIdentifier).\(differences.description.hashValue)"
 				let notificationRequest = UNNotificationRequest(identifier: notificationIdentifier, content: notificationContent, trigger: nil)
 				try await UNUserNotificationCenter.current().add(notificationRequest)
 			} else {
-				logger.warning("notificationContent(for:) didn't return anything! [\(String.debugInfo(), privacy: .public)]")
+				logger.warning("[\(Self.logPrefix, privacy: .public)] notificationContent(for:) didn't return anything! [\(String.debugInfo(), privacy: .public)]")
 			}
 
-			logger.debug("Finished handling background refresh :) [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("[\(Self.logPrefix, privacy: .public)] Finished handling background refresh :) [\(String.debugInfo(), privacy: .public)]")
 		} catch {
-			logger.error("Error handling background refresh: \(String(describing: error), privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			// swiftlint:disable:next line_length
+			logger.error("[\(Self.logPrefix, privacy: .public)] Error handling background refresh: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 		}
 	}
 
@@ -121,23 +124,24 @@ extension AppState {
 		notificationContent.interruptionLevel = .active
 		notificationContent.relevanceScore = Double(changes.count) / 10
 		notificationContent.sound = .default
-		notificationContent.userInfo = [
+		/* notificationContent.userInfo = [
 			"changes": changes
-		]
+		] */
 
 		let emoji: String
-		let title: String = Localization.title
-		let subtitle: String
+		let title: String
+		let body: String
 
 		switch changes.count {
 			case 1:
 				// One difference, use singular notification content
 				guard let change = changes.first else { return nil }
+				title = Localization.Title.containerChanged
 				switch change {
 					case .disappeared(let name):
 						// "😶‍🌫️ Container "<name>" disappeared"
 						emoji = "😶‍🌫️"
-						subtitle = Localization.Subtitle.containerDisappeared(name)
+						body = Localization.Subtitle.containerDisappeared(name)
 					case .stateChanged(let name, _, let to):
 						// "<emoji> Container "<name>" changed its state to <to>."
 						switch to {
@@ -159,7 +163,7 @@ extension AppState {
 								emoji = "❔"
 						}
 						let stateOrUnknown = to?.rawValue ?? Localization.unknownPlaceholder
-						subtitle = Localization.Subtitle.containerChangedState(name, stateOrUnknown)
+						body = Localization.Subtitle.containerChangedState(name, stateOrUnknown)
 				}
 			case 2...3:
 				// Multiple differences, readable, use plural notification content
@@ -174,19 +178,21 @@ extension AppState {
 				}
 				let namesJoined = names.formatted(.list(type: .and))
 				emoji = "📫" // 🗂️ 👯
-				subtitle = Localization.Subtitle.ContainersChangedStates.readable(namesJoined)
+				title = Localization.Title.containersChanged
+				body = Localization.Subtitle.ContainersChangedStates.readable(namesJoined)
 			case 4...:
 				// Multiple differences, unreadable, use "multiple changes" notification content
 				// "Multiple containers changed their states"
 				emoji = "📫" // 🗂️ 👯
-				subtitle = Localization.Subtitle.ContainersChangedStates.unreadable
+				title = Localization.Title.containersChanged
+				body = Localization.Subtitle.ContainersChangedStates.unreadable
 			default:
 				// What
 				return nil
 		}
 
 		notificationContent.title = "\(emoji) \(title)"
-		notificationContent.subtitle = subtitle
+		notificationContent.body = body
 
 		return notificationContent
 	}

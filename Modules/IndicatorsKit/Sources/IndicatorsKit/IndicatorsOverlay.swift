@@ -10,7 +10,7 @@ import SwiftUI
 struct IndicatorsOverlay: View {
 	@ObservedObject var model: Indicators
 
-	@State var isExpanded: Bool = false
+	@State var isExpanded = false
 	@State var dragOffset: CGSize = .zero
 
 	let dragInWrongDirectionMultiplier: Double = 0.015

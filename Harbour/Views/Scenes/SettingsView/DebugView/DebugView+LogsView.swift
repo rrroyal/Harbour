@@ -41,10 +41,10 @@ extension DebugView {
 				}) {
 					Label("Refresh", systemImage: "arrow.clockwise")
 				}
-			}, label: {
+			}) {
 				Image(systemName: "ellipsis")
 					.symbolVariant(.circle)
-			})
+			}
 		}
 
 		var body: some View {

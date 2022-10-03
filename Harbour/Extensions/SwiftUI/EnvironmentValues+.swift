@@ -39,7 +39,7 @@ extension EnvironmentValues {
 
 extension EnvironmentValues {
 	private struct ContainersViewUseGrid: EnvironmentKey {
-		static let defaultValue: Bool = false
+		static let defaultValue = false
 	}
 
 	var containersViewUseGrid: Bool {

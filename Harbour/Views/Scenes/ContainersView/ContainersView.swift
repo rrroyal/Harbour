@@ -63,6 +63,7 @@ struct ContainersView: View {
 		}
 		.refreshable(action: refresh)
 		.searchable(text: $searchFilter)
+		.scrollDismissesKeyboard(.interactively)
 		.background(placeholderBackground)
 		.navigationDestination(for: ContainersView.ContainerNavigationItem.self) { item in
 			ContainerDetailsView(item: item)
