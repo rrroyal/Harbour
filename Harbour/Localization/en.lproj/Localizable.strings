@@ -12,6 +12,7 @@
 
 "Generic.Loading" = "Loading...";
 "Generic.Error" = "Error!";
+"Generic.Container" = "Container";
 
 // MARK: - Landing
 
@@ -43,6 +44,11 @@
 "ContainerCell.Unnamed" = "Unnamed";
 "ContainerCell.UnknownState" = "Unknown";
 "ContainerCell.StateJoiner" = " • ";
+
+// MARK: - ContainerContextMenu
+
+"ContainerContextMenu.Attach" = "Attach";
+"ContainerContextMenu.UnknownState" = "Unknown";
 
 // MARK: - ContainerDetails
 
@@ -91,15 +97,25 @@
 "Debug.LastBackgroundRefresh.Title" = "Last Background Refresh";
 "Debug.LastBackgroundRefresh.Never" = "Never";
 
-// MARK: - Indicators
-
-"Indicators.ExpandToReadMore" = "Expand to read more";
-
 // MARK: - Notifications
 
-"Notifications.ContainersChanged.Title" = "Containers changed!";
+"Notifications.ContainersChanged.Title.ContainerChanged" = "Container changed!";
+"Notifications.ContainersChanged.Title.ContainersChanged" = "Containers changed!";
 "Notifications.ContainersChanged.UnknownPlaceholder" = "unknown";
 "Notifications.ContainersChanged.Subtitle.ContainerDisappeared" = "Container \"%@\" disappeared.";
 "Notifications.ContainersChanged.Subtitle.ContainerChangedState" = "\"%@\" changed it's state to %@.";
 "Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Readable" =  "%@ changed their states.";
 "Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Unreadable" =  "Multiple containers changed their states.";
+
+// MARK: - Indicators
+
+"Indicators.ExpandToReadMore" = "Expand to read more";
+
+// MARK: - PortainerKit
+
+"PortainerKit.ExecuteAction.Start" = "Start";
+"PortainerKit.ExecuteAction.Stop" = "Stop";
+"PortainerKit.ExecuteAction.Restart" = "Restart";
+"PortainerKit.ExecuteAction.Kill" = "Kill";
+"PortainerKit.ExecuteAction.Pause" = "Pause";
+"PortainerKit.ExecuteAction.Unpause" = "Resume";

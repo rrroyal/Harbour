@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 // MARK: - DebugView
 
@@ -16,6 +17,7 @@ struct DebugView: View {
 		List {
 			#if DEBUG
 			LastBackgroundRefreshSection()
+			LogsSection()
 			#endif
 		}
 		.navigationTitle(Localization.title)
@@ -41,6 +43,16 @@ private extension DebugView {
 		}
 	}
 	#endif
+
+	struct LogsSection: View {
+		var body: some View {
+			Section {
+				NavigationLink("Logs") {
+					LogsView()
+				}
+			}
+		}
+	}
 }
 
 // MARK: - Previews

@@ -22,6 +22,13 @@ internal enum Localizable {
     internal static let unnamed = Localizable.tr("Localizable", "ContainerCell.Unnamed")
   }
 
+  internal enum ContainerContextMenu {
+    /// Attach
+    internal static let attach = Localizable.tr("Localizable", "ContainerContextMenu.Attach")
+    /// Unknown
+    internal static let unknownState = Localizable.tr("Localizable", "ContainerContextMenu.UnknownState")
+  }
+
   internal enum ContainerDetails {
     internal enum UserActivity {
       /// See the details of %@
@@ -56,6 +63,8 @@ internal enum Localizable {
   }
 
   internal enum Generic {
+    /// Container
+    internal static let container = Localizable.tr("Localizable", "Generic.Container")
     /// Error!
     internal static let error = Localizable.tr("Localizable", "Generic.Error")
     /// Loading...
@@ -94,8 +103,6 @@ internal enum Localizable {
 
   internal enum Notifications {
     internal enum ContainersChanged {
-      /// Containers changed!
-      internal static let title = Localizable.tr("Localizable", "Notifications.ContainersChanged.Title")
       /// unknown
       internal static let unknownPlaceholder = Localizable.tr("Localizable", "Notifications.ContainersChanged.UnknownPlaceholder")
       internal enum Subtitle {
@@ -116,6 +123,29 @@ internal enum Localizable {
           internal static let unreadable = Localizable.tr("Localizable", "Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Unreadable")
         }
       }
+      internal enum Title {
+        /// Container changed!
+        internal static let containerChanged = Localizable.tr("Localizable", "Notifications.ContainersChanged.Title.ContainerChanged")
+        /// Containers changed!
+        internal static let containersChanged = Localizable.tr("Localizable", "Notifications.ContainersChanged.Title.ContainersChanged")
+      }
+    }
+  }
+
+  internal enum PortainerKit {
+    internal enum ExecuteAction {
+      /// Kill
+      internal static let kill = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Kill")
+      /// Pause
+      internal static let pause = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Pause")
+      /// Restart
+      internal static let restart = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Restart")
+      /// Start
+      internal static let start = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Start")
+      /// Stop
+      internal static let stop = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Stop")
+      /// Resume
+      internal static let unpause = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Unpause")
     }
   }
 

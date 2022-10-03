@@ -8,26 +8,23 @@
 import SwiftUI
 import PortainerKit
 
+// MARK: - ContainerState+color
+
 extension ContainerState {
 	var color: Color {
 		switch self {
-			case .created:
-				return Color.yellow
-			case .running:
-				return Color.green
-			case .paused:
-				return Color.orange
-			case .restarting:
-				return Color.blue
-			case .removing:
-				return Color(uiColor: .systemGray)
-			case .exited:
-				return Color(uiColor: .systemGray4)
-			case .dead:
-				return Color(uiColor: .systemGray2)
+			case .created:		return .yellow
+			case .running:		return .green
+			case .paused:		return .orange
+			case .restarting:	return .blue
+			case .removing:		return Color(uiColor: .lightGray)
+			case .exited:		return Color(uiColor: .darkGray)
+			case .dead:			return .gray
 		}
 	}
 }
+
+// MARK: - ContainerState?+color
 
 extension ContainerState? {
 	var color: Color {
