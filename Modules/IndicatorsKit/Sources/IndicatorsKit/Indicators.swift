@@ -15,10 +15,7 @@ public final class Indicators: ObservableObject {
 	public init() { }
 
 	public func display(_ indicator: Indicator) {
-		if activeIndicator?.id != indicator.id {
-			timer?.invalidate()
-		}
-
+		timer?.invalidate()
 		activeIndicator = indicator
 		updateTimer()
 	}

@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - Indicator
 
-public struct Indicator {
+public struct Indicator: Identifiable {
 	public let id: String
 
 	public let icon: String?
@@ -40,19 +40,23 @@ public struct Indicator {
 	}
 }
 
-// MARK: - Indicator+Identifiable
-
-extension Indicator: Identifiable {
-	public static func == (lhs: Indicator, rhs: Indicator) -> Bool {
-		lhs.id == rhs.id
-	}
-}
-
 // MARK: - Indicator+Hashable
 
 extension Indicator: Hashable {
 	public func hash(into hasher: inout Hasher) {
 		hasher.combine(id)
+	}
+}
+
+// MARK: - Indicator+Equatable
+
+extension Indicator: Equatable {
+	public static func == (lhs: Indicator, rhs: Indicator) -> Bool {
+		lhs.id == rhs.id &&
+		lhs.headline == rhs.headline &&
+		lhs.subheadline == rhs.subheadline &&
+		lhs.icon == rhs.icon &&
+		lhs.expandedText == rhs.expandedText
 	}
 }
 

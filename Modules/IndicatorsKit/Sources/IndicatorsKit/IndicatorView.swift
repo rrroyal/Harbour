@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-struct IndicatorView: View, Identifiable {
+// MARK: - IndicatorView
+
+struct IndicatorView: View {
 	let indicator: Indicator
 	@Binding var isExpanded: Bool
 
@@ -45,7 +47,7 @@ struct IndicatorView: View, Identifiable {
 						.foregroundColor(indicator.style.subheadlineColor)
 						.transition(.opacity)
 						.animation(.easeInOut, value: indicator.style.subheadlineColor)
-						.id("IndicatorViewSubheadline-\(indicator.id)")
+						.id("IndicatorView.Subheadline.\(indicator.id)")
 				}
 			}
 			.padding(.trailing, indicator.icon != nil ? padding : 0)
@@ -60,13 +62,31 @@ struct IndicatorView: View, Identifiable {
 		.frame(maxWidth: isExpanded ? nil : maxWidth)
 		.animation(.easeInOut, value: indicator.icon)
 		.animation(.easeInOut, value: indicator.headline)
-		//		.animation(.easeInOut, value: isExpanded ? indicator.expandedText : indicator.subheadline)
-		//		.animation(.interactiveSpring(), value: isExpanded)
+//		.animation(.easeInOut, value: isExpanded ? indicator.expandedText : indicator.subheadline)
+		.animation(.spring(), value: isExpanded)
 		.optionalTapGesture(indicator.onTap)
 	}
+}
 
+// MARK: - IndicatorView+Identifiable
+
+extension IndicatorView: Identifiable {
 	var id: String { indicator.id }
 }
+
+// MARK: - IndicatorView+Equatable
+
+extension IndicatorView: Equatable {
+	static func == (lhs: IndicatorView, rhs: IndicatorView) -> Bool {
+		lhs.indicator.id == rhs.indicator.id &&
+		lhs.indicator.headline == rhs.indicator.headline &&
+		lhs.indicator.subheadline == rhs.indicator.subheadline &&
+		lhs.indicator.icon == rhs.indicator.icon &&
+		lhs.indicator.expandedText == rhs.indicator.expandedText
+	}
+}
+
+// MARK: - Previews
 
 struct IndicatorView_Previews: PreviewProvider {
 	static let isExpanded: Binding<Bool> = .constant(false)

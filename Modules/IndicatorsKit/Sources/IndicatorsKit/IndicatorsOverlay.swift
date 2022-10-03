@@ -27,9 +27,9 @@ struct IndicatorsOverlay: View {
 			.onEnded {
 				dragOffset = .zero
 
-				guard let indicator = model.activeIndicator, indicator.expandedText != nil else { return }
+				guard let indicator = model.activeIndicator else { return }
 
-				if $0.translation.height > 0 {
+				if $0.translation.height > 0 && indicator.expandedText != nil {
 					UIImpactFeedbackGenerator(style: .soft).impactOccurred()
 					isExpanded.toggle()
 					isExpanded ? model.timer?.invalidate() : model.updateTimer()
@@ -43,6 +43,7 @@ struct IndicatorsOverlay: View {
 		ZStack {
 			if let indicator = model.activeIndicator {
 				IndicatorView(indicator: indicator, isExpanded: $isExpanded)
+					.equatable()
 					.shadow(color: .black.opacity(0.085), radius: 8, x: 0, y: 0)
 					.offset(dragOffset)
 					.gesture(dragGesture)
