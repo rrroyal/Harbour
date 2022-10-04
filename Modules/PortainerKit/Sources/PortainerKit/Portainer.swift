@@ -81,7 +81,7 @@ public final class Portainer {
 	/// - Parameter filters: Query filters
 	/// - Returns: `[Container]`
 	@Sendable
-	public func fetchContainers(for endpointID: Int, filters: [String: [String]] = [:]) async throws -> [Container] {
+	public func fetchContainers(endpointID: Int, filters: [String: [String]] = [:]) async throws -> [Container] {
 		var queryItems = [
 			URLQueryItem(name: "all", value: "true")
 		]

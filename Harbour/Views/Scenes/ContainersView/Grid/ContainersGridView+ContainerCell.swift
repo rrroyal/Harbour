@@ -25,7 +25,8 @@ extension ContainersGridView {
 				let state = container.isStored ? Localization.unknownState : container.state?.rawValue.capitalized
 				Text(state ?? Localization.unknownState)
 					.font(.footnote.weight(.medium))
-					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
+					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
+//					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
 					.transition(.opacity)
 
 				Spacer()

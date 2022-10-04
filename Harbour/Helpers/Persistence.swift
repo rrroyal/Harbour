@@ -11,8 +11,7 @@ import os.log
 struct PersistenceController {
 	static let shared = PersistenceController()
 
-	// swiftlint:disable:next force_unwrapping
-	private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "Persistence")
+	private static let logger = Logger(category: "Persistence")
 
 	let container: NSPersistentContainer
 	let backgroundContext: NSManagedObjectContext

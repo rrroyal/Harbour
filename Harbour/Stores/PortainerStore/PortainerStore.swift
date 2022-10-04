@@ -21,10 +21,9 @@ public final class PortainerStore: ObservableObject {
 
 	// MARK: Private properties
 
-	// swiftlint:disable:next force_unwrapping
-	private let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "PortainerStore")
+	private let logger = Logger(category: "PortainerStore")
 	private let keychain = Keychain(accessGroup: Bundle.main.groupIdentifier)
-
+	private let preferences = Preferences.shared
 	private let portainer: Portainer
 
 	// MARK: Public properties
@@ -107,7 +106,7 @@ public final class PortainerStore: ObservableObject {
 
 			isSetup = true
 
-			Preferences.shared.selectedServer = url.absoluteString
+			preferences.selectedServer = url.absoluteString
 
 			do {
 				try keychain.saveToken(for: url, token: token)
@@ -256,7 +255,7 @@ private extension PortainerStore {
 		logger.debug("Getting containers... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
-			let containers = try await portainer.fetchContainers(for: endpointID)
+			let containers = try await portainer.fetchContainers(endpointID: endpointID)
 			logger.debug("Got \(containers.count, privacy: .public) containers. [\(String.debugInfo(), privacy: .public)]")
 			return containers.sorted()
 		} catch {
@@ -290,7 +289,7 @@ private extension PortainerStore {
 private extension PortainerStore {
 
 	func onSelectedEndpointIDChange(_ selectedEndpointID: Endpoint.ID?) {
-		Preferences.shared.selectedEndpointID = selectedEndpointID
+		preferences.selectedEndpointID = selectedEndpointID
 	}
 
 	func onEndpointsChange(_ endpoints: [Endpoint]) {
@@ -300,7 +299,7 @@ private extension PortainerStore {
 		} else if endpoints.count == 1 {
 			selectedEndpointID = endpoints.first?.id
 		} else {
-			let storedEndpointID = Preferences.shared.selectedEndpointID
+			let storedEndpointID = preferences.selectedEndpointID
 			if endpoints.contains(where: { $0.id == storedEndpointID }) {
 				selectedEndpointID = storedEndpointID
 			}
@@ -321,7 +320,7 @@ private extension PortainerStore {
 	func setupIfStored() -> Bool {
 		logger.debug("Looking for token... [\(String.debugInfo(), privacy: .public)]")
 		do {
-			guard let selectedServer = Preferences.shared.selectedServer,
+			guard let selectedServer = preferences.selectedServer,
 				  let selectedServerURL = URL(string: selectedServer) else {
 				logger.debug("No selectedServer. [\(String.debugInfo(), privacy: .public)]")
 				return false

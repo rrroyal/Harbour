@@ -12,6 +12,7 @@
 
 "Generic.Loading" = "Loading...";
 "Generic.Error" = "Error!";
+"Generic.Unknown" = "Unknown";
 "Generic.Container" = "Container";
 
 // MARK: - Landing
@@ -106,6 +107,17 @@
 "Notifications.ContainersChanged.Subtitle.ContainerChangedState" = "\"%@\" changed it's state to %@.";
 "Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Readable" =  "%@ changed their states.";
 "Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Unreadable" =  "Multiple containers changed their states.";
+
+// MARK: - Widgets
+
+"Widgets.SelectContainerPlaceholder" = "Please select a container 🙈"; // 😊🧐
+"Widgets.UnreachablePlaceholder" = "Unreachable";
+
+"Widgets.Placeholder.ContainerName" = "Containy";
+"Widgets.Placeholder.ContainerStatus" = "Up 10 days";
+
+"Widgets.ContainerState.DisplayName" = "Container State";
+"Widgets.ContainerState.Description" = "See the status of selected container right on your Home Screen :)";
 
 // MARK: - Indicators
 

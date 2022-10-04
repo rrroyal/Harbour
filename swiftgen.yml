@@ -3,9 +3,9 @@
 ##   SwiftGen will parse all `.strings` files found in that folder.
 strings:
   inputs:
-    - ${PROJECT_DIR}/Localization/en.lproj
+    - Shared/Localization/en.lproj
   outputs:
     - templateName: structured-swift5
-      output: ${OUTPUT_DIR}/Localizable.swift
+      output: Shared/Localization/Localizable.swift
       params:
         enumName: Localizable

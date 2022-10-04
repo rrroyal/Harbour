@@ -18,8 +18,7 @@ public final class SceneState: ObservableObject {
 
 	// MARK: Internal properties
 
-	// swiftlint:disable:next force_unwrapping
-	internal let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "SceneState")
+	internal let logger = Logger(category: "SceneState")
 	internal let indicators = Indicators()
 
 	// MARK: Public properties

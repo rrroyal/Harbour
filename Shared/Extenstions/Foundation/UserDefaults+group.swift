@@ -9,5 +9,5 @@ import Foundation
 
 extension UserDefaults {
 	// swiftlint:disable:next force_unwrapping
-	static let group = UserDefaults(suiteName: Bundle.main.groupIdentifier)!
+	static let group = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier)")!
 }

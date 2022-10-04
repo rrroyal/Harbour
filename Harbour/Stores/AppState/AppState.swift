@@ -19,8 +19,7 @@ final class AppState: ObservableObject {
 
 	// MARK: Internal properties
 
-	// swiftlint:disable:next force_unwrapping
-	internal let logger = Logger(subsystem: Bundle.main.bundleIdentifier!, category: "AppState")
+	internal let logger = Logger(category: "AppState")
 
 	// MARK: init
 

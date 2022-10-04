@@ -79,6 +79,9 @@ struct ContentView: View {
 		.animation(.easeInOut, value: sceneState.isLoading)
 		.environment(\.sceneErrorHandler, handleError)
 		.environmentObject(sceneState)
+		.onOpenURL { url in
+			sceneState.onOpenURL(url)
+		}
 		.onContinueUserActivity(HarbourUserActivity.containerDetails) { userActivity in
 			sceneState.onContinueContainerDetailsActivity(userActivity)
 		}

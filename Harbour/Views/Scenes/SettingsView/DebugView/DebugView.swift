@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OSLog
+import WidgetKit
 
 // MARK: - DebugView
 
@@ -17,6 +18,7 @@ struct DebugView: View {
 		List {
 			#if DEBUG
 			LastBackgroundRefreshSection()
+			WidgetsSection()
 			LogsSection()
 			#endif
 		}
@@ -43,6 +45,17 @@ private extension DebugView {
 		}
 	}
 	#endif
+
+	struct WidgetsSection: View {
+		var body: some View {
+			Section("WidgetKit") {
+				Button("Refresh timelines") {
+					UIDevice.generateHaptic(.buttonPress)
+					WidgetCenter.shared.reloadAllTimelines()
+				}
+			}
+		}
+	}
 
 	struct LogsSection: View {
 		var body: some View {

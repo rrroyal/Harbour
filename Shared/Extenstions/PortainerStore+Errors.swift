@@ -13,6 +13,9 @@ extension PortainerStore {
 		/// `Portainer` isn't setup.
 		case notSetup
 
+		/// No server is stored.
+		case noServer
+
 		/// No endpoint is selected.
 		case noSelectedEndpoint
 

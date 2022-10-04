@@ -8,6 +8,7 @@
 import Foundation
 import BackgroundTasks
 import UserNotifications
+import WidgetKit
 import PortainerKit
 
 // MARK: - AppState+scheduleBackgroundRefresh
@@ -92,6 +93,9 @@ extension AppState {
 			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
 			try? await UNUserNotificationCenter.current().add(debugNotificationRequest)
 			#endif
+
+			// Reload widget timelines
+			WidgetCenter.shared.reloadAllTimelines()
 
 			// Handle differences
 			if differences.isEmpty {

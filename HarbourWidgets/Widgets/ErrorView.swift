@@ -1,0 +1,31 @@
+//
+//  ErrorView.swift
+//  HarbourWidgets
+//
+//  Created by royal on 04/10/2022.
+//
+
+import SwiftUI
+
+// MARK: - ErrorView
+
+struct ErrorView: View {
+	let error: Error
+
+	var body: some View {
+		Text(error.localizedDescription)
+			.font(.body.weight(.medium))
+			.foregroundStyle(.red)
+			.multilineTextAlignment(.center)
+			.lineLimit(nil)
+			.padding()
+	}
+}
+
+// MARK: - Previews
+
+struct ErrorView_Previews: PreviewProvider {
+	static var previews: some View {
+		ErrorView(error: GenericError.invalidURL)
+	}
+}

@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>BuildDate</key>
-	<string>__BUILD_DATE__</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>__HBMainBundleIdentifier__.BackgroundRefresh</string>
 	</array>
+	<key>BuildDate</key>
+	<string>__BUILD_DATE__</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -27,8 +27,17 @@
 	<string>__HBMainBundleIdentifier__</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
 	<key>NSUserActivityTypes</key>
 	<array>
+		<string>ContainerDetailsIntent</string>
+		<string>ContainerStateIntent</string>
 		<string>__HBMainBundleIdentifier__.ContainerDetailsActivity</string>
 	</array>
 	<key>UIBackgroundModes</key>

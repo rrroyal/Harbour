@@ -69,6 +69,8 @@ internal enum Localizable {
     internal static let error = Localizable.tr("Localizable", "Generic.Error")
     /// Loading...
     internal static let loading = Localizable.tr("Localizable", "Generic.Loading")
+    /// Unknown
+    internal static let unknown = Localizable.tr("Localizable", "Generic.Unknown")
   }
 
   internal enum Indicators {
@@ -210,6 +212,25 @@ internal enum Localizable {
       internal static let login = Localizable.tr("Localizable", "Setup.Button.Login")
       /// Success!
       internal static let success = Localizable.tr("Localizable", "Setup.Button.Success")
+    }
+  }
+
+  internal enum Widgets {
+    /// Please select a container 🙈
+    internal static let selectContainerPlaceholder = Localizable.tr("Localizable", "Widgets.SelectContainerPlaceholder")
+    /// Unreachable
+    internal static let unreachablePlaceholder = Localizable.tr("Localizable", "Widgets.UnreachablePlaceholder")
+    internal enum ContainerState {
+      /// See the status of selected container right on your Home Screen :)
+      internal static let description = Localizable.tr("Localizable", "Widgets.ContainerState.Description")
+      /// Container State
+      internal static let displayName = Localizable.tr("Localizable", "Widgets.ContainerState.DisplayName")
+    }
+    internal enum Placeholder {
+      /// Containy
+      internal static let containerName = Localizable.tr("Localizable", "Widgets.Placeholder.ContainerName")
+      /// Up 10 days
+      internal static let containerStatus = Localizable.tr("Localizable", "Widgets.Placeholder.ContainerStatus")
     }
   }
 }
