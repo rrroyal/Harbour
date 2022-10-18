@@ -89,3 +89,11 @@ private extension ContainersView {
 		}
 	}
 }
+
+// MARK: - Previews
+
+struct ContainersView_Previews: PreviewProvider {
+	static var previews: some View {
+		ContainersView()
+	}
+}

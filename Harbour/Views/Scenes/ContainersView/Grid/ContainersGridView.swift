@@ -27,16 +27,10 @@ struct ContainersGridView: View {
 	var body: some View {
 		LazyVGrid(columns: columns, spacing: Self.cellSpacing) {
 			ForEach(containers) { container in
-				let navigationItem = ContainersView.ContainerNavigationItem(id: container.id, displayName: container.displayName, endpointID: portainerSelectedEndpointID)
-				NavigationLink(value: navigationItem) {
+				ContainersView.ContainerNavigationCell(container: container) {
 					ContainerCell(container: container)
-						.equatable()
-						.contextMenu {
-							ContainersView.ContainerContextMenu(container: container)
-						}
-						.tint(Color.primary)
-						.transition(.opacity)
 				}
+				.transition(.opacity)
 			}
 		}
 		.padding(.horizontal)

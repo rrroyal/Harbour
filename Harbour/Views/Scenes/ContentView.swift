@@ -23,6 +23,7 @@ struct ContentView: View {
 	private var titleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
 			Button(action: {
+				UIDevice.generateHaptic(.light)
 				selectEndpoint(endpoint)
 			}) {
 				Text(endpoint.name ?? endpoint.id.description)
@@ -34,7 +35,10 @@ struct ContentView: View {
 
 		Divider()
 
-		Button(action: refresh) {
+		Button(action: {
+			UIDevice.generateHaptic(.light)
+			refresh()
+		}) {
 			Label("Refresh", systemImage: "arrow.clockwise")
 		}
 	}
@@ -102,7 +106,6 @@ private extension ContentView {
 
 	@MainActor
 	func selectEndpoint(_ endpoint: Endpoint?) {
-		UIDevice.generateHaptic(.light)
 		portainerStore.selectEndpoint(endpoint)
 	}
 

@@ -55,7 +55,7 @@ struct SetupView: View {
 	@ViewBuilder
 	private var tokenTextField: some View {
 		SecureField(Self.tokenPlaceholder, text: $token) {
-			guard !token.isEmpty else { return }
+			guard !token.isReallyEmpty else { return }
 
 			UIDevice.generateHaptic(.light)
 			login()

@@ -141,22 +141,20 @@ extension ContainersView {
 											 style: style)
 			sceneState.indicators.display(indicator)
 
-			/*
 			Task {
 				do {
-					try await Portainer.shared.execute(action, on: container.id)
+					try await portainerStore.execute(action, on: container.id)
 
-					DispatchQueue.main.async {
-						container.state = action.expectedState
-						Portainer.shared.refreshContainerPassthroughSubject.send(container.id)
-					}
+//					DispatchQueue.main.async {
+//						container.state = action.expectedState
+//						Portainer.shared.refreshContainerPassthroughSubject.send(container.id)
+//					}
 
 					// try await Portainer.shared.getContainers()
 				} catch {
 					sceneState.handle(error)
 				}
 			}
-			 */
 		}
 
 		// TODO: attachAction()

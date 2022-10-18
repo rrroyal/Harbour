@@ -19,12 +19,19 @@ struct ContainerDetailsView: View {
 	@State private var details: ContainerDetails?
 
 	var body: some View {
-		VStack {
-			Text(item.id)
-			if let details {
+		List {
+			Section {
+				Text(String(describing: item))
+			}
+
+			Section {
 				Text(String(describing: details))
 			}
+
+			LogsSection(item: item)
 		}
+		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
+		.animation(.easeInOut, value: details != nil)
 		.navigationTitle(item.displayName ?? item.id)
 		.userActivity(HarbourUserActivity.containerDetails, element: item, createUserActivity)
 		.task(getContainerDetails)
@@ -37,23 +44,21 @@ private extension ContainerDetailsView {
 	func createUserActivity(for item: ContainersView.ContainerNavigationItem, userActivity: NSUserActivity) {
 		typealias Localization = Localizable.ContainerDetails.UserActivity
 
-		Task {
-			userActivity.isEligibleForHandoff = true
-			userActivity.isEligibleForPrediction = true
-			userActivity.isEligibleForSearch = true
+		userActivity.isEligibleForHandoff = true
+		userActivity.isEligibleForPrediction = true
+		userActivity.isEligibleForSearch = true
 
-			if let serverURL = PortainerStore.shared.serverURL,
-			   let endpointID = item.endpointID {
-				let portainerURLScheme = PortainerURLScheme(address: serverURL)
-				let portainerURL = portainerURLScheme.containerURL(containerID: item.id, endpointID: endpointID)
-				userActivity.webpageURL = portainerURL
-			}
-
-			let displayName = item.displayName ?? Localization.unnamedContainerPlaceholder
-			userActivity.title = Localization.title(displayName)
-
-			try? userActivity.setTypedPayload(item)
+		if let serverURL = PortainerStore.shared.serverURL,
+		   let endpointID = item.endpointID {
+			let portainerURLScheme = PortainerURLScheme(address: serverURL)
+			let portainerURL = portainerURLScheme.containerURL(containerID: item.id, endpointID: endpointID)
+			userActivity.webpageURL = portainerURL
 		}
+
+		let displayName = item.displayName ?? Localization.unnamedContainerPlaceholder
+		userActivity.title = Localization.title(displayName)
+
+		try? userActivity.setTypedPayload(item)
 	}
 
 	@Sendable
@@ -66,9 +71,25 @@ private extension ContainerDetailsView {
 //				_ = try? await portainerStore.endpointsTask?.value
 //			}
 
-			details = try await portainerStore.inspectContainer(item.id)
+			details = try await portainerStore.inspectContainer(item.id, endpointID: item.endpointID)
 		} catch {
 			sceneErrorHandler?(error, String.debugInfo())
+		}
+	}
+}
+
+// MARK: - ContainerDetailsView+Components
+
+private extension ContainerDetailsView {
+	struct LogsSection: View {
+		let item: ContainersView.ContainerNavigationItem
+
+		var body: some View {
+			Section {
+				NavigationLink(destination: ContainerLogsView(item: item)) {
+					Label("Logs", systemImage: "text.alignleft")
+				}
+			}
 		}
 	}
 }
