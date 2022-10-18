@@ -40,12 +40,16 @@ public final class PortainerStore {
 		portainer.setup(url: url, token: token)
 	}
 
-	public func getContainers(filters: [String: [String]] = [:]) async throws -> [Container] {
+	public func getEndpoints() async throws -> [Endpoint] {
 		guard isSetup else {
 			throw PortainerError.notSetup
 		}
-		guard let endpointID = Preferences.shared.selectedEndpointID else {
-			throw PortainerError.noSelectedEndpoint
+		return try await portainer.fetchEndpoints()
+	}
+
+	public func getContainers(for endpointID: Endpoint.ID, filters: [String: [String]] = [:]) async throws -> [Container] {
+		guard isSetup else {
+			throw PortainerError.notSetup
 		}
 		return try await portainer.fetchContainers(endpointID: endpointID, filters: filters)
 	}

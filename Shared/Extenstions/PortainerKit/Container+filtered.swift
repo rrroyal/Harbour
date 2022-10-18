@@ -10,7 +10,7 @@ import PortainerKit
 
 extension [Container] {
 	func filtered(query: String) -> Self {
-		if query.isEmpty { return self }
+		if query.isReallyEmpty { return self }
 		return filter {
 			$0.names?.contains(where: { $0.localizedCaseInsensitiveContains(query) }) ?? false
 		}

@@ -32,8 +32,15 @@ struct ContainerStateWidget: Widget {
 
 private extension ContainerStateWidget {
 	func widgetURL(for entry: ContainerStateProvider.Entry) -> URL? {
-		guard let containerID = entry.container?.id else { return nil }
-		return HarbourURLScheme.containerDetails(id: containerID, displayName: entry.container?.displayName).url
+		guard let containerID = entry.configuration.container?.identifier else { return nil }
+		let endpointID: Endpoint.ID?
+		if let endpointIDStr = entry.configuration.endpoint?.identifier {
+			endpointID = Int(endpointIDStr)
+		} else {
+			endpointID = nil
+		}
+		let displayName = entry.container?.displayName
+		return HarbourURLScheme.containerDetails(id: containerID, displayName: displayName, endpointID: endpointID).url
 	}
 }
 

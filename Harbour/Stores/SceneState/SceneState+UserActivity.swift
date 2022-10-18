@@ -15,8 +15,8 @@ extension SceneState {
 
 		guard let harbourURL = HarbourURLScheme.fromURL(url) else { return }
 		switch harbourURL {
-			case .containerDetails(let id, let displayName):
-				let navigationItem = ContainersView.ContainerNavigationItem(id: id, displayName: displayName, endpointID: nil)
+			case .containerDetails(let id, let displayName, let endpointID):
+				let navigationItem = ContainersView.ContainerNavigationItem(id: id, displayName: displayName, endpointID: endpointID)
 				navigationPath.removeLast(navigationPath.count)
 				navigationPath.append(navigationItem)
 		}

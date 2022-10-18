@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>INEnumDisplayName</key>
-			<string>Container State</string>
+			<string>IntentContainerState</string>
 			<key>INEnumDisplayNameID</key>
 			<string>4LwIlG</string>
 			<key>INEnumGeneratesHeader</key>
@@ -19,7 +19,7 @@
 			<array>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Unknown</string>
+					<string>ContainerState.Unknown</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>Pdto89</string>
 					<key>INEnumValueName</key>
@@ -27,7 +27,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Created</string>
+					<string>ContainerState.Created</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>EvtFyE</string>
 					<key>INEnumValueIndex</key>
@@ -37,7 +37,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Running</string>
+					<string>ContainerState.Running</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>TK3lVt</string>
 					<key>INEnumValueIndex</key>
@@ -47,7 +47,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Paused</string>
+					<string>ContainerState.Paused</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>TLVDgk</string>
 					<key>INEnumValueIndex</key>
@@ -57,7 +57,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Restarting</string>
+					<string>ContainerState.Restarting</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>yvXnJE</string>
 					<key>INEnumValueIndex</key>
@@ -67,7 +67,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Removing</string>
+					<string>ContainerState.Removing</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>4gjK73</string>
 					<key>INEnumValueIndex</key>
@@ -77,7 +77,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Exited</string>
+					<string>ContainerState.Exited</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>8pW2s2</string>
 					<key>INEnumValueIndex</key>
@@ -87,7 +87,7 @@
 				</dict>
 				<dict>
 					<key>INEnumValueDisplayName</key>
-					<string>Dead</string>
+					<string>ContainerState.Dead</string>
 					<key>INEnumValueDisplayNameID</key>
 					<string>Cc2V5I</string>
 					<key>INEnumValueIndex</key>
@@ -103,7 +103,7 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>GDQip4</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>22A5358e</string>
+	<string>22A5373b</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
 	<string>14B5033e</string>
 	<key>INIntentDefinitionToolsVersion</key>
@@ -116,27 +116,38 @@
 			<key>INIntentConfigurable</key>
 			<true/>
 			<key>INIntentDescription</key>
-			<string>_DESCRIPTION_</string>
+			<string>%CONTAINERSTATE_INTENT_DESCRIPTION%</string>
 			<key>INIntentDescriptionID</key>
 			<string>G2dSs0</string>
 			<key>INIntentEligibleForWidgets</key>
 			<true/>
 			<key>INIntentInput</key>
-			<string>container</string>
+			<string>endpoint</string>
 			<key>INIntentKeyParameter</key>
-			<string>container</string>
+			<string>endpoint</string>
 			<key>INIntentLastParameterTag</key>
-			<integer>2</integer>
+			<integer>4</integer>
 			<key>INIntentManagedParameterCombinations</key>
 			<dict>
-				<key>container</key>
+				<key>container,endpoint</key>
 				<dict>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>_SUMMARY1_</string>
+					<string>%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${container} ${endpoint}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>OsU0Vn</string>
+					<key>INIntentParameterCombinationUpdatesLinked</key>
+					<true/>
+				</dict>
+				<key>endpoint</key>
+				<dict>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${endpoint}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>2M2CyA</string>
 					<key>INIntentParameterCombinationUpdatesLinked</key>
 					<true/>
 				</dict>
@@ -150,15 +161,41 @@
 					<key>INIntentParameterCombinationIsPrimary</key>
 					<true/>
 					<key>INIntentParameterCombinationSubtitle</key>
-					<string>_DESCRIPTION_</string>
+					<string>%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${container}</string>
 					<key>INIntentParameterCombinationSubtitleID</key>
 					<string>paAiRQ</string>
 					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
 					<true/>
 					<key>INIntentParameterCombinationTitle</key>
-					<string>_SUMMARY2_</string>
+					<string>%CONTAINERSTATE_SUGGESTIONS_SUMMARY% ${container}</string>
 					<key>INIntentParameterCombinationTitleID</key>
 					<string>cI9nZG</string>
+				</dict>
+				<key>container,endpoint</key>
+				<dict>
+					<key>INIntentParameterCombinationSubtitle</key>
+					<string>%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${endpoint} ${container}</string>
+					<key>INIntentParameterCombinationSubtitleID</key>
+					<string>D23ZCT</string>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${container} ${endpoint}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>vTh0vo</string>
+				</dict>
+				<key>endpoint</key>
+				<dict>
+					<key>INIntentParameterCombinationSubtitle</key>
+					<string>%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${endpoint}</string>
+					<key>INIntentParameterCombinationSubtitleID</key>
+					<string>zNtToW</string>
+					<key>INIntentParameterCombinationSupportsBackgroundExecution</key>
+					<true/>
+					<key>INIntentParameterCombinationTitle</key>
+					<string>%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${endpoint}</string>
+					<key>INIntentParameterCombinationTitleID</key>
+					<string>gReFPf</string>
 				</dict>
 			</dict>
 			<key>INIntentParameters</key>
@@ -167,11 +204,60 @@
 					<key>INIntentParameterConfigurable</key>
 					<true/>
 					<key>INIntentParameterDisplayName</key>
+					<string>Endpoint</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>L28vqf</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>1</integer>
+					<key>INIntentParameterName</key>
+					<string>endpoint</string>
+					<key>INIntentParameterObjectType</key>
+					<string>IntentEndpoint</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>GDQip4</string>
+					<key>INIntentParameterPromptDialogs</key>
+					<array>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>%CONTAINERSTATE_ENDPOINT_PROMPT_LABEL% ${endpoint}</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>Ya7rYB</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Configuration</string>
+						</dict>
+						<dict>
+							<key>INIntentParameterPromptDialogCustom</key>
+							<true/>
+							<key>INIntentParameterPromptDialogFormatString</key>
+							<string>%CONTAINERSTATE_ENDPOINT_SIRI_DIALOG% ${endpoint}</string>
+							<key>INIntentParameterPromptDialogFormatStringID</key>
+							<string>rYe9Pc</string>
+							<key>INIntentParameterPromptDialogType</key>
+							<string>Primary</string>
+						</dict>
+					</array>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
+					<key>INIntentParameterSupportsResolution</key>
+					<true/>
+					<key>INIntentParameterSupportsSearch</key>
+					<true/>
+					<key>INIntentParameterTag</key>
+					<integer>4</integer>
+					<key>INIntentParameterType</key>
+					<string>Object</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterConfigurable</key>
+					<true/>
+					<key>INIntentParameterDisplayName</key>
 					<string>Container</string>
 					<key>INIntentParameterDisplayNameID</key>
 					<string>WGSq9K</string>
 					<key>INIntentParameterDisplayPriority</key>
-					<integer>1</integer>
+					<integer>2</integer>
 					<key>INIntentParameterName</key>
 					<string>container</string>
 					<key>INIntentParameterObjectType</key>
@@ -184,7 +270,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>_PROMPT_LABEL_ ${container}</string>
+							<string>%CONTAINERSTATE_CONTAINER_PROMPT_LABEL% ${container}</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>gSc8XU</string>
 							<key>INIntentParameterPromptDialogType</key>
@@ -194,13 +280,20 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>_SIRI_DIALOG_ ${container}</string>
+							<string>%CONTAINERSTATE_CONTAINER_SIRI_DIALOG% ${container}</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>vOfMxo</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Primary</string>
 						</dict>
 					</array>
+					<key>INIntentParameterRelationship</key>
+					<dict>
+						<key>INIntentParameterRelationshipParentName</key>
+						<string>endpoint</string>
+						<key>INIntentParameterRelationshipPredicateName</key>
+						<string>HasAnyValue</string>
+					</dict>
 					<key>INIntentParameterSupportsDynamicEnumeration</key>
 					<true/>
 					<key>INIntentParameterSupportsResolution</key>
@@ -219,11 +312,11 @@
 				<array>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>_PRINTED_DIALOG_SUCCESS_ ${state} ${status}</string>
+						<string>%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ${state} ${status} ${containerName}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>aDnza6</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>_VOICE_ONLY_DIALOG_SUCCESS_ ${state} ${status}</string>
+						<string>%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ${state} ${status} ${containerName}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>kIBFup</string>
 						<key>INIntentResponseCodeName</key>
@@ -233,11 +326,11 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseCodeConciseFormatString</key>
-						<string>_PRINTED_DIALOG_ERROR_ ${error}</string>
+						<string>%CONTAINERSTATE_ERROR_DIALOG_PRINTED% ${error} ${containerName}</string>
 						<key>INIntentResponseCodeConciseFormatStringID</key>
 						<string>ZsiYH7</string>
 						<key>INIntentResponseCodeFormatString</key>
-						<string>_VOICE_ONLY_DIALOG_ERROR_ ${error}</string>
+						<string>%CONTAINERSTATE_ERROR_DIALOG_VOICE% ${error} ${containerName}</string>
 						<key>INIntentResponseCodeFormatStringID</key>
 						<string>ivj3sq</string>
 						<key>INIntentResponseCodeName</key>
@@ -245,14 +338,14 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>4</integer>
+				<integer>5</integer>
 				<key>INIntentResponseOutput</key>
 				<string>state</string>
 				<key>INIntentResponseParameters</key>
 				<array>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>State</string>
+						<string>Container State</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>hGVR1N</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
@@ -270,7 +363,7 @@
 					</dict>
 					<dict>
 						<key>INIntentResponseParameterDisplayName</key>
-						<string>Status</string>
+						<string>Container Status</string>
 						<key>INIntentResponseParameterDisplayNameID</key>
 						<string>XZ4ynf</string>
 						<key>INIntentResponseParameterDisplayPriority</key>
@@ -296,10 +389,24 @@
 						<key>INIntentResponseParameterType</key>
 						<string>String</string>
 					</dict>
+					<dict>
+						<key>INIntentResponseParameterDisplayName</key>
+						<string>Container Name</string>
+						<key>INIntentResponseParameterDisplayNameID</key>
+						<string>E3S8Vi</string>
+						<key>INIntentResponseParameterDisplayPriority</key>
+						<integer>4</integer>
+						<key>INIntentResponseParameterName</key>
+						<string>containerName</string>
+						<key>INIntentResponseParameterTag</key>
+						<integer>5</integer>
+						<key>INIntentResponseParameterType</key>
+						<string>String</string>
+					</dict>
 				</array>
 			</dict>
 			<key>INIntentTitle</key>
-			<string>Container State</string>
+			<string>%CONTAINERSTATE_TITLE%</string>
 			<key>INIntentTitleID</key>
 			<string>XCOyin</string>
 			<key>INIntentType</key>
@@ -319,6 +426,69 @@
 			<integer>99</integer>
 			<key>INTypeName</key>
 			<string>IntentContainer</string>
+			<key>INTypeProperties</key>
+			<array>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>1</integer>
+					<key>INTypePropertyName</key>
+					<string>identifier</string>
+					<key>INTypePropertyTag</key>
+					<integer>1</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>2</integer>
+					<key>INTypePropertyName</key>
+					<string>displayString</string>
+					<key>INTypePropertyTag</key>
+					<integer>2</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>3</integer>
+					<key>INTypePropertyName</key>
+					<string>pronunciationHint</string>
+					<key>INTypePropertyTag</key>
+					<integer>3</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>4</integer>
+					<key>INTypePropertyName</key>
+					<string>alternativeSpeakableMatches</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>4</integer>
+					<key>INTypePropertyType</key>
+					<string>SpeakableString</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INTypeDisplayName</key>
+			<string>Endpoint</string>
+			<key>INTypeDisplayNameID</key>
+			<string>Ec8j3G</string>
+			<key>INTypeLastPropertyTag</key>
+			<integer>101</integer>
+			<key>INTypeName</key>
+			<string>IntentEndpoint</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>

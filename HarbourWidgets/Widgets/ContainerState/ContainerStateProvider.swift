@@ -10,6 +10,8 @@ import Intents
 import os.log
 import PortainerKit
 
+import UserNotifications
+
 // TODO: Execute AppState.handleBackgroundRefresh() when providing a timeline/snapshot (inside a Task, nonblocking).
 
 // MARK: - ContainerStateProvider
@@ -52,7 +54,8 @@ struct ContainerStateProvider: IntentTimelineProvider {
 
 		let now = Date()
 
-		guard let intentContainer = configuration.container,
+		guard let endpointID = Int(configuration.endpoint?.identifier ?? ""),
+			  let intentContainer = configuration.container,
 			  let containerID = intentContainer.identifier else {
 			let entry = Entry(date: now, configuration: configuration, container: nil)
 			completion(entry)
@@ -66,12 +69,13 @@ struct ContainerStateProvider: IntentTimelineProvider {
 				try portainerStore.setupIfNeeded()
 
 				let filters = ["id": [containerID]]
-				let container = (try await portainerStore.getContainers(filters: filters)).first
+				let container = (try await portainerStore.getContainers(for: endpointID, filters: filters)).first
 
 				entry = Entry(date: now, configuration: configuration, container: container)
 			} catch {
 				logger.error("Error getting a snapshot: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
-				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
+				entry = Entry(date: now, configuration: configuration, container: nil)
+//				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 			}
 
 			completion(entry)
@@ -83,7 +87,8 @@ struct ContainerStateProvider: IntentTimelineProvider {
 
 		let now = Date()
 
-		guard let intentContainer = configuration.container,
+		guard let endpointID = Int(configuration.endpoint?.identifier ?? ""),
+			  let intentContainer = configuration.container,
 			  let containerID = intentContainer.identifier else {
 			let entry = Entry(date: now, configuration: configuration, container: nil)
 			let timeline = Timeline(entries: [entry], policy: .atEnd)
@@ -92,24 +97,36 @@ struct ContainerStateProvider: IntentTimelineProvider {
 		}
 
 		Task {
-			var entries: [Entry] = []
+			let entry: Entry
 
 			do {
 				try portainerStore.setupIfNeeded()
 
 				let filters = ["id": [containerID]]
-				let container = (try await portainerStore.getContainers(filters: filters)).first
+				let container = (try await portainerStore.getContainers(for: endpointID, filters: filters)).first
 
-				let entry = Entry(date: now, configuration: configuration, container: container)
-				entries.append(entry)
+				entry = Entry(date: now, configuration: configuration, container: container)
 			} catch {
 				logger.error("Error getting a timeline: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 
-				let entry = Entry(date: now, configuration: configuration, container: nil, error: error)
-				entries.append(entry)
+				entry = Entry(date: now, configuration: configuration, container: nil)
+//				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 			}
 
-			let timeline = Timeline(entries: entries, policy: .atEnd)
+			#if DEBUG
+			let debugNotification = UNMutableNotificationContent()
+			debugNotification.title = "🚧 getTimeline() completion"
+			debugNotification.threadIdentifier = "debug"
+			debugNotification.body = [
+				entry.error?.localizedDescription ?? "no error",
+				entry.container?.id ?? "no container"
+			].joined(separator: "\n")
+			let debugNotificationIdentifier = "Debug.WidgetTimeline.Return.\(now.timeIntervalSince1970)"
+			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
+			UNUserNotificationCenter.current().add(debugNotificationRequest) { _ in }
+			#endif
+
+			let timeline = Timeline(entries: [entry], policy: .atEnd)
 			completion(timeline)
 		}
 	}

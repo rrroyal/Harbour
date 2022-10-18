@@ -24,6 +24,7 @@ extension AppState {
 		#if DEBUG
 		let debugNotification = UNMutableNotificationContent()
 		debugNotification.title = "🚧 Background refresh scheduled!"
+		debugNotification.threadIdentifier = "debug"
 		let debugNotificationIdentifier = "Debug.BackgroundRefreshScheduled"
 		let debugNotificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
 		let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: debugNotificationTrigger)
@@ -88,6 +89,7 @@ extension AppState {
 			#if DEBUG
 			let debugNotification = UNMutableNotificationContent()
 			debugNotification.title = "🚧 Background refresh happened!"
+			debugNotification.threadIdentifier = "debug"
 			debugNotification.body = differences.description
 			let debugNotificationIdentifier = "Debug.BackgroundRefreshHappened"
 			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
@@ -124,7 +126,7 @@ extension AppState {
 		typealias Localization = Localizable.Notifications.ContainersChanged
 
 		let notificationContent = UNMutableNotificationContent()
-		notificationContent.categoryIdentifier = Self.containersChangedNotificationIdentifier
+		notificationContent.threadIdentifier = Self.containersChangedNotificationIdentifier
 		notificationContent.interruptionLevel = .active
 		notificationContent.relevanceScore = Double(changes.count) / 10
 		notificationContent.sound = .default

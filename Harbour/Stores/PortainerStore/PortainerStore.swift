@@ -139,15 +139,56 @@ public final class PortainerStore: ObservableObject {
 	}
 
 	@Sendable
-	public func inspectContainer(_ containerID: Container.ID) async throws -> ContainerDetails {
+	public func inspectContainer(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
 		logger.debug("Getting details for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
 		do {
-			let (portainer, endpointID) = try getPortainerAndEndpoint()
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
+			guard let endpointID = endpointID ?? selectedEndpointID else {
+				throw PortainerError.noSelectedEndpoint
+			}
 			let details = try await portainer.inspectContainer(containerID, endpointID: endpointID)
 			logger.debug("Got details for containerID: \(containerID, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
 			return details
 		} catch {
 			logger.error("Failed to get container details: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			throw error
+		}
+	}
+
+	@Sendable
+	public func getLogs(for containerID: Container.ID) async throws -> String {
+		logger.debug("Getting logs for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		do {
+			let (portainer, endpointID) = try getPortainerAndEndpoint()
+			let logs = try await portainer.fetchLogs(containerID: containerID, endpointID: endpointID)
+
+			logger.debug("Got logs for containerID: \"\(containerID, privacy: .public)\". [\(String.debugInfo(), privacy: .public)]")
+
+			return logs
+		} catch {
+			logger.error("Failed to get logs for containerID: \"\(containerID, privacy: .public)\": \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			throw error
+		}
+	}
+
+	@Sendable
+	public func execute(_ action: ExecuteAction, on containerID: Container.ID) async throws {
+		logger.info("Executing action \"\(action.rawValue, privacy: .public)\" on containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		do {
+			let (portainer, endpointID) = try getPortainerAndEndpoint()
+			try await portainer.execute(action, containerID: containerID, endpointID: endpointID)
+
+			// TODO: Check if this can be done better
+			if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
+				containers[storedContainerIndex].state = action.expectedState
+			}
+
+			logger.debug("Executed action \"\(action.rawValue, privacy: .public)\" on containerID: \"\(containerID, privacy: .public)\". [\(String.debugInfo(), privacy: .public)]")
+		} catch {
+			// swiftlint:disable:next line_length
+			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on containerID: \"\(containerID, privacy: .public)\": \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error
 		}
 	}

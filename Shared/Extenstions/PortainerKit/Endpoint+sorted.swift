@@ -10,6 +10,6 @@ import PortainerKit
 
 extension [Endpoint] {
 	func sorted() -> Self {
-		sorted { ($0.id.description, $0.name ?? "") < ($1.id.description, $1.name ?? "") }
+		sorted { ("\($0.id)", $0.name ?? "") < ("\($1.id)", $1.name ?? "") }
 	}
 }

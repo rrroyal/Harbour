@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E706AB7E28ED864D00950D35 /* HarbourIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E706AB8228ED864D00950D35 /* HarbourIntents.intentdefinition */; };
+		E706AB7F28ED864D00950D35 /* HarbourIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E706AB8228ED864D00950D35 /* HarbourIntents.intentdefinition */; };
+		E706AB8028ED864D00950D35 /* HarbourIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E706AB8228ED864D00950D35 /* HarbourIntents.intentdefinition */; };
 		E71180F228E737D40019774A /* PortainerURLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71180F128E737D40019774A /* PortainerURLScheme.swift */; };
 		E713177B28E59E8200DB82AF /* ContainersListView+ContainerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713177A28E59E8200DB82AF /* ContainersListView+ContainerCell.swift */; };
 		E713178228E5A1DC00DB82AF /* ContainerState+color.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178128E5A1DC00DB82AF /* ContainerState+color.swift */; };
@@ -20,6 +23,8 @@
 		E713179E28E5C8F600DB82AF /* Container+filtered.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179D28E5C8F600DB82AF /* Container+filtered.swift */; };
 		E71A04D628EB92DF00B88C7D /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = E71A04D528EB92DF00B88C7D /* KeychainKit */; };
 		E71A04D828EB92E200B88C7D /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E71A04D728EB92E200B88C7D /* PortainerKit */; };
+		E725018C28FC4757006B1190 /* ContainerLogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E725018B28FC4757006B1190 /* ContainerLogsView.swift */; };
+		E725018F28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E725018E28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift */; };
 		E72AA76E28EB662400C33EA3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA76D28EB662300C33EA3 /* WidgetKit.framework */; };
 		E72AA77028EB662400C33EA3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA76F28EB662400C33EA3 /* SwiftUI.framework */; };
 		E72AA77328EB662400C33EA3 /* HarbourWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72AA77228EB662400C33EA3 /* HarbourWidgetsBundle.swift */; };
@@ -27,12 +32,9 @@
 		E72AA79A28EB895D00C33EA3 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA79928EB895D00C33EA3 /* Intents.framework */; };
 		E72AA79D28EB895D00C33EA3 /* IntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72AA79C28EB895D00C33EA3 /* IntentHandler.swift */; };
 		E72AA7A128EB895D00C33EA3 /* HarbourIntents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E72AA79828EB895D00C33EA3 /* HarbourIntents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		E72AA7A628EB898E00C33EA3 /* HarbourIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E72AA7A528EB898E00C33EA3 /* HarbourIntents.intentdefinition */; };
 		E72AA7AB28EB8A6800C33EA3 /* ContainerStateIntentHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72AA7AA28EB8A6800C33EA3 /* ContainerStateIntentHandler.swift */; };
 		E72AA7B328EB8EDF00C33EA3 /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = E72AA7B228EB8EDF00C33EA3 /* KeychainKit */; };
 		E72AA7B528EB8EE200C33EA3 /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E72AA7B428EB8EE200C33EA3 /* PortainerKit */; };
-		E72AA7B728EB8F0800C33EA3 /* HarbourIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E72AA7A528EB898E00C33EA3 /* HarbourIntents.intentdefinition */; };
-		E72AA7B928EB8F0A00C33EA3 /* HarbourIntents.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = E72AA7A528EB898E00C33EA3 /* HarbourIntents.intentdefinition */; };
 		E72AA7BD28EB8F3800C33EA3 /* PortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72AA7BC28EB8F3800C33EA3 /* PortainerStore.swift */; };
 		E72AA7C028EB8FC700C33EA3 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA2028857CDD00FCD7DC /* Preferences.swift */; };
 		E72AA7C128EB8FC800C33EA3 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA2028857CDD00FCD7DC /* Preferences.swift */; };
@@ -83,6 +85,8 @@
 		E768A59B28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E768A59A28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift */; };
 		E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = E777698828E9A71300C5AFE9 /* Container+isStored.swift */; };
 		E7779B2E28E75F8F00AD8569 /* HarbourUserActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7779B2D28E75F8F00AD8569 /* HarbourUserActivity.swift */; };
+		E77E88FF28FF4B2C00D95DA5 /* Endpoint+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179528E5B99600DB82AF /* Endpoint+sorted.swift */; };
+		E77E890028FF4B2C00D95DA5 /* Endpoint+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179528E5B99600DB82AF /* Endpoint+sorted.swift */; };
 		E7813A1828EB9E7F0063BCE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E62B2884771400C79732 /* Assets.xcassets */; };
 		E7813A1928EB9E7F0063BCE0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E62B2884771400C79732 /* Assets.xcassets */; };
 		E78C660D28E9BA920033D0E4 /* Harbour.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E78C660B28E9BA920033D0E4 /* Harbour.xcdatamodeld */; };
@@ -176,6 +180,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E706AB8128ED864D00950D35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/HarbourIntents.intentdefinition; sourceTree = "<group>"; };
 		E71180F128E737D40019774A /* PortainerURLScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerURLScheme.swift; sourceTree = "<group>"; };
 		E713177A28E59E8200DB82AF /* ContainersListView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersListView+ContainerCell.swift"; sourceTree = "<group>"; };
 		E713178128E5A1DC00DB82AF /* ContainerState+color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerState+color.swift"; sourceTree = "<group>"; };
@@ -187,6 +192,8 @@
 		E713179528E5B99600DB82AF /* Endpoint+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Endpoint+sorted.swift"; sourceTree = "<group>"; };
 		E713179728E5C02F00DB82AF /* ContainersGridView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersGridView+ContainerCell.swift"; sourceTree = "<group>"; };
 		E713179D28E5C8F600DB82AF /* Container+filtered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+filtered.swift"; sourceTree = "<group>"; };
+		E725018B28FC4757006B1190 /* ContainerLogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerLogsView.swift; sourceTree = "<group>"; };
+		E725018E28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersView+ContainerNavigationCell.swift"; sourceTree = "<group>"; };
 		E72AA76C28EB662300C33EA3 /* HarbourWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HarbourWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E72AA76D28EB662300C33EA3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E72AA76F28EB662400C33EA3 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -197,7 +204,6 @@
 		E72AA79928EB895D00C33EA3 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		E72AA79C28EB895D00C33EA3 /* IntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntentHandler.swift; sourceTree = "<group>"; };
 		E72AA79E28EB895D00C33EA3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E72AA7A528EB898E00C33EA3 /* HarbourIntents.intentdefinition */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; path = HarbourIntents.intentdefinition; sourceTree = "<group>"; };
 		E72AA7AA28EB8A6800C33EA3 /* ContainerStateIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerStateIntentHandler.swift; sourceTree = "<group>"; };
 		E72AA7AC28EB8BEB00C33EA3 /* HarbourIntents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HarbourIntents.entitlements; sourceTree = "<group>"; };
 		E72AA7BC28EB8F3800C33EA3 /* PortainerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerStore.swift; sourceTree = "<group>"; };
@@ -327,7 +333,6 @@
 		E713177D28E5A1C900DB82AF /* PortainerKit */ = {
 			isa = PBXGroup;
 			children = (
-				E713179528E5B99600DB82AF /* Endpoint+sorted.swift */,
 				E7B1F43B28E9E685004D4999 /* ExecuteAction+expectedState.swift */,
 				E78C661428E9D64A0033D0E4 /* ExecuteAction+UI.swift */,
 				E777698828E9A71300C5AFE9 /* Container+isStored.swift */,
@@ -336,12 +341,13 @@
 			path = PortainerKit;
 			sourceTree = "<group>";
 		};
-		E713178628E5A66000DB82AF /* ContainerDetailsView */ = {
+		E713178628E5A66000DB82AF /* ContainerDetails */ = {
 			isa = PBXGroup;
 			children = (
 				E713178728E5A66D00DB82AF /* ContainerDetailsView.swift */,
+				E725018B28FC4757006B1190 /* ContainerLogsView.swift */,
 			);
-			path = ContainerDetailsView;
+			path = ContainerDetails;
 			sourceTree = "<group>";
 		};
 		E72AA77128EB662400C33EA3 /* HarbourWidgets */ = {
@@ -375,7 +381,7 @@
 				E72AA7A828EB8A5A00C33EA3 /* Handlers */,
 				E73A304328EC335500004093 /* Helpers */,
 				E72AA79C28EB895D00C33EA3 /* IntentHandler.swift */,
-				E72AA7A528EB898E00C33EA3 /* HarbourIntents.intentdefinition */,
+				E706AB8228ED864D00950D35 /* HarbourIntents.intentdefinition */,
 				E72AA79E28EB895D00C33EA3 /* Info.plist */,
 				E72AA7AC28EB8BEB00C33EA3 /* HarbourIntents.entitlements */,
 			);
@@ -425,6 +431,7 @@
 		E72AA7CE28EB91CE00C33EA3 /* PortainerKit */ = {
 			isa = PBXGroup;
 			children = (
+				E713179528E5B99600DB82AF /* Endpoint+sorted.swift */,
 				E713178928E5A76A00DB82AF /* Container+Equatable.swift */,
 				E713179D28E5C8F600DB82AF /* Container+filtered.swift */,
 				E713179228E5B94F00DB82AF /* Container+sorted.swift */,
@@ -519,8 +526,9 @@
 				E766D920288C37AB00F2DB99 /* Grid */,
 				E766D91F288C37A700F2DB99 /* List */,
 				E766D91D288C379800F2DB99 /* ContainersView.swift */,
-				E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */,
 				E713178C28E5A81C00DB82AF /* ContainersView+ContainerContextMenu.swift */,
+				E725018E28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift */,
+				E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */,
 			);
 			path = ContainersView;
 			sourceTree = "<group>";
@@ -611,7 +619,7 @@
 		E766D931288C3CA400F2DB99 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				E713178628E5A66000DB82AF /* ContainerDetailsView */,
+				E713178628E5A66000DB82AF /* ContainerDetails */,
 				E766D91C288C378700F2DB99 /* ContainersView */,
 				E760CDB32892C130007280ED /* Landing */,
 				E766D930288C3C9100F2DB99 /* SettingsView */,
@@ -1001,8 +1009,9 @@
 				E72AA7CC28EB907300C33EA3 /* UserDefaults+group.swift in Sources */,
 				E73A305828EC492D00004093 /* ContainerStateWidgetView.swift in Sources */,
 				E7C3ED7E28EB9B4500233930 /* PortainerStore.swift in Sources */,
+				E77E890028FF4B2C00D95DA5 /* Endpoint+sorted.swift in Sources */,
 				E7C3ED7C28EB9B1F00233930 /* PortainerStore+Errors.swift in Sources */,
-				E72AA7B728EB8F0800C33EA3 /* HarbourIntents.intentdefinition in Sources */,
+				E706AB8028ED864D00950D35 /* HarbourIntents.intentdefinition in Sources */,
 				E7C3ED8728EB9C8D00233930 /* Logger+init.swift in Sources */,
 				E7B4230728EC59C600CBC5F4 /* ContainerStateWidgetView+ContainerStateView.swift in Sources */,
 				E72AA7C128EB8FC800C33EA3 /* Preferences.swift in Sources */,
@@ -1023,6 +1032,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E72AA7BD28EB8F3800C33EA3 /* PortainerStore.swift in Sources */,
+				E77E88FF28FF4B2C00D95DA5 /* Endpoint+sorted.swift in Sources */,
 				E73A304D28EC361400004093 /* Localizable.swift in Sources */,
 				E72AA7C828EB907200C33EA3 /* UserDefaults+group.swift in Sources */,
 				E72AA7D028EB920500C33EA3 /* Container+Equatable.swift in Sources */,
@@ -1037,7 +1047,7 @@
 				E73A304228EC330F00004093 /* IntentContainerState+init.swift in Sources */,
 				E72AA7C528EB907200C33EA3 /* Bundle+.swift in Sources */,
 				E7B4230A28EC615100CBC5F4 /* HarbourURLScheme.swift in Sources */,
-				E72AA7A628EB898E00C33EA3 /* HarbourIntents.intentdefinition in Sources */,
+				E706AB7F28ED864D00950D35 /* HarbourIntents.intentdefinition in Sources */,
 				E7B4230C28EC615400CBC5F4 /* PortainerURLScheme.swift in Sources */,
 				E7C3ED8628EB9C8D00233930 /* Logger+init.swift in Sources */,
 				E72AA7C628EB907200C33EA3 /* String+.swift in Sources */,
@@ -1089,7 +1099,7 @@
 				E713178D28E5A81C00DB82AF /* ContainersView+ContainerContextMenu.swift in Sources */,
 				E7C772ED28E8705500143E8C /* HarbourBackgroundTask.swift in Sources */,
 				E79AD30B2893D9FA002D0CD9 /* PrimaryButtonStyle.swift in Sources */,
-				E72AA7B928EB8F0A00C33EA3 /* HarbourIntents.intentdefinition in Sources */,
+				E706AB7E28ED864D00950D35 /* HarbourIntents.intentdefinition in Sources */,
 				E713178428E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift in Sources */,
 				E78C660D28E9BA920033D0E4 /* Harbour.xcdatamodeld in Sources */,
 				E72BB34828DE256C007991D1 /* RoundedTextFieldStyle.swift in Sources */,
@@ -1102,12 +1112,14 @@
 				E7BEBA2A2885801900FCD7DC /* UIWindow+.swift in Sources */,
 				E72BB33C28DE0CFB007991D1 /* Persistence.swift in Sources */,
 				E7ACE73E288C421C000E6FF6 /* OtherSection.swift in Sources */,
+				E725018C28FC4757006B1190 /* ContainerLogsView.swift in Sources */,
 				E72BB35028DE26BD007991D1 /* GenericError.swift in Sources */,
 				E766D91E288C379800F2DB99 /* ContainersView.swift in Sources */,
 				E7ACE749288C47C7000E6FF6 /* SettingsView+Common.swift in Sources */,
 				E766D92A288C381900F2DB99 /* EnvironmentValues+.swift in Sources */,
 				E7B1F43C28E9E685004D4999 /* ExecuteAction+expectedState.swift in Sources */,
 				E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */,
+				E725018F28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift in Sources */,
 				E7ACE74D288C48A6000E6FF6 /* SettingsView+NavigationLinkOption.swift in Sources */,
 				E713178228E5A1DC00DB82AF /* ContainerState+color.swift in Sources */,
 				E7ACE744288C44C8000E6FF6 /* View+padding.swift in Sources */,
@@ -1147,6 +1159,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		E706AB8228ED864D00950D35 /* HarbourIntents.intentdefinition */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E706AB8128ED864D00950D35 /* Base */,
+			);
+			name = HarbourIntents.intentdefinition;
+			sourceTree = "<group>";
+		};
 		E7D6E645288478E000C79732 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (

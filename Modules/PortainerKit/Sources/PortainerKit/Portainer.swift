@@ -81,7 +81,7 @@ public final class Portainer {
 	/// - Parameter filters: Query filters
 	/// - Returns: `[Container]`
 	@Sendable
-	public func fetchContainers(endpointID: Int, filters: [String: [String]] = [:]) async throws -> [Container] {
+	public func fetchContainers(endpointID: Endpoint.ID, filters: [String: [String]] = [:]) async throws -> [Container] {
 		var queryItems = [
 			URLQueryItem(name: "all", value: "true")
 		]
@@ -103,7 +103,7 @@ public final class Portainer {
 	///   - endpointID: Endpoint ID
 	/// - Returns: `ContainerDetails`
 	@Sendable
-	public func inspectContainer(_ containerID: String, endpointID: Int) async throws -> ContainerDetails {
+	public func inspectContainer(_ containerID: Container.ID, endpointID: Endpoint.ID) async throws -> ContainerDetails {
 		let request = try request(for: .inspect(containerID: containerID, endpointID: endpointID))
 
 		let decoder = JSONDecoder()
@@ -131,7 +131,7 @@ public final class Portainer {
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
 	@Sendable
-	public func execute(_ action: ExecuteAction, containerID: String, endpointID: Int) async throws {
+	public func execute(_ action: ExecuteAction, containerID: Container.ID, endpointID: Endpoint.ID) async throws {
 		var request = try request(for: .executeAction(containerID: containerID, endpointID: endpointID, action: action))
 		request.httpMethod = "POST"
 		request.httpBody = "{}".data(using: .utf8)
@@ -166,7 +166,7 @@ public final class Portainer {
 	///   - displayTimestamps: Display timestamps?
 	/// - Returns: `String` logs
 	@Sendable
-	public func fetchLogs(containerID: String, endpointID: Int, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
+	public func fetchLogs(containerID: Container.ID, endpointID: Endpoint.ID, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
 		let queryItems = [
 			URLQueryItem(name: "since", value: "\(since)"),
 			URLQueryItem(name: "stderr", value: "true"),
@@ -187,7 +187,7 @@ public final class Portainer {
 	///   - endpointID: Endpoint ID
 	/// - Returns: `WebSocketPassthroughSubject`
 	@Sendable
-	public func attach(to containerID: String, endpointID: Int) throws -> WebSocketPassthroughSubject {
+	public func attach(to containerID: Container.ID, endpointID: Endpoint.ID) throws -> WebSocketPassthroughSubject {
 		guard let url else {
 			throw PortainerError.notSetup
 		}
