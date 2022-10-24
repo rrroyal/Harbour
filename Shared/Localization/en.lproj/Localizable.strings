@@ -82,7 +82,7 @@
 "Settings.Interface.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
 
 "Settings.Interface.UseGridView.Title" = "Use Grid view";
-"Settings.Interface.UseGridView.Description" = "You can fit more containers, but it's worse for accessibility";
+"Settings.Interface.UseGridView.Description" = "You can fit more containers, but it's harder to read";
 
 // MARK: Settings - Other
 

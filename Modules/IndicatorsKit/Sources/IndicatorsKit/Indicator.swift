@@ -13,11 +13,15 @@ public struct Indicator: Identifiable {
 	public let id: String
 
 	public let icon: String?
+
 	public let headline: String
 	public let subheadline: String?
 	public let expandedText: String?
+
 	public let dismissType: DismissType
+
 	public let style: Style
+
 	public let onTap: (() -> Void)?
 
 	public init(id: String,
@@ -60,16 +64,24 @@ extension Indicator: Equatable {
 	}
 }
 
-// MARK: - Indicator+
+// MARK: - Indicator+DismissType
 
 public extension Indicator {
 	enum DismissType {
+		/// Indicator hides only after dismissing it manually
 		case manual
+
+		/// Dismiss indicator after `TimeInterval`
 		case after(TimeInterval)
 
+		/// Dismiss indicator after 5 seconds
 		public static let automatic: DismissType = .after(5)
 	}
+}
 
+// MARK: - Indicator+Style
+
+public extension Indicator {
 	struct Style {
 		public var headlineColor: Color?
 		public var headlineStyle: HierarchicalShapeStyle
@@ -80,6 +92,7 @@ public extension Indicator {
 		public var iconColor: Color?
 		public var iconStyle: HierarchicalShapeStyle
 		public var iconVariants: SymbolVariants
+		public var iconRenderingMode: SymbolRenderingMode?
 
 		public init(headlineColor: Color? = nil,
 					headlineStyle: HierarchicalShapeStyle = .primary,
@@ -87,6 +100,7 @@ public extension Indicator {
 					subheadlineStyle: HierarchicalShapeStyle = .primary,
 					iconColor: Color? = nil,
 					iconStyle: HierarchicalShapeStyle = .primary,
+					iconRenderingMode: SymbolRenderingMode? = nil,
 					iconVariants: SymbolVariants = .none
 		) {
 			self.headlineColor = headlineColor
@@ -95,9 +109,10 @@ public extension Indicator {
 			self.subheadlineStyle = subheadlineStyle
 			self.iconColor = iconColor
 			self.iconStyle = iconStyle
+			self.iconRenderingMode = iconRenderingMode
 			self.iconVariants = iconVariants
 		}
 
-		public static let `default` = Style(headlineStyle: .primary, subheadlineStyle: .secondary, iconStyle: .secondary, iconVariants: .fill)
+		public static let `default` = Style(headlineStyle: .primary, subheadlineStyle: .secondary, iconStyle: .secondary, iconRenderingMode: .hierarchical, iconVariants: .fill)
 	}
 }

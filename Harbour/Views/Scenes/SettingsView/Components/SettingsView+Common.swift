@@ -11,7 +11,7 @@ import SwiftUI
 
 internal extension SettingsView {
 	static let standaloneLabelFont: Font = .body.weight(.medium)
-	static let vstackSpacing: Double = 4
+	static let vstackSpacing: Double = 2
 }
 
 // MARK: - SettingsView+OptionIcon

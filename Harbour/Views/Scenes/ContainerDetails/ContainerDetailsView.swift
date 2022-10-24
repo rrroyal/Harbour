@@ -34,7 +34,7 @@ struct ContainerDetailsView: View {
 		.animation(.easeInOut, value: details != nil)
 		.navigationTitle(item.displayName ?? item.id)
 		.userActivity(HarbourUserActivity.containerDetails, element: item, createUserActivity)
-		.task(getContainerDetails)
+		.task(id: "\(item.endpointID ?? -1)-\(item.id)", getContainerDetails)
 	}
 }
 
@@ -64,6 +64,8 @@ private extension ContainerDetailsView {
 	@Sendable
 	func getContainerDetails() async {
 		do {
+			details = nil
+
 			if !portainerStore.isSetup {
 				await portainerStore.setupTask?.value
 			}

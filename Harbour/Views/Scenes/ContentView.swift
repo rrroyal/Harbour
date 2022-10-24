@@ -52,12 +52,12 @@ struct ContentView: View {
 					titleMenu
 				}
 				.toolbar {
-					ToolbarItem(placement: .navigationBarLeading) {
-						if sceneState.isLoading {
-							ProgressView()
-								.transition(.opacity)
-						}
-					}
+//					ToolbarItem(placement: .navigationBarLeading) {
+//						if sceneState.isLoading {
+//							ProgressView()
+//								.transition(.opacity)
+//						}
+//					}
 
 //					ToolbarTitle(title: Localizable.appName, subtitle: sceneState.isLoadingMainScreenData ? Localizable.Generic.loading : nil)
 

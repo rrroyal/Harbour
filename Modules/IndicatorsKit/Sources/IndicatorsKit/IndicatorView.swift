@@ -11,60 +11,131 @@ import SwiftUI
 
 struct IndicatorView: View {
 	let indicator: Indicator
-	@Binding var isExpanded: Bool
+	@ObservedObject var model: Indicators
 
-	let maxWidth: Double = 300
-	let padding: Double = 10
-	let backgroundShape: some Shape = RoundedRectangle(cornerRadius: 32, style: .circular)
+	@State private var isExpanded = false
+	@State private var dragOffset: CGSize = .zero
+	@State private var timer: Timer?
 
-	var body: some View {
-		HStack {
-			if let icon = indicator.icon {
-				Image(systemName: icon)
-					.font(indicator.subheadline != nil ? .title3 : .footnote)
-					.symbolVariant(indicator.style.iconVariants)
-					.foregroundStyle(indicator.style.iconStyle)
-					.foregroundColor(indicator.style.iconColor)
-					.animation(.easeInOut, value: indicator.style.iconColor)
-					.transition(.opacity)
+	private let maxWidth: Double = 300
+
+	private let paddingHorizontal: Double = 18
+	private let paddingVertical: Double = 12
+
+	private let backgroundShape: some Shape = RoundedRectangle(cornerRadius: 32, style: .circular)
+
+	private let springAnimation: Animation = .interactiveSpring(response: 0.32, dampingFraction: 0.7, blendDuration: 0.8)
+
+	private let dragInWrongDirectionMultiplier: Double = 0.015
+	private let dragThreshold: Double = 30
+
+	private var subheadlineOrExpandedText: String? {
+		isExpanded ? indicator.expandedText : indicator.subheadline
+	}
+
+	private var dragGesture: some Gesture {
+		DragGesture()
+			.onChanged {
+				dragOffset.width = $0.translation.width * dragInWrongDirectionMultiplier
+				dragOffset.height = $0.translation.height < 0 ? $0.translation.height : $0.translation.height * dragInWrongDirectionMultiplier
 			}
-
-			VStack {
-				Text(indicator.headline)
-					.font(.footnote)
-					.fontWeight(.medium)
-					.lineLimit(1)
-					.foregroundStyle(indicator.style.headlineStyle)
-					.foregroundColor(indicator.style.headlineColor)
-					.animation(.easeInOut, value: indicator.style.headlineColor)
-
-				if let subheadline = isExpanded ? indicator.expandedText : indicator.subheadline {
-					Text(subheadline)
-						.font(.footnote)
-						.fontWeight(.medium)
-						.lineLimit(isExpanded ? nil : 1)
-						.foregroundStyle(indicator.style.subheadlineStyle)
-						.foregroundColor(indicator.style.subheadlineColor)
-						.transition(.opacity)
-						.animation(.easeInOut, value: indicator.style.subheadlineColor)
-						.id("IndicatorView.Subheadline.\(indicator.id)")
+			.onEnded {
+				if $0.translation.height > 0 && indicator.expandedText != nil {
+					UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+					isExpanded.toggle()
+					dragOffset = .zero
+				} else if $0.translation.height < dragThreshold {
+					model.dismiss(indicator)
+				} else {
+					withAnimation(springAnimation) {
+						dragOffset = .zero
+					}
 				}
 			}
-			.padding(.trailing, indicator.icon != nil ? padding : 0)
-			.padding(.horizontal, indicator.subheadline != nil ? padding : 0)
+	}
+
+	@ViewBuilder
+	private var iconView: some View {
+		if let icon = indicator.icon {
+			Image(systemName: icon)
+				.animation(.easeInOut, value: indicator.icon)
+				.font(subheadlineOrExpandedText != nil ? .title3 : .footnote)
+				.symbolRenderingMode(indicator.style.iconRenderingMode)
+//				.animation(.easeInOut, value: indicator.style.iconRenderingMode)
+				.symbolVariant(indicator.style.iconVariants)
+				.animation(.easeInOut, value: indicator.style.iconVariants)
+				.foregroundStyle(indicator.style.iconStyle)
+//				.animation(.easeInOut, value: indicator.style.iconStyle)
+				.foregroundColor(indicator.style.iconColor)
+				.animation(.easeInOut, value: indicator.style.iconColor)
+				.transition(.opacity)
+				.id("IndicatorView.Icon.\(indicator.id)")
+		}
+	}
+
+	@ViewBuilder
+	private var headlineLabel: some View {
+		Text(indicator.headline)
+			.animation(.easeInOut, value: indicator.headline)
+			.font(.footnote)
+			.fontWeight(.medium)
+			.lineLimit(1)
+			.foregroundStyle(indicator.style.headlineStyle)
+//			.animation(.easeInOut, value: indicator.style.headlineStyle)
+			.foregroundColor(indicator.style.headlineColor)
+			.animation(.easeInOut, value: indicator.style.headlineColor)
+			.transition(.opacity)
+			.id("IndicatorView.Headline.\(indicator.id)")
+	}
+
+	@ViewBuilder
+	private var subheadlineLabel: some View {
+		if let subheadline = subheadlineOrExpandedText {
+			Text(subheadline)
+				.animation(.easeInOut, value: subheadline)
+				.font(.footnote)
+				.fontWeight(.medium)
+				.lineLimit(isExpanded ? nil : 1)
+				.foregroundStyle(indicator.style.subheadlineStyle)
+//				.animation(.easeInOut, value: indicator.style.subheadlineStyle)
+				.foregroundColor(indicator.style.subheadlineColor)
+				.animation(.easeInOut, value: indicator.style.subheadlineColor)
+				.transition(.opacity)
+				.id("IndicatorView.Subheadline.\(indicator.id)")
+		}
+	}
+
+	var body: some View {
+		HStack(spacing: 8) {
+			iconView
+
+			VStack {
+				headlineLabel
+
+				subheadlineLabel
+					.padding(.horizontal, 8)
+			}
 			.multilineTextAlignment(.center)
 			.minimumScaleFactor(0.8)
-			.transition(.opacity)
 		}
-		.padding(padding)
-		.padding(.horizontal, padding)
+		.padding(.horizontal, paddingHorizontal)
+		.padding(.vertical, paddingVertical)
 		.background(.thickMaterial, in: backgroundShape)
+		.clipShape(backgroundShape)
 		.frame(maxWidth: isExpanded ? nil : maxWidth)
-		.animation(.easeInOut, value: indicator.icon)
-		.animation(.easeInOut, value: indicator.headline)
-//		.animation(.easeInOut, value: isExpanded ? indicator.expandedText : indicator.subheadline)
-		.animation(.spring(), value: isExpanded)
+		.animation(springAnimation, value: isExpanded)
+		.offset(dragOffset)
+		.gesture(dragGesture)
 		.optionalTapGesture(indicator.onTap)
+		.onChange(of: isExpanded) { _ in
+			setupTimer()
+		}
+		.onChange(of: indicator) { _ in
+			setupTimer()
+		}
+		.onAppear {
+			setupTimer()
+		}
 	}
 }
 
@@ -86,10 +157,28 @@ extension IndicatorView: Equatable {
 	}
 }
 
+// MARK: - IndicatorView+Actions
+
+private extension IndicatorView {
+	func setupTimer() {
+		timer?.invalidate()
+
+		guard !isExpanded else { return }
+
+		guard case .after(let timeout) = indicator.dismissType else {
+			return
+		}
+
+		self.timer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false) { _ in
+			self.model.dismiss(with: indicator.id)
+		}
+	}
+}
+
 // MARK: - Previews
 
 struct IndicatorView_Previews: PreviewProvider {
-	static let isExpanded: Binding<Bool> = .constant(false)
+	static let model = Indicators()
 
 	static var previews: some View {
 		Group {
@@ -97,21 +186,21 @@ struct IndicatorView_Previews: PreviewProvider {
 										   icon: nil,
 										   headline: "Headline",
 										   dismissType: .manual),
-						  isExpanded: isExpanded)
+						  model: model)
 				.previewDisplayName("Basic")
 
 			IndicatorView(indicator: .init(id: "",
 										   icon: "bolt.fill",
 										   headline: "Headline",
 										   dismissType: .manual),
-						  isExpanded: isExpanded)
+						  model: model)
 				.previewDisplayName("Icon")
 
 			IndicatorView(indicator: .init(id: "",
 										   headline: "Headline",
 										   subheadline: "Subheadline",
 										   dismissType: .manual),
-						  isExpanded: isExpanded)
+						  model: model)
 				.previewDisplayName("Subheadline")
 
 			IndicatorView(indicator: .init(id: "",
@@ -119,7 +208,7 @@ struct IndicatorView_Previews: PreviewProvider {
 										   headline: "Headline",
 										   subheadline: "Subheadline",
 										   dismissType: .manual),
-						  isExpanded: isExpanded)
+						  model: model)
 				.previewDisplayName("Subheadline with icon")
 
 			IndicatorView(indicator: .init(id: "",
@@ -128,7 +217,7 @@ struct IndicatorView_Previews: PreviewProvider {
 										   subheadline: "Subheadline",
 										   dismissType: .manual,
 										   style: .init(subheadlineColor: .red, iconColor: .red)),
-						  isExpanded: isExpanded)
+						  model: model)
 				.previewDisplayName("Full colored")
 		}
 		.previewLayout(.sizeThatFits)

@@ -1,5 +1,5 @@
 //
-//  GeneralSection.swift
+//  SettingsView+GeneralSection.swift
 //  Harbour
 //
 //  Created by royal on 23/07/2022.

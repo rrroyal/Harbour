@@ -126,7 +126,6 @@ public final class Keychain {
 	private func addOrUpdate(query: QueryDictionary, attributes: QueryDictionary) throws {
 		let addQuery = query.merging(attributes, uniquingKeysWith: { $1 })
 		let addStatus = SecItemAdd(addQuery as CFDictionary, nil)
-		print(addStatus == errSecDuplicateItem ? "duplicate" : addStatus)
 
 		switch addStatus {
 			case errSecSuccess:

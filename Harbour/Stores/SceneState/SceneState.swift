@@ -34,10 +34,10 @@ public final class SceneState: ObservableObject {
 
 	public var isLoading: Bool {
 		let portainerStore = PortainerStore.shared
-		let setupCancelled = portainerStore.setupTask?.isCancelled ?? true
-		let endpointsCancelled = portainerStore.endpointsTask?.isCancelled ?? true
-		let containersCancelled = portainerStore.containersTask?.isCancelled ?? true
-		return !setupCancelled || !endpointsCancelled || !containersCancelled
+		let setupTask = portainerStore.setupTask != nil
+		let endpointsTask = portainerStore.endpointsTask != nil
+		let containersTask = portainerStore.containersTask != nil
+		return setupTask || endpointsTask || containersTask
 	}
 
 	// MARK: init

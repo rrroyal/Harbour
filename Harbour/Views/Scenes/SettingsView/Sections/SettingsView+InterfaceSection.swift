@@ -1,5 +1,5 @@
 //
-//  InterfaceSection.swift
+//  SettingsView+InterfaceSection.swift
 //  Harbour
 //
 //  Created by royal on 23/07/2022.

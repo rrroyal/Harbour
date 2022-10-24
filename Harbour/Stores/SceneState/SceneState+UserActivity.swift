@@ -8,7 +8,6 @@
 import Foundation
 
 extension SceneState {
-
 	@MainActor
 	func onOpenURL(_ url: URL) {
 		logger.info("Opening from URL: \(url.absoluteString, privacy: .public) [\(String.debugInfo(), privacy: .public)]")

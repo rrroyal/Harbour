@@ -9,6 +9,8 @@ import SwiftUI
 
 public extension View {
 	func indicatorOverlay(model: Indicators) -> some View {
-		overlay(IndicatorsOverlay(model: model))
+		overlay(alignment: .top) {
+			IndicatorsOverlay(model: model)
+		}
 	}
 }

@@ -7,57 +7,41 @@
 
 import SwiftUI
 
+// MARK: - IndicatorsOverlay
+
 struct IndicatorsOverlay: View {
+	static let moveAnimation: Animation = .interpolatingSpring(mass: 0.5, stiffness: 45, damping: 45, initialVelocity: 15)
+
 	@ObservedObject var model: Indicators
 
-	@State var isExpanded = false
-	@State var dragOffset: CGSize = .zero
-
-	let dragInWrongDirectionMultiplier: Double = 0.015
-	let dragThreshold: Double = 30
-	let transition: AnyTransition = .asymmetric(insertion: .move(edge: .top), removal: .move(edge: .top).combined(with: .opacity))
-	let animation: Animation = .interpolatingSpring(mass: 0.5, stiffness: 45, damping: 45, initialVelocity: 15)
-
-	var dragGesture: some Gesture {
-		DragGesture()
-			.onChanged {
-				dragOffset.width = $0.translation.width * dragInWrongDirectionMultiplier
-				dragOffset.height = $0.translation.height < 0 ? $0.translation.height : $0.translation.height * dragInWrongDirectionMultiplier
-			}
-			.onEnded {
-				dragOffset = .zero
-
-				guard let indicator = model.activeIndicator else { return }
-
-				if $0.translation.height > 0 && indicator.expandedText != nil {
-					UIImpactFeedbackGenerator(style: .soft).impactOccurred()
-					isExpanded.toggle()
-					isExpanded ? model.timer?.invalidate() : model.updateTimer()
-				} else if $0.translation.height < dragThreshold {
-					model.dismiss()
-				}
-			}
-	}
+	private let baseIndex: Double = 1000
+	private let zIndexTransformMultiplier: Double = 0.1
+	private let transition: AnyTransition = .asymmetric(insertion: .move(edge: .top), removal: .move(edge: .top).combined(with: .opacity))
 
 	var body: some View {
-		ZStack {
-			if let indicator = model.activeIndicator {
-				IndicatorView(indicator: indicator, isExpanded: $isExpanded)
+		ZStack(alignment: .top) {
+			ForEach(model.activeIndicators) { indicator in
+				IndicatorView(indicator: indicator, model: model)
 					.equatable()
 					.shadow(color: .black.opacity(0.085), radius: 8, x: 0, y: 0)
-					.offset(dragOffset)
-					.gesture(dragGesture)
 					.transition(transition)
-					.animation(animation, value: isExpanded)
+//					.scaleEffect(scale(for: index), anchor: .center)
+//					.zIndex(baseIndex - Double(index))
 			}
 		}
-		.frame(maxHeight: .infinity, alignment: .top)
-		.padding(.horizontal)
-		.padding(.top, 5)
-		.animation(animation, value: model.activeIndicator != nil)
-		.animation(animation, value: dragOffset)
 	}
 }
+
+// MARK: - IndicatorsOverlay+Helpers
+
+private extension IndicatorsOverlay {
+	func scale(for index: Int) -> CGSize {
+		let translated = max(0, 1 - (Double(index) * zIndexTransformMultiplier))
+		return CGSize(width: translated, height: translated)
+	}
+}
+
+// MARK: - Previews
 
 struct IndicatorsOverlay_Previews: PreviewProvider {
 	static var previews: some View {

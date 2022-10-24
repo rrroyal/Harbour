@@ -11,6 +11,8 @@ import CoreData
 import PortainerKit
 import KeychainKit
 
+// TODO: Split this file
+
 // MARK: - PortainerStore
 
 /// Main store for Portainer-related data.
@@ -79,8 +81,6 @@ public final class PortainerStore: ObservableObject {
 			if containers.isEmpty {
 				self.containers = storedContainers
 			}
-
-			setupTask?.cancel()
 		}
 	}
 
@@ -132,7 +132,6 @@ public final class PortainerStore: ObservableObject {
 			containersTask?.cancel()
 			containersTask = Task {
 				containers = []
-				containersTask?.cancel()
 				return []
 			}
 		}
@@ -180,10 +179,10 @@ public final class PortainerStore: ObservableObject {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			try await portainer.execute(action, containerID: containerID, endpointID: endpointID)
 
-			// TODO: Check if this can be done better
-			if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
-				containers[storedContainerIndex].state = action.expectedState
-			}
+			// Check if this can be done better
+//			if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
+//				containers[storedContainerIndex].state = action.expectedState
+//			}
 
 			logger.debug("Executed action \"\(action.rawValue, privacy: .public)\" on containerID: \"\(containerID, privacy: .public)\". [\(String.debugInfo(), privacy: .public)]")
 		} catch {
@@ -236,7 +235,6 @@ extension PortainerStore {
 			do {
 				let endpoints = try await getEndpoints()
 				self.endpoints = endpoints
-				endpointsTask?.cancel()
 				return endpoints
 			} catch {
 				if Task.isCancelled { return self.endpoints }
@@ -260,7 +258,6 @@ extension PortainerStore {
 			do {
 				let containers = try await getContainers()
 				self.containers = containers
-				containersTask?.cancel()
 				return containers
 			} catch {
 				if Task.isCancelled { return self.containers }

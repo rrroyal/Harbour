@@ -168,7 +168,7 @@ internal enum Localizable {
         internal static let title = Localizable.tr("Localizable", "Settings.Interface.EnableHaptics.Title")
       }
       internal enum UseGridView {
-        /// You can fit more containers, but it's worse for accessibility
+        /// You can fit more containers, but it's harder to read
         internal static let description = Localizable.tr("Localizable", "Settings.Interface.UseGridView.Description")
         /// Use Grid view
         internal static let title = Localizable.tr("Localizable", "Settings.Interface.UseGridView.Title")

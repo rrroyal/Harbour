@@ -6,42 +6,79 @@ OUTPUT_IPA = "Harbour.ipa"
 OUTPUT_IPA_PATH = OUTPUT_DIR + "/" + OUTPUT_IPA
 
 platform :ios do
-  desc "Build .ipa, create new GitHub release & submit a build to TestFlight"
-  lane :release do
-    build_number = app_store_build_number(live: false) + 1
-    changelog = File.read("./CHANGELOG.md")
+	desc "Runs swiftlint and reports any errors"
+	lane :lint do
+		swiftlint(
+			mode: :lint,
+			# output_file: "swiftlint.result.json",
+			raise_if_swiftlint_error: true,
+			ignore_exit_status: false
+		)
+	end
 
-    increment_build_number(
-      build_number: build_number,
-      xcodeproj: "Harbour.xcodeproj"
-    )
+	desc "Builds and exports an .ipa"
+	lane :build_ipa do
+		build_app(
+			scheme: "Harbour",
+			export_method: "development",
+			silent: true,
+			include_symbols: true,
+			output_directory: OUTPUT_DIR,
+			output_name: OUTPUT_IPA
+		)
+	end
 
-    build_app(
-      scheme: "Harbour",
-      silent: true,
-      include_symbols: true,
-      include_bitcode: true,
-      output_directory: OUTPUT_DIR,
-      output_name: OUTPUT_IPA
-    )
+	desc "Build .ipa, create new GitHub release & submit a build to TestFlight"
+	lane :release do
+		build_number = increase_build_number
+		changelog = File.read("./CHANGELOG.md")
+		build_app(
+			scheme: "Harbour",
+			export_method: "app-store",
+			silent: true,
+			include_symbols: true,
+			output_directory: OUTPUT_DIR,
+			output_name: OUTPUT_IPA
+		)
 
-    version = get_ipa_info_plist_value(ipa: OUTPUT_IPA_PATH, key: "CFBundleShortVersionString")
+		version = get_app_version
 
-    github_release = set_github_release(
-      repository_name: REPOSITORY,
-      api_token: ENV["GITHUB_TOKEN"],
-      name: "v" + version + " (" + build_number.to_s + ")",
-      tag_name: "v" + version + "-" + build_number.to_s,
-      description: changelog,
-      commitish: "main",
-      upload_assets: [OUTPUT_IPA_PATH],
-      is_draft: true
-    )
+		publish_to_github(version, build_number, changelog)
+		publish_to_testflight(changelog)
+	end
 
-    upload_to_testflight(
-      skip_submission: true,
-      changelog: changelog,
-      skip_waiting_for_build_processing: true
-    )
-  end
+	def increase_build_number
+		build_number = app_store_build_number(live: false) + 1
+		increment_build_number(
+			build_number: build_number,
+			xcodeproj: "Harbour.xcodeproj"
+		)
+		return build_number
+	end
+
+	def get_app_version
+		version = get_ipa_info_plist_value(ipa: OUTPUT_IPA_PATH, key: "CFBundleShortVersionString")
+		return version
+	end
+
+	def publish_to_github(version, build_number, changelog)
+		github_release = set_github_release(
+			repository_name: REPOSITORY,
+			api_token: ENV["GITHUB_TOKEN"],
+			name: "v" + version + " (" + build_number.to_s + ")",
+			tag_name: "v" + version + "-" + build_number.to_s,
+			description: changelog,
+			commitish: "main",
+			upload_assets: [OUTPUT_IPA_PATH],
+			is_draft: true
+		)
+	end
+
+	def publish_to_testflight(changelog)
+		upload_to_testflight(
+			skip_submission: true,
+			changelog: changelog,
+			skip_waiting_for_build_processing: true
+		)
+	end
 end

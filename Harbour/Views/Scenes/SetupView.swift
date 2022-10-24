@@ -31,40 +31,47 @@ struct SetupView: View {
 
 	@FocusState private var focusedField: FocusedField?
 
+	private var canSubmit: Bool {
+		!isLoading && !url.isReallyEmpty && !token.isReallyEmpty
+	}
+
 	@ViewBuilder
 	private var urlTextField: some View {
 		TextField(Self.urlPlaceholder, text: $url, onEditingChanged: { finished in
 			if finished { loginTask?.cancel() }
-		}, onCommit: {
-			guard !url.isReallyEmpty else { return }
-
-			if !url.starts(with: "http") {
+		})
+		.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+		.keyboardType(.URL)
+		.submitLabel(.next)
+		.disableAutocorrection(true)
+		.autocapitalization(.none)
+		.focused($focusedField, equals: .url)
+		.onSubmit {
+			if !url.isReallyEmpty && !url.starts(with: "http") {
 				UIDevice.generateHaptic(.selectionChanged)
 				url = "https://\(url)"
 			}
 
 			focusedField = .token
-		})
-		.keyboardType(.URL)
-		.disableAutocorrection(true)
-		.autocapitalization(.none)
-		.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-		.focused($focusedField, equals: .url)
+		}
 	}
 
 	@ViewBuilder
 	private var tokenTextField: some View {
-		SecureField(Self.tokenPlaceholder, text: $token) {
-			guard !token.isReallyEmpty else { return }
+		SecureField(Self.tokenPlaceholder, text: $token)
+		.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+		.keyboardType(.default)
+		.submitLabel(.go)
+		.submitScope(token.isReallyEmpty)
+		.disableAutocorrection(true)
+		.autocapitalization(.none)
+		.focused($focusedField, equals: .token)
+		.onSubmit {
+			guard canSubmit else { return }
 
 			UIDevice.generateHaptic(.light)
 			login()
 		}
-		.keyboardType(.default)
-		.disableAutocorrection(true)
-		.autocapitalization(.none)
-		.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-		.focused($focusedField, equals: .token)
 	}
 
 	@ViewBuilder
@@ -90,7 +97,7 @@ struct SetupView: View {
 		.foregroundColor(.white)
 		.buttonStyle(.customPrimary(backgroundColor: buttonColor ?? .accentColor))
 		.animation(.easeInOut, value: buttonColor)
-		.disabled(isLoading || url.isReallyEmpty || token.isReallyEmpty)
+		.disabled(!canSubmit)
 	}
 
 	var body: some View {

@@ -4,14 +4,14 @@
 Docker/Portainer management app for iOS
 
 ## Features
-*TODO*
+- [x] Multiple servers/endpoints
+- [x] Managing container state
+- [x] Widgets
+- [x] Siri Intents & Shortcuts
+- [ ] Container details
 
 ## Installation
 **Harbour is available on [TestFlight](https://testflight.apple.com/join/F2vK7xo4), and will be available on the App Store too in the near future 😄**
 #### Alternative methods
 - Sideload .ipa from [releases](https://github.com/rrroyal/Harbour/releases/latest)
 - Build it yourself
-
-## Coming up
-*TODO*
-

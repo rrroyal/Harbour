@@ -96,10 +96,10 @@
 		E79AD30B2893D9FA002D0CD9 /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */; };
 		E79AD30E2893DABF002D0CD9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30D2893DABF002D0CD9 /* Constants.swift */; };
 		E7A8BC19288C0826007AB20B /* PortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7A8BC18288C0826007AB20B /* PortainerStore.swift */; };
-		E7ACE738288C4177000E6FF6 /* PortainerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE737288C4177000E6FF6 /* PortainerSection.swift */; };
-		E7ACE73A288C41B9000E6FF6 /* GeneralSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE739288C41B9000E6FF6 /* GeneralSection.swift */; };
-		E7ACE73C288C4215000E6FF6 /* InterfaceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE73B288C4215000E6FF6 /* InterfaceSection.swift */; };
-		E7ACE73E288C421C000E6FF6 /* OtherSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE73D288C421C000E6FF6 /* OtherSection.swift */; };
+		E7ACE738288C4177000E6FF6 /* SettingsView+PortainerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE737288C4177000E6FF6 /* SettingsView+PortainerSection.swift */; };
+		E7ACE73A288C41B9000E6FF6 /* SettingsView+GeneralSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE739288C41B9000E6FF6 /* SettingsView+GeneralSection.swift */; };
+		E7ACE73C288C4215000E6FF6 /* SettingsView+InterfaceSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE73B288C4215000E6FF6 /* SettingsView+InterfaceSection.swift */; };
+		E7ACE73E288C421C000E6FF6 /* SettingsView+OtherSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE73D288C421C000E6FF6 /* SettingsView+OtherSection.swift */; };
 		E7ACE742288C4450000E6FF6 /* View+opacity.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE741288C4450000E6FF6 /* View+opacity.swift */; };
 		E7ACE744288C44C8000E6FF6 /* View+padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE743288C44C8000E6FF6 /* View+padding.swift */; };
 		E7ACE747288C47BA000E6FF6 /* SettingsView+ToggleOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7ACE746288C47BA000E6FF6 /* SettingsView+ToggleOption.swift */; };
@@ -242,10 +242,10 @@
 		E79AD30A2893D9FA002D0CD9 /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		E79AD30D2893DABF002D0CD9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		E7A8BC18288C0826007AB20B /* PortainerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerStore.swift; sourceTree = "<group>"; };
-		E7ACE737288C4177000E6FF6 /* PortainerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerSection.swift; sourceTree = "<group>"; };
-		E7ACE739288C41B9000E6FF6 /* GeneralSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneralSection.swift; sourceTree = "<group>"; };
-		E7ACE73B288C4215000E6FF6 /* InterfaceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterfaceSection.swift; sourceTree = "<group>"; };
-		E7ACE73D288C421C000E6FF6 /* OtherSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherSection.swift; sourceTree = "<group>"; };
+		E7ACE737288C4177000E6FF6 /* SettingsView+PortainerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+PortainerSection.swift"; sourceTree = "<group>"; };
+		E7ACE739288C41B9000E6FF6 /* SettingsView+GeneralSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+GeneralSection.swift"; sourceTree = "<group>"; };
+		E7ACE73B288C4215000E6FF6 /* SettingsView+InterfaceSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+InterfaceSection.swift"; sourceTree = "<group>"; };
+		E7ACE73D288C421C000E6FF6 /* SettingsView+OtherSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+OtherSection.swift"; sourceTree = "<group>"; };
 		E7ACE741288C4450000E6FF6 /* View+opacity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+opacity.swift"; sourceTree = "<group>"; };
 		E7ACE743288C44C8000E6FF6 /* View+padding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+padding.swift"; sourceTree = "<group>"; };
 		E7ACE746288C47BA000E6FF6 /* SettingsView+ToggleOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+ToggleOption.swift"; sourceTree = "<group>"; };
@@ -649,10 +649,10 @@
 		E7ACE736288C4166000E6FF6 /* Sections */ = {
 			isa = PBXGroup;
 			children = (
-				E7ACE737288C4177000E6FF6 /* PortainerSection.swift */,
-				E7ACE739288C41B9000E6FF6 /* GeneralSection.swift */,
-				E7ACE73B288C4215000E6FF6 /* InterfaceSection.swift */,
-				E7ACE73D288C421C000E6FF6 /* OtherSection.swift */,
+				E7ACE737288C4177000E6FF6 /* SettingsView+PortainerSection.swift */,
+				E7ACE739288C41B9000E6FF6 /* SettingsView+GeneralSection.swift */,
+				E7ACE73B288C4215000E6FF6 /* SettingsView+InterfaceSection.swift */,
+				E7ACE73D288C421C000E6FF6 /* SettingsView+OtherSection.swift */,
 			);
 			path = Sections;
 			sourceTree = "<group>";
@@ -1076,7 +1076,7 @@
 				E766D933288C3CBF00F2DB99 /* SettingsView.swift in Sources */,
 				E7D6E62A2884771200C79732 /* ContentView.swift in Sources */,
 				E72BB34E28DE2640007991D1 /* DecreasesOnPressButtonStyle.swift in Sources */,
-				E7ACE73C288C4215000E6FF6 /* InterfaceSection.swift in Sources */,
+				E7ACE73C288C4215000E6FF6 /* SettingsView+InterfaceSection.swift in Sources */,
 				E766D92F288C38D900F2DB99 /* SceneState+Errors.swift in Sources */,
 				E7BEBA2328857D3300FCD7DC /* UserDefaults+group.swift in Sources */,
 				E7C772E928E86FE400143E8C /* SceneState+UserActivity.swift in Sources */,
@@ -1089,7 +1089,7 @@
 				E73A304C28EC361300004093 /* Localizable.swift in Sources */,
 				E713178828E5A66D00DB82AF /* ContainerDetailsView.swift in Sources */,
 				E7BEBA2128857CDD00FCD7DC /* Preferences.swift in Sources */,
-				E7ACE73A288C41B9000E6FF6 /* GeneralSection.swift in Sources */,
+				E7ACE73A288C41B9000E6FF6 /* SettingsView+GeneralSection.swift in Sources */,
 				E7D6E6282884771200C79732 /* HarbourApp.swift in Sources */,
 				E7779B2E28E75F8F00AD8569 /* HarbourUserActivity.swift in Sources */,
 				E7BEBA2528857D4E00FCD7DC /* Bundle+.swift in Sources */,
@@ -1111,7 +1111,7 @@
 				E78C661828E9D6750033D0E4 /* ContainerState+icon.swift in Sources */,
 				E7BEBA2A2885801900FCD7DC /* UIWindow+.swift in Sources */,
 				E72BB33C28DE0CFB007991D1 /* Persistence.swift in Sources */,
-				E7ACE73E288C421C000E6FF6 /* OtherSection.swift in Sources */,
+				E7ACE73E288C421C000E6FF6 /* SettingsView+OtherSection.swift in Sources */,
 				E725018C28FC4757006B1190 /* ContainerLogsView.swift in Sources */,
 				E72BB35028DE26BD007991D1 /* GenericError.swift in Sources */,
 				E766D91E288C379800F2DB99 /* ContainersView.swift in Sources */,
@@ -1125,7 +1125,7 @@
 				E7ACE744288C44C8000E6FF6 /* View+padding.swift in Sources */,
 				E713179E28E5C8F600DB82AF /* Container+filtered.swift in Sources */,
 				E72BB34C28DE2627007991D1 /* TransparentButtonStyle.swift in Sources */,
-				E7ACE738288C4177000E6FF6 /* PortainerSection.swift in Sources */,
+				E7ACE738288C4177000E6FF6 /* SettingsView+PortainerSection.swift in Sources */,
 				E760CDB72892C1D2007280ED /* SetupView.swift in Sources */,
 				E72BB34528DE1B32007991D1 /* String+debugInfo.swift in Sources */,
 				E7EB776528EA094800295CA2 /* DebugView+LogsView.swift in Sources */,

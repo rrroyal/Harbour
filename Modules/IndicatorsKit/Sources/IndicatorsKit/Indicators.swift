@@ -6,41 +6,38 @@
 //
 
 import Foundation
+import SwiftUI
 
 public final class Indicators: ObservableObject {
-	@Published public private(set) var activeIndicator: Indicator?
-
-	internal var timer: Timer?
+	@Published public private(set) var activeIndicators: [Indicator] = []
 
 	public init() { }
 
 	public func display(_ indicator: Indicator) {
-		timer?.invalidate()
-		activeIndicator = indicator
-		updateTimer()
-	}
-
-	public func dismiss() {
-		activeIndicator = nil
-		timer?.invalidate()
-	}
-
-	public func dismiss(matching id: String) {
-		if activeIndicator?.id == id {
-			dismiss()
+		if let index = activeIndicators.firstIndex(where: { $0.id == indicator.id }) {
+			activeIndicators[index] = indicator
+		} else {
+			withAnimation(IndicatorsOverlay.moveAnimation) {
+				activeIndicators.append(indicator)
+			}
 		}
 	}
 
-	internal func updateTimer() {
-		if case .after(let timeout) = activeIndicator?.dismissType {
-			let storedIndicator = activeIndicator
+	@inlinable
+	public func dismiss(_ indicator: Indicator) {
+		dismiss(with: indicator.id)
+	}
 
-			timer = Timer.scheduledTimer(withTimeInterval: timeout, repeats: false) { [weak self] _ in
-				// Check if activeIndicator is still the same as it was previously
-				if self?.activeIndicator == storedIndicator {
-					self?.dismiss()
-				}
-			}
+	public func dismiss(with id: Indicator.ID) {
+		guard let index = activeIndicators.firstIndex(where: { $0.id == id }) else { return }
+		withAnimation(IndicatorsOverlay.moveAnimation) {
+			_ = activeIndicators.remove(at: index)
+		}
+	}
+
+	public func dismissAll() {
+		withAnimation(IndicatorsOverlay.moveAnimation) {
+			activeIndicators.removeAll()
 		}
 	}
 }
