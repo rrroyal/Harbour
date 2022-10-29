@@ -101,11 +101,11 @@ extension AppState {
 
 			// Handle differences
 			if differences.isEmpty {
-				logger.debug("[\(Self.logPrefix, privacy: .public)] Differences are empty. [\(String.debugInfo(), privacy: .public)]")
+				logger.debug("[\(Self.logPrefix, privacy: .public)] Differences are empty [\(String.debugInfo(), privacy: .public)]")
 				return
 			}
 
-			logger.debug("[\(Self.logPrefix, privacy: .public)] Differences count: \(differences.count, privacy: .public). [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("[\(Self.logPrefix, privacy: .public)] Differences count: \(differences.count, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 
 			if let notificationContent = notificationContent(for: differences) {
 				let notificationIdentifier = "\(Self.containersChangedNotificationIdentifier).\(differences.description.hashValue)"

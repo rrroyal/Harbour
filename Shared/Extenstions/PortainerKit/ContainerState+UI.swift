@@ -1,5 +1,5 @@
 //
-//  ContainerState+color.swift
+//  ContainerState+UI.swift
 //  Harbour
 //
 //  Created by royal on 29/09/2022.
@@ -32,6 +32,26 @@ extension ContainerState? {
 			return self.color
 		} else {
 			return Color(uiColor: .systemGray5)
+		}
+	}
+}
+
+// MARK: - ContainerState+description
+
+extension ContainerState {
+	var description: String {
+		self.rawValue
+	}
+}
+
+// MARK: - ContainerState?+description
+
+extension ContainerState? {
+	var description: String {
+		if let self {
+			return self.rawValue
+		} else {
+			return Localizable.Generic.unknown
 		}
 	}
 }

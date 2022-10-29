@@ -33,6 +33,8 @@ private extension SettingsView.PortainerSection {
 		private typealias Localization = Localizable.Settings.Portainer.EndpointsMenu
 
 		@EnvironmentObject private var portainerStore: PortainerStore
+		@EnvironmentObject private var appState: AppState
+		@Environment(\.sceneErrorHandler) private var sceneErrorHandler
 		@Binding var isSetupSheetPresented: Bool
 
 		private var serverURLLabel: String? {
@@ -53,13 +55,14 @@ private extension SettingsView.PortainerSection {
 					UIDevice.generateHaptic(.sheetPresentation)
 					isSetupSheetPresented = true
 				}) {
-					Label(Localization.add, systemImage: "plus")
+					Label(Localization.add, systemImage: SFSymbol.add)
 				}
 			}) {
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
 					Text(serverURLLabel ?? Localization.noServerPlaceholder)
 						.font(SettingsView.standaloneLabelFont)
+						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
 
 					Spacer()
 
@@ -67,11 +70,6 @@ private extension SettingsView.PortainerSection {
 						.fontWeight(.medium)
 				}
 			}
-		}
-
-		private func selectServer(_ url: URL) {
-			// TODO: selectServer(_:)
-			print(#function, url)
 		}
 
 		private func deleteServer(_ url: URL) {
@@ -90,14 +88,14 @@ private extension SettingsView.PortainerSection {
 		private func urlMenu(for url: URL) -> some View {
 			Menu(formattedURL(url), content: {
 				if portainerStore.serverURL == url {
-					Label(Localization.Server.inUse, systemImage: "checkmark")
+					Label(Localization.Server.inUse, systemImage: SFSymbol.selected)
 						.symbolVariant(.circle.fill)
 				} else {
 					Button(action: {
 						UIDevice.generateHaptic(.buttonPress)
-						selectServer(url)
+						appState.switchPortainerServer(to: url, errorHandler: sceneErrorHandler)
 					}) {
-						Label(Localization.Server.use, systemImage: "checkmark")
+						Label(Localization.Server.use, systemImage: SFSymbol.selected)
 							.symbolVariant(.circle)
 					}
 				}
@@ -108,7 +106,7 @@ private extension SettingsView.PortainerSection {
 					UIDevice.generateHaptic(.buttonPress)
 					deleteServer(url)
 				}) {
-					Label(Localization.Server.delete, systemImage: "trash")
+					Label(Localization.Server.delete, systemImage: SFSymbol.remove)
 				}
 			})
 		}

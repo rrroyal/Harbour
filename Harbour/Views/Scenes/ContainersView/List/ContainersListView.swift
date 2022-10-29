@@ -19,15 +19,17 @@ struct ContainersListView: View {
 	let containers: [Container]
 
 	var body: some View {
-		LazyVStack(spacing: Self.cellSpacing) {
-			ForEach(containers) { container in
-				ContainersView.ContainerNavigationCell(container: container) {
-					ContainerCell(container: container)
+		ScrollView {
+			LazyVStack(spacing: Self.cellSpacing) {
+				ForEach(containers) { container in
+					ContainersView.ContainerNavigationCell(container: container) {
+						ContainerCell(container: container)
+					}
+					.transition(.opacity)
 				}
-				.transition(.opacity)
 			}
+			.padding(.horizontal)
 		}
-		.padding(.horizontal)
 		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
 		.animation(.easeInOut, value: containers)
 	}

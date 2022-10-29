@@ -22,8 +22,7 @@ extension ContainersGridView {
 		@ViewBuilder
 		private var stateHeader: some View {
 			HStack {
-				let state = container.isStored ? Localization.unknownState : container.state?.rawValue.capitalized
-				Text(state ?? Localization.unknownState)
+				Text(container.isStored ? ContainerState?.none.description : container.state.description.capitalized)
 					.font(.footnote.weight(.medium))
 					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
 //					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
@@ -48,7 +47,7 @@ extension ContainersGridView {
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.transition(.opacity)
 
-				Text(container.status ?? Localization.unknownState)
+				Text(container.status ?? Localizable.Generic.unknown)
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
 					.transition(.opacity)

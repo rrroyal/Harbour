@@ -16,8 +16,6 @@ internal enum Localizable {
   internal enum ContainerCell {
     ///  • 
     internal static let stateJoiner = Localizable.tr("Localizable", "ContainerCell.StateJoiner")
-    /// Unknown
-    internal static let unknownState = Localizable.tr("Localizable", "ContainerCell.UnknownState")
     /// Unnamed
     internal static let unnamed = Localizable.tr("Localizable", "ContainerCell.Unnamed")
   }
@@ -168,7 +166,7 @@ internal enum Localizable {
         internal static let title = Localizable.tr("Localizable", "Settings.Interface.EnableHaptics.Title")
       }
       internal enum UseGridView {
-        /// You can fit more containers, but it's harder to read
+        /// You can fit more containers, but it's harder to read.
         internal static let description = Localizable.tr("Localizable", "Settings.Interface.UseGridView.Description")
         /// Use Grid view
         internal static let title = Localizable.tr("Localizable", "Settings.Interface.UseGridView.Title")

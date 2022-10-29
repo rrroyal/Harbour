@@ -155,7 +155,7 @@ private extension SetupView {
 					throw GenericError.invalidURL
 				}
 
-				try await portainer.login(url: url, token: token)
+				try await portainer.setup(url: url, token: token)
 
 				isLoading = false
 				UIDevice.generateHaptic(.success)

@@ -28,7 +28,7 @@ struct ContentView: View {
 			}) {
 				Text(endpoint.name ?? endpoint.id.description)
 				if portainerStore.selectedEndpointID == endpoint.id {
-					Image(systemName: "checkmark")
+					Image(systemName: SFSymbol.selected)
 				}
 			}
 		}
@@ -39,7 +39,7 @@ struct ContentView: View {
 			UIDevice.generateHaptic(.light)
 			refresh()
 		}) {
-			Label("Refresh", systemImage: "arrow.clockwise")
+			Label("Refresh", systemImage: SFSymbol.reload)
 		}
 	}
 
@@ -64,9 +64,9 @@ struct ContentView: View {
 					ToolbarItem(placement: .navigationBarTrailing) {
 						Button(action: {
 							UIDevice.generateHaptic(.sheetPresentation)
-							sceneState.isSettingsSheetPresented = true
+							sceneState.isSettingsSheetPresented.toggle()
 						}) {
-							Image(systemName: "gear")
+							Image(systemName: SFSymbol.settings)
 						}
 					}
 				}

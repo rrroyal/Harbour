@@ -21,6 +21,8 @@ final class AppState: ObservableObject {
 
 	internal let logger = Logger(category: "AppState")
 
+	internal var portainerServerSwitchTask: Task<Void, Error>?
+
 	// MARK: init
 
 	private init() {}

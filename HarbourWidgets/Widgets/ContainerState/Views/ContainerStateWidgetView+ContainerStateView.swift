@@ -21,7 +21,7 @@ extension ContainerStateWidgetView {
 		@ViewBuilder
 		private var stateHeadline: some View {
 			HStack {
-				Text(entry.container?.state?.rawValue.capitalized ?? Localizable.ContainerCell.unknownState)
+				Text(entry.container?.state.description ?? ContainerState?.none.description)
 					.font(.subheadline.weight(.medium))
 					.foregroundColor(entry.container?.state.color ?? ContainerState?.none.color)
 //					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
@@ -58,7 +58,7 @@ extension ContainerStateWidgetView {
 				.foregroundStyle(entry.container?.status != nil ? .secondary : .tertiary)
 		}
 
-		var body: some View {
+		var _body: some View {
 			VStack(spacing: 0) {
 				stateHeadline
 					.padding(.bottom, 2)
@@ -78,13 +78,41 @@ extension ContainerStateWidgetView {
 			}
 			.padding()
 		}
+
+		var body: some View {
+			VStack {
+				Labeled(title: "Date", content: entry.date.formatted())
+				Labeled(title: "ConfID", content: entry.configuration.container?.identifier)
+				Labeled(title: "ContID", content: entry.container?.id)
+				Labeled(title: "ContState", content: entry.container?.state?.rawValue)
+			}
+			.padding()
+		}
 	}
 }
 
 // MARK: - ContainerStateWidgetView.ContainerStateView+Components
 
 private extension ContainerStateWidgetView.ContainerStateView {
+	struct Labeled: View {
+		let title: String
+		let content: String?
 
+		var body: some View {
+			VStack(alignment: .leading, spacing: 0) {
+				Text(title)
+					.font(.caption2.weight(.medium))
+					.foregroundStyle(.secondary)
+
+				Text(content ?? "none")
+					.font(.subheadline.weight(.medium))
+					.foregroundStyle(content != nil ? .primary : .secondary)
+			}
+			.lineLimit(1)
+			.multilineTextAlignment(.leading)
+			.frame(maxWidth: .infinity, alignment: .leading)
+		}
+	}
 }
 
 // MARK: - Previews

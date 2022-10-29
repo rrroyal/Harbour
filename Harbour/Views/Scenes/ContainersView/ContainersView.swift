@@ -58,20 +58,18 @@ struct ContainersView: View {
 	}
 
 	var body: some View {
-		ScrollView {
-			containersList
-		}
-		.refreshable(action: refresh)
-		.searchable(text: $searchFilter)
-		.scrollDismissesKeyboard(.interactively)
-		.background(placeholderBackground)
-		.navigationDestination(for: ContainersView.ContainerNavigationItem.self) { item in
-			ContainerDetailsView(item: item)
-		}
-		.transition(.opacity)
-		.animation(.easeInOut, value: useGrid)
-		.animation(.easeInOut, value: portainerStore.selectedEndpointID == nil)
-		.animation(.easeInOut, value: portainerStore.containers.isEmpty)
+		containersList
+			.refreshable(action: refresh)
+			.searchable(text: $searchFilter)
+			.scrollDismissesKeyboard(.interactively)
+			.background(placeholderBackground)
+			.navigationDestination(for: ContainersView.ContainerNavigationItem.self) { item in
+				ContainerDetailsView(item: item)
+			}
+			.transition(.opacity)
+			.animation(.easeInOut, value: useGrid)
+			.animation(.easeInOut, value: portainerStore.selectedEndpointID == nil)
+			.animation(.easeInOut, value: portainerStore.containers.isEmpty)
 	}
 }
 

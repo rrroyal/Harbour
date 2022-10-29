@@ -8,6 +8,8 @@
 import SwiftUI
 import PortainerKit
 
+// TODO: Rebuild this view
+
 // MARK: - ContainerDetailsView
 
 struct ContainerDetailsView: View {
@@ -67,7 +69,7 @@ private extension ContainerDetailsView {
 			details = nil
 
 			if !portainerStore.isSetup {
-				await portainerStore.setupTask?.value
+				try await portainerStore.setupTask?.value
 			}
 //			if portainerStore.selectedEndpointID == nil {
 //				_ = try? await portainerStore.endpointsTask?.value

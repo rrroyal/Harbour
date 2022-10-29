@@ -70,6 +70,10 @@ line_length:
   warning: 180
   error: 220
 
+file_length:
+  warning: 500
+  error: 700
+
 closure_body_length:
   warning: 60
   error: 80

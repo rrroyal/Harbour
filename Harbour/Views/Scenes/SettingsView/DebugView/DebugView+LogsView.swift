@@ -8,6 +8,8 @@
 import SwiftUI
 import OSLog
 
+// TODO: Rebuild this view
+
 // MARK: - DebugView+LogsView
 
 extension DebugView {
@@ -30,7 +32,7 @@ extension DebugView {
 					UIDevice.generateHaptic(.buttonPress)
 					UIPasteboard.general.string = logs.map(\.debugDescription).joined(separator: "\n")
 				}) {
-					Label("Copy", systemImage: "doc.on.doc")
+					Label("Copy", systemImage: SFSymbol.copy)
 				}
 
 				Divider()
@@ -39,10 +41,10 @@ extension DebugView {
 					UIDevice.generateHaptic(.buttonPress)
 					getLogs()
 				}) {
-					Label("Refresh", systemImage: "arrow.clockwise")
+					Label("Refresh", systemImage: SFSymbol.reload)
 				}
 			}) {
-				Image(systemName: "ellipsis")
+				Image(systemName: SFSymbol.more)
 					.symbolVariant(.circle)
 			}
 		}

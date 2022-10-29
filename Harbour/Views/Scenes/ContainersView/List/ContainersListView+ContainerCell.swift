@@ -18,39 +18,56 @@ extension ContainersListView {
 
 		let container: Container
 
-		private var subheadline: String? {
-			let state = container.isStored ? Localization.unknownState : container.state?.rawValue.capitalized
-			let parts = [state, container.status].compactMap { $0 }
-			if !parts.isEmpty {
-				return parts.joined(separator: Localization.stateJoiner)
-			} else {
-				return nil
-			}
+//		private var subheadline: String? {
+//			let state = container.isStored ? Localization. : container.state?.rawValue.capitalized
+//			let parts = [state, container.status].compactMap { $0 }
+//			if !parts.isEmpty {
+//				return parts.joined(separator: Localization.stateJoiner)
+//			} else {
+//				return nil
+//			}
+//		}
+
+		@ViewBuilder
+		private var headlineLabel: some View {
+			Text(container.displayName ?? Localization.unnamed)
+				.font(.headline.weight(.semibold))
+				.foregroundStyle(container.displayName != nil ? .primary : .secondary)
+				.transition(.opacity)
+				.animation(.easeInOut, value: container.displayName)
 		}
 
 		@ViewBuilder
-		private var nameAndStatusLabels: some View {
-			VStack(alignment: .leading, spacing: 2) {
-				Text(container.displayName ?? Localization.unnamed)
-					.font(.headline.weight(.semibold))
-					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
+		private var subheadlineLabel: some View {
+			HStack(spacing: 0) {
+				Text(container.isStored ? ContainerState?.none.description : container.state.description.capitalized)
+					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
 					.transition(.opacity)
-					.animation(.easeInOut, value: container.displayName)
+					.animation(.easeInOut, value: container.state)
+					.animation(.easeInOut, value: container.isStored)
 
-				Text(subheadline ?? Localization.unknownState)
-					.font(.subheadline.weight(.medium))
-					.foregroundStyle(subheadline != nil ? .secondary : .tertiary)
-					.transition(.opacity)
-					.animation(.easeInOut, value: subheadline)
+				if let containerStatus = container.status {
+					Group {
+						Text(Localization.stateJoiner)
+						Text(containerStatus)
+					}
+					.foregroundStyle(.secondary)
+				}
 			}
-			.lineLimit(2)
-			.multilineTextAlignment(.leading)
-			.minimumScaleFactor(Self.minimumScaleFactor)
+			.font(.subheadline.weight(.medium))
+			.transition(.opacity)
+			.animation(.easeInOut, value: container.status)
 		}
 
 		var body: some View {
 			HStack {
-				nameAndStatusLabels
+				VStack(alignment: .leading, spacing: 2) {
+					headlineLabel
+					subheadlineLabel
+				}
+				.lineLimit(2)
+				.multilineTextAlignment(.leading)
+				.minimumScaleFactor(Self.minimumScaleFactor)
 
 				Spacer()
 
