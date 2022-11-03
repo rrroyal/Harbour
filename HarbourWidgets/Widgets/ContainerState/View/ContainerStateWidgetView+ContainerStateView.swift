@@ -21,7 +21,7 @@ extension ContainerStateWidgetView {
 		@ViewBuilder
 		private var stateHeadline: some View {
 			HStack {
-				Text(entry.container?.state.description ?? ContainerState?.none.description)
+				Text((entry.container?.state.description ?? ContainerState?.none.description).localizedCapitalized)
 					.font(.subheadline.weight(.medium))
 					.foregroundColor(entry.container?.state.color ?? ContainerState?.none.color)
 //					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
@@ -58,7 +58,7 @@ extension ContainerStateWidgetView {
 				.foregroundStyle(entry.container?.status != nil ? .secondary : .tertiary)
 		}
 
-		var _body: some View {
+		var body: some View {
 			VStack(spacing: 0) {
 				stateHeadline
 					.padding(.bottom, 2)
@@ -79,7 +79,8 @@ extension ContainerStateWidgetView {
 			.padding()
 		}
 
-		var body: some View {
+		#if DEBUG
+		var _body: some View {
 			VStack {
 				Labeled(title: "Date", content: entry.date.formatted())
 				Labeled(title: "ConfID", content: entry.configuration.container?.identifier)
@@ -88,6 +89,7 @@ extension ContainerStateWidgetView {
 			}
 			.padding()
 		}
+		#endif
 	}
 }
 

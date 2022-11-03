@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - LandingView
 
 struct LandingView: View {
+	@Environment(\.dismiss) private var dismiss
 	@State private var currentScreen: Screen = .features
 
 	// this doesn't work because of `.tabViewStyle(_:)` 🙃
@@ -31,7 +32,7 @@ struct LandingView: View {
 		Group {
 			switch currentScreen {
 				case .features:
-					FeaturesView(continueAction: navigateToSetup)
+					FeaturesView(continueAction: navigateToSetupIfNeeded)
 						.tag(Screen.features)
 						.transition(viewAnimation(edge: .leading))
 				case .setup:
@@ -47,8 +48,12 @@ struct LandingView: View {
 // MARK: - LandingView+Actions
 
 private extension LandingView {
-	func navigateToSetup() {
-		currentScreen = .setup
+	func navigateToSetupIfNeeded() {
+		if PortainerStore.shared.savedURLs.isEmpty {
+			currentScreen = .setup
+		} else {
+			dismiss()
+		}
 	}
 }
 

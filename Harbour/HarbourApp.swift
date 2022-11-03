@@ -27,7 +27,7 @@ struct HarbourApp: App {
 		}
 		.defaultAppStorage(Preferences.ud)
 		.onChange(of: scenePhase, perform: onScenePhaseChange)
-		.backgroundTask(.appRefresh(HarbourBackgroundTask.backgroundRefresh), action: appState.handleBackgroundRefresh)
+		.backgroundTask(.appRefresh(HarbourBackgroundTaskIdentifier.backgroundRefresh), action: appState.handleBackgroundRefresh)
 	}
 }
 

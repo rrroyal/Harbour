@@ -115,11 +115,11 @@ private extension DebugView.LogsView {
 				case .undefined:
 					return nil
 				case .debug:
-					return .blue
+					return .purple
 				case .info:
 					return nil
 				case .notice:
-					return nil
+					return .blue
 				case .error:
 					return .red
 				case .fault:

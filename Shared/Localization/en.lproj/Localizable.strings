@@ -73,6 +73,9 @@
 
 "Settings.General.Title" = "General";
 
+"Settings.General.EnableBackgroundRefresh.Title" = "Enable Background Refresh";
+"Settings.General.EnableBackgroundRefresh.Description" = "Harbour will notify you if containers change their state in the background.";
+
 // MARK: Settings - Interface
 
 "Settings.Interface.Title" = "Interface";
@@ -80,7 +83,7 @@
 "Settings.Interface.EnableHaptics.Title" = "Enable Haptics";
 "Settings.Interface.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
 
-"Settings.Interface.UseGridView.Title" = "Use Grid view";
+"Settings.Interface.UseGridView.Title" = "Use Grid View";
 "Settings.Interface.UseGridView.Description" = "You can fit more containers, but it's harder to read.";
 
 // MARK: Settings - Other

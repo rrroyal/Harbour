@@ -155,6 +155,12 @@ internal enum Localizable {
     internal enum General {
       /// General
       internal static let title = Localizable.tr("Localizable", "Settings.General.Title")
+      internal enum EnableBackgroundRefresh {
+        /// Harbour will notify you if containers change their state in the background.
+        internal static let description = Localizable.tr("Localizable", "Settings.General.EnableBackgroundRefresh.Description")
+        /// Enable Background Refresh
+        internal static let title = Localizable.tr("Localizable", "Settings.General.EnableBackgroundRefresh.Title")
+      }
     }
     internal enum Interface {
       /// Interface
@@ -168,7 +174,7 @@ internal enum Localizable {
       internal enum UseGridView {
         /// You can fit more containers, but it's harder to read.
         internal static let description = Localizable.tr("Localizable", "Settings.Interface.UseGridView.Description")
-        /// Use Grid view
+        /// Use Grid View
         internal static let title = Localizable.tr("Localizable", "Settings.Interface.UseGridView.Title")
       }
     }

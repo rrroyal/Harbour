@@ -6,12 +6,12 @@
 //
 
 import CoreData
-import os.log
+import OSLog
 
 struct PersistenceController {
 	static let shared = PersistenceController()
 
-	private static let logger = Logger(category: "Persistence")
+	private static let logger = Logger(category: .persistence)
 
 	let container: NSPersistentContainer
 	let backgroundContext: NSManagedObjectContext

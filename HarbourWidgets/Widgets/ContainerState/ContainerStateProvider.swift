@@ -7,7 +7,7 @@
 
 import WidgetKit
 import Intents
-import os.log
+import OSLog
 import PortainerKit
 
 import UserNotifications
@@ -19,7 +19,7 @@ import UserNotifications
 struct ContainerStateProvider: IntentTimelineProvider {
 	typealias Intent = ContainerStateIntent
 
-	private let logger = Logger(category: "ContainerStateProvider")
+	private let logger = Logger(category: .containerStateIntentProvider)
 	private let portainerStore = PortainerStore.shared
 
 	static var placeholderContainer: Container {
@@ -54,7 +54,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 
 		let now = Date()
 
-		guard let endpointID = Int(configuration.endpoint?.identifier ?? ""),
+		guard let endpointID = Endpoint.ID(configuration.endpoint?.identifier ?? ""),
 			  let intentContainer = configuration.container,
 			  let containerID = intentContainer.identifier else {
 			let entry = Entry(date: now, configuration: configuration, container: nil)
@@ -74,8 +74,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 				entry = Entry(date: now, configuration: configuration, container: container)
 			} catch {
 				logger.error("Error getting a snapshot: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
-				entry = Entry(date: now, configuration: configuration, container: nil)
-//				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
+				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 			}
 
 			completion(entry)
@@ -87,7 +86,16 @@ struct ContainerStateProvider: IntentTimelineProvider {
 
 		let now = Date()
 
-		guard let endpointID = Int(configuration.endpoint?.identifier ?? ""),
+//		#if DEBUG
+//		let debugNotification = UNMutableNotificationContent()
+//		debugNotification.title = "🚧 getTimeline() request"
+//		debugNotification.threadIdentifier = "debug"
+//		let debugNotificationIdentifier = "Debug.WidgetTimeline.Request.\(now.timeIntervalSince1970)"
+//		let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
+//		UNUserNotificationCenter.current().add(debugNotificationRequest) { _ in }
+//		#endif
+
+		guard let endpointID = Endpoint.ID(configuration.endpoint?.identifier ?? ""),
 			  let intentContainer = configuration.container,
 			  let containerID = intentContainer.identifier else {
 			let entry = Entry(date: now, configuration: configuration, container: nil)
@@ -108,23 +116,21 @@ struct ContainerStateProvider: IntentTimelineProvider {
 				entry = Entry(date: now, configuration: configuration, container: container)
 			} catch {
 				logger.error("Error getting a timeline: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
-
-				entry = Entry(date: now, configuration: configuration, container: nil)
-//				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
+				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 			}
 
-			#if DEBUG
-			let debugNotification = UNMutableNotificationContent()
-			debugNotification.title = "🚧 getTimeline() completion"
-			debugNotification.threadIdentifier = "debug"
-			debugNotification.body = [
-				entry.error?.localizedDescription ?? "no error",
-				entry.container?.id ?? "no container"
-			].joined(separator: "\n")
-			let debugNotificationIdentifier = "Debug.WidgetTimeline.Return.\(now.timeIntervalSince1970)"
-			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
-			UNUserNotificationCenter.current().add(debugNotificationRequest) { _ in }
-			#endif
+//			#if DEBUG
+//			let debugNotification = UNMutableNotificationContent()
+//			debugNotification.title = "🚧 getTimeline() completion"
+//			debugNotification.threadIdentifier = "debug"
+//			debugNotification.body = [
+//				entry.error?.localizedDescription ?? "no error",
+//				entry.container?.id ?? "no container"
+//			].joined(separator: "\n")
+//			let debugNotificationIdentifier = "Debug.WidgetTimeline.Return.\(now.timeIntervalSince1970)"
+//			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
+//			UNUserNotificationCenter.current().add(debugNotificationRequest) { _ in }
+//			#endif
 
 			let timeline = Timeline(entries: [entry], policy: .atEnd)
 			completion(timeline)

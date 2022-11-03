@@ -35,7 +35,7 @@ struct ContainerDetailsView: View {
 		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
 		.animation(.easeInOut, value: details != nil)
 		.navigationTitle(item.displayName ?? item.id)
-		.userActivity(HarbourUserActivity.containerDetails, element: item, createUserActivity)
+		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: item, createUserActivity)
 		.task(id: "\(item.endpointID ?? -1)-\(item.id)", getContainerDetails)
 	}
 }
@@ -69,7 +69,7 @@ private extension ContainerDetailsView {
 			details = nil
 
 			if !portainerStore.isSetup {
-				try await portainerStore.setupTask?.value
+				await portainerStore.setupTask?.value
 			}
 //			if portainerStore.selectedEndpointID == nil {
 //				_ = try? await portainerStore.endpointsTask?.value

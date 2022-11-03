@@ -7,7 +7,7 @@
 
 import Foundation
 import Intents
-import os.log
+import OSLog
 import PortainerKit
 
 // TODO: Try to implement this in AppIntents?
@@ -17,7 +17,7 @@ import PortainerKit
 /// Handler for `ContainerStateIntent`
 final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling {
 
-	private let logger = Logger(category: "ContainerStatusIntentHandler")
+	private let logger = Logger(category: .containerStateIntentHandler)
 	private let portainerStore = PortainerStore.shared
 
 	/// Cached endpoints

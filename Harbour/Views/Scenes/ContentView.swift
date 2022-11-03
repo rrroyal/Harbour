@@ -86,7 +86,7 @@ struct ContentView: View {
 		.onOpenURL { url in
 			sceneState.onOpenURL(url)
 		}
-		.onContinueUserActivity(HarbourUserActivity.containerDetails) { userActivity in
+		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) { userActivity in
 			sceneState.onContinueContainerDetailsActivity(userActivity)
 		}
 	}

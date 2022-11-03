@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-import os.log
+import OSLog
 import PortainerKit
 import IndicatorsKit
 
@@ -18,7 +18,7 @@ public final class SceneState: ObservableObject {
 
 	// MARK: Internal properties
 
-	internal let logger = Logger(category: "SceneState")
+	internal let logger = Logger(category: .sceneState)
 	internal let indicators = Indicators()
 
 	// MARK: Public properties

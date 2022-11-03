@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO: Fix no animation in Toggle
-
 internal extension SettingsView {
 	struct ToggleOption: View {
 		@Environment(\.isEnabled) private var isEnabled: Bool

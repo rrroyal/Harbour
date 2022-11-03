@@ -12,7 +12,7 @@ extension SceneState {
 	typealias ErrorHandler = (Error, String) -> Void
 
 	func handle(_ error: Error, _debugInfo: String = .debugInfo()) {
-		if error is CancellationError {
+		guard !error.isCancellationError else {
 			logger.debug("Cancelled error: \(error.localizedDescription, privacy: .public) [\(_debugInfo)]")
 			return
 		}

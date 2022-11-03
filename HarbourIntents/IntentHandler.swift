@@ -6,7 +6,7 @@
 //
 
 import Intents
-import os.log
+import OSLog
 
 final class IntentHandler: INExtension {
 	override func handler(for intent: INIntent) -> Any {

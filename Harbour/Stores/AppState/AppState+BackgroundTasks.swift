@@ -16,20 +16,26 @@ import PortainerKit
 extension AppState {
 
 	func scheduleBackgroundRefresh() {
-		logger.info("Scheduling background refresh with identifier: \"\(HarbourBackgroundTask.backgroundRefresh, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		guard Preferences.shared.enableBackgroundRefresh else {
+			logger.debug("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String.debugInfo(), privacy: .public)]")
+			return
+		}
 
-		let request = BGAppRefreshTaskRequest(identifier: HarbourBackgroundTask.backgroundRefresh)
+		// swiftlint:disable:next line_length
+		logger.notice("Scheduling background refresh with identifier: \"\(HarbourBackgroundTaskIdentifier.backgroundRefresh, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
+
+		let request = BGAppRefreshTaskRequest(identifier: HarbourBackgroundTaskIdentifier.backgroundRefresh)
 		request.earliestBeginDate = .now
 
-		#if DEBUG
-		let debugNotification = UNMutableNotificationContent()
-		debugNotification.title = "🚧 Background refresh scheduled!"
-		debugNotification.threadIdentifier = "debug"
-		let debugNotificationIdentifier = "Debug.BackgroundRefreshScheduled"
-		let debugNotificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-		let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: debugNotificationTrigger)
-		UNUserNotificationCenter.current().add(debugNotificationRequest, withCompletionHandler: { _ in })
-		#endif
+//		#if DEBUG
+//		let debugNotification = UNMutableNotificationContent()
+//		debugNotification.title = "🚧 Background refresh scheduled!"
+//		debugNotification.threadIdentifier = "debug"
+//		let debugNotificationIdentifier = "Debug.BackgroundRefreshScheduled"
+//		let debugNotificationTrigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+//		let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: debugNotificationTrigger)
+//		UNUserNotificationCenter.current().add(debugNotificationRequest, withCompletionHandler: { _ in })
+//		#endif
 
 		do {
 			try BGTaskScheduler.shared.submit(request)
@@ -51,7 +57,6 @@ extension AppState {
 	}
 
 	private static let logPrefix = "BackgroundRefresh"
-	private static let containersChangedNotificationIdentifier = "ContainersChanged"
 
 	@Sendable
 	nonisolated func handleBackgroundRefresh() async {
@@ -62,11 +67,13 @@ extension AppState {
 			Preferences.shared.lastBackgroundRefreshDate = Date().timeIntervalSince1970
 			#endif
 
+			let portainerStore = PortainerStore(urlSessionConfiguration: .harbourBackground)
+
 			// Schedule new background refresh
 			scheduleBackgroundRefresh()
 
 			// Get pre-refresh containers
-			let storedContainers = PortainerStore.shared.containers
+			let storedContainers = portainerStore.containers
 			let storedContainersStates = storedContainers.reduce(into: [:]) { $0[$1.id] = (name: $1.displayName ?? $1.id, state: $1.state) }
 
 			// Refresh containers, get new state
@@ -86,15 +93,15 @@ extension AppState {
 					}
 				}
 
-			#if DEBUG
-			let debugNotification = UNMutableNotificationContent()
-			debugNotification.title = "🚧 Background refresh happened!"
-			debugNotification.threadIdentifier = "debug"
-			debugNotification.body = differences.description
-			let debugNotificationIdentifier = "Debug.BackgroundRefreshHappened"
-			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
-			try? await UNUserNotificationCenter.current().add(debugNotificationRequest)
-			#endif
+//			#if DEBUG
+//			let debugNotification = UNMutableNotificationContent()
+//			debugNotification.title = "🚧 Background refresh happened!"
+//			debugNotification.threadIdentifier = "debug"
+//			debugNotification.body = differences.description
+//			let debugNotificationIdentifier = "Debug.BackgroundRefreshHappened"
+//			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
+//			try? await UNUserNotificationCenter.current().add(debugNotificationRequest)
+//			#endif
 
 			// Reload widget timelines
 			WidgetCenter.shared.reloadAllTimelines()
@@ -108,7 +115,7 @@ extension AppState {
 			logger.debug("[\(Self.logPrefix, privacy: .public)] Differences count: \(differences.count, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 
 			if let notificationContent = notificationContent(for: differences) {
-				let notificationIdentifier = "\(Self.containersChangedNotificationIdentifier).\(differences.description.hashValue)"
+				let notificationIdentifier = "\(HarbourNotificationIdentifier.containersChanged).\(differences.description.hashValue)"
 				let notificationRequest = UNNotificationRequest(identifier: notificationIdentifier, content: notificationContent, trigger: nil)
 				try await UNUserNotificationCenter.current().add(notificationRequest)
 			} else {
@@ -126,7 +133,7 @@ extension AppState {
 		typealias Localization = Localizable.Notifications.ContainersChanged
 
 		let notificationContent = UNMutableNotificationContent()
-		notificationContent.threadIdentifier = Self.containersChangedNotificationIdentifier
+		notificationContent.threadIdentifier = HarbourNotificationIdentifier.containersChanged
 		notificationContent.interruptionLevel = .active
 		notificationContent.relevanceScore = Double(changes.count) / 10
 		notificationContent.sound = .default

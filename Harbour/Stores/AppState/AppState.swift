@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import os.log
+import OSLog
 
 // MARK: - AppState
 
@@ -19,7 +19,7 @@ final class AppState: ObservableObject {
 
 	// MARK: Internal properties
 
-	internal let logger = Logger(category: "AppState")
+	internal let logger = Logger(category: .appState)
 
 	internal var portainerServerSwitchTask: Task<Void, Error>?
 

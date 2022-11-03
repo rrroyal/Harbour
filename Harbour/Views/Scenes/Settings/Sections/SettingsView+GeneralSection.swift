@@ -13,9 +13,15 @@ extension SettingsView {
 	struct GeneralSection: View {
 		private typealias Localization = Localizable.Settings.General
 
+		@EnvironmentObject private var preferences: Preferences
+
 		var body: some View {
 			Section(Localization.title) {
-				Text("general")
+				// Enable Background Refresh
+				ToggleOption(label: Localization.EnableBackgroundRefresh.title,
+							 description: Localization.EnableBackgroundRefresh.description,
+							 iconSymbolName: SFSymbol.reload,
+							 isOn: $preferences.enableBackgroundRefresh)
 			}
 		}
 	}
