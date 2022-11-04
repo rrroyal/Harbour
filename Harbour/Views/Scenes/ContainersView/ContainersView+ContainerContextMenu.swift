@@ -124,7 +124,6 @@ extension ContainersView {
 			attachButton
 		}
 
-		// TODO: execute(_:)
 		private func execute(_ action: PortainerKit.ExecuteAction, haptic: UIDevice.FeedbackStyle = .medium) {
 			UIDevice.generateHaptic(haptic)
 

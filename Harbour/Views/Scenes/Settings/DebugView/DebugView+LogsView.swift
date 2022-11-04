@@ -8,8 +8,6 @@
 import SwiftUI
 import OSLog
 
-// TODO: Rebuild this view
-
 // MARK: - DebugView+LogsView
 
 extension DebugView {

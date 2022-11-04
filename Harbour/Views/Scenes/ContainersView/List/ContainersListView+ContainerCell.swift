@@ -18,16 +18,6 @@ extension ContainersListView {
 
 		let container: Container
 
-//		private var subheadline: String? {
-//			let state = container.isStored ? Localization. : container.state?.rawValue.capitalized
-//			let parts = [state, container.status].compactMap { $0 }
-//			if !parts.isEmpty {
-//				return parts.joined(separator: Localization.stateJoiner)
-//			} else {
-//				return nil
-//			}
-//		}
-
 		@ViewBuilder
 		private var headlineLabel: some View {
 			Text(container.displayName ?? Localization.unnamed)
@@ -95,9 +85,10 @@ extension ContainersListView.ContainerCell: Identifiable {
 
 extension ContainersListView.ContainerCell: Equatable {
 	static func == (lhs: ContainersListView.ContainerCell, rhs: ContainersListView.ContainerCell) -> Bool {
-		lhs.container.id == rhs.container.id &&
 		lhs.container.state == rhs.container.state &&
-		lhs.container.status == rhs.container.status
+		lhs.container.status == rhs.container.status &&
+		lhs.container.displayName == rhs.container.displayName &&
+		lhs.container.id == rhs.container.id
 	}
 }
 

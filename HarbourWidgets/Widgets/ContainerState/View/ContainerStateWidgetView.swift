@@ -14,28 +14,6 @@ import UserNotifications
 struct ContainerStateWidgetView: View {
 	let entry: ContainerStateProvider.Entry
 
-	init(entry: ContainerStateProvider.Entry) {
-		self.entry = entry
-
-//		#if DEBUG
-//		let debugNotification = UNMutableNotificationContent()
-//		debugNotification.title = "🚧 ContainerStateWidgetView()"
-//		debugNotification.threadIdentifier = "debug"
-//		if let error = entry.error, !(error is URLError) {
-//			debugNotification.subtitle = "error: \(error.localizedDescription)"
-//		} else if let confContainer = entry.configuration.container {
-//			debugNotification.subtitle = "confContainer ID: \(confContainer.identifier ?? "nil")"
-//			debugNotification.body = "containerID: \(entry.container?.id ?? "nil")"
-//		} else {
-//			debugNotification.subtitle = "?"
-//		}
-//
-//		let debugNotificationIdentifier = "Debug.ContainerStateWidgetView.init.\(entry.date.timeIntervalSince1970)"
-//		let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
-//		UNUserNotificationCenter.current().add(debugNotificationRequest) { _ in }
-//		#endif
-	}
-
 	var body: some View {
 		Group {
 			if let error = entry.error, !(error is URLError) {

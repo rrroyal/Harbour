@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public struct Mount: Decodable, Sendable {
+public struct Mount: Equatable, Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case target = "Target"
 		case source = "Source"
@@ -24,17 +24,16 @@ public struct Mount: Decodable, Sendable {
 }
 
 public extension Mount {
-	enum Consistency: String, Decodable, Sendable {
+	enum Consistency: String, Equatable, Decodable, Sendable {
 		case `default`
 		case consistent
 		case cached
 		case delegated
 	}
 
-	enum MountType: String, Decodable, Sendable {
+	enum MountType: String, Equatable, Decodable, Sendable {
 		case bind
 		case volume
 		case tmpfs
 	}
-
 }

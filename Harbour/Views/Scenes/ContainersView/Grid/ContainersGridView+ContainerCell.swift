@@ -84,9 +84,10 @@ extension ContainersGridView.ContainerCell: Identifiable {
 
 extension ContainersGridView.ContainerCell: Equatable {
 	static func == (lhs: ContainersGridView.ContainerCell, rhs: ContainersGridView.ContainerCell) -> Bool {
-		lhs.container.id == rhs.container.id &&
 		lhs.container.state == rhs.container.state &&
-		lhs.container.status == rhs.container.status
+		lhs.container.status == rhs.container.status &&
+		lhs.container.displayName == rhs.container.displayName &&
+		lhs.container.id == rhs.container.id
 	}
 }
 
@@ -99,7 +100,7 @@ struct ContainersGridView_ContainerCell_Previews: PreviewProvider {
 		ContainersGridView.ContainerCell(container: container)
 			.padding()
 			.background(Color(uiColor: .systemGroupedBackground))
-			.frame(width: 196, height: 196)
+			.frame(width: 184, height: 184)
 			.previewLayout(.sizeThatFits)
 	}
 }

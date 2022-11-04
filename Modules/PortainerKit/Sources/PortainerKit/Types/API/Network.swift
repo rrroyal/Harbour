@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public struct Network: Decodable, Sendable {
+public struct Network: Equatable, Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case links = "Links"
 		case aliases = "Aliases"

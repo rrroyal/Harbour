@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public struct BindOptions: Decodable, Sendable {
+public struct BindOptions: Equatable, Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case propagation = "Propagation"
 	}
@@ -14,7 +14,7 @@ public struct BindOptions: Decodable, Sendable {
 }
 
 public extension BindOptions {
-	enum Propagation: String, Decodable, Sendable {
+	enum Propagation: String, Equatable, Decodable, Sendable {
 		case `private`
 		case rprivate
 		case shared

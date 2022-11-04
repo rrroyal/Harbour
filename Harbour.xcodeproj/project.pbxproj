@@ -15,7 +15,6 @@
 		E713178228E5A1DC00DB82AF /* ContainerState+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178128E5A1DC00DB82AF /* ContainerState+UI.swift */; };
 		E713178428E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */; };
 		E713178828E5A66D00DB82AF /* ContainerDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178728E5A66D00DB82AF /* ContainerDetailsView.swift */; };
-		E713178A28E5A76A00DB82AF /* Container+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178928E5A76A00DB82AF /* Container+Equatable.swift */; };
 		E713178D28E5A81C00DB82AF /* ContainersView+ContainerContextMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178C28E5A81C00DB82AF /* ContainersView+ContainerContextMenu.swift */; };
 		E713179328E5B94F00DB82AF /* Container+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179228E5B94F00DB82AF /* Container+sorted.swift */; };
 		E713179628E5B99600DB82AF /* Endpoint+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179528E5B99600DB82AF /* Endpoint+sorted.swift */; };
@@ -46,11 +45,9 @@
 		E72AA7CA28EB907300C33EA3 /* String+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA2728857F8700FCD7DC /* String+.swift */; };
 		E72AA7CB28EB907300C33EA3 /* String+debugInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72BB34428DE1B32007991D1 /* String+debugInfo.swift */; };
 		E72AA7CC28EB907300C33EA3 /* UserDefaults+group.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA2228857D3300FCD7DC /* UserDefaults+group.swift */; };
-		E72AA7D028EB920500C33EA3 /* Container+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178928E5A76A00DB82AF /* Container+Equatable.swift */; };
 		E72AA7D128EB920500C33EA3 /* ContainerState+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178128E5A1DC00DB82AF /* ContainerState+UI.swift */; };
 		E72AA7D228EB920500C33EA3 /* Container+filtered.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179D28E5C8F600DB82AF /* Container+filtered.swift */; };
 		E72AA7D428EB920500C33EA3 /* Container+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179228E5B94F00DB82AF /* Container+sorted.swift */; };
-		E72AA7D528EB920600C33EA3 /* Container+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178928E5A76A00DB82AF /* Container+Equatable.swift */; };
 		E72AA7D628EB920600C33EA3 /* ContainerState+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713178128E5A1DC00DB82AF /* ContainerState+UI.swift */; };
 		E72AA7D728EB920600C33EA3 /* Container+filtered.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179D28E5C8F600DB82AF /* Container+filtered.swift */; };
 		E72AA7D928EB920600C33EA3 /* Container+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179228E5B94F00DB82AF /* Container+sorted.swift */; };
@@ -208,7 +205,6 @@
 		E713178128E5A1DC00DB82AF /* ContainerState+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerState+UI.swift"; sourceTree = "<group>"; };
 		E713178328E5A5FA00DB82AF /* ContainersView+ContainerNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersView+ContainerNavigationItem.swift"; sourceTree = "<group>"; };
 		E713178728E5A66D00DB82AF /* ContainerDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerDetailsView.swift; sourceTree = "<group>"; };
-		E713178928E5A76A00DB82AF /* Container+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+Equatable.swift"; sourceTree = "<group>"; };
 		E713178C28E5A81C00DB82AF /* ContainersView+ContainerContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersView+ContainerContextMenu.swift"; sourceTree = "<group>"; };
 		E713179228E5B94F00DB82AF /* Container+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+sorted.swift"; sourceTree = "<group>"; };
 		E713179528E5B99600DB82AF /* Endpoint+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Endpoint+sorted.swift"; sourceTree = "<group>"; };
@@ -468,7 +464,6 @@
 			isa = PBXGroup;
 			children = (
 				E713179528E5B99600DB82AF /* Endpoint+sorted.swift */,
-				E713178928E5A76A00DB82AF /* Container+Equatable.swift */,
 				E713179D28E5C8F600DB82AF /* Container+filtered.swift */,
 				E713179228E5B94F00DB82AF /* Container+sorted.swift */,
 				E713178128E5A1DC00DB82AF /* ContainerState+UI.swift */,
@@ -1075,7 +1070,6 @@
 				E7B4230D28EC615500CBC5F4 /* PortainerURLScheme.swift in Sources */,
 				E73057ED291331F200675152 /* Error+isCancellationError.swift in Sources */,
 				E7B4230028EC570D00CBC5F4 /* SelectContainerPlaceholder.swift in Sources */,
-				E72AA7D528EB920600C33EA3 /* Container+Equatable.swift in Sources */,
 				E73A305428EC48E800004093 /* ContainerStateProvider.swift in Sources */,
 				E7AF688E290DB14C00E48EAC /* View+hidden.swift in Sources */,
 				E72AA7CA28EB907300C33EA3 /* String+.swift in Sources */,
@@ -1096,7 +1090,6 @@
 				E77E88FF28FF4B2C00D95DA5 /* Endpoint+sorted.swift in Sources */,
 				E73A304D28EC361400004093 /* Localizable.swift in Sources */,
 				E72AA7C828EB907200C33EA3 /* UserDefaults+group.swift in Sources */,
-				E72AA7D028EB920500C33EA3 /* Container+Equatable.swift in Sources */,
 				E7C3ED7B28EB9B1F00233930 /* PortainerStore+Errors.swift in Sources */,
 				E73A304628EC337200004093 /* IntentError.swift in Sources */,
 				E7C3ED8128EB9B7700233930 /* GenericError.swift in Sources */,
@@ -1175,7 +1168,6 @@
 				E78C660D28E9BA920033D0E4 /* Harbour.xcdatamodeld in Sources */,
 				E72BB34828DE256C007991D1 /* RoundedTextFieldStyle.swift in Sources */,
 				E72BB34228DE19C1007991D1 /* PortainerStore+Errors.swift in Sources */,
-				E713178A28E5A76A00DB82AF /* Container+Equatable.swift in Sources */,
 				E766D925288C37E200F2DB99 /* ContainersListView.swift in Sources */,
 				E7BEBA1F28857CB000FCD7DC /* UIDevice+Haptics.swift in Sources */,
 				E7BEBA312885806500FCD7DC /* SceneState.swift in Sources */,

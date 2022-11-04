@@ -19,7 +19,7 @@ struct IndicatorView: View {
 
 	private let maxWidth: Double = 300
 
-	private let paddingHorizontal: Double = 18
+	private let paddingHorizontal: Double = 20
 	private let paddingVertical: Double = 12
 
 	private let backgroundShape: some Shape = RoundedRectangle(cornerRadius: 32, style: .circular)
@@ -106,7 +106,7 @@ struct IndicatorView: View {
 	}
 
 	var body: some View {
-		HStack(spacing: 8) {
+		HStack(spacing: 14) {
 			iconView
 
 			VStack {

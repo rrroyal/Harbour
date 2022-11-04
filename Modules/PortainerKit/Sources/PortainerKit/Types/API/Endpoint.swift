@@ -7,7 +7,7 @@
 
 // MARK: - Endpoint
 
-public struct Endpoint: Identifiable, Decodable, Sendable {
+public struct Endpoint: Identifiable, Equatable, Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case authorizedTeams = "AuthorizedTeams"
 		case authorizedUsers = "AuthorizedUsers"
@@ -66,7 +66,3 @@ public extension Endpoint {
 		}
 	}
 }
-
-// MARK: - Endpoint+Equatable
-
-extension Endpoint: Equatable {}

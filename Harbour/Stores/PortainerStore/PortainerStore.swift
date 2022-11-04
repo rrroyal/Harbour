@@ -215,20 +215,19 @@ public final class PortainerStore: ObservableObject {
 
 	@Sendable
 	public func execute(_ action: ExecuteAction, on containerID: Container.ID) async throws {
-		logger.info("Executing action \"\(action.rawValue, privacy: .public)\" on containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		logger.info("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			try await portainer.execute(action, containerID: containerID, endpointID: endpointID)
 
-			// Check if this can be done better
 //			if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
 //				containers[storedContainerIndex].state = action.expectedState
 //			}
 
-			logger.debug("Executed action \"\(action.rawValue, privacy: .public)\" on containerID: \"\(containerID, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
 		} catch {
 			// swiftlint:disable:next line_length
-			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on containerID: \"\(containerID, privacy: .public)\": \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error
 		}
 	}

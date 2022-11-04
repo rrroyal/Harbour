@@ -68,12 +68,31 @@ public struct Container: Identifiable, Decodable, Sendable {
 // MARK: - Container+NetworkSettings
 
 public extension Container {
-	struct NetworkSettings: Decodable, Sendable {
+	struct NetworkSettings: Equatable, Decodable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case network = "Networks"
 		}
 
 		public let network: Network?
+	}
+}
+
+// MARK: - Container+Equatable
+
+extension Container: Equatable {
+	public static func == (lhs: Container, rhs: Container) -> Bool {
+		lhs.state == rhs.state &&
+		lhs.status == rhs.status &&
+		lhs.created == rhs.created &&
+		lhs.names == rhs.names &&
+		lhs.command == rhs.command &&
+		lhs.id == rhs.id &&
+		lhs.image == rhs.image &&
+		lhs.imageID == rhs.imageID &&
+		lhs.labels == rhs.labels &&
+		lhs.ports == rhs.ports &&
+		lhs.mounts == rhs.mounts &&
+		lhs.networkSettings == rhs.networkSettings
 	}
 }
 
