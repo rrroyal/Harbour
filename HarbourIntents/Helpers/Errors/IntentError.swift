@@ -7,6 +7,8 @@
 
 import Foundation
 
+// TODO: Localize it
+
 enum IntentError: LocalizedError {
 
 	/// Intent doesn't have configuration selected.

@@ -220,6 +220,8 @@ internal enum Localizable {
   }
 
   internal enum Widgets {
+    /// Not Found
+    internal static let notFoundPlaceholder = Localizable.tr("Localizable", "Widgets.NotFoundPlaceholder")
     /// Please select a container 🙈
     internal static let selectContainerPlaceholder = Localizable.tr("Localizable", "Widgets.SelectContainerPlaceholder")
     /// Unreachable

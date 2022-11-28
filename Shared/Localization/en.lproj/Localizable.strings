@@ -114,6 +114,7 @@
 
 "Widgets.SelectContainerPlaceholder" = "Please select a container 🙈"; // 😊🧐
 "Widgets.UnreachablePlaceholder" = "Unreachable";
+"Widgets.NotFoundPlaceholder" = "Not Found";
 
 "Widgets.Placeholder.ContainerName" = "Containy";
 "Widgets.Placeholder.ContainerStatus" = "Up 10 days";

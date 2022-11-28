@@ -108,7 +108,7 @@ public final class PortainerStore: ObservableObject {
 
 			portainer.setup(url: url, token: _token)
 
-			logger.debug("Getting endpoints for setup... [\(String.debugInfo(), privacy: .public)]")
+//			logger.debug("Getting endpoints for setup... [\(String.debugInfo(), privacy: .public)]")
 
 //			let endpointsTask = refreshEndpoints()
 //			_ = try await endpointsTask.value
@@ -142,6 +142,8 @@ public final class PortainerStore: ObservableObject {
 	public func switchServer(to serverURL: URL) async throws {
 		logger.info("Switching to \"\(serverURL.absoluteString, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
 
+		preferences.selectedServer = serverURL.absoluteString
+
 		do {
 			let token = try keychain.getToken(for: serverURL)
 
@@ -155,7 +157,6 @@ public final class PortainerStore: ObservableObject {
 			containers = []
 
 			try await setup(url: serverURL, token: token)
-			preferences.selectedServer = serverURL.absoluteString
 
 			logger.debug("Switched successfully! [\(String.debugInfo(), privacy: .public)]")
 		} catch {

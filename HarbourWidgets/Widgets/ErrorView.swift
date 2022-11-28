@@ -18,6 +18,7 @@ struct ErrorView: View {
 			.foregroundStyle(.red)
 			.multilineTextAlignment(.center)
 			.lineLimit(nil)
+			.minimumScaleFactor(0.7)
 			.padding()
 	}
 }

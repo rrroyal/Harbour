@@ -26,7 +26,9 @@ extension ContainersView {
 				content()
 					.equatable()
 					.contextMenu {
-						ContainersView.ContainerContextMenu(container: container)
+						if !container.isStored {
+							ContainersView.ContainerContextMenu(container: container)
+						}
 					}
 					.tint(Color.primary)
 			}

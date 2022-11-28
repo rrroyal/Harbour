@@ -392,7 +392,7 @@
 		E72AA78428EB665800C33EA3 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				E72AA7C328EB905300C33EA3 /* Extenstions */,
+				E72AA7C328EB905300C33EA3 /* Extensions */,
 				E72AA7C228EB904C00C33EA3 /* Helpers */,
 				E7D6E63E2884785700C79732 /* Localization */,
 				E7C3ED7D28EB9B3000233930 /* Stores */,
@@ -438,7 +438,7 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		E72AA7C328EB905300C33EA3 /* Extenstions */ = {
+		E72AA7C328EB905300C33EA3 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				E72AA7C428EB905F00C33EA3 /* Foundation */,
@@ -447,7 +447,7 @@
 				E7AF688A290DB13C00E48EAC /* SwiftUI */,
 				E72BB34128DE19C1007991D1 /* PortainerStore+Errors.swift */,
 			);
-			path = Extenstions;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		E72AA7C428EB905F00C33EA3 /* Foundation */ = {

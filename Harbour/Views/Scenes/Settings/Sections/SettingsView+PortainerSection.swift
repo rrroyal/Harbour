@@ -52,7 +52,7 @@ private extension SettingsView.PortainerSection {
 				Divider()
 
 				Button(action: {
-					UIDevice.generateHaptic(.sheetPresentation)
+//					UIDevice.generateHaptic(.sheetPresentation)
 					isSetupSheetPresented = true
 				}) {
 					Label(Localization.add, systemImage: SFSymbol.add)
