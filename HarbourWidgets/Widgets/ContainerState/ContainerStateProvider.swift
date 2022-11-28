@@ -70,8 +70,11 @@ struct ContainerStateProvider: IntentTimelineProvider {
 
 				let filters = ["id": [containerID]]
 				let container = (try await portainerStore.getContainers(for: endpointID, filters: filters)).first
-
-				entry = Entry(date: now, configuration: configuration, container: container)
+				if let container {
+					entry = Entry(date: now, configuration: configuration, container: container)
+				} else {
+					entry = Entry(date: now, configuration: configuration, container: nil, error: ProviderError.containerNotFound)
+				}
 			} catch {
 				logger.error("Error getting a snapshot: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
@@ -112,8 +115,11 @@ struct ContainerStateProvider: IntentTimelineProvider {
 
 				let filters = ["id": [containerID]]
 				let container = (try await portainerStore.getContainers(for: endpointID, filters: filters)).first
-
-				entry = Entry(date: now, configuration: configuration, container: container)
+				if let container {
+					entry = Entry(date: now, configuration: configuration, container: container)
+				} else {
+					entry = Entry(date: now, configuration: configuration, container: nil, error: ProviderError.containerNotFound)
+				}
 			} catch {
 				logger.error("Error getting a timeline: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 				entry = Entry(date: now, configuration: configuration, container: nil, error: error)

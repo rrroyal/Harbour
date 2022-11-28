@@ -14,9 +14,20 @@ import UserNotifications
 struct ContainerStateWidgetView: View {
 	let entry: ContainerStateProvider.Entry
 
+	var shouldDisplayErrorView: Bool {
+		guard let error = entry.error else {
+			return false
+		}
+		if let error = error as? ProviderError {
+			return error.shouldDisplayErrorView
+		}
+
+		return !(error is URLError)
+	}
+
 	var body: some View {
 		Group {
-			if let error = entry.error, !(error is URLError) {
+			if let error = entry.error, shouldDisplayErrorView {
 				ErrorView(error: error)
 			} else if entry.configuration.container != nil {
 				ContainerStateView(entry: entry)

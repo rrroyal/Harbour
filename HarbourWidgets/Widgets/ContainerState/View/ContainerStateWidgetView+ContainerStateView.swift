@@ -13,10 +13,24 @@ import PortainerKit
 
 extension ContainerStateWidgetView {
 	struct ContainerStateView: View {
+		private typealias Localization = Localizable.Widgets
+
 		private static let circleSize: Double = 8
 		private static let minimumScaleFactor: Double = 0.8
 
 		let entry: ContainerStateProvider.Entry
+
+		private var subheadlinePlaceholder: String {
+			guard let error = entry.error else {
+				return Localization.unreachablePlaceholder
+			}
+
+			if let error = error as? ProviderError {
+				return error.widgetPlaceholder
+			}
+
+			return Localization.unreachablePlaceholder
+		}
 
 		@ViewBuilder
 		private var stateHeadline: some View {
@@ -53,7 +67,7 @@ extension ContainerStateWidgetView {
 
 		@ViewBuilder
 		private var statusLabel: some View {
-			Text(entry.container?.status ?? Localizable.Widgets.unreachablePlaceholder)
+			Text(entry.container?.status ?? subheadlinePlaceholder)
 				.font(.subheadline.weight(.medium))
 				.foregroundStyle(entry.container?.status != nil ? .secondary : .tertiary)
 		}
