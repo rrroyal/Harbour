@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>HBMainBundleIdentifier</key>
-	<string>__HBMainBundleIdentifier__</string>
-	<key>HBAppIdentifierPrefix</key>
-	<string>$(AppIdentifierPrefix)</string>
 	<key>BuildDate</key>
 	<string>__BUILD_DATE__</string>
+	<key>HBAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>HBMainBundleIdentifier</key>
+	<string>__HBMainBundleIdentifier__</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>

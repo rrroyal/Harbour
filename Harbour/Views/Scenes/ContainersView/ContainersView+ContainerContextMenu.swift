@@ -75,7 +75,7 @@ extension ContainersView {
 		}
 
 		var body: some View {
-			Label(container.status ?? container.state?.rawValue.capitalized ?? Localization.unknownState, systemImage: container.state.icon)
+			Label(container.status ?? container.state?.rawValue.localizedCapitalized ?? Localization.unknownState, systemImage: container.state.icon)
 
 			Divider()
 
@@ -134,7 +134,7 @@ extension ContainersView {
 														  iconVariants: .fill)
 			let indicator: Indicator = .init(id: "ContainerExecuteAction.\(container.id)",
 											 icon: action.icon,
-											 headline: container.displayName ?? Localizable.Generic.container,
+											 headline: container.displayName ?? Localizable.PortainerKit.Generic.container,
 											 subheadline: action.label,
 											 dismissType: .automatic,
 											 style: style)

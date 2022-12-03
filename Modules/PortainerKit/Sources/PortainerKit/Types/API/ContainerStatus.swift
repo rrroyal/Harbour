@@ -28,7 +28,31 @@ public struct ContainerStatus: Decodable, Sendable {
 	public let oomKilled: Bool
 	public let dead: Bool
 	public let pid: Int
-	public let error: String
+	public let error: String?
 	public let startedAt: Date?
 	public let finishedAt: Date?
+
+	#if DEBUG
+	public init(state: ContainerState,
+				running: Bool,
+				paused: Bool,
+				restarting: Bool,
+				oomKilled: Bool,
+				dead: Bool,
+				pid: Int,
+				error: String?,
+				startedAt: Date?,
+				finishedAt: Date?) {
+		self.state = state
+		self.running = running
+		self.paused = paused
+		self.restarting = restarting
+		self.oomKilled = oomKilled
+		self.dead = dead
+		self.pid = pid
+		self.error = error
+		self.startedAt = startedAt
+		self.finishedAt = finishedAt
+	}
+	#endif
 }
