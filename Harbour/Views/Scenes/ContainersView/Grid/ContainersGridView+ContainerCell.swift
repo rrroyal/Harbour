@@ -22,7 +22,7 @@ extension ContainersGridView {
 		@ViewBuilder
 		private var stateHeader: some View {
 			HStack {
-				Text(container.isStored ? ContainerState?.none.description : container.state.description.capitalized)
+				Text(container.isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
 					.font(.footnote.weight(.medium))
 					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
 //					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
@@ -93,7 +93,6 @@ extension ContainersGridView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-// swiftlint:disable:next type_name
 struct ContainersGridView_ContainerCell_Previews: PreviewProvider {
 	static let container = Container(id: "id", names: ["PreviewContainer"], state: .running, status: "Status")
 	static var previews: some View {

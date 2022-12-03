@@ -131,7 +131,6 @@ private extension DebugView.LogsView {
 
 // MARK: - Previews
 
-// swiftlint:disable:next type_name
 struct DebugView_LogsView_Previews: PreviewProvider {
 	static var previews: some View {
 		DebugView.LogsView()

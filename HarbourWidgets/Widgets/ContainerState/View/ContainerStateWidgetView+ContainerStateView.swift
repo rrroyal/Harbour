@@ -92,48 +92,11 @@ extension ContainerStateWidgetView {
 			}
 			.padding()
 		}
-
-		#if DEBUG
-		var _body: some View {
-			VStack {
-				Labeled(title: "Date", content: entry.date.formatted())
-				Labeled(title: "ConfID", content: entry.configuration.container?.identifier)
-				Labeled(title: "ContID", content: entry.container?.id)
-				Labeled(title: "ContState", content: entry.container?.state?.rawValue)
-			}
-			.padding()
-		}
-		#endif
-	}
-}
-
-// MARK: - ContainerStateWidgetView.ContainerStateView+Components
-
-private extension ContainerStateWidgetView.ContainerStateView {
-	struct Labeled: View {
-		let title: String
-		let content: String?
-
-		var body: some View {
-			VStack(alignment: .leading, spacing: 0) {
-				Text(title)
-					.font(.caption2.weight(.medium))
-					.foregroundStyle(.secondary)
-
-				Text(content ?? "none")
-					.font(.subheadline.weight(.medium))
-					.foregroundStyle(content != nil ? .primary : .secondary)
-			}
-			.lineLimit(1)
-			.multilineTextAlignment(.leading)
-			.frame(maxWidth: .infinity, alignment: .leading)
-		}
 	}
 }
 
 // MARK: - Previews
 
-// swiftlint:disable:next type_name
 struct ContainerStateWidgetView_ContainerStateView_Previews: PreviewProvider {
 	static let container = ContainerStateProvider.placeholderContainer
 	static let entry = ContainerStateProvider.placeholderEntry

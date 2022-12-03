@@ -30,7 +30,7 @@ extension ContainersListView {
 		@ViewBuilder
 		private var subheadlineLabel: some View {
 			HStack(spacing: 0) {
-				Text(container.isStored ? ContainerState?.none.description : container.state.description.capitalized)
+				Text(container.isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
 					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
@@ -94,7 +94,6 @@ extension ContainersListView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-// swiftlint:disable:next type_name
 struct ContainersListView_ContainerCell_Previews: PreviewProvider {
 	static let container = Container(id: "id", names: ["PreviewContainer"], state: .running, status: "Status")
 	static var previews: some View {
