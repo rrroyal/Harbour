@@ -17,7 +17,7 @@ extension AppState {
 
 	func scheduleBackgroundRefresh() {
 		guard Preferences.shared.enableBackgroundRefresh else {
-			logger.debug("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String.debugInfo(), privacy: .public)]")
+			logger.info("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String.debugInfo(), privacy: .public)]")
 			return
 		}
 
@@ -61,7 +61,7 @@ extension AppState {
 	@Sendable
 	nonisolated func handleBackgroundRefresh() async {
 		do {
-			logger.info("[\(Self.logPrefix, privacy: .public)] Handling background refresh... [\(String.debugInfo(), privacy: .public)]")
+			logger.notice("[\(Self.logPrefix, privacy: .public)] Handling background refresh... [\(String.debugInfo(), privacy: .public)]")
 
 			#if DEBUG
 			Preferences.shared.lastBackgroundRefreshDate = Date().timeIntervalSince1970
@@ -122,7 +122,7 @@ extension AppState {
 				logger.warning("[\(Self.logPrefix, privacy: .public)] notificationContent(for:) didn't return anything! [\(String.debugInfo(), privacy: .public)]")
 			}
 
-			logger.debug("[\(Self.logPrefix, privacy: .public)] Finished handling background refresh :) [\(String.debugInfo(), privacy: .public)]")
+			logger.info("[\(Self.logPrefix, privacy: .public)] Finished handling background refresh :) [\(String.debugInfo(), privacy: .public)]")
 		} catch {
 			// swiftlint:disable:next line_length
 			logger.error("[\(Self.logPrefix, privacy: .public)] Error handling background refresh: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")

@@ -135,7 +135,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 
 	/// Handles `ContainerStateIntent`.
 	func handle(intent: ContainerStateIntent) async -> ContainerStateIntentResponse {
-		logger.debug("Handling intent with containerID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String.debugInfo(), privacy: .public)]...")
+		logger.notice("Handling intent with containerID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String.debugInfo(), privacy: .public)]...")
 
 		do {
 			guard let endpointID = Int(intent.endpoint?.identifier ?? ""),

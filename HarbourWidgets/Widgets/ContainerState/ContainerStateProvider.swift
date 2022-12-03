@@ -39,8 +39,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 	}
 
 	func placeholder(in context: Context) -> Entry {
-		logger.debug("Placeholder requested [\(String.debugInfo(), privacy: .public)]")
-		return Self.placeholderEntry
+		Self.placeholderEntry
 	}
 
 	func getSnapshot(for configuration: Intent, in context: Context, completion: @escaping (Entry) -> Void) {
@@ -85,7 +84,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 	}
 
 	func getTimeline(for configuration: Intent, in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-		logger.debug("Getting timeline... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Getting timeline... [\(String.debugInfo(), privacy: .public)]")
 
 		let now = Date()
 

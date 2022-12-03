@@ -10,7 +10,7 @@ import Foundation
 extension AppState {
 	@MainActor
 	func switchPortainerServer(to serverURL: URL, errorHandler: SceneState.ErrorHandler?) {
-		logger.info("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
 
 		portainerServerSwitchTask?.cancel()
 		portainerServerSwitchTask = Task {

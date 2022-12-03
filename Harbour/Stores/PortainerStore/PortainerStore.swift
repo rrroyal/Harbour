@@ -94,7 +94,7 @@ public final class PortainerStore: ObservableObject {
 	///   - url: Server URL
 	///   - token: Authorization token (if `nil`, it's searched in the keychain)
 	public func setup(url: URL, token: String?) async throws {
-		logger.info("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String.debugInfo(), privacy: .public)]")
 
 		do {
 			isSetup = false
@@ -131,7 +131,7 @@ public final class PortainerStore: ObservableObject {
 				logger.error("Unable to save token to Keychain: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			}
 
-			logger.debug("Setup with URL: \"\(url.absoluteString, privacy: .sensitive)\" sucessfully! [\(String.debugInfo(), privacy: .public)]")
+			logger.info("Setup with URL: \"\(url.absoluteString, privacy: .sensitive)\" sucessfully! [\(String.debugInfo(), privacy: .public)]")
 		} catch {
 			logger.error("Failed to setup: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error
@@ -140,7 +140,7 @@ public final class PortainerStore: ObservableObject {
 
 	@MainActor
 	public func switchServer(to serverURL: URL) async throws {
-		logger.info("Switching to \"\(serverURL.absoluteString, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Switching to \"\(serverURL.absoluteString, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
 
 		preferences.selectedServer = serverURL.absoluteString
 
@@ -158,7 +158,7 @@ public final class PortainerStore: ObservableObject {
 
 			try await setup(url: serverURL, token: token)
 
-			logger.debug("Switched successfully! [\(String.debugInfo(), privacy: .public)]")
+			logger.info("Switched successfully! [\(String.debugInfo(), privacy: .public)]")
 		} catch {
 			logger.error("Failed to switch: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
 			throw error
@@ -167,7 +167,7 @@ public final class PortainerStore: ObservableObject {
 
 	@MainActor
 	public func selectEndpoint(_ endpoint: Endpoint?) {
-		logger.info("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive)\" (\(endpoint?.id.description ?? "<none>")) [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive)\" (\(endpoint?.id.description ?? "<none>")) [\(String.debugInfo(), privacy: .public)]")
 		self.selectedEndpointID = endpoint?.id
 
 		if endpoint != nil {
@@ -181,7 +181,7 @@ public final class PortainerStore: ObservableObject {
 
 	@Sendable
 	public func inspectContainer(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
-		logger.info("Getting details for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Getting details for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			guard portainer.isSetup else {
 				throw PortainerError.notSetup
@@ -200,7 +200,7 @@ public final class PortainerStore: ObservableObject {
 
 	@Sendable
 	public func getLogs(for containerID: Container.ID) async throws -> String {
-		logger.info("Getting logs for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Getting logs for containerID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			let logs = try await portainer.fetchLogs(containerID: containerID, endpointID: endpointID)
@@ -216,7 +216,7 @@ public final class PortainerStore: ObservableObject {
 
 	@Sendable
 	public func execute(_ action: ExecuteAction, on containerID: Container.ID) async throws {
-		logger.info("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			try await portainer.execute(action, containerID: containerID, endpointID: endpointID)
@@ -318,7 +318,7 @@ private extension PortainerStore {
 
 	@Sendable
 	func getEndpoints() async throws -> [Endpoint] {
-		logger.debug("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Getting endpoints... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let endpoints = try await portainer.fetchEndpoints()
 			logger.debug("Got \(endpoints.count, privacy: .public) endpoints [\(String.debugInfo(), privacy: .public)]")
@@ -331,7 +331,7 @@ private extension PortainerStore {
 
 	@Sendable
 	func getContainers() async throws -> [Container] {
-		logger.debug("Getting containers... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Getting containers... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpointID) = try getPortainerAndEndpoint()
 			let containers = try await portainer.fetchContainers(endpointID: endpointID)
@@ -398,7 +398,7 @@ private extension PortainerStore {
 	/// Loads authorization token for saved server if available.
 	/// - Returns: Credentials for Portainer
 	func getStoredCredentials() -> (url: URL, token: String)? {
-		logger.debug("Looking for credentials... [\(String.debugInfo(), privacy: .public)]")
+		logger.info("Looking for credentials... [\(String.debugInfo(), privacy: .public)]")
 		do {
 			guard let selectedServer = preferences.selectedServer,
 				  let selectedServerURL = URL(string: selectedServer) else {
@@ -418,7 +418,7 @@ private extension PortainerStore {
 	/// Stores containers to CoreData store.
 	/// - Parameter containers: Containers to store
 	func storeContainers(_ containers: [Container]) {
-		logger.debug("Saving \(containers.count, privacy: .public) containers... [\(String.debugInfo(), privacy: .public)]")
+		logger.info("Saving \(containers.count, privacy: .public) containers... [\(String.debugInfo(), privacy: .public)]")
 
 		do {
 			let newContainersIDs = containers.map(\.id)
@@ -448,7 +448,7 @@ private extension PortainerStore {
 	/// Fetches stored containers and returns them.
 	/// - Returns: Mapped [Container] from CoreData store.
 	func loadStoredContainers() -> [Container] {
-		logger.debug("Loading stored containers... [\(String.debugInfo(), privacy: .public)]")
+		logger.info("Loading stored containers... [\(String.debugInfo(), privacy: .public)]")
 
 		do {
 			let context = PersistenceController.shared.backgroundContext
