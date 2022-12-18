@@ -71,6 +71,7 @@ extension ContainerDetailsView {
 	}
 }
 
+#if DEBUG
 struct ContainerDetailsView_StatusSection_Previews: PreviewProvider {
 	static let status = ContainerStatus(state: .running,
 										running: true,
@@ -88,3 +89,4 @@ struct ContainerDetailsView_StatusSection_Previews: PreviewProvider {
 		}
 	}
 }
+#endif
