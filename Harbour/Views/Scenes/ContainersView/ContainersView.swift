@@ -83,7 +83,7 @@ private extension ContainersView {
 			refreshTask = portainerStore.refresh(errorHandler: sceneErrorHandler)
 			try await refreshTask?.value
 		} catch {
-			sceneErrorHandler?(error, String.debugInfo())
+			sceneErrorHandler?(error, ._debugInfo())
 		}
 	}
 }

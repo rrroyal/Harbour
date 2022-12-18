@@ -27,7 +27,7 @@ extension DebugView {
 		private var toolbarMenu: some View {
 			Menu(content: {
 				Button(action: {
-					UIDevice.generateHaptic(.buttonPress)
+					UIDevice.generateHaptic(.selectionChanged)
 					UIPasteboard.general.string = logs.map(\.debugDescription).joined(separator: "\n")
 				}) {
 					Label("Copy", systemImage: SFSymbol.copy)

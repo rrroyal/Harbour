@@ -41,7 +41,7 @@ public final class Preferences: ObservableObject {
 
 private extension Preferences {
 	func onEnableBackgroundRefreshChange(_ isEnabled: Bool) {
-		logger.debug("\(Keys.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("\(Keys.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 
 		let notificationCenter = UNUserNotificationCenter.current()
 
@@ -50,9 +50,9 @@ private extension Preferences {
 			notificationCenter.requestAuthorization(options: [.alert, .sound, .providesAppNotificationSettings]) { [weak self] allowed, error in
 				guard let self else { return }
 				if let error {
-					self.logger.error("Error requesting notifications authorization: \(error, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+					self.logger.error("Error requesting notifications authorization: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				}
-				self.logger.debug("Notifications authorization allowed: \(allowed, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+				self.logger.debug("Notifications authorization allowed: \(allowed, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 
 				if error != nil || !allowed {
 					DispatchQueue.main.async {

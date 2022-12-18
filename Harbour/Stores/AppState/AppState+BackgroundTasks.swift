@@ -17,12 +17,12 @@ extension AppState {
 
 	func scheduleBackgroundRefresh() {
 		guard Preferences.shared.enableBackgroundRefresh else {
-			logger.info("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String.debugInfo(), privacy: .public)]")
+			logger.info("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String._debugInfo(), privacy: .public)]")
 			return
 		}
 
 		// swiftlint:disable:next line_length
-		logger.notice("Scheduling background refresh with identifier: \"\(HarbourBackgroundTaskIdentifier.backgroundRefresh, privacy: .public)\" [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Scheduling background refresh with identifier: \"\(HarbourBackgroundTaskIdentifier.backgroundRefresh, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
 
 		let request = BGAppRefreshTaskRequest(identifier: HarbourBackgroundTaskIdentifier.backgroundRefresh)
 		request.earliestBeginDate = .now
@@ -41,7 +41,7 @@ extension AppState {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
 			// swiftlint:disable:next line_length
-			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
 	}
 
@@ -61,7 +61,7 @@ extension AppState {
 	@Sendable
 	nonisolated func handleBackgroundRefresh() async {
 		do {
-			logger.notice("[\(Self.logPrefix, privacy: .public)] Handling background refresh... [\(String.debugInfo(), privacy: .public)]")
+			logger.notice("[\(Self.logPrefix, privacy: .public)] Handling background refresh... [\(String._debugInfo(), privacy: .public)]")
 
 			#if DEBUG
 			Preferences.shared.lastBackgroundRefreshDate = Date().timeIntervalSince1970
@@ -108,24 +108,24 @@ extension AppState {
 
 			// Handle differences
 			if differences.isEmpty {
-				logger.debug("[\(Self.logPrefix, privacy: .public)] Differences are empty [\(String.debugInfo(), privacy: .public)]")
+				logger.debug("[\(Self.logPrefix, privacy: .public)] Differences are empty [\(String._debugInfo(), privacy: .public)]")
 				return
 			}
 
-			logger.debug("[\(Self.logPrefix, privacy: .public)] Differences count: \(differences.count, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.debug("[\(Self.logPrefix, privacy: .public)] Differences count: \(differences.count, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 
 			if let notificationContent = notificationContent(for: differences) {
 				let notificationIdentifier = "\(HarbourNotificationIdentifier.containersChanged).\(differences.description.hashValue)"
 				let notificationRequest = UNNotificationRequest(identifier: notificationIdentifier, content: notificationContent, trigger: nil)
 				try await UNUserNotificationCenter.current().add(notificationRequest)
 			} else {
-				logger.warning("[\(Self.logPrefix, privacy: .public)] notificationContent(for:) didn't return anything! [\(String.debugInfo(), privacy: .public)]")
+				logger.warning("[\(Self.logPrefix, privacy: .public)] notificationContent(for:) didn't return anything! [\(String._debugInfo(), privacy: .public)]")
 			}
 
-			logger.info("[\(Self.logPrefix, privacy: .public)] Finished handling background refresh :) [\(String.debugInfo(), privacy: .public)]")
+			logger.info("[\(Self.logPrefix, privacy: .public)] Finished handling background refresh :) [\(String._debugInfo(), privacy: .public)]")
 		} catch {
 			// swiftlint:disable:next line_length
-			logger.error("[\(Self.logPrefix, privacy: .public)] Error handling background refresh: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+			logger.error("[\(Self.logPrefix, privacy: .public)] Error handling background refresh: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
 	}
 

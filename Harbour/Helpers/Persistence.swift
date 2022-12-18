@@ -33,7 +33,7 @@ struct PersistenceController {
 				 * The store could not be migrated to the current model version.
 				 Check the error message to determine what the actual problem was.
 				 */
-				Self.logger.error("Failed to load stores: \(error, privacy: .public), \(error.userInfo, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+				Self.logger.error("Failed to load stores: \(error, privacy: .public), \(error.userInfo, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			}
 
 			storeDescription.shouldMigrateStoreAutomatically = true

@@ -37,13 +37,15 @@ private extension SettingsView.PortainerSection {
 		@Environment(\.sceneErrorHandler) private var sceneErrorHandler
 		@Binding var isSetupSheetPresented: Bool
 
+		@State private var savedURLs: [URL] = PortainerStore.shared.savedURLs
+
 		private var serverURLLabel: String? {
 			guard let url = portainerStore.serverURL else { return nil }
 			return formattedURL(url)
 		}
 
 		var body: some View {
-			let urls = portainerStore.savedURLs.sorted { $0.absoluteString > $1.absoluteString }
+			let urls = savedURLs.sorted { $0.absoluteString > $1.absoluteString }
 			Menu(content: {
 				ForEach(urls, id: \.absoluteString) { url in
 					urlMenu(for: url)
@@ -52,7 +54,7 @@ private extension SettingsView.PortainerSection {
 				Divider()
 
 				Button(action: {
-//					UIDevice.generateHaptic(.sheetPresentation)
+					UIDevice.generateHaptic(.sheetPresentation)
 					isSetupSheetPresented = true
 				}) {
 					Label(Localization.add, systemImage: SFSymbol.add)
@@ -73,8 +75,12 @@ private extension SettingsView.PortainerSection {
 		}
 
 		private func deleteServer(_ url: URL) {
-			// TODO: deleteServer(_:)
-			print(#function, url)
+			do {
+				try portainerStore.deleteServer(url)
+				savedURLs = portainerStore.savedURLs
+			} catch {
+				sceneErrorHandler?(error, ._debugInfo())
+			}
 		}
 
 		private func formattedURL(_ url: URL) -> String {

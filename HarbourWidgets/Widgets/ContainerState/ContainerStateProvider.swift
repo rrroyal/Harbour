@@ -43,7 +43,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 	}
 
 	func getSnapshot(for configuration: Intent, in context: Context, completion: @escaping (Entry) -> Void) {
-		logger.debug("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)... [\(String.debugInfo(), privacy: .public)]")
+		logger.debug("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)... [\(String._debugInfo(), privacy: .public)]")
 
 		guard !context.isPreview else {
 			let placeholder = placeholder(in: context)
@@ -75,7 +75,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 					entry = Entry(date: now, configuration: configuration, container: nil, error: ProviderError.containerNotFound)
 				}
 			} catch {
-				logger.error("Error getting a snapshot: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+				logger.error("Error getting a snapshot: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 			}
 
@@ -84,7 +84,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 	}
 
 	func getTimeline(for configuration: Intent, in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-		logger.notice("Getting timeline... [\(String.debugInfo(), privacy: .public)]")
+		logger.notice("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
 
 		let now = Date()
 
@@ -120,7 +120,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 					entry = Entry(date: now, configuration: configuration, container: nil, error: ProviderError.containerNotFound)
 				}
 			} catch {
-				logger.error("Error getting a timeline: \(error.localizedDescription, privacy: .public) [\(String.debugInfo(), privacy: .public)]")
+				logger.error("Error getting a timeline: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 			}
 

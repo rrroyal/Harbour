@@ -40,9 +40,9 @@ public final class Keychain {
 	/// - Parameters:
 	///   - server: Service URL
 	///   - token: Account token
-	public func saveToken(for server: URL, token: String) throws {
+	public func saveToken(for serverURL: URL, token: String) throws {
 		var query = baseQuery
-		query[kSecAttrServer] = server.host()
+		query[kSecAttrServer] = serverURL.host()
 
 		guard let tokenData = token.data(using: self.textEncoding) else {
 			throw KeychainError.encodingFailed
@@ -50,8 +50,8 @@ public final class Keychain {
 		let attributes: QueryDictionary = [
 			kSecValueData: tokenData,
 //			kSecAttrComment: comment as Any,
-			kSecAttrPath: server.path,
-			kSecAttrLabel: server.absoluteString,
+			kSecAttrPath: serverURL.path,
+			kSecAttrLabel: serverURL.absoluteString,
 			kSecAttrDescription: tokenItemDescription
 		]
 
@@ -61,9 +61,9 @@ public final class Keychain {
 	/// Retrieves token
 	/// - Parameter server: Service URL
 	/// - Returns: Token
-	public func getToken(for server: URL) throws -> String {
+	public func getToken(for serverURL: URL) throws -> String {
 		var query = baseQuery
-		query[kSecAttrServer] = server.host()
+		query[kSecAttrServer] = serverURL.host()
 		query[kSecMatchLimit] = kSecMatchLimitOne
 		query[kSecReturnData] = true
 
@@ -83,9 +83,9 @@ public final class Keychain {
 
 	/// Deletes token  for supplied URL
 	/// - Parameter server: Service URL
-	public func removeToken(server: URL) throws {
+	public func removeToken(for serverURL: URL) throws {
 		var query = baseQuery
-		query[kSecAttrServer] = server.host
+		query[kSecAttrServer] = serverURL.host
 		let status = SecItemDelete(query as CFDictionary)
 		guard status == errSecSuccess || status == errSecItemNotFound else { throw SecError(status) }
 	}

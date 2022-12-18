@@ -13,7 +13,7 @@
 "Generic.Loading" = "Loading...";
 "Generic.Error" = "Error!";
 "Generic.Unknown" = "Unknown";
-"Generic.Container" = "Container";
+"Generic.None" = "None";
 
 // MARK: - Landing
 
@@ -51,6 +51,10 @@
 "ContainerContextMenu.UnknownState" = "Unknown";
 
 // MARK: - ContainerDetails
+
+"ContainerDetails.ContainerState" = "State";
+
+"ContainerDetails.Logs" = "Logs";
 
 "ContainerDetails.UserActivity.Title" = "See the details of %@";
 "ContainerDetails.UserActivity.UnnamedContainerPlaceholder" = "a container";
@@ -127,6 +131,8 @@
 "Indicators.ExpandToReadMore" = "Expand to read more";
 
 // MARK: - PortainerKit
+
+"PortainerKit.Generic.Container" = "Container";
 
 "PortainerKit.ExecuteAction.Start" = "Start";
 "PortainerKit.ExecuteAction.Stop" = "Stop";

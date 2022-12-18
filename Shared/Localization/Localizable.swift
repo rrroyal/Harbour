@@ -28,6 +28,10 @@ internal enum Localizable {
   }
 
   internal enum ContainerDetails {
+    /// State
+    internal static let containerState = Localizable.tr("Localizable", "ContainerDetails.ContainerState")
+    /// Logs
+    internal static let logs = Localizable.tr("Localizable", "ContainerDetails.Logs")
     internal enum UserActivity {
       /// See the details of %@
       internal static func title(_ p1: Any) -> String {
@@ -61,12 +65,12 @@ internal enum Localizable {
   }
 
   internal enum Generic {
-    /// Container
-    internal static let container = Localizable.tr("Localizable", "Generic.Container")
     /// Error!
     internal static let error = Localizable.tr("Localizable", "Generic.Error")
     /// Loading...
     internal static let loading = Localizable.tr("Localizable", "Generic.Loading")
+    /// None
+    internal static let `none` = Localizable.tr("Localizable", "Generic.None")
     /// Unknown
     internal static let unknown = Localizable.tr("Localizable", "Generic.Unknown")
   }
@@ -146,6 +150,10 @@ internal enum Localizable {
       internal static let stop = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Stop")
       /// Resume
       internal static let unpause = Localizable.tr("Localizable", "PortainerKit.ExecuteAction.Unpause")
+    }
+    internal enum Generic {
+      /// Container
+      internal static let container = Localizable.tr("Localizable", "PortainerKit.Generic.Container")
     }
   }
 

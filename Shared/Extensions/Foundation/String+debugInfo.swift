@@ -14,7 +14,7 @@ extension String {
 	///   - _fileID: File ID
 	///   - _line: Line of the statement
 	/// - Returns: `String`
-	static func debugInfo(_function: StaticString = #function, _fileID: StaticString = #fileID, _line: Int = #line) -> Self {
+	static func _debugInfo(_function: StaticString = #function, _fileID: StaticString = #fileID, _line: Int = #line) -> Self {
 		#if DEBUG
 		"\(_function) \(_fileID):\(_line)"
 		#else

@@ -33,7 +33,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 
 	/// Provides options for `endpoint` parameter.
 	func provideEndpointOptionsCollection(for intent: ContainerStateIntent, searchTerm: String?) async throws -> INObjectCollection<IntentEndpoint> {
-		logger.debug("Providing options for \"endpoint\" [\(String.debugInfo(), privacy: .public)]...")
+		logger.debug("Providing options for \"endpoint\" [\(String._debugInfo(), privacy: .public)]...")
 
 		let endpoints = try await fetchEndpoints()
 
@@ -53,7 +53,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 
 	/// Provides options for `container` parameter.
 	func provideContainerOptionsCollection(for intent: ContainerStateIntent, searchTerm: String?) async throws -> INObjectCollection<IntentContainer> {
-		logger.debug("Providing options for \"container\" [\(String.debugInfo(), privacy: .public)]...")
+		logger.debug("Providing options for \"container\" [\(String._debugInfo(), privacy: .public)]...")
 
 		guard let endpointID = Int(intent.endpoint?.identifier ?? "") else {
 			return .init(items: [])
@@ -71,7 +71,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 
 	/// Resolves value for `endpoint` parameter.
 	func resolveEndpoint(for intent: ContainerStateIntent) async -> IntentEndpointResolutionResult {
-		logger.debug("Resolving endpoint with ID: \(intent.endpoint?.identifier ?? "<none>", privacy: .public) [\(String.debugInfo(), privacy: .public)]...")
+		logger.debug("Resolving endpoint with ID: \(intent.endpoint?.identifier ?? "<none>", privacy: .public) [\(String._debugInfo(), privacy: .public)]...")
 
 		guard let endpointID = Int(intent.endpoint?.identifier ?? "") else { return .needsValue() }
 
@@ -104,7 +104,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 
 	/// Resolves value for `container` parameter.
 	func resolveContainer(for intent: ContainerStateIntent) async -> IntentContainerResolutionResult {
-		logger.debug("Resolving container with ID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String.debugInfo(), privacy: .public)]...")
+		logger.debug("Resolving container with ID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String._debugInfo(), privacy: .public)]...")
 
 		guard let endpointID = Int(intent.endpoint?.identifier ?? ""),
 			  let containerID = intent.container?.identifier else { return .needsValue() }
@@ -135,7 +135,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 
 	/// Handles `ContainerStateIntent`.
 	func handle(intent: ContainerStateIntent) async -> ContainerStateIntentResponse {
-		logger.notice("Handling intent with containerID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String.debugInfo(), privacy: .public)]...")
+		logger.notice("Handling intent with containerID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String._debugInfo(), privacy: .public)]...")
 
 		do {
 			guard let endpointID = Int(intent.endpoint?.identifier ?? ""),

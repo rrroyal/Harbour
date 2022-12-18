@@ -13,7 +13,7 @@ struct SetupView: View {
 	private typealias Localization = Localizable.Setup
 
 	private static let urlPlaceholder: String = "https://172.17.0.2"
-	private static let tokenPlaceholder: String = "hunter2"
+	private static let tokenPlaceholder: String = "token"
 
 	@EnvironmentObject private var sceneState: SceneState
 	@EnvironmentObject private var portainer: PortainerStore

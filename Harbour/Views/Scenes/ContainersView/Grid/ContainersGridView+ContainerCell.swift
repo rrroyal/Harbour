@@ -14,7 +14,7 @@ extension ContainersGridView {
 	struct ContainerCell: View {
 		private typealias Localization = Localizable.ContainerCell
 
-		private static let minimumScaleFactor: Double = 0.6
+		private static let minimumScaleFactor: Double = 0.7
 		private static let paddingSize: Double = 12
 
 		let container: Container
@@ -46,13 +46,14 @@ extension ContainersGridView {
 					.font(.callout.weight(.semibold))
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.transition(.opacity)
+					.lineLimit(2)
 
 				Text(container.status ?? Localizable.Generic.unknown)
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
 					.transition(.opacity)
+					.lineLimit(1)
 			}
-			.lineLimit(1)
 			.multilineTextAlignment(.leading)
 			.minimumScaleFactor(Self.minimumScaleFactor)
 			.animation(.easeInOut, value: container.displayName)

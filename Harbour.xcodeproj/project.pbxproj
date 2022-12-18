@@ -22,7 +22,10 @@
 		E713179E28E5C8F600DB82AF /* Container+filtered.swift in Sources */ = {isa = PBXBuildFile; fileRef = E713179D28E5C8F600DB82AF /* Container+filtered.swift */; };
 		E71A04D628EB92DF00B88C7D /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = E71A04D528EB92DF00B88C7D /* KeychainKit */; };
 		E71A04D828EB92E200B88C7D /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E71A04D728EB92E200B88C7D /* PortainerKit */; };
-		E725018C28FC4757006B1190 /* ContainerLogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E725018B28FC4757006B1190 /* ContainerLogsView.swift */; };
+		E71DFEBD293AD37300A65C6C /* ContainerDetailsView+LogsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71DFEBC293AD37300A65C6C /* ContainerDetailsView+LogsSection.swift */; };
+		E71DFEC0293AD7AD00A65C6C /* ContainerDetailsView+StatusSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71DFEBF293AD7AD00A65C6C /* ContainerDetailsView+StatusSection.swift */; };
+		E71DFEC3293ADC2200A65C6C /* ContainerDetailsView+Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71DFEC2293ADC2200A65C6C /* ContainerDetailsView+Components.swift */; };
+		E725018C28FC4757006B1190 /* ContainerDetailsView+LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E725018B28FC4757006B1190 /* ContainerDetailsView+LogsView.swift */; };
 		E725018F28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E725018E28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift */; };
 		E72AA76E28EB662400C33EA3 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA76D28EB662300C33EA3 /* WidgetKit.framework */; };
 		E72AA77028EB662400C33EA3 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA76F28EB662400C33EA3 /* SwiftUI.framework */; };
@@ -211,7 +214,10 @@
 		E713179528E5B99600DB82AF /* Endpoint+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Endpoint+sorted.swift"; sourceTree = "<group>"; };
 		E713179728E5C02F00DB82AF /* ContainersGridView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersGridView+ContainerCell.swift"; sourceTree = "<group>"; };
 		E713179D28E5C8F600DB82AF /* Container+filtered.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+filtered.swift"; sourceTree = "<group>"; };
-		E725018B28FC4757006B1190 /* ContainerLogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerLogsView.swift; sourceTree = "<group>"; };
+		E71DFEBC293AD37300A65C6C /* ContainerDetailsView+LogsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+LogsSection.swift"; sourceTree = "<group>"; };
+		E71DFEBF293AD7AD00A65C6C /* ContainerDetailsView+StatusSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+StatusSection.swift"; sourceTree = "<group>"; };
+		E71DFEC2293ADC2200A65C6C /* ContainerDetailsView+Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+Components.swift"; sourceTree = "<group>"; };
+		E725018B28FC4757006B1190 /* ContainerDetailsView+LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+LogsView.swift"; sourceTree = "<group>"; };
 		E725018E28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersView+ContainerNavigationCell.swift"; sourceTree = "<group>"; };
 		E72AA76C28EB662300C33EA3 /* HarbourWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HarbourWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E72AA76D28EB662300C33EA3 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -372,7 +378,10 @@
 			isa = PBXGroup;
 			children = (
 				E713178728E5A66D00DB82AF /* ContainerDetailsView.swift */,
-				E725018B28FC4757006B1190 /* ContainerLogsView.swift */,
+				E71DFEC2293ADC2200A65C6C /* ContainerDetailsView+Components.swift */,
+				E71DFEBF293AD7AD00A65C6C /* ContainerDetailsView+StatusSection.swift */,
+				E71DFEBC293AD37300A65C6C /* ContainerDetailsView+LogsSection.swift */,
+				E725018B28FC4757006B1190 /* ContainerDetailsView+LogsView.swift */,
 			);
 			path = ContainerDetails;
 			sourceTree = "<group>";
@@ -1146,6 +1155,7 @@
 				E7AF6886290DAD0700E48EAC /* SFSymbol.swift in Sources */,
 				E7BEBA2C2885803A00FCD7DC /* Notification+.swift in Sources */,
 				E7A8BC19288C0826007AB20B /* PortainerStore.swift in Sources */,
+				E71DFEC3293ADC2200A65C6C /* ContainerDetailsView+Components.swift in Sources */,
 				E713179628E5B99600DB82AF /* Endpoint+sorted.swift in Sources */,
 				E7BEBA2828857F8700FCD7DC /* String+.swift in Sources */,
 				E760CDB92892C1E8007280ED /* LandingView.swift in Sources */,
@@ -1195,11 +1205,12 @@
 				E7BEBA2A2885801900FCD7DC /* UIWindow+.swift in Sources */,
 				E72BB33C28DE0CFB007991D1 /* Persistence.swift in Sources */,
 				E7ACE73E288C421C000E6FF6 /* SettingsView+OtherSection.swift in Sources */,
-				E725018C28FC4757006B1190 /* ContainerLogsView.swift in Sources */,
+				E725018C28FC4757006B1190 /* ContainerDetailsView+LogsView.swift in Sources */,
 				E72BB35028DE26BD007991D1 /* GenericError.swift in Sources */,
 				E766D91E288C379800F2DB99 /* ContainersView.swift in Sources */,
 				E7ACE749288C47C7000E6FF6 /* SettingsView+Common.swift in Sources */,
 				E766D92A288C381900F2DB99 /* EnvironmentValues+.swift in Sources */,
+				E71DFEC0293AD7AD00A65C6C /* ContainerDetailsView+StatusSection.swift in Sources */,
 				E7B1F43C28E9E685004D4999 /* ExecuteAction+expectedState.swift in Sources */,
 				E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */,
 				E725018F28FC491C006B1190 /* ContainersView+ContainerNavigationCell.swift in Sources */,
@@ -1207,6 +1218,7 @@
 				E713178228E5A1DC00DB82AF /* ContainerState+UI.swift in Sources */,
 				E7C3D5F1291137FF004E02AC /* URLSessionConfiguration+harbourBackground.swift in Sources */,
 				E7ACE744288C44C8000E6FF6 /* View+padding.swift in Sources */,
+				E71DFEBD293AD37300A65C6C /* ContainerDetailsView+LogsSection.swift in Sources */,
 				E713179E28E5C8F600DB82AF /* Container+filtered.swift in Sources */,
 				E72BB34C28DE2627007991D1 /* TransparentButtonStyle.swift in Sources */,
 				E7ACE738288C4177000E6FF6 /* SettingsView+PortainerSection.swift in Sources */,
@@ -1522,6 +1534,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_PREFIX_HEADER = Shared/Info.h;
 				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1561,6 +1574,7 @@
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_PREFIX_HEADER = Shared/Info.h;
 				INFOPLIST_PREPROCESS = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

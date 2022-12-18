@@ -8,36 +8,71 @@
 import SwiftUI
 import PortainerKit
 
-// TODO: Rebuild this view
-
 // MARK: - ContainerDetailsView
 
+/// View fetching and displaying details for associated container ID.
 struct ContainerDetailsView: View {
+	private typealias Localization = Localizable.ContainerDetails
+
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneState.ErrorHandler?
 
 	let item: ContainersView.ContainerNavigationItem
 
+	@State private var isLoading = false
 	@State private var details: ContainerDetails?
 
 	var body: some View {
 		List {
-			Section {
-				Text(String(describing: item))
-			}
-
-			Section {
-				Text(String(describing: details))
+			if let details {
+				StatusSection(status: details.status)
+			} else if isLoading {
+				// TODO: loading view
+				Text("loading")
 			}
 
 			LogsSection(item: item)
 		}
 		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
 		.animation(.easeInOut, value: details != nil)
+		.animation(.easeInOut, value: isLoading)
 		.navigationTitle(item.displayName ?? item.id)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: item, createUserActivity)
 		.task(id: "\(item.endpointID ?? -1)-\(item.id)", getContainerDetails)
 	}
+
+//	var _body: some View {
+//		ScrollView {
+//			Grid(alignment: .topLeading, horizontalSpacing: 10, verticalSpacing: 10) {
+//				GridRow {
+//					Text("something")
+//						.frame(maxWidth: .infinity, maxHeight: .infinity)
+//						.gridCellColumns(2)
+//						.background(Color.mint)
+//					Text("asd")
+//						.frame(maxWidth: .infinity, maxHeight: .infinity)
+//						.gridCellColumns(1)
+//						.background(Color.green)
+//					Text("dsadas")
+//						.frame(maxWidth: .infinity, maxHeight: .infinity)
+//						.gridCellColumns(1)
+//						.background(Color.red)
+//				}
+//				GridRow {
+//					Text("dsa")
+//						.frame(maxWidth: .infinity, maxHeight: .infinity)
+//						.gridCellColumns(3)
+//						.background(Color.blue)
+//				}
+//			}
+//		}
+//		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
+//		.animation(.easeInOut, value: details != nil)
+//		.animation(.easeInOut, value: isLoading)
+//		.navigationTitle(item.displayName ?? item.id)
+//		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: item, createUserActivity)
+//		.task(id: "\(item.endpointID ?? -1)-\(item.id)", getContainerDetails)
+//	}
 }
 
 // MARK: - ContainerDetailsView+Actions
@@ -65,35 +100,21 @@ private extension ContainerDetailsView {
 
 	@Sendable
 	func getContainerDetails() async {
+		isLoading = true
+		defer { isLoading = false }
+
 		do {
-			details = nil
+			if item.id != details?.id {
+				details = nil
+			}
 
 			if !portainerStore.isSetup {
 				await portainerStore.setupTask?.value
 			}
-//			if portainerStore.selectedEndpointID == nil {
-//				_ = try? await portainerStore.endpointsTask?.value
-//			}
 
 			details = try await portainerStore.inspectContainer(item.id, endpointID: item.endpointID)
 		} catch {
-			sceneErrorHandler?(error, String.debugInfo())
-		}
-	}
-}
-
-// MARK: - ContainerDetailsView+Components
-
-private extension ContainerDetailsView {
-	struct LogsSection: View {
-		let item: ContainersView.ContainerNavigationItem
-
-		var body: some View {
-			Section {
-				NavigationLink(destination: ContainerLogsView(item: item)) {
-					Label("Logs", systemImage: "text.alignleft")
-				}
-			}
+			sceneErrorHandler?(error, ._debugInfo())
 		}
 	}
 }

@@ -10,25 +10,25 @@ import Foundation
 /// Aliases for general-usage SF Symbols
 enum SFSymbol {
 
-	/// "plus"
+	/// plus
 	static let add = "plus"
 
-	/// "doc.on.doc"
+	/// doc.on.doc
 	static let copy = "doc.on.doc"
 
-	/// "ellipsis"
+	/// ellipsis
 	static let more = "ellipsis"
 
-	/// "arrow.clockwise"
+	/// arrow.clockwise
 	static let reload = "arrow.clockwise"
 
-	/// "trash"
+	/// trash
 	static let remove = "trash"
 
-	/// "checkmark"
+	/// checkmark
 	static let selected = "checkmark"
 
-	/// "gear"
+	/// gear
 	static let settings = "gear"
 
 }

@@ -63,8 +63,8 @@ struct ContentView: View {
 
 					ToolbarItem(placement: .navigationBarTrailing) {
 						Button(action: {
-//							UIDevice.generateHaptic(.sheetPresentation)
-							sceneState.isSettingsSheetPresented.toggle()
+							UIDevice.generateHaptic(.sheetPresentation)
+							sceneState.isSettingsSheetPresented = true
 						}) {
 							Image(systemName: SFSymbol.settings)
 						}

@@ -21,7 +21,7 @@ public extension Bundle {
 	}
 
 	var appIdentifierPrefix: String? {
-		Bundle.main.infoDictionary?["HBAppIdentifierPrefix"] as? String
+		Bundle.main.infoDictionary?["AppIdentifierPrefix"] as? String
 	}
 
 	var groupIdentifier: String {

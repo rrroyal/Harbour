@@ -63,6 +63,7 @@ extension ContainerStateWidgetView {
 			Text(displayName ?? Localizable.Generic.unknown)
 				.font(.headline)
 				.foregroundStyle(displayName != nil ? .primary : .secondary)
+				.lineLimit(3)
 		}
 
 		@ViewBuilder
@@ -70,6 +71,7 @@ extension ContainerStateWidgetView {
 			Text(entry.container?.status ?? subheadlinePlaceholder)
 				.font(.subheadline.weight(.medium))
 				.foregroundStyle(entry.container?.status != nil ? .secondary : .tertiary)
+				.lineLimit(2)
 		}
 
 		var body: some View {
@@ -85,7 +87,6 @@ extension ContainerStateWidgetView {
 					nameLabel
 					statusLabel
 				}
-				.lineLimit(2)
 				.multilineTextAlignment(.leading)
 				.minimumScaleFactor(Self.minimumScaleFactor)
 				.frame(maxWidth: .infinity, alignment: .leading)
