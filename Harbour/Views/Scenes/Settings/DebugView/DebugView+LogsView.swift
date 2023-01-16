@@ -7,6 +7,8 @@
 
 import SwiftUI
 import OSLog
+import CommonFoundation
+import CommonHaptics
 
 // MARK: - DebugView+LogsView
 
@@ -27,7 +29,7 @@ extension DebugView {
 		private var toolbarMenu: some View {
 			Menu(content: {
 				Button(action: {
-					UIDevice.generateHaptic(.selectionChanged)
+					Haptics.generateIfEnabled(.selectionChanged)
 					UIPasteboard.general.string = logs.map(\.debugDescription).joined(separator: "\n")
 				}) {
 					Label("Copy", systemImage: SFSymbol.copy)
@@ -36,7 +38,7 @@ extension DebugView {
 				Divider()
 
 				Button(action: {
-					UIDevice.generateHaptic(.buttonPress)
+					Haptics.generateIfEnabled(.buttonPress)
 					getLogs()
 				}) {
 					Label("Refresh", systemImage: SFSymbol.reload)
@@ -82,7 +84,11 @@ extension DebugView {
 				do {
 					let logStore = try OSLogStore(scope: .currentProcessIdentifier)
 					let position = logStore.position(date: Date().addingTimeInterval(-(6 * 60 * 60)))
-					let entries = try logStore.getEntries(with: [], at: position, matching: NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier))
+					// swiftlint:disable:next force_unwrapping
+					let predicate = NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)
+					let entries = try logStore.getEntries(with: [],
+														  at: position,
+														  matching: predicate)
 					logs = entries
 						.compactMap { $0 as? OSLogEntryLog }
 						.map { LogEntry(message: $0.composedMessage, level: $0.level, date: $0.date, category: $0.category) }

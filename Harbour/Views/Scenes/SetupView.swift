@@ -6,18 +6,17 @@
 //
 
 import SwiftUI
+import CommonFoundation
+import CommonHaptics
 
 // MARK: - SetupView
 
 struct SetupView: View {
 	private typealias Localization = Localizable.Setup
 
-	private static let urlPlaceholder: String = "https://172.17.0.2"
-	private static let tokenPlaceholder: String = "token"
-
-	@EnvironmentObject private var sceneState: SceneState
 	@EnvironmentObject private var portainer: PortainerStore
 	@Environment(\.dismiss) private var dismiss: DismissAction
+	@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneDelegate.ErrorHandler?
 
 	@State private var url: String = ""
 	@State private var token: String = ""
@@ -31,16 +30,20 @@ struct SetupView: View {
 
 	@FocusState private var focusedField: FocusedField?
 
+	private let urlPlaceholder: String = "https://172.17.0.2"
+	private let tokenPlaceholder: String = "token"
+	private let textFieldBackgroundColor = Color(uiColor: .secondarySystemBackground)
+
 	private var canSubmit: Bool {
 		!isLoading && !url.isReallyEmpty && !token.isReallyEmpty
 	}
 
 	@ViewBuilder
 	private var urlTextField: some View {
-		TextField(Self.urlPlaceholder, text: $url, onEditingChanged: { finished in
+		TextField(urlPlaceholder, text: $url, onEditingChanged: { finished in
 			if finished { loginTask?.cancel() }
 		})
-		.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
+		.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced, backgroundColor: textFieldBackgroundColor))
 		.keyboardType(.URL)
 		.submitLabel(.next)
 		.disableAutocorrection(true)
@@ -48,7 +51,7 @@ struct SetupView: View {
 		.focused($focusedField, equals: .url)
 		.onSubmit {
 			if !url.isReallyEmpty && !url.starts(with: "http") {
-				UIDevice.generateHaptic(.selectionChanged)
+				Haptics.generateIfEnabled(.selectionChanged)
 				url = "https://\(url)"
 			}
 
@@ -58,26 +61,26 @@ struct SetupView: View {
 
 	@ViewBuilder
 	private var tokenTextField: some View {
-		SecureField(Self.tokenPlaceholder, text: $token)
-		.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced))
-		.keyboardType(.default)
-		.submitLabel(.go)
-		.submitScope(token.isReallyEmpty)
-		.disableAutocorrection(true)
-		.autocapitalization(.none)
-		.focused($focusedField, equals: .token)
-		.onSubmit {
-			guard canSubmit else { return }
+		SecureField(tokenPlaceholder, text: $token)
+			.textFieldStyle(RoundedTextFieldStyle(fontDesign: .monospaced, backgroundColor: textFieldBackgroundColor))
+			.keyboardType(.default)
+			.submitLabel(.go)
+			.submitScope(token.isReallyEmpty)
+			.disableAutocorrection(true)
+			.autocapitalization(.none)
+			.focused($focusedField, equals: .token)
+			.onSubmit {
+				guard canSubmit else { return }
 
-			UIDevice.generateHaptic(.light)
-			login()
-		}
+				Haptics.generateIfEnabled(.light)
+				login()
+			}
 	}
 
 	@ViewBuilder
 	private var continueButton: some View {
 		Button(action: {
-			UIDevice.generateHaptic(.light)
+			Haptics.generateIfEnabled(.light)
 			login()
 		}) {
 			if isLoading {
@@ -101,37 +104,50 @@ struct SetupView: View {
 	}
 
 	var body: some View {
-		VStack {
-			Spacer()
-
-			Text(Localization.headline)
-				.font(.largeTitle.bold())
-
-			Spacer()
-
+		NavigationView {
 			VStack {
-				urlTextField
-				tokenTextField
-			}
+				Spacer()
 
-			Spacer()
+				Text(Localization.headline)
+					.font(.largeTitle.bold())
 
-			VStack {
-				continueButton
+				Spacer()
 
-				// swiftlint:disable:next force_unwrapping
-				Link(destination: URL(string: "https://harbour.shameful.xyz/docs/setup")!) {
-					HStack {
-						Image(systemName: "person.fill.questionmark")
-						Text(Localization.howToLogin)
-					}
-					.font(.callout.weight(.medium))
-					.padding(.horizontal, .small)
+				VStack {
+					urlTextField
+					tokenTextField
 				}
-				.buttonStyle(.customTransparent)
+
+				Spacer()
+
+				VStack {
+					continueButton
+
+					// swiftlint:disable:next force_unwrapping
+					Link(destination: URL(string: "https://harbour.shameful.xyz/docs/setup")!) {
+						HStack {
+							Image(systemName: "person.fill.questionmark")
+							Text(Localization.howToLogin)
+						}
+						.font(.callout.weight(.medium))
+						.padding(.horizontal, .small)
+					}
+					.buttonStyle(.customTransparent)
+				}
+			}
+			.padding()
+			.toolbar {
+				#if targetEnvironment(macCatalyst)
+				ToolbarItem(placement: .cancellationAction) {
+					Button(Localizable.Generic.done) {
+						Haptics.generateIfEnabled(.sheetPresentation)
+						dismiss()
+					}
+				}
+				#endif
 			}
 		}
-		.padding()
+		.background(Color(uiColor: .systemBackground), ignoresSafeAreaEdges: .all)
 		.animation(.easeInOut, value: buttonLabel)
 		.animation(.easeInOut, value: buttonColor)
 		.animation(.easeInOut, value: isLoading)
@@ -158,7 +174,7 @@ private extension SetupView {
 				try await portainer.setup(url: url, token: token)
 
 				isLoading = false
-				UIDevice.generateHaptic(.success)
+				Haptics.generateIfEnabled(.success)
 
 				buttonColor = .green
 				buttonLabel = Localization.Button.success
@@ -166,7 +182,7 @@ private extension SetupView {
 				dismiss()
 			} catch {
 				isLoading = false
-				UIDevice.generateHaptic(.error)
+				Haptics.generateIfEnabled(.error)
 
 				buttonColor = .red
 				buttonLabel = error.localizedDescription
@@ -179,7 +195,7 @@ private extension SetupView {
 					}
 				}
 
-				sceneState.handle(error)
+				sceneErrorHandler?(error, ._debugInfo())
 
 				throw error
 			}

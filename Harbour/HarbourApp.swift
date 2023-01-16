@@ -11,6 +11,7 @@ import SwiftUI
 
 @main
 struct HarbourApp: App {
+	@UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
 	@Environment(\.scenePhase) private var scenePhase: ScenePhase
 	@StateObject var appState: AppState = .shared
 	@StateObject var portainerStore: PortainerStore = .shared
@@ -19,13 +20,14 @@ struct HarbourApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpointID)
-				.environment(\.containersViewUseGrid, preferences.cvUseGrid)
 				.environmentObject(appState)
 				.environmentObject(portainerStore)
 				.environmentObject(preferences)
+				.environment(\.portainerServerURL, portainerStore.serverURL)
+				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
+				.environment(\.containersViewUseGrid, preferences.cvUseGrid)
 		}
-		.defaultAppStorage(Preferences.ud)
+		.defaultAppStorage(Preferences.userDefaults)
 		.onChange(of: scenePhase, perform: onScenePhaseChange)
 		.backgroundTask(.appRefresh(HarbourBackgroundTaskIdentifier.backgroundRefresh), action: appState.handleBackgroundRefresh)
 	}

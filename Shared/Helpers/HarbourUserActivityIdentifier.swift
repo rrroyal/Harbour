@@ -8,5 +8,5 @@
 import Foundation
 
 enum HarbourUserActivityIdentifier {
-	static let containerDetails = "\(Bundle.main.mainBundleIdentifier).ContainerDetailsActivity"
+	static let containerDetails = "\(Bundle.main.mainBundleIdentifier!).ContainerDetailsActivity"
 }

@@ -6,7 +6,7 @@
 	<string>$(AppIdentifierPrefix)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>__HBMainBundleIdentifier__.BackgroundRefresh</string>
+		<string>__MainBundleIdentifier__.BackgroundRefresh</string>
 	</array>
 	<key>BuildDate</key>
 	<string>__BUILD_DATE__</string>
@@ -23,10 +23,10 @@
 			</array>
 		</dict>
 	</array>
-	<key>HBMainBundleIdentifier</key>
-	<string>__HBMainBundleIdentifier__</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>MainBundleIdentifier</key>
+	<string>__MainBundleIdentifier__</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -36,10 +36,19 @@
 	</dict>
 	<key>NSUserActivityTypes</key>
 	<array>
-		<string>ContainerDetailsIntent</string>
-		<string>ContainerStateIntent</string>
-		<string>__HBMainBundleIdentifier__.ContainerDetailsActivity</string>
+		<string>__MainBundleIdentifier__.ContainerDetailsActivity</string>
+		<string>__MainBundleIdentifier__.ContainerStateIntent</string>
 	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array/>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

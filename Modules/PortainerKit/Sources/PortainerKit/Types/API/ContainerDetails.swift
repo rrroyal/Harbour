@@ -7,6 +7,8 @@
 
 import Foundation
 
+// MARK: - ContainerDetails
+
 public struct ContainerDetails: Identifiable, Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case id = "Id"
@@ -38,6 +40,8 @@ public struct ContainerDetails: Identifiable, Decodable, Sendable {
 	public let mounts: [MountPoint]
 	public let networkSettings: NetworkSettings
 }
+
+// MARK: - ContainerDetails+NetworkSettings
 
 public extension ContainerDetails {
 	struct NetworkSettings: Decodable, Sendable {

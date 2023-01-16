@@ -14,7 +14,9 @@ struct ErrorView: View {
 
 	var body: some View {
 		Text(error.localizedDescription)
-			.font(.body.weight(.medium))
+			.font(.body)
+			.fontDesign(.monospaced)
+			.fontWeight(.medium)
 			.foregroundStyle(.red)
 			.multilineTextAlignment(.center)
 			.lineLimit(nil)

@@ -7,6 +7,7 @@
 
 import Foundation
 import PortainerKit
+import CommonFoundation
 
 extension [Container] {
 	func filtered(query: String) -> Self {

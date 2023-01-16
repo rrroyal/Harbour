@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import CommonHaptics
 
 struct SettingsView: View {
 	private typealias Localization = Localizable.Settings
 
-//	let listRowInsets: EdgeInsets = EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+	@Environment(\.dismiss) private var dismiss
 
 	var body: some View {
 		NavigationStack {
@@ -21,10 +22,19 @@ struct SettingsView: View {
 					InterfaceSection()
 					OtherSection()
 				}
-//				.listRowInsets(listRowInsets)
 				.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			}
 			.navigationTitle(Localization.title)
+			.toolbar {
+				#if targetEnvironment(macCatalyst)
+				ToolbarItem(placement: .cancellationAction) {
+					Button(Localizable.Generic.done) {
+						Haptics.generateIfEnabled(.sheetPresentation)
+						dismiss()
+					}
+				}
+				#endif
+			}
 		}
 	}
 }

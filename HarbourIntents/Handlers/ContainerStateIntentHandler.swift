@@ -9,6 +9,8 @@ import Foundation
 import Intents
 import OSLog
 import PortainerKit
+import CommonFoundation
+import CommonOSLog
 
 // TODO: Try to implement this in AppIntents?
 
@@ -17,14 +19,8 @@ import PortainerKit
 /// Handler for `ContainerStateIntent`
 final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling {
 
-	private let logger = Logger(category: .containerStateIntentHandler)
+	private let logger = Logger(category: Logger.Category.intents)
 	private let portainerStore = PortainerStore.shared
-
-	/// Cached endpoints
-	private var endpoints: [Endpoint]?
-
-	/// Cached containers
-	private var containers: [Endpoint.ID: [Container]] = [:]
 
 	override init() {
 		super.init()
@@ -35,7 +31,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 	func provideEndpointOptionsCollection(for intent: ContainerStateIntent, searchTerm: String?) async throws -> INObjectCollection<IntentEndpoint> {
 		logger.debug("Providing options for \"endpoint\" [\(String._debugInfo(), privacy: .public)]...")
 
-		let endpoints = try await fetchEndpoints()
+		let endpoints = try await portainerStore.getEndpoints()
 
 		let items: [IntentEndpoint] = endpoints
 			.filter {
@@ -59,13 +55,15 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 			return .init(items: [])
 		}
 
-		let containers = try await fetchContainers(for: endpointID)
-
+		let containers = try await portainerStore.fetchContainers(for: endpointID)
 		let items: [IntentContainer] = containers
 			.filtered(query: searchTerm ?? "")
 			.sorted()
-			.map { IntentContainer(identifier: $0.id, display: $0.displayName ?? $0.id) }
-
+			.map {
+				let intentContainer = IntentContainer(identifier: $0.id, display: $0.displayName ?? $0.id)
+				intentContainer.name = $0.names?.first
+				return intentContainer
+			}
 		return .init(items: items)
 	}
 
@@ -107,10 +105,14 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 		logger.debug("Resolving container with ID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String._debugInfo(), privacy: .public)]...")
 
 		guard let endpointID = Int(intent.endpoint?.identifier ?? ""),
-			  let containerID = intent.container?.identifier else { return .needsValue() }
+			  let intentContainer = intent.container else { return .needsValue() }
 
 		do {
-			let containers = try await getContainers(for: endpointID, with: containerID)
+			let resolveByName = intent.resolveByName?.boolValue ?? false
+			let filters = PortainerStore.filters(for: intentContainer.identifier,
+												 name: intentContainer.name,
+												 resolveByName: resolveByName)
+			let containers = try await portainerStore.fetchContainers(for: endpointID, filters: filters)
 			switch containers.count {
 				case 0:
 					return .needsValue()
@@ -119,11 +121,16 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 						return .needsValue()
 					}
 					let intentContainer = IntentContainer(identifier: firstContainer.id, display: firstContainer.displayName ?? firstContainer.id)
+					intentContainer.name = firstContainer.names?.first
 					return .success(with: intentContainer)
 				case 2...:
 					let intentContainers = containers
 						.sorted()
-						.map { IntentContainer(identifier: $0.id, display: $0.displayName ?? $0.id) }
+						.map {
+							let intentContainer = IntentContainer(identifier: $0.id, display: $0.displayName ?? $0.id)
+							intentContainer.name = $0.names?.first
+							return intentContainer
+						}
 					return .disambiguation(with: intentContainers)
 				default:
 					return .needsValue()
@@ -133,16 +140,26 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 		}
 	}
 
+	/// Resolves value for `resolveByName` parameter.
+	func resolveResolveByName(for intent: ContainerStateIntent) async -> INBooleanResolutionResult {
+		.success(with: intent.resolveByName?.boolValue ?? false)
+	}
+
 	/// Handles `ContainerStateIntent`.
 	func handle(intent: ContainerStateIntent) async -> ContainerStateIntentResponse {
 		logger.notice("Handling intent with containerID: \(intent.container?.identifier ?? "<none>", privacy: .public) [\(String._debugInfo(), privacy: .public)]...")
 
 		do {
-			guard let endpointID = Int(intent.endpoint?.identifier ?? ""),
-				  let intentContainer = intent.container,
-				  let containerID = intentContainer.identifier else { throw IntentError.noConfigurationSelected }
+			guard let endpointID = Endpoint.ID(intent.endpoint?.identifier ?? ""),
+				  let intentContainer = intent.container else {
+				throw IntentError.noConfigurationSelected
+			}
 
-			let containers = try await getContainers(for: endpointID, with: containerID)
+			let resolveByName = intent.resolveByName?.boolValue ?? false
+			let filters = PortainerStore.filters(for: intentContainer.identifier,
+												 name: intentContainer.name,
+												 resolveByName: resolveByName)
+			let containers = try await portainerStore.fetchContainers(for: endpointID, filters: filters)
 			guard let container = containers.first else {
 				throw IntentError.noValueForConfiguration
 			}
@@ -154,43 +171,5 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 			let containerName = intent.container?.displayString ?? Localizable.Generic.unknown
 			return .failure(error: error.localizedDescription, containerName: containerName)
 		}
-	}
-}
-
-// MARK: - ContainerStateIntentHandler+private
-
-private extension ContainerStateIntentHandler {
-	func fetchEndpoints() async throws -> [Endpoint] {
-		if let storedEndpoints = self.endpoints {
-			return storedEndpoints
-		} else {
-			try portainerStore.setupIfNeeded()
-			let endpoints = try await portainerStore.getEndpoints()
-			self.endpoints = endpoints
-			return endpoints
-		}
-	}
-
-	/// Fetches containers, or returns cached ones if available.
-	/// - Parameter endpointID: Endpoint ID
-	/// - Returns: `[Container]`
-	func fetchContainers(for endpointID: Endpoint.ID) async throws -> [Container] {
-		if let storedContainers = self.containers[endpointID] {
-			return storedContainers
-		} else {
-			try portainerStore.setupIfNeeded()
-			let containers = try await portainerStore.getContainers(for: endpointID)
-			self.containers[endpointID] = containers
-			return containers
-		}
-	}
-
-	/// Fetches containers with specified `containerID`.
-	/// - Parameter containerID: ID to filter for
-	/// - Returns: `[Container]` with `id == containerID`
-	func getContainers(for endpointID: Endpoint.ID, with containerID: String) async throws -> [Container] {
-		try portainerStore.setupIfNeeded()
-		let filters = ["id": [containerID]]
-		return try await portainerStore.getContainers(for: endpointID, filters: filters)
 	}
 }

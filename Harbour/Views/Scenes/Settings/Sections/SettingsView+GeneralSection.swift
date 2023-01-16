@@ -22,6 +22,7 @@ extension SettingsView {
 							 description: Localization.EnableBackgroundRefresh.description,
 							 iconSymbolName: SFSymbol.reload,
 							 isOn: $preferences.enableBackgroundRefresh)
+//				.symbolVariant(preferences.enableBackgroundRefresh ? .none : .slash)
 			}
 		}
 	}

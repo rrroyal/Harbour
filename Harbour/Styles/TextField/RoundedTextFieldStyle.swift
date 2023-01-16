@@ -9,9 +9,11 @@ import SwiftUI
 
 struct RoundedTextFieldStyle: TextFieldStyle {
 	let fontDesign: Font.Design
+	let backgroundColor: Color
 
-	init(fontDesign: Font.Design = .default) {
+	init(fontDesign: Font.Design = .default, backgroundColor: Color = Color(uiColor: .secondarySystemBackground)) {
 		self.fontDesign = fontDesign
+		self.backgroundColor = backgroundColor
 	}
 
 	func _body(configuration: TextField<Self._Label>) -> some View {
@@ -20,8 +22,8 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 			.multilineTextAlignment(.center)
 			.padding(.medium)
 			.background(
-				RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .continuous)
-					.fill(Color(uiColor: .secondarySystemBackground))
+				RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .circular)
+					.fill(backgroundColor)
 			)
 	}
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CommonFoundation
 
 // MARK: - ContainerDetailsView+LogsView
 
@@ -13,7 +14,7 @@ extension ContainerDetailsView {
 	/// View displaying logs for associated container.
 	struct LogsView: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
-		@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneState.ErrorHandler?
+		@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneDelegate.ErrorHandler?
 
 		let item: ContainersView.ContainerNavigationItem
 

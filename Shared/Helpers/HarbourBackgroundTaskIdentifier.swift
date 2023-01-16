@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import CommonFoundation
 
 enum HarbourBackgroundTaskIdentifier {
-	static let backgroundRefresh = "\(Bundle.main.mainBundleIdentifier).BackgroundRefresh"
+	// swiftlint:disable:next force_unwrapping
+	static let backgroundRefresh = "\(Bundle.main.mainBundleIdentifier!).BackgroundRefresh"
 }

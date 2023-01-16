@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CommonHaptics
 
 internal extension SettingsView {
 	struct SliderOption: View {
@@ -42,12 +43,13 @@ internal extension SettingsView {
 					Slider(value: $value, in: range, step: step, onEditingChanged: onEditingChanged)
 						.onChange(of: value) {
 							if $0 > range.lowerBound && $0 < range.upperBound {
-								UIDevice.generateHaptic(.selectionChanged)
+								Haptics.generateIfEnabled(.selectionChanged)
 							}
 						}
 				}
 			}
 			.padding(.vertical, .small)
+			.frame(minHeight: SettingsView.minimumCellHeight)
 		}
 	}
 }

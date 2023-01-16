@@ -8,9 +8,10 @@
 import WidgetKit
 import Intents
 import OSLog
-import PortainerKit
-
 import UserNotifications
+import PortainerKit
+import CommonFoundation
+import CommonOSLog
 
 // TODO: Execute AppState.handleBackgroundRefresh() when providing a timeline/snapshot (inside a Task, nonblocking).
 
@@ -19,7 +20,7 @@ import UserNotifications
 struct ContainerStateProvider: IntentTimelineProvider {
 	typealias Intent = ContainerStateIntent
 
-	private let logger = Logger(category: .containerStateIntentProvider)
+	private let logger = Logger(category: Logger.Category.intents)
 	private let portainerStore = PortainerStore.shared
 
 	static var placeholderContainer: Container {
@@ -54,12 +55,13 @@ struct ContainerStateProvider: IntentTimelineProvider {
 		let now = Date()
 
 		guard let endpointID = Endpoint.ID(configuration.endpoint?.identifier ?? ""),
-			  let intentContainer = configuration.container,
-			  let containerID = intentContainer.identifier else {
+			  let intentContainer = configuration.container else {
 			let entry = Entry(date: now, configuration: configuration, container: nil)
 			completion(entry)
 			return
 		}
+
+		let resolveByName = configuration.resolveByName?.boolValue ?? false
 
 		Task {
 			let entry: Entry
@@ -67,8 +69,10 @@ struct ContainerStateProvider: IntentTimelineProvider {
 			do {
 				try portainerStore.setupIfNeeded()
 
-				let filters = ["id": [containerID]]
-				let container = (try await portainerStore.getContainers(for: endpointID, filters: filters)).first
+				let filters = PortainerStore.filters(for: intentContainer.identifier,
+													 name: intentContainer.name,
+													 resolveByName: resolveByName)
+				let container = (try await portainerStore.fetchContainers(for: endpointID, filters: filters)).first
 				if let container {
 					entry = Entry(date: now, configuration: configuration, container: container)
 				} else {
@@ -88,23 +92,15 @@ struct ContainerStateProvider: IntentTimelineProvider {
 
 		let now = Date()
 
-//		#if DEBUG
-//		let debugNotification = UNMutableNotificationContent()
-//		debugNotification.title = "🚧 getTimeline() request"
-//		debugNotification.threadIdentifier = "debug"
-//		let debugNotificationIdentifier = "Debug.WidgetTimeline.Request.\(now.timeIntervalSince1970)"
-//		let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
-//		UNUserNotificationCenter.current().add(debugNotificationRequest) { _ in }
-//		#endif
-
 		guard let endpointID = Endpoint.ID(configuration.endpoint?.identifier ?? ""),
-			  let intentContainer = configuration.container,
-			  let containerID = intentContainer.identifier else {
+			  let intentContainer = configuration.container else {
 			let entry = Entry(date: now, configuration: configuration, container: nil)
 			let timeline = Timeline(entries: [entry], policy: .atEnd)
 			completion(timeline)
 			return
 		}
+
+		let resolveByName = configuration.resolveByName?.boolValue ?? false
 
 		Task {
 			let entry: Entry
@@ -112,8 +108,10 @@ struct ContainerStateProvider: IntentTimelineProvider {
 			do {
 				try portainerStore.setupIfNeeded()
 
-				let filters = ["id": [containerID]]
-				let container = (try await portainerStore.getContainers(for: endpointID, filters: filters)).first
+				let filters = PortainerStore.filters(for: intentContainer.identifier,
+													 name: intentContainer.name,
+													 resolveByName: resolveByName)
+				let container = (try await portainerStore.fetchContainers(for: endpointID, filters: filters)).first
 				if let container {
 					entry = Entry(date: now, configuration: configuration, container: container)
 				} else {
@@ -123,19 +121,6 @@ struct ContainerStateProvider: IntentTimelineProvider {
 				logger.error("Error getting a timeline: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				entry = Entry(date: now, configuration: configuration, container: nil, error: error)
 			}
-
-//			#if DEBUG
-//			let debugNotification = UNMutableNotificationContent()
-//			debugNotification.title = "🚧 getTimeline() completion"
-//			debugNotification.threadIdentifier = "debug"
-//			debugNotification.body = [
-//				entry.error?.localizedDescription ?? "no error",
-//				entry.container?.id ?? "no container"
-//			].joined(separator: "\n")
-//			let debugNotificationIdentifier = "Debug.WidgetTimeline.Return.\(now.timeIntervalSince1970)"
-//			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
-//			UNUserNotificationCenter.current().add(debugNotificationRequest) { _ in }
-//			#endif
 
 			let timeline = Timeline(entries: [entry], policy: .atEnd)
 			completion(timeline)

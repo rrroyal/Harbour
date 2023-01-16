@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import CommonFoundation
 
 enum HarbourNotificationIdentifier {
-	static let containersChanged = "\(Bundle.main.mainBundleIdentifier).ContainersChanged"
+	// swiftlint:disable:next force_unwrapping
+	static let containersChanged = "\(Bundle.main.mainBundleIdentifier!).ContainersChanged"
 }

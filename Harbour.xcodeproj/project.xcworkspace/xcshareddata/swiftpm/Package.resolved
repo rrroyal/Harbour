@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "commonkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rrroyal/CommonKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "21dd62682020625597819109873e2a7d10af59ef"
+      }
+    },
+    {
+      "identity" : "indicatorskit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rrroyal/IndicatorsKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "ce9f218c27858649823d45d8160a6b2767cf11c2"
+      }
+    },
+    {
+      "identity" : "keychainkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rrroyal/KeychainKit.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "97bc943d476cb26d1aaf149d6d8dbd2342f11c9d"
+      }
+    }
+  ],
+  "version" : 2
+}

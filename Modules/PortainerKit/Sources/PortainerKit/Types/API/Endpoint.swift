@@ -37,6 +37,34 @@ public struct Endpoint: Identifiable, Equatable, Decodable, Sendable {
 	public let tags: [String]?
 	public let type: EndpointType?
 	public let url: String?
+
+	public init(authorizedTeams: [Int]? = nil,
+				authorizedUsers: [Int]? = nil,
+				edgeID: String? = nil,
+				groupID: String? = nil,
+				id: Int,
+				name: String? = nil,
+				publicURL: String? = nil,
+				status: Status? = nil,
+				tls: Bool? = nil,
+				tagIDs: [Int]? = nil,
+				tags: [String]? = nil,
+				type: EndpointType? = nil,
+				url: String? = nil) {
+		self.authorizedTeams = authorizedTeams
+		self.authorizedUsers = authorizedUsers
+		self.edgeID = edgeID
+		self.groupID = groupID
+		self.id = id
+		self.name = name
+		self.publicURL = publicURL
+		self.status = status
+		self.tls = tls
+		self.tagIDs = tagIDs
+		self.tags = tags
+		self.type = type
+		self.url = url
+	}
 }
 
 // MARK: - Endpoint+Status

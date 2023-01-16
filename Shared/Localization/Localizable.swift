@@ -51,6 +51,17 @@ internal enum Localizable {
     internal static let noEndpointsPlaceholder = Localizable.tr("Localizable", "ContainersView.NoEndpointsPlaceholder")
     /// No endpoint selected
     internal static let noSelectedEndpointPlaceholder = Localizable.tr("Localizable", "ContainersView.NoSelectedEndpointPlaceholder")
+    /// No server selected
+    internal static let noSelectedServerPlaceholder = Localizable.tr("Localizable", "ContainersView.NoSelectedServerPlaceholder")
+  }
+
+  internal enum ContentView {
+    /// No container selected
+    internal static let noContainerSelectedPlaceholder = Localizable.tr("Localizable", "ContentView.NoContainerSelectedPlaceholder")
+    /// No endpoint selected
+    internal static let noEndpointSelected = Localizable.tr("Localizable", "ContentView.NoEndpointSelected")
+    /// Not setup
+    internal static let notSetup = Localizable.tr("Localizable", "ContentView.NotSetup")
   }
 
   internal enum Debug {
@@ -65,12 +76,16 @@ internal enum Localizable {
   }
 
   internal enum Generic {
+    /// Done
+    internal static let done = Localizable.tr("Localizable", "Generic.Done")
     /// Error!
     internal static let error = Localizable.tr("Localizable", "Generic.Error")
     /// Loading...
     internal static let loading = Localizable.tr("Localizable", "Generic.Loading")
     /// None
     internal static let `none` = Localizable.tr("Localizable", "Generic.None")
+    /// Share Portainer URL...
+    internal static let sharePortainerURL = Localizable.tr("Localizable", "Generic.SharePortainerURL")
     /// Unknown
     internal static let unknown = Localizable.tr("Localizable", "Generic.Unknown")
   }
@@ -86,9 +101,9 @@ internal enum Localizable {
     /// Hi! Welcome to
     internal static let titlePrefix = Localizable.tr("Localizable", "Landing.TitlePrefix")
     internal enum Feature1 {
-      /// Feature1_Description
+      /// Manage state, inspect details or see real-time logs right on your phone.
       internal static let description = Localizable.tr("Localizable", "Landing.Feature1.Description")
-      /// Feature1_Title
+      /// Control in your pocket
       internal static let title = Localizable.tr("Localizable", "Landing.Feature1.Title")
     }
     internal enum Feature2 {
@@ -173,11 +188,27 @@ internal enum Localizable {
     internal enum Interface {
       /// Interface
       internal static let title = Localizable.tr("Localizable", "Settings.Interface.Title")
+      internal enum AppIcon {
+        /// App Icon
+        internal static let title = Localizable.tr("Localizable", "Settings.Interface.AppIcon.Title")
+      }
+      internal enum DisplaySummary {
+        /// Show a summary of your containers.
+        internal static let description = Localizable.tr("Localizable", "Settings.Interface.DisplaySummary.Description")
+        /// Display Summary
+        internal static let title = Localizable.tr("Localizable", "Settings.Interface.DisplaySummary.Title")
+      }
       internal enum EnableHaptics {
         /// You can tone them down if you don't like them as much as I do :]
         internal static let description = Localizable.tr("Localizable", "Settings.Interface.EnableHaptics.Description")
         /// Enable Haptics
         internal static let title = Localizable.tr("Localizable", "Settings.Interface.EnableHaptics.Title")
+      }
+      internal enum UseColumns {
+        /// Display containers list and detail side-by-side.
+        internal static let description = Localizable.tr("Localizable", "Settings.Interface.UseColumns.Description")
+        /// Use Two-Column Layout
+        internal static let title = Localizable.tr("Localizable", "Settings.Interface.UseColumns.Title")
       }
       internal enum UseGridView {
         /// You can fit more containers, but it's harder to read.
@@ -235,9 +266,9 @@ internal enum Localizable {
     /// Unreachable
     internal static let unreachablePlaceholder = Localizable.tr("Localizable", "Widgets.UnreachablePlaceholder")
     internal enum ContainerState {
-      /// See the status of selected container right on your Home Screen :)
+      /// See the status of selected container right on your home screen :)
       internal static let description = Localizable.tr("Localizable", "Widgets.ContainerState.Description")
-      /// Container State
+      /// Container Status
       internal static let displayName = Localizable.tr("Localizable", "Widgets.ContainerState.DisplayName")
     }
     internal enum Placeholder {

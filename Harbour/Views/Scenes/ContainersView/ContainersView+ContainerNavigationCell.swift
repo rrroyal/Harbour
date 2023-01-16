@@ -10,6 +10,7 @@ import PortainerKit
 
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View & Equatable>: View {
+		@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 		let container: Container
 		let content: () -> Content
@@ -26,9 +27,7 @@ extension ContainersView {
 				content()
 					.equatable()
 					.contextMenu {
-						if !container.isStored {
-							ContainersView.ContainerContextMenu(container: container)
-						}
+						ContainerContextMenu(container: container)
 					}
 					.tint(Color.primary)
 			}

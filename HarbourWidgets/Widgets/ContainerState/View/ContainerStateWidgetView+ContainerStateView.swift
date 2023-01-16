@@ -15,8 +15,8 @@ extension ContainerStateWidgetView {
 	struct ContainerStateView: View {
 		private typealias Localization = Localizable.Widgets
 
-		private static let circleSize: Double = 8
-		private static let minimumScaleFactor: Double = 0.8
+		private let circleSize: Double = 8
+		private let minimumScaleFactor: Double = 0.8
 
 		let entry: ContainerStateProvider.Entry
 
@@ -39,13 +39,13 @@ extension ContainerStateWidgetView {
 					.font(.subheadline.weight(.medium))
 					.foregroundColor(entry.container?.state.color ?? ContainerState?.none.color)
 //					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
-					.minimumScaleFactor(Self.minimumScaleFactor)
+					.minimumScaleFactor(minimumScaleFactor)
 
 				Spacer()
 
 				Circle()
 					.fill(entry.container?.state.color ?? ContainerState?.none.color)
-					.frame(width: Self.circleSize, height: Self.circleSize)
+					.frame(width: circleSize, height: circleSize)
 			}
 		}
 
@@ -63,7 +63,7 @@ extension ContainerStateWidgetView {
 			Text(displayName ?? Localizable.Generic.unknown)
 				.font(.headline)
 				.foregroundStyle(displayName != nil ? .primary : .secondary)
-				.lineLimit(3)
+				.lineLimit(2)
 		}
 
 		@ViewBuilder
@@ -88,7 +88,7 @@ extension ContainerStateWidgetView {
 					statusLabel
 				}
 				.multilineTextAlignment(.leading)
-				.minimumScaleFactor(Self.minimumScaleFactor)
+				.minimumScaleFactor(minimumScaleFactor)
 				.frame(maxWidth: .infinity, alignment: .leading)
 			}
 			.padding()

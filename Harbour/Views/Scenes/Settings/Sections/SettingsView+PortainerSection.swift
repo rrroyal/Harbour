@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import CommonFoundation
+import CommonHaptics
 
 // MARK: - SettingsView+PortainerSection
 
@@ -13,15 +15,22 @@ extension SettingsView {
 	struct PortainerSection: View {
 		private typealias Localization = Localizable.Settings.Portainer
 
+		@EnvironmentObject private var portainerStore: PortainerStore
+
 		@State private var isSetupSheetPresented = false
+		@State private var serverURLs: [URL] = PortainerStore.shared.savedURLs
 
 		var body: some View {
 			Section(Localization.title) {
-				EndpointsMenu(isSetupSheetPresented: $isSetupSheetPresented)
+				EndpointsMenu(isSetupSheetPresented: $isSetupSheetPresented, savedURLs: $serverURLs)
 			}
-			.sheet(isPresented: $isSetupSheetPresented) {
+			.sheet(isPresented: $isSetupSheetPresented, onDismiss: refreshServers) {
 				SetupView()
 			}
+		}
+
+		private func refreshServers() {
+			serverURLs = portainerStore.savedURLs
 		}
 	}
 }
@@ -36,8 +45,7 @@ private extension SettingsView.PortainerSection {
 		@EnvironmentObject private var appState: AppState
 		@Environment(\.sceneErrorHandler) private var sceneErrorHandler
 		@Binding var isSetupSheetPresented: Bool
-
-		@State private var savedURLs: [URL] = PortainerStore.shared.savedURLs
+		@Binding var savedURLs: [URL]
 
 		private var serverURLLabel: String? {
 			guard let url = portainerStore.serverURL else { return nil }
@@ -54,8 +62,8 @@ private extension SettingsView.PortainerSection {
 				Divider()
 
 				Button(action: {
-					UIDevice.generateHaptic(.sheetPresentation)
-					isSetupSheetPresented = true
+					Haptics.generateIfEnabled(.sheetPresentation)
+					isSetupSheetPresented.toggle()
 				}) {
 					Label(Localization.add, systemImage: SFSymbol.add)
 				}
@@ -74,10 +82,37 @@ private extension SettingsView.PortainerSection {
 			}
 		}
 
+		@ViewBuilder
+		private func urlMenu(for url: URL) -> some View {
+			Menu(formattedURL(url), content: {
+				if portainerStore.serverURL == url {
+					Label(Localization.Server.inUse, systemImage: SFSymbol.selected)
+						.symbolVariant(.circle.fill)
+				} else {
+					Button(action: {
+						Haptics.generateIfEnabled(.buttonPress)
+						appState.switchPortainerServer(to: url, errorHandler: sceneErrorHandler)
+					}) {
+						Label(Localization.Server.use, systemImage: SFSymbol.selected)
+							.symbolVariant(.circle)
+					}
+				}
+
+				Divider()
+
+				Button(role: .destructive, action: {
+					Haptics.generateIfEnabled(.buttonPress)
+					deleteServer(url)
+				}) {
+					Label(Localization.Server.delete, systemImage: SFSymbol.remove)
+				}
+			})
+		}
+
 		private func deleteServer(_ url: URL) {
 			do {
 				try portainerStore.deleteServer(url)
-				savedURLs = portainerStore.savedURLs
+				refreshServers()
 			} catch {
 				sceneErrorHandler?(error, ._debugInfo())
 			}
@@ -90,31 +125,8 @@ private extension SettingsView.PortainerSection {
 			return url.absoluteString
 		}
 
-		@ViewBuilder
-		private func urlMenu(for url: URL) -> some View {
-			Menu(formattedURL(url), content: {
-				if portainerStore.serverURL == url {
-					Label(Localization.Server.inUse, systemImage: SFSymbol.selected)
-						.symbolVariant(.circle.fill)
-				} else {
-					Button(action: {
-						UIDevice.generateHaptic(.buttonPress)
-						appState.switchPortainerServer(to: url, errorHandler: sceneErrorHandler)
-					}) {
-						Label(Localization.Server.use, systemImage: SFSymbol.selected)
-							.symbolVariant(.circle)
-					}
-				}
-
-				Divider()
-
-				Button(role: .destructive, action: {
-					UIDevice.generateHaptic(.buttonPress)
-					deleteServer(url)
-				}) {
-					Label(Localization.Server.delete, systemImage: SFSymbol.remove)
-				}
-			})
+		private func refreshServers() {
+			savedURLs = portainerStore.savedURLs
 		}
 	}
 }

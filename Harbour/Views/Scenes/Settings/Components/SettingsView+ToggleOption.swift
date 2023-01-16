@@ -13,22 +13,27 @@ internal extension SettingsView {
 		let label: String
 		let description: String?
 		let iconSymbolName: String
-		let iconColor: Color
+		let symbolVariants: SymbolVariants
 		@Binding var isOn: Bool
 
-		init(label: String, description: String? = nil, iconSymbolName: String, iconColor: Color = .accentColor, isOn: Binding<Bool>) {
+		init(label: String,
+			 description: String? = nil,
+			 iconSymbolName: String,
+			 symbolVariants: SymbolVariants = .fill,
+			 isOn: Binding<Bool>) {
 			self.label = label
 			self.description = description
 			self.iconSymbolName = iconSymbolName
-			self.iconColor = iconColor
+			self.symbolVariants = symbolVariants
 			self._isOn = isOn
 		}
 
 		var body: some View {
 			Toggle(isOn: $isOn) {
 				HStack(alignment: SettingsView.optionTitleAlignment) {
-					OptionIcon(symbolName: iconSymbolName, color: iconColor)
+					OptionIcon(symbolName: iconSymbolName, color: .accentColor, symbolVariants: symbolVariants)
 						.alignmentGuide(SettingsView.optionTitleAlignment) { $0[VerticalAlignment.center] }
+						.animation(.easeInOut, value: isOn)
 
 					VStack(alignment: .listRowSeparatorLeading, spacing: vstackSpacing) {
 						Text(label)
@@ -44,6 +49,7 @@ internal extension SettingsView {
 					.padding(.trailing, 2)
 				}
 			}
+			.frame(minHeight: SettingsView.minimumCellHeight)
 		}
 	}
 }

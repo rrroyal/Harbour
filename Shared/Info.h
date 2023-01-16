@@ -6,4 +6,4 @@
 //
 
 #define __BUILD_DATE__ __TIMESTAMP__
-#define __HBMainBundleIdentifier__ xyz.shameful.Harbour
+#define __MainBundleIdentifier__ xyz.shameful.Harbour

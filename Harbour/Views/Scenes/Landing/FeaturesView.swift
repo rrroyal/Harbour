@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CommonHaptics
 
 // MARK: - FeaturesView
 
@@ -27,19 +28,19 @@ struct FeaturesView: View {
 			VStack(spacing: 20) {
 				FeatureCell(headline: Localization.Feature1.title,
 							subheadline: Localization.Feature1.description,
-							icon: "globe")
+							icon: "ipad.and.iphone")
 				FeatureCell(headline: Localization.Feature2.title,
 							subheadline: Localization.Feature2.description,
-							icon: "globe")
+							icon: "questionmark")
 				FeatureCell(headline: Localization.Feature3.title,
 							subheadline: Localization.Feature3.description,
-							icon: "globe")
+							icon: "questionmark")
 			}
 
 			Spacer()
 
 			Button(Localization.continueButton) {
-				UIDevice.generateHaptic(.buttonPress)
+				Haptics.generateIfEnabled(.buttonPress)
 				continueAction()
 			}
 			.buttonStyle(.customPrimary)

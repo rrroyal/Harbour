@@ -19,6 +19,9 @@ enum SFSymbol {
 	/// ellipsis
 	static let more = "ellipsis"
 
+	/// ellipsis.circle
+	static let moreCircle = "ellipsis.circle"
+
 	/// arrow.clockwise
 	static let reload = "arrow.clockwise"
 

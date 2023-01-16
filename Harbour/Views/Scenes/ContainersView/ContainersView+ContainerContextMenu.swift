@@ -14,7 +14,7 @@ extension ContainersView {
 		private typealias Localization = Localizable.ContainerContextMenu
 
 		@EnvironmentObject private var portainerStore: PortainerStore
-		@EnvironmentObject private var sceneState: SceneState
+		@EnvironmentObject private var sceneDelegate: SceneDelegate
 
 		let container: Container
 
@@ -138,7 +138,7 @@ extension ContainersView {
 											 subheadline: action.label,
 											 dismissType: .automatic,
 											 style: style)
-			sceneState.indicators.display(indicator)
+			sceneDelegate.indicators.display(indicator)
 
 			Task {
 				do {
@@ -151,7 +151,7 @@ extension ContainersView {
 
 					// try await Portainer.shared.getContainers()
 				} catch {
-					sceneState.handle(error)
+					sceneDelegate.handle(error)
 				}
 			}
 		}

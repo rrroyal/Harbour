@@ -13,6 +13,8 @@ struct PrimaryButtonStyle: ButtonStyle {
 	let backgroundColor: Color
 	let font: Font
 
+	private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .circular)
+
 	init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) {
 		self.foregroundColor = foregroundColor
 		self.backgroundColor = backgroundColor
@@ -27,7 +29,8 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.padding()
 			.frame(maxWidth: .infinity, alignment: .center)
 			.background(isEnabled ? backgroundColor : Color(uiColor: .systemGray5))
-			.cornerRadius(Constants.cornerRadius)
+			.clipShape(roundedRectangle)
+			.contentShape(roundedRectangle)
 			.opacity(configuration.isPressed ? Constants.Buttons.pressedOpacity : 1)
 			.scaleEffect(configuration.isPressed ? Constants.Buttons.pressedScale : 1)
 			.animation(Constants.Buttons.pressAnimation, value: configuration.isPressed)

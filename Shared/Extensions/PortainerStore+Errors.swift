@@ -8,8 +8,8 @@
 import Foundation
 
 extension PortainerStore {
-	enum PortainerError: LocalizedError {
-
+	// TODO: Localize it
+	enum PortainerError: Error {
 		/// `Portainer` isn't setup.
 		case notSetup
 
@@ -18,6 +18,5 @@ extension PortainerStore {
 
 		/// No endpoint is selected.
 		case noSelectedEndpoint
-
 	}
 }

@@ -14,10 +14,12 @@ enum ViewPaddingSize: Double {
 }
 
 extension View {
+	@ViewBuilder
 	func padding(_ edges: Edge.Set, _ size: ViewPaddingSize) -> some View {
 		padding(edges, size.rawValue)
 	}
 
+	@ViewBuilder
 	func padding(_ size: ViewPaddingSize) -> some View {
 		padding(size.rawValue)
 	}

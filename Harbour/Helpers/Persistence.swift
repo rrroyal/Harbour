@@ -7,11 +7,13 @@
 
 import CoreData
 import OSLog
+import CommonFoundation
+import CommonOSLog
 
-struct PersistenceController {
-	static let shared = PersistenceController()
+struct Persistence {
+	static let shared = Persistence()
 
-	private static let logger = Logger(category: .persistence)
+	private static let logger = Logger(category: Logger.Category.persistence)
 
 	let container: NSPersistentContainer
 	let backgroundContext: NSManagedObjectContext
@@ -46,5 +48,21 @@ struct PersistenceController {
 		backgroundContext = container.newBackgroundContext()
 		backgroundContext.automaticallyMergesChangesFromParent = true
 		backgroundContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+	}
+
+	func reset() {
+		Self.logger.info("Resetting CoreData! [\(String._debugInfo(), privacy: .public)]")
+
+		let entities = container.managedObjectModel.entities
+		for entity in entities {
+			guard let entityName = entity.name else { continue }
+			let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+			let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+			do {
+				try container.viewContext.execute(deleteRequest)
+			} catch {
+				Self.logger.error("Failed to remove entity \"\(entityName, privacy: .public)\": \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			}
+		}
 	}
 }

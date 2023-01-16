@@ -95,22 +95,3 @@ extension Container: Equatable {
 		lhs.networkSettings == rhs.networkSettings
 	}
 }
-
-// MARK: - Container+displayName
-
-public extension Container {
-	var displayName: String? {
-		guard let firstName = names?.first else { return nil }
-		return firstName.starts(with: "/") ? String(firstName.dropFirst()) : firstName
-	}
-}
-
-// MARK: - Container+stack
-
-public extension Container {
-	private static let stackLabelID = "com.docker.compose.project"
-
-	var stack: String? {
-		labels?.first(where: { $0.key == Self.stackLabelID })?.value
-	}
-}

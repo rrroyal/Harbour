@@ -14,7 +14,8 @@ extension ContainersListView {
 	struct ContainerCell: View {
 		private typealias Localization = Localizable.ContainerCell
 
-		private static let minimumScaleFactor: Double = 0.8
+		private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .circular)
+		private let minimumScaleFactor: Double = 0.8
 
 		let container: Container
 
@@ -57,7 +58,7 @@ extension ContainersListView {
 				}
 				.lineLimit(2)
 				.multilineTextAlignment(.leading)
-				.minimumScaleFactor(Self.minimumScaleFactor)
+				.minimumScaleFactor(minimumScaleFactor)
 
 				Spacer()
 
@@ -70,7 +71,8 @@ extension ContainersListView {
 			.padding()
 			.frame(maxWidth: .infinity)
 			.background(Color(uiColor: .secondarySystemGroupedBackground))
-			.cornerRadius(Constants.ContainerCell.cornerRadius)
+			.clipShape(roundedRectangle)
+			.contentShape(roundedRectangle)
 		}
 	}
 }

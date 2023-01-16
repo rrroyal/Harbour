@@ -14,12 +14,15 @@
 "Generic.Error" = "Error!";
 "Generic.Unknown" = "Unknown";
 "Generic.None" = "None";
+"Generic.Done" = "Done";
+
+"Generic.SharePortainerURL" = "Share Portainer URL...";
 
 // MARK: - Landing
 
 "Landing.TitlePrefix" = "Hi! Welcome to";
-"Landing.Feature1.Title" = "Feature1_Title";
-"Landing.Feature1.Description" = "Feature1_Description";
+"Landing.Feature1.Title" = "Control in your pocket";
+"Landing.Feature1.Description" = "Manage state, inspect details or see real-time logs right on your phone.";
 "Landing.Feature2.Title" = "Feature2_Title";
 "Landing.Feature2.Description" = "Feature2_Description";
 "Landing.Feature3.Title" = "Feature3_Title";
@@ -33,9 +36,16 @@
 "Setup.Button.Login" = "Log in";
 "Setup.Button.Success" = "Success!";
 
+// MARK: - ContentView
+
+"ContentView.NotSetup" = "Not setup";
+"ContentView.NoEndpointSelected" = "No endpoint selected";
+"ContentView.NoContainerSelectedPlaceholder" = "No container selected";
+
 // MARK: - ContainersView
 
 "ContainersView.LoadingPlaceholder" = "Loading...";
+"ContainersView.NoSelectedServerPlaceholder" = "No server selected";
 "ContainersView.NoContainersPlaceholder" = "No containers";
 "ContainersView.NoSelectedEndpointPlaceholder" = "No endpoint selected";
 "ContainersView.NoEndpointsPlaceholder" = "No endpoints";
@@ -84,11 +94,19 @@
 
 "Settings.Interface.Title" = "Interface";
 
-"Settings.Interface.EnableHaptics.Title" = "Enable Haptics";
-"Settings.Interface.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
+"Settings.Interface.DisplaySummary.Title" = "Display Summary";
+"Settings.Interface.DisplaySummary.Description" = "Show a summary of your containers.";
+
+"Settings.Interface.UseColumns.Title" = "Use Two-Column Layout";
+"Settings.Interface.UseColumns.Description" = "Display containers list and detail side-by-side.";
 
 "Settings.Interface.UseGridView.Title" = "Use Grid View";
 "Settings.Interface.UseGridView.Description" = "You can fit more containers, but it's harder to read.";
+
+"Settings.Interface.EnableHaptics.Title" = "Enable Haptics";
+"Settings.Interface.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
+
+"Settings.Interface.AppIcon.Title" = "App Icon";
 
 // MARK: Settings - Other
 
@@ -123,8 +141,8 @@
 "Widgets.Placeholder.ContainerName" = "Containy";
 "Widgets.Placeholder.ContainerStatus" = "Up 10 days";
 
-"Widgets.ContainerState.DisplayName" = "Container State";
-"Widgets.ContainerState.Description" = "See the status of selected container right on your Home Screen :)";
+"Widgets.ContainerState.DisplayName" = "Container Status";
+"Widgets.ContainerState.Description" = "See the status of selected container right on your home screen :)";
 
 // MARK: - Indicators
 

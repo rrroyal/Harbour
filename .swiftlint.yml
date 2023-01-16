@@ -64,7 +64,7 @@ opt_in_rules:
   # - vertical_parameter_alignment_on_call
   # - vertical_whitespace_closing_braces
   # - vertical_whitespace_opening_braces
-  - weak_delegate
+  # - weak_delegate
   - yoda_condition
 
 line_length:

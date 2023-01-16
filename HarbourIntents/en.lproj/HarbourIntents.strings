@@ -1,0 +1,94 @@
+/*
+  HarbourIntents.strings
+  Harbour
+
+  Created by royal on 27/12/2022.
+  en_US
+*/
+
+// MARK: - ContainerState
+
+"4gjK73" = "Removing";		// "ContainerState.Removing";
+"8pW2s2" = "Exited";		// "ContainerState.Exited";
+"Cc2V5I" = "Dead";			// "ContainerState.Dead";
+"EvtFyE" = "Created";		// "ContainerState.Created";
+"Pdto89" = "Unknown";		// "ContainerState.Unknown";
+"TK3lVt" = "Running";		// "ContainerState.Running";
+"TLVDgk" = "Paused";		// "ContainerState.Paused";
+"yvXnJE" = "Restarting";	// "ContainerState.Restarting";
+
+// MARK: - Shortcuts
+
+"XCOyin" = "Get Container State";	// "%CONTAINERSTATE_TITLE%";
+
+"2M2CyA" = "Get state of container on ${endpoint}";		// "%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${endpoint}";
+"OsU0Vn" = "Get state of ${container} on ${endpoint}";	// "%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${container} ${endpoint}";
+
+"gReFPf" = "CONTAINERSTATE_SHORTCUTS_SUMMARY ${endpoint}";	// "%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${endpoint}";
+"vTh0vo" = "CONTAINERSTATE_SHORTCUTS_SUMMARY ${container} ${endpoint}";	// "%CONTAINERSTATE_SHORTCUTS_SUMMARY% ${container} ${endpoint}";
+
+"ZsiYH7" = "Getting state of ${containerName} failed - ${error}.";	// "%CONTAINERSTATE_ERROR_DIALOG_PRINTED% ${error} ${containerName}";
+
+"aDnza6-4gjK73" = "${containerName} - \"${status}\" (removing)";	// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Removing ${status} ${containerName}";
+"aDnza6-8pW2s2" = "${containerName} - \"${status}\" (exited)";		// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Exited ${status} ${containerName}";
+"aDnza6-Cc2V5I" = "${containerName} - \"${status}\" (dead)";		// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Dead ${status} ${containerName}";
+"aDnza6-EvtFyE" = "${containerName} - \"${status}\" (created)";		// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Created ${status} ${containerName}";
+"aDnza6-Pdto89" = "${containerName} - \"${status}\" (unknown)";		// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Unknown ${status} ${containerName}";
+"aDnza6-TK3lVt" = "${containerName} - \"${status}\" (running)";		// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Running ${status} ${containerName}";
+"aDnza6-TLVDgk" = "${containerName} - \"${status}\" (paused)";		// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Paused ${status} ${containerName}";
+"aDnza6-yvXnJE" = "${containerName} - \"${status}\" (restarting)";	// "%CONTAINERSTATE_SUCCESS_DIALOG_PRINTED% ContainerState.Restarting ${status} ${containerName}";
+
+"ivj3sq" = "Getting state of ${containerName} failed with error \"${error}\".";	// "%CONTAINERSTATE_ERROR_DIALOG_VOICE% ${error} ${containerName}";
+
+"kIBFup-4gjK73" = "${containerName} is being removed and has state \"${status}\".";	// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Removing ${status} ${containerName}";
+"kIBFup-8pW2s2" = "${containerName} has exited and has state \"${status}\".";		// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Exited ${status} ${containerName}";
+"kIBFup-Cc2V5I" = "${containerName} is dead and has state \"${status}\".";			// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Dead ${status} ${containerName}";
+"kIBFup-EvtFyE" = "${containerName} is being created and has state \"${status}\".";	// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Created ${status} ${containerName}";
+"kIBFup-Pdto89" = "${containerName} is unknown and has state \"${status}\".";		// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Unknown ${status} ${containerName}";
+"kIBFup-TK3lVt" = "${containerName} is running and has state \"${status}\".";		// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Running ${status} ${containerName}";
+"kIBFup-TLVDgk" = "${containerName} is paused and has state \"${status}\".";		// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Paused ${status} ${containerName}";
+"kIBFup-yvXnJE" = "${containerName} is restarting and has state \"${status}\".";	// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Restarting ${status} ${containerName}";
+
+// MARK: - Unsorted
+
+"4LwIlG" = "Container State";	// "IntentContainerState";
+
+"D23ZCT" = "CONTAINERSTATE_SUGGESTIONS_DESCRIPTION ${endpoint} ${container}";	// "%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${endpoint} ${container}";
+
+"E3S8Vi" = "Container Name";	// "Container Name";
+
+"Ec8j3G" = "Endpoint";	// "Endpoint";
+
+"G2dSs0" = "CONTAINERSTATE_INTENT_DESCRIPTION";	// "%CONTAINERSTATE_INTENT_DESCRIPTION%";
+
+"L28vqf" = "Endpoint";	// "Endpoint";
+
+"PDUnU5" = "Container";	// "Container";
+
+"WGSq9K" = "Container";	// "Container";
+
+"6aNebZ" = "Resolve by name?"; // "Resolve by name?"
+"LrE4d8" = "No";
+"MS0qJL" = "Yes";
+"dJrhx0" = "%CONTAINERSTATE_RESOLVEBYNAME_SIRI_DIALOG% ${resolveByName}"; // "%CONTAINERSTATE_RESOLVEBYNAME_SIRI_DIALOG% ${resolveByName}"
+
+"Qsot87" = "Error";	// "Error";
+
+"XZ4ynf" = "Container Status";	// "Container Status";
+
+"Ya7rYB" = "CONTAINERSTATE_ENDPOINT_PROMPT_LABEL ${endpoint}";	// "%CONTAINERSTATE_ENDPOINT_PROMPT_LABEL% ${endpoint}";
+
+"cI9nZG" = "CONTAINERSTATE_SUGGESTIONS_SUMMARY ${container}";	// "%CONTAINERSTATE_SUGGESTIONS_SUMMARY% ${container}";
+
+"gSc8XU" = "CONTAINERSTATE_CONTAINER_PROMPT_LABEL ${container}";	// "%CONTAINERSTATE_CONTAINER_PROMPT_LABEL% ${container}";
+
+"hGVR1N" = "Container State";	// "Container State";
+
+"paAiRQ" = "CONTAINERSTATE_SUGGESTIONS_DESCRIPTION ${container}";	// "%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${container}";
+
+"rYe9Pc" = "CONTAINERSTATE_ENDPOINT_SIRI_DIALOG ${endpoint}";	// "%CONTAINERSTATE_ENDPOINT_SIRI_DIALOG% ${endpoint}";
+
+"vOfMxo" = "CONTAINERSTATE_CONTAINER_SIRI_DIALOG ${container}";	// "%CONTAINERSTATE_CONTAINER_SIRI_DIALOG% ${container}";
+
+"zNtToW" = "CONTAINERSTATE_SUGGESTIONS_DESCRIPTION ${endpoint}";	// "%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${endpoint}";
+

@@ -14,6 +14,7 @@ enum ViewOpacity: Double {
 }
 
 extension View {
+	@ViewBuilder
 	func opacity(_ opacity: ViewOpacity) -> some View {
 		self.opacity(opacity.rawValue)
 	}

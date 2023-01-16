@@ -13,14 +13,27 @@ import IndicatorsKit
 
  extension EnvironmentValues {
 	private struct SceneErrorHandler: EnvironmentKey {
-		static let defaultValue: SceneState.ErrorHandler? = nil
+		static let defaultValue: SceneDelegate.ErrorHandler? = nil
 	}
 
-	var sceneErrorHandler: SceneState.ErrorHandler? {
+	var sceneErrorHandler: SceneDelegate.ErrorHandler? {
 		get { self[SceneErrorHandler.self] }
 		set { self[SceneErrorHandler.self] = newValue }
 	}
  }
+
+// MARK: - PortainerServerURL
+
+extension EnvironmentValues {
+	private struct PortainerServerURL: EnvironmentKey {
+		static let defaultValue: URL? = nil
+	}
+
+	var portainerServerURL: URL? {
+		get { self[PortainerServerURL.self] }
+		set { self[PortainerServerURL.self] = newValue }
+	}
+}
 
 // MARK: - PortainerSelectedEndpointID
 

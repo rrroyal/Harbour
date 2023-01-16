@@ -8,6 +8,7 @@
 import SwiftUI
 import OSLog
 import WidgetKit
+import CommonHaptics
 
 // MARK: - DebugView
 
@@ -18,9 +19,10 @@ struct DebugView: View {
 		List {
 			#if DEBUG
 			LastBackgroundRefreshSection()
-			WidgetsSection()
-			LogsSection()
 			#endif
+			WidgetsSection()
+			PersistenceSection()
+			LogsSection()
 		}
 		.navigationTitle(Localization.title)
 	}
@@ -50,8 +52,24 @@ private extension DebugView {
 		var body: some View {
 			Section("WidgetKit") {
 				Button("Refresh timelines") {
-					UIDevice.generateHaptic(.buttonPress)
+					Haptics.generateIfEnabled(.buttonPress)
 					WidgetCenter.shared.reloadAllTimelines()
+				}
+			}
+		}
+	}
+
+	struct PersistenceSection: View {
+		var body: some View {
+			Section("Persistence") {
+				Button("Reset CoreData", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					Persistence.shared.reset()
+				}
+
+				Button("Reset Keychain", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					// TODO: Reset Keychain
 				}
 			}
 		}

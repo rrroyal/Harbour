@@ -14,10 +14,12 @@ extension ContainersGridView {
 	struct ContainerCell: View {
 		private typealias Localization = Localizable.ContainerCell
 
-		private static let minimumScaleFactor: Double = 0.7
-		private static let paddingSize: Double = 12
+		private let minimumScaleFactor: Double = 0.7
+		private let paddingSize: Double = 12
 
 		let container: Container
+
+		private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
 		@ViewBuilder
 		private var stateHeader: some View {
@@ -36,7 +38,7 @@ extension ContainersGridView {
 					.transition(.opacity)
 			}
 			.animation(.easeInOut, value: container.state)
-			.minimumScaleFactor(Self.minimumScaleFactor)
+			.minimumScaleFactor(minimumScaleFactor)
 		}
 
 		@ViewBuilder
@@ -55,7 +57,7 @@ extension ContainersGridView {
 					.lineLimit(1)
 			}
 			.multilineTextAlignment(.leading)
-			.minimumScaleFactor(Self.minimumScaleFactor)
+			.minimumScaleFactor(minimumScaleFactor)
 			.animation(.easeInOut, value: container.displayName)
 			.animation(.easeInOut, value: container.status)
 		}
@@ -66,11 +68,12 @@ extension ContainersGridView {
 				Spacer()
 				nameAndStatusLabels
 			}
-			.padding(Self.paddingSize)
+			.padding(paddingSize)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.aspectRatio(1, contentMode: .fit)
 			.background(Color(uiColor: .secondarySystemGroupedBackground))
-			.cornerRadius(Constants.ContainerCell.cornerRadius)
+			.clipShape(roundedRectangle)
+			.contentShape(roundedRectangle)
 		}
 	}
 }

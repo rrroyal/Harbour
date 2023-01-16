@@ -11,27 +11,25 @@ import PortainerKit
 // MARK: - ContainersListView
 
 struct ContainersListView: View {
-	private static let cellSpacing: Double = 8
-
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
-	@EnvironmentObject private var sceneState: SceneState
+	@EnvironmentObject private var sceneDelegate: SceneDelegate
+
+	private let cellSpacing: Double = 8
 
 	let containers: [Container]
 
 	var body: some View {
-		ScrollView {
-			LazyVStack(spacing: Self.cellSpacing) {
-				ForEach(containers) { container in
-					ContainersView.ContainerNavigationCell(container: container) {
-						ContainerCell(container: container)
-					}
-					.transition(.opacity)
+		LazyVStack(spacing: cellSpacing) {
+			ForEach(containers) { container in
+				ContainersView.ContainerNavigationCell(container: container) {
+					ContainerCell(container: container)
 				}
+//				.transition(.opacity)
 			}
-			.padding(.horizontal)
 		}
-		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
-		.animation(.easeInOut, value: containers)
+		.padding(.horizontal)
+		.padding(.bottom)
+//		.animation(.easeInOut, value: containers)
 	}
 }
 
