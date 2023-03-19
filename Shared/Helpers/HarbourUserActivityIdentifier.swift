@@ -8,5 +8,6 @@
 import Foundation
 
 enum HarbourUserActivityIdentifier {
+	// swiftlint:disable:next force_unwrapping
 	static let containerDetails = "\(Bundle.main.mainBundleIdentifier!).ContainerDetailsActivity"
 }

@@ -25,13 +25,11 @@ struct ContainersGridView: View {
 			ForEach(containers) { container in
 				ContainersView.ContainerNavigationCell(container: container) {
 					ContainerCell(container: container)
+						.equatable()
 				}
-//				.transition(.opacity)
+				.transition(.opacity)
 			}
 		}
-		.padding(.horizontal)
-		.padding(.bottom)
-//		.animation(.easeInOut, value: containers)
 	}
 }
 

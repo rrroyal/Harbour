@@ -15,8 +15,12 @@ struct ContainerContextMenu: View {
 
 	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
+	@Environment(\.showIndicatorAction) private var showIndicatorAction
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
+
+	private let killActionHaptic: Haptics.HapticStyle = .heavy
 
 	let containerID: Container.ID
 	let containerDisplayName: String?
@@ -33,153 +37,98 @@ struct ContainerContextMenu: View {
 	}
 
 	@ViewBuilder
-	private var resumeButton: some View {
-		Button(action: { execute(.unpause) }) {
-			Text(ExecuteAction.unpause.label)
-			Image(systemName: ExecuteAction.unpause.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var restartButton: some View {
-		Button(action: { execute(.restart) }) {
-			Text(ExecuteAction.restart.label)
-			Image(systemName: ExecuteAction.restart.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var startButton: some View {
-		Button(action: { execute(.start) }) {
-			Text(ExecuteAction.start.label)
-			Image(systemName: ExecuteAction.start.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var pauseButton: some View {
-		Button(action: { execute(.pause) }) {
-			Text(ExecuteAction.pause.label)
-			Image(systemName: ExecuteAction.pause.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var stopButton: some View {
-		Button(action: { execute(.stop) }) {
-			Text(ExecuteAction.stop.label)
-			Image(systemName: ExecuteAction.stop.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var killButton: some View {
-		Button(role: .destructive, action: { execute(.kill, haptic: .heavy) }) {
-			Text(ExecuteAction.kill.label)
-			Image(systemName: ExecuteAction.kill.icon)
-		}
-	}
-
-	@ViewBuilder
 	private var attachButton: some View {
 		Button(action: attachAction) {
-			Label(Localization.attach, systemImage: "terminal")
+			Label(Localization.attach, systemImage: SFSymbol.terminal)
 		}
 		.disabled(containerState != .running)
 	}
 
 	var body: some View {
-		Label(containerStatus ?? containerState?.rawValue.localizedCapitalized ?? Localization.unknownState, systemImage: containerState.icon)
+//		Label(containerStatus ?? containerState?.rawValue.localizedCapitalized ?? Localization.unknownState, systemImage: containerState.icon)
 
 		if !containerIsStored {
 			Divider()
 
 			switch containerState {
 				case .created:
-					pauseButton
-					stopButton
-					restartButton
+					button(for: .pause)
+					button(for: .stop)
+					button(for: .restart)
 					Divider()
-					killButton
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .running:
-					pauseButton
-					stopButton
-					restartButton
+					button(for: .pause)
+					button(for: .stop)
+					button(for: .restart)
 					Divider()
-					killButton
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .paused:
-					resumeButton
-					stopButton
-					restartButton
+					button(for: .unpause)
+					button(for: .stop)
+					button(for: .restart)
 					Divider()
-					killButton
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .restarting:
-					pauseButton
-					stopButton
+					button(for: .pause)
+					button(for: .stop)
 					Divider()
-					killButton
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .removing:
-					killButton
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .exited:
-					startButton
+					button(for: .start)
 				case .dead:
-					startButton
+					button(for: .start)
 				case .none:
-					resumeButton
-					startButton
-					restartButton
-					pauseButton
-					stopButton
+					button(for: .unpause)
+					button(for: .start)
+					button(for: .restart)
+					button(for: .pause)
+					button(for: .stop)
 					Divider()
-					killButton
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 			}
+
+			Divider()
+
+			attachButton
 		}
-
-		Divider()
-
-		attachButton
-
-		//			if let portainerURL = PortainerURLScheme(address: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpointID) {
-		//				Divider()
-		//
-		//				ShareLink(Localization.sharePortainerURL, item: portainerURL)
-		//			}
 	}
 
-	private func execute(_ action: PortainerKit.ExecuteAction, haptic hapticStyle: Haptics.HapticStyle = .medium) {
+	private func button(for action: ExecuteAction, role: ButtonRole? = nil, haptic: Haptics.HapticStyle = .medium) -> some View {
+		Button(role: role, action: { execute(action, haptic: haptic) }) {
+			Label(action.label, systemImage: action.icon)
+		}
+	}
+}
+
+// MARK: - ContainerContextMenu+Actions
+
+private extension ContainerContextMenu {
+	func execute(_ action: PortainerKit.ExecuteAction, haptic hapticStyle: Haptics.HapticStyle) {
 		Haptics.generateIfEnabled(hapticStyle)
 
-		let style: Indicator.Style = .init(subheadlineColor: action.color,
-										   subheadlineStyle: .primary,
-										   iconColor: action.color,
-										   iconStyle: .primary,
-										   iconVariants: .fill)
-		let indicator: Indicator = .init(id: "ContainerExecuteAction.\(containerID)",
-										 icon: action.icon,
-										 headline: containerDisplayName ?? Localizable.PortainerKit.Generic.container,
-										 subheadline: action.label,
-										 dismissType: .automatic,
-										 style: style)
-		sceneDelegate.indicators.display(indicator)
+		showIndicatorAction(.containerActionExecuted(containerID, containerDisplayName, action))
 
 		Task {
 			do {
 				try await portainerStore.execute(action, on: containerID)
 
-				//					DispatchQueue.main.async {
-				//						container.state = action.expectedState
-				//						Portainer.shared.refreshContainerPassthroughSubject.send(container.id)
-				//					}
+//				DispatchQueue.main.async {
+//					container.state = action.expectedState
+//					Portainer.shared.refreshContainerPassthroughSubject.send(container.id)
+//				}
 
-				// try await Portainer.shared.getContainers()
+				portainerStore.refreshContainers(errorHandler: sceneErrorHandler)
 			} catch {
-				sceneDelegate.handle(error)
+				sceneErrorHandler(error, ._debugInfo())
 			}
 		}
 	}
 
 	// TODO: attachAction()
-	private func attachAction() {
+	func attachAction() {
 		print(#function)
 
 		Haptics.generateIfEnabled(.sheetPresentation)

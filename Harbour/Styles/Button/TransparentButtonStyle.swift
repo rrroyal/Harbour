@@ -24,5 +24,5 @@ struct TransparentButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == TransparentButtonStyle {
-	static var customTransparent: TransparentButtonStyle { .init() }
+	static var customTransparent: Self { .init() }
 }

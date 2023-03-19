@@ -9,8 +9,7 @@ import Foundation
 import PortainerKit
 
 extension Container {
-	// TODO: Validate that every container has those two properties set.
 	var isStored: Bool {
-		imageID == nil && created == nil
+		imageID == nil
 	}
 }

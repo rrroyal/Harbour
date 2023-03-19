@@ -36,6 +36,34 @@ public final class Portainer {
 	private let logger = Logger(subsystem: Portainer.bundleIdentifier, category: "PortainerKit")
 	private let wsQueue = DispatchQueue(label: Portainer.bundleIdentifier.appending(".WebSocket"), qos: .utility)
 
+	private let jsonDecoder: JSONDecoder = {
+		let decoder = JSONDecoder()
+		decoder.dateDecodingStrategy = .custom { decoder -> Date in
+			let dateFormatter = ISO8601DateFormatter()
+
+			let container = try decoder.singleValueContainer()
+			do {
+				let str = try container.decode(String.self)
+
+				dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+				if let date = dateFormatter.date(from: str) { return date }
+
+				dateFormatter.formatOptions = [.withInternetDateTime]
+				if let date = dateFormatter.date(from: str) { return date }
+
+				throw DateError.invalidDate(dateString: str)
+			} catch {
+				if let decodingError = error as? DecodingError {
+					let number = try container.decode(TimeInterval.self)
+					return Date(timeIntervalSince1970: number)
+				}
+
+				throw error
+			}
+		}
+		return decoder
+	}()
+
 	// MARK: init
 
 	/// Initializes PortainerKit with endpoint URL and optional authorization token.
@@ -66,6 +94,13 @@ public final class Portainer {
 		self.serverURL = url
 		self.token = token
 		self.isSetup = true
+	}
+
+	@Sendable
+	public func reset() {
+		self.serverURL = nil
+		self.token = nil
+		self.isSetup = false
 	}
 
 	/// Fetches available endpoints.
@@ -105,24 +140,7 @@ public final class Portainer {
 	@Sendable
 	public func inspectContainer(_ containerID: Container.ID, endpointID: Endpoint.ID) async throws -> ContainerDetails {
 		let request = try request(for: .inspect(containerID: containerID, endpointID: endpointID))
-
-		let decoder = JSONDecoder()
-		decoder.dateDecodingStrategy = .custom { decoder -> Date in
-			let dateFormatter = ISO8601DateFormatter()
-
-			let container = try decoder.singleValueContainer()
-			let str = try container.decode(String.self)
-
-			dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-			if let date = dateFormatter.date(from: str) { return date }
-
-			dateFormatter.formatOptions = [.withInternetDateTime]
-			if let date = dateFormatter.date(from: str) { return date }
-
-			throw DateError.invalidDate(dateString: str)
-		}
-
-		return try await fetch(request: request, decoder: decoder)
+		return try await fetch(request: request)
 	}
 
 	/// Executes selected action for container with supplied ID.
@@ -163,16 +181,20 @@ public final class Portainer {
 	///   - endpointID: Endpoint ID
 	///   - since: Fetch logs since then
 	///   - tail: Number of lines, counting from the end
-	///   - displayTimestamps: Display timestamps?
+	///   - timestamps: Display timestamps?
 	/// - Returns: `String` logs
 	@Sendable
-	public func fetchLogs(containerID: Container.ID, endpointID: Endpoint.ID, since: TimeInterval = 0, tail: Int = 100, displayTimestamps: Bool = false) async throws -> String {
+	public func fetchLogs(containerID: Container.ID,
+						  endpointID: Endpoint.ID,
+						  since logsSince: TimeInterval = 0,
+						  tail lastEntriesAmount: Int = 100,
+						  timestamps includeTimestamps: Bool = false) async throws -> String {
 		let queryItems = [
-			URLQueryItem(name: "since", value: "\(since)"),
+			URLQueryItem(name: "since", value: "\(logsSince)"),
 			URLQueryItem(name: "stderr", value: "true"),
 			URLQueryItem(name: "stdout", value: "true"),
-			URLQueryItem(name: "tail", value: "\(tail)"),
-			URLQueryItem(name: "timestamps", value: "\(displayTimestamps)")
+			URLQueryItem(name: "tail", value: "\(lastEntriesAmount)"),
+			URLQueryItem(name: "timestamps", value: "\(includeTimestamps)")
 		]
 		let request = try request(for: .logs(containerID: containerID, endpointID: endpointID), query: queryItems)
 
@@ -261,7 +283,7 @@ public final class Portainer {
 	/// - Parameter decoder: `JSONDecoder`
 	/// - Returns: `Output`
 	@Sendable
-	private func fetch<Output: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder()) async throws -> Output {
+	private func fetch<Output: Decodable>(request: URLRequest) async throws -> Output {
 		let response = try await session.data(for: request)
 
 //		if UserDefaults.standard.bool(forKey: Self.userDefaultsLoggingKey) {
@@ -275,10 +297,10 @@ public final class Portainer {
 //		}
 
 		do {
-			let decoded = try decoder.decode(Output.self, from: response.0)
+			let decoded = try jsonDecoder.decode(Output.self, from: response.0)
 			return decoded
 		} catch {
-			if let errorJson = try? decoder.decode([String: String?].self, from: response.0), let message = errorJson[APIError.errorMessageKey] {
+			if let errorJson = try? jsonDecoder.decode([String: String?].self, from: response.0), let message = errorJson[APIError.errorMessageKey] {
 				throw APIError.fromMessage(message)
 			} else {
 				throw error

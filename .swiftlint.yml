@@ -28,7 +28,7 @@ opt_in_rules:
   # - fatal_error_message
   # - file_name
   - file_name_no_space
-  - file_types_order
+  # - file_types_order
   - first_where
   - flatmap_over_map_reduce
   - force_unwrapping
@@ -56,16 +56,18 @@ opt_in_rules:
   - static_operator
   - toggle_bool
   # - type_contents_order
-  - typesafe_array_init
   - unneeded_parentheses_in_closure_argument
   - unowned_variable_capture
-  - unused_declaration
-  - unused_import
   # - vertical_parameter_alignment_on_call
   # - vertical_whitespace_closing_braces
   # - vertical_whitespace_opening_braces
   # - weak_delegate
   - yoda_condition
+
+analyzer_rules:
+  - typesafe_array_init
+  - unused_declaration
+  - unused_import
 
 line_length:
   warning: 180

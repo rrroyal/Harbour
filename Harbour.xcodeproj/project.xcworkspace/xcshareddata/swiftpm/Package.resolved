@@ -3,7 +3,7 @@
     {
       "identity" : "commonkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rrroyal/CommonKit.git",
+      "location" : "https://github.com/rrroyal/CommonKit",
       "state" : {
         "branch" : "main",
         "revision" : "21dd62682020625597819109873e2a7d10af59ef"
@@ -15,7 +15,7 @@
       "location" : "https://github.com/rrroyal/IndicatorsKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "ce9f218c27858649823d45d8160a6b2767cf11c2"
+        "revision" : "9b1121ccd38cc706cae1e70482a7459db6acd629"
       }
     },
     {
@@ -25,6 +25,24 @@
       "state" : {
         "branch" : "main",
         "revision" : "97bc943d476cb26d1aaf149d6d8dbd2342f11c9d"
+      }
+    },
+    {
+      "identity" : "swiftgenplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rrroyal/SwiftGenPlugin",
+      "state" : {
+        "branch" : "main",
+        "revision" : "239c33f2cf48cdc1f7daaf468260d750db974b48"
+      }
+    },
+    {
+      "identity" : "swiftlintplugin",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rrroyal/SwiftLintPlugin",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9e81b09c241aa5f41ee5339c17237fe38192d67e"
       }
     }
   ],

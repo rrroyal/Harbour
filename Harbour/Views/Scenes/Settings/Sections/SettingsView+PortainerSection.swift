@@ -15,22 +15,15 @@ extension SettingsView {
 	struct PortainerSection: View {
 		private typealias Localization = Localizable.Settings.Portainer
 
-		@EnvironmentObject private var portainerStore: PortainerStore
-
-		@State private var isSetupSheetPresented = false
-		@State private var serverURLs: [URL] = PortainerStore.shared.savedURLs
+		@EnvironmentObject private var viewModel: ViewModel
 
 		var body: some View {
 			Section(Localization.title) {
-				EndpointsMenu(isSetupSheetPresented: $isSetupSheetPresented, savedURLs: $serverURLs)
+				EndpointsMenu()
 			}
-			.sheet(isPresented: $isSetupSheetPresented, onDismiss: refreshServers) {
+			.sheet(isPresented: $viewModel.isSetupSheetPresented, onDismiss: { viewModel.refreshServers() }) {
 				SetupView()
 			}
-		}
-
-		private func refreshServers() {
-			serverURLs = portainerStore.savedURLs
 		}
 	}
 }
@@ -41,19 +34,16 @@ private extension SettingsView.PortainerSection {
 	struct EndpointsMenu: View {
 		private typealias Localization = Localizable.Settings.Portainer.EndpointsMenu
 
-		@EnvironmentObject private var portainerStore: PortainerStore
-		@EnvironmentObject private var appState: AppState
+		@EnvironmentObject private var viewModel: SettingsView.ViewModel
 		@Environment(\.sceneErrorHandler) private var sceneErrorHandler
-		@Binding var isSetupSheetPresented: Bool
-		@Binding var savedURLs: [URL]
 
 		private var serverURLLabel: String? {
-			guard let url = portainerStore.serverURL else { return nil }
+			guard let url = viewModel.activeURL else { return nil }
 			return formattedURL(url)
 		}
 
 		var body: some View {
-			let urls = savedURLs.sorted { $0.absoluteString > $1.absoluteString }
+			let urls = viewModel.serverURLs.sorted { $0.absoluteString > $1.absoluteString }
 			Menu(content: {
 				ForEach(urls, id: \.absoluteString) { url in
 					urlMenu(for: url)
@@ -62,8 +52,8 @@ private extension SettingsView.PortainerSection {
 				Divider()
 
 				Button(action: {
-					Haptics.generateIfEnabled(.sheetPresentation)
-					isSetupSheetPresented.toggle()
+//					Haptics.generateIfEnabled(.sheetPresentation)
+					viewModel.isSetupSheetPresented.toggle()
 				}) {
 					Label(Localization.add, systemImage: SFSymbol.add)
 				}
@@ -76,7 +66,7 @@ private extension SettingsView.PortainerSection {
 
 					Spacer()
 
-					Image(systemName: "chevron.down")
+					Image(systemName: SFSymbol.chevronDown)
 						.fontWeight(.medium)
 				}
 			}
@@ -85,13 +75,13 @@ private extension SettingsView.PortainerSection {
 		@ViewBuilder
 		private func urlMenu(for url: URL) -> some View {
 			Menu(formattedURL(url), content: {
-				if portainerStore.serverURL == url {
+				if viewModel.activeURL == url {
 					Label(Localization.Server.inUse, systemImage: SFSymbol.selected)
 						.symbolVariant(.circle.fill)
 				} else {
 					Button(action: {
 						Haptics.generateIfEnabled(.buttonPress)
-						appState.switchPortainerServer(to: url, errorHandler: sceneErrorHandler)
+						viewModel.switchPortainerServer(to: url, errorHandler: sceneErrorHandler)
 					}) {
 						Label(Localization.Server.use, systemImage: SFSymbol.selected)
 							.symbolVariant(.circle)
@@ -102,20 +92,11 @@ private extension SettingsView.PortainerSection {
 
 				Button(role: .destructive, action: {
 					Haptics.generateIfEnabled(.buttonPress)
-					deleteServer(url)
+					viewModel.deleteServer(url, errorHandler: sceneErrorHandler)
 				}) {
 					Label(Localization.Server.delete, systemImage: SFSymbol.remove)
 				}
 			})
-		}
-
-		private func deleteServer(_ url: URL) {
-			do {
-				try portainerStore.deleteServer(url)
-				refreshServers()
-			} catch {
-				sceneErrorHandler?(error, ._debugInfo())
-			}
 		}
 
 		private func formattedURL(_ url: URL) -> String {
@@ -123,10 +104,6 @@ private extension SettingsView.PortainerSection {
 				return url.absoluteString.replacing("\(scheme)://", with: "")
 			}
 			return url.absoluteString
-		}
-
-		private func refreshServers() {
-			savedURLs = portainerStore.savedURLs
 		}
 	}
 }

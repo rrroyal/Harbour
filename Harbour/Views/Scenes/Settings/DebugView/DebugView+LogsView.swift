@@ -32,7 +32,7 @@ extension DebugView {
 					Haptics.generateIfEnabled(.selectionChanged)
 					UIPasteboard.general.string = logs.map(\.debugDescription).joined(separator: "\n")
 				}) {
-					Label("Copy", systemImage: SFSymbol.copy)
+					Label(Localizable.Generic.copy, systemImage: SFSymbol.copy)
 				}
 
 				Divider()
@@ -41,11 +41,10 @@ extension DebugView {
 					Haptics.generateIfEnabled(.buttonPress)
 					getLogs()
 				}) {
-					Label("Refresh", systemImage: SFSymbol.reload)
+					Label(Localizable.Generic.refresh, systemImage: SFSymbol.reload)
 				}
 			}) {
-				Image(systemName: SFSymbol.more)
-					.symbolVariant(.circle)
+				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
 			}
 		}
 

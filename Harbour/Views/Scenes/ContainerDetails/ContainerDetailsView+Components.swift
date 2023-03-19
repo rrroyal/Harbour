@@ -7,24 +7,53 @@
 
 import SwiftUI
 
+// MARK: - ContainerDetailsView+Labeled
+
 extension ContainerDetailsView {
-	struct BooleanLabel: View {
-		let value: Bool
+	struct Labeled: View {
+		let title: String
+		let font: Font
+		let fontDesign: Font.Design
+
+		init(_ title: String, monospaced: Bool = false, smaller: Bool = false) {
+			self.title = title
+			self.font = smaller ? .callout : .body
+			self.fontDesign = monospaced ? .monospaced : .default
+		}
 
 		var body: some View {
-			Text(value.description)
-				.foregroundColor(value ? .green : .red)
-				.textSelection(.enabled)
+			Text(title)
+				.modifier(LabelModifier())
+				.font(font)
+				.fontDesign(fontDesign)
 		}
 	}
+}
 
-	struct MonospaceLabel: View {
-		let value: String
+// MARK: - ContainerDetailsView+LabeledWithIcon
+
+extension ContainerDetailsView {
+	struct LabeledWithIcon: View {
+		let title: String
+		let icon: String
+
+		init(_ title: String, icon: String) {
+			self.title = title
+			self.icon = icon
+		}
 
 		var body: some View {
-			Text(value)
-				.fontDesign(.monospaced)
-				.textSelection(.enabled)
+			Label(title, systemImage: icon)
+				.modifier(LabelModifier())
 		}
+	}
+}
+
+// MARK: - LabelModifier
+
+private struct LabelModifier: ViewModifier {
+	func body(content: Content) -> some View {
+		content
+			.textSelection(.enabled)
 	}
 }

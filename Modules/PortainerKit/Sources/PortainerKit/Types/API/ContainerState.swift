@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public enum ContainerState: String, Decodable, Sendable {
+public enum ContainerState: String, Codable, Sendable {
 	case created
 	case running
 	case paused

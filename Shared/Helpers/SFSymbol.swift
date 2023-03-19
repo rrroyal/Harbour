@@ -16,6 +16,9 @@ enum SFSymbol {
 	/// doc.on.doc
 	static let copy = "doc.on.doc"
 
+	/// square.and.arrow.up
+	static let share = "square.and.arrow.up"
+
 	/// ellipsis
 	static let more = "ellipsis"
 
@@ -33,5 +36,21 @@ enum SFSymbol {
 
 	/// gear
 	static let settings = "gear"
+
+	/// square.stack.3d.up
+	static let stack = "square.stack.3d.up"
+
+	/// chevron.down
+	static let chevronDown = "chevron.down"
+
+	static let terminal = "terminal"
+
+	static let logs = "text.alignleft"
+
+	static let scrollToTop = "arrow.up.to.line"
+
+	static let scrollToBottom = "arrow.down.to.line"
+
+	static let howTo = "person.fill.questionmark"
 
 }

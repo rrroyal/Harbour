@@ -13,6 +13,7 @@ extension SettingsView {
 	struct GeneralSection: View {
 		private typealias Localization = Localizable.Settings.General
 
+		@EnvironmentObject private var viewModel: ViewModel
 		@EnvironmentObject private var preferences: Preferences
 
 		var body: some View {

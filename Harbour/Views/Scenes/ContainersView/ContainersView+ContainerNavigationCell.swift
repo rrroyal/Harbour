@@ -9,13 +9,13 @@ import SwiftUI
 import PortainerKit
 
 extension ContainersView {
-	struct ContainerNavigationCell<Content: View & Equatable>: View {
+	struct ContainerNavigationCell<Content: View>: View {
 		@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 		let container: Container
 		let content: () -> Content
 
-		private var navigationItem: ContainersView.ContainerNavigationItem {
+		private var navigationItem: ContainerNavigationItem {
 			let containerID = container.id
 			let displayName = container.displayName
 			let endpointID = portainerSelectedEndpointID
@@ -25,7 +25,6 @@ extension ContainersView {
 		var body: some View {
 			NavigationLink(value: navigationItem) {
 				content()
-					.equatable()
 					.contextMenu {
 						ContainerContextMenu(container: container)
 					}

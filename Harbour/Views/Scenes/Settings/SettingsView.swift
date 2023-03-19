@@ -12,6 +12,13 @@ struct SettingsView: View {
 	private typealias Localization = Localizable.Settings
 
 	@Environment(\.dismiss) private var dismiss
+	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
+	@StateObject private var viewModel: ViewModel
+
+	init() {
+		let viewModel = ViewModel()
+		self._viewModel = .init(wrappedValue: viewModel)
+	}
 
 	var body: some View {
 		NavigationStack {
@@ -28,14 +35,15 @@ struct SettingsView: View {
 			.toolbar {
 				#if targetEnvironment(macCatalyst)
 				ToolbarItem(placement: .cancellationAction) {
-					Button(Localizable.Generic.done) {
-						Haptics.generateIfEnabled(.sheetPresentation)
+					Button(Localizable.Generic.close) {
+//						Haptics.generateIfEnabled(.sheetPresentation)
 						dismiss()
 					}
 				}
 				#endif
 			}
 		}
+		.environmentObject(viewModel)
 	}
 }
 

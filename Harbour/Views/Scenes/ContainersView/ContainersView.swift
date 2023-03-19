@@ -8,17 +8,14 @@
 import SwiftUI
 import PortainerKit
 
+// TODO: Animate ContainerCell changes (i.e. state)
+
+// MARK: - ContainersView
+
 struct ContainersView: View {
-	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.containersViewUseGrid) private var useGrid: Bool
-	@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneDelegate.ErrorHandler?
-//	@Binding var searchFilter: String
 	let containers: [Container]
-
-//	private var containers: [Container] {
-//		portainerStore.containers.filtered(query: searchFilter)
-//	}
 
 	@ViewBuilder
 	private var containersList: some View {
@@ -31,16 +28,29 @@ struct ContainersView: View {
 
 	var body: some View {
 		containersList
-			.navigationDestination(for: ContainersView.ContainerNavigationItem.self) { item in
-				ContainerDetailsView(containerNavigationItem: item)
+			.padding(.horizontal)
+			.padding(.bottom)
+			.navigationDestination(for: ContainerNavigationItem.self) { navigationItem in
+				ContainerDetailsView(navigationItem: navigationItem)
 			}
 			.transition(.opacity)
 			.animation(.easeInOut, value: useGrid)
-			.animation(.easeInOut, value: containers)
-			.animation(.easeInOut, value: portainerStore.selectedEndpoint == nil)
-			.animation(.easeInOut, value: portainerStore.containers.isEmpty)
+//			.animation(.easeInOut, value: containers)
+//			.animation(.easeInOut, value: portainerStore.selectedEndpoint == nil)
+//			.animation(.easeInOut, value: portainerStore.containers.isEmpty)
 	}
 }
+
+// MARK: - ContainersView+Equatable
+
+/*
+extension ContainersView: Equatable {
+	static func == (lhs: ContainersView, rhs: ContainersView) -> Bool {
+		lhs.useGrid == rhs.useGrid &&
+		lhs.containers == rhs.containers
+	}
+}
+ */
 
 // MARK: - Previews
 

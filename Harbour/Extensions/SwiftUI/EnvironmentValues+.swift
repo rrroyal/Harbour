@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import OSLog
 import PortainerKit
 import IndicatorsKit
 
@@ -13,14 +14,32 @@ import IndicatorsKit
 
  extension EnvironmentValues {
 	private struct SceneErrorHandler: EnvironmentKey {
-		static let defaultValue: SceneDelegate.ErrorHandler? = nil
+		static let defaultValue: SceneDelegate.ErrorHandler = { error, _debugInfo in
+			assertionFailure("`SceneErrorHandler` has been called, but none is attached!")
+			os_log(.error, log: .default, "Error: \(error, privacy: .public) [\(_debugInfo, privacy: .public)]")
+		}
 	}
 
-	var sceneErrorHandler: SceneDelegate.ErrorHandler? {
+	var sceneErrorHandler: SceneDelegate.ErrorHandler {
 		get { self[SceneErrorHandler.self] }
 		set { self[SceneErrorHandler.self] = newValue }
 	}
  }
+
+// MARK: - ShowIndicatorAction
+
+extension EnvironmentValues {
+	private struct ShowIndicatorAction: EnvironmentKey {
+		static let defaultValue: SceneDelegate.ShowIndicatorAction = { indicator in
+			assertionFailure("`ShowIndicatorAction` has been called, but none is attached! Indicator: \(indicator)")
+		}
+	}
+
+	var showIndicatorAction: SceneDelegate.ShowIndicatorAction {
+		get { self[ShowIndicatorAction.self] }
+		set { self[ShowIndicatorAction.self] = newValue }
+	}
+}
 
 // MARK: - PortainerServerURL
 
@@ -52,7 +71,7 @@ extension EnvironmentValues {
 
 extension EnvironmentValues {
 	private struct ContainersViewUseGrid: EnvironmentKey {
-		static let defaultValue = false
+		static let defaultValue = Preferences.shared.cvUseGrid
 	}
 
 	var containersViewUseGrid: Bool {

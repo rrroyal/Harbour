@@ -12,7 +12,7 @@ import IndicatorsKit
 extension SceneDelegate {
 	typealias ErrorHandler = (Error, String) -> Void
 
-	func handle(_ error: Error, _debugInfo: String = ._debugInfo()) {
+	func handleError(_ error: Error, _debugInfo: String = ._debugInfo()) {
 		guard !error.isCancellationError else {
 			logger.debug("Cancelled error: \(error, privacy: .public) [\(_debugInfo, privacy: .public)]")
 			return
@@ -20,7 +20,6 @@ extension SceneDelegate {
 
 		logger.error("Error: \(error, privacy: .public) [\(_debugInfo, privacy: .public)]")
 
-		let indicator = Indicator(error: error)
-		indicators.display(indicator)
+		showIndicator(.error(error))
 	}
 }

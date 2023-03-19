@@ -16,8 +16,10 @@ extension AppState {
 
 		portainerServerSwitchTask?.cancel()
 		portainerServerSwitchTask = Task {
+			let portainerStore = PortainerStore.shared
 			do {
-				try await PortainerStore.shared.switchServer(to: serverURL)
+				try await portainerStore.switchServer(to: serverURL)
+				try await portainerStore.refresh().value
 			} catch {
 				logger.error("Failed to switch Portainer server: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				errorHandler?(error, String._debugInfo())

@@ -39,10 +39,10 @@ struct PrimaryButtonStyle: ButtonStyle {
 }
 
 extension ButtonStyle where Self == PrimaryButtonStyle {
-	static var customPrimary: PrimaryButtonStyle { .init() }
+	static var customPrimary: Self { .init() }
 	static func customPrimary(foregroundColor: Color = .white,
 							  backgroundColor: Color = .accentColor,
-							  font: Font = .body.weight(.semibold)) -> PrimaryButtonStyle {
+							  font: Font = .body.weight(.semibold)) -> Self {
 		.init(foregroundColor: foregroundColor, backgroundColor: backgroundColor, font: font)
 	}
 }

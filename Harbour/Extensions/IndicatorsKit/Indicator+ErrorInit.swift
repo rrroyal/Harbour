@@ -22,11 +22,10 @@ extension Indicator {
 			expandedText = error.localizedDescription
 		}
 
-		self.init(id: error.localizedDescription.hashValue.description,
-				  headline: Localizable.Generic.error,
+		self.init(id: String(describing: error).hashValue.description,
+				  headline: Localizable.Indicators.error,
 				  subheadline: subheadline,
 				  expandedText: expandedText,
-				  dismissType: .automatic,
 				  style: style)
 	}
 }

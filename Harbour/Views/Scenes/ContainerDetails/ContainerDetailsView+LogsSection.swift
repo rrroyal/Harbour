@@ -13,12 +13,13 @@ extension ContainerDetailsView {
 	struct LogsSection: View {
 		private typealias Localization = Localizable.ContainerDetails
 
-		let item: ContainersView.ContainerNavigationItem
+		let navigationItem: ContainerNavigationItem
 
 		var body: some View {
 			Section {
-				NavigationLink(destination: ContainerDetailsView.LogsView(item: item)) {
-					Label(Localization.logs, systemImage: "text.alignleft")
+				NavigationLink(destination: ContainerLogsView(navigationItem: navigationItem)) {
+					Label(Localization.logs, systemImage: SFSymbol.logs)
+						.font(.body)
 				}
 			}
 		}
@@ -29,6 +30,6 @@ extension ContainerDetailsView {
 
 struct ContainerDetailsView_LogsSection_Previews: PreviewProvider {
 	static var previews: some View {
-		ContainerDetailsView.LogsSection(item: .init(id: "id", displayName: "Container", endpointID: nil))
+		ContainerDetailsView.LogsSection(navigationItem: .init(id: "", displayName: "Container", endpointID: nil))
 	}
 }

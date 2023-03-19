@@ -16,136 +16,84 @@ struct ContainerDetailsView: View {
 	private typealias Localization = Localizable.ContainerDetails
 
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(\.sceneErrorHandler) private var sceneErrorHandler: SceneDelegate.ErrorHandler?
+	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
-	let containerNavigationItem: ContainersView.ContainerNavigationItem
+	@StateObject private var viewModel: ViewModel
 
-	@State private var isLoading = false
-	@State private var details: ContainerDetails?
+	let navigationItem: ContainerNavigationItem
 
-	private var container: Container? {
-		portainerStore.containers.first(where: { $0.id == containerNavigationItem.id })
+	private var navigationTitle: String {
+		viewModel.containerDetails?.displayName ?? navigationItem.displayName ?? viewModel.container(for: navigationItem)?.displayName ?? navigationItem.id
+	}
+
+	init(navigationItem: ContainerNavigationItem) {
+		self.navigationItem = navigationItem
+
+		let viewModel = ViewModel()
+		self._viewModel = .init(wrappedValue: viewModel)
 	}
 
 	var body: some View {
 		List {
-			if let details {
-				StatusSection(status: details.status)
-			} else if isLoading {
-				// TODO: loading view
-				Text("loading")
-			}
-
-			LogsSection(item: containerNavigationItem)
+			DetailsSection(container: viewModel.container, details: viewModel.containerDetails)
+			LogsSection(navigationItem: navigationItem)
 		}
-		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
-		.animation(.easeInOut, value: details != nil)
-		.animation(.easeInOut, value: isLoading)
-		.navigationTitle(containerNavigationItem.displayName ?? containerNavigationItem.id)
-		#if targetEnvironment(macCatalyst)
-		.navigationSubtitle(containerNavigationItem.displayName ?? containerNavigationItem.id)
-		#endif
+		.background(PlaceholderView(viewState: viewModel.viewState))
+		.navigationTitle(navigationTitle)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
-				Menu(content: {
-					if isLoading {
-						Text(Localizable.Generic.loading)
-						Divider()
-					}
-
-					if let container {
-						ContainerContextMenu(container: container)
-					}
-
-					if let portainerURL = PortainerURLScheme(address: portainerServerURL)?.containerURL(containerID: containerNavigationItem.id, endpointID: portainerSelectedEndpointID) {
-						Divider()
-						ShareLink(Localizable.Generic.sharePortainerURL, item: portainerURL)
-					}
-				}, label: {
-					Image(systemName: SFSymbol.moreCircle)
-				})
+				ToolbarMenu(isLoading: viewModel.isLoading,
+							containerID: navigationItem.id,
+							container: viewModel.container(for: navigationItem))
 			}
 		}
-		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: containerNavigationItem, createUserActivity)
-		.task(id: "\(containerNavigationItem.endpointID ?? -1)-\(containerNavigationItem.id)", getContainerDetails)
+		.refreshable {
+			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: sceneErrorHandler).value
+		}
+		.task(id: "\(navigationItem.endpointID ?? -1).\(navigationItem.id)") {
+			print("task", navigationItem.id)
+			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: sceneErrorHandler).value
+		}
+		.animation(.easeInOut, value: viewModel.containerDetails != nil)
+		.animation(.easeInOut, value: viewModel.isLoading)
+		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: navigationItem) { navigationItem, userActivity in
+			viewModel.createUserActivity(for: navigationItem, userActivity: userActivity)
+		}
 	}
-
-//	var _body: some View {
-//		ScrollView {
-//			Grid(alignment: .topLeading, horizontalSpacing: 10, verticalSpacing: 10) {
-//				GridRow {
-//					Text("something")
-//						.frame(maxWidth: .infinity, maxHeight: .infinity)
-//						.gridCellColumns(2)
-//						.background(Color.mint)
-//					Text("asd")
-//						.frame(maxWidth: .infinity, maxHeight: .infinity)
-//						.gridCellColumns(1)
-//						.background(Color.green)
-//					Text("dsadas")
-//						.frame(maxWidth: .infinity, maxHeight: .infinity)
-//						.gridCellColumns(1)
-//						.background(Color.red)
-//				}
-//				GridRow {
-//					Text("dsa")
-//						.frame(maxWidth: .infinity, maxHeight: .infinity)
-//						.gridCellColumns(3)
-//						.background(Color.blue)
-//				}
-//			}
-//		}
-//		.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
-//		.animation(.easeInOut, value: details != nil)
-//		.animation(.easeInOut, value: isLoading)
-//		.navigationTitle(item.displayName ?? item.id)
-//		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: item, createUserActivity)
-//		.task(id: "\(item.endpointID ?? -1)-\(item.id)", getContainerDetails)
-//	}
 }
 
-// MARK: - ContainerDetailsView+Actions
+// MARK: - ContainerDetailsView+ToolbarMenu
 
 private extension ContainerDetailsView {
-	func createUserActivity(for item: ContainersView.ContainerNavigationItem, userActivity: NSUserActivity) {
-		typealias Localization = Localizable.ContainerDetails.UserActivity
+	struct ToolbarMenu: View {
+		@Environment(\.portainerServerURL) private var portainerServerURL
+		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID
+		let isLoading: Bool
+		let containerID: Container.ID
+		let container: Container?
 
-		userActivity.isEligibleForHandoff = true
-		userActivity.isEligibleForPrediction = true
-		userActivity.isEligibleForSearch = true
+		var body: some View {
+			Menu(content: {
+				if isLoading {
+					Text(Localizable.Generic.loading)
+					Divider()
+				}
 
-		if let serverURL = PortainerStore.shared.serverURL,
-		   let endpointID = item.endpointID {
-			let portainerURLScheme = PortainerURLScheme(address: serverURL)
-			let portainerURL = portainerURLScheme?.containerURL(containerID: item.id, endpointID: endpointID)
-			userActivity.webpageURL = portainerURL
-		}
+				if let container {
+					Label(container.state.description.localizedCapitalized, systemImage: container.state.icon)
+					Divider()
+					ContainerContextMenu(container: container)
+				}
 
-		let displayName = item.displayName ?? Localization.unnamedContainerPlaceholder
-		userActivity.title = Localization.title(displayName)
-
-		try? userActivity.setTypedPayload(item)
-	}
-
-	@Sendable
-	func getContainerDetails() async {
-		isLoading = true
-		defer { isLoading = false }
-
-		do {
-			if containerNavigationItem.id != details?.id {
-				details = nil
+				if let portainerURL = PortainerURLScheme(address: portainerServerURL)?.containerURL(containerID: containerID, endpointID: portainerSelectedEndpointID) {
+					Divider()
+					ShareLink(Localizable.Generic.sharePortainerURL, item: portainerURL)
+				}
+			}) {
+				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
 			}
-
-			if !portainerStore.isSetup {
-				await portainerStore.setupTask?.value
-			}
-
-			details = try await portainerStore.inspectContainer(containerNavigationItem.id, endpointID: containerNavigationItem.endpointID)
-		} catch {
-			sceneErrorHandler?(error, ._debugInfo())
 		}
 	}
 }
@@ -153,8 +101,7 @@ private extension ContainerDetailsView {
 // MARK: - Previews
 
 struct ContainerDetailsView_Previews: PreviewProvider {
-	static let item = ContainersView.ContainerNavigationItem(id: "id", displayName: "DisplayName", endpointID: nil)
 	static var previews: some View {
-		ContainerDetailsView(containerNavigationItem: item)
+		ContainerDetailsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
 	}
 }

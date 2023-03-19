@@ -11,22 +11,21 @@ extension SettingsView {
 	struct InterfaceSection: View {
 		private typealias Localization = Localizable.Settings.Interface
 
+		@EnvironmentObject private var viewModel: ViewModel
 		@EnvironmentObject private var preferences: Preferences
-
-		private var displayiPadOptions: Bool {
-			UIDevice.current.userInterfaceIdiom == .mac || UIDevice.current.userInterfaceIdiom == .pad
-		}
 
 		var body: some View {
 			Section(Localization.title) {
+				#if ENABLE_PREVIEW_FEATURES
 				// Display Summary
 				ToggleOption(label: Localization.DisplaySummary.title,
 							 description: Localization.DisplaySummary.description,
 							 iconSymbolName: "square.text.square",
 							 isOn: $preferences.cvDisplaySummary)
 //				.symbolVariant(preferences.enableHaptics ? .none : .slash)
+				#endif
 
-				if displayiPadOptions {
+				if viewModel.displayiPadOptions {
 					// Use Two-Column Layout
 					ToggleOption(label: Localization.UseColumns.title,
 								 description: Localization.UseColumns.description,
@@ -50,10 +49,12 @@ extension SettingsView {
 							 isOn: $preferences.enableHaptics)
 //				.symbolVariant(preferences.enableHaptics ? .none : .slash)
 
+				#if ENABLE_PREVIEW_FEATURES
 				// App Icon
 				NavigationLinkOption(label: Localization.AppIcon.title, iconSymbolName: "app.badge") {
 					Text("App Icon")
 				}
+				#endif
 			}
 		}
 	}

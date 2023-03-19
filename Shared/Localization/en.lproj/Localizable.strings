@@ -12,10 +12,16 @@
 
 "Generic.Loading" = "Loading...";
 "Generic.Error" = "Error!";
+"Generic.SomethingWentWrong" = "Something went wrong 😕";
 "Generic.Unknown" = "Unknown";
 "Generic.None" = "None";
 "Generic.Done" = "Done";
-
+"Generic.Close" = "Close";
+"Generic.More" = "More";
+"Generic.Refresh" = "Refresh";
+"Generic.Copy" = "Copy";
+"Generic.Share" = "Share...";
+"Generic.ShareNoDots" = "Share";
 "Generic.SharePortainerURL" = "Share Portainer URL...";
 
 // MARK: - Landing
@@ -41,6 +47,8 @@
 "ContentView.NotSetup" = "Not setup";
 "ContentView.NoEndpointSelected" = "No endpoint selected";
 "ContentView.NoContainerSelectedPlaceholder" = "No container selected";
+"ContentView.NavigationButton.Settings" = "Settings";
+"ContentView.NavigationButton.Stacks" = "Stacks";
 
 // MARK: - ContainersView
 
@@ -58,7 +66,6 @@
 // MARK: - ContainerContextMenu
 
 "ContainerContextMenu.Attach" = "Attach";
-"ContainerContextMenu.UnknownState" = "Unknown";
 
 // MARK: - ContainerDetails
 
@@ -68,6 +75,14 @@
 
 "ContainerDetails.UserActivity.Title" = "See the details of %@";
 "ContainerDetails.UserActivity.UnnamedContainerPlaceholder" = "a container";
+
+// MARK: - ContainerLogs
+
+"ContainerLogs.NavigationTitle" = "Logs";
+"ContainerLogs.LogsEmpty" = "Empty";
+"ContainerLogs.Menu.ScrollToTop" = "Scroll to top";
+"ContainerLogs.Menu.ScrollToBottom" = "Scroll to bottom";
+"ContainerLogs.Menu.IncludeTimestamps" = "Include timestamps?";
 
 // MARK: - Settings
 
@@ -124,17 +139,31 @@
 
 // MARK: - Notifications
 
-"Notifications.ContainersChanged.Title.ContainerChanged" = "Container changed!";
-"Notifications.ContainersChanged.Title.ContainersChanged" = "Containers changed!";
-"Notifications.ContainersChanged.UnknownPlaceholder" = "unknown";
-"Notifications.ContainersChanged.Subtitle.ContainerDisappeared" = "Container \"%@\" disappeared.";
-"Notifications.ContainersChanged.Subtitle.ContainerChangedState" = "\"%@\" changed it's state to %@.";
-"Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Readable" =  "%@ changed their states.";
-"Notifications.ContainersChanged.Subtitle.ContainersChangedStates.Unreadable" =  "Multiple containers changed their states.";
+//"Notifications.ContainersChanged.Single.Inserted.Emoji" = "";
+"Notifications.ContainersChanged.Single.Inserted.Title" = "\"%@\" appeared.";
+"Notifications.ContainersChanged.Single.Inserted.Body" = "Current status: %@";
+
+//"Notifications.ContainersChanged.Single.Changed.Emoji" = "";
+"Notifications.ContainersChanged.Single.Changed.Title" = "\"%@\" changed its state.";
+"Notifications.ContainersChanged.Single.Changed.Body" = "%@ → %@";
+
+"Notifications.ContainersChanged.Single.Removed.Emoji" = "😶‍🌫️";
+"Notifications.ContainersChanged.Single.Removed.Title" = "\"%@\" disappeared.";
+"Notifications.ContainersChanged.Single.Removed.Body" = "Last known state: %@";
+
+"Notifications.ContainersChanged.MultipleReadable.Emoji" = "📫";
+"Notifications.ContainersChanged.MultipleReadable.Title" = "%@ changed their states.";
+//"Notifications.ContainersChanged.MultipleReadable.Body" = "";
+
+"Notifications.ContainersChanged.MultipleUnreadable.Emoji" = "📫";
+"Notifications.ContainersChanged.MultipleUnreadable.Title" = "%@ containers changed their states.";
+//"Notifications.ContainersChanged.MultipleUnreadable.Body" = "";
+
+"Notifications.ContainersChanged.UnknownContainerPlaceholder" = "Some container";
 
 // MARK: - Widgets
 
-"Widgets.SelectContainerPlaceholder" = "Please select a container 🙈"; // 😊🧐
+"Widgets.SelectContainerPlaceholder" = "Please select a container 🙈";
 "Widgets.UnreachablePlaceholder" = "Unreachable";
 "Widgets.NotFoundPlaceholder" = "Not Found";
 
@@ -142,15 +171,19 @@
 "Widgets.Placeholder.ContainerStatus" = "Up 10 days";
 
 "Widgets.ContainerState.DisplayName" = "Container Status";
-"Widgets.ContainerState.Description" = "See the status of selected container right on your home screen :)";
+"Widgets.ContainerState.Description" = "See the status of selected container right on your Home Screen :)";
 
 // MARK: - Indicators
 
 "Indicators.ExpandToReadMore" = "Expand to read more";
+"Indicators.Copied" = "Copied!";
+"Indicators.Error" = "Error!";
 
 // MARK: - PortainerKit
 
 "PortainerKit.Generic.Container" = "Container";
+
+"PortainerKit.ContainerState.Unknown" = "Unknown";
 
 "PortainerKit.ExecuteAction.Start" = "Start";
 "PortainerKit.ExecuteAction.Stop" = "Stop";

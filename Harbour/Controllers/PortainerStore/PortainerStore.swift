@@ -67,9 +67,7 @@ public final class PortainerStore: ObservableObject {
 	}
 
 	/// Containers of `selectedEndpoint`
-	@Published private(set) var containers: [Container] = [] {
-		didSet { onContainersChange(containers) }
-	}
+	@Published private(set) var containers: [Container] = []
 
 	// MARK: init
 
@@ -81,16 +79,18 @@ public final class PortainerStore: ObservableObject {
 		self.selectedEndpoint = getStoredEndpoint()
 
 		if let (url, token) = getStoredCredentials() {
-			portainer.setup(url: url, token: token)
 			self.setupTask = Task { @MainActor in
-				let storedContainers = loadStoredContainers()
-				if self.containers.isEmpty {
-					self.containers = storedContainers
-				}
+				try? await setup(url: url, token: token)
+			}
+
+			let storedContainers = loadStoredContainers()
+			if !self.containers.contains(where: { !$0.isStored }) {
+				self.containers = storedContainers
 			}
 		} else {
 			endpoints = []
 			containers = []
+			storeContainers([])
 		}
 	}
 
@@ -101,20 +101,20 @@ public final class PortainerStore: ObservableObject {
 	/// - Parameters:
 	///   - url: Server URL
 	///   - token: Authorization token (if `nil`, it's searched in the keychain)
-	public func setup(url: URL, token: String?) async throws {
+	public func setup(url: URL, token _token: String?) async throws {
 		logger.notice("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String._debugInfo(), privacy: .public)]")
 
 		do {
 			isSetup = false
 
-			let _token: String
-			if let token {
-				_token = token
+			let token: String
+			if let _token {
+				token = _token
 			} else {
-				_token = try keychain.getContent(for: url)
+				token = try keychain.getContent(for: url)
 			}
 
-			portainer.setup(url: url, token: _token)
+			portainer.setup(url: url, token: token)
 
 //			logger.debug("Getting endpoints for setup... [\(String._debugInfo(), privacy: .public)]")
 
@@ -122,8 +122,8 @@ public final class PortainerStore: ObservableObject {
 //			_ = try await endpointsTask.value
 
 			// Check if authorized
-			let refreshTask = refresh()
-			_ = try await refreshTask.value
+//			let refreshTask = refresh()
+//			_ = try await refreshTask.value
 
 //			let endpoints = try await portainer.fetchEndpoints()
 //			logger.debug("Got \(endpoints.count, privacy: .public) endpoints [\(String._debugInfo(), privacy: .public)]")
@@ -134,7 +134,7 @@ public final class PortainerStore: ObservableObject {
 			preferences.selectedServer = url.absoluteString
 
 			do {
-				try keychain.saveContent(_token, for: url)
+				try keychain.saveContent(token, for: url)
 			} catch {
 				logger.error("Unable to save token to Keychain: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			}
@@ -155,14 +155,7 @@ public final class PortainerStore: ObservableObject {
 		do {
 			let token = try keychain.getContent(for: serverURL)
 
-			isSetup = false
-			preferences.selectedServer = nil
-
-			endpointsTask?.cancel()
-			endpoints = []
-
-			containersTask?.cancel()
-			containers = []
+			reset()
 
 			try await setup(url: serverURL, token: token)
 
@@ -184,6 +177,24 @@ public final class PortainerStore: ObservableObject {
 		}
 	}
 
+	public func reset() {
+		logger.notice("Resetting state [\(String._debugInfo(), privacy: .public)]")
+
+		portainer.reset()
+
+		isSetup = false
+
+		preferences.selectedEndpoint = nil
+		preferences.selectedServer = nil
+
+		endpointsTask?.cancel()
+		endpoints = []
+
+		containersTask?.cancel()
+		containers = []
+		storeContainers([])
+	}
+
 	@MainActor
 	public func selectEndpoint(_ endpoint: Endpoint?) {
 		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive)\" (\(endpoint?.id.description ?? "<none>")) [\(String._debugInfo(), privacy: .public)]")
@@ -195,6 +206,7 @@ public final class PortainerStore: ObservableObject {
 			containersTask?.cancel()
 			containersTask = nil
 			containers = []
+			storeContainers([])
 		}
 	}
 
@@ -218,11 +230,18 @@ public final class PortainerStore: ObservableObject {
 	}
 
 	@Sendable
-	public func getLogs(for containerID: Container.ID) async throws -> String {
+	public func getLogs(for containerID: Container.ID,
+						since logsSince: TimeInterval = 0,
+						tail lastEntriesAmount: Int = 100,
+						timestamps includeTimestamps: Bool = false) async throws -> String {
 		logger.notice("Getting logs for containerID: \"\(containerID, privacy: .public)\"... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			let logs = try await portainer.fetchLogs(containerID: containerID, endpointID: endpoint.id)
+			let logs = try await portainer.fetchLogs(containerID: containerID,
+													 endpointID: endpoint.id,
+													 since: logsSince,
+													 tail: lastEntriesAmount,
+													 timestamps: includeTimestamps)
 
 			logger.debug("Got logs for containerID: \"\(containerID, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
 
@@ -259,14 +278,14 @@ public final class PortainerStore: ObservableObject {
 
 extension PortainerStore {
 
-	@discardableResult @MainActor
+	@discardableResult
 	/// Refreshes endpoints and containers, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
 	///   - errorHandler: `SceneDelegate.ErrorHandler` used to notify the user of errors
 	/// - Returns: `Task<Void, Error>` of refresh
 	func refresh(errorHandler: SceneDelegate.ErrorHandler? = nil, _debugInfo: String = ._debugInfo()) -> Task<Void, Error> {
-		let task = Task {
+		let task = Task { @MainActor in
 			do {
 				await setupTask?.value
 
@@ -284,7 +303,7 @@ extension PortainerStore {
 		return task
 	}
 
-	@discardableResult @MainActor
+	@discardableResult
 	/// Refreshes endpoints, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
@@ -292,9 +311,9 @@ extension PortainerStore {
 	/// - Returns: `Task<[Endpoint], Error>` of refresh
 	func refreshEndpoints(errorHandler: SceneDelegate.ErrorHandler? = nil, _debugInfo: String = ._debugInfo()) -> Task<[Endpoint], Error> {
 		endpointsTask?.cancel()
-		let task = Task<[Endpoint], Error> {
+		let task = Task<[Endpoint], Error> { @MainActor in
 			do {
-				let endpoints = try await getEndpoints()
+				let endpoints = try await fetchEndpoints()
 				self.endpoints = endpoints
 				return endpoints
 			} catch {
@@ -307,7 +326,7 @@ extension PortainerStore {
 		return task
 	}
 
-	@discardableResult @MainActor
+	@discardableResult
 	/// Refreshes containers, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
@@ -315,10 +334,11 @@ extension PortainerStore {
 	/// - Returns: `Task<[Container], Error>` of refresh
 	func refreshContainers(errorHandler: SceneDelegate.ErrorHandler? = nil, _debugInfo: String = ._debugInfo()) -> Task<[Container], Error> {
 		containersTask?.cancel()
-		let task = Task<[Container], Error> { [self] in
+		let task = Task<[Container], Error> { @MainActor in
 			do {
-				let containers = try await getContainers()
+				let containers = try await fetchContainers()
 				self.containers = containers
+				storeContainers(containers)
 				return containers
 			} catch {
 				if error.isCancellationError { return self.containers }
@@ -334,10 +354,10 @@ extension PortainerStore {
 
 // MARK: - PortainerStore+Private
 
-private extension PortainerStore {
+extension PortainerStore {
 
 	@Sendable
-	func getEndpoints() async throws -> [Endpoint] {
+	func fetchEndpoints() async throws -> [Endpoint] {
 		logger.notice("Getting endpoints... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let endpoints = try await portainer.fetchEndpoints()
@@ -350,7 +370,7 @@ private extension PortainerStore {
 	}
 
 	@Sendable
-	func getContainers() async throws -> [Container] {
+	func fetchContainers() async throws -> [Container] {
 		logger.notice("Getting containers... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpoint) = try getPortainerAndEndpoint()
@@ -399,6 +419,7 @@ private extension PortainerStore {
 		if endpoints.isEmpty {
 			containers = []
 			selectedEndpoint = nil
+			storeContainers([])
 		} else if endpoints.count == 1 {
 			selectedEndpoint = endpoints.first
 		} else {

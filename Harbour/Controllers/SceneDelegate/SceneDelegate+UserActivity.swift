@@ -16,7 +16,7 @@ extension SceneDelegate {
 		guard let harbourURL = HarbourURLScheme.fromURL(url) else { return }
 		switch harbourURL {
 			case .containerDetails(let id, let displayName, let endpointID):
-				let navigationItem = ContainersView.ContainerNavigationItem(id: id, displayName: displayName, endpointID: endpointID)
+				let navigationItem = ContainerNavigationItem(id: id, displayName: displayName, endpointID: endpointID)
 				isSettingsSheetPresented = false
 				navigationPath.removeLast(navigationPath.count)
 				navigationPath.append(navigationItem)
@@ -27,7 +27,7 @@ extension SceneDelegate {
 	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
 		logger.notice("Continuing userActivity: \(userActivity, privacy: .sensitive(mask: .hash)) [\(String._debugInfo(), privacy: .public)]")
 
-		guard let navigationItem = try? userActivity.typedPayload(ContainersView.ContainerNavigationItem.self) else {
+		guard let navigationItem = try? userActivity.typedPayload(ContainerNavigationItem.self) else {
 			logger.warning("Invalid payload in userActivity! [\(String._debugInfo(), privacy: .public)]")
 			return
 		}
