@@ -8,14 +8,12 @@
 import SwiftUI
 import PortainerKit
 
-// TODO: Animate ContainerCell changes (i.e. state)
-
 // MARK: - ContainersView
 
 struct ContainersView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(\.containersViewUseGrid) private var useGrid: Bool
 	let containers: [Container]
+	let useGrid: Bool
 
 	@ViewBuilder
 	private var containersList: some View {
@@ -56,6 +54,6 @@ extension ContainersView: Equatable {
 
 struct ContainersView_Previews: PreviewProvider {
 	static var previews: some View {
-		ContainersView(containers: [])
+		ContainersView(containers: [], useGrid: true)
 	}
 }

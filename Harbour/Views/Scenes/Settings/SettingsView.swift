@@ -12,7 +12,7 @@ struct SettingsView: View {
 	private typealias Localization = Localizable.Settings
 
 	@Environment(\.dismiss) private var dismiss
-	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
+	@Environment(\.errorHandler) private var errorHandler
 	@StateObject private var viewModel: ViewModel
 
 	init() {

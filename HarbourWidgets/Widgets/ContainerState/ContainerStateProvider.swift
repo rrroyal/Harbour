@@ -13,8 +13,6 @@ import PortainerKit
 import CommonFoundation
 import CommonOSLog
 
-// TODO: Execute AppState.handleBackgroundRefresh() when providing a timeline/snapshot (inside a Task, nonblocking).
-
 // MARK: - ContainerStateProvider
 
 struct ContainerStateProvider: IntentTimelineProvider {
@@ -27,6 +25,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 		typealias Localization = Localizable.Widgets.Placeholder
 		return Container(id: "ContainerID", names: [Localization.containerName], state: .running, status: Localization.containerStatus)
 	}
+
 	static var placeholderEntry: Entry {
 		let container = Self.placeholderContainer
 
@@ -88,7 +87,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 	}
 
 	func getTimeline(for configuration: Intent, in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-		logger.notice("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
+		logger.debug("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
 
 		let now = Date()
 

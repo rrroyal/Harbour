@@ -31,14 +31,14 @@ struct LandingView: View {
 	var body: some View {
 		Group {
 			switch currentScreen {
-				case .features:
-					FeaturesView(continueAction: navigateToSetupIfNeeded)
-						.tag(Screen.features)
-						.transition(viewAnimation(edge: .leading))
-				case .setup:
-					SetupView()
-						.tag(Screen.setup)
-						.transition(viewAnimation(edge: .trailing))
+			case .features:
+				FeaturesView(continueAction: navigateToSetupIfNeeded)
+					.tag(Screen.features)
+					.transition(viewAnimation(edge: .leading))
+			case .setup:
+				SetupView()
+					.tag(Screen.setup)
+					.transition(viewAnimation(edge: .trailing))
 			}
 		}
 		.animation(.easeInOut, value: currentScreen)

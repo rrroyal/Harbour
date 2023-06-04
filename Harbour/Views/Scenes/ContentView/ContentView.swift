@@ -32,14 +32,38 @@ struct ContentView: View {
 	@ViewBuilder
 	private var titleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
-			Button(action: {
+			Button {
 				Haptics.generateIfEnabled(.light)
 				viewModel.selectEndpoint(endpoint)
-			}) {
+			} label: {
 				let isSelected = portainerStore.selectedEndpoint?.id == endpoint.id
 				Label(endpoint.name ?? endpoint.id.description, systemImage: isSelected ? SFSymbol.selected : "")
 			}
 		}
+	}
+
+	@ToolbarContentBuilder
+	private var toolbarMenu: some ToolbarContent {
+		ToolbarItem(placement: .primaryAction) {
+			Button {
+//				Haptics.generateIfEnabled(.sheetPresentation)
+				sceneDelegate.isSettingsSheetPresented.toggle()
+			} label: {
+				Label(Localization.NavigationButton.settings, systemImage: SFSymbol.settings)
+			}
+		}
+
+		#if ENABLE_PREVIEW_FEATURES
+		ToolbarItem(placement: .navigationBarLeading) {
+			NavigationLink {
+				StacksView()
+			} label: {
+				Label(Localization.NavigationButton.stacks, systemImage: SFSymbol.stack)
+					.symbolVariant(portainerStore.isSetup ? .none : .slash)
+			}
+			.disabled(!portainerStore.isSetup)
+		}
+		#endif
 	}
 
 	@ViewBuilder
@@ -54,7 +78,7 @@ struct ContentView: View {
 			}
 			#endif
 
-			ContainersView(containers: viewModel.containers)
+			ContainersView(containers: viewModel.containers, useGrid: preferences.cvUseGrid)
 				.transition(.opacity)
 				.animation(.easeInOut, value: viewModel.containers)
 		}
@@ -63,7 +87,7 @@ struct ContentView: View {
 		.scrollDismissesKeyboard(.interactively)
 	}
 
-	// MARK: body
+	// MARK: Body
 
 	var body: some View {
 		NavigationWrapped(useColumns: viewModel.shouldUseColumns, content: {
@@ -76,26 +100,7 @@ struct ContentView: View {
 					titleMenu
 				}
 				.toolbar {
-					ToolbarItem(placement: .primaryAction) {
-						Button(action: {
-//							Haptics.generateIfEnabled(.sheetPresentation)
-							sceneDelegate.isSettingsSheetPresented.toggle()
-						}) {
-							Label(Localization.NavigationButton.settings, systemImage: SFSymbol.settings)
-						}
-					}
-
-					#if ENABLE_PREVIEW_FEATURES
-					ToolbarItem(placement: .navigationBarLeading) {
-						NavigationLink(destination: {
-							StacksView()
-						}) {
-							Label(Localization.NavigationButton.stacks, systemImage: SFSymbol.stack)
-								.symbolVariant(portainerStore.isSetup ? .none : .slash)
-						}
-						.disabled(!portainerStore.isSetup)
-					}
-					#endif
+					toolbarMenu
 				}
 		}, placeholderContent: {
 			Text(Localization.noContainerSelectedPlaceholder)
@@ -105,13 +110,13 @@ struct ContentView: View {
 		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 			SettingsView()
 		}
-		.sheet(isPresented: $viewModel.isLandingSheetPresented, onDismiss: {
+		.sheet(isPresented: $viewModel.isLandingSheetPresented) {
 			viewModel.onLandingDismissed()
-		}) {
+		} content: {
 			LandingView()
 		}
-		.environment(\.sceneErrorHandler, sceneDelegate.handleError)
-		.environment(\.showIndicatorAction, sceneDelegate.showIndicator)
+		.environment(\.errorHandler, sceneDelegate.handleError)
+		.environment(\.showIndicator, sceneDelegate.showIndicator)
 		.onOpenURL { url in
 			sceneDelegate.onOpenURL(url)
 		}
@@ -132,9 +137,9 @@ private extension ContentView {
 
 		@ViewBuilder
 		private var viewSplit: some View {
-			NavigationSplitView(sidebar: {
+			NavigationSplitView {
 				content()
-			}) {
+			} detail: {
 				placeholderContent()
 			}
 			.navigationSplitViewColumnWidth(min: 100, ideal: 200, max: .infinity)

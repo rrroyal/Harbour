@@ -69,9 +69,17 @@
 
 // MARK: - ContainerDetails
 
-"ContainerDetails.ContainerState" = "State";
-
-"ContainerDetails.Logs" = "Logs";
+"ContainerDetails.Section.State" = "State";
+"ContainerDetails.Section.ID" = "ID";
+"ContainerDetails.Section.CreatedAt" = "Created At";
+"ContainerDetails.Section.FinishedAt" = "Finished At";
+"ContainerDetails.Section.Image" = "Image";
+"ContainerDetails.Section.CMD" = "CMD";
+"ContainerDetails.Section.Entrypoint" = "Entrypoint";
+"ContainerDetails.Section.Environment" = "Environment";
+"ContainerDetails.Section.Labels" = "Labels";
+"ContainerDetails.Section.Mounts" = "Mounts";
+"ContainerDetails.Section.Logs" = "Logs";
 
 "ContainerDetails.UserActivity.Title" = "See the details of %@";
 "ContainerDetails.UserActivity.UnnamedContainerPlaceholder" = "a container";
@@ -82,7 +90,8 @@
 "ContainerLogs.LogsEmpty" = "Empty";
 "ContainerLogs.Menu.ScrollToTop" = "Scroll to top";
 "ContainerLogs.Menu.ScrollToBottom" = "Scroll to bottom";
-"ContainerLogs.Menu.IncludeTimestamps" = "Include timestamps?";
+"ContainerLogs.Menu.IncludeTimestamps" = "Timestamps";
+"ContainerLogs.Menu.LinesCount" = "Entries count";
 
 // MARK: - Settings
 
@@ -172,6 +181,15 @@
 
 "Widgets.ContainerState.DisplayName" = "Container Status";
 "Widgets.ContainerState.Description" = "See the status of selected container right on your Home Screen :)";
+
+// MARK: - Errors
+
+"Errors.Portainer.NotSetup" = "Portainer not setup.";
+"Errors.Portainer.NoServer" = "No server selected.";
+"Errors.Portainer.NoSelectedEndpoint" = "No endpoint selected.";
+
+"Errors.Intents.NoConfigurationSelected" = "No configuration selected.";
+"Errors.Intents.NoValueForConfiguration" = "No value found for specified configuration.";
 
 // MARK: - Indicators
 

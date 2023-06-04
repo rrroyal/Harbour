@@ -23,7 +23,7 @@ extension ContainerLogsView {
 		@Published @MainActor private(set) var logs: String?
 		@Published @MainActor private(set) var logsParsed: AttributedString?
 		@Published var includeTimestamps = false
-		@Published var lastEntriesAmount = 100
+		@Published var linesCount = 100
 
 		@MainActor
 		var viewState: ViewState {
@@ -60,7 +60,7 @@ extension ContainerLogsView {
 
 				do {
 					let logs = try await portainerStore.getLogs(for: containerNavigationItem.id,
-																tail: lastEntriesAmount,
+																tail: linesCount,
 																timestamps: includeTimestamps)
 					self.logs = logs
 					self.logsParsed = nil
@@ -105,27 +105,27 @@ extension ContainerLogsView.ViewModel {
 
 		var id: Int {
 			switch self {
-				case .somethingWentWrong:	return -2
-				case .error:				return -1
-				case .loading:				return 0
-				case .hasLogs:				return 2
-				case .logsEmpty:			return 3
+			case .somethingWentWrong:	return -2
+			case .error:				return -1
+			case .loading:				return 0
+			case .hasLogs:				return 2
+			case .logsEmpty:			return 3
 			}
 		}
 
 		var title: String? {
 			switch self {
-				case .loading:
-					return Localizable.Generic.loading
-				case .error(let error):
-					return error.localizedDescription
-				case .logsEmpty:
-					return Localizable.ContainerLogs.logsEmpty
-				case .somethingWentWrong:
+			case .loading:
+				return Localizable.Generic.loading
+			case .error(let error):
+				return error.localizedDescription
+			case .logsEmpty:
+				return Localizable.ContainerLogs.logsEmpty
+			case .somethingWentWrong:
 //					return Localizable.Generic.somethingWentWrong
-					return nil
-				default:
-					return nil
+				return nil
+			default:
+				return nil
 			}
 		}
 

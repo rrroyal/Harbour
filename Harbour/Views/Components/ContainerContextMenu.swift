@@ -15,8 +15,8 @@ struct ContainerContextMenu: View {
 
 	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
-	@Environment(\.showIndicatorAction) private var showIndicatorAction
+	@Environment(\.errorHandler) private var errorHandler
+	@Environment(\.showIndicator) private var showIndicator
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
@@ -51,53 +51,55 @@ struct ContainerContextMenu: View {
 			Divider()
 
 			switch containerState {
-				case .created:
-					button(for: .pause)
-					button(for: .stop)
-					button(for: .restart)
-					Divider()
-					button(for: .kill, role: .destructive, haptic: killActionHaptic)
-				case .running:
-					button(for: .pause)
-					button(for: .stop)
-					button(for: .restart)
-					Divider()
-					button(for: .kill, role: .destructive, haptic: killActionHaptic)
-				case .paused:
-					button(for: .unpause)
-					button(for: .stop)
-					button(for: .restart)
-					Divider()
-					button(for: .kill, role: .destructive, haptic: killActionHaptic)
-				case .restarting:
-					button(for: .pause)
-					button(for: .stop)
-					Divider()
-					button(for: .kill, role: .destructive, haptic: killActionHaptic)
-				case .removing:
-					button(for: .kill, role: .destructive, haptic: killActionHaptic)
-				case .exited:
-					button(for: .start)
-				case .dead:
-					button(for: .start)
-				case .none:
-					button(for: .unpause)
-					button(for: .start)
-					button(for: .restart)
-					button(for: .pause)
-					button(for: .stop)
-					Divider()
-					button(for: .kill, role: .destructive, haptic: killActionHaptic)
+			case .created:
+				button(for: .pause)
+				button(for: .stop)
+				button(for: .restart)
+				Divider()
+				button(for: .kill, role: .destructive, haptic: killActionHaptic)
+			case .running:
+				button(for: .pause)
+				button(for: .stop)
+				button(for: .restart)
+				Divider()
+				button(for: .kill, role: .destructive, haptic: killActionHaptic)
+			case .paused:
+				button(for: .unpause)
+				button(for: .stop)
+				button(for: .restart)
+				Divider()
+				button(for: .kill, role: .destructive, haptic: killActionHaptic)
+			case .restarting:
+				button(for: .pause)
+				button(for: .stop)
+				Divider()
+				button(for: .kill, role: .destructive, haptic: killActionHaptic)
+			case .removing:
+				button(for: .kill, role: .destructive, haptic: killActionHaptic)
+			case .exited:
+				button(for: .start)
+			case .dead:
+				button(for: .start)
+			case .none:
+				button(for: .unpause)
+				button(for: .start)
+				button(for: .restart)
+				button(for: .pause)
+				button(for: .stop)
+				Divider()
+				button(for: .kill, role: .destructive, haptic: killActionHaptic)
 			}
 
 			Divider()
 
-			attachButton
+//			attachButton
 		}
 	}
 
 	private func button(for action: ExecuteAction, role: ButtonRole? = nil, haptic: Haptics.HapticStyle = .medium) -> some View {
-		Button(role: role, action: { execute(action, haptic: haptic) }) {
+		Button(role: role) {
+			execute(action, haptic: haptic)
+		} label: {
 			Label(action.label, systemImage: action.icon)
 		}
 	}
@@ -109,20 +111,14 @@ private extension ContainerContextMenu {
 	func execute(_ action: PortainerKit.ExecuteAction, haptic hapticStyle: Haptics.HapticStyle) {
 		Haptics.generateIfEnabled(hapticStyle)
 
-		showIndicatorAction(.containerActionExecuted(containerID, containerDisplayName, action))
+		showIndicator(.containerActionExecuted(containerID, containerDisplayName, action))
 
 		Task {
 			do {
 				try await portainerStore.execute(action, on: containerID)
-
-//				DispatchQueue.main.async {
-//					container.state = action.expectedState
-//					Portainer.shared.refreshContainerPassthroughSubject.send(container.id)
-//				}
-
-				portainerStore.refreshContainers(errorHandler: sceneErrorHandler)
+				portainerStore.refreshContainers(errorHandler: errorHandler)
 			} catch {
-				sceneErrorHandler(error, ._debugInfo())
+				errorHandler(error, ._debugInfo())
 			}
 		}
 	}

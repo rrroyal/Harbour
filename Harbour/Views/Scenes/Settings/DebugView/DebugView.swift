@@ -9,11 +9,15 @@ import SwiftUI
 import OSLog
 import WidgetKit
 import CommonHaptics
+import CommonOSLog
+import KeychainKit
 
 // MARK: - DebugView
 
 struct DebugView: View {
 	private typealias Localization = Localizable.Debug
+
+	private let logger = Logger(category: Logger.Category.debug)
 
 	var body: some View {
 		List {
@@ -25,6 +29,7 @@ struct DebugView: View {
 			LogsSection()
 		}
 		.navigationTitle(Localization.title)
+		.environment(\.logger, logger)
 	}
 }
 
@@ -49,9 +54,12 @@ private extension DebugView {
 	#endif
 
 	struct WidgetsSection: View {
+		@Environment(\.logger) private var logger
+
 		var body: some View {
 			Section("WidgetKit") {
 				Button("Refresh timelines") {
+					logger.debug("Refreshing timelines... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.buttonPress)
 					WidgetCenter.shared.reloadAllTimelines()
 				}
@@ -60,16 +68,30 @@ private extension DebugView {
 	}
 
 	struct PersistenceSection: View {
+		@Environment(\.logger) private var logger
+		@Environment(\.errorHandler) private var handleError
+
 		var body: some View {
 			Section("Persistence") {
 				Button("Reset CoreData", role: .destructive) {
+					logger.debug("Resetting CoreData... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.heavy)
 					Persistence.shared.reset()
 				}
 
 				Button("Reset Keychain", role: .destructive) {
+					logger.debug("Resetting Keychain... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.heavy)
-					// TODO: Reset Keychain
+					do {
+						let urls = try Keychain.shared.getSavedURLs()
+						for url in urls {
+							try Keychain.shared.removeContent(for: url)
+						}
+						exit(0)
+					} catch {
+						Haptics.generateIfEnabled(.error)
+						handleError(error, ._debugInfo())
+					}
 				}
 			}
 		}

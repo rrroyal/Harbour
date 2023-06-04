@@ -63,6 +63,22 @@ public struct Container: Identifiable, Decodable, Sendable {
 		self.networkSettings = networkSettings
 		self.mounts = mounts
 	}
+
+//	required public init(from decoder: Decoder) throws {
+//		let container = try decoder.container(keyedBy: CodingKeys.self)
+//		self.id = try container.decode(String.self, forKey: .id)
+//		self.names = try container.decodeIfPresent([String].self, forKey: .names)
+//		self.image = try container.decodeIfPresent(String.self, forKey: .image)
+//		self.imageID = try container.decodeIfPresent(String.self, forKey: .imageID)
+//		self.command = try container.decodeIfPresent(String.self, forKey: .command)
+//		self.created = try container.decodeIfPresent(Date.self, forKey: .created)
+//		self.ports = try container.decodeIfPresent([Port].self, forKey: .ports)
+//		self.labels = try container.decodeIfPresent([String : String].self, forKey: .labels)
+//		self.state = try container.decodeIfPresent(ContainerState.self, forKey: .state)
+//		self.status = try container.decodeIfPresent(String.self, forKey: .status)
+//		self.networkSettings = try container.decodeIfPresent(Container.NetworkSettings.self, forKey: .networkSettings)
+//		self.mounts = try container.decodeIfPresent([Mount].self, forKey: .mounts)
+//	}
 }
 
 // MARK: - Container+NetworkSettings
@@ -93,5 +109,24 @@ extension Container: Equatable {
 		lhs.ports == rhs.ports &&
 		lhs.mounts == rhs.mounts &&
 		lhs.networkSettings == rhs.networkSettings
+	}
+}
+
+// MARK: - Container+Hashable
+
+extension Container: Hashable {
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(id)
+		hasher.combine(names)
+		hasher.combine(image)
+		hasher.combine(imageID)
+		hasher.combine(command)
+		hasher.combine(created)
+//		hasher.combine(ports)
+		hasher.combine(labels)
+		hasher.combine(state)
+		hasher.combine(status)
+//		hasher.combine(networkSettings)
+//		hasher.combine(mounts)
 	}
 }

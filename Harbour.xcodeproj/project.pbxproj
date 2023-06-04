@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00F6E0FF2A28D05F0018758C /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00F6E0FE2A28D05F0018758C /* PortainerKit */; };
+		00F6E1042A28D0880018758C /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00F6E1032A28D0880018758C /* PortainerKit */; };
+		00F6E1062A28D08B0018758C /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00F6E1052A28D08B0018758C /* PortainerKit */; };
+		E703A4DF2A1EC3C700ECE328 /* Keychain+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = E703A4DE2A1EC3C700ECE328 /* Keychain+shared.swift */; };
+		E703A4E12A1EC3C700ECE328 /* Keychain+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = E703A4DE2A1EC3C700ECE328 /* Keychain+shared.swift */; };
+		E703A4E62A1EC43400ECE328 /* Keychain+shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = E703A4DE2A1EC3C700ECE328 /* Keychain+shared.swift */; };
 		E706997A2986D9B30001A823 /* SceneDelegate+Indicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70699792986D9B30001A823 /* SceneDelegate+Indicators.swift */; };
 		E70699872986E15A0001A823 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30D2893DABF002D0CD9 /* Constants.swift */; };
 		E70699882986E15A0001A823 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79AD30D2893DABF002D0CD9 /* Constants.swift */; };
@@ -147,16 +153,13 @@
 		E7AF6888290DAD0700E48EAC /* SFSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AF6885290DAD0700E48EAC /* SFSymbol.swift */; };
 		E7AF688D290DB14C00E48EAC /* View+hidden.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AF688C290DB14C00E48EAC /* View+hidden.swift */; };
 		E7AF688E290DB14C00E48EAC /* View+hidden.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AF688C290DB14C00E48EAC /* View+hidden.swift */; };
-		E7AFD2602977391F00F75B62 /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD25F2977391F00F75B62 /* PortainerKit */; };
 		E7AFD2622977392200F75B62 /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD2612977392200F75B62 /* CommonFoundation */; };
 		E7AFD2642977392500F75B62 /* CommonOSLog in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD2632977392500F75B62 /* CommonOSLog */; };
-		E7AFD2662977392900F75B62 /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD2652977392900F75B62 /* PortainerKit */; };
 		E7AFD2682977393000F75B62 /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD2672977393000F75B62 /* KeychainKit */; };
 		E7AFD26A2977393500F75B62 /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD2692977393500F75B62 /* KeychainKit */; };
 		E7AFD26C2977393800F75B62 /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD26B2977393800F75B62 /* CommonFoundation */; };
 		E7AFD26E2977393B00F75B62 /* CommonOSLog in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD26D2977393B00F75B62 /* CommonOSLog */; };
 		E7AFD2702977393F00F75B62 /* CommonSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD26F2977393F00F75B62 /* CommonSwiftUI */; };
-		E7AFD2752977398900F75B62 /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7AFD2742977398900F75B62 /* PortainerKit */; };
 		E7B1F43C28E9E685004D4999 /* ExecuteAction+expectedState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B1F43B28E9E685004D4999 /* ExecuteAction+expectedState.swift */; };
 		E7B4230028EC570D00CBC5F4 /* SelectContainerPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B422FF28EC570D00CBC5F4 /* SelectContainerPlaceholder.swift */; };
 		E7B4230528EC597F00CBC5F4 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B4230428EC597F00CBC5F4 /* ErrorView.swift */; };
@@ -167,7 +170,6 @@
 		E7B4230D28EC615500CBC5F4 /* PortainerURLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71180F128E737D40019774A /* PortainerURLScheme.swift */; };
 		E7BEBA18288575A800FCD7DC /* ToolbarTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA17288575A800FCD7DC /* ToolbarTitle.swift */; };
 		E7BEBA1B28857BF300FCD7DC /* HarbourURLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA1A28857BF300FCD7DC /* HarbourURLScheme.swift */; };
-		E7BEBA1F28857CB000FCD7DC /* UIDevice+Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA1E28857CB000FCD7DC /* UIDevice+Haptics.swift */; };
 		E7BEBA2A2885801900FCD7DC /* UIWindow+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA292885801900FCD7DC /* UIWindow+.swift */; };
 		E7BEBA2C2885803A00FCD7DC /* Notification+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7BEBA2B2885803A00FCD7DC /* Notification+.swift */; };
 		E7C3ED7B28EB9B1F00233930 /* PortainerStore+Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = E72BB34128DE19C1007991D1 /* PortainerStore+Errors.swift */; };
@@ -227,6 +229,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00F6E0FD2A28D05A0018758C /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PortainerKit; sourceTree = "<group>"; };
+		E703A4DE2A1EC3C700ECE328 /* Keychain+shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keychain+shared.swift"; sourceTree = "<group>"; };
 		E70699792986D9B30001A823 /* SceneDelegate+Indicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+Indicators.swift"; sourceTree = "<group>"; };
 		E706AB8128ED864D00950D35 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.intentdefinition; name = Base; path = Base.lproj/HarbourIntents.intentdefinition; sourceTree = "<group>"; };
 		E71180F128E737D40019774A /* PortainerURLScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerURLScheme.swift; sourceTree = "<group>"; };
@@ -338,7 +342,6 @@
 		E7BEBA17288575A800FCD7DC /* ToolbarTitle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarTitle.swift; sourceTree = "<group>"; };
 		E7BEBA1A28857BF300FCD7DC /* HarbourURLScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourURLScheme.swift; sourceTree = "<group>"; };
 		E7BEBA1C28857C1C00FCD7DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		E7BEBA1E28857CB000FCD7DC /* UIDevice+Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Haptics.swift"; sourceTree = "<group>"; };
 		E7BEBA2628857E6F00FCD7DC /* Harbour.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Harbour.entitlements; sourceTree = "<group>"; };
 		E7BEBA292885801900FCD7DC /* UIWindow+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIWindow+.swift"; sourceTree = "<group>"; };
 		E7BEBA2B2885803A00FCD7DC /* Notification+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+.swift"; sourceTree = "<group>"; };
@@ -349,7 +352,6 @@
 		E7D6E6292884771200C79732 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E7D6E62B2884771400C79732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E7D6E62E2884771400C79732 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		E7D6E63D288477ED00C79732 /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PortainerKit; sourceTree = "<group>"; };
 		E7D6E644288478E000C79732 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E7EB776428EA094800295CA2 /* DebugView+LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DebugView+LogsView.swift"; sourceTree = "<group>"; };
 		E7FFDB43297589F5007EBB0D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/HarbourIntents.strings; sourceTree = "<group>"; };
@@ -361,8 +363,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7AFD26E2977393B00F75B62 /* CommonOSLog in Frameworks */,
-				E7AFD2662977392900F75B62 /* PortainerKit in Frameworks */,
 				E72AA77028EB662400C33EA3 /* SwiftUI.framework in Frameworks */,
+				00F6E1062A28D08B0018758C /* PortainerKit in Frameworks */,
 				E72AA76E28EB662400C33EA3 /* WidgetKit.framework in Frameworks */,
 				E7AFD2702977393F00F75B62 /* CommonSwiftUI in Frameworks */,
 				E7AFD26A2977393500F75B62 /* KeychainKit in Frameworks */,
@@ -376,8 +378,8 @@
 			files = (
 				E7AFD2642977392500F75B62 /* CommonOSLog in Frameworks */,
 				E7AFD2622977392200F75B62 /* CommonFoundation in Frameworks */,
-				E7AFD2602977391F00F75B62 /* PortainerKit in Frameworks */,
 				E7AFD2682977393000F75B62 /* KeychainKit in Frameworks */,
+				00F6E1042A28D0880018758C /* PortainerKit in Frameworks */,
 				E72AA79A28EB895D00C33EA3 /* Intents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -386,7 +388,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7AFD2752977398900F75B62 /* PortainerKit in Frameworks */,
+				00F6E0FF2A28D05F0018758C /* PortainerKit in Frameworks */,
 				E7DA4CEA297738AF00DBA55C /* KeychainKit in Frameworks */,
 				E7DA4CE42977389700DBA55C /* CommonSwiftUI in Frameworks */,
 				E7DA4CE22977389700DBA55C /* CommonOSLog in Frameworks */,
@@ -537,6 +539,7 @@
 				E7C3ED8328EB9C7D00233930 /* OSLog */,
 				E72AA7CE28EB91CE00C33EA3 /* PortainerKit */,
 				E7AF688A290DB13C00E48EAC /* SwiftUI */,
+				E703A4DE2A1EC3C700ECE328 /* Keychain+shared.swift */,
 				E72BB34128DE19C1007991D1 /* PortainerStore+Errors.swift */,
 			);
 			path = Extensions;
@@ -686,7 +689,6 @@
 		E766D927288C37F700F2DB99 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
-				E7BEBA1E28857CB000FCD7DC /* UIDevice+Haptics.swift */,
 				E7BEBA292885801900FCD7DC /* UIWindow+.swift */,
 			);
 			path = UIKit;
@@ -994,7 +996,7 @@
 		E7D6E6352884771900C79732 /* Modules */ = {
 			isa = PBXGroup;
 			children = (
-				E7D6E63D288477ED00C79732 /* PortainerKit */,
+				00F6E0FD2A28D05A0018758C /* PortainerKit */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -1055,11 +1057,11 @@
 			);
 			name = HarbourWidgets;
 			packageProductDependencies = (
-				E7AFD2652977392900F75B62 /* PortainerKit */,
 				E7AFD2692977393500F75B62 /* KeychainKit */,
 				E7AFD26B2977393800F75B62 /* CommonFoundation */,
 				E7AFD26D2977393B00F75B62 /* CommonOSLog */,
 				E7AFD26F2977393F00F75B62 /* CommonSwiftUI */,
+				00F6E1052A28D08B0018758C /* PortainerKit */,
 			);
 			productName = HarbourWidgetsExtension;
 			productReference = E72AA76C28EB662300C33EA3 /* HarbourWidgets.appex */;
@@ -1081,10 +1083,10 @@
 			);
 			name = HarbourIntents;
 			packageProductDependencies = (
-				E7AFD25F2977391F00F75B62 /* PortainerKit */,
 				E7AFD2612977392200F75B62 /* CommonFoundation */,
 				E7AFD2632977392500F75B62 /* CommonOSLog */,
 				E7AFD2672977393000F75B62 /* KeychainKit */,
+				00F6E1032A28D0880018758C /* PortainerKit */,
 			);
 			productName = HarbourIntents;
 			productReference = E72AA79828EB895D00C33EA3 /* HarbourIntents.appex */;
@@ -1116,7 +1118,7 @@
 				E7DA4CE32977389700DBA55C /* CommonSwiftUI */,
 				E7DA4CE6297738A500DBA55C /* IndicatorsKit */,
 				E7DA4CE9297738AF00DBA55C /* KeychainKit */,
-				E7AFD2742977398900F75B62 /* PortainerKit */,
+				00F6E0FE2A28D05F0018758C /* PortainerKit */,
 			);
 			productName = Harbour;
 			productReference = E7D6E6242884771200C79732 /* Harbour.app */;
@@ -1232,6 +1234,7 @@
 				E70699872986E15A0001A823 /* Constants.swift in Sources */,
 				E7B4230028EC570D00CBC5F4 /* SelectContainerPlaceholder.swift in Sources */,
 				E73A305428EC48E800004093 /* ContainerStateProvider.swift in Sources */,
+				E703A4E12A1EC3C700ECE328 /* Keychain+shared.swift in Sources */,
 				E7AF688E290DB14C00E48EAC /* View+hidden.swift in Sources */,
 				E7811173297572CB000CB98A /* URLSessionConfiguration+intents.swift in Sources */,
 				E73A305628EC490800004093 /* ContainerStateWidget.swift in Sources */,
@@ -1256,6 +1259,7 @@
 				E7C3ED7B28EB9B1F00233930 /* PortainerStore+Errors.swift in Sources */,
 				E73A304628EC337200004093 /* IntentError.swift in Sources */,
 				E7C3ED8128EB9B7700233930 /* GenericError.swift in Sources */,
+				E703A4E62A1EC43400ECE328 /* Keychain+shared.swift in Sources */,
 				E72AA7AB28EB8A6800C33EA3 /* ContainerStateIntentHandler.swift in Sources */,
 				E75F9B0A291283DC001EF707 /* HarbourUserActivityIdentifier.swift in Sources */,
 				E73A303F28EC330600004093 /* ContainerState+init.swift in Sources */,
@@ -1302,6 +1306,7 @@
 				E7C3ED8528EB9C8D00233930 /* Logger.Category+.swift in Sources */,
 				E766D933288C3CBF00F2DB99 /* SettingsView.swift in Sources */,
 				E78111B0297574B2000CB98A /* SceneDelegate+UIWindowSceneDelegate.swift in Sources */,
+				E703A4DF2A1EC3C700ECE328 /* Keychain+shared.swift in Sources */,
 				E7D6E62A2884771200C79732 /* ContentView.swift in Sources */,
 				E7ACE73C288C4215000E6FF6 /* SettingsView+InterfaceSection.swift in Sources */,
 				E7AF688D290DB14C00E48EAC /* View+hidden.swift in Sources */,
@@ -1335,7 +1340,6 @@
 				E72BB34228DE19C1007991D1 /* PortainerStore+Errors.swift in Sources */,
 				E78111B1297574B2000CB98A /* SceneDelegate+UserActivity.swift in Sources */,
 				E766D925288C37E200F2DB99 /* ContainersListView.swift in Sources */,
-				E7BEBA1F28857CB000FCD7DC /* UIDevice+Haptics.swift in Sources */,
 				E72E834E297C12FD00F6F1BD /* ContainerLogsView.swift in Sources */,
 				E78111B4297574B2000CB98A /* AppState.swift in Sources */,
 				E7BEBA2A2885801900FCD7DC /* UIWindow+.swift in Sources */,
@@ -1446,7 +1450,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = HarbourWidgets/HarbourWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourWidgets/Info.plist;
@@ -1478,7 +1482,7 @@
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CODE_SIGN_ENTITLEMENTS = HarbourWidgets/HarbourWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourWidgets/Info.plist;
@@ -1508,7 +1512,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = HarbourIntents/HarbourIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourIntents/Info.plist;
@@ -1538,7 +1542,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = HarbourIntents/HarbourIntents.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourIntents/Info.plist;
@@ -1685,7 +1689,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Harbour/Preview Content\"";
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				ENABLE_PREVIEWS = YES;
@@ -1705,11 +1709,12 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.0.0;
-				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-expression-type-checking=100 -Xfrontend -warn-long-function-bodies=100 -D ENABLE_PREVIEW_FEATURES";
+				OTHER_SWIFT_FLAGS = "-Xfrontend -warn-long-expression-type-checking=300 -Xfrontend -warn-long-function-bodies=300";
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG ENABLE_PREVIEW_FEATURES";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
@@ -1725,7 +1730,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_ASSET_PATHS = "\"Harbour/Preview Content\"";
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				ENABLE_PREVIEWS = YES;
@@ -1841,7 +1846,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E7AFD25F2977391F00F75B62 /* PortainerKit */ = {
+		00F6E0FE2A28D05F0018758C /* PortainerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PortainerKit;
+		};
+		00F6E1032A28D0880018758C /* PortainerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = PortainerKit;
+		};
+		00F6E1052A28D08B0018758C /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PortainerKit;
 		};
@@ -1854,10 +1867,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E7DA4CDA2977389700DBA55C /* XCRemoteSwiftPackageReference "CommonKit" */;
 			productName = CommonOSLog;
-		};
-		E7AFD2652977392900F75B62 /* PortainerKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PortainerKit;
 		};
 		E7AFD2672977393000F75B62 /* KeychainKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1883,10 +1892,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E7DA4CDA2977389700DBA55C /* XCRemoteSwiftPackageReference "CommonKit" */;
 			productName = CommonSwiftUI;
-		};
-		E7AFD2742977398900F75B62 /* PortainerKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = PortainerKit;
 		};
 		E7DA4CAC2977327300DBA55C /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;

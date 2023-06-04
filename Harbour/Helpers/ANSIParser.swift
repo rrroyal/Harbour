@@ -180,82 +180,82 @@ extension ANSIParser {
 
 		var attributedStringAttributes: (NSAttributedString.Key, Any)? {
 			switch self {
-				case .reset:
-					return nil
-				case .bold:
-					return nil
-				case .faint:
-					return nil
-				case .italic:
-					return nil
-				case .underline:
-					return (.underlineStyle, NSUnderlineStyle.single)
-				case .strikethrough:
-					return (.strikethroughStyle, NSUnderlineStyle.single)
-				case .fgBlack:
-					return (.foregroundColor, PlatformColor.black)
-				case .fgRed:
-					return (.foregroundColor, PlatformColor.red)
-				case .fgGreen:
-					return (.foregroundColor, PlatformColor.green)
-				case .fgYellow:
-					return (.foregroundColor, PlatformColor.yellow)
-				case .fgBlue:
-					return (.foregroundColor, PlatformColor.blue)
-				case .fgMagenta:
-					return (.foregroundColor, PlatformColor.magenta)
-				case .fgCyan:
-					return (.foregroundColor, PlatformColor.cyan)
-				case .fgWhite:
-					return (.foregroundColor, PlatformColor.white)
-				case .fgBrightBlack:
-					return (.foregroundColor, PlatformColor.black)
-				case .fgBrightRed:
-					return (.foregroundColor, PlatformColor.red)
-				case .fgBrightGreen:
-					return (.foregroundColor, PlatformColor.green)
-				case .fgBrightYellow:
-					return (.foregroundColor, PlatformColor.yellow)
-				case .fgBrightBlue:
-					return (.foregroundColor, PlatformColor.blue)
-				case .fgBrightMagenta:
-					return (.foregroundColor, PlatformColor.magenta)
-				case .fgBrightCyan:
-					return (.foregroundColor, PlatformColor.cyan)
-				case .fgBrightWhite:
-					return (.foregroundColor, PlatformColor.white)
-				case .bgBlack:
-					return (.backgroundColor, PlatformColor.black)
-				case .bgRed:
-					return (.backgroundColor, PlatformColor.red)
-				case .bgGreen:
-					return (.backgroundColor, PlatformColor.green)
-				case .bgYellow:
-					return (.backgroundColor, PlatformColor.yellow)
-				case .bgBlue:
-					return (.backgroundColor, PlatformColor.blue)
-				case .bgMagenta:
-					return (.backgroundColor, PlatformColor.magenta)
-				case .bgCyan:
-					return (.backgroundColor, PlatformColor.cyan)
-				case .bgWhite:
-					return (.backgroundColor, PlatformColor.white)
-				case .bgBrightBlack:
-					return (.backgroundColor, PlatformColor.black)
-				case .bgBrightRed:
-					return (.backgroundColor, PlatformColor.red)
-				case .bgBrightGreen:
-					return (.backgroundColor, PlatformColor.green)
-				case .bgBrightYellow:
-					return (.backgroundColor, PlatformColor.yellow)
-				case .bgBrightBlue:
-					return (.backgroundColor, PlatformColor.blue)
-				case .bgBrightMagenta:
-					return (.backgroundColor, PlatformColor.magenta)
-				case .bgBrightCyan:
-					return (.backgroundColor, PlatformColor.cyan)
-				case .bgBrightWhite:
-					return (.backgroundColor, PlatformColor.white)
+			case .reset:
+				return nil
+			case .bold:
+				return nil
+			case .faint:
+				return nil
+			case .italic:
+				return nil
+			case .underline:
+				return (.underlineStyle, NSUnderlineStyle.single)
+			case .strikethrough:
+				return (.strikethroughStyle, NSUnderlineStyle.single)
+			case .fgBlack:
+				return (.foregroundColor, PlatformColor.black)
+			case .fgRed:
+				return (.foregroundColor, PlatformColor.red)
+			case .fgGreen:
+				return (.foregroundColor, PlatformColor.green)
+			case .fgYellow:
+				return (.foregroundColor, PlatformColor.yellow)
+			case .fgBlue:
+				return (.foregroundColor, PlatformColor.blue)
+			case .fgMagenta:
+				return (.foregroundColor, PlatformColor.magenta)
+			case .fgCyan:
+				return (.foregroundColor, PlatformColor.cyan)
+			case .fgWhite:
+				return (.foregroundColor, PlatformColor.white)
+			case .fgBrightBlack:
+				return (.foregroundColor, PlatformColor.black)
+			case .fgBrightRed:
+				return (.foregroundColor, PlatformColor.red)
+			case .fgBrightGreen:
+				return (.foregroundColor, PlatformColor.green)
+			case .fgBrightYellow:
+				return (.foregroundColor, PlatformColor.yellow)
+			case .fgBrightBlue:
+				return (.foregroundColor, PlatformColor.blue)
+			case .fgBrightMagenta:
+				return (.foregroundColor, PlatformColor.magenta)
+			case .fgBrightCyan:
+				return (.foregroundColor, PlatformColor.cyan)
+			case .fgBrightWhite:
+				return (.foregroundColor, PlatformColor.white)
+			case .bgBlack:
+				return (.backgroundColor, PlatformColor.black)
+			case .bgRed:
+				return (.backgroundColor, PlatformColor.red)
+			case .bgGreen:
+				return (.backgroundColor, PlatformColor.green)
+			case .bgYellow:
+				return (.backgroundColor, PlatformColor.yellow)
+			case .bgBlue:
+				return (.backgroundColor, PlatformColor.blue)
+			case .bgMagenta:
+				return (.backgroundColor, PlatformColor.magenta)
+			case .bgCyan:
+				return (.backgroundColor, PlatformColor.cyan)
+			case .bgWhite:
+				return (.backgroundColor, PlatformColor.white)
+			case .bgBrightBlack:
+				return (.backgroundColor, PlatformColor.black)
+			case .bgBrightRed:
+				return (.backgroundColor, PlatformColor.red)
+			case .bgBrightGreen:
+				return (.backgroundColor, PlatformColor.green)
+			case .bgBrightYellow:
+				return (.backgroundColor, PlatformColor.yellow)
+			case .bgBrightBlue:
+				return (.backgroundColor, PlatformColor.blue)
+			case .bgBrightMagenta:
+				return (.backgroundColor, PlatformColor.magenta)
+			case .bgBrightCyan:
+				return (.backgroundColor, PlatformColor.cyan)
+			case .bgBrightWhite:
+				return (.backgroundColor, PlatformColor.white)
 			}
 		}
 	}

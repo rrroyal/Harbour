@@ -18,7 +18,7 @@ extension ContainerDetailsView {
 		var body: some View {
 			Section {
 				NavigationLink(destination: ContainerLogsView(navigationItem: navigationItem)) {
-					Label(Localization.logs, systemImage: SFSymbol.logs)
+					Label(Localization.Section.logs, systemImage: SFSymbol.logs)
 						.font(.body)
 				}
 			}

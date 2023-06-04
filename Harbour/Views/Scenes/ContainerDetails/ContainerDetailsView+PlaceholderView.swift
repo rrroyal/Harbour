@@ -16,15 +16,15 @@ extension ContainerDetailsView {
 		var body: some View {
 			Group {
 				switch viewState {
-					case .loading:
-						ProgressView()
-							.progressViewStyle(.circular)
-					case .hasDetails:
-						EmptyView()
-					default:
-						if let title = viewState.title {
-							Text(title)
-						}
+				case .loading:
+					ProgressView()
+						.progressViewStyle(.circular)
+				case .hasDetails:
+					EmptyView()
+				default:
+					if let title = viewState.title {
+						Text(title)
+					}
 				}
 			}
 			.foregroundStyle(.secondary)

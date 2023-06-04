@@ -7,22 +7,20 @@
 
 import Foundation
 
-// TODO: Localize it
-
 enum ProviderError: LocalizedError {
 	case containerNotFound
 
 	var shouldDisplayErrorView: Bool {
 		switch self {
-			case .containerNotFound:
-				return false
+		case .containerNotFound:
+			return false
 		}
 	}
 
 	var widgetPlaceholder: String {
 		switch self {
-			case .containerNotFound:
-				return Localizable.Widgets.notFoundPlaceholder
+		case .containerNotFound:
+			return Localizable.Widgets.notFoundPlaceholder
 		}
 	}
 }

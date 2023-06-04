@@ -16,7 +16,7 @@ struct ContainerDetailsView: View {
 	private typealias Localization = Localizable.ContainerDetails
 
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
+	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
@@ -50,16 +50,15 @@ struct ContainerDetailsView: View {
 			}
 		}
 		.refreshable {
-			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: sceneErrorHandler).value
+			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
 		}
 		.task(id: "\(navigationItem.endpointID ?? -1).\(navigationItem.id)") {
-			print("task", navigationItem.id)
-			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: sceneErrorHandler).value
+			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
 		}
 		.animation(.easeInOut, value: viewModel.containerDetails != nil)
 		.animation(.easeInOut, value: viewModel.isLoading)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: navigationItem) { navigationItem, userActivity in
-			viewModel.createUserActivity(for: navigationItem, userActivity: userActivity)
+			viewModel.createUserActivity(for: navigationItem, userActivity: userActivity, errorHandler: errorHandler)
 		}
 	}
 }
@@ -75,7 +74,7 @@ private extension ContainerDetailsView {
 		let container: Container?
 
 		var body: some View {
-			Menu(content: {
+			Menu {
 				if isLoading {
 					Text(Localizable.Generic.loading)
 					Divider()
@@ -91,7 +90,7 @@ private extension ContainerDetailsView {
 					Divider()
 					ShareLink(Localizable.Generic.sharePortainerURL, item: portainerURL)
 				}
-			}) {
+			} label: {
 				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
 			}
 		}

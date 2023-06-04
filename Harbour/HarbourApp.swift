@@ -25,7 +25,6 @@ struct HarbourApp: App {
 				.environmentObject(preferences)
 				.environment(\.portainerServerURL, portainerStore.serverURL)
 				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
-				.environment(\.containersViewUseGrid, preferences.cvUseGrid)
 		}
 		.defaultAppStorage(Preferences.userDefaults)
 		.onChange(of: scenePhase, perform: onScenePhaseChange)
@@ -38,14 +37,16 @@ struct HarbourApp: App {
 private extension HarbourApp {
 	func onScenePhaseChange(_ scenePhase: ScenePhase) {
 		switch scenePhase {
-			case .background:
-				appState.scheduleBackgroundRefresh()
-			case .inactive:
-				break
-			case .active:
+		case .background:
+			appState.scheduleBackgroundRefresh()
+		case .inactive:
+			break
+		case .active:
+			if portainerStore.isSetup {
 				portainerStore.refresh()
-			@unknown default:
-				break
+			}
+		@unknown default:
+			break
 		}
 	}
 }

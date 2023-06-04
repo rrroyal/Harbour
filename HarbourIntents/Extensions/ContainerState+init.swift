@@ -11,14 +11,14 @@ import PortainerKit
 extension ContainerState {
 	init?(intentContainerState: IntentContainerState) {
 		switch intentContainerState {
-			case .created:		self = .created
-			case .running:		self = .running
-			case .paused:		self = .paused
-			case .restarting:	self = .restarting
-			case .removing:		self = .removing
-			case .exited:		self = .exited
-			case .dead:			self = .dead
-			case .unknown:		return nil
+		case .created:		self = .created
+		case .running:		self = .running
+		case .paused:		self = .paused
+		case .restarting:	self = .restarting
+		case .removing:		self = .removing
+		case .exited:		self = .exited
+		case .dead:			self = .dead
+		case .unknown:		return nil
 		}
 	}
 }

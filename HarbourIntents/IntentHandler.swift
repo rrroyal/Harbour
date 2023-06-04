@@ -11,12 +11,12 @@ import OSLog
 final class IntentHandler: INExtension {
 	override func handler(for intent: INIntent) -> Any {
 		switch intent {
-			case is ContainerStateIntent:
-				return ContainerStateIntentHandler()
+		case is ContainerStateIntent:
+			return ContainerStateIntentHandler()
 //			case is ExecuteActionIntent:
 //				return ExecuteActionIntentHandler()
-			default:
-				return self
+		default:
+			return self
 		}
 	}
 

@@ -27,23 +27,23 @@ extension DebugView {
 
 		@ViewBuilder
 		private var toolbarMenu: some View {
-			Menu(content: {
-				Button(action: {
+			Menu {
+				Button {
 					Haptics.generateIfEnabled(.selectionChanged)
 					UIPasteboard.general.string = logs.map(\.debugDescription).joined(separator: "\n")
-				}) {
+				} label: {
 					Label(Localizable.Generic.copy, systemImage: SFSymbol.copy)
 				}
 
 				Divider()
 
-				Button(action: {
+				Button {
 					Haptics.generateIfEnabled(.buttonPress)
 					getLogs()
-				}) {
+				} label: {
 					Label(Localizable.Generic.refresh, systemImage: SFSymbol.reload)
 				}
-			}) {
+			} label: {
 				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
 			}
 		}
@@ -115,20 +115,20 @@ private extension DebugView.LogsView {
 		var color: Color? {
 			guard let level = level else { return nil }
 			switch level {
-				case .undefined:
-					return nil
-				case .debug:
-					return .purple
-				case .info:
-					return nil
-				case .notice:
-					return .blue
-				case .error:
-					return .red
-				case .fault:
-					return .red
-				@unknown default:
-					return nil
+			case .undefined:
+				return nil
+			case .debug:
+				return .purple
+			case .info:
+				return nil
+			case .notice:
+				return .blue
+			case .error:
+				return .red
+			case .fault:
+				return .red
+			@unknown default:
+				return nil
 			}
 		}
 	}

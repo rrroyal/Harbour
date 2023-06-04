@@ -14,8 +14,8 @@ struct ContainerLogsView: View {
 	private typealias Localization = Localizable.ContainerLogs
 
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
-	@Environment(\.showIndicatorAction) private var showIndicatorAction
+	@Environment(\.errorHandler) private var errorHandler
+	@Environment(\.showIndicator) private var showIndicator
 
 	@StateObject private var viewModel: ViewModel
 
@@ -38,24 +38,25 @@ struct ContainerLogsView: View {
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					ToolbarMenu(viewState: viewModel.viewState,
+								linesCount: $viewModel.linesCount,
 								includeTimestamps: $viewModel.includeTimestamps,
 								scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
-								copyAction: { viewModel.copyLogs(showIndicatorAction: showIndicatorAction) },
-								refreshAction: { viewModel.getLogs(errorHandler: sceneErrorHandler) })
+								copyAction: { viewModel.copyLogs(showIndicatorAction: showIndicator) },
+								refreshAction: { viewModel.getLogs(errorHandler: errorHandler) })
 				}
 			}
 		}
 		.background(PlaceholderView(viewState: viewModel.viewState))
 		.navigationTitle(Localization.navigationTitle)
 		.refreshable {
-			await viewModel.getLogs(errorHandler: sceneErrorHandler).value
+			await viewModel.getLogs(errorHandler: errorHandler).value
 		}
 //		.searchable(text: $searchQuery)
 		.task(id: navigationItem.id) {
-			await viewModel.getLogs(errorHandler: sceneErrorHandler).value
+			await viewModel.getLogs(errorHandler: errorHandler).value
 		}
 		.onChange(of: viewModel.includeTimestamps) { _ in
-			viewModel.getLogs(errorHandler: sceneErrorHandler)
+			viewModel.getLogs(errorHandler: errorHandler)
 		}
 	}
 }
@@ -74,8 +75,9 @@ private extension ContainerLogsView {
 
 private extension ContainerLogsView {
 	struct ToolbarMenu: View {
-		@Environment(\.showIndicatorAction) private var showIndicatorAction
+		@Environment(\.showIndicator) private var showIndicator
 		let viewState: ViewModel.ViewState
+		@Binding var linesCount: Int
 		@Binding var includeTimestamps: Bool
 		let scrollAction: (UnitPoint) -> Void
 		let copyAction: () -> Void
@@ -83,68 +85,89 @@ private extension ContainerLogsView {
 
 		@ViewBuilder
 		private var refreshButton: some View {
-			Button(action: {
+			Button {
 				Haptics.generateIfEnabled(.buttonPress)
 				refreshAction()
-			}) {
+			} label: {
 				Label(Localizable.Generic.refresh, systemImage: SFSymbol.reload)
 			}
 		}
 
 		@ViewBuilder
 		private var scrollButtons: some View {
-			Button(action: {
+			Button {
 				Haptics.generateIfEnabled(.light)
 				scrollAction(.top)
-			}) {
+			} label: {
 				Label(Localization.Menu.scrollToTop, systemImage: SFSymbol.scrollToTop)
 			}
 
-			Button(action: {
+			Button {
 				Haptics.generateIfEnabled(.light)
 				scrollAction(.bottom)
-			}) {
+			} label: {
 				Label(Localization.Menu.scrollToBottom, systemImage: SFSymbol.scrollToBottom)
 			}
 		}
 
 		@ViewBuilder
 		private var includeTimestampsButton: some View {
-			Button(action: {
+			Button {
 				Haptics.generateIfEnabled(.selectionChanged)
 				includeTimestamps.toggle()
-			}) {
+			} label: {
 				Label(Localization.Menu.includeTimestamps, systemImage: includeTimestamps ? SFSymbol.selected : "")
 			}
 		}
 
 		@ViewBuilder
+		private var logLinesMenu: some View {
+			let lineCounts: [Int] = [
+				100,
+				1_000,
+				10_000,
+				100_000
+			]
+			Menu(Localization.Menu.linesCount) {
+				ForEach(lineCounts, id: \.self) { amount in
+					let isSelected = linesCount == amount
+					Button {
+						Haptics.generateIfEnabled(.selectionChanged)
+						linesCount = amount
+					} label: {
+						Label(amount.formatted(), systemImage: isSelected ? SFSymbol.selected : "")
+					}
+				}
+			}
+		}
+
+		@ViewBuilder
 		private var copyButton: some View {
-			Button(action: {
+			Button {
 				Haptics.generateIfEnabled(.selectionChanged)
 				copyAction()
-			}) {
+			} label: {
 				Label(Localizable.Generic.copy, systemImage: SFSymbol.copy)
 			}
 		}
 
 		var body: some View {
-			Menu(content: {
+			Menu {
 				switch viewState {
-					case .loading:
-						Text(Localizable.Generic.loading)
-					case .hasLogs:
-						scrollButtons
-						Divider()
-						includeTimestampsButton
-						// TODO: Log lines amount menu
-						Divider()
-						refreshButton
-						copyButton
-					default:
-						refreshButton
+				case .loading:
+					Text(Localizable.Generic.loading)
+				case .hasLogs:
+					scrollButtons
+					Divider()
+					includeTimestampsButton
+					logLinesMenu
+					Divider()
+					refreshButton
+					copyButton
+				default:
+					refreshButton
 				}
-			}) {
+			} label: {
 				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
 			}
 		}

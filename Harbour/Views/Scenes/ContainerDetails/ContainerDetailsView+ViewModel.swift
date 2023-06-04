@@ -36,7 +36,9 @@ extension ContainerDetailsView {
 
 		init() { }
 
-		func createUserActivity(for navigationItem: ContainerNavigationItem, userActivity: NSUserActivity) {
+		func createUserActivity(for navigationItem: ContainerNavigationItem,
+								userActivity: NSUserActivity,
+								errorHandler: SceneDelegate.ErrorHandler?) {
 			typealias Localization = Localizable.ContainerDetails.UserActivity
 
 			let container = self.container(for: navigationItem)
@@ -71,7 +73,7 @@ extension ContainerDetailsView {
 				]
 				userActivity.requiredUserInfoKeys = Set(requiredUserInfoKeys)
 			} catch {
-				// TODO: Log error
+				errorHandler?(error, ._debugInfo())
 			}
 		}
 
@@ -121,24 +123,24 @@ extension ContainerDetailsView.ViewModel {
 
 		var id: Int {
 			switch self {
-				case .somethingWentWrong:	return -2
-				case .error:				return -1
-				case .loading:				return 0
-				case .hasDetails:			return 1
+			case .somethingWentWrong:	return -2
+			case .error:				return -1
+			case .loading:				return 0
+			case .hasDetails:			return 1
 			}
 		}
 
 		var title: String? {
 			switch self {
-				case .loading:
-					return Localizable.Generic.loading
-				case .error(let error):
-					return error.localizedDescription
-				case .somethingWentWrong:
+			case .loading:
+				return Localizable.Generic.loading
+			case .error(let error):
+				return error.localizedDescription
+			case .somethingWentWrong:
 //					return Localizable.Generic.somethingWentWrong
-					return nil
-				default:
-					return nil
+				return nil
+			default:
+				return nil
 			}
 		}
 

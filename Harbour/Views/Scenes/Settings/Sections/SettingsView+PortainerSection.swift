@@ -21,7 +21,9 @@ extension SettingsView {
 			Section(Localization.title) {
 				EndpointsMenu()
 			}
-			.sheet(isPresented: $viewModel.isSetupSheetPresented, onDismiss: { viewModel.refreshServers() }) {
+			.sheet(isPresented: $viewModel.isSetupSheetPresented) {
+				viewModel.refreshServers()
+			} content: {
 				SetupView()
 			}
 		}
@@ -35,7 +37,7 @@ private extension SettingsView.PortainerSection {
 		private typealias Localization = Localizable.Settings.Portainer.EndpointsMenu
 
 		@EnvironmentObject private var viewModel: SettingsView.ViewModel
-		@Environment(\.sceneErrorHandler) private var sceneErrorHandler
+		@Environment(\.errorHandler) private var errorHandler
 
 		private var serverURLLabel: String? {
 			guard let url = viewModel.activeURL else { return nil }
@@ -44,20 +46,20 @@ private extension SettingsView.PortainerSection {
 
 		var body: some View {
 			let urls = viewModel.serverURLs.sorted { $0.absoluteString > $1.absoluteString }
-			Menu(content: {
+			Menu {
 				ForEach(urls, id: \.absoluteString) { url in
 					urlMenu(for: url)
 				}
 
 				Divider()
 
-				Button(action: {
+				Button {
 //					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isSetupSheetPresented.toggle()
-				}) {
+				} label: {
 					Label(Localization.add, systemImage: SFSymbol.add)
 				}
-			}) {
+			} label: {
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
 					Text(serverURLLabel ?? Localization.noServerPlaceholder)
@@ -79,10 +81,10 @@ private extension SettingsView.PortainerSection {
 					Label(Localization.Server.inUse, systemImage: SFSymbol.selected)
 						.symbolVariant(.circle.fill)
 				} else {
-					Button(action: {
+					Button {
 						Haptics.generateIfEnabled(.buttonPress)
-						viewModel.switchPortainerServer(to: url, errorHandler: sceneErrorHandler)
-					}) {
+						viewModel.switchPortainerServer(to: url, errorHandler: errorHandler)
+					} label: {
 						Label(Localization.Server.use, systemImage: SFSymbol.selected)
 							.symbolVariant(.circle)
 					}
@@ -90,10 +92,10 @@ private extension SettingsView.PortainerSection {
 
 				Divider()
 
-				Button(role: .destructive, action: {
+				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.buttonPress)
-					viewModel.deleteServer(url, errorHandler: sceneErrorHandler)
-				}) {
+					viewModel.removeServer(url, errorHandler: errorHandler)
+				} label: {
 					Label(Localization.Server.delete, systemImage: SFSymbol.remove)
 				}
 			})

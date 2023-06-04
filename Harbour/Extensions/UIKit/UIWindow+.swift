@@ -12,10 +12,10 @@ extension UIWindow {
 		super.motionEnded(motion, with: event)
 
 		switch motion {
-			case .motionShake:
-				NotificationCenter.default.post(name: .DeviceDidShake, object: nil)
-			default:
-				break
+		case .motionShake:
+			NotificationCenter.default.post(name: .DeviceDidShake, object: nil)
+		default:
+			break
 		}
 	}
 }

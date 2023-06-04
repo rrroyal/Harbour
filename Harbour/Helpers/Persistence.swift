@@ -51,7 +51,7 @@ struct Persistence {
 	}
 
 	func reset() {
-		Self.logger.info("Resetting CoreData! [\(String._debugInfo(), privacy: .public)]")
+		Self.logger.warning("Resetting CoreData! [\(String._debugInfo(), privacy: .public)]")
 
 		let entities = container.managedObjectModel.entities
 		for entity in entities {

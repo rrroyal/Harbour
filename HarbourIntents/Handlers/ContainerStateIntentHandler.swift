@@ -78,22 +78,22 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 			let endpointsFiltered = endpoints.filter { $0.id == endpointID }
 
 			switch endpointsFiltered.count {
-				case 0:
+			case 0:
+				return .needsValue()
+			case 1:
+				guard let firstEndpoint = endpointsFiltered.first else {
 					return .needsValue()
-				case 1:
-					guard let firstEndpoint = endpointsFiltered.first else {
-						return .needsValue()
-					}
-					let intentEndpoint = IntentEndpoint(identifier: "\(firstEndpoint.id)",
-														display: firstEndpoint.name ?? firstEndpoint.id.description)
-					return .success(with: intentEndpoint)
-				case 2...:
-					let intentEndpoints: [IntentEndpoint] = endpointsFiltered
-						.sorted()
-						.map { IntentEndpoint(identifier: "\($0.id)", display: $0.name ?? $0.id.description) }
-					return .disambiguation(with: intentEndpoints)
-				default:
-					return .needsValue()
+				}
+				let intentEndpoint = IntentEndpoint(identifier: "\(firstEndpoint.id)",
+													display: firstEndpoint.name ?? firstEndpoint.id.description)
+				return .success(with: intentEndpoint)
+			case 2...:
+				let intentEndpoints: [IntentEndpoint] = endpointsFiltered
+					.sorted()
+					.map { IntentEndpoint(identifier: "\($0.id)", display: $0.name ?? $0.id.description) }
+				return .disambiguation(with: intentEndpoints)
+			default:
+				return .needsValue()
 			}
 		} catch {
 			return .needsValue()
@@ -114,26 +114,26 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 												 resolveByName: resolveByName)
 			let containers = try await portainerStore.fetchContainers(for: endpointID, filters: filters)
 			switch containers.count {
-				case 0:
+			case 0:
+				return .needsValue()
+			case 1:
+				guard let firstContainer = containers.first else {
 					return .needsValue()
-				case 1:
-					guard let firstContainer = containers.first else {
-						return .needsValue()
+				}
+				let intentContainer = IntentContainer(identifier: firstContainer.id, display: firstContainer.displayName ?? firstContainer.id)
+				intentContainer.name = firstContainer.names?.first
+				return .success(with: intentContainer)
+			case 2...:
+				let intentContainers = containers
+					.sorted()
+					.map {
+						let intentContainer = IntentContainer(identifier: $0.id, display: $0.displayName ?? $0.id)
+						intentContainer.name = $0.names?.first
+						return intentContainer
 					}
-					let intentContainer = IntentContainer(identifier: firstContainer.id, display: firstContainer.displayName ?? firstContainer.id)
-					intentContainer.name = firstContainer.names?.first
-					return .success(with: intentContainer)
-				case 2...:
-					let intentContainers = containers
-						.sorted()
-						.map {
-							let intentContainer = IntentContainer(identifier: $0.id, display: $0.displayName ?? $0.id)
-							intentContainer.name = $0.names?.first
-							return intentContainer
-						}
-					return .disambiguation(with: intentContainers)
-				default:
-					return .needsValue()
+				return .disambiguation(with: intentContainers)
+			default:
+				return .needsValue()
 			}
 		} catch {
 			return .needsValue()

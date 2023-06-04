@@ -9,35 +9,52 @@ import SwiftUI
 import OSLog
 import PortainerKit
 import IndicatorsKit
+import KeychainKit
 
-// MARK: - SceneErrorHandler
+// MARK: - ErrorHandler
 
- extension EnvironmentValues {
-	private struct SceneErrorHandler: EnvironmentKey {
+extension EnvironmentValues {
+	private struct ErrorHandlerEnvironmentKey: EnvironmentKey {
 		static let defaultValue: SceneDelegate.ErrorHandler = { error, _debugInfo in
-			assertionFailure("`SceneErrorHandler` has been called, but none is attached!")
+			assertionFailure("`errorHandler` has been called, but none is attached!")
 			os_log(.error, log: .default, "Error: \(error, privacy: .public) [\(_debugInfo, privacy: .public)]")
 		}
 	}
 
-	var sceneErrorHandler: SceneDelegate.ErrorHandler {
-		get { self[SceneErrorHandler.self] }
-		set { self[SceneErrorHandler.self] = newValue }
+	/// An action that can handle provided error.
+	var errorHandler: SceneDelegate.ErrorHandler {
+		get { self[ErrorHandlerEnvironmentKey.self] }
+		set { self[ErrorHandlerEnvironmentKey.self] = newValue }
 	}
- }
+}
 
-// MARK: - ShowIndicatorAction
+// MARK: - ShowIndicator
 
 extension EnvironmentValues {
-	private struct ShowIndicatorAction: EnvironmentKey {
+	private struct ShowIndicatorEnvironmentKey: EnvironmentKey {
 		static let defaultValue: SceneDelegate.ShowIndicatorAction = { indicator in
-			assertionFailure("`ShowIndicatorAction` has been called, but none is attached! Indicator: \(indicator)")
+			assertionFailure("`showIndicator` has been called, but none is attached! Indicator: \(indicator)")
 		}
 	}
 
-	var showIndicatorAction: SceneDelegate.ShowIndicatorAction {
-		get { self[ShowIndicatorAction.self] }
-		set { self[ShowIndicatorAction.self] = newValue }
+	/// An action that shows provided indicator.
+	var showIndicator: SceneDelegate.ShowIndicatorAction {
+		get { self[ShowIndicatorEnvironmentKey.self] }
+		set { self[ShowIndicatorEnvironmentKey.self] = newValue }
+	}
+}
+
+// MARK: - Logger
+
+extension EnvironmentValues {
+	private struct LoggerEnvironmentKey: EnvironmentKey {
+		static let defaultValue = Logger(category: Logger.Category.app)
+	}
+
+	/// Logging subsystem attached to this view.
+	var logger: Logger {
+		get { self[LoggerEnvironmentKey.self] }
+		set { self[LoggerEnvironmentKey.self] = newValue }
 	}
 }
 
@@ -48,6 +65,7 @@ extension EnvironmentValues {
 		static let defaultValue: URL? = nil
 	}
 
+	/// Active Portainer server URL.
 	var portainerServerURL: URL? {
 		get { self[PortainerServerURL.self] }
 		set { self[PortainerServerURL.self] = newValue }
@@ -61,21 +79,9 @@ extension EnvironmentValues {
 		static let defaultValue: Endpoint.ID? = nil
 	}
 
+	/// Active Portainer endpoint ID.
 	var portainerSelectedEndpointID: Endpoint.ID? {
 		get { self[PortainerSelectedEndpoint.self] }
 		set { self[PortainerSelectedEndpoint.self] = newValue }
-	}
-}
-
-// MARK: - ContainersListUseGrid
-
-extension EnvironmentValues {
-	private struct ContainersViewUseGrid: EnvironmentKey {
-		static let defaultValue = Preferences.shared.cvUseGrid
-	}
-
-	var containersViewUseGrid: Bool {
-		get { self[ContainersViewUseGrid.self] }
-		set { self[ContainersViewUseGrid.self] = newValue }
 	}
 }

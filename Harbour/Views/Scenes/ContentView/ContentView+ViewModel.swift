@@ -23,7 +23,7 @@ extension ContentView {
 		@Published var searchFilter = ""
 		@Published var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
-		var sceneErrorHandler: SceneDelegate.ErrorHandler?
+		var errorHandler: SceneDelegate.ErrorHandler?
 
 		var viewState: ViewState {
 			if !portainerStore.containers.isEmpty {
@@ -73,7 +73,7 @@ extension ContentView {
 				let task = portainerStore.refresh()
 				try await task.value
 			} catch {
-				sceneErrorHandler?(error, ._debugInfo())
+				errorHandler?(error, ._debugInfo())
 			}
 		}
 
@@ -104,36 +104,36 @@ extension ContentView.ViewModel {
 
 		var id: Int {
 			switch self {
-				case .somethingWentWrong:	return -2
-				case .error:				return -1
-				case .loading:				return 0
-				case .hasContainers:		return 1
-				case .containersEmpty:		return 2
-				case .noEndpointSelected:	return 3
-				case .noEndpoints:			return 4
-				case .noServer:				return 5
+			case .somethingWentWrong:	return -2
+			case .error:				return -1
+			case .loading:				return 0
+			case .hasContainers:		return 1
+			case .containersEmpty:		return 2
+			case .noEndpointSelected:	return 3
+			case .noEndpoints:			return 4
+			case .noServer:				return 5
 			}
 		}
 
 		var title: String? {
 			switch self {
-				case .loading:
-					return Localizable.Generic.loading
-				case .error(let error):
-					return error.localizedDescription
-				case .hasContainers:
-					return nil
-				case .containersEmpty:
-					return Localizable.ContainersView.noContainersPlaceholder
-				case .noEndpointSelected:
-					return Localizable.ContainersView.noSelectedEndpointPlaceholder
-				case .noEndpoints:
-					return Localizable.ContainersView.noEndpointsPlaceholder
-				case .noServer:
-					return Localizable.ContainersView.noSelectedServerPlaceholder
-				case .somethingWentWrong:
+			case .loading:
+				return Localizable.Generic.loading
+			case .error(let error):
+				return error.localizedDescription
+			case .hasContainers:
+				return nil
+			case .containersEmpty:
+				return Localizable.ContainersView.noContainersPlaceholder
+			case .noEndpointSelected:
+				return Localizable.ContainersView.noSelectedEndpointPlaceholder
+			case .noEndpoints:
+				return Localizable.ContainersView.noEndpointsPlaceholder
+			case .noServer:
+				return Localizable.ContainersView.noSelectedServerPlaceholder
+			case .somethingWentWrong:
 //					return Localizable.Generic.somethingWentWrong
-					return nil
+				return nil
 			}
 		}
 

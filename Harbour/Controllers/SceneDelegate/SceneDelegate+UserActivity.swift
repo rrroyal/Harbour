@@ -15,11 +15,11 @@ extension SceneDelegate {
 
 		guard let harbourURL = HarbourURLScheme.fromURL(url) else { return }
 		switch harbourURL {
-			case .containerDetails(let id, let displayName, let endpointID):
-				let navigationItem = ContainerNavigationItem(id: id, displayName: displayName, endpointID: endpointID)
-				isSettingsSheetPresented = false
-				navigationPath.removeLast(navigationPath.count)
-				navigationPath.append(navigationItem)
+		case .containerDetails(let id, let displayName, let endpointID):
+			let navigationItem = ContainerNavigationItem(id: id, displayName: displayName, endpointID: endpointID)
+			isSettingsSheetPresented = false
+			navigationPath.removeLast(navigationPath.count)
+			navigationPath.append(navigationItem)
 		}
 	}
 

@@ -13,13 +13,13 @@ import PortainerKit
 extension ContainerState {
 	var color: Color {
 		switch self {
-			case .created:		return .yellow
-			case .running:		return .green
-			case .paused:		return .orange
-			case .restarting:	return .blue
-			case .removing:		return Color(uiColor: .lightGray)
-			case .exited:		return Color(uiColor: .darkGray)
-			case .dead:			return .gray
+		case .created:		return .yellow
+		case .running:		return .green
+		case .paused:		return .orange
+		case .restarting:	return .blue
+		case .removing:		return Color(uiColor: .lightGray)
+		case .exited:		return Color(uiColor: .darkGray)
+		case .dead:			return .gray
 		}
 	}
 }
@@ -57,13 +57,13 @@ extension ContainerState? {
 extension ContainerState {
 	var icon: String {
 		switch self {
-			case .created:		return "wake"
-			case .running:		return "power"
-			case .paused:		return "pause"
-			case .restarting:	return "restart"
-			case .removing:		return "trash"
-			case .exited:		return "poweroff"
-			case .dead:			return "xmark"
+		case .created:		return "wake"
+		case .running:		return "power"
+		case .paused:		return "pause"
+		case .restarting:	return "restart"
+		case .removing:		return "trash"
+		case .exited:		return "poweroff"
+		case .dead:			return "xmark"
 		}
 	}
 }
@@ -83,13 +83,13 @@ extension ContainerState? {
 extension ContainerState {
 	var emoji: String {
 		switch self {
-			case .dead:			return "☠️"
-			case .created:		return "🐣"
-			case .exited:		return "🚪"
-			case .paused:		return "⏸️"
-			case .removing:		return "🗑️"
-			case .restarting:	return "🔄"
-			case .running:		return "🏃"
+		case .dead:			return "☠️"
+		case .created:		return "🐣"
+		case .exited:		return "🚪"
+		case .paused:		return "⏸️"
+		case .removing:		return "🗑️"
+		case .restarting:	return "🔄"
+		case .running:		return "🏃"
 		}
 	}
 }

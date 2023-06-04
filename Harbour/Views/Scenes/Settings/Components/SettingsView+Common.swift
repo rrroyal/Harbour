@@ -19,18 +19,18 @@ internal extension SettingsView {
 
 internal extension SettingsView {
 	struct OptionIcon: View {
-		let symbolName: String
-		let color: Color
-		let symbolVariants: SymbolVariants
+		private let symbolName: String
+		private let color: Color
+		private let symbolVariants: SymbolVariants = .fill
 
-		init(symbolName: String, color: Color, symbolVariants: SymbolVariants = .fill) {
+		init(symbolName: String, color: Color) {
 			self.symbolName = symbolName
 			self.color = color
-			self.symbolVariants = symbolVariants
+//			self.symbolVariants = symbolVariants
 		}
 
-		let font: Font = .caption
-		@ScaledMetric(relativeTo: .caption) var backgroundSize = 24
+		private let font: Font = .caption
+		@ScaledMetric(relativeTo: .caption) private var backgroundSize = 24
 
 		var body: some View {
 			Image(systemName: symbolName)
@@ -43,19 +43,4 @@ internal extension SettingsView {
 				.cornerRadius(6)
 		}
 	}
-}
-
-// MARK: - SettingsView+OptionTitleAlignment
-
-internal extension SettingsView {
-	private struct OptionTitleAlignment: AlignmentID {
-		static func defaultValue(in context: ViewDimensions) -> CGFloat {
-			context[VerticalAlignment.center]
-		}
-	}
-
-	/// A guide for aligning titles.
-	static let optionTitleAlignment = VerticalAlignment(
-		OptionTitleAlignment.self
-	)
 }

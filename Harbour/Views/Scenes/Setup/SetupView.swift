@@ -15,7 +15,7 @@ struct SetupView: View {
 	private typealias Localization = Localizable.Setup
 
 	@Environment(\.dismiss) private var dismiss: DismissAction
-	@Environment(\.sceneErrorHandler) private var sceneErrorHandler
+	@Environment(\.errorHandler) private var errorHandler
 
 	@StateObject private var viewModel: ViewModel
 	@FocusState private var focusedField: ViewModel.FocusedField?
@@ -58,12 +58,14 @@ struct SetupView: View {
 			.disableAutocorrection(true)
 			.autocapitalization(.none)
 			.focused($focusedField, equals: .token)
-			.onSubmit { viewModel.onTokenTextFieldSubmit(dismissAction: dismiss, errorHandler: sceneErrorHandler) }
+			.onSubmit { viewModel.onTokenTextFieldSubmit(dismissAction: dismiss, errorHandler: errorHandler) }
 	}
 
 	@ViewBuilder
 	private var continueButton: some View {
-		Button(action: { viewModel.onContinueButtonPress(dismissAction: dismiss, errorHandler: sceneErrorHandler) }) {
+		Button {
+			viewModel.onContinueButtonPress(dismissAction: dismiss, errorHandler: errorHandler)
+		} label: {
 			if viewModel.isLoading {
 				ProgressView()
 			} else {

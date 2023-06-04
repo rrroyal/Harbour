@@ -27,10 +27,30 @@ internal enum Localizable {
     internal static let attach = Localizable.tr("Localizable", "ContainerContextMenu.Attach", fallback: "Attach")
   }
   internal enum ContainerDetails {
-    /// State
-    internal static let containerState = Localizable.tr("Localizable", "ContainerDetails.ContainerState", fallback: "State")
-    /// Logs
-    internal static let logs = Localizable.tr("Localizable", "ContainerDetails.Logs", fallback: "Logs")
+    internal enum Section {
+      /// CMD
+      internal static let cmd = Localizable.tr("Localizable", "ContainerDetails.Section.CMD", fallback: "CMD")
+      /// Created At
+      internal static let createdAt = Localizable.tr("Localizable", "ContainerDetails.Section.CreatedAt", fallback: "Created At")
+      /// Entrypoint
+      internal static let entrypoint = Localizable.tr("Localizable", "ContainerDetails.Section.Entrypoint", fallback: "Entrypoint")
+      /// Environment
+      internal static let environment = Localizable.tr("Localizable", "ContainerDetails.Section.Environment", fallback: "Environment")
+      /// Finished At
+      internal static let finishedAt = Localizable.tr("Localizable", "ContainerDetails.Section.FinishedAt", fallback: "Finished At")
+      /// ID
+      internal static let id = Localizable.tr("Localizable", "ContainerDetails.Section.ID", fallback: "ID")
+      /// Image
+      internal static let image = Localizable.tr("Localizable", "ContainerDetails.Section.Image", fallback: "Image")
+      /// Labels
+      internal static let labels = Localizable.tr("Localizable", "ContainerDetails.Section.Labels", fallback: "Labels")
+      /// Logs
+      internal static let logs = Localizable.tr("Localizable", "ContainerDetails.Section.Logs", fallback: "Logs")
+      /// Mounts
+      internal static let mounts = Localizable.tr("Localizable", "ContainerDetails.Section.Mounts", fallback: "Mounts")
+      /// State
+      internal static let state = Localizable.tr("Localizable", "ContainerDetails.Section.State", fallback: "State")
+    }
     internal enum UserActivity {
       /// See the details of %@
       internal static func title(_ p1: Any) -> String {
@@ -46,8 +66,10 @@ internal enum Localizable {
     /// Logs
     internal static let navigationTitle = Localizable.tr("Localizable", "ContainerLogs.NavigationTitle", fallback: "Logs")
     internal enum Menu {
-      /// Include timestamps?
-      internal static let includeTimestamps = Localizable.tr("Localizable", "ContainerLogs.Menu.IncludeTimestamps", fallback: "Include timestamps?")
+      /// Timestamps
+      internal static let includeTimestamps = Localizable.tr("Localizable", "ContainerLogs.Menu.IncludeTimestamps", fallback: "Timestamps")
+      /// Entries count
+      internal static let linesCount = Localizable.tr("Localizable", "ContainerLogs.Menu.LinesCount", fallback: "Entries count")
       /// Scroll to bottom
       internal static let scrollToBottom = Localizable.tr("Localizable", "ContainerLogs.Menu.ScrollToBottom", fallback: "Scroll to bottom")
       /// Scroll to top
@@ -88,6 +110,22 @@ internal enum Localizable {
       internal static let never = Localizable.tr("Localizable", "Debug.LastBackgroundRefresh.Never", fallback: "Never")
       /// Last Background Refresh
       internal static let title = Localizable.tr("Localizable", "Debug.LastBackgroundRefresh.Title", fallback: "Last Background Refresh")
+    }
+  }
+  internal enum Errors {
+    internal enum Intents {
+      /// No configuration selected.
+      internal static let noConfigurationSelected = Localizable.tr("Localizable", "Errors.Intents.NoConfigurationSelected", fallback: "No configuration selected.")
+      /// No value found for specified configuration.
+      internal static let noValueForConfiguration = Localizable.tr("Localizable", "Errors.Intents.NoValueForConfiguration", fallback: "No value found for specified configuration.")
+    }
+    internal enum Portainer {
+      /// No endpoint selected.
+      internal static let noSelectedEndpoint = Localizable.tr("Localizable", "Errors.Portainer.NoSelectedEndpoint", fallback: "No endpoint selected.")
+      /// No server selected.
+      internal static let noServer = Localizable.tr("Localizable", "Errors.Portainer.NoServer", fallback: "No server selected.")
+      /// Portainer not setup.
+      internal static let notSetup = Localizable.tr("Localizable", "Errors.Portainer.NotSetup", fallback: "Portainer not setup.")
     }
   }
   internal enum Generic {

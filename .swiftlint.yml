@@ -90,7 +90,7 @@ nesting:
   function_level: 2
 
 switch_case_alignment:
-  indented_cases: true
+  indented_cases: false
 
 force_cast: error
 

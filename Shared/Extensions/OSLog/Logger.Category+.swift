@@ -16,4 +16,5 @@ extension Logger.Category {
 	static let portainerStore = "PortainerStore"
 	static let preferences = "Preferences"
 	static let intents = "Intents"
+	static let debug = "Debug"
 }
