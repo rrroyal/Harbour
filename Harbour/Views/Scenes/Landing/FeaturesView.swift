@@ -11,7 +11,7 @@ import CommonHaptics
 // MARK: - FeaturesView
 
 struct FeaturesView: View {
-	private typealias Localization = Localizable.Landing
+	private typealias Localization = Localizable.LandingView
 
 	let continueAction: () -> Void
 
@@ -85,14 +85,14 @@ extension FeaturesView {
 
 // MARK: - Previews
 
-struct FeaturesView_Previews: PreviewProvider {
-	static var previews: some View {
+#Preview("FeaturesView") {
 		FeaturesView(continueAction: {})
 			.previewDisplayName("FeaturesView")
+}
 
-		FeaturesView.FeatureCell(headline: "Headline", subheadline: "Subheadline", icon: "globe")
-			.previewLayout(.sizeThatFits)
-			.padding()
-			.previewDisplayName("FeatureCell")
-	}
+#Preview("FeatureCell") {
+	FeaturesView.FeatureCell(headline: "Headline", subheadline: "Subheadline", icon: "globe")
+		.previewLayout(.sizeThatFits)
+		.padding()
+		.previewDisplayName("FeatureCell")
 }

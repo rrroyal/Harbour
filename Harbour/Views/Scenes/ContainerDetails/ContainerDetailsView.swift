@@ -13,7 +13,7 @@ import CommonFoundation
 
 /// View fetching and displaying details for associated container ID.
 struct ContainerDetailsView: View {
-	private typealias Localization = Localizable.ContainerDetails
+	private typealias Localization = Localizable.ContainerDetailsView
 
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.errorHandler) private var errorHandler
@@ -99,8 +99,6 @@ private extension ContainerDetailsView {
 
 // MARK: - Previews
 
-struct ContainerDetailsView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainerDetailsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
-	}
+#Preview {
+	ContainerDetailsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
 }

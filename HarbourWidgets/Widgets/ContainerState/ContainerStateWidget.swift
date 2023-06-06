@@ -12,7 +12,7 @@ import PortainerKit
 // MARK: - ContainerStateWidget
 
 struct ContainerStateWidget: Widget {
-	private typealias Localization = Localizable.Widgets.ContainerState
+	private typealias Localization = Localizable.Widget.ContainerState
 
 	let kind: String = "ContainerStateWidget"
 	let provider = ContainerStateProvider()

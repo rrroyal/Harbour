@@ -10,6 +10,8 @@ import Foundation
 // MARK: - Container
 
 public struct Container: Identifiable, Decodable, Sendable {
+	public typealias Name = String
+
 	enum CodingKeys: String, CodingKey {
 		case id = "Id"
 		case names = "Names"
@@ -26,7 +28,7 @@ public struct Container: Identifiable, Decodable, Sendable {
 	}
 
 	public let id: String
-	public let names: [String]?
+	public let names: [Name]?
 	public let image: String?
 	public let imageID: String?
 	public let command: String?

@@ -35,8 +35,6 @@ struct ContainersGridView: View {
 
 // MARK: - Previews
 
-struct ContainersGridView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainersGridView(containers: [])
-	}
+#Preview {
+	ContainersGridView(containers: [])
 }

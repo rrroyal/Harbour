@@ -57,7 +57,7 @@ final class ContainerStateIntentHandler: NSObject, ContainerStateIntentHandling 
 
 		let containers = try await portainerStore.fetchContainers(for: endpointID)
 		let items: [IntentContainer] = containers
-			.filtered(query: searchTerm ?? "")
+			.filtered(searchTerm ?? "")
 			.sorted()
 			.map {
 				let intentContainer = IntentContainer(identifier: $0.id, display: $0.displayName ?? $0.id)

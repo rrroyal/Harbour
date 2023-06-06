@@ -1,10 +1,10 @@
-/* 
-  Localizable.strings
-  Harbour
+/*
+ Localizable.strings
+ Harbour
 
-  Created by royal on 17/07/2022.
-  en_US
-*/
+ Created by royal on 17/07/2022.
+ en_US
+ */
 
 "AppName" = "Harbour";
 
@@ -26,21 +26,21 @@
 
 // MARK: - Landing
 
-"Landing.TitlePrefix" = "Hi! Welcome to";
-"Landing.Feature1.Title" = "Control in your pocket";
-"Landing.Feature1.Description" = "Manage state, inspect details or see real-time logs right on your phone.";
-"Landing.Feature2.Title" = "Feature2_Title";
-"Landing.Feature2.Description" = "Feature2_Description";
-"Landing.Feature3.Title" = "Feature3_Title";
-"Landing.Feature3.Description" = "Feature3_Description";
-"Landing.ContinueButton" = "Beam me up, Scotty!";
+"LandingView.TitlePrefix" = "Hi! Welcome to";
+"LandingView.Feature1.Title" = "Control in your pocket";
+"LandingView.Feature1.Description" = "Manage state, inspect details or see real-time logs right on your phone.";
+"LandingView.Feature2.Title" = "Feature2_Title";
+"LandingView.Feature2.Description" = "Feature2_Description";
+"LandingView.Feature3.Title" = "Feature3_Title";
+"LandingView.Feature3.Description" = "Feature3_Description";
+"LandingView.ContinueButton" = "Beam me up, Scotty!";
 
 // MARK: - Setup
 
-"Setup.Headline" = "Setup";
-"Setup.HowToLogin" = "How to log in?";
-"Setup.Button.Login" = "Log in";
-"Setup.Button.Success" = "Success!";
+"SetupView.Headline" = "Setup";
+"SetupView.HowToLogin" = "How to log in?";
+"SetupView.Button.Login" = "Log in";
+"SetupView.Button.Success" = "Success!";
 
 // MARK: - ContentView
 
@@ -69,127 +69,149 @@
 
 // MARK: - ContainerDetails
 
-"ContainerDetails.Section.State" = "State";
-"ContainerDetails.Section.ID" = "ID";
-"ContainerDetails.Section.CreatedAt" = "Created At";
-"ContainerDetails.Section.FinishedAt" = "Finished At";
-"ContainerDetails.Section.Image" = "Image";
-"ContainerDetails.Section.CMD" = "CMD";
-"ContainerDetails.Section.Entrypoint" = "Entrypoint";
-"ContainerDetails.Section.Environment" = "Environment";
-"ContainerDetails.Section.Labels" = "Labels";
-"ContainerDetails.Section.Mounts" = "Mounts";
-"ContainerDetails.Section.Logs" = "Logs";
+"ContainerDetailsView.Section.State" = "State";
+"ContainerDetailsView.Section.ID" = "ID";
+"ContainerDetailsView.Section.CreatedAt" = "Created At";
+"ContainerDetailsView.Section.FinishedAt" = "Finished At";
+"ContainerDetailsView.Section.Image" = "Image";
+"ContainerDetailsView.Section.CMD" = "CMD";
+"ContainerDetailsView.Section.Entrypoint" = "Entrypoint";
+"ContainerDetailsView.Section.Environment" = "Environment";
+"ContainerDetailsView.Section.Labels" = "Labels";
+"ContainerDetailsView.Section.Mounts" = "Mounts";
+"ContainerDetailsView.Section.Logs" = "Logs";
 
-"ContainerDetails.UserActivity.Title" = "See the details of %@";
-"ContainerDetails.UserActivity.UnnamedContainerPlaceholder" = "a container";
+"ContainerDetailsView.UserActivity.Title" = "See the details of %@";
+"ContainerDetailsView.UserActivity.UnnamedContainerPlaceholder" = "a container";
 
 // MARK: - ContainerLogs
 
-"ContainerLogs.NavigationTitle" = "Logs";
-"ContainerLogs.LogsEmpty" = "Empty";
-"ContainerLogs.Menu.ScrollToTop" = "Scroll to top";
-"ContainerLogs.Menu.ScrollToBottom" = "Scroll to bottom";
-"ContainerLogs.Menu.IncludeTimestamps" = "Timestamps";
-"ContainerLogs.Menu.LinesCount" = "Entries count";
+"ContainerLogsView.Title" = "Logs";
+"ContainerLogsView.LogsEmpty" = "Empty";
+"ContainerLogsView.Menu.ScrollToTop" = "Scroll to top";
+"ContainerLogsView.Menu.ScrollToBottom" = "Scroll to bottom";
+"ContainerLogsView.Menu.IncludeTimestamps" = "Timestamps";
+"ContainerLogsView.Menu.LinesCount" = "Entries count";
+
+// MARK: - StacksView
+
+"StacksView.Title" = "Stacks";
+
+"StacksView.Stack.Start" = "Start";
+"StacksView.Stack.Stop" = "Stop";
 
 // MARK: - Settings
 
-"Settings.Title" = "Settings";
+"SettingsView.Title" = "Settings";
 
 // MARK: Settings - Portainer
 
-"Settings.Portainer.Title" = "Portainer";
+"SettingsView.Portainer.Title" = "Portainer";
 
-"Settings.Portainer.EndpointsMenu.Add" = "Add";
-"Settings.Portainer.EndpointsMenu.NoServerPlaceholder" = "None";
-"Settings.Portainer.EndpointsMenu.Server.InUse" = "In use";
-"Settings.Portainer.EndpointsMenu.Server.Use" = "Use";
-"Settings.Portainer.EndpointsMenu.Server.Delete" = "Delete";
+"SettingsView.Portainer.EndpointsMenu.Add" = "Add";
+"SettingsView.Portainer.EndpointsMenu.NoServerPlaceholder" = "None";
+"SettingsView.Portainer.EndpointsMenu.Server.InUse" = "In Use";
+"SettingsView.Portainer.EndpointsMenu.Server.Use" = "Use";
+"SettingsView.Portainer.EndpointsMenu.Server.Delete" = "Delete";
 
 // MARK: Settings - General
 
-"Settings.General.Title" = "General";
+"SettingsView.General.Title" = "General";
 
-"Settings.General.EnableBackgroundRefresh.Title" = "Enable Background Refresh";
-"Settings.General.EnableBackgroundRefresh.Description" = "Harbour will notify you if containers change their state in the background.";
+"SettingsView.General.EnableBackgroundRefresh.Title" = "Enable Background Refresh";
+"SettingsView.General.EnableBackgroundRefresh.Description" = "Harbour will notify you if containers change their state in the background.";
 
 // MARK: Settings - Interface
 
-"Settings.Interface.Title" = "Interface";
+"SettingsView.Interface.Title" = "Interface";
 
-"Settings.Interface.DisplaySummary.Title" = "Display Summary";
-"Settings.Interface.DisplaySummary.Description" = "Show a summary of your containers.";
+"SettingsView.Interface.DisplaySummary.Title" = "Display Summary";
+"SettingsView.Interface.DisplaySummary.Description" = "Show a summary of your containers.";
 
-"Settings.Interface.UseColumns.Title" = "Use Two-Column Layout";
-"Settings.Interface.UseColumns.Description" = "Display containers list and detail side-by-side.";
+"SettingsView.Interface.UseColumns.Title" = "Use Two-Column Layout";
+"SettingsView.Interface.UseColumns.Description" = "Display containers list and detail side-by-side.";
 
-"Settings.Interface.UseGridView.Title" = "Use Grid View";
-"Settings.Interface.UseGridView.Description" = "You can fit more containers, but it's harder to read.";
+"SettingsView.Interface.UseGridView.Title" = "Use Grid View";
+"SettingsView.Interface.UseGridView.Description" = "You can fit more containers, but it's harder to read.";
 
-"Settings.Interface.EnableHaptics.Title" = "Enable Haptics";
-"Settings.Interface.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
+"SettingsView.Interface.EnableHaptics.Title" = "Enable Haptics";
+"SettingsView.Interface.EnableHaptics.Description" = "You can tone them down if you don't like them as much as I do :]";
 
-"Settings.Interface.AppIcon.Title" = "App Icon";
+"SettingsView.Interface.AppIcon.Title" = "App Icon";
 
 // MARK: Settings - Other
 
-"Settings.Other.Title" = "Other";
+"SettingsView.Other.Title" = "Other";
 
-"Settings.Other.Debug" = "Debug";
+"SettingsView.Other.Debug" = "Debug";
 
-"Settings.Other.Footer" = "Made with ❤️ (and ☕) by @rrroyal";
+"SettingsView.Other.Footer" = "Made with ❤️ (and ☕) by @rrroyal";
 
 // MARK: - Debug
 
-"Debug.Title" = "Debug";
-"Debug.LastBackgroundRefresh.Title" = "Last Background Refresh";
-"Debug.LastBackgroundRefresh.Never" = "Never";
+"DebugView.Title" = "Debug";
+"DebugView.LastBackgroundRefresh.Title" = "Last Background Refresh";
+"DebugView.LastBackgroundRefresh.Never" = "Never";
+
+// MARK: - Debug - Logs
+
+"DebugView.LogsView.Title" = "Logs";
+
+// MARK: - UnavailableView
+
+"UnavailableView.SearchEmpty.Title" = "No Results";
+"UnavailableView.SearchEmpty.TitleWithQuery" = "No Results for \"%@\"";
 
 // MARK: - Notifications
 
-//"Notifications.ContainersChanged.Single.Inserted.Emoji" = "";
-"Notifications.ContainersChanged.Single.Inserted.Title" = "\"%@\" appeared.";
-"Notifications.ContainersChanged.Single.Inserted.Body" = "Current status: %@";
+"Notification.ContainersChanged.Single.Inserted.Title" = "\"%@\" appeared.";
+"Notification.ContainersChanged.Single.Inserted.Body" = "Current status: %@";
 
-//"Notifications.ContainersChanged.Single.Changed.Emoji" = "";
-"Notifications.ContainersChanged.Single.Changed.Title" = "\"%@\" changed its state.";
-"Notifications.ContainersChanged.Single.Changed.Body" = "%@ → %@";
+"Notification.ContainersChanged.Single.Changed.Title" = "\"%@\" changed its state.";
+"Notification.ContainersChanged.Single.Changed.Body" = "%@ → %@";
 
-"Notifications.ContainersChanged.Single.Removed.Emoji" = "😶‍🌫️";
-"Notifications.ContainersChanged.Single.Removed.Title" = "\"%@\" disappeared.";
-"Notifications.ContainersChanged.Single.Removed.Body" = "Last known state: %@";
+"Notification.ContainersChanged.Single.Removed.Emoji" = "😶‍🌫️";
+"Notification.ContainersChanged.Single.Removed.Title" = "\"%@\" disappeared.";
+"Notification.ContainersChanged.Single.Removed.Body" = "Last known state: %@";
 
-"Notifications.ContainersChanged.MultipleReadable.Emoji" = "📫";
-"Notifications.ContainersChanged.MultipleReadable.Title" = "%@ changed their states.";
-//"Notifications.ContainersChanged.MultipleReadable.Body" = "";
+"Notification.ContainersChanged.MultipleReadable.Emoji" = "📫";
+"Notification.ContainersChanged.MultipleReadable.Title" = "%@ changed their states.";
 
-"Notifications.ContainersChanged.MultipleUnreadable.Emoji" = "📫";
-"Notifications.ContainersChanged.MultipleUnreadable.Title" = "%@ containers changed their states.";
-//"Notifications.ContainersChanged.MultipleUnreadable.Body" = "";
+"Notification.ContainersChanged.MultipleUnreadable.Emoji" = "📫";
+"Notification.ContainersChanged.MultipleUnreadable.Title" = "%@ containers changed their states.";
 
-"Notifications.ContainersChanged.UnknownContainerPlaceholder" = "Some container";
+"Notification.ContainersChanged.UnknownContainerPlaceholder" = "Some container";
 
 // MARK: - Widgets
 
-"Widgets.SelectContainerPlaceholder" = "Please select a container 🙈";
-"Widgets.UnreachablePlaceholder" = "Unreachable";
-"Widgets.NotFoundPlaceholder" = "Not Found";
+"Widget.SelectContainerPlaceholder" = "Please select a container 🙈";
+"Widget.UnreachablePlaceholder" = "Unreachable";
+"Widget.NotFoundPlaceholder" = "Not Found";
 
-"Widgets.Placeholder.ContainerName" = "Containy";
-"Widgets.Placeholder.ContainerStatus" = "Up 10 days";
+"Widget.Placeholder.ContainerName" = "Containy";
+"Widget.Placeholder.ContainerStatus" = "Up 10 days";
 
-"Widgets.ContainerState.DisplayName" = "Container Status";
-"Widgets.ContainerState.Description" = "See the status of selected container right on your Home Screen :)";
+"Widget.ContainerState.DisplayName" = "Container Status";
+"Widget.ContainerState.Description" = "See the status of selected container right on your Home Screen :)";
 
 // MARK: - Errors
 
-"Errors.Portainer.NotSetup" = "Portainer not setup.";
-"Errors.Portainer.NoServer" = "No server selected.";
-"Errors.Portainer.NoSelectedEndpoint" = "No endpoint selected.";
+"Error.Generic.InvalidURL" = "Invalid URL";
 
-"Errors.Intents.NoConfigurationSelected" = "No configuration selected.";
-"Errors.Intents.NoValueForConfiguration" = "No value found for specified configuration.";
+"Error.Portainer.NotSetup" = "Portainer not setup.";
+"Error.Portainer.NoServer" = "No server selected.";
+"Error.Portainer.NoSelectedEndpoint" = "No endpoint selected.";
+
+"Error.Intents.NoConfigurationSelected" = "No configuration selected.";
+"Error.Intents.NoValueForConfiguration" = "No value found for specified configuration.";
+
+// MARK: - App Icon
+
+"AppIcon.Default" = "Default";
+"AppIcon.BoxLight" = "Box (Light)";
+"AppIcon.BoxDark" = "Box (Dark)";
+"AppIcon.OGLight" = "Original (Light)";
+"AppIcon.OGDark" = "Original (Dark)";
 
 // MARK: - Indicators
 
@@ -209,3 +231,28 @@
 "PortainerKit.ExecuteAction.Kill" = "Kill";
 "PortainerKit.ExecuteAction.Pause" = "Pause";
 "PortainerKit.ExecuteAction.Unpause" = "Resume";
+
+"PortainerKit.ContainerState.Icon.Unknown" = "😶‍🌫️";
+"PortainerKit.ContainerState.Icon.Dead" = "☠️";
+"PortainerKit.ContainerState.Icon.Created" = "🐣";
+"PortainerKit.ContainerState.Icon.Exited" = "🚪";
+"PortainerKit.ContainerState.Icon.Paused" = "⏸️";
+"PortainerKit.ContainerState.Icon.Removing" = "🗑️";
+"PortainerKit.ContainerState.Icon.Restarting" = "🔄";
+"PortainerKit.ContainerState.Icon.Running" = "🏃";
+
+"PortainerKit.Stack.Status.Active" = "Active";
+"PortainerKit.Stack.Status.Inactive" = "Inactive";
+
+"PortainerKit.Error.PortainerError.Other" = "%@";
+"PortainerKit.Error.PortainerError.UnknownError" = "Unknown error";
+"PortainerKit.Error.PortainerError.ResponseCodeUnacceptable" = "Response unacceptable (%@)";
+"PortainerKit.Error.PortainerError.EncodingFailed" = "Encoding failed";
+"PortainerKit.Error.PortainerError.DecodingFailed" = "Decoding failed";
+"PortainerKit.Error.PortainerError.InvalidToken" = "Invalid token";
+"PortainerKit.Error.PortainerError.Unauthorized" = "Unauthorized";
+"PortainerKit.Error.PortainerError.InvalidPayload" = "Invalid payload";
+"PortainerKit.Error.PortainerError.InvalidURL" = "Invalid URL";
+"PortainerKit.Error.PortainerError.NotSetup" = "Not setup";
+
+"PortainerKit.Error.APIError.Unauthorized.RecoverySuggestion" = "Try logging out and logging in back again.";

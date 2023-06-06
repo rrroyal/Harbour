@@ -33,8 +33,6 @@ struct ContainersListView: View {
 
 // MARK: - Previews
 
-struct ContainersListView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainersListView(containers: [])
-	}
+#Preview {
+	ContainersListView(containers: [])
 }

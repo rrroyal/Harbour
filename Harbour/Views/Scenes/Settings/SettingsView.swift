@@ -9,7 +9,7 @@ import SwiftUI
 import CommonHaptics
 
 struct SettingsView: View {
-	private typealias Localization = Localizable.Settings
+	private typealias Localization = Localizable.SettingsView
 
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
@@ -47,8 +47,6 @@ struct SettingsView: View {
 	}
 }
 
-struct SettingsView_Previews: PreviewProvider {
-	static var previews: some View {
-		SettingsView()
-	}
+#Preview {
+	SettingsView()
 }

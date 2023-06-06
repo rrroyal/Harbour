@@ -97,13 +97,10 @@ extension ContainersGridView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-struct ContainersGridView_ContainerCell_Previews: PreviewProvider {
-	static let container = Container(id: "id", names: ["PreviewContainer"], state: .running, status: "Status")
-	static var previews: some View {
-		ContainersGridView.ContainerCell(container: container)
-			.padding()
-			.background(Color(uiColor: .systemGroupedBackground))
-			.frame(width: 184, height: 184)
-			.previewLayout(.sizeThatFits)
-	}
+#Preview {
+	ContainersGridView.ContainerCell(container: .init(id: "id", names: ["PreviewContainer"], state: .running, status: "Status"))
+		.padding()
+		.background(Color(uiColor: .systemGroupedBackground))
+		.frame(width: 184, height: 184)
+		.previewLayout(.sizeThatFits)
 }

@@ -12,18 +12,22 @@ extension Indicator {
 	init(error: Error) {
 		let style = Indicator.Style(headlineColor: Color.red, iconColor: Color.red)
 
+		let headline: String
 		let subheadline: String
 		let expandedText: String?
-		if error.localizedDescription.count <= 16 {
+
+		if let error = error as? LocalizedError, let failureReason = error.failureReason {
+			headline = error.localizedDescription
+			subheadline = failureReason
+			expandedText = error.recoverySuggestion ?? failureReason
+		} else {
+			headline = Localizable.Indicators.error
 			subheadline = error.localizedDescription
 			expandedText = nil
-		} else {
-			subheadline = Localizable.Indicators.expandToReadMore
-			expandedText = error.localizedDescription
 		}
 
 		self.init(id: String(describing: error).hashValue.description,
-				  headline: Localizable.Indicators.error,
+				  headline: headline,
 				  subheadline: subheadline,
 				  expandedText: expandedText,
 				  style: style)

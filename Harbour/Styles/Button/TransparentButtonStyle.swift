@@ -14,7 +14,7 @@ struct TransparentButtonStyle: ButtonStyle {
 		configuration.label
 			.multilineTextAlignment(.center)
 			.padding()
-			.background(Color(uiColor: .systemGray5).opacity(configuration.isPressed ? Constants.secondaryOpacity : 0))
+			.background(Color(uiColor: .systemGray5).opacity(configuration.isPressed ? ViewOpacity.secondary.rawValue : 0))
 			.clipShape(roundedRectangle)
 			.contentShape(roundedRectangle)
 			.opacity(configuration.isPressed ? Constants.Buttons.pressedOpacity : 1)

@@ -27,8 +27,6 @@ struct ErrorView: View {
 
 // MARK: - Previews
 
-struct ErrorView_Previews: PreviewProvider {
-	static var previews: some View {
-		ErrorView(error: GenericError.invalidURL)
-	}
+#Preview {
+	ErrorView(error: GenericError.invalidURL)
 }

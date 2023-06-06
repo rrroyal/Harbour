@@ -36,15 +36,34 @@ extension ContentView {
 
 // MARK: - Previews
 
-struct ContentView_PlaceholderView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView.PlaceholderView(viewState: .loading)
-		ContentView.PlaceholderView(viewState: .error(NSError(domain: "", code: 0, userInfo: nil)))
-		ContentView.PlaceholderView(viewState: .hasContainers)
-		ContentView.PlaceholderView(viewState: .containersEmpty)
-		ContentView.PlaceholderView(viewState: .noEndpointSelected)
-		ContentView.PlaceholderView(viewState: .noEndpoints)
-		ContentView.PlaceholderView(viewState: .noServer)
-		ContentView.PlaceholderView(viewState: .somethingWentWrong)
-	}
+#Preview("loading") {
+	ContentView.PlaceholderView(viewState: .loading)
+}
+
+#Preview("error") {
+	ContentView.PlaceholderView(viewState: .error(NSError(domain: "", code: 0, userInfo: nil)))
+}
+
+#Preview("hasContainers") {
+	ContentView.PlaceholderView(viewState: .hasContainers)
+}
+
+#Preview("containersEmpty") {
+	ContentView.PlaceholderView(viewState: .containersEmpty)
+}
+
+#Preview("noEndpointSelected") {
+	ContentView.PlaceholderView(viewState: .noEndpointSelected)
+}
+
+#Preview("noEndpoints") {
+	ContentView.PlaceholderView(viewState: .noEndpoints)
+}
+
+#Preview("noServer") {
+	ContentView.PlaceholderView(viewState: .noServer)
+}
+
+#Preview("somethingWentWrong") {
+	ContentView.PlaceholderView(viewState: .somethingWentWrong)
 }

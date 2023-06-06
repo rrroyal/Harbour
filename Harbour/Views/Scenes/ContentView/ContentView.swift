@@ -29,6 +29,10 @@ struct ContentView: View {
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
 
+	private var isSummaryVisible: Bool {
+		preferences.cvDisplaySummary && viewModel.viewState == .hasContainers && viewModel.searchText.isReallyEmpty
+	}
+
 	@ViewBuilder
 	private var titleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
@@ -37,7 +41,7 @@ struct ContentView: View {
 				viewModel.selectEndpoint(endpoint)
 			} label: {
 				let isSelected = portainerStore.selectedEndpoint?.id == endpoint.id
-				Label(endpoint.name ?? endpoint.id.description, systemImage: isSelected ? SFSymbol.selected : "")
+				Label(endpoint.name ?? endpoint.id.description, systemImage: isSelected ? SFSymbol.checkmark : "")
 			}
 		}
 	}
@@ -59,9 +63,8 @@ struct ContentView: View {
 				StacksView()
 			} label: {
 				Label(Localization.NavigationButton.stacks, systemImage: SFSymbol.stack)
-					.symbolVariant(portainerStore.isSetup ? .none : .slash)
+//					.symbolVariant(portainerStore.isSetup ? .none : .slash)
 			}
-			.disabled(!portainerStore.isSetup)
 		}
 		#endif
 	}
@@ -69,31 +72,36 @@ struct ContentView: View {
 	@ViewBuilder
 	private var containersView: some View {
 		ScrollView {
-			// TODO: Hide summary when searching
 			#if ENABLE_PREVIEW_FEATURES
-			if preferences.cvDisplaySummary && viewModel.viewState == .hasContainers {
-				// TODO: Summary
-				Text("Summary")
-				Divider()
+			if isSummaryVisible {
+				VStack {
+					// TODO: Summary
+					Text("Summary")
+					Divider()
+				}
+				.transition(.move(edge: .top).combined(with: .opacity))
 			}
 			#endif
 
-			ContainersView(containers: viewModel.containers, useGrid: preferences.cvUseGrid)
+			ContainersView(containers: viewModel.containers)
 				.transition(.opacity)
 				.animation(.easeInOut, value: viewModel.containers)
 		}
+		.modifier(
+			ContainersView.ListModifier {
+				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers.isEmpty)
+			}
+		)
 		.refreshable(action: viewModel.refresh)
-		.searchable(text: $viewModel.searchFilter, placement: .navigationBarDrawer)
-		.scrollDismissesKeyboard(.interactively)
+		.searchable(text: $viewModel.searchText)
+		.animation(.easeInOut, value: isSummaryVisible)
 	}
 
 	// MARK: Body
 
 	var body: some View {
-		NavigationWrapped(useColumns: viewModel.shouldUseColumns, content: {
+		NavigationWrapped(useColumns: viewModel.shouldUseColumns) {
 			containersView
-				.background(PlaceholderView(viewState: viewModel.viewState))
-				.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
 				.navigationTitle(viewModel.navigationTitle)
 				.navigationBarTitleDisplayMode(.inline)
 				.toolbarTitleMenu {
@@ -102,20 +110,22 @@ struct ContentView: View {
 				.toolbar {
 					toolbarMenu
 				}
-		}, placeholderContent: {
+		} placeholderContent: {
 			Text(Localization.noContainerSelectedPlaceholder)
 				.foregroundStyle(.tertiary)
-		})
+		}
 		.indicatorOverlay(model: sceneDelegate.indicators)
 		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 			SettingsView()
+				.indicatorOverlay(model: sceneDelegate.indicators)
 		}
 		.sheet(isPresented: $viewModel.isLandingSheetPresented) {
 			viewModel.onLandingDismissed()
 		} content: {
 			LandingView()
+				.indicatorOverlay(model: sceneDelegate.indicators)
 		}
-		.environment(\.errorHandler, sceneDelegate.handleError)
+		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.showIndicator, sceneDelegate.showIndicator)
 		.onOpenURL { url in
 			sceneDelegate.onOpenURL(url)
@@ -126,49 +136,11 @@ struct ContentView: View {
 	}
 }
 
-// MARK: - ContentView+Components
-
-private extension ContentView {
-	struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
-		@EnvironmentObject private var sceneDelegate: SceneDelegate
-		let useColumns: Bool
-		let content: () -> Content
-		let placeholderContent: () -> PlaceholderContent
-
-		@ViewBuilder
-		private var viewSplit: some View {
-			NavigationSplitView {
-				content()
-			} detail: {
-				placeholderContent()
-			}
-			.navigationSplitViewColumnWidth(min: 100, ideal: 200, max: .infinity)
-		}
-
-		@ViewBuilder
-		private var viewStack: some View {
-			NavigationStack(path: $sceneDelegate.navigationPath) {
-				content()
-			}
-		}
-
-		var body: some View {
-			if useColumns {
-				viewSplit
-			} else {
-				viewStack
-			}
-		}
-	}
-}
-
 // MARK: - Previews
 
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
-			.environmentObject(AppState.shared)
-			.environmentObject(PortainerStore.shared)
-			.environmentObject(Preferences.shared)
-	}
+#Preview {
+	ContentView()
+		.environmentObject(AppState.shared)
+		.environmentObject(PortainerStore.shared)
+		.environmentObject(Preferences.shared)
 }

@@ -12,15 +12,16 @@ import PortainerKit
 // MARK: - ExecuteAction+label
 
 extension ExecuteAction {
+	private typealias Localization = Localizable.PortainerKit.ExecuteAction
+
 	var label: String {
-		typealias Localization = Localizable.PortainerKit.ExecuteAction
 		switch self {
-		case .start:	return Localization.start
-		case .stop:		return Localization.stop
-		case .restart:	return Localization.restart
-		case .kill:		return Localization.kill
-		case .pause:	return Localization.pause
-		case .unpause:	return Localization.unpause
+		case .start:	Localization.start
+		case .stop:		Localization.stop
+		case .restart:	Localization.restart
+		case .kill:		Localization.kill
+		case .pause:	Localization.pause
+		case .unpause:	Localization.unpause
 		}
 	}
 }
@@ -30,12 +31,12 @@ extension ExecuteAction {
 extension ExecuteAction {
 	var icon: String {
 		switch self {
-		case .start:	return "play"
-		case .stop:		return "stop"
-		case .restart:	return "restart"
-		case .kill:		return "bolt"
-		case .pause:	return "pause"
-		case .unpause:	return "wake"
+		case .start:	"play"
+		case .stop:		"stop"
+		case .restart:	"restart"
+		case .kill:		"bolt"
+		case .pause:	"pause"
+		case .unpause:	"wake"
 		}
 	}
 }
@@ -45,12 +46,12 @@ extension ExecuteAction {
 extension ExecuteAction {
 	var color: Color {
 		switch self {
-		case .start:	return .green
-		case .stop:		return Color(uiColor: .darkGray)
-		case .restart:	return .blue
-		case .kill:		return .red
-		case .pause:	return .orange
-		case .unpause:	return .green
+		case .start:	.green
+		case .stop:		Color(uiColor: .darkGray)
+		case .restart:	.blue
+		case .kill:		.red
+		case .pause:	.orange
+		case .unpause:	.green
 		}
 	}
 }

@@ -15,13 +15,14 @@ import KeychainKit
 // MARK: - DebugView
 
 struct DebugView: View {
-	private typealias Localization = Localizable.Debug
+	private typealias Localization = Localizable.DebugView
 
 	private let logger = Logger(category: Logger.Category.debug)
 
 	var body: some View {
 		List {
 			#if DEBUG
+			BuildInfoSection()
 			LastBackgroundRefreshSection()
 			#endif
 			WidgetsSection()
@@ -37,18 +38,24 @@ struct DebugView: View {
 
 private extension DebugView {
 	#if DEBUG
+	struct BuildInfoSection: View {
+		var body: some View {
+			Section("Build Info") {
+				LabeledContent("Build Date", value: Bundle.main.infoDictionary?["BuildDate"] as? String ?? "Unknown")
+			}
+		}
+	}
+
 	struct LastBackgroundRefreshSection: View {
 		var body: some View {
-			Section(content: {
+			Section(Localization.LastBackgroundRefresh.title) {
 				if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
 					Text(Date(timeIntervalSince1970: lastBackgroundRefreshDate), format: .dateTime)
 				} else {
 					Text(Localization.LastBackgroundRefresh.never)
 						.foregroundStyle(.secondary)
 				}
-			}, header: {
-				Text(Localization.LastBackgroundRefresh.title)
-			})
+			}
 		}
 	}
 	#endif
@@ -73,6 +80,14 @@ private extension DebugView {
 
 		var body: some View {
 			Section("Persistence") {
+				Button("Delete User Activities") {
+					logger.debug("Deleting saved user activities... [\(String._debugInfo())]")
+					Haptics.generateIfEnabled(.heavy)
+					NSUserActivity.deleteAllSavedUserActivities {
+						logger.debug("Deleted user activities! [\(String._debugInfo())]")
+					}
+				}
+
 				Button("Reset CoreData", role: .destructive) {
 					logger.debug("Resetting CoreData... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.heavy)
@@ -89,7 +104,6 @@ private extension DebugView {
 						}
 						exit(0)
 					} catch {
-						Haptics.generateIfEnabled(.error)
 						handleError(error, ._debugInfo())
 					}
 				}
@@ -110,8 +124,6 @@ private extension DebugView {
 
 // MARK: - Previews
 
-struct DebugView_Previews: PreviewProvider {
-	static var previews: some View {
-		DebugView()
-	}
+#Preview {
+	DebugView()
 }

@@ -1,5 +1,5 @@
 //
-//  Endpoint+sorted.swift
+//  Endpoint+.swift
 //  Harbour
 //
 //  Created by royal on 29/09/2022.
@@ -7,6 +7,8 @@
 
 import Foundation
 import PortainerKit
+
+// MARK: - [Endpoint]+sorted
 
 extension [Endpoint] {
 	func sorted() -> Self {

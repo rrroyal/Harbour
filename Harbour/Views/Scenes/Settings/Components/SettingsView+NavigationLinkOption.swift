@@ -11,23 +11,21 @@ internal extension SettingsView {
 	struct NavigationLinkOption<Destination: View>: View {
 		let label: String
 		let iconSymbolName: String
-		let iconColor: Color
 		let destination: Destination
 
-		init(label: String, iconSymbolName: String, iconColor: Color = .accentColor, destination: @escaping () -> Destination) {
+		init(label: String, iconSymbolName: String, destination: @escaping () -> Destination) {
 			self.label = label
 			self.iconSymbolName = iconSymbolName
-			self.iconColor = iconColor
 			self.destination = destination()
 		}
 
 		var body: some View {
 			NavigationLink(destination: destination) {
 				HStack {
-					OptionIcon(symbolName: iconSymbolName, color: iconColor)
+					OptionIcon(symbolName: iconSymbolName)
 
 					Text(label)
-						.font(standaloneLabelFont)
+						.font(labelFontHeadline)
 				}
 			}
 		}

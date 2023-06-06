@@ -6,16 +6,13 @@
   en_US
 */
 
-// MARK: - ContainerState
+// MARK: - Intents
 
-"4gjK73" = "Removing";		// "ContainerState.Removing";
-"8pW2s2" = "Exited";		// "ContainerState.Exited";
-"Cc2V5I" = "Dead";			// "ContainerState.Dead";
-"EvtFyE" = "Created";		// "ContainerState.Created";
-"Pdto89" = "Unknown";		// "ContainerState.Unknown";
-"TK3lVt" = "Running";		// "ContainerState.Running";
-"TLVDgk" = "Paused";		// "ContainerState.Paused";
-"yvXnJE" = "Restarting";	// "ContainerState.Restarting";
+"gSc8XU" = "Select the container";	// "%CONTAINERSTATE_CONTAINER_PROMPT_LABEL%";
+"vOfMxo" = "Select the container";	// "%CONTAINERSTATE_CONTAINER_SIRI_DIALOG%";
+
+"Ya7rYB" = "Select the endpoint";	// "%CONTAINERSTATE_ENDPOINT_PROMPT_LABEL%";
+"rYe9Pc" = "Select the endpoint";	// "%CONTAINERSTATE_ENDPOINT_SIRI_DIALOG%";
 
 // MARK: - Shortcuts
 
@@ -49,6 +46,17 @@
 "kIBFup-TLVDgk" = "${containerName} is paused and has state \"${status}\".";		// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Paused ${status} ${containerName}";
 "kIBFup-yvXnJE" = "${containerName} is restarting and has state \"${status}\".";	// "%CONTAINERSTATE_SUCCESS_DIALOG_VOICE% ContainerState.Restarting ${status} ${containerName}";
 
+// MARK: - ContainerState
+
+"4gjK73" = "Removing";		// "ContainerState.Removing";
+"8pW2s2" = "Exited";		// "ContainerState.Exited";
+"Cc2V5I" = "Dead";			// "ContainerState.Dead";
+"EvtFyE" = "Created";		// "ContainerState.Created";
+"Pdto89" = "Unknown";		// "ContainerState.Unknown";
+"TK3lVt" = "Running";		// "ContainerState.Running";
+"TLVDgk" = "Paused";		// "ContainerState.Paused";
+"yvXnJE" = "Restarting";	// "ContainerState.Restarting";
+
 // MARK: - Unsorted
 
 "4LwIlG" = "Container State";	// "IntentContainerState";
@@ -76,19 +84,10 @@
 
 "XZ4ynf" = "Container Status";	// "Container Status";
 
-"Ya7rYB" = "CONTAINERSTATE_ENDPOINT_PROMPT_LABEL ${endpoint}";	// "%CONTAINERSTATE_ENDPOINT_PROMPT_LABEL% ${endpoint}";
-
 "cI9nZG" = "CONTAINERSTATE_SUGGESTIONS_SUMMARY ${container}";	// "%CONTAINERSTATE_SUGGESTIONS_SUMMARY% ${container}";
-
-"gSc8XU" = "CONTAINERSTATE_CONTAINER_PROMPT_LABEL ${container}";	// "%CONTAINERSTATE_CONTAINER_PROMPT_LABEL% ${container}";
 
 "hGVR1N" = "Container State";	// "Container State";
 
 "paAiRQ" = "CONTAINERSTATE_SUGGESTIONS_DESCRIPTION ${container}";	// "%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${container}";
 
-"rYe9Pc" = "CONTAINERSTATE_ENDPOINT_SIRI_DIALOG ${endpoint}";	// "%CONTAINERSTATE_ENDPOINT_SIRI_DIALOG% ${endpoint}";
-
-"vOfMxo" = "CONTAINERSTATE_CONTAINER_SIRI_DIALOG ${container}";	// "%CONTAINERSTATE_CONTAINER_SIRI_DIALOG% ${container}";
-
 "zNtToW" = "CONTAINERSTATE_SUGGESTIONS_DESCRIPTION ${endpoint}";	// "%CONTAINERSTATE_SUGGESTIONS_DESCRIPTION% ${endpoint}";
-

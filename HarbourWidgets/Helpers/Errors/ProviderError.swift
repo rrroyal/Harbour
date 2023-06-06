@@ -13,14 +13,14 @@ enum ProviderError: LocalizedError {
 	var shouldDisplayErrorView: Bool {
 		switch self {
 		case .containerNotFound:
-			return false
+			false
 		}
 	}
 
 	var widgetPlaceholder: String {
 		switch self {
 		case .containerNotFound:
-			return Localizable.Widgets.notFoundPlaceholder
+			Localizable.Widget.notFoundPlaceholder
 		}
 	}
 }

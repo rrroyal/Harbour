@@ -11,7 +11,7 @@ import SwiftUI
 
 extension SettingsView {
 	struct GeneralSection: View {
-		private typealias Localization = Localizable.Settings.General
+		private typealias Localization = Localizable.SettingsView.General
 
 		@EnvironmentObject private var viewModel: ViewModel
 		@EnvironmentObject private var preferences: Preferences
@@ -31,8 +31,6 @@ extension SettingsView {
 
 // MARK: - Previews
 
-struct GeneralSection_Previews: PreviewProvider {
-	static var previews: some View {
-		SettingsView.GeneralSection()
-	}
+#Preview {
+	SettingsView.GeneralSection()
 }

@@ -11,7 +11,7 @@ import CommonFoundation
 
 extension AppState {
 	@MainActor
-	func switchPortainerServer(to serverURL: URL, errorHandler: SceneDelegate.ErrorHandler?) {
+	func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
 		logger.info("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
 
 		portainerServerSwitchTask?.cancel()

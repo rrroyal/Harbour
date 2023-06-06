@@ -14,7 +14,6 @@ internal extension SettingsView {
 		let label: String
 		let description: String?
 		let iconSymbolName: String
-		let iconColor: Color
 		@Binding var value: Double
 		let range: ClosedRange<Double>
 		let step: Double
@@ -22,34 +21,34 @@ internal extension SettingsView {
 
 		var body: some View {
 			HStack {
-				OptionIcon(symbolName: iconSymbolName, color: iconColor)
+				OptionIcon(symbolName: iconSymbolName)
 					.frame(maxHeight: .infinity, alignment: .top)
 
 				VStack(spacing: vstackSpacing) {
 					HStack {
 						Text(label)
-							.font(.headline)
+							.font(labelFontHeadline)
 
 						Spacer()
 
 						if let description = description {
 							Text(description)
-								.font(.body)
+								.font(labelFontSubheadline)
 								.foregroundStyle(.secondary)
 						}
 					}
 					.opacity(isEnabled ? .primary : .secondary)
 
 					Slider(value: $value, in: range, step: step, onEditingChanged: onEditingChanged)
-						.onChange(of: value) {
-							if $0 > range.lowerBound && $0 < range.upperBound {
+						.onChange(of: value) { _, newValue in
+							if newValue > range.lowerBound && newValue < range.upperBound {
 								Haptics.generateIfEnabled(.selectionChanged)
 							}
 						}
 				}
 			}
 			.padding(.vertical, .small)
-			.frame(minHeight: SettingsView.minimumCellHeight)
+			.frame(minHeight: description == nil ? SettingsView.minimumCellHeight : SettingsView.minimumCellHeightWithDescription)
 		}
 	}
 }

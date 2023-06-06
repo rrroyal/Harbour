@@ -103,11 +103,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>GDQip4</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>22D5027d</string>
+	<string>23A5257q</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>14C18</string>
+	<string>15A5160n</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>14.2</string>
+	<string>15.0</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -243,7 +243,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>%CONTAINERSTATE_ENDPOINT_PROMPT_LABEL% ${endpoint}</string>
+							<string>%CONTAINERSTATE_ENDPOINT_PROMPT_LABEL%</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>Ya7rYB</string>
 							<key>INIntentParameterPromptDialogType</key>
@@ -253,7 +253,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>%CONTAINERSTATE_ENDPOINT_SIRI_DIALOG% ${endpoint}</string>
+							<string>%CONTAINERSTATE_ENDPOINT_SIRI_DIALOG%</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>rYe9Pc</string>
 							<key>INIntentParameterPromptDialogType</key>
@@ -292,7 +292,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>%CONTAINERSTATE_CONTAINER_PROMPT_LABEL% ${container}</string>
+							<string>%CONTAINERSTATE_CONTAINER_PROMPT_LABEL%</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>gSc8XU</string>
 							<key>INIntentParameterPromptDialogType</key>
@@ -302,7 +302,7 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>%CONTAINERSTATE_CONTAINER_SIRI_DIALOG% ${container}</string>
+							<string>%CONTAINERSTATE_CONTAINER_SIRI_DIALOG%</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
 							<string>vOfMxo</string>
 							<key>INIntentParameterPromptDialogType</key>

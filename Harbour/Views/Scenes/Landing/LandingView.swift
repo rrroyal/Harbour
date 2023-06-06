@@ -76,8 +76,6 @@ extension LandingView {
 
 // MARK: - Previews
 
-struct LandingView_Previews: PreviewProvider {
-	static var previews: some View {
-		LandingView()
-	}
+#Preview {
+	LandingView()
 }

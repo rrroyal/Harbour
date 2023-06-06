@@ -31,23 +31,23 @@ internal extension SettingsView {
 		var body: some View {
 			Toggle(isOn: $isOn) {
 				HStack(alignment: .top) {
-					OptionIcon(symbolName: iconSymbolName, color: .accentColor)
+					OptionIcon(symbolName: iconSymbolName)
 //						.animation(.easeInOut, value: isOn)
 
 					VStack(alignment: .listRowSeparatorLeading, spacing: vstackSpacing) {
 						Text(label)
-							.font(.headline)
+							.font(labelFontHeadline)
 
 						if let description {
 							Text(description)
-								.font(.footnote)
+								.font(labelFontSubheadline)
 								.foregroundStyle(.secondary)
 						}
 					}
 					.padding(.trailing, 2)
 				}
 			}
-			.frame(minHeight: SettingsView.minimumCellHeight)
+			.frame(minHeight: description == nil ? SettingsView.minimumCellHeight : SettingsView.minimumCellHeightWithDescription)
 		}
 	}
 }

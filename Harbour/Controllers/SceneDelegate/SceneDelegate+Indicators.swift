@@ -14,6 +14,7 @@ import IndicatorsKit
 extension SceneDelegate {
 	typealias ShowIndicatorAction = (PresentedIndicator) -> Void
 
+	@MainActor
 	func showIndicator(_ presentedIndicator: PresentedIndicator) {
 		let indicator: Indicator
 
@@ -56,11 +57,11 @@ extension SceneDelegate {
 		var id: String {
 			switch self {
 			case .containerActionExecuted(let containerID, _, let action):
-				return "ContainerActionExecutedIndicator.\(containerID).\(action.rawValue)"
+				"ContainerActionExecutedIndicator.\(containerID).\(action.rawValue)"
 			case .copied:
-				return "CopiedIndicator.\(UUID().uuidString)"
+				"CopiedIndicator.\(UUID().uuidString)"
 			case .error(let error):
-				return "ErrorIndicator.\(String(describing: error).hashValue)"
+				"ErrorIndicator.\(String(describing: error).hashValue)"
 			}
 		}
 	}

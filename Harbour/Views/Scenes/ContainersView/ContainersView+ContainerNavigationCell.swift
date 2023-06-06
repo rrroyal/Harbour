@@ -25,11 +25,11 @@ extension ContainersView {
 		var body: some View {
 			NavigationLink(value: navigationItem) {
 				content()
-					.contextMenu {
-						ContainerContextMenu(container: container)
-					}
-					.tint(Color.primary)
 			}
+			.contextMenu {
+				ContainerContextMenu(container: container)
+			}
+			.tint(Color.primary)
 		}
 	}
 }

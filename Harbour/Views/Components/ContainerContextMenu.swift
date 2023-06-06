@@ -41,58 +41,59 @@ struct ContainerContextMenu: View {
 		Button(action: attachAction) {
 			Label(Localization.attach, systemImage: SFSymbol.terminal)
 		}
-		.disabled(containerState != .running)
 	}
 
 	var body: some View {
-//		Label(containerStatus ?? containerState?.rawValue.localizedCapitalized ?? Localization.unknownState, systemImage: containerState.icon)
-
 		if !containerIsStored {
-			Divider()
-
-			switch containerState {
-			case .created:
-				button(for: .pause)
-				button(for: .stop)
-				button(for: .restart)
-				Divider()
-				button(for: .kill, role: .destructive, haptic: killActionHaptic)
-			case .running:
-				button(for: .pause)
-				button(for: .stop)
-				button(for: .restart)
-				Divider()
-				button(for: .kill, role: .destructive, haptic: killActionHaptic)
-			case .paused:
-				button(for: .unpause)
-				button(for: .stop)
-				button(for: .restart)
-				Divider()
-				button(for: .kill, role: .destructive, haptic: killActionHaptic)
-			case .restarting:
-				button(for: .pause)
-				button(for: .stop)
-				Divider()
-				button(for: .kill, role: .destructive, haptic: killActionHaptic)
-			case .removing:
-				button(for: .kill, role: .destructive, haptic: killActionHaptic)
-			case .exited:
-				button(for: .start)
-			case .dead:
-				button(for: .start)
-			case .none:
-				button(for: .unpause)
-				button(for: .start)
-				button(for: .restart)
-				button(for: .pause)
-				button(for: .stop)
-				Divider()
-				button(for: .kill, role: .destructive, haptic: killActionHaptic)
+			ControlGroup {
+				switch containerState {
+				case .created:
+					button(for: .pause)
+					button(for: .stop)
+					button(for: .restart)
+//					Divider()
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
+				case .running:
+					button(for: .pause)
+					button(for: .stop)
+					button(for: .restart)
+//					Divider()
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
+				case .paused:
+					button(for: .unpause)
+					button(for: .stop)
+					button(for: .restart)
+//					Divider()
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
+				case .restarting:
+					button(for: .pause)
+					button(for: .stop)
+//					Divider()
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
+				case .removing:
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
+				case .exited:
+					button(for: .start)
+				case .dead:
+					button(for: .start)
+				case .none:
+					button(for: .unpause)
+					button(for: .start)
+					button(for: .restart)
+					button(for: .pause)
+					button(for: .stop)
+//					Divider()
+					button(for: .kill, role: .destructive, haptic: killActionHaptic)
+				}
 			}
 
+			#if ENABLE_PREVIEW_FEATURES
 			Divider()
 
-//			attachButton
+			if containerState.isContainerOn {
+				attachButton
+			}
+			#endif
 		}
 	}
 

@@ -179,7 +179,7 @@ extension AppState {
 	/// - Parameter changes: Container changes between the refreshes.
 	/// - Returns: `UNNotificationContent` for the container change notification.
 	private nonisolated func notificationContent(for changes: [AppRefreshContainerChange]) -> UNNotificationContent? {
-		typealias Localization = Localizable.Notifications.ContainersChanged
+		typealias Localization = Localizable.Notification.ContainersChanged
 
 		let notificationContent = UNMutableNotificationContent()
 		notificationContent.threadIdentifier = HarbourNotificationIdentifier.containersChanged

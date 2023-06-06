@@ -11,7 +11,7 @@ import CommonHaptics
 // MARK: - ContainerLogsView
 
 struct ContainerLogsView: View {
-	private typealias Localization = Localizable.ContainerLogs
+	private typealias Localization = Localizable.ContainerLogsView
 
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.errorHandler) private var errorHandler
@@ -47,7 +47,7 @@ struct ContainerLogsView: View {
 			}
 		}
 		.background(PlaceholderView(viewState: viewModel.viewState))
-		.navigationTitle(Localization.navigationTitle)
+		.navigationTitle(Localization.title)
 		.refreshable {
 			await viewModel.getLogs(errorHandler: errorHandler).value
 		}
@@ -55,7 +55,7 @@ struct ContainerLogsView: View {
 		.task(id: navigationItem.id) {
 			await viewModel.getLogs(errorHandler: errorHandler).value
 		}
-		.onChange(of: viewModel.includeTimestamps) { _ in
+		.onChange(of: viewModel.includeTimestamps) {
 			viewModel.getLogs(errorHandler: errorHandler)
 		}
 	}
@@ -116,7 +116,7 @@ private extension ContainerLogsView {
 				Haptics.generateIfEnabled(.selectionChanged)
 				includeTimestamps.toggle()
 			} label: {
-				Label(Localization.Menu.includeTimestamps, systemImage: includeTimestamps ? SFSymbol.selected : "")
+				Label(Localization.Menu.includeTimestamps, systemImage: includeTimestamps ? SFSymbol.checkmark : "")
 			}
 		}
 
@@ -135,7 +135,7 @@ private extension ContainerLogsView {
 						Haptics.generateIfEnabled(.selectionChanged)
 						linesCount = amount
 					} label: {
-						Label(amount.formatted(), systemImage: isSelected ? SFSymbol.selected : "")
+						Label(amount.formatted(), systemImage: isSelected ? SFSymbol.checkmark : "")
 					}
 				}
 			}
@@ -176,8 +176,6 @@ private extension ContainerLogsView {
 
 // MARK: - Previews
 
-struct ContainerLogsView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainerLogsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
-	}
+#Preview {
+	ContainerLogsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
 }

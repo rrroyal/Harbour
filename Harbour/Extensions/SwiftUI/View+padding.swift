@@ -8,9 +8,9 @@
 import SwiftUI
 
 enum ViewPaddingSize: Double {
-	case small = 5
-	case medium = 12
-	case large = 18
+	case small = 8
+	case medium = 10
+	case large = 16
 }
 
 extension View {

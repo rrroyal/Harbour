@@ -96,12 +96,9 @@ extension ContainersListView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-struct ContainersListView_ContainerCell_Previews: PreviewProvider {
-	static let container = Container(id: "id", names: ["PreviewContainer"], state: .running, status: "Status")
-	static var previews: some View {
-		ContainersListView.ContainerCell(container: container)
-			.padding()
-			.background(Color(uiColor: .systemGroupedBackground))
-			.previewLayout(.sizeThatFits)
-	}
+#Preview {
+	ContainersListView.ContainerCell(container: .init(id: "id", names: ["PreviewContainer"], state: .running, status: "Status"))
+		.padding()
+		.background(Color(uiColor: .systemGroupedBackground))
+		.previewLayout(.sizeThatFits)
 }

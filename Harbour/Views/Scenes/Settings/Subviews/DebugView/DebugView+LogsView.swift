@@ -14,6 +14,8 @@ import CommonHaptics
 
 extension DebugView {
 	struct LogsView: View {
+		private typealias Localization = Localizable.DebugView.LogsView
+
 		@State private var logs: [LogEntry] = []
 		@State private var filter: String = ""
 
@@ -63,7 +65,7 @@ extension DebugView {
 				})
 				.listRowBackground(entry.color?.opacity(0.1))
 			}
-			.navigationTitle("Logs")
+			.navigationTitle(Localization.title)
 			.navigationBarTitleDisplayMode(.inline)
 			.listStyle(.grouped)
 			.searchable(text: $filter)
@@ -136,8 +138,6 @@ private extension DebugView.LogsView {
 
 // MARK: - Previews
 
-struct DebugView_LogsView_Previews: PreviewProvider {
-	static var previews: some View {
-		DebugView.LogsView()
-	}
+#Preview {
+	DebugView.LogsView()
 }

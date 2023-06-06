@@ -20,12 +20,14 @@ enum IntentError: Error {
 // MARK: - IntentError+LocalizedError
 
 extension IntentError: LocalizedError {
+	private typealias Localization = Localizable.Error.Intents
+
 	var errorDescription: String? {
 		switch self {
 		case .noConfigurationSelected:
-			return Localizable.Errors.Intents.noConfigurationSelected
+			Localization.noConfigurationSelected
 		case .noValueForConfiguration:
-			return Localizable.Errors.Intents.noValueForConfiguration
+			Localization.noValueForConfiguration
 		}
 	}
 }

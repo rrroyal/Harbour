@@ -19,9 +19,7 @@ extension SettingsView {
 		@Published var isSetupSheetPresented = false
 		@Published var serverURLs: [URL]
 
-		var activeURL: URL? {
-			portainerStore.serverURL
-		}
+		@Published var activeURL: URL?
 
 		var displayiPadOptions: Bool {
 			UIDevice.current.userInterfaceIdiom == .mac || UIDevice.current.userInterfaceIdiom == .pad
@@ -29,19 +27,22 @@ extension SettingsView {
 
 		init() {
 			self.serverURLs = portainerStore.savedURLs
+			self.activeURL = portainerStore.serverURL
 		}
 
 		func refreshServers() {
 			serverURLs = portainerStore.savedURLs
 		}
 
-		func switchPortainerServer(to serverURL: URL, errorHandler: SceneDelegate.ErrorHandler?) {
+		func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
+			activeURL = serverURL
 			appState.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
 		}
 
-		func removeServer(_ url: URL, errorHandler: SceneDelegate.ErrorHandler?) {
+		func removeServer(_ url: URL, errorHandler: ErrorHandler?) {
 			do {
 				if portainerStore.serverURL == url {
+					activeURL = nil
 					portainerStore.reset()
 				}
 

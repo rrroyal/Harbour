@@ -11,13 +11,15 @@ import SwiftUI
 
 extension ContainerDetailsView {
 	struct LogsSection: View {
-		private typealias Localization = Localizable.ContainerDetails
+		private typealias Localization = Localizable.ContainerDetailsView
 
 		let navigationItem: ContainerNavigationItem
 
 		var body: some View {
 			Section {
-				NavigationLink(destination: ContainerLogsView(navigationItem: navigationItem)) {
+				NavigationLink {
+					ContainerLogsView(navigationItem: navigationItem)
+				} label: {
 					Label(Localization.Section.logs, systemImage: SFSymbol.logs)
 						.font(.body)
 				}
@@ -28,8 +30,6 @@ extension ContainerDetailsView {
 
 // MARK: - Previews
 
-struct ContainerDetailsView_LogsSection_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainerDetailsView.LogsSection(navigationItem: .init(id: "", displayName: "Container", endpointID: nil))
-	}
+#Preview {
+	ContainerDetailsView.LogsSection(navigationItem: .init(id: "", displayName: "Container", endpointID: nil))
 }

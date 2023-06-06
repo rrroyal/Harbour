@@ -11,7 +11,7 @@ import SwiftUI
 
 extension SettingsView {
 	struct OtherSection: View {
-		private typealias Localization = Localizable.Settings.Other
+		private typealias Localization = Localizable.SettingsView.Other
 
 		var body: some View {
 			Section(header: Text(Localization.title), footer: FooterView()) {
@@ -27,7 +27,7 @@ extension SettingsView {
 
 private extension SettingsView.OtherSection {
 	struct FooterView: View {
-		private typealias Localization = Localizable.Settings.Other
+		private typealias Localization = Localizable.SettingsView.Other
 
 		// swiftlint:disable:next force_unwrapping
 		let githubURL = URL(string: "https://github.com/rrroyal/Harbour")!
@@ -50,8 +50,6 @@ private extension SettingsView.OtherSection {
 
 // MARK: - Previews
 
-struct OtherSection_Previews: PreviewProvider {
-	static var previews: some View {
-		SettingsView.OtherSection()
-	}
+#Preview {
+	SettingsView.OtherSection()
 }

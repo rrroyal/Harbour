@@ -17,6 +17,7 @@ import CommonOSLog
 
 /// UserDefaults wrapper; user preferences store.
 public final class Preferences: ObservableObject {
+
 	public static let shared = Preferences()
 	// swiftlint:disable:next force_unwrapping
 	public static let userDefaults: UserDefaults = .group!

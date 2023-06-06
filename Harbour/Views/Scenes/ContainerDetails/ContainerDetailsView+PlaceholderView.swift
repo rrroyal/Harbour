@@ -36,11 +36,18 @@ extension ContainerDetailsView {
 
 // MARK: - Previews
 
-struct ContainerDetailsView_PlaceholderView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainerDetailsView.PlaceholderView(viewState: .loading)
-		ContainerDetailsView.PlaceholderView(viewState: .hasDetails)
-		ContainerDetailsView.PlaceholderView(viewState: .error(NSError(domain: "", code: 0, userInfo: nil)))
-		ContainerDetailsView.PlaceholderView(viewState: .somethingWentWrong)
-	}
+#Preview("loading") {
+	ContainerDetailsView.PlaceholderView(viewState: .loading)
+}
+
+#Preview("hasDetails") {
+	ContainerDetailsView.PlaceholderView(viewState: .hasDetails)
+}
+
+#Preview("error") {
+	ContainerDetailsView.PlaceholderView(viewState: .error(NSError(domain: "", code: 0, userInfo: nil)))
+}
+
+#Preview("somethingWentWrong") {
+	ContainerDetailsView.PlaceholderView(viewState: .somethingWentWrong)
 }

@@ -11,9 +11,11 @@ import PortainerKit
 // MARK: - ContainersView
 
 struct ContainersView: View {
+	private typealias Localization = Localizable.ContainersView
+
 	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(\.cvUseGrid) private var useGrid
 	let containers: [Container]
-	let useGrid: Bool
 
 	@ViewBuilder
 	private var containersList: some View {
@@ -39,21 +41,53 @@ struct ContainersView: View {
 	}
 }
 
-// MARK: - ContainersView+Equatable
+// MARK: - ContainersView+NoContainersPlaceholder
 
-/*
-extension ContainersView: Equatable {
-	static func == (lhs: ContainersView, rhs: ContainersView) -> Bool {
-		lhs.useGrid == rhs.useGrid &&
-		lhs.containers == rhs.containers
+extension ContainersView {
+	struct NoContainersPlaceholder: View {
+		let isEmpty: Bool
+
+		var body: some View {
+			VStack {
+				if isEmpty {
+					Text(Localization.noContainersPlaceholder)
+						.foregroundStyle(.secondary)
+						.padding()
+						.transition(.opacity)
+				}
+			}
+			.animation(.easeInOut, value: isEmpty)
+		}
 	}
 }
- */
+
+// MARK: - ContainersView+ListModifier
+
+extension ContainersView {
+	struct ListModifier<BackgroundView: View>: ViewModifier {
+		let background: () -> BackgroundView
+
+		init(background: @escaping () -> BackgroundView) {
+			self.background = background
+		}
+
+		@ViewBuilder
+		private var backgroundView: some View {
+			background()
+				.containerRelativeFrame([.horizontal, .vertical])
+				.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
+		}
+
+		func body(content: Content) -> some View {
+			content
+				.background(backgroundView)
+				.scrollDismissesKeyboard(.interactively)
+		}
+	}
+}
 
 // MARK: - Previews
 
-struct ContainersView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainersView(containers: [], useGrid: true)
-	}
+#Preview {
+	ContainersView(containers: [])
 }

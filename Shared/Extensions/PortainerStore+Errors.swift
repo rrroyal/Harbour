@@ -25,14 +25,16 @@ extension PortainerStore {
 // MARK: - PortainerStore.PortainerError+LocalizedError
 
 extension PortainerStore.PortainerError: LocalizedError {
+	private typealias Localization = Localizable.Error.Portainer
+
 	var errorDescription: String? {
 		switch self {
 		case .notSetup:
-			return Localizable.Errors.Portainer.notSetup
+			Localization.notSetup
 		case .noServer:
-			return Localizable.Errors.Portainer.noServer
+			Localization.noServer
 		case .noSelectedEndpoint:
-			return Localizable.Errors.Portainer.noSelectedEndpoint
+			Localization.noSelectedEndpoint
 		}
 	}
 }

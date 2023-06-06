@@ -36,11 +36,18 @@ extension ContainerLogsView {
 
 // MARK: - Previews
 
-struct ContainerLogsView_PlaceholderView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainerLogsView.PlaceholderView(viewState: .loading)
-		ContainerLogsView.PlaceholderView(viewState: .hasLogs)
-		ContainerLogsView.PlaceholderView(viewState: .logsEmpty)
-		ContainerLogsView.PlaceholderView(viewState: .error(NSError(domain: "", code: 0, userInfo: nil)))
-	}
+#Preview("loading") {
+	ContainerLogsView.PlaceholderView(viewState: .loading)
+}
+
+#Preview("hasLogs") {
+	ContainerLogsView.PlaceholderView(viewState: .hasLogs)
+}
+
+#Preview("logsEmpty") {
+	ContainerLogsView.PlaceholderView(viewState: .logsEmpty)
+}
+
+#Preview("error") {
+	ContainerLogsView.PlaceholderView(viewState: .error(NSError(domain: "", code: 0, userInfo: nil)))
 }

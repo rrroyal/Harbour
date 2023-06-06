@@ -13,7 +13,7 @@ import PortainerKit
 
 extension ContainerStateWidgetView {
 	struct ContainerStateView: View {
-		private typealias Localization = Localizable.Widgets
+		private typealias Localization = Localizable.Widget
 
 		private let circleSize: Double = 8
 		private let minimumScaleFactor: Double = 0.8
@@ -91,7 +91,6 @@ extension ContainerStateWidgetView {
 				.minimumScaleFactor(minimumScaleFactor)
 				.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			.padding()
 		}
 	}
 }

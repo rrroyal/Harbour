@@ -33,8 +33,6 @@ extension ContainerLogsView {
 
 // MARK: - Previews
 
-struct ContainerLogsView_LogsView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainerLogsView.LogsView(logs: "hello word")
-	}
+#Preview {
+	ContainerLogsView.LogsView(logs: "hello word")
 }

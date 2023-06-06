@@ -11,7 +11,7 @@ import SwiftUI
 
 struct SelectContainerPlaceholder: View {
 	var body: some View {
-		Text(Localizable.Widgets.selectContainerPlaceholder)
+		Text(Localizable.Widget.selectContainerPlaceholder)
 			.font(.body.weight(.medium))
 			.foregroundStyle(.secondary)
 			.multilineTextAlignment(.center)
@@ -21,8 +21,6 @@ struct SelectContainerPlaceholder: View {
 
 // MARK: - Previews
 
-struct SelectContainerPlaceholder_Previews: PreviewProvider {
-	static var previews: some View {
-		SelectContainerPlaceholder()
-	}
+#Preview {
+	SelectContainerPlaceholder()
 }

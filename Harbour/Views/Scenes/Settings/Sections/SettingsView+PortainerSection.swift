@@ -13,7 +13,7 @@ import CommonHaptics
 
 extension SettingsView {
 	struct PortainerSection: View {
-		private typealias Localization = Localizable.Settings.Portainer
+		private typealias Localization = Localizable.SettingsView.Portainer
 
 		@EnvironmentObject private var viewModel: ViewModel
 
@@ -34,7 +34,7 @@ extension SettingsView {
 
 private extension SettingsView.PortainerSection {
 	struct EndpointsMenu: View {
-		private typealias Localization = Localizable.Settings.Portainer.EndpointsMenu
+		private typealias Localization = Localizable.SettingsView.Portainer.EndpointsMenu
 
 		@EnvironmentObject private var viewModel: SettingsView.ViewModel
 		@Environment(\.errorHandler) private var errorHandler
@@ -60,10 +60,11 @@ private extension SettingsView.PortainerSection {
 					Label(Localization.add, systemImage: SFSymbol.add)
 				}
 			} label: {
+				let _serverURLLabel = serverURLLabel ?? Localization.noServerPlaceholder
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
-					Text(serverURLLabel ?? Localization.noServerPlaceholder)
-						.font(SettingsView.standaloneLabelFont)
+					Text(_serverURLLabel)
+						.font(SettingsView.labelFontHeadline)
 						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
 
 					Spacer()
@@ -71,6 +72,8 @@ private extension SettingsView.PortainerSection {
 					Image(systemName: SFSymbol.chevronDown)
 						.fontWeight(.medium)
 				}
+				.transition(.opacity)
+				.animation(.easeInOut, value: _serverURLLabel)
 			}
 		}
 
@@ -78,14 +81,14 @@ private extension SettingsView.PortainerSection {
 		private func urlMenu(for url: URL) -> some View {
 			Menu(formattedURL(url), content: {
 				if viewModel.activeURL == url {
-					Label(Localization.Server.inUse, systemImage: SFSymbol.selected)
+					Label(Localization.Server.inUse, systemImage: SFSymbol.checkmark)
 						.symbolVariant(.circle.fill)
 				} else {
 					Button {
 						Haptics.generateIfEnabled(.buttonPress)
 						viewModel.switchPortainerServer(to: url, errorHandler: errorHandler)
 					} label: {
-						Label(Localization.Server.use, systemImage: SFSymbol.selected)
+						Label(Localization.Server.use, systemImage: SFSymbol.checkmark)
 							.symbolVariant(.circle)
 					}
 				}
@@ -112,8 +115,6 @@ private extension SettingsView.PortainerSection {
 
 // MARK: - Previews
 
-struct PortainerSection_Previews: PreviewProvider {
-	static var previews: some View {
-		SettingsView.PortainerSection()
-	}
+#Preview {
+	SettingsView.PortainerSection()
 }

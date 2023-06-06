@@ -22,7 +22,7 @@ struct ContainerStateProvider: IntentTimelineProvider {
 	private let portainerStore = PortainerStore.shared
 
 	static var placeholderContainer: Container {
-		typealias Localization = Localizable.Widgets.Placeholder
+		typealias Localization = Localizable.Widget.Placeholder
 		return Container(id: "ContainerID", names: [Localization.containerName], state: .running, status: Localization.containerStatus)
 	}
 

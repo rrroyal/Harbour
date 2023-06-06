@@ -8,6 +8,8 @@
 // MARK: - Endpoint
 
 public struct Endpoint: Identifiable, Equatable, Decodable, Sendable {
+	public typealias Name = String
+
 	enum CodingKeys: String, CodingKey {
 		case authorizedTeams = "AuthorizedTeams"
 		case authorizedUsers = "AuthorizedUsers"
@@ -29,7 +31,7 @@ public struct Endpoint: Identifiable, Equatable, Decodable, Sendable {
 	public let edgeID: String?
 	public let groupID: String?
 	public let id: Int
-	public let name: String?
+	public let name: Name?
 	public let publicURL: String?
 	public let status: Status?
 	public let tls: Bool?

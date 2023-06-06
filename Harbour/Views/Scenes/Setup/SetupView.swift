@@ -12,7 +12,7 @@ import CommonHaptics
 // MARK: - SetupView
 
 struct SetupView: View {
-	private typealias Localization = Localizable.Setup
+	private typealias Localization = Localizable.SetupView
 
 	@Environment(\.dismiss) private var dismiss: DismissAction
 	@Environment(\.errorHandler) private var errorHandler
@@ -140,8 +140,6 @@ struct SetupView: View {
 
 // MARK: - Previews
 
-struct SetupView_Previews: PreviewProvider {
-	static var previews: some View {
-		SetupView()
-	}
+#Preview {
+	SetupView()
 }

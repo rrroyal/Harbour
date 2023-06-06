@@ -10,6 +10,14 @@ import Foundation
 /// Aliases for general-usage SF Symbols
 enum SFSymbol {
 
+	static let error = "exclamationmark.triangle.fill"
+
+	static let circle = "circle"
+
+	static let search = "magnifyingglass"
+
+	static let xmark = "xmark"
+
 	/// plus
 	static let add = "plus"
 
@@ -31,8 +39,7 @@ enum SFSymbol {
 	/// trash
 	static let remove = "trash"
 
-	/// checkmark
-	static let selected = "checkmark"
+	static let checkmark = "checkmark"
 
 	/// gear
 	static let settings = "gear"
@@ -52,5 +59,9 @@ enum SFSymbol {
 	static let scrollToBottom = "arrow.down.to.line"
 
 	static let howTo = "person.fill.questionmark"
+
+	static let enable = "power"
+
+	static let disable = "stop"
 
 }

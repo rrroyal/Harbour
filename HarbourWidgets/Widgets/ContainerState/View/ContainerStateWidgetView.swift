@@ -36,7 +36,9 @@ struct ContainerStateWidgetView: View {
 			}
 		}
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.background(Color("WidgetBackground"), ignoresSafeAreaEdges: .all)
+		.containerBackground(for: .widget) {
+			Color.widgetBackground
+		}
 	}
 }
 

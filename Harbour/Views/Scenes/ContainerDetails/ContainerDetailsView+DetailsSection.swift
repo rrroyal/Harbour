@@ -12,7 +12,7 @@ import PortainerKit
 
 extension ContainerDetailsView {
 	struct DetailsSection: View {
-		private typealias Localization = Localizable.ContainerDetails
+		private typealias Localization = Localizable.ContainerDetailsView
 
 		let container: Container?
 		let details: ContainerDetails?
@@ -137,9 +137,7 @@ extension ContainerDetailsView {
 // MARK: - Previews
 
 /*
-struct ContainerDetailsView_DetailsSection_Previews: PreviewProvider {
-	static var previews: some View {
-		ContainerDetailsView.DetailsSection(details: <#T##ContainerDetails#>)
-	}
+#Preview {
+	ContainerDetailsView.DetailsSection(details: <#T##ContainerDetails#>)
 }
 */

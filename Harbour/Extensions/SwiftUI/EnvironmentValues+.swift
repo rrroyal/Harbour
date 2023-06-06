@@ -15,14 +15,14 @@ import KeychainKit
 
 extension EnvironmentValues {
 	private struct ErrorHandlerEnvironmentKey: EnvironmentKey {
-		static let defaultValue: SceneDelegate.ErrorHandler = { error, _debugInfo in
+		static let defaultValue: ErrorHandler = .init { error, _debugInfo in
 			assertionFailure("`errorHandler` has been called, but none is attached!")
 			os_log(.error, log: .default, "Error: \(error, privacy: .public) [\(_debugInfo, privacy: .public)]")
 		}
 	}
 
 	/// An action that can handle provided error.
-	var errorHandler: SceneDelegate.ErrorHandler {
+	var errorHandler: ErrorHandler {
 		get { self[ErrorHandlerEnvironmentKey.self] }
 		set { self[ErrorHandlerEnvironmentKey.self] = newValue }
 	}
@@ -83,5 +83,19 @@ extension EnvironmentValues {
 	var portainerSelectedEndpointID: Endpoint.ID? {
 		get { self[PortainerSelectedEndpoint.self] }
 		set { self[PortainerSelectedEndpoint.self] = newValue }
+	}
+}
+
+// MARK: - CVUseGrid
+
+extension EnvironmentValues {
+	private struct CVUseGrid: EnvironmentKey {
+		static let defaultValue: Bool = Preferences.shared.cvUseGrid
+	}
+
+	/// `ContainersView` uses grid style view.
+	var cvUseGrid: Bool {
+		get { self[CVUseGrid.self] }
+		set { self[CVUseGrid.self] = newValue }
 	}
 }

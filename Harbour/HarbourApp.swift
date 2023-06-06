@@ -25,9 +25,12 @@ struct HarbourApp: App {
 				.environmentObject(preferences)
 				.environment(\.portainerServerURL, portainerStore.serverURL)
 				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
+				.environment(\.cvUseGrid, preferences.cvUseGrid)
 		}
 		.defaultAppStorage(Preferences.userDefaults)
-		.onChange(of: scenePhase, perform: onScenePhaseChange)
+		.onChange(of: scenePhase) {
+			onScenePhaseChange(previous: $0, new: $1)
+		}
 		.backgroundTask(.appRefresh(HarbourBackgroundTaskIdentifier.backgroundRefresh), action: appState.handleBackgroundRefresh)
 	}
 }
@@ -35,8 +38,8 @@ struct HarbourApp: App {
 // MARK: - HarbourApp+Actions
 
 private extension HarbourApp {
-	func onScenePhaseChange(_ scenePhase: ScenePhase) {
-		switch scenePhase {
+	func onScenePhaseChange(previous previousScenePhase: ScenePhase, new newScenePhase: ScenePhase) {
+		switch newScenePhase {
 		case .background:
 			appState.scheduleBackgroundRefresh()
 		case .inactive:

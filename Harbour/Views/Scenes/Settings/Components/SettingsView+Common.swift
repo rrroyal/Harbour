@@ -10,9 +10,13 @@ import SwiftUI
 // MARK: - SettingsView+Common
 
 internal extension SettingsView {
-	static let standaloneLabelFont: Font = .body.weight(.medium)
+	static let labelFontHeadline: Font = .headline
+	static let labelFontSubheadline: Font = .footnote
+
 	static let vstackSpacing: Double = 2
-	static let minimumCellHeight: Double = 40
+
+	static let minimumCellHeight: Double = 36
+	static let minimumCellHeightWithDescription: Double = 40
 }
 
 // MARK: - SettingsView+OptionIcon
@@ -20,12 +24,10 @@ internal extension SettingsView {
 internal extension SettingsView {
 	struct OptionIcon: View {
 		private let symbolName: String
-		private let color: Color
 		private let symbolVariants: SymbolVariants = .fill
 
-		init(symbolName: String, color: Color) {
+		init(symbolName: String) {
 			self.symbolName = symbolName
-			self.color = color
 //			self.symbolVariants = symbolVariants
 		}
 
@@ -39,7 +41,7 @@ internal extension SettingsView {
 				.font(font.weight(.bold))
 				.frame(width: backgroundSize, height: backgroundSize, alignment: .center)
 				.foregroundStyle(Color.accentColor)
-				.background(Color.accentColor.opacity(.candy))
+				.background(Color.accentColor.quaternary)
 				.cornerRadius(6)
 		}
 	}

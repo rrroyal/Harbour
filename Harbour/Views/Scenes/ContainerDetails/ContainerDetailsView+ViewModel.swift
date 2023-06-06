@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreSpotlight
 import PortainerKit
 
 // MARK: - ContainerDetailsView+ViewModel
@@ -38,18 +39,25 @@ extension ContainerDetailsView {
 
 		func createUserActivity(for navigationItem: ContainerNavigationItem,
 								userActivity: NSUserActivity,
-								errorHandler: SceneDelegate.ErrorHandler?) {
-			typealias Localization = Localizable.ContainerDetails.UserActivity
+								errorHandler: ErrorHandler) {
+			typealias Localization = Localizable.ContainerDetailsView.UserActivity
+
+			let identifier = "\(HarbourUserActivityIdentifier.containerDetails).\(navigationItem.endpointID ?? -1).\(navigationItem.id)"
 
 			let container = self.container(for: navigationItem)
 
 			userActivity.isEligibleForHandoff = true
-			userActivity.isEligibleForPrediction = true
+			userActivity.isEligibleForPrediction = false
 			userActivity.isEligibleForSearch = true
 
 			let displayName = navigationItem.displayName ?? navigationItem.id
 			userActivity.title = displayName
-			userActivity.suggestedInvocationPhrase = Localization.title(displayName)
+//			userActivity.suggestedInvocationPhrase = Localization.title(displayName)
+
+			let attributeSet = CSSearchableItemAttributeSet()
+			attributeSet.title = displayName
+			attributeSet.contentDescription = Localization.title(displayName)
+			userActivity.contentAttributeSet = attributeSet
 
 			if let serverURL = portainerStore.serverURL,
 			   let endpointID = navigationItem.endpointID {
@@ -63,7 +71,8 @@ extension ContainerDetailsView {
 				userActivity.keywords = Set(containerNames)
 			}
 
-			userActivity.targetContentIdentifier = "\(navigationItem.endpointID ?? -1).\(navigationItem.id)"
+			userActivity.persistentIdentifier = identifier
+			userActivity.targetContentIdentifier = identifier
 
 			do {
 				try userActivity.setTypedPayload(navigationItem)
@@ -73,12 +82,12 @@ extension ContainerDetailsView {
 				]
 				userActivity.requiredUserInfoKeys = Set(requiredUserInfoKeys)
 			} catch {
-				errorHandler?(error, ._debugInfo())
+				errorHandler(error)
 			}
 		}
 
 		@discardableResult
-		func getContainerDetails(navigationItem: ContainerNavigationItem, errorHandler: SceneDelegate.ErrorHandler?) -> Task<Void, Never> {
+		func getContainerDetails(navigationItem: ContainerNavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task {
 				isLoading = true
@@ -96,7 +105,7 @@ extension ContainerDetailsView {
 					containerDetails = try await portainerStore.inspectContainer(navigationItem.id,
 																				 endpointID: navigationItem.endpointID)
 				} catch {
-					errorHandler?(error, ._debugInfo())
+					errorHandler(error)
 				}
 
 				isLoading = false
@@ -123,24 +132,23 @@ extension ContainerDetailsView.ViewModel {
 
 		var id: Int {
 			switch self {
-			case .somethingWentWrong:	return -2
-			case .error:				return -1
-			case .loading:				return 0
-			case .hasDetails:			return 1
+			case .somethingWentWrong:	-2
+			case .error:				-1
+			case .loading:				0
+			case .hasDetails:			1
 			}
 		}
 
 		var title: String? {
 			switch self {
 			case .loading:
-				return Localizable.Generic.loading
+				Localizable.Generic.loading
 			case .error(let error):
-				return error.localizedDescription
+				error.localizedDescription
 			case .somethingWentWrong:
-//					return Localizable.Generic.somethingWentWrong
-				return nil
+				nil
 			default:
-				return nil
+				nil
 			}
 		}
 

@@ -14,7 +14,7 @@ import CommonHaptics
 extension SetupView {
 	@MainActor
 	final class ViewModel: ObservableObject {
-		private typealias Localization = Localizable.Setup
+		private typealias Localization = Localizable.SetupView
 
 		private let portainerStore: PortainerStore = .shared
 
@@ -51,19 +51,19 @@ extension SetupView {
 			}
 		}
 
-		func onTokenTextFieldSubmit(dismissAction: DismissAction?, errorHandler: SceneDelegate.ErrorHandler?) {
+		func onTokenTextFieldSubmit(dismissAction: DismissAction?, errorHandler: ErrorHandler?) {
 			guard canSubmit else { return }
 
 			Haptics.generateIfEnabled(.light)
 			login(dismissAction: dismissAction, errorHandler: errorHandler)
 		}
 
-		func onContinueButtonPress(dismissAction: DismissAction?, errorHandler: SceneDelegate.ErrorHandler?) {
+		func onContinueButtonPress(dismissAction: DismissAction?, errorHandler: ErrorHandler?) {
 			Haptics.generateIfEnabled(.light)
 			login(dismissAction: dismissAction, errorHandler: errorHandler)
 		}
 
-		func login(dismissAction: DismissAction?, errorHandler: SceneDelegate.ErrorHandler?) {
+		func login(dismissAction: DismissAction?, errorHandler: ErrorHandler?) {
 			loginTask?.cancel()
 			loginTask = Task {
 				isLoading = true
@@ -84,7 +84,6 @@ extension SetupView {
 					dismissAction?()
 				} catch {
 					isLoading = false
-					Haptics.generateIfEnabled(.error)
 
 					buttonColor = .red
 					buttonLabel = error.localizedDescription

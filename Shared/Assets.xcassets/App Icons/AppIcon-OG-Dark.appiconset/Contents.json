@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "AppIcon-Dark.png",
+      "filename" : "AppIcon-OG-Dark.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"

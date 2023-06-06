@@ -181,81 +181,81 @@ extension ANSIParser {
 		var attributedStringAttributes: (NSAttributedString.Key, Any)? {
 			switch self {
 			case .reset:
-				return nil
+				nil
 			case .bold:
-				return nil
+				nil
 			case .faint:
-				return nil
+				nil
 			case .italic:
-				return nil
+				nil
 			case .underline:
-				return (.underlineStyle, NSUnderlineStyle.single)
+				(.underlineStyle, NSUnderlineStyle.single)
 			case .strikethrough:
-				return (.strikethroughStyle, NSUnderlineStyle.single)
+				(.strikethroughStyle, NSUnderlineStyle.single)
 			case .fgBlack:
-				return (.foregroundColor, PlatformColor.black)
+				(.foregroundColor, PlatformColor.black)
 			case .fgRed:
-				return (.foregroundColor, PlatformColor.red)
+				(.foregroundColor, PlatformColor.red)
 			case .fgGreen:
-				return (.foregroundColor, PlatformColor.green)
+				(.foregroundColor, PlatformColor.green)
 			case .fgYellow:
-				return (.foregroundColor, PlatformColor.yellow)
+				(.foregroundColor, PlatformColor.yellow)
 			case .fgBlue:
-				return (.foregroundColor, PlatformColor.blue)
+				(.foregroundColor, PlatformColor.blue)
 			case .fgMagenta:
-				return (.foregroundColor, PlatformColor.magenta)
+				(.foregroundColor, PlatformColor.magenta)
 			case .fgCyan:
-				return (.foregroundColor, PlatformColor.cyan)
+				(.foregroundColor, PlatformColor.cyan)
 			case .fgWhite:
-				return (.foregroundColor, PlatformColor.white)
+				(.foregroundColor, PlatformColor.white)
 			case .fgBrightBlack:
-				return (.foregroundColor, PlatformColor.black)
+				(.foregroundColor, PlatformColor.black)
 			case .fgBrightRed:
-				return (.foregroundColor, PlatformColor.red)
+				(.foregroundColor, PlatformColor.red)
 			case .fgBrightGreen:
-				return (.foregroundColor, PlatformColor.green)
+				(.foregroundColor, PlatformColor.green)
 			case .fgBrightYellow:
-				return (.foregroundColor, PlatformColor.yellow)
+				(.foregroundColor, PlatformColor.yellow)
 			case .fgBrightBlue:
-				return (.foregroundColor, PlatformColor.blue)
+				(.foregroundColor, PlatformColor.blue)
 			case .fgBrightMagenta:
-				return (.foregroundColor, PlatformColor.magenta)
+				(.foregroundColor, PlatformColor.magenta)
 			case .fgBrightCyan:
-				return (.foregroundColor, PlatformColor.cyan)
+				(.foregroundColor, PlatformColor.cyan)
 			case .fgBrightWhite:
-				return (.foregroundColor, PlatformColor.white)
+				(.foregroundColor, PlatformColor.white)
 			case .bgBlack:
-				return (.backgroundColor, PlatformColor.black)
+				(.backgroundColor, PlatformColor.black)
 			case .bgRed:
-				return (.backgroundColor, PlatformColor.red)
+				(.backgroundColor, PlatformColor.red)
 			case .bgGreen:
-				return (.backgroundColor, PlatformColor.green)
+				(.backgroundColor, PlatformColor.green)
 			case .bgYellow:
-				return (.backgroundColor, PlatformColor.yellow)
+				(.backgroundColor, PlatformColor.yellow)
 			case .bgBlue:
-				return (.backgroundColor, PlatformColor.blue)
+				(.backgroundColor, PlatformColor.blue)
 			case .bgMagenta:
-				return (.backgroundColor, PlatformColor.magenta)
+				(.backgroundColor, PlatformColor.magenta)
 			case .bgCyan:
-				return (.backgroundColor, PlatformColor.cyan)
+				(.backgroundColor, PlatformColor.cyan)
 			case .bgWhite:
-				return (.backgroundColor, PlatformColor.white)
+				(.backgroundColor, PlatformColor.white)
 			case .bgBrightBlack:
-				return (.backgroundColor, PlatformColor.black)
+				(.backgroundColor, PlatformColor.black)
 			case .bgBrightRed:
-				return (.backgroundColor, PlatformColor.red)
+				(.backgroundColor, PlatformColor.red)
 			case .bgBrightGreen:
-				return (.backgroundColor, PlatformColor.green)
+				(.backgroundColor, PlatformColor.green)
 			case .bgBrightYellow:
-				return (.backgroundColor, PlatformColor.yellow)
+				(.backgroundColor, PlatformColor.yellow)
 			case .bgBrightBlue:
-				return (.backgroundColor, PlatformColor.blue)
+				(.backgroundColor, PlatformColor.blue)
 			case .bgBrightMagenta:
-				return (.backgroundColor, PlatformColor.magenta)
+				(.backgroundColor, PlatformColor.magenta)
 			case .bgBrightCyan:
-				return (.backgroundColor, PlatformColor.cyan)
+				(.backgroundColor, PlatformColor.cyan)
 			case .bgBrightWhite:
-				return (.backgroundColor, PlatformColor.white)
+				(.backgroundColor, PlatformColor.white)
 			}
 		}
 	}

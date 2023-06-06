@@ -51,7 +51,7 @@ extension ContainerLogsView {
 		}
 
 		@discardableResult
-		func getLogs(errorHandler: SceneDelegate.ErrorHandler?) -> Task<Void, Never> {
+		func getLogs(errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
 				self.isLoading = true
@@ -73,7 +73,7 @@ extension ContainerLogsView {
 						}
 					}
 				} catch {
-					errorHandler?(error, ._debugInfo())
+					errorHandler(error)
 					self.logs = nil
 					self.error = error
 				}
@@ -105,27 +105,26 @@ extension ContainerLogsView.ViewModel {
 
 		var id: Int {
 			switch self {
-			case .somethingWentWrong:	return -2
-			case .error:				return -1
-			case .loading:				return 0
-			case .hasLogs:				return 2
-			case .logsEmpty:			return 3
+			case .somethingWentWrong:	-2
+			case .error:				-1
+			case .loading:				0
+			case .hasLogs:				2
+			case .logsEmpty:			3
 			}
 		}
 
 		var title: String? {
 			switch self {
 			case .loading:
-				return Localizable.Generic.loading
+				Localizable.Generic.loading
 			case .error(let error):
-				return error.localizedDescription
+				error.localizedDescription
 			case .logsEmpty:
-				return Localizable.ContainerLogs.logsEmpty
+				Localizable.ContainerLogsView.logsEmpty
 			case .somethingWentWrong:
-//					return Localizable.Generic.somethingWentWrong
-				return nil
+				nil
 			default:
-				return nil
+				nil
 			}
 		}
 
