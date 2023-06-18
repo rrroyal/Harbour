@@ -15,7 +15,7 @@
       "location" : "https://github.com/rrroyal/IndicatorsKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "9b1121ccd38cc706cae1e70482a7459db6acd629"
+        "revision" : "4cf460a557b101be570fac0c2cdd205bb39dab7f"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/rrroyal/SwiftGenPlugin",
       "state" : {
         "branch" : "main",
-        "revision" : "239c33f2cf48cdc1f7daaf468260d750db974b48"
+        "revision" : "606cb33f4fcdb789f9fbf7f89dac703f2376c71d"
       }
     },
     {
@@ -42,7 +42,7 @@
       "location" : "https://github.com/rrroyal/SwiftLintPlugin",
       "state" : {
         "branch" : "main",
-        "revision" : "9e81b09c241aa5f41ee5339c17237fe38192d67e"
+        "revision" : "83ae63d6ac1594ed6b79d6b2545b1155431101cf"
       }
     }
   ],

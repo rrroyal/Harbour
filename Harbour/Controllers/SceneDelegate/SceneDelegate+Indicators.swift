@@ -39,7 +39,9 @@ extension SceneDelegate {
 							  style: style)
 		}
 
-		indicators.display(indicator)
+		Task { @MainActor in
+			indicators.display(indicator)
+		}
 	}
 }
 
