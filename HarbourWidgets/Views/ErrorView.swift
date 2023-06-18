@@ -2,7 +2,7 @@
 //  ErrorView.swift
 //  HarbourWidgets
 //
-//  Created by royal on 04/10/2022.
+//  Created by royal on 11/06/2023.
 //
 
 import SwiftUI
@@ -13,7 +13,7 @@ struct ErrorView: View {
 	let error: Error
 
 	var body: some View {
-		Text(error.localizedDescription)
+		Text(verbatim: error.localizedDescription)
 			.font(.body)
 			.fontDesign(.monospaced)
 			.fontWeight(.medium)
@@ -21,7 +21,11 @@ struct ErrorView: View {
 			.multilineTextAlignment(.center)
 			.lineLimit(nil)
 			.minimumScaleFactor(0.7)
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.padding()
+			.containerBackground(for: .widget) {
+				Color.widgetBackground
+			}
 	}
 }
 

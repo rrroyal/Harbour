@@ -130,6 +130,9 @@ struct ContentView: View {
 		.onOpenURL { url in
 			sceneDelegate.onOpenURL(url)
 		}
+		.onContinueUserActivity("OpenContainerDetails") { userActivity in
+			print(userActivity)
+		}
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) { userActivity in
 			sceneDelegate.onContinueContainerDetailsActivity(userActivity)
 		}

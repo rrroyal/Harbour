@@ -6,25 +6,12 @@
 	<string>$(AppIdentifierPrefix)</string>
 	<key>BuildDate</key>
 	<string>__BUILD_DATE__</string>
+	<key>EXAppExtensionAttributes</key>
+	<dict>
+		<key>EXExtensionPointIdentifier</key>
+		<string>com.apple.appintents-extension</string>
+	</dict>
 	<key>MainBundleIdentifier</key>
 	<string>__MainBundleIdentifier__</string>
-	<key>NSExtension</key>
-	<dict>
-		<key>NSExtensionAttributes</key>
-		<dict>
-			<key>IntentsRestrictedWhileLocked</key>
-			<array/>
-			<key>IntentsRestrictedWhileProtectedDataUnavailable</key>
-			<array/>
-			<key>IntentsSupported</key>
-			<array>
-				<string>ContainerStateIntent</string>
-			</array>
-		</dict>
-		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.intents-service</string>
-		<key>NSExtensionPrincipalClass</key>
-		<string>$(PRODUCT_MODULE_NAME).IntentHandler</string>
-	</dict>
 </dict>
 </plist>
