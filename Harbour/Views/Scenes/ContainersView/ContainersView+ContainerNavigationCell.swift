@@ -5,8 +5,8 @@
 //  Created by royal on 16/10/2022.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View>: View {
@@ -25,9 +25,6 @@ extension ContainersView {
 		var body: some View {
 			NavigationLink(value: navigationItem) {
 				content()
-			}
-			.contextMenu {
-				ContainerContextMenu(container: container)
 			}
 			.tint(Color.primary)
 		}

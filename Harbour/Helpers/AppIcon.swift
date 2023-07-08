@@ -5,12 +5,32 @@
 //  Created by royal on 09/06/2023.
 //
 
+#if canImport(UIKit)
 import UIKit
+#endif
 
-struct AppIcon: Identifiable {
+// MARK: - AppIcon
+
+struct AppIcon: Identifiable, Equatable {
 	let id: String?
 	let name: String
+
+	static func == (lhs: Self, rhs: Self) -> Bool {
+		lhs.id == rhs.id
+	}
 }
+
+// MARK: - AppIcon+setIcon
+
+extension AppIcon {
+	static func setIcon(_ icon: AppIcon) async throws {
+		#if canImport(UIKit)
+		try await UIApplication.shared.setAlternateIconName(icon.id)
+		#endif
+	}
+}
+
+// MARK: - AppIcon+icons
 
 extension AppIcon {
 	private typealias Localization = Localizable.AppIcon
@@ -30,8 +50,14 @@ extension AppIcon {
 	]
 }
 
+// MARK: - AppIcon+current
+
 extension AppIcon {
 	static var current: Self {
+		#if os(iOS)
 		allCases.first { $0.id == UIApplication.shared.alternateIconName } ?? .default
+		#else
+		.default
+		#endif
 	}
 }

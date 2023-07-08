@@ -5,6 +5,7 @@
 //  Created by royal on 27/12/2022.
 //
 
+#if canImport(UIKit)
 import UIKit
 
 extension SceneDelegate: UIWindowSceneDelegate {
@@ -20,3 +21,4 @@ extension SceneDelegate: UIWindowSceneDelegate {
 		#endif
 	}
 }
+#endif

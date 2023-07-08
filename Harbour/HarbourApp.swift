@@ -11,7 +11,12 @@ import SwiftUI
 
 @main
 struct HarbourApp: App {
+	#if os(iOS)
 	@UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
+	#elseif os(macOS)
+	@NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
+	#endif
+
 	@Environment(\.scenePhase) private var scenePhase: ScenePhase
 	@StateObject var appState: AppState = .shared
 	@StateObject var portainerStore: PortainerStore = .shared
@@ -31,7 +36,9 @@ struct HarbourApp: App {
 		.onChange(of: scenePhase) {
 			onScenePhaseChange(previous: $0, new: $1)
 		}
+		#if os(iOS)
 		.backgroundTask(.appRefresh(HarbourBackgroundTaskIdentifier.backgroundRefresh), action: appState.handleBackgroundRefresh)
+		#endif
 	}
 }
 

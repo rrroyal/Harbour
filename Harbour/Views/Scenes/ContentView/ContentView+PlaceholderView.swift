@@ -36,6 +36,7 @@ extension ContentView {
 
 // MARK: - Previews
 
+/*
 #Preview("loading") {
 	ContentView.PlaceholderView(viewState: .loading)
 }
@@ -67,3 +68,4 @@ extension ContentView {
 #Preview("somethingWentWrong") {
 	ContentView.PlaceholderView(viewState: .somethingWentWrong)
 }
+*/

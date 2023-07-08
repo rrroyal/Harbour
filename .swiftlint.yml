@@ -52,7 +52,7 @@ opt_in_rules:
   - redundant_type_annotation
   - return_value_from_void_function
   - sorted_first_last
-  # - sorted_imports
+  - sorted_imports
   - static_operator
   - toggle_bool
   # - type_contents_order

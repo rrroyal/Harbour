@@ -5,9 +5,9 @@
 //  Created by royal on 31/01/2023.
 //
 
-import SwiftUI
 import CommonHaptics
 import PortainerKit
+import SwiftUI
 
 // MARK: - StacksView
 
@@ -19,33 +19,56 @@ struct StacksView: View {
 
 	var body: some View {
 		List {
-			if let stacks = viewModel.viewState.unwrappedValue {
-				ForEach(stacks.filtered(viewModel.searchText)) { stack in
+			if let stacks = viewModel.stacks {
+				ForEach(stacks) { stack in
 					let isLoading = viewModel.loadingStacks.contains(stack.id)
 					let isStackOn = stack.status == .active
 					StackCell(stack: stack, isOn: isStackOn, isLoading: isLoading) {
-						setStackStatus(stack, started: !isStackOn)
+						setStackState(stack, started: !isStackOn)
 					}
+					.transition(.opacity)
 				}
 			}
 		}
 		.searchable(text: $viewModel.searchText)
-		.background(viewModel.viewState.backgroundView())
+		.overlay(viewModel.viewState.backgroundView)
+		.overlay {
+			if viewModel.shouldShowEmptyPlaceholderView {
+				if !viewModel.searchText.isEmpty {
+					ContentUnavailableView.search(text: viewModel.searchText)
+				} else {
+					ContentUnavailableView("NO_CONTAINERS", systemImage: "xmark")
+				}
+			}
+		}
 		.navigationTitle(Localization.title)
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState.id)
+		.animation(.easeInOut, value: viewModel.stacks)
 		.task {
-			await viewModel.getStacks(errorHandler: errorHandler)
+			do {
+				try await viewModel.getStacks()
+			} catch {
+				errorHandler(error)
+			}
 		}
 		.refreshable {
-			await viewModel.getStacks(errorHandler: errorHandler)
+			do {
+				try await viewModel.getStacks()
+			} catch {
+				errorHandler(error)
+			}
 		}
 	}
 
-	private func setStackStatus(_ stack: Stack, started: Bool) {
+	private func setStackState(_ stack: Stack, started: Bool) {
 		Task {
-			Haptics.generateIfEnabled(.light)
-			await viewModel.setStackStatus(stack, started: started, errorHandler: errorHandler)
+			do {
+				Haptics.generateIfEnabled(.light)
+				try await viewModel.setStackState(stack, started: started)
+			} catch {
+				errorHandler(error)
+			}
 		}
 	}
 }
@@ -117,21 +140,21 @@ private extension StacksView {
 			Button {
 				toggleAction()
 			} label: {
-				Group {
-					if isOn {
-						Label(Localization.Stack.stop, systemImage: SFSymbol.disable)
-					} else {
-						Label(Localization.Stack.start, systemImage: SFSymbol.enable)
-					}
+				if isOn {
+					Label(Localization.Stack.stop, systemImage: SFSymbol.disable)
+				} else {
+					Label(Localization.Stack.start, systemImage: SFSymbol.enable)
 				}
-				.symbolVariant(.fill)
 			}
+			.symbolVariant(.fill)
 		}
 	}
 }
 
 // MARK: - Previews
 
+/*
 #Preview("StacksView") {
 	StacksView()
 }
+*/

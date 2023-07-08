@@ -59,7 +59,7 @@ extension ViewState: Identifiable {
 	/// ID of the state.
 	var id: Int {
 		switch self {
-		case .loading:		-1
+		case .loading:		0
 		case .reloading:	-2
 		case .success:		1
 		case .failure:		2
@@ -91,7 +91,7 @@ extension ViewState: Equatable where Success: Equatable {
 extension ViewState {
 	/// Background view for this state.
 	@ViewBuilder
-	func backgroundView() -> some View {
+	var backgroundView: some View {
 		Group {
 			switch self {
 			case .loading:
@@ -117,5 +117,6 @@ extension ViewState {
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.transition(.opacity)
 		.animation(.easeInOut, value: self.id)
+		.allowsHitTesting(false)
 	}
 }

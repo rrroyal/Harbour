@@ -5,17 +5,18 @@
 //  Created by royal on 01/10/2022.
 //
 
-import Foundation
 import BackgroundTasks
+import CommonFoundation
+import Foundation
+import PortainerKit
 import UserNotifications
 import WidgetKit
-import PortainerKit
-import CommonFoundation
 
 // MARK: - AppState+scheduleBackgroundRefresh
 
 extension AppState {
 	func scheduleBackgroundRefresh() {
+		#if os(iOS)
 		guard Preferences.shared.enableBackgroundRefresh else {
 			logger.info("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String._debugInfo(), privacy: .public)]")
 			return
@@ -34,6 +35,7 @@ extension AppState {
 			// swiftlint:disable:next line_length
 			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
+		#endif
 	}
 }
 
@@ -56,8 +58,6 @@ private extension AppState {
 		let status: String?
 		let changeType: ChangeType
 	}
-
-	static let logPrefix = "BackgroundRefresh"
 }
 
 // MARK: - AppState+BackgroundRefresh
@@ -67,7 +67,7 @@ extension AppState {
 	@Sendable
 	nonisolated func handleBackgroundRefresh() async {
 		do {
-			logger.notice("[\(Self.logPrefix, privacy: .public)] Handling background refresh... [\(String._debugInfo(), privacy: .public)]")
+			loggerBackground.notice("Handling background refresh... [\(String._debugInfo(), privacy: .public)]")
 
 			#if DEBUG
 			Task { @MainActor in
@@ -80,7 +80,7 @@ extension AppState {
 			let portainerStore = PortainerStore(urlSessionConfiguration: .intents)
 			await portainerStore.setupTask?.value
 
-			let oldContainers = portainerStore.containers
+			let oldContainers = await portainerStore.containers
 				.map { Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status) }
 
 			let newContainersTask = portainerStore.refreshContainers()
@@ -89,8 +89,7 @@ extension AppState {
 
 			try await handleContainersUpdate(from: oldContainers, to: newContainers)
 		} catch {
-			// swiftlint:disable:next line_length
-			logger.error("[\(Self.logPrefix, privacy: .public)] Error handling background refresh: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			loggerBackground.error("Error handling background refresh: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
 	}
 
@@ -160,7 +159,7 @@ extension AppState {
 //		}
 //		#endif
 
-		logger.notice("[\(Self.logPrefix, privacy: .public)] Differences: \(changesAndDifferences, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+		loggerBackground.notice("Differences: \(changesAndDifferences, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 
 		if changesAndDifferences.isEmpty {
 			return
@@ -171,7 +170,7 @@ extension AppState {
 			let notificationRequest = UNNotificationRequest(identifier: notificationIdentifier, content: notificationContent, trigger: nil)
 			try await UNUserNotificationCenter.current().add(notificationRequest)
 		} else {
-			logger.warning("[\(Self.logPrefix, privacy: .public)] notificationContent(for:) didn't return anything! [\(String._debugInfo(), privacy: .public)]")
+			loggerBackground.warning("notificationContent(for:) didn't return anything! [\(String._debugInfo(), privacy: .public)]")
 		}
 	}
 

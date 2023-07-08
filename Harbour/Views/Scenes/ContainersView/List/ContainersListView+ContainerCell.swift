@@ -5,16 +5,17 @@
 //  Created by royal on 29/09/2022.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 // MARK: - ContainersListView+ContainerCell
 
 extension ContainersListView {
 	struct ContainerCell: View {
+		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
+
 		private typealias Localization = Localizable.ContainerCell
 
-		private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .circular)
 		private let minimumScaleFactor: Double = 0.8
 
 		let container: Container
@@ -70,9 +71,9 @@ extension ContainersListView {
 			}
 			.padding()
 			.frame(maxWidth: .infinity)
-			.background(Color(uiColor: .secondarySystemGroupedBackground))
-			.clipShape(roundedRectangle)
-			.contentShape(roundedRectangle)
+			.background(Color.secondaryGroupedBackground)
+			.contentShape(Self.roundedRectangleBackground)
+			.clipShape(Self.roundedRectangleBackground)
 		}
 	}
 }
@@ -96,9 +97,11 @@ extension ContainersListView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
+/*
 #Preview {
 	ContainersListView.ContainerCell(container: .init(id: "id", names: ["PreviewContainer"], state: .running, status: "Status"))
 		.padding()
 		.background(Color(uiColor: .systemGroupedBackground))
 		.previewLayout(.sizeThatFits)
 }
+*/

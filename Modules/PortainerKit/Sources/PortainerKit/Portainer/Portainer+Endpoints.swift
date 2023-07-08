@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Portainer {
-	/// List all environments(endpoints) based on the current user authorizations.
+	/// Lists all environments(endpoints) based on the current user authorizations.
 	/// Will return all environments(endpoints) if using an administrator or team leader account.
 	/// Otherwise it will only return authorized environments(endpoints).
 	/// 

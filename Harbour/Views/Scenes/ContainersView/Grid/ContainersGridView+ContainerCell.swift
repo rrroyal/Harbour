@@ -5,21 +5,21 @@
 //  Created by royal on 29/09/2022.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 // MARK: - ContainersGridView+ContainerCell
 
 extension ContainersGridView {
 	struct ContainerCell: View {
+		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
+
 		private typealias Localization = Localizable.ContainerCell
 
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
 
 		let container: Container
-
-		private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
 		@ViewBuilder
 		private var stateHeader: some View {
@@ -71,9 +71,9 @@ extension ContainersGridView {
 			.padding(paddingSize)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.aspectRatio(1, contentMode: .fit)
-			.background(Color(uiColor: .secondarySystemGroupedBackground))
-			.clipShape(roundedRectangle)
-			.contentShape(roundedRectangle)
+			.background(Color.secondaryGroupedBackground)
+			.contentShape(Self.roundedRectangleBackground)
+			.clipShape(Self.roundedRectangleBackground)
 		}
 	}
 }
@@ -97,6 +97,7 @@ extension ContainersGridView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
+/*
 #Preview {
 	ContainersGridView.ContainerCell(container: .init(id: "id", names: ["PreviewContainer"], state: .running, status: "Status"))
 		.padding()
@@ -104,3 +105,4 @@ extension ContainersGridView.ContainerCell: Equatable {
 		.frame(width: 184, height: 184)
 		.previewLayout(.sizeThatFits)
 }
+*/

@@ -28,7 +28,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.foregroundStyle(isEnabled ? foregroundColor : .secondary)
 			.padding()
 			.frame(maxWidth: .infinity, alignment: .center)
-			.background(isEnabled ? backgroundColor : Color(uiColor: .systemGray5))
+			.background(isEnabled ? backgroundColor : Color.systemGray)
 			.clipShape(roundedRectangle)
 			.contentShape(roundedRectangle)
 			.opacity(configuration.isPressed ? Constants.Buttons.pressedOpacity : 1)

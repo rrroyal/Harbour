@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO: Check if it's needed
+
 enum ViewOpacity: Double {
 	case primary = 1.0
 	case secondary = 0.3

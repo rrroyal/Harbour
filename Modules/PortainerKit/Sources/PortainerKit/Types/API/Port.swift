@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public struct Port: Equatable, Decodable, Sendable {
+public struct Port: Equatable, Hashable, Decodable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case ip = "IP"
 		case privatePort = "PrivatePort"
@@ -13,7 +13,7 @@ public struct Port: Equatable, Decodable, Sendable {
 		case type = "Type"
 	}
 
-	public enum PortType: String, Decodable, Sendable {
+	public enum PortType: String, Hashable, Decodable, Sendable {
 		case tcp
 		case udp
 	}

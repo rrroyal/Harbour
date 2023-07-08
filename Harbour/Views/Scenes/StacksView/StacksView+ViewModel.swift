@@ -15,14 +15,24 @@ extension StacksView {
 	final class ViewModel: ObservableObject {
 		private let portainerStore = PortainerStore.shared
 
-		@Published private(set) var viewState: ViewState<[Stack], Error> = .loading
-		@Published private(set) var loadingStacks: Set<Stack.ID> = []
-		@Published var searchText = ""
+		@MainActor @Published private(set) var viewState: ViewState<[Stack], Error> = .loading
+		@MainActor @Published private(set) var loadingStacks: Set<Stack.ID> = []
+		@MainActor @Published var searchText = ""
 
-		private var refreshTask: Task<Void, Never>?
+		private var refreshTask: Task<Void, Error>?
 
 		@MainActor
-		func getStacks(errorHandler: ErrorHandler) async {
+		var stacks: [Stack]? {
+			viewState.unwrappedValue?.filtered(searchText)
+		}
+
+		@MainActor
+		var shouldShowEmptyPlaceholderView: Bool {
+			stacks?.isEmpty ?? false
+		}
+
+		@MainActor
+		func getStacks() async throws {
 			refreshTask?.cancel()
 
 			let task = Task {
@@ -34,36 +44,33 @@ extension StacksView {
 				} catch {
 					guard !error.isCancellationError else { return }
 					viewState = .failure(error)
-					errorHandler(error)
+					throw error
 				}
 			}
 			refreshTask = task
 
-			await task.value
+			try await task.value
 		}
 
 		@MainActor
-		func setStackStatus(_ stack: Stack, started: Bool, errorHandler: ErrorHandler) async {
+		func setStackState(_ stack: Stack, started: Bool) async throws {
 			loadingStacks.insert(stack.id)
 			defer { loadingStacks.remove(stack.id) }
 
-			do {
-				try await portainerStore.setStackStatus(stackID: stack.id, started: started)
+			try await portainerStore.setStackStatus(stackID: stack.id, started: started)
 
-				Task {
-					if case .success(var stacks) = viewState,
-					   let stackIndex = stacks.firstIndex(where: { $0.id == stack.id }) {
-						await MainActor.run {
-							stacks[stackIndex].status = started ? .active : .inactive
-							viewState = .success(stacks)
-						}
+			let task = Task {
+				if case .success(var stacks) = self.viewState,
+				   let stackIndex = stacks.firstIndex(where: { $0.id == stack.id }) {
+					await MainActor.run {
+						stacks[stackIndex].status = started ? .active : .inactive
+						viewState = .success(stacks)
 					}
-
-					await getStacks(errorHandler: errorHandler)
 				}
-			} catch {
-				errorHandler(error, ._debugInfo())
+
+				try await getStacks()
 			}
+			try await task.value
 		}
 	}
 }

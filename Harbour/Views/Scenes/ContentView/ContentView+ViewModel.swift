@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if canImport(UIKit)
 import UIKit
+#endif
 import PortainerKit
 
 // MARK: - ContentView+ViewModel
@@ -51,9 +53,11 @@ extension ContentView {
 		}
 
 		var shouldUseColumns: Bool {
+			#if os(iOS)
 			guard UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac else {
 				return false
 			}
+			#endif
 			return preferences.cvUseColumns
 		}
 
@@ -65,7 +69,7 @@ extension ContentView {
 			portainerStore.containers.filtered(searchText)
 		}
 
-		init() {}
+		init() { }
 
 		@Sendable
 		func refresh() async {

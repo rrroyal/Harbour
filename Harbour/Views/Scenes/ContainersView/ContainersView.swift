@@ -5,8 +5,8 @@
 //  Created by royal on 23/07/2022.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 // MARK: - ContainersView
 
@@ -75,7 +75,7 @@ extension ContainersView {
 		private var backgroundView: some View {
 			background()
 				.containerRelativeFrame([.horizontal, .vertical])
-				.background(Color(uiColor: .systemGroupedBackground), ignoresSafeAreaEdges: .all)
+				.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
 		}
 
 		func body(content: Content) -> some View {

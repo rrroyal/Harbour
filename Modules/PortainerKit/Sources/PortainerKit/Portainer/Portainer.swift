@@ -91,7 +91,7 @@ public final class Portainer {
 // MARK: - Portainer+Utility
 
 internal extension Portainer {
-	/// Creates a authorized URLRequest.
+	/// Creates an authorized URLRequest.
 	/// - Parameter path: Request path
 	/// - Parameter query: Optional URL query items
 	/// - Returns: `URLRequest` with authorization header set.

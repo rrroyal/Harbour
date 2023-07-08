@@ -5,8 +5,8 @@
 //  Created by royal on 10/06/2023.
 //
 
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 // MARK: - ContainerStatusWidget
 
@@ -16,7 +16,7 @@ struct ContainerStatusWidget: Widget {
 	var body: some WidgetConfiguration {
 		AppIntentConfiguration(
 			kind: kind,
-			intent: ContainerStatusProvider.IntentConfiguration.self,
+			intent: ContainerStatusProvider.Intent.self,
 			provider: ContainerStatusProvider()) { entry in
 			ContainerStatusWidgetView(entry: entry)
 		}

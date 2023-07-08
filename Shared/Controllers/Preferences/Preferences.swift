@@ -5,13 +5,13 @@
 //  Created by royal on 18/07/2022.
 //
 
-import Combine
-import OSLog
-import SwiftUI
-import NotificationCenter
 import BackgroundTasks
+import Combine
 import CommonFoundation
 import CommonOSLog
+import NotificationCenter
+import OSLog
+import SwiftUI
 
 // MARK: - Preferences
 
@@ -22,7 +22,7 @@ public final class Preferences: ObservableObject {
 	// swiftlint:disable:next force_unwrapping
 	public static let userDefaults: UserDefaults = .group!
 
-	private let logger = Logger(category: Logger.Category.preferences)
+	private let logger = Logger(category: String(describing: Preferences.self))
 
 	/// Was landing view displayed?
 	@AppStorage(Keys.landingDisplayed, store: Preferences.userDefaults) public var landingDisplayed = false
@@ -55,13 +55,14 @@ public final class Preferences: ObservableObject {
 	/// Display ContainersView as grid.
 	@AppStorage(Keys.cvUseGrid, store: Preferences.userDefaults) public var cvUseGrid = true
 
-	private init() {}
+	private init() { }
 }
 
 // MARK: - Preferences+Handlers
 
 private extension Preferences {
 	func onEnableBackgroundRefreshChange(_ isEnabled: Bool) {
+		#if os(iOS)
 		logger.debug("\(Keys.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 
 		let notificationCenter = UNUserNotificationCenter.current()
@@ -86,5 +87,6 @@ private extension Preferences {
 			BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: HarbourBackgroundTaskIdentifier.backgroundRefresh)
 			notificationCenter.removePendingNotificationRequests(withIdentifiers: [HarbourNotificationIdentifier.containersChanged])
 		}
+		#endif
 	}
 }

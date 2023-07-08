@@ -5,10 +5,10 @@
 //  Created by royal on 27/12/2022.
 //
 
-import SwiftUI
-import PortainerKit
-import IndicatorsKit
 import CommonHaptics
+import IndicatorsKit
+import PortainerKit
+import SwiftUI
 
 struct ContainerContextMenu: View {
 	private typealias Localization = Localizable.ContainerContextMenu
@@ -45,30 +45,30 @@ struct ContainerContextMenu: View {
 
 	var body: some View {
 		if !containerIsStored {
-			ControlGroup {
+			Group {
 				switch containerState {
 				case .created:
 					button(for: .pause)
 					button(for: .stop)
 					button(for: .restart)
-//					Divider()
+					Divider()
 					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .running:
 					button(for: .pause)
 					button(for: .stop)
 					button(for: .restart)
-//					Divider()
+					Divider()
 					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .paused:
 					button(for: .unpause)
 					button(for: .stop)
 					button(for: .restart)
-//					Divider()
+					Divider()
 					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .restarting:
 					button(for: .pause)
 					button(for: .stop)
-//					Divider()
+					Divider()
 					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				case .removing:
 					button(for: .kill, role: .destructive, haptic: killActionHaptic)
@@ -82,7 +82,7 @@ struct ContainerContextMenu: View {
 					button(for: .restart)
 					button(for: .pause)
 					button(for: .stop)
-//					Divider()
+					Divider()
 					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				}
 			}

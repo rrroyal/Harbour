@@ -5,11 +5,11 @@
 //  Created by royal on 17/07/2022.
 //
 
-import SwiftUI
-import PortainerKit
-import IndicatorsKit
 import CommonFoundation
 import CommonHaptics
+import IndicatorsKit
+import PortainerKit
+import SwiftUI
 
 // MARK: - ContentView
 
@@ -58,7 +58,7 @@ struct ContentView: View {
 		}
 
 		#if ENABLE_PREVIEW_FEATURES
-		ToolbarItem(placement: .navigationBarLeading) {
+		ToolbarItem(placement: .navigation) {
 			NavigationLink {
 				StacksView()
 			} label: {
@@ -103,7 +103,9 @@ struct ContentView: View {
 		NavigationWrapped(useColumns: viewModel.shouldUseColumns) {
 			containersView
 				.navigationTitle(viewModel.navigationTitle)
+				#if os(iOS)
 				.navigationBarTitleDisplayMode(.inline)
+				#endif
 				.toolbarTitleMenu {
 					titleMenu
 				}
@@ -114,7 +116,6 @@ struct ContentView: View {
 			Text(Localization.noContainerSelectedPlaceholder)
 				.foregroundStyle(.tertiary)
 		}
-		.indicatorOverlay(model: sceneDelegate.indicators)
 		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 			SettingsView()
 				.indicatorOverlay(model: sceneDelegate.indicators)
@@ -125,13 +126,17 @@ struct ContentView: View {
 			LandingView()
 				.indicatorOverlay(model: sceneDelegate.indicators)
 		}
+		.indicatorOverlay(model: sceneDelegate.indicators)
+		.alert(appState.alertContent ?? "<empty>", isPresented: .constant(appState.alertContent != nil)) {
+			Button("Continue") {
+				appState.alertContent = nil
+			}
+		}
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.showIndicator, sceneDelegate.showIndicator)
+		.environmentObject(sceneDelegate.indicators)
 		.onOpenURL { url in
 			sceneDelegate.onOpenURL(url)
-		}
-		.onContinueUserActivity("OpenContainerDetails") { userActivity in
-			print(userActivity)
 		}
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) { userActivity in
 			sceneDelegate.onContinueContainerDetailsActivity(userActivity)

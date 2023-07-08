@@ -7,4 +7,4 @@
 
 import Foundation
 
-protocol NavigationItem: Codable, Hashable, Identifiable {}
+protocol NavigationItem: Codable, Hashable, Identifiable { }

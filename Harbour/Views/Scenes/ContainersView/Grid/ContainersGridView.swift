@@ -5,8 +5,8 @@
 //  Created by royal on 23/07/2022.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 // MARK: - ContainersGridView
 
@@ -28,6 +28,10 @@ struct ContainersGridView: View {
 						.equatable()
 				}
 				.transition(.opacity)
+				.contentShape(.contextMenuPreview, ContainerCell.roundedRectangleBackground)
+				.contextMenu {
+					ContainerContextMenu(container: container)
+				}
 			}
 		}
 	}

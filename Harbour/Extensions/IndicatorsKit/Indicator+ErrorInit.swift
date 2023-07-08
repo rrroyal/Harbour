@@ -5,8 +5,8 @@
 //  Created by royal on 29/09/2022.
 //
 
-import SwiftUI
 import IndicatorsKit
+import SwiftUI
 
 extension Indicator {
 	init(error: Error) {

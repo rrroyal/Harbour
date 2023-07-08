@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// TODO: Check if it's needed
+
 enum ViewPaddingSize: Double {
 	case small = 8
 	case medium = 10

@@ -5,15 +5,15 @@
 //  Created by royal on 23/09/2022.
 //
 
-import CoreData
-import OSLog
 import CommonFoundation
 import CommonOSLog
+import CoreData
+import OSLog
 
 struct Persistence {
 	static let shared = Persistence()
 
-	private static let logger = Logger(category: Logger.Category.persistence)
+	private static let logger = Logger(category: String(describing: Persistence.self))
 
 	let container: NSPersistentContainer
 	let backgroundContext: NSManagedObjectContext

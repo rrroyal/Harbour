@@ -5,9 +5,9 @@
 //  Created by royal on 10/06/2023.
 //
 
+import PortainerKit
 import SwiftUI
 import WidgetKit
-import PortainerKit
 
 // TODO: Open ContainerDetailsView on ContainerView tap
 
@@ -47,18 +47,17 @@ extension ContainerStatusWidgetView {
 		}
 
 		private var container: Container? {
-			entry.containers?.first { $0.id == intentContainer?.id }
+			entry.containers?.first { $0.id == intentContainer?._id }
 		}
 
 		var body: some View {
 			Group {
-				if let intentContainer {
+				if let intentEndpoint = entry.configuration.endpoint, let intentContainer {
 					ContainerStatusWidgetView.ContainerView(
+						entry: entry,
 						intentContainer: intentContainer,
-						intentEndpoint: entry.configuration.endpoint,
-						container: container,
-						date: entry.date,
-						error: entry.error
+						intentEndpoint: intentEndpoint,
+						container: container
 					)
 				} else {
 					SelectContainerView(entry: entry)
@@ -81,14 +80,14 @@ extension ContainerStatusWidgetView {
 			HStack {
 				ForEach(0..<2, id: \.self) { index in
 					Group {
-						if let configurationContainer = entry.configuration.containers[safe: index] {
-							let container = entry.containers?.first { $0.id == configurationContainer.id }
+						if let intentEndpoint = entry.configuration.endpoint,
+						   let intentContainer = entry.configuration.containers[safe: index] {
+							let container = entry.containers?.first { $0.id == intentContainer ._id }
 							ContainerStatusWidgetView.ContainerView(
-								intentContainer: configurationContainer,
-								intentEndpoint: entry.configuration.endpoint,
-								container: container,
-								date: entry.date,
-								error: entry.error
+								entry: entry,
+								intentContainer: intentContainer,
+								intentEndpoint: intentEndpoint,
+								container: container
 							)
 						} else {
 							SelectContainerView(entry: entry)
@@ -118,14 +117,14 @@ extension ContainerStatusWidgetView {
 						ForEach(0..<2, id: \.self) { xIndex in
 							Group {
 								let index = (yIndex * 2) + xIndex
-								if let configurationContainer = entry.configuration.containers[safe: index] {
-									let container = entry.containers?.first { $0.id == configurationContainer.id }
+								if let intentEndpoint = entry.configuration.endpoint,
+								   let intentContainer = entry.configuration.containers[safe: index] {
+									let container = entry.containers?.first { $0.id == intentContainer._id }
 									ContainerStatusWidgetView.ContainerView(
-										intentContainer: configurationContainer,
-										intentEndpoint: entry.configuration.endpoint,
-										container: container,
-										date: entry.date,
-										error: entry.error
+										entry: entry,
+										intentContainer: intentContainer,
+										intentEndpoint: intentEndpoint,
+										container: container
 									)
 								} else {
 									SelectContainerView(entry: entry)

@@ -11,7 +11,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 	let fontDesign: Font.Design
 	let backgroundColor: Color
 
-	init(fontDesign: Font.Design = .default, backgroundColor: Color = Color(uiColor: .secondarySystemBackground)) {
+	init(fontDesign: Font.Design = .default, backgroundColor: Color = .secondaryBackground) {
 		self.fontDesign = fontDesign
 		self.backgroundColor = backgroundColor
 	}
@@ -31,7 +31,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 extension TextFieldStyle where Self == RoundedTextFieldStyle {
 	static var rounded: Self { .init() }
 	static func rounded(fontDesign: Font.Design = .default,
-						backgroundColor: Color = Color(uiColor: .secondarySystemBackground)) -> Self {
+						backgroundColor: Color = .secondaryBackground) -> Self {
 		RoundedTextFieldStyle(fontDesign: fontDesign, backgroundColor: backgroundColor)
 	}
 }

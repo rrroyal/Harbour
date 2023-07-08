@@ -5,14 +5,14 @@
 //  Created by royal on 29/10/2022.
 //
 
+import CommonFoundation
 import Foundation
 import WidgetKit
-import CommonFoundation
 
 extension AppState {
 	@MainActor
 	func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
-		logger.info("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .sensitive)\" [\(String._debugInfo(), privacy: .public)]")
 
 		portainerServerSwitchTask?.cancel()
 		portainerServerSwitchTask = Task {

@@ -15,6 +15,7 @@
 "Generic.SomethingWentWrong" = "Something went wrong 😕";
 "Generic.Unknown" = "Unknown";
 "Generic.None" = "None";
+"Generic.Empty" = "Empty";
 "Generic.Done" = "Done";
 "Generic.Close" = "Close";
 "Generic.More" = "More";
@@ -76,6 +77,7 @@
 "ContainerDetailsView.Section.Image" = "Image";
 "ContainerDetailsView.Section.CMD" = "CMD";
 "ContainerDetailsView.Section.Entrypoint" = "Entrypoint";
+"ContainerDetailsView.Section.Ports" = "Ports";
 "ContainerDetailsView.Section.Environment" = "Environment";
 "ContainerDetailsView.Section.Labels" = "Labels";
 "ContainerDetailsView.Section.Mounts" = "Mounts";
@@ -88,10 +90,10 @@
 
 "ContainerLogsView.Title" = "Logs";
 "ContainerLogsView.LogsEmpty" = "Empty";
-"ContainerLogsView.Menu.ScrollToTop" = "Scroll to top";
-"ContainerLogsView.Menu.ScrollToBottom" = "Scroll to bottom";
+"ContainerLogsView.Menu.ScrollToTop" = "Scroll to Top";
+"ContainerLogsView.Menu.ScrollToBottom" = "Scroll to Bottom";
 "ContainerLogsView.Menu.IncludeTimestamps" = "Timestamps";
-"ContainerLogsView.Menu.LinesCount" = "Entries count";
+"ContainerLogsView.Menu.LinesCount" = "Entries Count";
 
 // MARK: - StacksView
 
@@ -112,7 +114,8 @@
 "SettingsView.Portainer.EndpointsMenu.NoServerPlaceholder" = "None";
 "SettingsView.Portainer.EndpointsMenu.Server.InUse" = "In Use";
 "SettingsView.Portainer.EndpointsMenu.Server.Use" = "Use";
-"SettingsView.Portainer.EndpointsMenu.Server.Delete" = "Delete";
+"SettingsView.Portainer.EndpointsMenu.Server.Remove" = "Remove";
+"SettingsView.Portainer.EndpointsMenu.Server.RemoveExclamation" = "Remove!";
 
 // MARK: Settings - General
 
@@ -156,6 +159,14 @@
 // MARK: - Debug - Logs
 
 "DebugView.LogsView.Title" = "Logs";
+
+"DebugView.LogsView.LogLevel.Debug" = "Debug";
+"DebugView.LogsView.LogLevel.Info" = "Info";
+"DebugView.LogsView.LogLevel.Notice" = "Notice";
+"DebugView.LogsView.LogLevel.Error" = "Error";
+"DebugView.LogsView.LogLevel.Fault" = "Fault";
+"DebugView.LogsView.LogLevel.None" = "None";
+"DebugView.LogsView.LogLevel.Unknown" = "Unknown";
 
 // MARK: - UnavailableView
 
@@ -225,6 +236,7 @@
 
 "PortainerKit.ContainerState.Unknown" = "Unknown";
 
+"PortainerKit.ExecuteAction.Title" = "Execute Action";
 "PortainerKit.ExecuteAction.Start" = "Start";
 "PortainerKit.ExecuteAction.Stop" = "Stop";
 "PortainerKit.ExecuteAction.Restart" = "Restart";

@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import PortainerKit
 import IndicatorsKit
+import PortainerKit
 
 // MARK: - SceneDelegate+Indicators
 

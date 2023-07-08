@@ -53,5 +53,20 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
+	<key>MDItemKeywords</key>
+	<string>Harbour, Harbor, Docker, Portainer, Containers</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>NSAppIconActionTintColorName</key>
+			<string>AccentColor</string>
+			<key>NSAppIconComplementingColorNames</key>
+			<array>
+				<string>AccentColor</string>
+				<string>AccentColor</string>
+			</array>
+		</dict>
+	</dict>
 </dict>
 </plist>

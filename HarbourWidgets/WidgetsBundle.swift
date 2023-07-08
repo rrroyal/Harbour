@@ -5,8 +5,8 @@
 //  Created by royal on 10/06/2023.
 //
 
-import WidgetKit
 import SwiftUI
+import WidgetKit
 
 @main
 struct WidgetsBundle: WidgetBundle {

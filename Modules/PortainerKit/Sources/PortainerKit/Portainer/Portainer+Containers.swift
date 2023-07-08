@@ -46,7 +46,7 @@ public extension Portainer {
 		return try await fetchContainers(endpointID: endpointID, filters: filters)
 	}
 
-	/// Return low-level information about a container.
+	/// Returns low-level information about a container.
 	/// - Parameters:
 	///   - containerID: Container ID
 	///   - endpointID: Endpoint ID
@@ -74,7 +74,7 @@ public extension Portainer {
 		}
 	}
 
-	/// Get stdout and stderr logs from a container.
+	/// Fetches stdout and stderr logs from a container.
 	/// Note: This endpoint works only for containers with the json-file or journald logging driver.
 	/// - Parameters:
 	///   - containerID: Container ID
@@ -90,7 +90,7 @@ public extension Portainer {
 				   tail lastEntriesAmount: Int = 100,
 				   timestamps includeTimestamps: Bool = false) async throws -> String {
 		let queryItems = [
-			URLQueryItem(name: "since", value: "\(logsSince)"),
+			URLQueryItem(name: "since", value: "\(Int(logsSince))"),
 			URLQueryItem(name: "stderr", value: "true"),
 			URLQueryItem(name: "stdout", value: "true"),
 			URLQueryItem(name: "tail", value: "\(lastEntriesAmount)"),
@@ -103,7 +103,7 @@ public extension Portainer {
 		return string
 	}
 
-	/// Attach to a container to read its output or send it input. You can attach to the same container multiple times and you can reattach to containers that have been detached.
+	/// Attaches to a container to read its output or send it input. You can attach to the same container multiple times and you can reattach to containers that have been detached.
 	/// Either the stream or logs parameter must be true for this endpoint to do anything.
 	/// See the documentation for the docker attach command for more details.
 	/// 

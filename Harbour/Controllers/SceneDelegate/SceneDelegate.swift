@@ -5,13 +5,13 @@
 //  Created by royal on 19/12/2022.
 //
 
-import SwiftUI
-import OSLog
-import IndicatorsKit
 import CommonOSLog
+import IndicatorsKit
+import OSLog
+import SwiftUI
 
 final class SceneDelegate: NSObject, ObservableObject {
-	let logger = Logger(category: Logger.Category.scene)
+	let logger = Logger(category: String(describing: SceneDelegate.self))
 	let indicators = Indicators()
 
 	@Published var isSettingsSheetPresented = false

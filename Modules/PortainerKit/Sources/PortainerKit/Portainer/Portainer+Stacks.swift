@@ -8,7 +8,7 @@
 import Foundation
 
 public extension Portainer {
-	/// List all stacks based on the current user authorizations.
+	/// Lists all stacks based on the current user authorizations.
 	/// Will return all stacks if using an administrator account otherwise it will only return the list of stacks the user have access to.
 	/// - Returns: `[Stack]`
 	@Sendable

@@ -5,19 +5,18 @@
 //  Created by royal on 11/06/2023.
 //
 
+import PortainerKit
 import SwiftUI
 import WidgetKit
-import PortainerKit
 
 // MARK: - ContainerStatusWidgetView+ContainerView
 
 extension ContainerStatusWidgetView {
 	struct ContainerView: View {
+		var entry: ContainerStatusProvider.Entry
 		var intentContainer: IntentContainer
-		var intentEndpoint: IntentEndpoint?
+		var intentEndpoint: IntentEndpoint
 		var container: Container?
-		var date: Date
-		var error: Error?
 
 		private let circleSize: Double = 8
 		private let minimumScaleFactor: Double = 0.8
@@ -27,7 +26,7 @@ extension ContainerStatusWidgetView {
 		}
 
 		private var statusPlaceholder: String {
-			if let error {
+			if let error = entry.error {
 				return error.localizedDescription
 			}
 
@@ -53,7 +52,7 @@ extension ContainerStatusWidgetView {
 
 		@ViewBuilder
 		private var dateLabel: some View {
-			Text(date, style: .relative)
+			Text(entry.date, style: .relative)
 				.font(.caption)
 				.fontWeight(.medium)
 				.foregroundStyle(.tertiary)
@@ -79,7 +78,7 @@ extension ContainerStatusWidgetView {
 		}
 
 		var body: some View {
-//			Button(intent: OpenContainerDetailsIntent(endpoint: intentEndpoint, container: intentContainer)) {
+//			Button(intent: entry.configuration) {
 				VStack(spacing: 0) {
 					stateHeadline
 						.padding(.bottom, 2)
@@ -97,8 +96,10 @@ extension ContainerStatusWidgetView {
 					.frame(maxWidth: .infinity, alignment: .leading)
 				}
 				.padding()
-				.background(Color.widgetBackground)
 //			}
+			.buttonStyle(.plain)
+			.tint(nil)
+			.background(Color.widgetBackground)
 		}
 	}
 }

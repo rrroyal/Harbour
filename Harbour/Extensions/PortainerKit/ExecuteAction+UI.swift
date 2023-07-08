@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 // MARK: - ExecuteAction+label
 
@@ -47,7 +47,7 @@ extension ExecuteAction {
 	var color: Color {
 		switch self {
 		case .start:	.green
-		case .stop:		Color(uiColor: .darkGray)
+		case .stop:		.darkGray
 		case .restart:	.blue
 		case .kill:		.red
 		case .pause:	.orange

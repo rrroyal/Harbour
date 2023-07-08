@@ -5,8 +5,8 @@
 //  Created by royal on 19/12/2022.
 //
 
-import Foundation
 import CommonFoundation
+import Foundation
 
 extension SceneDelegate {
 	@MainActor

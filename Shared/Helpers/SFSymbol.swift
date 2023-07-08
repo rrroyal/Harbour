@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Aliases for general-usage SF Symbols
+// TODO: Remove this
 enum SFSymbol {
 
 	static let error = "exclamationmark.triangle.fill"

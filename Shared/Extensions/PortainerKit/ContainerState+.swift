@@ -5,28 +5,21 @@
 //  Created by royal on 29/09/2022.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 // MARK: - ContainerState+color
 
 extension ContainerState {
 	var color: Color {
 		switch self {
-		case .created:
-			.yellow
-		case .running:
-			.green
-		case .paused:
-			.orange
-		case .restarting:
-			.blue
-		case .removing:
-			Color(uiColor: .lightGray)
-		case .exited:
-			Color(uiColor: .darkGray)
-		case .dead:
-			.gray
+		case .created:		.yellow
+		case .running:		.green
+		case .paused:		.orange
+		case .restarting:	.blue
+		case .removing:		.lightGray
+		case .exited:		.darkGray
+		case .dead:			.gray
 		}
 	}
 }
@@ -34,9 +27,9 @@ extension ContainerState {
 extension ContainerState? {
 	var color: Color {
 		if let self {
-			return self.color
+			self.color
 		} else {
-			return Color(uiColor: .systemGray5)
+			.systemGray
 		}
 	}
 }
@@ -64,20 +57,13 @@ extension ContainerState? {
 extension ContainerState {
 	var icon: String {
 		switch self {
-		case .created:
-			"wake"
-		case .running:
-			"power"
-		case .paused:
-			"pause"
-		case .restarting:
-			"restart"
-		case .removing:
-			"trash"
-		case .exited:
-			"poweroff"
-		case .dead:
-			"xmark"
+		case .created:		"wake"
+		case .running:		"power"
+		case .paused:		"pause"
+		case .restarting:	"restart"
+		case .removing:		"trash"
+		case .exited:		"poweroff"
+		case .dead:			"xmark"
 		}
 	}
 }

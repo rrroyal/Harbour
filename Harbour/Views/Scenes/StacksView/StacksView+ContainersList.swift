@@ -5,8 +5,8 @@
 //  Created by royal on 08/06/2023.
 //
 
-import SwiftUI
 import PortainerKit
+import SwiftUI
 
 // MARK: - StacksView+ContainersList
 
@@ -39,7 +39,7 @@ extension StacksView {
 			.background(ContainersView.NoContainersPlaceholder(isEmpty: _containersFiltered.isEmpty))
 			.modifier(
 				ContainersView.ListModifier {
-					viewState.backgroundView()
+					viewState.backgroundView
 				}
 			)
 			.navigationTitle(stack.name)

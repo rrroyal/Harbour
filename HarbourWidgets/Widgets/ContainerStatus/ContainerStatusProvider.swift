@@ -5,52 +5,20 @@
 //  Created by royal on 10/06/2023.
 //
 
-import WidgetKit
 import OSLog
 import PortainerKit
+import WidgetKit
 
 // MARK: - ContainerStatusProvider
 
 struct ContainerStatusProvider: AppIntentTimelineProvider {
-	typealias IntentConfiguration = ContainerStatusIntent
+	typealias Intent = ContainerStatusIntent
 
-	private let logger = Logger(category: Logger.Category.intents)
-	private let portainerStore = PortainerStore.shared
+	// MARK: Entry
 
-	func placeholder(in context: Context) -> Entry {
-		.placeholder
-	}
-
-	func snapshot(for configuration: IntentConfiguration, in context: Context) async -> Entry {
-		logger.notice("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)... [\(String._debugInfo(), privacy: .public)]")
-
-		guard !context.isPreview else {
-			logger.debug("Running in preview. [\(String._debugInfo(), privacy: .public)]")
-			return placeholder(in: context)
-		}
-
-		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive). [\(String._debugInfo(), privacy: .public)]")
-
-		return entry
-	}
-
-	func timeline(for configuration: IntentConfiguration, in context: Context) async -> Timeline<Entry> {
-		logger.notice("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
-
-		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive). [\(String._debugInfo(), privacy: .public)]")
-
-		return .init(entries: [entry], policy: .atEnd)
-	}
-}
-
-// MARK: - ContainerStatusProvider+Entry
-
-extension ContainerStatusProvider {
 	struct Entry: TimelineEntry {
 		let date: Date
-		let configuration: ContainerStatusProvider.IntentConfiguration
+		let configuration: ContainerStatusProvider.Intent
 		let containers: [Container]?
 		let error: Error?
 
@@ -115,24 +83,59 @@ extension ContainerStatusProvider {
 //			)
 			let containers = [container1, container2]
 
-			let entry = Entry(date: date,
-							  configuration: intent,
-							  containers: containers,
-							  error: nil)
-			return entry
+			return .init(
+				date: date,
+				configuration: intent,
+				containers: containers,
+				error: nil
+			)
 		}
 		// swiftlint:enable force_unwrapping
+	}
+
+	// MARK: Private properties
+
+	private let logger = Logger(category: String(describing: ContainerStatusProvider.self))
+	private let portainerStore = IntentPortainerStore.shared
+
+	// MARK: AppIntentTimelineProvider
+
+	func placeholder(in context: Context) -> Entry {
+		.placeholder
+	}
+
+	func snapshot(for configuration: Intent, in context: Context) async -> Entry {
+		logger.info("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)... [\(String._debugInfo(), privacy: .public)]")
+
+		guard !context.isPreview else {
+			logger.debug("Running in preview. [\(String._debugInfo(), privacy: .public)]")
+			return placeholder(in: context)
+		}
+
+		let entry = await getEntry(for: configuration, in: context)
+		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive). [\(String._debugInfo(), privacy: .public)]")
+
+		return entry
+	}
+
+	func timeline(for configuration: Intent, in context: Context) async -> Timeline<Entry> {
+		logger.info("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
+
+		let entry = await getEntry(for: configuration, in: context)
+		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive). [\(String._debugInfo(), privacy: .public)]")
+
+		return .init(entries: [entry], policy: .atEnd)
 	}
 }
 
 // MARK: - ContainerStatusProvider+Private
 
 private extension ContainerStatusProvider {
-	func getEntry(for configuration: IntentConfiguration, in context: Context) async -> Entry {
+	func getEntry(for configuration: Intent, in context: Context) async -> Entry {
 		let now = Date.now
+		let containers = configuration.containers
 
-		guard let endpoint = configuration.endpoint,
-			  !configuration.containers.isEmpty else {
+		guard let endpoint = configuration.endpoint, !containers.isEmpty else {
 			let entry = Entry(date: now, configuration: configuration, containers: nil, error: nil)
 			return entry
 		}
@@ -140,9 +143,11 @@ private extension ContainerStatusProvider {
 		do {
 			try portainerStore.setupIfNeeded()
 
-			let filters = PortainerStore.filters(for: configuration.containers.map(\.id),
-												 names: configuration.containers.map(\.name),
-												 resolveByName: configuration.resolveByName)
+			let filters = IntentPortainerStore.filters(
+				for: containers.map(\._id),
+				names: containers.map(\.name),
+				resolveByName: configuration.resolveByName
+			)
 			let containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
 
 			// Remake containers to make the payload smaller

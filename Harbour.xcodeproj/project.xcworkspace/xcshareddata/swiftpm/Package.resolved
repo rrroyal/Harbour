@@ -6,7 +6,7 @@
       "location" : "https://github.com/rrroyal/CommonKit",
       "state" : {
         "branch" : "main",
-        "revision" : "21dd62682020625597819109873e2a7d10af59ef"
+        "revision" : "81618b2164ea56a57bfd512bbda72e552f4bbd8e"
       }
     },
     {
@@ -24,7 +24,7 @@
       "location" : "https://github.com/rrroyal/KeychainKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "c6affafc0fad02b3bc360b8ab7bca83f40672c0c"
+        "revision" : "10f6e68ed68fd16797afd08ef0e49ec0b2f8dfca"
       }
     },
     {

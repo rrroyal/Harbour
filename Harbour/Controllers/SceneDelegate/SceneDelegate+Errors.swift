@@ -5,9 +5,9 @@
 //  Created by royal on 19/12/2022.
 //
 
-import Foundation
 import CommonFoundation
 import CommonHaptics
+import Foundation
 import IndicatorsKit
 
 extension SceneDelegate {
