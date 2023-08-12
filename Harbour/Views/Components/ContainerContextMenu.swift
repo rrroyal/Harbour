@@ -99,7 +99,7 @@ struct ContainerContextMenu: View {
 		Button(role: role) {
 			execute(action, haptic: haptic)
 		} label: {
-			Label(action.label, systemImage: action.icon)
+			Label(action.title, systemImage: action.icon)
 		}
 	}
 }

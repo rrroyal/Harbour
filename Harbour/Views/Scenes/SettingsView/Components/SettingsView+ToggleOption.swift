@@ -16,7 +16,7 @@ internal extension SettingsView {
 		private let symbolVariants: SymbolVariants = .fill
 		@Binding private var isOn: Bool
 
-		init(label: LocalizedStringResource,
+		init(_ label: LocalizedStringResource,
 			 description: LocalizedStringResource? = nil,
 			 iconSymbolName: String,
 //			 symbolVariants: SymbolVariants = .fill,

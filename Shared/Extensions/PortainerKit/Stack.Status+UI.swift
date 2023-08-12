@@ -11,7 +11,7 @@ import SwiftUI
 // MARK: - Stack.Status+label
 
 extension Stack.Status {
-	var label: String {
+	var title: String {
 		switch self {
 		case .active:	String(localized: "PortainerKit.Stack.Status.Active")
 		case .inactive: String(localized: "PortainerKit.Stack.Status.Inactive")

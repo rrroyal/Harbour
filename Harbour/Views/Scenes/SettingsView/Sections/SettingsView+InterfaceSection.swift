@@ -15,18 +15,17 @@ extension SettingsView {
 
 		var body: some View {
 			Section("SettingsView.Interface.Title") {
-				#if ENABLE_PREVIEW_FEATURES
-				// Display Summary
-				ToggleOption(label: "SettingsView.Interface.DisplaySummary.Title",
-							 description: "SettingsView.Interface.DisplaySummary.Description",
-							 iconSymbolName: "square.text.square",
-							 isOn: $preferences.cvDisplaySummary)
-//				.symbolVariant(preferences.enableHaptics ? .none : .slash)
-				#endif
+//				#if ENABLE_PREVIEW_FEATURES
+//				// Display Summary
+//				ToggleOption(label: "SettingsView.Interface.DisplaySummary.Title",
+//							 description: "SettingsView.Interface.DisplaySummary.Description",
+//							 iconSymbolName: "square.text.square",
+//							 isOn: $preferences.cvDisplaySummary)
+//				#endif
 
 				if viewModel.displayiPadOptions {
 					// Use Two-Column Layout
-					ToggleOption(label: "SettingsView.Interface.UseColumns.Title",
+					ToggleOption("SettingsView.Interface.UseColumns.Title",
 								 description: "SettingsView.Interface.UseColumns.Description",
 //								 iconSymbolName: preferences.cvUseColumns ? "sidebar.squares.left" : "rectangle.stack",
 								 iconSymbolName: "sidebar.squares.left",
@@ -35,14 +34,14 @@ extension SettingsView {
 				}
 
 				// Use Grid View
-				ToggleOption(label: "SettingsView.Interface.UseGridView.Title",
+				ToggleOption("SettingsView.Interface.UseGridView.Title",
 							 description: "SettingsView.Interface.UseGridView.Description",
 //							 iconSymbolName: preferences.cvUseGrid ? "square.grid.2x2" : "rectangle.grid.1x2",
 							 iconSymbolName: "square.grid.2x2",
 							 isOn: $preferences.cvUseGrid)
 
 				// Enable Haptics
-				ToggleOption(label: "SettingsView.Interface.EnableHaptics.Title",
+				ToggleOption("SettingsView.Interface.EnableHaptics.Title",
 							 description: "SettingsView.Interface.EnableHaptics.Description",
 							 iconSymbolName: "waveform",
 							 isOn: $preferences.enableHaptics)
@@ -63,7 +62,7 @@ private extension SettingsView.InterfaceSection {
 		@State private var currentIcon: AppIcon = .current
 
 		var body: some View {
-			SettingsView.MenuOption(label: "SettingsView.Interface.AppIcon.Title", iconSymbolName: "app.badge") {
+			SettingsView.MenuOption("SettingsView.Interface.AppIcon.Title", iconSymbolName: "app.badge") {
 				Menu {
 					ForEach(AppIcon.allCases) { icon in
 						let isCurrent = AppIcon.current == icon

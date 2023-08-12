@@ -13,7 +13,7 @@ extension SettingsView {
 	struct OtherSection: View {
 		var body: some View {
 			Section(header: Text("SettingsView.Other.Title"), footer: FooterView()) {
-				NavigationLinkOption(label: "SettingsView.Other.Debug", iconSymbolName: "wrench.and.screwdriver") {
+				NavigationLinkOption("SettingsView.Other.Debug", iconSymbolName: "wrench.and.screwdriver") {
 					DebugView()
 				}
 			}

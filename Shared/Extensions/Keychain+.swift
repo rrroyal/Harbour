@@ -22,7 +22,7 @@ extension Keychain {
 // MARK: - Keychain+itemDescription
 
 extension Keychain {
-	static let itemDescription = "Harbour - Token"
+	static let tokenItemDescription = "Harbour - Token"
 }
 
 // MARK: - Keychain+URL

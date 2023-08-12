@@ -28,14 +28,6 @@
       }
     },
     {
-      "identity" : "swiftgenplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Mindera/SwiftGenPlugin",
-      "state" : {
-        "revision" : "0e8da6e2d74455e7110fe40528256fb33395d153"
-      }
-    },
-    {
       "identity" : "swiftlintplugin",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/rrroyal/SwiftLintPlugin",

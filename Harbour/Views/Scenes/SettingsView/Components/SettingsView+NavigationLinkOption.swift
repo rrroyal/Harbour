@@ -13,7 +13,7 @@ internal extension SettingsView {
 		let iconSymbolName: String
 		let destination: Destination
 
-		init(label: LocalizedStringResource, iconSymbolName: String, destination: @escaping () -> Destination) {
+		init(_ label: LocalizedStringResource, iconSymbolName: String, destination: @escaping () -> Destination) {
 			self.label = label
 			self.iconSymbolName = iconSymbolName
 			self.destination = destination()

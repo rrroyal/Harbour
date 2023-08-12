@@ -18,9 +18,9 @@ struct HarbourApp: App {
 	#endif
 
 	@Environment(\.scenePhase) private var scenePhase: ScenePhase
-	@StateObject var appState: AppState = .shared
-	@StateObject var portainerStore: PortainerStore = .shared
-	@StateObject var preferences: Preferences = .shared
+	@StateObject private var appState: AppState = .shared
+	@StateObject private var portainerStore: PortainerStore = .shared
+	@StateObject private var preferences: Preferences = .shared
 
 	var body: some Scene {
 		WindowGroup {
@@ -45,10 +45,13 @@ struct HarbourApp: App {
 // MARK: - HarbourApp+Actions
 
 private extension HarbourApp {
+	@MainActor
 	func onScenePhaseChange(previous previousScenePhase: ScenePhase, new newScenePhase: ScenePhase) {
 		switch newScenePhase {
 		case .background:
+			#if os(iOS)
 			appState.scheduleBackgroundRefresh()
+			#endif
 		case .inactive:
 			break
 		case .active:

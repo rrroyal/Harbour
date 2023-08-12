@@ -50,7 +50,7 @@ struct ExecuteActionIntent: AppIntent {
 
 	@MainActor
 	func perform() async throws -> some IntentResult {
-		let portainerStore = IntentPortainerStore.shared
+//		let portainerStore = IntentPortainerStore.shared
 //		try await portainerStore.execute(action, containerID: container.id, endpointID: endpoint.id)
 		return .result()
 	}

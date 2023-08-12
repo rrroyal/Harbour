@@ -96,7 +96,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resolve by name"
+            "value" : "Resolve By Name"
           }
         }
       }
@@ -312,7 +312,14 @@
       }
     },
     "ContainerStatusIntent.Description" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get the current status of selected container."
+          }
+        }
+      }
     },
     "ContainerStatusIntent.Title" : {
       "localizations" : {
@@ -388,9 +395,6 @@
         }
       }
     },
-    "ContentView.Summary" : {
-
-    },
     "DebugView.BuildInfoSection.BuildDate" : {
       "localizations" : {
         "en" : {
@@ -407,6 +411,76 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Build Info"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.LogLevel.Debug" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.LogLevel.Error" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.LogLevel.Fault" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fault"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.LogLevel.Info" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.LogLevel.None" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.LogLevel.Notice" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notice"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.LogLevel.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
           }
         }
       }
@@ -641,6 +715,16 @@
         }
       }
     },
+    "Generic.None" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
+          }
+        }
+      }
+    },
     "Generic.Refresh" : {
       "localizations" : {
         "en" : {
@@ -671,6 +755,16 @@
         }
       }
     },
+    "Indicators.Copied" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied!"
+          }
+        }
+      }
+    },
     "IntentContainer.Preview.Name" : {
       "localizations" : {
         "en" : {
@@ -686,7 +780,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Running"
+            "value" : "Up 2 days"
           }
         }
       }
@@ -832,7 +926,14 @@
       }
     },
     "OpenContainerDetailsIntent.Description" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open details view for selected container."
+          }
+        }
+      }
     },
     "OpenContainerDetailsIntent.Title" : {
       "localizations" : {
@@ -1150,26 +1251,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Icon"
-          }
-        }
-      }
-    },
-    "SettingsView.Interface.DisplaySummary.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show a summary of your containers."
-          }
-        }
-      }
-    },
-    "SettingsView.Interface.DisplaySummary.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Display Summary"
           }
         }
       }

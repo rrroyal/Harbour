@@ -12,12 +12,12 @@ extension ExecuteAction: AppEnum {
 	public static var typeDisplayRepresentation: TypeDisplayRepresentation = "PortainerKit.ExecuteAction.AppEnumTitle"
 
 	public static var caseDisplayRepresentations: [Self: DisplayRepresentation] = [
-		.start: .init(title: "PortainerKit.ExecuteAction.Start"),
-		.stop: .init(title: "PortainerKit.ExecuteAction.Stop"),
-		.restart: .init(title: "PortainerKit.ExecuteAction.Restart"),
-		.kill: .init(title: "PortainerKit.ExecuteAction.Kill"),
-		.pause: .init(title: "PortainerKit.ExecuteAction.Pause"),
-		.unpause: .init(title: "PortainerKit.ExecuteAction.Unpause")
+		.start: .init(title: .init(stringLiteral: Self.start.title), image: .init(systemName: Self.start.icon)),
+		.stop: .init(title: .init(stringLiteral: Self.stop.title), image: .init(systemName: Self.stop.icon)),
+		.restart: .init(title: .init(stringLiteral: Self.restart.title), image: .init(systemName: Self.restart.icon)),
+		.kill: .init(title: .init(stringLiteral: Self.kill.title), image: .init(systemName: Self.kill.icon)),
+		.pause: .init(title: .init(stringLiteral: Self.pause.title), image: .init(systemName: Self.pause.icon)),
+		.unpause: .init(title: .init(stringLiteral: Self.unpause.title), image: .init(systemName: Self.unpause.icon))
 	]
 
 	public static var allCases: [Self] = [

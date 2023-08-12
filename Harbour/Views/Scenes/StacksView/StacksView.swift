@@ -98,9 +98,9 @@ private extension StacksView {
 							.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
 							.font(.system(size: iconSize))
 							.foregroundStyle(isLoading ? Color.gray : stack.status.color)
-							.accessibilityLabel(isLoading ? "Generic.Loading" : stack.status.label)
+							.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
 
-						Text(isLoading ? "Generic.Loading" : stack.status.label)
+						Text(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
 							.font(.footnote)
 							.fontWeight(.medium)
 							.foregroundStyle(isLoading ? Color.gray : stack.status.color)

@@ -15,8 +15,8 @@ import WidgetKit
 // MARK: - AppState+scheduleBackgroundRefresh
 
 extension AppState {
+	@available(iOS 17, *)
 	func scheduleBackgroundRefresh() {
-		#if os(iOS)
 		guard Preferences.shared.enableBackgroundRefresh else {
 			logger.info("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String._debugInfo(), privacy: .public)]")
 			return
@@ -35,7 +35,6 @@ extension AppState {
 			// swiftlint:disable:next line_length
 			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
-		#endif
 	}
 }
 

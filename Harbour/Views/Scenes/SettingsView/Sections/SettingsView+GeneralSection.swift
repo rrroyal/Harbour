@@ -17,7 +17,7 @@ extension SettingsView {
 		var body: some View {
 			Section("SettingsView.General.Title") {
 				// Enable Background Refresh
-				ToggleOption(label: "SettingsView.General.EnableBackgroundRefresh.Title",
+				ToggleOption("SettingsView.General.EnableBackgroundRefresh.Title",
 							 description: "SettingsView.General.EnableBackgroundRefresh.Description",
 							 iconSymbolName: SFSymbol.reload,
 							 isOn: $preferences.enableBackgroundRefresh)

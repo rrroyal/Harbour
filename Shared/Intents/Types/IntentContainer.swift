@@ -11,7 +11,7 @@ import PortainerKit
 // MARK: - IntentContainer
 
 struct IntentContainer: AppEntity, Identifiable, Hashable {
-	/// Container ID
+	/// Actual container ID
 	let _id: Container.ID
 
 	/// Container ID + display name

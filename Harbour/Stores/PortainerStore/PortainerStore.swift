@@ -126,7 +126,7 @@ public extension PortainerStore {
 
 			if saveToken {
 				do {
-					try keychain.setString(_token, for: url, itemDescription: Keychain.itemDescription)
+					try keychain.setString(_token, for: url, itemDescription: Keychain.tokenItemDescription)
 				} catch {
 					logger.error("Unable to save token to Keychain: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				}

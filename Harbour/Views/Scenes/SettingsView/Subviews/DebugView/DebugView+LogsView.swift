@@ -108,7 +108,7 @@ private extension DebugView.LogsView {
 		let category: String?
 
 		var debugDescription: String {
-			"(\(level?.rawValue ?? -1)) \(date?.ISO8601Format() ?? "<none>") [\(category ?? "<none>")] \(message)"
+			"(\(level?.rawValue ?? -1)) \(date?.ISO8601Format() ?? String(localized: "Generic.None")) [\(category ?? String(localized: "Generic.None"))] \(message)"
 		}
 
 		var color: Color? {
@@ -125,13 +125,13 @@ private extension DebugView.LogsView {
 
 		var levelReadable: String {
 			switch level {
-			case .debug:			"DebugView.LogsView.LogLevel.Debug"
-			case .info:				"DebugView.LogsView.LogLevel.Info"
-			case .notice:			"DebugView.LogsView.LogLevel.Notice"
-			case .error:			"DebugView.LogsView.LogLevel.Error"
-			case .fault:			"DebugView.LogsView.LogLevel.Fault"
-			case nil, .undefined:	"DebugView.LogsView.LogLevel.None"
-			@unknown default:		"DebugView.LogsView.LogLevel.Unknown"
+			case .debug:			String(localized: "DebugView.LogsView.LogLevel.Debug")
+			case .info:				String(localized: "DebugView.LogsView.LogLevel.Info")
+			case .notice:			String(localized: "DebugView.LogsView.LogLevel.Notice")
+			case .error:			String(localized: "DebugView.LogsView.LogLevel.Error")
+			case .fault:			String(localized: "DebugView.LogsView.LogLevel.Fault")
+			case nil, .undefined:	String(localized: "DebugView.LogsView.LogLevel.None")
+			@unknown default:		String(localized: "DebugView.LogsView.LogLevel.Unknown")
 			}
 		}
 	}

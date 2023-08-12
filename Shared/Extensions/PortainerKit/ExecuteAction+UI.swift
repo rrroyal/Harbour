@@ -12,7 +12,7 @@ import SwiftUI
 // MARK: - ExecuteAction+label
 
 extension ExecuteAction {
-	var label: String {
+	var title: String {
 		switch self {
 		case .start:	String(localized: "PortainerKit.ExecuteAction.Start")
 		case .stop:		String(localized: "PortainerKit.ExecuteAction.Stop")

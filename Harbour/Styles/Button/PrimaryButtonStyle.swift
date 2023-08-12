@@ -7,13 +7,15 @@
 
 import SwiftUI
 
+// MARK: - PrimaryButtonStyle
+
 struct PrimaryButtonStyle: ButtonStyle {
 	@Environment(\.isEnabled) private var isEnabled: Bool
 	let foregroundColor: Color
 	let backgroundColor: Color
 	let font: Font
 
-	private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .circular)
+	private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius)
 
 	init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) {
 		self.foregroundColor = foregroundColor
@@ -31,12 +33,12 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.background(isEnabled ? backgroundColor : Color.systemGray)
 			.clipShape(roundedRectangle)
 			.contentShape(roundedRectangle)
-			.opacity(configuration.isPressed ? Constants.Buttons.pressedOpacity : 1)
-			.scaleEffect(configuration.isPressed ? Constants.Buttons.pressedScale : 1)
-			.animation(Constants.Buttons.pressAnimation, value: configuration.isPressed)
 			.animation(.easeInOut, value: isEnabled)
+			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
 	}
 }
+
+// MARK: - ButtonStyle+customPrimary
 
 extension ButtonStyle where Self == PrimaryButtonStyle {
 	static var customPrimary: Self { .init() }

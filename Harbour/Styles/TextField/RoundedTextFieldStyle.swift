@@ -20,9 +20,9 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 		configuration
 			.font(.system(.callout, design: fontDesign).weight(.regular))
 			.multilineTextAlignment(.center)
-			.padding(.medium)
+			.padding(10)
 			.background(
-				RoundedRectangle(cornerRadius: Constants.cornerRadius, style: .circular)
+				RoundedRectangle(cornerRadius: Constants.cornerRadius)
 					.fill(backgroundColor)
 			)
 	}

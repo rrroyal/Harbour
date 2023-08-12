@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-// TODO: Support splitting lines
-
 // MARK: - ANSIParser
 
 enum ANSIParser {

@@ -27,9 +27,9 @@ struct ContentView: View {
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
 
-	private var isSummaryVisible: Bool {
-		preferences.cvDisplaySummary && viewModel.viewState == .hasContainers && viewModel.searchText.isReallyEmpty
-	}
+//	private var isSummaryVisible: Bool {
+//		preferences.cvDisplaySummary && viewModel.viewState == .hasContainers && viewModel.searchText.isReallyEmpty
+//	}
 
 	@ViewBuilder
 	private var titleMenu: some View {
@@ -70,16 +70,15 @@ struct ContentView: View {
 	@ViewBuilder
 	private var containersView: some View {
 		ScrollView {
-			#if ENABLE_PREVIEW_FEATURES
-			if isSummaryVisible {
-				VStack {
-					// TODO: Summary
-					Text("ContentView.Summary")
-					Divider()
-				}
-				.transition(.move(edge: .top).combined(with: .opacity))
-			}
-			#endif
+//			#if ENABLE_PREVIEW_FEATURES
+//			if isSummaryVisible {
+//				VStack {
+//					Text("ContentView.Summary")
+//					Divider()
+//				}
+//				.transition(.move(edge: .top).combined(with: .opacity))
+//			}
+//			#endif
 
 			ContainersView(containers: viewModel.containers)
 				.transition(.opacity)
@@ -92,7 +91,7 @@ struct ContentView: View {
 		)
 		.refreshable(action: viewModel.refresh)
 		.searchable(text: $viewModel.searchText)
-		.animation(.easeInOut, value: isSummaryVisible)
+//		.animation(.easeInOut, value: isSummaryVisible)
 	}
 
 	// MARK: Body

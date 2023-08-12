@@ -102,17 +102,13 @@ struct SetupView: View {
 
 				Spacer()
 
-				VStack {
+				VStack(spacing: 24) {
 					continueButton
 
 					Link(destination: howToLoginURL) {
-						HStack {
-							// TODO: Label?
-							Image(systemName: "person.fill.questionmark")
-							Text("SetupView.HowToLoginButton")
-						}
-						.font(.callout.weight(.medium))
-						.padding(.horizontal, 6)
+						Label("SetupView.HowToLoginButton", systemImage: "person.fill.questionmark")
+							.font(.callout.weight(.medium))
+							.padding(.horizontal, 6)
 					}
 					.buttonStyle(.customTransparent)
 				}

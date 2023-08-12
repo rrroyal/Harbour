@@ -29,7 +29,7 @@ extension ContainersListView {
 
 		@ViewBuilder
 		private var subheadlineLabel: some View {
-			HStack(spacing: 0) {
+			HStack(spacing: 4) {
 				Text(container.isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
 					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
 					.transition(.opacity)
