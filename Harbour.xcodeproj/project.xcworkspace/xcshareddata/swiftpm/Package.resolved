@@ -3,10 +3,10 @@
     {
       "identity" : "commonkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rrroyal/CommonKit",
+      "location" : "https://github.com/rrroyal/CommonKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "81618b2164ea56a57bfd512bbda72e552f4bbd8e"
+        "revision" : "c2378a006798dcbc32593548527956df41166eba"
       }
     },
     {
@@ -15,7 +15,7 @@
       "location" : "https://github.com/rrroyal/IndicatorsKit.git",
       "state" : {
         "branch" : "main",
-        "revision" : "4cf460a557b101be570fac0c2cdd205bb39dab7f"
+        "revision" : "1b333a999f9a8d459319431c97d596e25b4ee166"
       }
     },
     {

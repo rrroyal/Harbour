@@ -5,6 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
+import IndicatorsKit
 import SwiftData
 import SwiftUI
 
@@ -32,6 +33,7 @@ struct HarbourApp: App {
 				.environment(\.portainerServerURL, portainerStore.serverURL)
 				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
 				.environment(\.cvUseGrid, preferences.cvUseGrid)
+				.environment(\.ikEnableHaptics, preferences.enableHaptics)
 		}
 		.defaultAppStorage(Preferences.userDefaults)
 		.modelContainer(for: [StoredContainer.self])
