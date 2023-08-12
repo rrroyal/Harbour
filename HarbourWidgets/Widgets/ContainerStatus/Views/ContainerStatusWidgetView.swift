@@ -9,8 +9,6 @@ import PortainerKit
 import SwiftUI
 import WidgetKit
 
-// TODO: Open ContainerDetailsView on ContainerView tap
-
 // MARK: - ContainerStatusWidgetView
 
 struct ContainerStatusWidgetView: View {
@@ -23,7 +21,10 @@ struct ContainerStatusWidgetView: View {
 		} else {
 			switch widgetFamily {
 			case .systemSmall:
+				let firstContainer = entry.configuration.containers.first
+				let widgetURL = HarbourURLScheme.containerDetails(id: firstContainer?._id ?? "", displayName: firstContainer?.name, endpointID: entry.configuration.endpoint?.id).url
 				SmallWidgetView(entry: entry)
+					.widgetURL(widgetURL)
 			case .systemMedium:
 				MediumWidgetView(entry: entry)
 			case .systemLarge:

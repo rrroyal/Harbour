@@ -44,11 +44,9 @@ struct OpenContainerDetailsIntent: AppIntent {
 	func perform() async throws -> some IntentResult {
 		#if TARGET_APP
 		Logger(category: Logger.Category.intents).notice("PERFORMING INTENT APP endpoint: \(endpoint.id); container: \(container.id)")
-		AppState.shared.alertContent = "Endpoint: \(endpoint.id)\nContainer: \(container.id)"
-
-		if let url = HarbourURLScheme.containerDetails(id: container._id, displayName: container.name, endpointID: endpoint.id).url {
-
-		}
+//		if let url = HarbourURLScheme.containerDetails(id: container._id, displayName: container.name, endpointID: endpoint.id).url {
+//
+//		}
 		#else
 		Logger(category: Logger.Category.intents).notice("PERFORMING INTENT ELSE endpoint: \(endpoint.id); container: \(container.id)")
 		#endif
@@ -67,7 +65,6 @@ struct OpenContainerDetailsShortcut: AppShortcutsProvider {
 		let containerStatusShortcut = AppShortcut(
 			intent: ContainerStatusIntent(),
 			phrases: [
-				// TODO: Localization
 				"Get container status in \(.applicationName)",
 				"Check container in \(.applicationName)"
 			],

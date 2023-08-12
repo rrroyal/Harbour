@@ -10,14 +10,14 @@ import SwiftUI
 internal extension SettingsView {
 	struct ToggleOption: View {
 		@Environment(\.isEnabled) private var isEnabled: Bool
-		private let label: String
-		private let description: String?
+		private let label: LocalizedStringResource
+		private let description: LocalizedStringResource?
 		private let iconSymbolName: String
 		private let symbolVariants: SymbolVariants = .fill
 		@Binding private var isOn: Bool
 
-		init(label: String,
-			 description: String? = nil,
+		init(label: LocalizedStringResource,
+			 description: LocalizedStringResource? = nil,
 			 iconSymbolName: String,
 //			 symbolVariants: SymbolVariants = .fill,
 			 isOn: Binding<Bool>) {

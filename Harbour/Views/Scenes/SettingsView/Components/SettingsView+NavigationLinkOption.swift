@@ -9,11 +9,11 @@ import SwiftUI
 
 internal extension SettingsView {
 	struct NavigationLinkOption<Destination: View>: View {
-		let label: String
+		let label: LocalizedStringResource
 		let iconSymbolName: String
 		let destination: Destination
 
-		init(label: String, iconSymbolName: String, destination: @escaping () -> Destination) {
+		init(label: LocalizedStringResource, iconSymbolName: String, destination: @escaping () -> Destination) {
 			self.label = label
 			self.iconSymbolName = iconSymbolName
 			self.destination = destination()

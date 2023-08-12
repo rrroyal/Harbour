@@ -11,8 +11,6 @@ import SwiftUI
 // MARK: - ContainerLogsView
 
 struct ContainerLogsView: View {
-	private typealias Localization = Localizable.ContainerLogsView
-
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.showIndicator) private var showIndicator
@@ -38,7 +36,7 @@ struct ContainerLogsView: View {
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					ToolbarMenu(viewState: viewModel.viewState,
-								linesCount: $viewModel.linesCount,
+								lineCount: $viewModel.lineCount,
 								includeTimestamps: $viewModel.includeTimestamps,
 								shareableContent: viewModel.logs,
 								scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
@@ -47,7 +45,7 @@ struct ContainerLogsView: View {
 			}
 		}
 		.background(PlaceholderView(viewState: viewModel.viewState))
-		.navigationTitle(Localization.title)
+		.navigationTitle("ContainerLogsView.Title")
 		.refreshable {
 			await viewModel.getLogs(errorHandler: errorHandler).value
 		}
@@ -77,7 +75,7 @@ private extension ContainerLogsView {
 	struct ToolbarMenu: View {
 		@Environment(\.showIndicator) private var showIndicator
 		let viewState: ViewModel.ViewState
-		@Binding var linesCount: Int
+		@Binding var lineCount: Int
 		@Binding var includeTimestamps: Bool
 		let shareableContent: String?
 		let scrollAction: (UnitPoint) -> Void
@@ -89,7 +87,7 @@ private extension ContainerLogsView {
 				Haptics.generateIfEnabled(.buttonPress)
 				refreshAction()
 			} label: {
-				Label(Localizable.Generic.refresh, systemImage: SFSymbol.reload)
+				Label("Generic.Refresh", systemImage: SFSymbol.reload)
 			}
 		}
 
@@ -99,14 +97,14 @@ private extension ContainerLogsView {
 				Haptics.generateIfEnabled(.light)
 				scrollAction(.top)
 			} label: {
-				Label(Localization.Menu.scrollToTop, systemImage: SFSymbol.scrollToTop)
+				Label("ContainerLogsView.Menu.ScrollToTop", systemImage: SFSymbol.arrowUpLine)
 			}
 
 			Button {
 				Haptics.generateIfEnabled(.light)
 				scrollAction(.bottom)
 			} label: {
-				Label(Localization.Menu.scrollToBottom, systemImage: SFSymbol.scrollToBottom)
+				Label("ContainerLogsView.Menu.ScrollToBottom", systemImage: SFSymbol.arrowDownLine)
 			}
 		}
 
@@ -116,7 +114,7 @@ private extension ContainerLogsView {
 				Haptics.generateIfEnabled(.selectionChanged)
 				includeTimestamps.toggle()
 			} label: {
-				Label(Localization.Menu.includeTimestamps, systemImage: includeTimestamps ? SFSymbol.checkmark : "")
+				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: includeTimestamps ? SFSymbol.checkmark : "")
 			}
 		}
 
@@ -128,12 +126,12 @@ private extension ContainerLogsView {
 				10_000,
 				100_000
 			]
-			Menu(Localization.Menu.linesCount) {
+			Menu("ContainerLogsView.Menu.LineCount") {
 				ForEach(lineCounts, id: \.self) { amount in
-					let isSelected = linesCount == amount
+					let isSelected = lineCount == amount
 					Button {
 						Haptics.generateIfEnabled(.selectionChanged)
-						linesCount = amount
+						lineCount = amount
 					} label: {
 						Label(amount.formatted(), systemImage: isSelected ? SFSymbol.checkmark : "")
 					}
@@ -157,7 +155,7 @@ private extension ContainerLogsView {
 			Menu {
 				switch viewState {
 				case .loading:
-					Text(Localizable.Generic.loading)
+					Text("Generic.Loading")
 				case .hasLogs:
 					refreshButton
 					Divider()
@@ -172,7 +170,7 @@ private extension ContainerLogsView {
 					refreshButton
 				}
 			} label: {
-				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
+				Label("Generic.More", systemImage: SFSymbol.moreCircle)
 			}
 		}
 	}

@@ -40,8 +40,6 @@ extension ContainerDetailsView {
 		func createUserActivity(for navigationItem: ContainerNavigationItem,
 								userActivity: NSUserActivity,
 								errorHandler: ErrorHandler) {
-			typealias Localization = Localizable.ContainerDetailsView.UserActivity
-
 			let identifier = "\(HarbourUserActivityIdentifier.containerDetails).\(navigationItem.endpointID ?? -1).\(navigationItem.id)"
 
 			let container = self.container(for: navigationItem)
@@ -53,12 +51,12 @@ extension ContainerDetailsView {
 			userActivity.isEligibleForSearch = true
 
 			let displayName = navigationItem.displayName ?? navigationItem.id
-			userActivity.title = displayName
+			userActivity.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
 //			userActivity.suggestedInvocationPhrase = Localization.title(displayName)
 
 			let attributeSet = CSSearchableItemAttributeSet()
-			attributeSet.title = displayName
-			attributeSet.contentDescription = Localization.title(displayName)
+			attributeSet.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
+			attributeSet.contentDescription = String(localized: "UserActivity.ContainerDetails.Description Name:\(displayName)")
 			userActivity.contentAttributeSet = attributeSet
 
 			if let serverURL = portainerStore.serverURL,
@@ -104,8 +102,7 @@ extension ContainerDetailsView {
 						await portainerStore.setupTask?.value
 					}
 
-					containerDetails = try await portainerStore.inspectContainer(navigationItem.id,
-																				 endpointID: navigationItem.endpointID)
+					containerDetails = try await portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
 				} catch {
 					errorHandler(error)
 				}
@@ -144,7 +141,7 @@ extension ContainerDetailsView.ViewModel {
 		var title: String? {
 			switch self {
 			case .loading:
-				Localizable.Generic.loading
+				String(localized: "Generic.Loading")
 			case .error(let error):
 				error.localizedDescription
 			case .somethingWentWrong:

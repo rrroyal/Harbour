@@ -16,7 +16,7 @@ struct SelectContainerView: View {
 
 	var body: some View {
 		VStack(spacing: 4) {
-			Text("SelectContainerView.Title")
+			Text("SelectContainerView.Headline")
 				.font(.body)
 				.fontWeight(.medium)
 				.foregroundStyle(.secondary)

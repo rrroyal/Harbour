@@ -96,11 +96,11 @@ extension ViewState {
 			switch self {
 			case .loading:
 				ProgressView()
-					.accessibilityLabel(Localizable.Generic.loading)
+					.accessibilityLabel("Generic.Loading")
 			case .reloading(let content):
 				if content == nil {
 					ProgressView()
-						.accessibilityLabel(Localizable.Generic.loading)
+						.accessibilityLabel("Generic.Loading")
 				} else {
 					EmptyView()
 				}

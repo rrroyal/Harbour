@@ -11,16 +11,14 @@ import SwiftUI
 
 extension SettingsView {
 	struct GeneralSection: View {
-		private typealias Localization = Localizable.SettingsView.General
-
 		@EnvironmentObject private var viewModel: ViewModel
 		@EnvironmentObject private var preferences: Preferences
 
 		var body: some View {
-			Section(Localization.title) {
+			Section("SettingsView.General.Title") {
 				// Enable Background Refresh
-				ToggleOption(label: Localization.EnableBackgroundRefresh.title,
-							 description: Localization.EnableBackgroundRefresh.description,
+				ToggleOption(label: "SettingsView.General.EnableBackgroundRefresh.Title",
+							 description: "SettingsView.General.EnableBackgroundRefresh.Description",
 							 iconSymbolName: SFSymbol.reload,
 							 isOn: $preferences.enableBackgroundRefresh)
 //				.symbolVariant(preferences.enableBackgroundRefresh ? .none : .slash)

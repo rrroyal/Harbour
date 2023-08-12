@@ -25,10 +25,6 @@ final class AppState: ObservableObject {
 
 	internal var portainerServerSwitchTask: Task<Void, Error>?
 
-	// MARK: Public Properties
-
-	@Published var alertContent: String?
-
 	// MARK: init
 
 	private init() { }

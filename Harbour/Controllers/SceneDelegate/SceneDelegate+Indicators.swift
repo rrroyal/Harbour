@@ -25,7 +25,7 @@ extension SceneDelegate {
 			let style: Indicator.Style = .default
 			indicator = Indicator(id: presentedIndicator.id,
 								  icon: SFSymbol.copy,
-								  headline: Localizable.Indicators.copied,
+								  headline: "Indicators.Copied",
 								  style: style)
 		case .containerActionExecuted(_, let containerName, let action):
 			let style: Indicator.Style = .init(subheadlineColor: action.color,
@@ -35,7 +35,7 @@ extension SceneDelegate {
 											   iconVariants: .fill)
 			indicator = .init(id: presentedIndicator.id,
 							  icon: action.icon,
-							  headline: containerName ?? Localizable.PortainerKit.Generic.container,
+							  headline: containerName ?? "PortainerKit.Generic.Container",
 							  subheadline: action.label,
 							  style: style)
 		}

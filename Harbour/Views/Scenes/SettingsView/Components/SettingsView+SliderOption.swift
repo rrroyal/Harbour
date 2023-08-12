@@ -11,8 +11,8 @@ import SwiftUI
 internal extension SettingsView {
 	struct SliderOption: View {
 		@Environment(\.isEnabled) private var isEnabled: Bool
-		let label: String
-		let description: String?
+		let label: LocalizedStringResource
+		let description: LocalizedStringResource?
 		let iconSymbolName: String
 		@Binding var value: Double
 		let range: ClosedRange<Double>
@@ -37,7 +37,7 @@ internal extension SettingsView {
 								.foregroundStyle(.secondary)
 						}
 					}
-					.opacity(isEnabled ? .primary : .secondary)
+					.opacity(isEnabled ? 1 : Constants.secondaryOpacity)
 
 					Slider(value: $value, in: range, step: step, onEditingChanged: onEditingChanged)
 						.onChange(of: value) { _, newValue in
@@ -47,7 +47,7 @@ internal extension SettingsView {
 						}
 				}
 			}
-			.padding(.vertical, .small)
+			.padding(.vertical, 6)
 			.frame(minHeight: description == nil ? SettingsView.minimumCellHeight : SettingsView.minimumCellHeightWithDescription)
 		}
 	}

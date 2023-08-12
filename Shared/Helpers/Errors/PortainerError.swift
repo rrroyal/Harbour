@@ -23,16 +23,14 @@ enum PortainerError: Error {
 // MARK: - PortainerError+LocalizedError
 
 extension PortainerError: LocalizedError {
-	private typealias Localization = Localizable.Error.Portainer
-
 	var errorDescription: String? {
 		switch self {
 		case .notSetup:
-			Localization.notSetup
+			String(localized: "Error.Portainer.NotSetup")
 		case .noServer:
-			Localization.noServer
+			String(localized: "Error.Portainer.NoServer")
 		case .noSelectedEndpoint:
-			Localization.noSelectedEndpoint
+			String(localized: "Error.Portainer.NoSelectedEndpoint")
 		}
 	}
 }

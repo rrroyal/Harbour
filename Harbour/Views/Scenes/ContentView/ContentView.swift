@@ -14,8 +14,6 @@ import SwiftUI
 // MARK: - ContentView
 
 struct ContentView: View {
-	private typealias Localization = Localizable.ContentView
-
 	@EnvironmentObject private var appDelegate: AppDelegate
 	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var appState: AppState
@@ -53,7 +51,7 @@ struct ContentView: View {
 //				Haptics.generateIfEnabled(.sheetPresentation)
 				sceneDelegate.isSettingsSheetPresented.toggle()
 			} label: {
-				Label(Localization.NavigationButton.settings, systemImage: SFSymbol.settings)
+				Label("ContentView.NavigationButton.Settings", systemImage: SFSymbol.settings)
 			}
 		}
 
@@ -62,7 +60,7 @@ struct ContentView: View {
 			NavigationLink {
 				StacksView()
 			} label: {
-				Label(Localization.NavigationButton.stacks, systemImage: SFSymbol.stack)
+				Label("ContentView.NavigationButton.Stacks", systemImage: SFSymbol.stack)
 //					.symbolVariant(portainerStore.isSetup ? .none : .slash)
 			}
 		}
@@ -76,7 +74,7 @@ struct ContentView: View {
 			if isSummaryVisible {
 				VStack {
 					// TODO: Summary
-					Text("Summary")
+					Text("ContentView.Summary")
 					Divider()
 				}
 				.transition(.move(edge: .top).combined(with: .opacity))
@@ -113,7 +111,7 @@ struct ContentView: View {
 					toolbarMenu
 				}
 		} placeholderContent: {
-			Text(Localization.noContainerSelectedPlaceholder)
+			Text("ContentView.NoContainerSelectedPlaceholder")
 				.foregroundStyle(.tertiary)
 		}
 		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
@@ -127,11 +125,6 @@ struct ContentView: View {
 				.indicatorOverlay(model: sceneDelegate.indicators)
 		}
 		.indicatorOverlay(model: sceneDelegate.indicators)
-		.alert(appState.alertContent ?? "<empty>", isPresented: .constant(appState.alertContent != nil)) {
-			Button("Continue") {
-				appState.alertContent = nil
-			}
-		}
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.showIndicator, sceneDelegate.showIndicator)
 		.environmentObject(sceneDelegate.indicators)

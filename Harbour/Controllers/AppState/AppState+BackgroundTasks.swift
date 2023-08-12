@@ -178,8 +178,6 @@ extension AppState {
 	/// - Parameter changes: Container changes between the refreshes.
 	/// - Returns: `UNNotificationContent` for the container change notification.
 	private nonisolated func notificationContent(for changes: [AppRefreshContainerChange]) -> UNNotificationContent? {
-		typealias Localization = Localizable.Notification.ContainersChanged
-
 		let notificationContent = UNMutableNotificationContent()
 		notificationContent.threadIdentifier = HarbourNotificationIdentifier.containersChanged
 		notificationContent.interruptionLevel = .active
@@ -205,16 +203,16 @@ extension AppState {
 				let newStateReadable = change.newState.description.localizedCapitalized
 
 				if change.changeType == .inserted {
-					title = Localization.Single.Inserted.title(change.name)
-					body = Localization.Single.Inserted.body(change.status ?? newStateReadable)
+					title = String(localized: "Notification.ContainersChanged.Single.Inserted.Title Name:\(change.name)")
+					body = String(localized: "Notification.ContainersChanged.Single.Inserted.Body Status:\(change.status ?? newStateReadable)")
 				} else {
-					title = Localization.Single.Changed.title(change.name)
-					body = Localization.Single.Changed.body(oldStateReadable, change.status ?? newStateReadable)
+					title = String(localized: "Notification.ContainersChanged.Single.Changed.Title Name:\(change.name)")
+					body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\(oldStateReadable) New:\(change.status ?? newStateReadable)")
 				}
 			case .removed:
-				emoji = Localization.Single.Removed.emoji
-				title = Localization.Single.Removed.title(change.name)
-				body = Localization.Single.Removed.body(change.oldState.description.localizedCapitalized)
+				emoji = String(localized: "Notification.ContainersChanged.Single.Removed.Emoji")
+				title = String(localized: "Notification.ContainersChanged.Single.Removed.Title Name:\(change.name)")
+				body = String(localized: "Notification.ContainersChanged.Single.Removed.Body Change:\(change.oldState.description.localizedCapitalized)")
 			}
 		case 2...4:
 			let namesJoined = changes
@@ -225,12 +223,12 @@ extension AppState {
 				.map { "\($0.name): \($0.status ?? $0.newState.description.localizedCapitalized)" }
 				.joined(separator: "\n")
 
-			emoji = Localization.MultipleReadable.emoji
-			title = Localization.MultipleReadable.title(namesJoined)
+			emoji = String(localized: "Notification.ContainersChanged.MultipleReadable.Emoji")
+			title = String(localized: "Notification.ContainersChanged.MultipleReadable.Title Names:\(namesJoined)")
 			body = changesJoined
 		case 5...:
-			emoji = Localization.MultipleUnreadable.emoji
-			title = Localization.MultipleUnreadable.title(changes.count)
+			emoji = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Emoji")
+			title = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Title ChangeCount:\(changes.count)")
 			body = changes.map(\.name).formatted(.list(type: .and))
 		default:
 			return nil

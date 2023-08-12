@@ -12,16 +12,14 @@ import SwiftUI
 // MARK: - ExecuteAction+label
 
 extension ExecuteAction {
-	private typealias Localization = Localizable.PortainerKit.ExecuteAction
-
 	var label: String {
 		switch self {
-		case .start:	Localization.start
-		case .stop:		Localization.stop
-		case .restart:	Localization.restart
-		case .kill:		Localization.kill
-		case .pause:	Localization.pause
-		case .unpause:	Localization.unpause
+		case .start:	String(localized: "PortainerKit.ExecuteAction.Start")
+		case .stop:		String(localized: "PortainerKit.ExecuteAction.Stop")
+		case .restart:	String(localized: "PortainerKit.ExecuteAction.Restart")
+		case .kill:		String(localized: "PortainerKit.ExecuteAction.Kill")
+		case .pause:	String(localized: "PortainerKit.ExecuteAction.Pause")
+		case .unpause:	String(localized: "PortainerKit.ExecuteAction.Unpause")
 		}
 	}
 }

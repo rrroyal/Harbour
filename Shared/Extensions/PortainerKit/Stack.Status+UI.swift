@@ -11,12 +11,10 @@ import SwiftUI
 // MARK: - Stack.Status+label
 
 extension Stack.Status {
-	private typealias Localization = Localizable.PortainerKit.Stack.Status
-
 	var label: String {
 		switch self {
-		case .active:	Localization.active
-		case .inactive: Localization.inactive
+		case .active:	String(localized: "PortainerKit.Stack.Status.Active")
+		case .inactive: String(localized: "PortainerKit.Stack.Status.Inactive")
 		}
 	}
 }

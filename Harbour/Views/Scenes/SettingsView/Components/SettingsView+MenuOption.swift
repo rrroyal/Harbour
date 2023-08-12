@@ -9,11 +9,11 @@ import SwiftUI
 
 internal extension SettingsView {
 	struct MenuOption<Content: View>: View {
-		let label: String
+		let label: LocalizedStringResource
 		let iconSymbolName: String
 		let menuView: () -> Content
 
-		init(label: String, iconSymbolName: String, menuView: @escaping () -> Content) {
+		init(label: LocalizedStringResource, iconSymbolName: String, menuView: @escaping () -> Content) {
 			self.label = label
 			self.iconSymbolName = iconSymbolName
 			self.menuView = menuView

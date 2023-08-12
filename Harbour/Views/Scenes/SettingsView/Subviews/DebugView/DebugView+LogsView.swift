@@ -14,8 +14,6 @@ import SwiftUI
 
 extension DebugView {
 	struct LogsView: View {
-		private typealias Localization = Localizable.DebugView.LogsView
-
 		@State private var logs: [LogEntry] = []
 		@State private var filter: String = ""
 
@@ -34,7 +32,7 @@ extension DebugView {
 					Haptics.generateIfEnabled(.buttonPress)
 					getLogs()
 				} label: {
-					Label(Localizable.Generic.refresh, systemImage: SFSymbol.reload)
+					Label("Generic.Refresh", systemImage: SFSymbol.reload)
 				}
 
 				Divider()
@@ -45,7 +43,7 @@ extension DebugView {
 					ShareLink(item: logsShareable, preview: .init(.init(verbatim: logsShareable)))
 				}
 			} label: {
-				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
+				Label("Generic.More", systemImage: SFSymbol.moreCircle)
 			}
 		}
 
@@ -58,13 +56,13 @@ extension DebugView {
 						.lineLimit(nil)
 						.textSelection(.enabled)
 				}, header: {
-					Text("\(entry.category ?? "<none>") - \(entry.date?.ISO8601Format() ?? "<none>") [\(entry.levelReadable)]")
+					Text(verbatim: "\(entry.category ?? "<none>") - \(entry.date?.ISO8601Format() ?? "<none>") [\(entry.levelReadable)]")
 						.font(.system(.footnote, design: .monospaced))
 						.textCase(.none)
 				})
 				.listRowBackground(entry.color?.opacity(0.1))
 			}
-			.navigationTitle(Localization.title)
+			.navigationTitle("DebugView.LogsView.Title")
 			.navigationBarTitleDisplayMode(.inline)
 			.listStyle(.grouped)
 			.searchable(text: $filter)
@@ -127,13 +125,13 @@ private extension DebugView.LogsView {
 
 		var levelReadable: String {
 			switch level {
-			case .debug:			Localization.LogLevel.debug
-			case .info:				Localization.LogLevel.info
-			case .notice:			Localization.LogLevel.notice
-			case .error:			Localization.LogLevel.error
-			case .fault:			Localization.LogLevel.fault
-			case nil, .undefined:	Localization.LogLevel.none
-			@unknown default:		Localization.LogLevel.unknown
+			case .debug:			"DebugView.LogsView.LogLevel.Debug"
+			case .info:				"DebugView.LogsView.LogLevel.Info"
+			case .notice:			"DebugView.LogsView.LogLevel.Notice"
+			case .error:			"DebugView.LogsView.LogLevel.Error"
+			case .fault:			"DebugView.LogsView.LogLevel.Fault"
+			case nil, .undefined:	"DebugView.LogsView.LogLevel.None"
+			@unknown default:		"DebugView.LogsView.LogLevel.Unknown"
 			}
 		}
 	}

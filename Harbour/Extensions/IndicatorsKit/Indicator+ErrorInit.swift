@@ -21,7 +21,7 @@ extension Indicator {
 			subheadline = failureReason
 			expandedText = error.recoverySuggestion ?? failureReason
 		} else {
-			headline = Localizable.Indicators.error
+			headline = "Indicators.Error"
 			subheadline = error.localizedDescription
 			expandedText = nil
 		}

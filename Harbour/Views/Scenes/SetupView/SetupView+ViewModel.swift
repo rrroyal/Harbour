@@ -14,8 +14,6 @@ import SwiftUI
 extension SetupView {
 	@MainActor
 	final class ViewModel: ObservableObject {
-		private typealias Localization = Localizable.SetupView
-
 		private let portainerStore: PortainerStore = .shared
 
 		private let errorTimeoutInterval: TimeInterval = 3
@@ -79,7 +77,7 @@ extension SetupView {
 					Haptics.generateIfEnabled(.success)
 
 					buttonColor = .green
-					buttonLabel = Localization.Button.success
+					buttonLabel = "SetupView.Button.Success"
 
 					dismissAction?()
 				} catch {

@@ -47,7 +47,7 @@ extension ContainerState? {
 		if let self {
 			return self.rawValue
 		} else {
-			return Localizable.PortainerKit.ContainerState.unknown
+			return String(localized: "PortainerKit.ContainerState.Unknown")
 		}
 	}
 }
@@ -83,13 +83,13 @@ extension ContainerState? {
 extension ContainerState {
 	var emoji: String {
 		switch self {
-		case .dead:			Localizable.PortainerKit.ContainerState.Icon.dead
-		case .created:		Localizable.PortainerKit.ContainerState.Icon.created
-		case .exited:		Localizable.PortainerKit.ContainerState.Icon.exited
-		case .paused:		Localizable.PortainerKit.ContainerState.Icon.paused
-		case .removing:		Localizable.PortainerKit.ContainerState.Icon.removing
-		case .restarting:	Localizable.PortainerKit.ContainerState.Icon.restarting
-		case .running:		Localizable.PortainerKit.ContainerState.Icon.running
+		case .dead:			String(localized: "PortainerKit.ContainerState.Icon.Dead")
+		case .created:		String(localized: "PortainerKit.ContainerState.Icon.Created")
+		case .exited:		String(localized: "PortainerKit.ContainerState.Icon.Exited")
+		case .paused:		String(localized: "PortainerKit.ContainerState.Icon.Paused")
+		case .removing:		String(localized: "PortainerKit.ContainerState.Icon.Removing")
+		case .restarting:	String(localized: "PortainerKit.ContainerState.Icon.Restarting")
+		case .running:		String(localized: "PortainerKit.ContainerState.Icon.Running")
 		}
 	}
 }
@@ -99,7 +99,7 @@ extension ContainerState? {
 		if let self {
 			self.emoji
 		} else {
-			Localizable.PortainerKit.ContainerState.Icon.unknown
+			String(localized: "PortainerKit.ContainerState.Icon.Unknown")
 		}
 	}
 }

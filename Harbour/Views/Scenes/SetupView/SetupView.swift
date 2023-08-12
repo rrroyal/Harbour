@@ -12,8 +12,6 @@ import SwiftUI
 // MARK: - SetupView
 
 struct SetupView: View {
-	private typealias Localization = Localizable.SetupView
-
 	@Environment(\.dismiss) private var dismiss: DismissAction
 	@Environment(\.errorHandler) private var errorHandler
 
@@ -73,7 +71,7 @@ struct SetupView: View {
 					if let buttonLabel = viewModel.buttonLabel {
 						Text(LocalizedStringKey(buttonLabel))
 					} else {
-						Text(Localization.Button.login)
+						Text("SetupView.LoginButton")
 					}
 				}
 				.transition(.opacity)
@@ -91,7 +89,7 @@ struct SetupView: View {
 			VStack {
 				Spacer()
 
-				Text(Localization.headline)
+				Text("SetupView.Headline")
 					.font(.largeTitle)
 					.fontWeight(.bold)
 
@@ -109,11 +107,12 @@ struct SetupView: View {
 
 					Link(destination: howToLoginURL) {
 						HStack {
-							Image(systemName: SFSymbol.howTo)
-							Text(Localization.howToLogin)
+							// TODO: Label?
+							Image(systemName: "person.fill.questionmark")
+							Text("SetupView.HowToLoginButton")
 						}
 						.font(.callout.weight(.medium))
-						.padding(.horizontal, .small)
+						.padding(.horizontal, 6)
 					}
 					.buttonStyle(.customTransparent)
 				}
@@ -122,7 +121,7 @@ struct SetupView: View {
 			.toolbar {
 				#if targetEnvironment(macCatalyst)
 				ToolbarItem(placement: .cancellationAction) {
-					Button(Localizable.Generic.close) {
+					Button("Generic.Close") {
 //						Haptics.generateIfEnabled(.sheetPresentation)
 						dismiss()
 					}
@@ -134,7 +133,7 @@ struct SetupView: View {
 		.animation(.easeInOut, value: viewModel.buttonLabel)
 		.animation(.easeInOut, value: viewModel.buttonColor)
 		.animation(.easeInOut, value: viewModel.isLoading)
-		.onDisappear { viewModel.onViewDisappear() }
+		.onDisappear(perform: viewModel.onViewDisappear)
 	}
 }
 

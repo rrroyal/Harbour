@@ -11,8 +11,6 @@ import SwiftUI
 // MARK: - ContainersView
 
 struct ContainersView: View {
-	private typealias Localization = Localizable.ContainersView
-
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.cvUseGrid) private var useGrid
 	let containers: [Container]
@@ -50,7 +48,7 @@ extension ContainersView {
 		var body: some View {
 			VStack {
 				if isEmpty {
-					Text(Localization.noContainersPlaceholder)
+					Text("ContainersView.NoContainersPlaceholder")
 						.foregroundStyle(.secondary)
 						.padding()
 						.transition(.opacity)

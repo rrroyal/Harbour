@@ -1,0 +1,1461 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "AppIcon.BoxDark" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Box (Dark)"
+          }
+        }
+      }
+    },
+    "AppIcon.BoxLight" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Box (Light)"
+          }
+        }
+      }
+    },
+    "AppIcon.Default" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Default"
+          }
+        }
+      }
+    },
+    "AppIcon.OGDark" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original (Dark)"
+          }
+        }
+      }
+    },
+    "AppIcon.OGLight" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Original (Light)"
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.Container.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container"
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.Containers.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Containers"
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.Endpoint.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endpoint"
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.ResolveByName.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If enabled, containers will be resolved by their name, instead of their ID."
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.ResolveByName.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resolve by name"
+          }
+        }
+      }
+    },
+    "AppName" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harbour"
+          }
+        }
+      }
+    },
+    "ContainerCell.UnknownName" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "ContainerCell.UnknownStatus" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "ContainerContextMenu.Attach" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Attach"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Cmd" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CMD"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.CreatedAt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Created At"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Entrypoint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrypoint"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Environment" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Environment"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.FinishedAt" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finished At"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Image" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Labels" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Labels"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Logs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Mounts" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mounts"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Ports" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ports"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.State" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "State"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.Menu.IncludeTimestamps" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include Timestamps"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.Menu.LineCount" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Line Count"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.Menu.ScrollToBottom" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scroll To Bottom"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.Menu.ScrollToTop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scroll To Top"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs"
+          }
+        }
+      }
+    },
+    "ContainerStatusIntent.Description" : {
+
+    },
+    "ContainerStatusIntent.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container Status"
+          }
+        }
+      }
+    },
+    "ContainerStatusWidget.Description" : {
+      "comment" : "ContainerStatus widget description",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See the status of selected container right on your Home Screen :)"
+          }
+        }
+      }
+    },
+    "ContainerStatusWidget.DisplayName" : {
+      "comment" : "ContainerStatus widget title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container Status"
+          }
+        }
+      }
+    },
+    "ContainersView.NoContainersPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Containers"
+          }
+        }
+      }
+    },
+    "ContentView.NavigationButton.Settings" : {
+      "comment" : "Accessibility label for ContentView Settings navigation button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "ContentView.NavigationButton.Stacks" : {
+      "comment" : "Accessibility label for ContentView Stacks navigation button",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stacks"
+          }
+        }
+      }
+    },
+    "ContentView.NoContainerSelectedPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Container Selected"
+          }
+        }
+      }
+    },
+    "ContentView.Summary" : {
+
+    },
+    "DebugView.BuildInfoSection.BuildDate" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build Date"
+          }
+        }
+      }
+    },
+    "DebugView.BuildInfoSection.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build Info"
+          }
+        }
+      }
+    },
+    "DebugView.LogsView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs"
+          }
+        }
+      }
+    },
+    "DebugView.OtherSection.Logs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Logs"
+          }
+        }
+      }
+    },
+    "DebugView.PersistenceSection.DeleteUserActivities" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete User Activities"
+          }
+        }
+      }
+    },
+    "DebugView.PersistenceSection.LastBackgroundRefresh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last Background Refresh"
+          }
+        }
+      }
+    },
+    "DebugView.PersistenceSection.LastBackgroundRefresh.Never" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never"
+          }
+        }
+      }
+    },
+    "DebugView.PersistenceSection.ResetCoreData" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Reset CoreData"
+          }
+        }
+      }
+    },
+    "DebugView.PersistenceSection.ResetKeychain" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset Keychain"
+          }
+        }
+      }
+    },
+    "DebugView.PersistenceSection.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Persistence"
+          }
+        }
+      }
+    },
+    "DebugView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug"
+          }
+        }
+      }
+    },
+    "DebugView.WidgetsSection.RefreshTimelines" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh Timelines"
+          }
+        }
+      }
+    },
+    "DebugView.WidgetsSection.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widgets"
+          }
+        }
+      }
+    },
+    "Error.Generic.InvalidURL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid URL"
+          }
+        }
+      }
+    },
+    "Error.Portainer.NoSelectedEndpoint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Selected Endpoint"
+          }
+        }
+      }
+    },
+    "Error.Portainer.NoServer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Server"
+          }
+        }
+      }
+    },
+    "Error.Portainer.NotSetup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Setup"
+          }
+        }
+      }
+    },
+    "ExecuteActionIntent.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action to execute"
+          }
+        }
+      }
+    },
+    "ExecuteActionIntent.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Execute Action"
+          }
+        }
+      }
+    },
+    "FeaturesView.ContinueButton" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continue"
+          }
+        }
+      }
+    },
+    "FeaturesView.Headline AppName:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hi! Welcome to %@!"
+          }
+        }
+      }
+    },
+    "Generic.Copy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy"
+          }
+        }
+      }
+    },
+    "Generic.Empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty"
+          }
+        }
+      }
+    },
+    "Generic.Loading" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loading..."
+          }
+        }
+      }
+    },
+    "Generic.More" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "More"
+          }
+        }
+      }
+    },
+    "Generic.Refresh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Refresh"
+          }
+        }
+      }
+    },
+    "Generic.SharePortainerURL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Portainer URL..."
+          }
+        }
+      }
+    },
+    "Generic.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "IntentContainer.Preview.Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Containy"
+          }
+        }
+      }
+    },
+    "IntentContainer.Preview.Status" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running"
+          }
+        }
+      }
+    },
+    "IntentContainer.TypeDisplayRepresentation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container"
+          }
+        }
+      }
+    },
+    "IntentEndpoint.Preview.Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "local"
+          }
+        }
+      }
+    },
+    "IntentEndpoint.TypeDisplayRepresentation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endpoint"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.MultipleReadable.Emoji" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📫"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.MultipleReadable.Title Names:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ changed their states."
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.MultipleUnreadable.Emoji" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📫"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.MultipleUnreadable.Title ChangeCount:%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ containers changed their states."
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Changed.Body Old:%@ New:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ → %2$@"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Changed.Title Name:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\\\"%@\\\" changed it's state!"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Inserted.Body Status:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Current status: %@."
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Inserted.Title Name:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" appeared!"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Removed.Body Change:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last known state: %@."
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Removed.Emoji" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😶‍🌫️"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Removed.Title Name:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" disappeared!"
+          }
+        }
+      }
+    },
+    "OpenContainerDetailsIntent.Description" : {
+
+    },
+    "OpenContainerDetailsIntent.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Container Details"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Created" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🐣"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Dead" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☠️"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Exited" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🚪"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Paused" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⏸️"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Removing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🗑️"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Restarting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Running" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Icon.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😶‍🌫️"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerState.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "PortainerKit.ExecuteAction.AppEnumTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action"
+          }
+        }
+      }
+    },
+    "PortainerKit.ExecuteAction.Kill" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kill"
+          }
+        }
+      }
+    },
+    "PortainerKit.ExecuteAction.Pause" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        }
+      }
+    },
+    "PortainerKit.ExecuteAction.Restart" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        }
+      }
+    },
+    "PortainerKit.ExecuteAction.Start" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "PortainerKit.ExecuteAction.Stop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
+    "PortainerKit.ExecuteAction.Unpause" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.DecodingFailed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decoding Failed"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.EncodingFailed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encoding Failed"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.InvalidPayload" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid Payload"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.InvalidURL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid URL"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.NotSetup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Setup"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.Other Reason:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.ResponseCodeUnacceptable Code:%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Response Code Unacceptable (%@)"
+          }
+        }
+      }
+    },
+    "PortainerKit.PortainerError.PortainerError.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown Error"
+          }
+        }
+      }
+    },
+    "PortainerKit.Stack.Status.Active" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active"
+          }
+        }
+      }
+    },
+    "PortainerKit.Stack.Status.Inactive" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inactive"
+          }
+        }
+      }
+    },
+    "SelectContainerView.Headline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select a container 🙈"
+          }
+        }
+      }
+    },
+    "SettingsView.General.EnableBackgroundRefresh.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harbour will notify you if containers change their state in the background."
+          }
+        }
+      }
+    },
+    "SettingsView.General.EnableBackgroundRefresh.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Background Refresh"
+          }
+        }
+      }
+    },
+    "SettingsView.General.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "General"
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.AppIcon.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Icon"
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.DisplaySummary.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show a summary of your containers."
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.DisplaySummary.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display Summary"
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.EnableHaptics.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can tone them down if you don't like them as much as I do :]"
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.EnableHaptics.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Haptics"
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Interface"
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.UseColumns.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Display containers list and detail side-by-side."
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.UseColumns.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Two-Column Layout"
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.UseGridView.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can fit more containers, but it may be harder to read."
+          }
+        }
+      }
+    },
+    "SettingsView.Interface.UseGridView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use Grid View"
+          }
+        }
+      }
+    },
+    "SettingsView.Other.Debug" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug"
+          }
+        }
+      }
+    },
+    "SettingsView.Other.Footer.Headline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Made with ❤️ (and ☕) by @rrroyal"
+          }
+        }
+      }
+    },
+    "SettingsView.Other.Footer.Subheadline BuildVersion:%@ BuildNumber:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Harbour v%1$@ (#%2$@)"
+          }
+        }
+      }
+    },
+    "SettingsView.Other.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointsMenu.Add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointsMenu.Server.CopyToken" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Token"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointsMenu.Server.InUse" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Use"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointsMenu.Server.Remove" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointsMenu.Server.Remove!" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove!"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointsMenu.Server.Use" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portainer"
+          }
+        }
+      }
+    },
+    "SettingsView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
+          }
+        }
+      }
+    },
+    "SetupView.Headline" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup"
+          }
+        }
+      }
+    },
+    "SetupView.HowToLoginButton" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "How to login?"
+          }
+        }
+      }
+    },
+    "SetupView.LoginButton" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login"
+          }
+        }
+      }
+    },
+    "StacksView.NoContainersPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Containers"
+          }
+        }
+      }
+    },
+    "StacksView.Stack.Start" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "StacksView.Stack.Stop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
+    "StacksView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stacks"
+          }
+        }
+      }
+    },
+    "UserActivity.ContainerDetails.Description Name:%@" : {
+      "comment" : "Description for ContainerDetails user activity",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See the details of %@."
+          }
+        }
+      }
+    },
+    "UserActivity.ContainerDetails.Title Name:%@" : {
+      "comment" : "Title for ContainerDetails user activity",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

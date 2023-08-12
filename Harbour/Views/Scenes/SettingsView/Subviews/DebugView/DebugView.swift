@@ -15,21 +15,18 @@ import WidgetKit
 // MARK: - DebugView
 
 struct DebugView: View {
-	private typealias Localization = Localizable.DebugView
-
 	private let logger = Logger(category: Logger.Category.debug)
 
 	var body: some View {
 		List {
 			#if DEBUG
 			BuildInfoSection()
-			LastBackgroundRefreshSection()
 			#endif
 			WidgetsSection()
 			PersistenceSection()
-			LogsSection()
+			OtherSection()
 		}
-		.navigationTitle(Localization.title)
+		.navigationTitle("DebugView.Title")
 		.environment(\.logger, logger)
 	}
 }
@@ -40,21 +37,8 @@ private extension DebugView {
 	#if DEBUG
 	struct BuildInfoSection: View {
 		var body: some View {
-			Section("Build Info") {
-				LabeledContent("Build Date", value: Bundle.main.infoDictionary?["BuildDate"] as? String ?? "Unknown")
-			}
-		}
-	}
-
-	struct LastBackgroundRefreshSection: View {
-		var body: some View {
-			Section(Localization.LastBackgroundRefresh.title) {
-				if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
-					Text(Date(timeIntervalSince1970: lastBackgroundRefreshDate), format: .dateTime)
-				} else {
-					Text(Localization.LastBackgroundRefresh.never)
-						.foregroundStyle(.secondary)
-				}
+			Section("DebugView.BuildInfoSection.Title") {
+				LabeledContent("DebugView.BuildInfoSection.BuildDate", value: Bundle.main.infoDictionary?["BuildDate"] as? String ?? String(localized: "Generic.Unknown"))
 			}
 		}
 	}
@@ -64,8 +48,8 @@ private extension DebugView {
 		@Environment(\.logger) private var logger
 
 		var body: some View {
-			Section("WidgetKit") {
-				Button("Refresh timelines") {
+			Section("DebugView.WidgetsSection.Title") {
+				Button("DebugView.WidgetsSection.RefreshTimelines") {
 					logger.debug("Refreshing timelines... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.buttonPress)
 					WidgetCenter.shared.reloadAllTimelines()
@@ -78,9 +62,19 @@ private extension DebugView {
 		@Environment(\.logger) private var logger
 		@Environment(\.errorHandler) private var handleError
 
+		var lastBackgroundRefreshDateString: String {
+			if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
+				Date(timeIntervalSince1970: lastBackgroundRefreshDate).formatted(.dateTime)
+			} else {
+				String(localized: "DebugView.PersistenceSection.LastBackgroundRefresh.Never")
+			}
+		}
+
 		var body: some View {
-			Section("Persistence") {
-				Button("Delete User Activities") {
+			Section("DebugView.PersistenceSection.Title") {
+				LabeledContent("DebugView.PersistenceSection.LastBackgroundRefresh", value: lastBackgroundRefreshDateString)
+
+				Button("DebugView.PersistenceSection.DeleteUserActivities", role: .destructive) {
 					logger.debug("Deleting saved user activities... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.heavy)
 					UIApplication.shared.shortcutItems = nil
@@ -89,13 +83,13 @@ private extension DebugView {
 					}
 				}
 
-				Button("Reset CoreData", role: .destructive) {
+				Button("DebugView.PersistenceSection.ResetCoreData", role: .destructive) {
 					logger.debug("Resetting CoreData... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.heavy)
 					Persistence.shared.reset()
 				}
 
-				Button("Reset Keychain", role: .destructive) {
+				Button("DebugView.PersistenceSection.ResetKeychain", role: .destructive) {
 					logger.debug("Resetting Keychain... [\(String._debugInfo())]")
 					Haptics.generateIfEnabled(.heavy)
 					do {
@@ -112,10 +106,10 @@ private extension DebugView {
 		}
 	}
 
-	struct LogsSection: View {
+	struct OtherSection: View {
 		var body: some View {
 			Section {
-				NavigationLink("Logs") {
+				NavigationLink("DebugView.OtherSection.Logs") {
 					LogsView()
 				}
 			}

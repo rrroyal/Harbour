@@ -19,7 +19,7 @@ extension GenericError: LocalizedError {
 	var errorDescription: String? {
 		switch self {
 		case .invalidURL:
-			Localizable.Error.Generic.invalidURL
+			String(localized: "Error.Generic.InvalidURL")
 		}
 	}
 }

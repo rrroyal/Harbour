@@ -115,7 +115,6 @@ extension ContainerStatusIntent: AppShortcutsProvider {
 		let containerStatusShortcut = AppShortcut(
 			intent: Self(),
 			phrases: [
-				// TODO: Localization
 				"Get container status in \(.applicationName)",
 				"Check container in \(.applicationName)"
 			],

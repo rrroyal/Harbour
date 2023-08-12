@@ -28,7 +28,7 @@ extension ContainerDetailsView {
 //			.background {
 			.overlay {
 				if data.isEmpty {
-					ContentUnavailableView(Localizable.Generic.empty, systemImage: "ellipsis")
+					ContentUnavailableView("Generic.Empty", systemImage: "ellipsis")
 						.transition(.opacity)
 						.allowsHitTesting(false)
 				}

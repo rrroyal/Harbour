@@ -12,14 +12,12 @@ import SwiftUI
 
 extension ContainerDetailsView {
 	struct DetailsSection: View {
-		private typealias Localization = Localizable.ContainerDetailsView
-
 		let container: Container?
 		let details: ContainerDetails?
 
 		var body: some View {
 			// Status / State
-			Section(Localization.Section.state) {
+			Section("ContainerDetailsView.Section.State") {
 				let state = details?.status.state ?? container?.state ?? ContainerState?.none
 				let title = container?.status ?? state.description.capitalized
 				let icon = state.icon
@@ -29,7 +27,7 @@ extension ContainerDetailsView {
 
 			// ID
 			if let id = container?.id ?? details?.id {
-				Section(Localization.Section.id) {
+				Section("ContainerDetailsView.Section.ID") {
 					Labeled(id)
 						.fontDesign(.monospaced)
 				}
@@ -37,21 +35,21 @@ extension ContainerDetailsView {
 
 			// Created At
 			if let createdAt = details?.created ?? container?.created {
-				Section(Localization.Section.createdAt) {
+				Section("ContainerDetailsView.Section.CreatedAt") {
 					Labeled(createdAt.formatted(.dateTime))
 				}
 			}
 
 			// Finished At
 			if let finishedAt = details?.status.finishedAt {
-				Section(Localization.Section.finishedAt) {
+				Section("ContainerDetailsView.Section.FinishedAt") {
 					Labeled(finishedAt.formatted(.dateTime))
 				}
 			}
 
 			// Image
 			if let image = container?.image {
-				Section(Localization.Section.image) {
+				Section("ContainerDetailsView.Section.Image") {
 					Group {
 						if let imageID = container?.imageID {
 							Labeled("\(image)@\(imageID)")
@@ -65,7 +63,7 @@ extension ContainerDetailsView {
 
 			// CMD
 			if let command = details?.config?.cmd?.joined(separator: " ") {
-				Section(Localization.Section.cmd) {
+				Section("ContainerDetailsView.Section.Cmd") {
 					Labeled(command)
 						.fontDesign(.monospaced)
 				}
@@ -73,7 +71,7 @@ extension ContainerDetailsView {
 
 			// Entrypoint
 			if let entrypoint = details?.config?.entrypoint?.joined(separator: " ") {
-				Section(Localization.Section.entrypoint) {
+				Section("ContainerDetailsView.Section.Entrypoint") {
 					Labeled(entrypoint)
 						.fontDesign(.monospaced)
 				}

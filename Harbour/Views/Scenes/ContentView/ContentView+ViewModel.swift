@@ -62,7 +62,7 @@ extension ContentView {
 		}
 
 		var navigationTitle: String {
-			portainerStore.selectedEndpoint?.name ?? Localizable.ContentView.noEndpointSelected
+			portainerStore.selectedEndpoint?.name ?? "ContentView.NoEndpointSelected"
 		}
 
 		var containers: [Container] {
@@ -122,19 +122,19 @@ extension ContentView.ViewModel {
 		var title: String? {
 			switch self {
 			case .loading:
-				Localizable.Generic.loading
+				"Generic.Loading"
 			case .error(let error):
 				error.localizedDescription
 			case .hasContainers:
 				nil
 			case .containersEmpty:
-				Localizable.ContainersView.noContainersPlaceholder
+				"ContainersView.NoContainersPlaceholder"
 			case .noEndpointSelected:
-				Localizable.ContainersView.noSelectedEndpointPlaceholder
+				"ContainersView.NoSelectedEndpointPlaceholder"
 			case .noEndpoints:
-				Localizable.ContainersView.noEndpointsPlaceholder
+				"ContainersView.NoEndpointsPlaceholder"
 			case .noServer:
-				Localizable.ContainersView.noSelectedServerPlaceholder
+				"ContainersView.NoSelectedServerPlaceholder"
 			case .somethingWentWrong:
 				nil
 			}

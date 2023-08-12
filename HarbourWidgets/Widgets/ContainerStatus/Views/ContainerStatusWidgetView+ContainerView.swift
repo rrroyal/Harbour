@@ -22,7 +22,7 @@ extension ContainerStatusWidgetView {
 		private let minimumScaleFactor: Double = 0.8
 
 		private var namePlaceholder: String {
-			String(localized: "Unknown")
+			String(localized: "Generic.Unknown")
 		}
 
 		private var statusPlaceholder: String {
@@ -30,7 +30,7 @@ extension ContainerStatusWidgetView {
 				return error.localizedDescription
 			}
 
-			return String(localized: "Unknown")
+			return String(localized: "Generic.Unknown")
 		}
 
 		@ViewBuilder

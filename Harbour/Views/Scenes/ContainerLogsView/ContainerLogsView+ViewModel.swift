@@ -27,7 +27,7 @@ extension ContainerLogsView {
 		@Published @MainActor private(set) var logs: String?
 		@Published @MainActor private(set) var logsParsed: AttributedString?
 		@Published var includeTimestamps = false
-		@Published var linesCount = 100
+		@Published var lineCount = 100
 
 		@MainActor
 		var viewState: ViewState {
@@ -64,7 +64,7 @@ extension ContainerLogsView {
 
 				do {
 					let logs = try await portainerStore.getLogs(for: containerNavigationItem.id,
-																tail: linesCount,
+																tail: lineCount,
 																timestamps: includeTimestamps)
 					self.logs = logs
 					self.logsParsed = nil
@@ -113,11 +113,11 @@ extension ContainerLogsView.ViewModel {
 		var title: String? {
 			switch self {
 			case .loading:
-				Localizable.Generic.loading
+				"Generic.Loading"
 			case .error(let error):
 				error.localizedDescription
 			case .logsEmpty:
-				Localizable.ContainerLogsView.logsEmpty
+				"ContainerLogsView.LogsEmpty"
 			case .somethingWentWrong:
 				nil
 			default:

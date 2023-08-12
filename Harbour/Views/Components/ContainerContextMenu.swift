@@ -11,8 +11,6 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerContextMenu: View {
-	private typealias Localization = Localizable.ContainerContextMenu
-
 	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.errorHandler) private var errorHandler
@@ -39,7 +37,7 @@ struct ContainerContextMenu: View {
 	@ViewBuilder
 	private var attachButton: some View {
 		Button(action: attachAction) {
-			Label(Localization.attach, systemImage: SFSymbol.terminal)
+			Label("ContainerContextMenu.Attach", systemImage: SFSymbol.terminal)
 		}
 	}
 

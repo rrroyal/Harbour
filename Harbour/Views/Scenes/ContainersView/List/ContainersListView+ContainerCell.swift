@@ -14,15 +14,13 @@ extension ContainersListView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
-		private typealias Localization = Localizable.ContainerCell
-
 		private let minimumScaleFactor: Double = 0.8
 
 		let container: Container
 
 		@ViewBuilder
 		private var headlineLabel: some View {
-			Text(container.displayName ?? Localization.unnamed)
+			Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
 				.font(.headline.weight(.semibold))
 				.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 				.transition(.opacity)
@@ -40,7 +38,7 @@ extension ContainersListView {
 
 				if let containerStatus = container.status {
 					Group {
-						Text(Localization.stateJoiner)
+						Text(verbatim: "•")
 						Text(containerStatus)
 					}
 					.foregroundStyle(.secondary)

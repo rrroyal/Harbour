@@ -33,13 +33,11 @@ extension AppIcon {
 // MARK: - AppIcon+icons
 
 extension AppIcon {
-	private typealias Localization = Localizable.AppIcon
-
-	static let `default`: Self = .init(id: nil, name: Localization.default)
-	static let boxLight: Self = .init(id: "AppIcon-Box-Light", name: Localization.boxLight)
-	static let boxDark: Self = .init(id: "AppIcon-Box-Dark", name: Localization.boxDark)
-	static let ogLight: Self = .init(id: "AppIcon-OG-Light", name: Localization.ogLight)
-	static let ogDark: Self = .init(id: "AppIcon-OG-Dark", name: Localization.ogDark)
+	static let `default`: Self = .init(id: nil, name: String(localized: "AppIcon.Default"))
+	static let boxLight: Self = .init(id: "AppIcon-Box-Light", name: String(localized: "AppIcon.BoxLight"))
+	static let boxDark: Self = .init(id: "AppIcon-Box-Dark", name: String(localized: "AppIcon.BoxDark"))
+	static let ogLight: Self = .init(id: "AppIcon-OG-Light", name: String(localized: "AppIcon.OGLight"))
+	static let ogDark: Self = .init(id: "AppIcon-OG-Dark", name: String(localized: "AppIcon.OGDark"))
 
 	static let allCases: [Self] = [
 		.default,

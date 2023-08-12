@@ -13,6 +13,8 @@
 		0000115E2A321AA800A08C52 /* Error+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000115D2A321AA800A08C52 /* Error+Equatable.swift */; };
 		0000116E2A321F4800A08C52 /* ContainerDetailsView+PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000116D2A321F4800A08C52 /* ContainerDetailsView+PlaceholderView.swift */; };
 		000011762A3220E400A08C52 /* ContainerLogsView+PlaceholderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000011752A3220E400A08C52 /* ContainerLogsView+PlaceholderView.swift */; };
+		002828842A869EDA00ABD7EA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 002828832A869EDA00ABD7EA /* Localizable.xcstrings */; };
+		0028288B2A86F46200ABD7EA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 002828832A869EDA00ABD7EA /* Localizable.xcstrings */; };
 		002D0EEB2A81B53900A914E5 /* CopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002D0EEA2A81B53900A914E5 /* CopyButton.swift */; };
 		002D1BAB2A5A18320044753E /* ContainerStatusIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABA32A34ED2A0074E940 /* ContainerStatusIntent.swift */; };
 		002D1BAC2A5A18320044753E /* OpenContainerDetailsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F1EA8D2A360CA3000EEF48 /* OpenContainerDetailsIntent.swift */; };
@@ -172,7 +174,6 @@
 		E7D6E62A2884771200C79732 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D6E6292884771200C79732 /* ContentView.swift */; };
 		E7D6E62C2884771400C79732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E62B2884771400C79732 /* Assets.xcassets */; };
 		E7D6E62F2884771400C79732 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E62E2884771400C79732 /* Preview Assets.xcassets */; };
-		E7D6E643288478E000C79732 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E645288478E000C79732 /* Localizable.strings */; };
 		E7DA4CB82977329000DBA55C /* HarbourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D6E6272884771200C79732 /* HarbourApp.swift */; };
 		E7DA4CDC2977389700DBA55C /* CommonCoreData in Frameworks */ = {isa = PBXBuildFile; productRef = E7DA4CDB2977389700DBA55C /* CommonCoreData */; };
 		E7DA4CDE2977389700DBA55C /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = E7DA4CDD2977389700DBA55C /* CommonFoundation */; };
@@ -225,6 +226,7 @@
 		0000115D2A321AA800A08C52 /* Error+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Equatable.swift"; sourceTree = "<group>"; };
 		0000116D2A321F4800A08C52 /* ContainerDetailsView+PlaceholderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+PlaceholderView.swift"; sourceTree = "<group>"; };
 		000011752A3220E400A08C52 /* ContainerLogsView+PlaceholderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContainerLogsView+PlaceholderView.swift"; sourceTree = "<group>"; };
+		002828832A869EDA00ABD7EA /* Localizable.xcstrings */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		002D0EEA2A81B53900A914E5 /* CopyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopyButton.swift; sourceTree = "<group>"; };
 		00687F852A6E9D340099BFE5 /* Haptics.HapticStyle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Haptics.HapticStyle+.swift"; sourceTree = "<group>"; };
 		007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StacksView+ViewModel.swift"; sourceTree = "<group>"; };
@@ -354,7 +356,6 @@
 		E7D6E6292884771200C79732 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E7D6E62B2884771400C79732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E7D6E62E2884771400C79732 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		E7D6E644288478E000C79732 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E7EB776428EA094800295CA2 /* DebugView+LogsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DebugView+LogsView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -579,8 +580,8 @@
 				E72AA7C328EB905300C33EA3 /* Extensions */,
 				E72AA7C228EB904C00C33EA3 /* Helpers */,
 				002D1BA72A5A17BE0044753E /* Intents */,
-				E7D6E63E2884785700C79732 /* Localization */,
 				E7D6E62B2884771400C79732 /* Assets.xcassets */,
+				002828832A869EDA00ABD7EA /* Localizable.xcstrings */,
 				E78C660528E9B90D0033D0E4 /* Info.h */,
 			);
 			path = Shared;
@@ -1002,14 +1003,6 @@
 			path = Modules;
 			sourceTree = "<group>";
 		};
-		E7D6E63E2884785700C79732 /* Localization */ = {
-			isa = PBXGroup;
-			children = (
-				E7D6E645288478E000C79732 /* Localizable.strings */,
-			);
-			path = Localization;
-			sourceTree = "<group>";
-		};
 		E7E240F128847FAB00CC4F4C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1147,6 +1140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0028288B2A86F46200ABD7EA /* Localizable.xcstrings in Resources */,
 				00FD0FB82A3533CF008D68DF /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1156,8 +1150,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E7D6E62F2884771400C79732 /* Preview Assets.xcassets in Resources */,
-				E7D6E643288478E000C79732 /* Localizable.strings in Resources */,
 				E7D6E62C2884771400C79732 /* Assets.xcassets in Resources */,
+				002828842A869EDA00ABD7EA /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1361,17 +1355,6 @@
 		};
 /* End PBXTargetDependency section */
 
-/* Begin PBXVariantGroup section */
-		E7D6E645288478E000C79732 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E7D6E644288478E000C79732 /* en */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
-
 /* Begin XCBuildConfiguration section */
 		00A4AB992A34ECB70074E940 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1515,6 +1498,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1570,6 +1554,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

@@ -12,8 +12,6 @@ import SwiftUI
 // MARK: - StacksView
 
 struct StacksView: View {
-	private typealias Localization = Localizable.StacksView
-
 	@Environment(\.errorHandler) var errorHandler
 	@StateObject private var viewModel = ViewModel()
 
@@ -37,11 +35,11 @@ struct StacksView: View {
 				if !viewModel.searchText.isEmpty {
 					ContentUnavailableView.search(text: viewModel.searchText)
 				} else {
-					ContentUnavailableView("NO_CONTAINERS", systemImage: "xmark")
+					ContentUnavailableView("StacksView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
 				}
 			}
 		}
-		.navigationTitle(Localization.title)
+		.navigationTitle("StacksView.Title")
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState.id)
 		.animation(.easeInOut, value: viewModel.stacks)
@@ -95,14 +93,14 @@ private extension StacksView {
 						.fontWeight(.medium)
 
 					HStack(spacing: 4) {
-						Image(systemName: SFSymbol.circle)
+						Image(systemName: "circle")
 							.symbolVariant(isLoading ? .none : .fill)
 							.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
 							.font(.system(size: iconSize))
 							.foregroundStyle(isLoading ? Color.gray : stack.status.color)
-							.accessibilityLabel(isLoading ? Localizable.Generic.loading : stack.status.label)
+							.accessibilityLabel(isLoading ? "Generic.Loading" : stack.status.label)
 
-						Text(isLoading ? Localizable.Generic.loading : stack.status.label)
+						Text(isLoading ? "Generic.Loading" : stack.status.label)
 							.font(.footnote)
 							.fontWeight(.medium)
 							.foregroundStyle(isLoading ? Color.gray : stack.status.color)
@@ -141,9 +139,9 @@ private extension StacksView {
 				toggleAction()
 			} label: {
 				if isOn {
-					Label(Localization.Stack.stop, systemImage: SFSymbol.disable)
+					Label("StacksView.Stack.Stop", systemImage: SFSymbol.stop)
 				} else {
-					Label(Localization.Stack.start, systemImage: SFSymbol.enable)
+					Label("StacksView.Stack.Start", systemImage: SFSymbol.start)
 				}
 			}
 			.symbolVariant(.fill)

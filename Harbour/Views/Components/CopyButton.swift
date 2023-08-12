@@ -10,19 +10,19 @@ import SwiftUI
 
 struct CopyButton: View {
 	@Environment(\.showIndicator) private var showIndicatorAction
-	let title: String
+	let title: LocalizedStringKey
 	let content: String?
 	let showIndicator: Bool
 	let action: (() -> String?)?
 
-	init(_ title: String = Localizable.Generic.copy, content: String?, showIndicator: Bool = true) {
+	init(_ title: LocalizedStringKey = "Generic.Copy", content: String?, showIndicator: Bool = true) {
 		self.title = title
 		self.content = content
 		self.showIndicator = showIndicator
 		self.action = nil
 	}
 
-	init(_ title: String = Localizable.Generic.copy, showIndicator: Bool = true, action: @escaping () -> String?) {
+	init(_ title: LocalizedStringKey = "Generic.Copy", showIndicator: Bool = true, action: @escaping () -> String?) {
 		self.title = title
 		self.content = nil
 		self.showIndicator = showIndicator

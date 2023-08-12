@@ -9,8 +9,6 @@ import CommonHaptics
 import SwiftUI
 
 struct SettingsView: View {
-	private typealias Localization = Localizable.SettingsView
-
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@StateObject private var viewModel: ViewModel
@@ -29,11 +27,11 @@ struct SettingsView: View {
 				OtherSection()
 			}
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
-			.navigationTitle(Localization.title)
+			.navigationTitle("SettingsView.Title")
 			.toolbar {
 				#if targetEnvironment(macCatalyst)
 				ToolbarItem(placement: .cancellationAction) {
-					Button(Localizable.Generic.close) {
+					Button("Generic.Close") {
 //						Haptics.generateIfEnabled(.sheetPresentation)
 						dismiss()
 					}

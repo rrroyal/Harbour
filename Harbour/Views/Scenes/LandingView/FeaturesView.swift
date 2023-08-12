@@ -11,35 +11,33 @@ import SwiftUI
 // MARK: - FeaturesView
 
 struct FeaturesView: View {
-	private typealias Localization = Localizable.LandingView
-
 	let continueAction: () -> Void
 
 	var body: some View {
 		VStack {
 			Spacer()
 
-			Text("\(Localization.titlePrefix) \(Text(Localizable.appName).foregroundColor(.accentColor))!")
+			Text("FeaturesView.Headline AppName:\(Text("AppName").foregroundColor(.accentColor))")
 				.font(.largeTitle.bold())
 				.multilineTextAlignment(.center)
 
 			Spacer()
 
 			VStack(spacing: 20) {
-				FeatureCell(headline: Localization.Feature1.title,
-							subheadline: Localization.Feature1.description,
+				FeatureCell(headline: "FeaturesView.Feature1.Title",
+							subheadline: "FeaturesView.Feature1.Description",
 							icon: "ipad.and.iphone")
-				FeatureCell(headline: Localization.Feature2.title,
-							subheadline: Localization.Feature2.description,
-							icon: "questionmark")
-				FeatureCell(headline: Localization.Feature3.title,
-							subheadline: Localization.Feature3.description,
-							icon: "questionmark")
+//				FeatureCell(headline: "LandingView.Feature2.Title",
+//							subheadline: "LandingView.Feature2.Description",
+//							icon: "questionmark")
+//				FeatureCell(headline: "LandingView.Feature3.Title",
+//							subheadline: "LandingView.Feature3.Description",
+//							icon: "questionmark")
 			}
 
 			Spacer()
 
-			Button(Localization.continueButton) {
+			Button("FeaturesView.ContinueButton") {
 				Haptics.generateIfEnabled(.buttonPress)
 				continueAction()
 			}

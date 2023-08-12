@@ -13,8 +13,6 @@ import SwiftUI
 
 /// View fetching and displaying details for associated container ID.
 struct ContainerDetailsView: View {
-	private typealias Localization = Localizable.ContainerDetailsView
-
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
@@ -80,7 +78,7 @@ private extension ContainerDetailsView {
 		var body: some View {
 			Menu {
 				if isLoading {
-					Text(Localizable.Generic.loading)
+					Text("Generic.Loading")
 					Divider()
 				}
 
@@ -92,10 +90,10 @@ private extension ContainerDetailsView {
 
 				if let portainerURL = PortainerURLScheme(address: portainerServerURL)?.containerURL(containerID: containerID, endpointID: portainerSelectedEndpointID) {
 					Divider()
-					ShareLink(Localizable.Generic.sharePortainerURL, item: portainerURL)
+					ShareLink("Generic.SharePortainerURL", item: portainerURL)
 				}
 			} label: {
-				Label(Localizable.Generic.more, systemImage: SFSymbol.moreCircle)
+				Label("Generic.More", systemImage: SFSymbol.moreCircle)
 			}
 		}
 	}

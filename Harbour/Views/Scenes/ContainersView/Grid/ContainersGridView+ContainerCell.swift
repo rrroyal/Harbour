@@ -14,8 +14,6 @@ extension ContainersGridView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
-		private typealias Localization = Localizable.ContainerCell
-
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
 
@@ -44,13 +42,13 @@ extension ContainersGridView {
 		@ViewBuilder
 		private var nameAndStatusLabels: some View {
 			VStack(alignment: .leading, spacing: 2) {
-				Text(container.displayName ?? Localization.unnamed)
+				Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
 					.font(.callout.weight(.semibold))
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.transition(.opacity)
 					.lineLimit(2)
 
-				Text(container.status ?? Localizable.Generic.unknown)
+				Text(container.status ?? String(localized: "ContainerCell.UnknownStatus"))
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
 					.transition(.opacity)

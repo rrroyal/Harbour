@@ -14,12 +14,10 @@ import SwiftUI
 
 extension SettingsView {
 	struct PortainerSection: View {
-		private typealias Localization = Localizable.SettingsView.Portainer
-
 		@EnvironmentObject private var viewModel: ViewModel
 
 		var body: some View {
-			Section(Localization.title) {
+			Section("SettingsView.Portainer.Title") {
 				EndpointsMenu()
 			}
 			.sheet(isPresented: $viewModel.isSetupSheetPresented) {
@@ -35,8 +33,6 @@ extension SettingsView {
 
 private extension SettingsView.PortainerSection {
 	struct EndpointsMenu: View {
-		private typealias Localization = Localizable.SettingsView.Portainer.EndpointsMenu
-
 		@EnvironmentObject private var viewModel: SettingsView.ViewModel
 		@Environment(\.errorHandler) private var errorHandler
 
@@ -58,10 +54,10 @@ private extension SettingsView.PortainerSection {
 //					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isSetupSheetPresented.toggle()
 				} label: {
-					Label(Localization.add, systemImage: SFSymbol.add)
+					Label("SettingsView.Portainer.EndpointsMenu.Add", systemImage: SFSymbol.plus)
 				}
 			} label: {
-				let _serverURLLabel = serverURLLabel ?? Localization.noServerPlaceholder
+				let _serverURLLabel = serverURLLabel ?? "SettingsView.Portainer.EndpointsMenu.NoServersPlaceholder"
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
 					Text(_serverURLLabel)
@@ -82,20 +78,20 @@ private extension SettingsView.PortainerSection {
 		private func urlMenu(for url: URL) -> some View {
 			Menu(formattedURL(url), content: {
 				if viewModel.activeURL == url {
-					Label(Localization.Server.inUse, systemImage: SFSymbol.checkmark)
+					Label("SettingsView.Portainer.EndpointsMenu.Server.InUse", systemImage: SFSymbol.checkmark)
 						.symbolVariant(.circle.fill)
 				} else {
 					Button {
 						Haptics.generateIfEnabled(.buttonPress)
 						viewModel.switchPortainerServer(to: url, errorHandler: errorHandler)
 					} label: {
-						Label(Localization.Server.use, systemImage: SFSymbol.checkmark)
+						Label("SettingsView.Portainer.EndpointsMenu.Server.Use", systemImage: SFSymbol.checkmark)
 							.symbolVariant(.circle)
 					}
 				}
 
 				#if DEBUG
-				CopyButton("Copy Token") {
+				CopyButton("SettingsView.Portainer.EndpointsMenu.Server.CopyToken") {
 					try? Keychain.shared.getString(for: url)
 				}
 				#endif
@@ -107,10 +103,10 @@ private extension SettingsView.PortainerSection {
 						Haptics.generateIfEnabled(.buttonPress)
 						viewModel.removeServer(url, errorHandler: errorHandler)
 					} label: {
-						Label(Localization.Server.removeExclamation, systemImage: SFSymbol.remove)
+						Label("SettingsView.Portainer.EndpointsMenu.Server.Remove!", systemImage: SFSymbol.remove)
 					}
 				} label: {
-					Label(Localization.Server.remove, systemImage: SFSymbol.remove)
+					Label("SettingsView.Portainer.EndpointsMenu.Server.Remove", systemImage: SFSymbol.remove)
 				}
 				.foregroundStyle(.red)
 			})
