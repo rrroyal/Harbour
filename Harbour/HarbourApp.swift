@@ -59,10 +59,9 @@ private extension HarbourApp {
 		case .inactive:
 			break
 		case .active:
-//			if portainerStore.isSetup {
-//				portainerStore.refresh()
-//			}
-			break
+			if portainerStore.isSetup {
+				portainerStore.refresh()
+			}
 		@unknown default:
 			break
 		}

@@ -6,10 +6,10 @@
 //
 
 import Foundation
+import PortainerKit
 #if canImport(UIKit)
 import UIKit
 #endif
-import PortainerKit
 
 // MARK: - ContentView+ViewModel
 
@@ -22,12 +22,12 @@ extension ContentView {
 		private var fetchTask: Task<Void, Error>?
 		private var suggestedSearchTokensTask: Task<Void, Error>?
 
-		@Published @MainActor private(set) var viewState: ViewState<[Container]?, Error> = .loading
-		@Published @MainActor private(set) var suggestedSearchTokens: [SearchToken] = []
+		@Published private(set) var viewState: ViewState<[Container]?, Error> = .loading
+		@Published private(set) var suggestedSearchTokens: [SearchToken] = []
 
-		@Published @MainActor var searchText = ""
-		@Published @MainActor var searchTokens: [SearchToken] = []
-		@Published @MainActor var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+		@Published var searchText = ""
+		@Published var searchTokens: [SearchToken] = []
+		@Published var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
 		var containers: [Container]? {
 			viewState.unwrappedValue??
@@ -68,7 +68,6 @@ extension ContentView {
 			}
 		}
 
-		@MainActor
 		func refresh() async throws {
 			fetchTask?.cancel()
 			self.fetchTask = Task {
@@ -85,28 +84,32 @@ extension ContentView {
 
 			self.suggestedSearchTokensTask?.cancel()
 			self.suggestedSearchTokensTask = Task {
-				let stacks = try await portainerStore.getStacks()
-				let stacksTokens = stacks
+				let staticTokens: [SearchToken] = [
+					.status(isOn: true),
+					.status(isOn: false)
+				]
+
+				let stacksTokens = try await portainerStore.getStacks()
 					.filter { $0.status == .active }
 					.sorted(by: \.name)
 					.map { SearchToken.stack($0) }
 
-				let statusTokens = [SearchToken.status(isOn: true), SearchToken.status(isOn: false)]
-
-				self.suggestedSearchTokens = statusTokens + stacksTokens
+				self.suggestedSearchTokens = staticTokens + stacksTokens
 			}
 
 			try await self.fetchTask?.value
 		}
 
-		@MainActor
+		func selectEndpoint(_ endpoint: Endpoint?) {
+			portainerStore.selectEndpoint(endpoint)
+		}
+
 		func onLandingDismissed() {
 			preferences.landingDisplayed = true
 		}
 
-		@MainActor
-		func selectEndpoint(_ endpoint: Endpoint?) {
-			portainerStore.selectEndpoint(endpoint)
+		func onStackTapped(_ stack: Stack) {
+			searchTokens = [.stack(stack)]
 		}
 	}
 }
@@ -150,8 +153,7 @@ extension ContentView.ViewModel {
 			case .stack(let stack):
 				return container.stack == stack.name
 			case .status(let isOn):
-				let state = container.state
-				let isContainerOn = state == .created || state == .paused || state == .removing || state == .restarting || state == .running
+				let isContainerOn = container.state.isRunning
 				return isOn ? isContainerOn : !isContainerOn
 			}
 		}

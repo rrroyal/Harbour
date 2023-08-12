@@ -18,23 +18,24 @@ extension Container {
 	}
 }
 
-// MARK: - Container+readableStatus
-
-extension Container {
-	static func readableStatus(status: String?, state: ContainerState?) -> String {
-		if let status {
-			return "\(status) (\(state.description))"
-		}
-
-		return state.description
-	}
-}
-
 // MARK: - Container+stack
 
 extension Container {
 	var stack: String? {
 		labels?.first(where: { $0.key == Portainer.Label.stack })?.value
+	}
+}
+
+// MARK: - Container+_exitCode
+
+extension Container {
+	var _exitCode: Int? {
+		guard let status else { return nil }
+
+		let regex = #/Exited \((\d*)\).*/#
+		guard let firstMatch = status.firstMatch(of: regex) else { return nil }
+		let str = firstMatch.output.1
+		return Int(str)
 	}
 }
 

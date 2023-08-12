@@ -22,16 +22,16 @@ extension ContainersGridView {
 		@ViewBuilder
 		private var stateHeader: some View {
 			HStack {
-				Text(container.isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
+				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
 					.font(.footnote.weight(.medium))
-					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
+					.foregroundColor(container._isStored ? ContainerState?.none.color : container.state.color)
 //					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
 					.transition(.opacity)
 
 				Spacer()
 
 				Circle()
-					.fill(container.isStored ? ContainerState?.none.color : container.state.color)
+					.fill(container._isStored ? ContainerState?.none.color : container.state.color)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 			}

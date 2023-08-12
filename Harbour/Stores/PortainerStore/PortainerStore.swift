@@ -84,12 +84,12 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 
 		if let (url, token) = getStoredCredentials() {
 			self.setupTask = Task { @MainActor in
-				try? await setup(url: url, token: token, saveToken: false)
+				try? await setup(url: url, token: token, saveToken: false, _refresh: false)
 			}
 
 			Task { @MainActor in
 				if let storedContainers = await loadStoredContainers(),
-				   !self.containers.contains(where: { !$0.isStored }) {
+				   !self.containers.contains(where: { !$0._isStored }) {
 					self.containers = storedContainers
 				}
 			}
@@ -111,7 +111,7 @@ public extension PortainerStore {
 	///   - token: Authorization token (if `nil`, it's searched in the keychain)
 	///   - saveToken: Should the token be saved to the keychain?
 	@Sendable @MainActor
-	func setup(url: URL, token: String?, saveToken: Bool = true) async throws {
+	func setup(url: URL, token: String?, saveToken: Bool = true, _refresh: Bool = true) async throws {
 		logger.notice("Setting up, URL: \(url.absoluteString, privacy: .sensitive)... [\(String._debugInfo(), privacy: .public)]")
 
 		do {
@@ -122,8 +122,10 @@ public extension PortainerStore {
 
 			preferences.selectedServer = url.absoluteString
 
-			let refreshTask = refresh(_awaitSetup: false)
-			_ = try await refreshTask.value
+			if _refresh {
+				let refreshTask = refresh(_awaitSetup: false)
+				_ = try await refreshTask.value
+			}
 
 			if saveToken {
 				do {

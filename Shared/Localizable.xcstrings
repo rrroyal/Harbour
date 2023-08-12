@@ -51,16 +51,6 @@
         }
       }
     },
-    "AppIntents.Parameter.Container.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Container"
-          }
-        }
-      }
-    },
     "AppIntents.Parameter.Containers.Title" : {
       "localizations" : {
         "en" : {
@@ -665,26 +655,6 @@
         }
       }
     },
-    "ExecuteActionIntent.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Action to execute"
-          }
-        }
-      }
-    },
-    "ExecuteActionIntent.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Execute Action"
-          }
-        }
-      }
-    },
     "FeaturesView.ContinueButton" : {
       "localizations" : {
         "en" : {
@@ -951,26 +921,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"%@\" disappeared!"
-          }
-        }
-      }
-    },
-    "OpenContainerDetailsIntent.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open details view for selected container."
-          }
-        }
-      }
-    },
-    "OpenContainerDetailsIntent.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Container Details"
           }
         }
       }
@@ -1551,7 +1501,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See the details of %@."
+            "value" : "See the details of the \"%@\" container."
           }
         }
       }

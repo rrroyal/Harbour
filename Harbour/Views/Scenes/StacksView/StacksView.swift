@@ -12,9 +12,12 @@ import SwiftUI
 // MARK: - StacksView
 
 struct StacksView: View {
-	@EnvironmentObject private var sceneDelegate: SceneDelegate
+	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@StateObject private var viewModel = ViewModel()
+
+	let stackTappedAction: (Stack) -> Void
 
 	var body: some View {
 		List {
@@ -22,7 +25,12 @@ struct StacksView: View {
 				ForEach(stacks) { stack in
 					let isLoading = viewModel.loadingStacks.contains(stack.id)
 					let isStackOn = stack.status == .active
-					StackCell(stack: stack, isOn: isStackOn, isLoading: isLoading) {
+					let containers = portainerStore.containers.filter { $0.stack == stack.name }
+
+					StackCell(stack, containers: containers, isLoading: isLoading) {
+						stackTappedAction(stack)
+						dismiss()
+					} toggleAction: {
 						setStackState(stack, started: !isStackOn)
 					}
 					.transition(.opacity)
@@ -77,49 +85,103 @@ struct StacksView: View {
 private extension StacksView {
 	struct StackCell: View {
 		let stack: Stack
-		let isOn: Bool
+		let containers: [Container]
 		let isLoading: Bool
+		let tappedAction: () -> Void
 		let toggleAction: () -> Void
+
+		init(
+			_ stack: Stack,
+			containers: [Container],
+			isLoading: Bool,
+			tappedAction: @escaping () -> Void,
+			toggleAction: @escaping () -> Void
+		) {
+			self.stack = stack
+			self.containers = containers
+			self.isLoading = isLoading
+			self.tappedAction = tappedAction
+			self.toggleAction = toggleAction
+		}
 
 		@ScaledMetric(relativeTo: .subheadline)
 		private var iconSize = 6
 
+		private var isOn: Bool {
+			stack.status == .active
+		}
+
+		private var stackColor: Color {
+			if isLoading { return Color.gray }
+			if !isOn { return stack.status.color.opacity(Constants.secondaryOpacity) }
+
+			if containers.count == runningContainersCount {
+				return stack.status.color
+			} else {
+				let hasFailedContainers = containers.contains {
+					if let exitCode = $0._exitCode {
+						return exitCode != 0
+					}
+					return false
+				}
+				return hasFailedContainers ? Color.orange : stack.status.color
+			}
+		}
+
+		private var runningContainersCount: Int {
+			containers.filter { $0.state.isRunning }.count
+		}
+
 		var body: some View {
-			Button {
-				// TODO: Navigate back & set stack tag
-			} label: {
-				VStack(alignment: .leading) {
-					Text(verbatim: stack.name)
-						.font(.body)
-						.fontWeight(.medium)
+			Button(action: tappedAction) {
+				HStack {
+					VStack(alignment: .leading) {
+						Text(verbatim: stack.name)
+							.font(.body)
+							.fontWeight(.medium)
 
-					HStack(spacing: 4) {
-						Image(systemName: "circle")
-							.symbolVariant(isLoading ? .none : .fill)
-							.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
-							.font(.system(size: iconSize))
-							.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
+						HStack(spacing: 4) {
+							Image(systemName: "circle")
+								.font(.system(size: iconSize))
+								.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
 
-						Text(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
+							Group {
+								if isLoading {
+									Text("Generic.Loading")
+								} else {
+									if isOn {
+										Text(verbatim: "\(stack.status.title) (\(runningContainersCount)/\(containers.count))")
+									} else {
+										Text(verbatim: stack.status.title)
+									}
+								}
+							}
 							.font(.footnote)
 							.fontWeight(.medium)
+						}
+						.foregroundStyle(stackColor)
+						.symbolVariant(isLoading ? .none : .fill)
+						.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
 					}
-					.foregroundStyle(isLoading ? Color.gray : stack.status.color.opacity(isOn ? 1 : Constants.secondaryOpacity))
-					.transition(.opacity)
+
+					Spacer()
+
+					Image(systemName: SFSymbol.filter)
+						.tint(Color.accentColor)
 				}
 			}
-			.disabled(!isOn)
+			.disabled(!isOn || isLoading)
 			.tint(Color.primary)
 			.padding(.vertical, 2)
 			.transition(.opacity)
 			.animation(.easeInOut, value: isLoading)
 			.animation(.easeInOut, value: stack.status)
 			.contextMenu {
-				StackToggleButton(stack: stack, isOn: isOn, toggleAction: toggleAction)
+				StackToggleButton(stack: stack, toggleAction: toggleAction)
 					.disabled(isLoading)
 			}
 			.swipeActions(edge: .trailing) {
-				StackToggleButton(stack: stack, isOn: isOn, toggleAction: toggleAction)
+				StackToggleButton(stack: stack, toggleAction: toggleAction)
 					.tint(isOn ? .red : .green)
 					.disabled(isLoading)
 			}
@@ -132,14 +194,13 @@ private extension StacksView {
 private extension StacksView {
 	struct StackToggleButton: View {
 		let stack: Stack
-		let isOn: Bool
 		let toggleAction: () -> Void
 
 		var body: some View {
 			Button {
 				toggleAction()
 			} label: {
-				if isOn {
+				if stack.status == .active {
 					Label("StacksView.Stack.Stop", systemImage: SFSymbol.stop)
 				} else {
 					Label("StacksView.Stack.Start", systemImage: SFSymbol.start)

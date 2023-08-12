@@ -59,7 +59,7 @@ struct ContentView: View {
 		#if ENABLE_PREVIEW_FEATURES
 		ToolbarItem(placement: .navigation) {
 			NavigationLink {
-				StacksView()
+				StacksView(stackTappedAction: viewModel.onStackTapped)
 			} label: {
 				Label("ContentView.NavigationButton.Stacks", systemImage: SFSymbol.stack)
 //					.symbolVariant(portainerStore.isSetup ? .none : .slash)
@@ -95,11 +95,13 @@ struct ContentView: View {
 				viewModel.viewState.backgroundView
 			}
 		)
-//		.searchable(text: $viewModel.searchText)
-		.searchable(text: $viewModel.searchText, tokens: $viewModel.searchTokens, suggestedTokens: .constant(viewModel.suggestedSearchTokens)) { token in
+		.searchable(
+			text: $viewModel.searchText,
+			tokens: $viewModel.searchTokens,
+			suggestedTokens: .constant(viewModel.suggestedSearchTokens)
+		) { token in
 			Label(token.title, systemImage: token.icon)
 		}
-//		.animation(.easeInOut, value: isSummaryVisible)
 	}
 
 	// MARK: Body

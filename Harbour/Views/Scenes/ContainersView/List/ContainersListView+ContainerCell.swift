@@ -30,11 +30,11 @@ extension ContainersListView {
 		@ViewBuilder
 		private var subheadlineLabel: some View {
 			HStack(spacing: 4) {
-				Text(container.isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
-					.foregroundColor(container.isStored ? ContainerState?.none.color : container.state.color)
+				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
+					.foregroundColor(container._isStored ? ContainerState?.none.color : container.state.color)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
-					.animation(.easeInOut, value: container.isStored)
+					.animation(.easeInOut, value: container._isStored)
 
 				if let containerStatus = container.status {
 					Group {
@@ -62,7 +62,7 @@ extension ContainersListView {
 				Spacer()
 
 				Circle()
-					.fill(container.isStored ? ContainerState?.none.color : container.state.color)
+					.fill(container._isStored ? ContainerState?.none.color : container.state.color)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)

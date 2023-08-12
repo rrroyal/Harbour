@@ -51,18 +51,19 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	)
 	var resolveByName: Bool
 
+	/*
 	func perform() async throws -> some IntentResult & ReturnsValue<Container> & OpensIntent {
-//		let containers: [IntentContainer] = if let containers { containers } else { try await $containers.requestValue() }
+		let containers = if let containers { containers } else { try await $containers.requestValue() }
 		let endpoint: IntentEndpoint = if let endpoint { endpoint } else { try await $endpoint.requestValue() }
 
-		let containers = try await getContainers(
-			for: endpoint.id,
-			ids: containers.map(\._id),
-			names: containers.map(\.name),
-			resolveByName: resolveByName
-		)
+//		let containers = try await getContainers(
+//			for: endpoint.id,
+//			ids: containers.map(\._id),
+//			names: containers.map(\.name),
+//			resolveByName: resolveByName
+//		)
 
-		let intentContainers = containers.map { IntentContainer(container: $0) }
+//		let intentContainers = containers.map { IntentContainer(container: $0) }
 		// swiftlint:disable switch_case_alignment
 		let intentContainer: IntentContainer = switch intentContainers.count {
 		case 0:
@@ -77,6 +78,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 		return .result(value: intentContainer, opensIntent: OpenContainerDetailsIntent(endpoint: endpoint, container: intentContainer))
 	}
+	 */
 }
 
 // MARK: - ContainerStatusIntent+Error

@@ -14,6 +14,9 @@ enum SFSymbol {
 	/// 􀄿 arrow.up.to.line
 	static let arrowUpLine = "arrow.up.to.line"
 
+	/// 􀯶 chevron.backward
+	static let chevronBackward = "chevron.backward"
+
 	/// 􀆈 chevron.down
 	static let chevronDown = "chevron.down"
 
@@ -23,17 +26,11 @@ enum SFSymbol {
 	/// 􀉁 doc.on.doc
 	static let copy = "doc.on.doc"
 
-	/// 􀍠 ellipsis
-	static let ellipsis = "ellipsis"
-
-	/// 􀍡 ellipsis.circle
-	static let ellipsisCircle = "ellipsis.circle"
-
 	/// 􀇿 exclamationmark.triangle.fill
 	static let error = "exclamationmark.triangle.fill"
 
-	/// 􀍟 gear
-	static let gear = "gear"
+	/// 􀌈 line.3.horizontal.decrease.circle
+	static let filter = "line.3.horizontal.decrease.circle"
 
 	/// 􀌀 text.alignleft
 	static let logs = "text.alignleft"

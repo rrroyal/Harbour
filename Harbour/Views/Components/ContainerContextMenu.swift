@@ -31,7 +31,7 @@ struct ContainerContextMenu: View {
 		self.containerDisplayName = container.displayName
 		self.containerState = container.state
 		self.containerStatus = container.status
-		self.containerIsStored = container.isStored
+		self.containerIsStored = container._isStored
 	}
 
 	@ViewBuilder
@@ -85,13 +85,13 @@ struct ContainerContextMenu: View {
 				}
 			}
 
-			#if ENABLE_PREVIEW_FEATURES
-			Divider()
-
-			if containerState.isContainerOn {
-				attachButton
-			}
-			#endif
+//			#if ENABLE_PREVIEW_FEATURES
+//			Divider()
+//
+//			if containerState.isContainerOn {
+//				attachButton
+//			}
+//			#endif
 		}
 	}
 
@@ -122,20 +122,15 @@ private extension ContainerContextMenu {
 		}
 	}
 
-	// TODO: attachAction()
 	func attachAction() {
 		print(#function)
 
 		Haptics.generateIfEnabled(.sheetPresentation)
-
-		/*
-		 do {
-		 Haptics.generateIfEnabled(.light)
-		 try Portainer.shared.attach(to: container)
-		 sceneState.isContainerConsoleSheetPresented = true
-		 } catch {
-		 sceneState.handle(error)
-		 }
-		 */
+//		do {
+//			try Portainer.shared.attach(to: container)
+//			sceneState.isContainerConsoleSheetPresented = true
+//		} catch {
+//			sceneState.handle(error)
+//		}
 	}
 }

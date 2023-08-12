@@ -20,7 +20,6 @@
 		0028288B2A86F46200ABD7EA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 002828832A869EDA00ABD7EA /* Localizable.xcstrings */; };
 		002D0EEB2A81B53900A914E5 /* CopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002D0EEA2A81B53900A914E5 /* CopyButton.swift */; };
 		002D1BAB2A5A18320044753E /* ContainerStatusIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABA32A34ED2A0074E940 /* ContainerStatusIntent.swift */; };
-		002D1BAC2A5A18320044753E /* OpenContainerDetailsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F1EA8D2A360CA3000EEF48 /* OpenContainerDetailsIntent.swift */; };
 		002D1BAF2A5A18360044753E /* IntentEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABDD2A34F2990074E940 /* IntentEndpoint.swift */; };
 		002D1BB12A5A18360044753E /* IntentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABD72A34F1570074E940 /* IntentContainer.swift */; };
 		002D1BB52A5A18680044753E /* IntentPortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F558042A34FD80002939A2 /* IntentPortainerStore.swift */; };
@@ -58,6 +57,7 @@
 		00C969D12A449F91002AC8D4 /* AppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C969D02A449F91002AC8D4 /* AppDelegate+NSApplicationDelegate.swift */; };
 		00C969DC2A44A0C0002AC8D4 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C969DB2A44A0C0002AC8D4 /* Color+.swift */; };
 		00C969E12A44A0CD002AC8D4 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C969DB2A44A0C0002AC8D4 /* Color+.swift */; };
+		00DEB0762A89186F00D253BF /* ContainerState+isRunning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DEB0752A89186F00D253BF /* ContainerState+isRunning.swift */; };
 		00EAFE0F2A354FEB00BC69D6 /* Collection+safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EAFE0E2A354FEB00BC69D6 /* Collection+safe.swift */; };
 		00EAFE112A354FEB00BC69D6 /* Collection+safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EAFE0E2A354FEB00BC69D6 /* Collection+safe.swift */; };
 		00EB4B882A51EC3400FB9A01 /* ContainerDetailsView+DetailsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EB4B872A51EC3400FB9A01 /* ContainerDetailsView+DetailsListView.swift */; };
@@ -88,11 +88,8 @@
 		00F558542A34FFD2002939A2 /* URLSessionConfiguration+intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7811170297572CB000CB98A /* URLSessionConfiguration+intents.swift */; };
 		00F558592A34FFE1002939A2 /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00F558582A34FFE1002939A2 /* KeychainKit */; };
 		00F6E0FF2A28D05F0018758C /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00F6E0FE2A28D05F0018758C /* PortainerKit */; };
-		00F96BF52A5AC46900F5CE22 /* OpenContainerDetailsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F1EA8D2A360CA3000EEF48 /* OpenContainerDetailsIntent.swift */; };
 		00F96BF62A5AC46C00F5CE22 /* IntentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABD72A34F1570074E940 /* IntentContainer.swift */; };
 		00F96BF72A5AC46E00F5CE22 /* ContainerStatusIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABA32A34ED2A0074E940 /* ContainerStatusIntent.swift */; };
-		00F96BFB2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F96BFA2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift */; };
-		00F96BFC2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F96BFA2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift */; };
 		00F96C002A5ACCDA00F5CE22 /* ExecuteAction+AppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F96BFF2A5ACCDA00F5CE22 /* ExecuteAction+AppEnum.swift */; };
 		00F96C012A5ACCDA00F5CE22 /* ExecuteAction+AppEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F96BFF2A5ACCDA00F5CE22 /* ExecuteAction+AppEnum.swift */; };
 		00FD0FB82A3533CF008D68DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00FD0FB72A3533CF008D68DF /* Assets.xcassets */; };
@@ -135,7 +132,7 @@
 		E766D933288C3CBF00F2DB99 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E766D932288C3CBF00F2DB99 /* SettingsView.swift */; };
 		E768A59B28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E768A59A28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift */; };
 		E76B1BEF298AF78A00D837AB /* SettingsView+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E76B1BEE298AF78A00D837AB /* SettingsView+ViewModel.swift */; };
-		E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = E777698828E9A71300C5AFE9 /* Container+isStored.swift */; };
+		E777698928E9A71300C5AFE9 /* Container+_isStored.swift in Sources */ = {isa = PBXBuildFile; fileRef = E777698828E9A71300C5AFE9 /* Container+_isStored.swift */; };
 		E7779B2E28E75F8F00AD8569 /* HarbourUserActivityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7779B2D28E75F8F00AD8569 /* HarbourUserActivityIdentifier.swift */; };
 		E7811171297572CB000CB98A /* URLSessionConfiguration+intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7811170297572CB000CB98A /* URLSessionConfiguration+intents.swift */; };
 		E7811179297572F4000CB98A /* Container+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7811174297572F4000CB98A /* Container+.swift */; };
@@ -251,6 +248,7 @@
 		00C969C82A449F4C002AC8D4 /* AppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
 		00C969D02A449F91002AC8D4 /* AppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
 		00C969DB2A44A0C0002AC8D4 /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
+		00DEB0752A89186F00D253BF /* ContainerState+isRunning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerState+isRunning.swift"; sourceTree = "<group>"; };
 		00EAFE0E2A354FEB00BC69D6 /* Collection+safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+safe.swift"; sourceTree = "<group>"; };
 		00EB4B872A51EC3400FB9A01 /* ContainerDetailsView+DetailsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+DetailsListView.swift"; sourceTree = "<group>"; };
 		00EB4B8C2A51EDE400FB9A01 /* IdentifiableTuple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentifiableTuple.swift; sourceTree = "<group>"; };
@@ -302,7 +300,7 @@
 		E766D932288C3CBF00F2DB99 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		E768A59A28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Indicator+ErrorInit.swift"; sourceTree = "<group>"; };
 		E76B1BEE298AF78A00D837AB /* SettingsView+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+ViewModel.swift"; sourceTree = "<group>"; };
-		E777698828E9A71300C5AFE9 /* Container+isStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+isStored.swift"; sourceTree = "<group>"; };
+		E777698828E9A71300C5AFE9 /* Container+_isStored.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+_isStored.swift"; sourceTree = "<group>"; };
 		E7779B2D28E75F8F00AD8569 /* HarbourUserActivityIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourUserActivityIdentifier.swift; sourceTree = "<group>"; };
 		E7811170297572CB000CB98A /* URLSessionConfiguration+intents.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSessionConfiguration+intents.swift"; sourceTree = "<group>"; };
 		E7811174297572F4000CB98A /* Container+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Container+.swift"; sourceTree = "<group>"; };
@@ -527,7 +525,8 @@
 			isa = PBXGroup;
 			children = (
 				E7B1F43B28E9E685004D4999 /* ExecuteAction+expectedState.swift */,
-				E777698828E9A71300C5AFE9 /* Container+isStored.swift */,
+				E777698828E9A71300C5AFE9 /* Container+_isStored.swift */,
+				00DEB0752A89186F00D253BF /* ContainerState+isRunning.swift */,
 			);
 			path = PortainerKit;
 			sourceTree = "<group>";
@@ -1165,7 +1164,6 @@
 				00A4AB8E2A34ECB60074E940 /* ContainerStatusWidget.swift in Sources */,
 				00A4ABCD2A34EFD60074E940 /* ContainerStatusProvider.swift in Sources */,
 				00F558152A34FDCB002939A2 /* Endpoint+.swift in Sources */,
-				00F96BFC2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift in Sources */,
 				0078D06D2A881D24009C4374 /* Container+init.swift in Sources */,
 				00C969E12A44A0CD002AC8D4 /* Color+.swift in Sources */,
 				0078D0582A8812DD009C4374 /* Sequence+sorted.swift in Sources */,
@@ -1193,7 +1191,6 @@
 				00F5581C2A34FDCB002939A2 /* Stack.Status+UI.swift in Sources */,
 				00F558212A34FDD3002939A2 /* View+hidden.swift in Sources */,
 				0078D03B2A870DC9009C4374 /* ExecuteAction+UI.swift in Sources */,
-				00F96BF52A5AC46900F5CE22 /* OpenContainerDetailsIntent.swift in Sources */,
 				00F5581B2A34FDCB002939A2 /* ContainerState+.swift in Sources */,
 				00F558412A34FF64002939A2 /* HarbourUserActivityIdentifier.swift in Sources */,
 				00F5583E2A34FF64002939A2 /* Constants.swift in Sources */,
@@ -1260,7 +1257,6 @@
 				E7C772ED28E8705500143E8C /* HarbourBackgroundTaskIdentifier.swift in Sources */,
 				002D1BB52A5A18680044753E /* IntentPortainerStore.swift in Sources */,
 				E79AD30B2893D9FA002D0CD9 /* PrimaryButtonStyle.swift in Sources */,
-				00F96BFB2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift in Sources */,
 				E72BB34828DE256C007991D1 /* RoundedTextFieldStyle.swift in Sources */,
 				E756B54B298340D500582631 /* ANSIParser.swift in Sources */,
 				E72BB34228DE19C1007991D1 /* PortainerError.swift in Sources */,
@@ -1280,12 +1276,13 @@
 				E766D91E288C379800F2DB99 /* ContainersView.swift in Sources */,
 				E7ACE749288C47C7000E6FF6 /* SettingsView+Common.swift in Sources */,
 				E766D92A288C381900F2DB99 /* EnvironmentValues+.swift in Sources */,
+				00DEB0762A89186F00D253BF /* ContainerState+isRunning.swift in Sources */,
 				00AA829F2A2FEF440064B870 /* Stack.Status+UI.swift in Sources */,
 				007B577B2A2FCE6400873A32 /* StacksView+ViewModel.swift in Sources */,
 				00BE56542A3376AB00A45CC5 /* AppIcon.swift in Sources */,
 				E7B1F43C28E9E685004D4999 /* ExecuteAction+expectedState.swift in Sources */,
 				0078D0572A8812DD009C4374 /* Sequence+sorted.swift in Sources */,
-				E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */,
+				E777698928E9A71300C5AFE9 /* Container+_isStored.swift in Sources */,
 				E78111AF297574B2000CB98A /* PortainerStore.swift in Sources */,
 				002D1BB12A5A18360044753E /* IntentContainer.swift in Sources */,
 				002D1BAB2A5A18320044753E /* ContainerStatusIntent.swift in Sources */,
@@ -1312,7 +1309,6 @@
 				E7207DB12988714100F7504C /* ContainerLogsView+ViewModel.swift in Sources */,
 				00AA82BC2A2FFF970064B870 /* ErrorHandler.swift in Sources */,
 				005CC9B82A85AD480051D876 /* SFSymbol.swift in Sources */,
-				002D1BAC2A5A18320044753E /* OpenContainerDetailsIntent.swift in Sources */,
 				00EB4B882A51EC3400FB9A01 /* ContainerDetailsView+DetailsListView.swift in Sources */,
 				E79AD30E2893DABF002D0CD9 /* Constants.swift in Sources */,
 			);

@@ -8,8 +8,10 @@
 import Foundation
 import PortainerKit
 
+// MARK: - Container+_isStored
+
 extension Container {
-	var isStored: Bool {
+	var _isStored: Bool {
 		imageID == nil
 	}
 }
