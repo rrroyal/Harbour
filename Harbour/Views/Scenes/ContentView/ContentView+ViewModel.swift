@@ -16,40 +16,22 @@ import PortainerKit
 extension ContentView {
 	@MainActor
 	final class ViewModel: ObservableObject {
-		private let portainerStore = PortainerStore.shared
+		private let portainerStore: PortainerStore
 		private let preferences = Preferences.shared
 
-		@Published private(set) var fetchTask: Task<Void, Error>?
-		@Published private(set) var isLoading = false
-		@Published private(set) var error: Error?
-		@Published var searchText = ""
-		@Published var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+		private var fetchTask: Task<Void, Error>?
 
-		var errorHandler: ErrorHandler?
+		@Published @MainActor private(set) var viewState: ViewState<[Container]?, Error>
 
-		var viewState: ViewState {
-			if !portainerStore.containers.isEmpty {
-				return .hasContainers
-			}
-			if isLoading {
-				return .loading
-			}
-			if let error {
-				return .error(error)
-			}
-			if portainerStore.containers.isEmpty {
-				return .containersEmpty
-			}
-			if portainerStore.serverURL == nil {
-				return .noServer
-			}
-			if portainerStore.selectedEndpoint == nil {
-				return .noEndpointSelected
-			}
-			if portainerStore.endpoints.isEmpty {
-				return .noEndpoints
-			}
-			return .somethingWentWrong
+		@Published @MainActor var searchText = ""
+		@Published @MainActor var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+
+		var containers: [Container]? {
+			viewState.unwrappedValue??.filtered(searchText)
+		}
+
+		var shouldShowEmptyPlaceholderView: Bool {
+			!viewState.isLoading && containers?.isEmpty ?? true
 		}
 
 		var shouldUseColumns: Bool {
@@ -65,19 +47,23 @@ extension ContentView {
 			portainerStore.selectedEndpoint?.name ?? "ContentView.NoEndpointSelected"
 		}
 
-		var containers: [Container] {
-			portainerStore.containers.filtered(searchText)
+		init() {
+			let portainerStore = PortainerStore.shared
+			self.portainerStore = portainerStore
+
+			self.viewState = .success(portainerStore.containers)
 		}
 
-		init() { }
-
-		@Sendable
-		func refresh() async {
+		@MainActor
+		func refresh() async throws {
 			do {
+				viewState = viewState.reloadingUnwrapped
 				let task = portainerStore.refresh()
-				try await task.value
+				let (_, containers) = try await task.value
+				viewState = .success(containers)
 			} catch {
-				errorHandler?(error)
+				viewState = .failure(error)
+				throw error
 			}
 		}
 
@@ -89,59 +75,6 @@ extension ContentView {
 		@MainActor
 		func selectEndpoint(_ endpoint: Endpoint?) {
 			portainerStore.selectEndpoint(endpoint)
-		}
-	}
-}
-
-// MARK: - ContentView.ViewModel+ViewState
-
-extension ContentView.ViewModel {
-	enum ViewState: Identifiable, Equatable {
-		case somethingWentWrong
-		case error(Error)
-		case loading
-		case hasContainers
-		case containersEmpty
-		case noEndpointSelected
-		case noEndpoints
-		case noServer
-
-		var id: Int {
-			switch self {
-			case .somethingWentWrong:	-2
-			case .error:				-1
-			case .loading:				0
-			case .hasContainers:		1
-			case .containersEmpty:		2
-			case .noEndpointSelected:	3
-			case .noEndpoints:			4
-			case .noServer:				5
-			}
-		}
-
-		var title: String? {
-			switch self {
-			case .loading:
-				"Generic.Loading"
-			case .error(let error):
-				error.localizedDescription
-			case .hasContainers:
-				nil
-			case .containersEmpty:
-				"ContainersView.NoContainersPlaceholder"
-			case .noEndpointSelected:
-				"ContainersView.NoSelectedEndpointPlaceholder"
-			case .noEndpoints:
-				"ContainersView.NoEndpointsPlaceholder"
-			case .noServer:
-				"ContainersView.NoSelectedServerPlaceholder"
-			case .somethingWentWrong:
-				nil
-			}
-		}
-
-		static func == (lhs: Self, rhs: Self) -> Bool {
-			lhs.id == rhs.id
 		}
 	}
 }

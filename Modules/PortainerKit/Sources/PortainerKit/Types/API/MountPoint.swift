@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public struct MountPoint: Decodable, Sendable {
+public struct MountPoint: Decodable, Sendable, Equatable {
 	enum CodingKeys: String, CodingKey {
 		case type = "Type"
 		case name = "Name"

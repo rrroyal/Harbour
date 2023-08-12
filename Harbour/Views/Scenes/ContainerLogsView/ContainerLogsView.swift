@@ -38,13 +38,13 @@ struct ContainerLogsView: View {
 					ToolbarMenu(viewState: viewModel.viewState,
 								lineCount: $viewModel.lineCount,
 								includeTimestamps: $viewModel.includeTimestamps,
-								shareableContent: viewModel.logs,
+								shareableContent: viewModel.viewState.unwrappedValue,
 								scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
 								refreshAction: { viewModel.getLogs(errorHandler: errorHandler) })
 				}
 			}
 		}
-		.background(PlaceholderView(viewState: viewModel.viewState))
+		.background(viewModel.viewState.backgroundView)
 		.navigationTitle("ContainerLogsView.Title")
 		.refreshable {
 			await viewModel.getLogs(errorHandler: errorHandler).value
@@ -74,7 +74,7 @@ private extension ContainerLogsView {
 private extension ContainerLogsView {
 	struct ToolbarMenu: View {
 		@Environment(\.showIndicator) private var showIndicator
-		let viewState: ViewModel.ViewState
+		let viewState: ViewModel._ViewState
 		@Binding var lineCount: Int
 		@Binding var includeTimestamps: Bool
 		let shareableContent: String?
@@ -156,7 +156,7 @@ private extension ContainerLogsView {
 				switch viewState {
 				case .loading:
 					Text("Generic.Loading")
-				case .hasLogs:
+				case .success:
 					refreshButton
 					Divider()
 					scrollButtons

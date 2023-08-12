@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public struct ContainerConfig: Decodable, Sendable {
+public struct ContainerConfig: Decodable, Sendable, Equatable {
 	enum CodingKeys: String, CodingKey {
 		case hostname = "Hostname"
 		case domainName = "DomainName"

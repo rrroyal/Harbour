@@ -16,23 +16,12 @@ extension ContainerDetailsView {
 	final class ViewModel: ObservableObject, @unchecked Sendable {
 		private let portainerStore = PortainerStore.shared
 
+		@Published @MainActor private(set) var viewState: ViewState<ContainerDetails, Error> = .loading
+		@Published @MainActor private(set) var container: Container?
 		@Published private(set) var fetchTask: Task<Void, Never>?
-		@Published private(set) var isLoading = false
-		@Published private(set) var error: Error?
-		@Published private(set) var container: Container?
-		@Published private(set) var containerDetails: ContainerDetails?
 
-		var viewState: ViewState {
-			if isLoading {
-				return .loading
-			}
-			if containerDetails != nil {
-				return .hasDetails
-			}
-			if let error, !error.isCancellationError {
-				return .error(error)
-			}
-			return .somethingWentWrong
+		var containerDetails: ContainerDetails? {
+			viewState.unwrappedValue
 		}
 
 		init() { }
@@ -90,24 +79,20 @@ extension ContainerDetailsView {
 		func getContainerDetails(navigationItem: ContainerNavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task {
-				isLoading = true
+				viewState = viewState.reloadingUnwrapped
 				container = container(for: navigationItem)
 
 				do {
-					if navigationItem.id != containerDetails?.id {
-						containerDetails = nil
-					}
-
 					if !portainerStore.isSetup {
 						await portainerStore.setupTask?.value
 					}
 
-					containerDetails = try await portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
+					let containerDetails = try await portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
+					viewState = .success(containerDetails)
 				} catch {
+					viewState = .failure(error)
 					errorHandler(error)
 				}
-
-				isLoading = false
 			}
 			self.fetchTask = task
 			return task
@@ -116,43 +101,6 @@ extension ContainerDetailsView {
 		func container(for navigationItem: ContainerNavigationItem) -> Container? {
 			if self.container?.id == navigationItem.id { return self.container }
 			return portainerStore.containers.first { $0.id == navigationItem.id }
-		}
-	}
-}
-
-// MARK: - ContainerDetailsView.ViewModel+ViewState
-
-extension ContainerDetailsView.ViewModel {
-	enum ViewState: Identifiable, Equatable {
-		case somethingWentWrong
-		case error(Error)
-		case loading
-		case hasDetails
-
-		var id: Int {
-			switch self {
-			case .somethingWentWrong:	-2
-			case .error:				-1
-			case .loading:				0
-			case .hasDetails:			1
-			}
-		}
-
-		var title: String? {
-			switch self {
-			case .loading:
-				String(localized: "Generic.Loading")
-			case .error(let error):
-				error.localizedDescription
-			case .somethingWentWrong:
-				nil
-			default:
-				nil
-			}
-		}
-
-		static func == (lhs: Self, rhs: Self) -> Bool {
-			lhs.id == rhs.id
 		}
 	}
 }

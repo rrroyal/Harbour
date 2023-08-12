@@ -51,6 +51,19 @@ extension ViewState {
 			.loading
 		}
 	}
+
+	var isLoading: Bool {
+		switch self {
+		case .loading:
+			true
+		case .reloading:
+			true
+		case .success:
+			false
+		case .failure:
+			false
+		}
+	}
 }
 
 // MARK: - ViewState+Identifiable

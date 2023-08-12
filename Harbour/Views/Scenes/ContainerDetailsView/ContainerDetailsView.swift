@@ -42,11 +42,11 @@ struct ContainerDetailsView: View {
 				navigationItem: navigationItem
 			)
 		}
-		.background(PlaceholderView(viewState: viewModel.viewState))
+		.background(viewModel.viewState.backgroundView)
 		.navigationTitle(navigationTitle)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
-				ToolbarMenu(isLoading: viewModel.isLoading,
+				ToolbarMenu(isLoading: viewModel.viewState.isLoading,
 							containerID: navigationItem.id,
 							container: viewModel.container(for: navigationItem))
 			}
@@ -58,7 +58,7 @@ struct ContainerDetailsView: View {
 			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
 		}
 		.animation(.easeInOut, value: viewModel.containerDetails != nil)
-		.animation(.easeInOut, value: viewModel.isLoading)
+		.animation(.easeInOut, value: viewModel.viewState)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: navigationItem) { navigationItem, userActivity in
 			viewModel.createUserActivity(for: navigationItem, userActivity: userActivity, errorHandler: errorHandler)
 		}

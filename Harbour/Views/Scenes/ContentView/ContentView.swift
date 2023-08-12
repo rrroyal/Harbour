@@ -14,6 +14,7 @@ import SwiftUI
 // MARK: - ContentView
 
 struct ContentView: View {
+	@Environment(\.errorHandler) private var errorHandler
 	@EnvironmentObject private var appDelegate: AppDelegate
 	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var appState: AppState
@@ -80,16 +81,20 @@ struct ContentView: View {
 //			}
 //			#endif
 
-			ContainersView(containers: viewModel.containers)
+			ContainersView(containers: viewModel.containers ?? [])
 				.transition(.opacity)
 				.animation(.easeInOut, value: viewModel.containers)
 		}
+		.background {
+			if viewModel.shouldShowEmptyPlaceholderView {
+				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers?.isEmpty ?? true)
+			}
+		}
 		.modifier(
 			ContainersView.ListModifier {
-				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers.isEmpty)
+				viewModel.viewState.backgroundView
 			}
 		)
-		.refreshable(action: viewModel.refresh)
 		.searchable(text: $viewModel.searchText)
 //		.animation(.easeInOut, value: isSummaryVisible)
 	}
@@ -132,6 +137,20 @@ struct ContentView: View {
 		}
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) { userActivity in
 			sceneDelegate.onContinueContainerDetailsActivity(userActivity)
+		}
+		.task {
+			do {
+				try await viewModel.refresh()
+			} catch {
+				errorHandler(error)
+			}
+		}
+		.refreshable {
+			do {
+				try await viewModel.refresh()
+			} catch {
+				errorHandler(error)
+			}
 		}
 	}
 }

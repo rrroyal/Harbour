@@ -5,7 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
-public struct HealthConfig: Decodable, Sendable {
+public struct HealthConfig: Decodable, Sendable, Equatable {
 	enum CodingKeys: String, CodingKey {
 		case test = "Test"
 		case interval = "Interval"

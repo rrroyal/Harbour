@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct ContainerStatus: Decodable, Sendable {
+public struct ContainerStatus: Decodable, Sendable, Equatable {
 	enum CodingKeys: String, CodingKey {
 		case state = "Status"
 		case running = "Running"

@@ -364,7 +364,7 @@ extension PortainerStore {
 	@discardableResult
 	func refresh(errorHandler: ErrorHandler? = nil,
 				 _awaitSetup: Bool = true,
-				 _debugInfo: String = ._debugInfo()) -> Task<Void, Error> {
+				 _debugInfo: String = ._debugInfo()) -> Task<([Endpoint], [Container]?), Error> {
 		let task = Task { @MainActor in
 			do {
 				if _awaitSetup {
@@ -372,12 +372,17 @@ extension PortainerStore {
 				}
 
 				let endpointsTask = refreshEndpoints(errorHandler: errorHandler, _debugInfo: _debugInfo)
-				_ = try await endpointsTask.value
+				let endpoints = try await endpointsTask.value
 
+				let containers: [Container]?
 				if selectedEndpoint != nil {
 					let containersTask = refreshContainers(errorHandler: errorHandler, _debugInfo: _debugInfo)
-					_ = try await containersTask.value
+					containers = try await containersTask.value
+				} else {
+					containers = nil
 				}
+
+				return (endpoints, containers)
 			} catch {
 				errorHandler?(error, _debugInfo)
 				throw error

@@ -16,37 +16,25 @@ import AppKit.NSPasteboard
 
 extension ContainerLogsView {
 	final class ViewModel: ObservableObject, @unchecked Sendable {
+		typealias _ViewState = ViewState<String, Error>
+
 		private let portainerStore = PortainerStore.shared
+
+		private var fetchTask: Task<Void, Never>?
+		private var parseTask: Task<Void, Never>?
+
+		@Published @MainActor private(set) var viewState: _ViewState = .loading
+		@Published @MainActor private(set) var logsParsed: AttributedString?
 
 		let containerNavigationItem: ContainerNavigationItem
 
-		@Published private(set) var fetchTask: Task<Void, Never>?
-		@Published private(set) var parseTask: Task<Void, Never>?
-		@Published @MainActor private(set) var isLoading = false
-		@Published @MainActor private(set) var error: Error?
-		@Published @MainActor private(set) var logs: String?
-		@Published @MainActor private(set) var logsParsed: AttributedString?
 		@Published var includeTimestamps = false
 		@Published var lineCount = 100
 
 		@MainActor
-		var viewState: ViewState {
-			if let logs {
-				return logs.isEmpty ? .logsEmpty : .hasLogs
-			}
-			if isLoading {
-				return .loading
-			}
-			if let error, !error.isCancellationError {
-				return .error(error)
-			}
-			return .somethingWentWrong
-		}
-
-		@MainActor
 		var logsViewable: AttributedString? {
 			if let logsParsed { return logsParsed }
-			if let logs { return AttributedString(stringLiteral: ANSIParser.trim(logs)) }
+			if let logs = viewState.unwrappedValue { return AttributedString(stringLiteral: ANSIParser.trim(logs)) }
 			return nil
 		}
 
@@ -58,16 +46,14 @@ extension ContainerLogsView {
 		func getLogs(errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
-				self.isLoading = true
-				self.error = nil
+				self.viewState = viewState.reloadingUnwrapped
 				self.parseTask?.cancel()
 
 				do {
 					let logs = try await portainerStore.getLogs(for: containerNavigationItem.id,
 																tail: lineCount,
 																timestamps: includeTimestamps)
-					self.logs = logs
-					self.logsParsed = nil
+					self.viewState = .success(logs)
 
 					self.parseTask = Task.detached {
 						let logsParsed = ANSIParser.parse(logs)
@@ -78,55 +64,11 @@ extension ContainerLogsView {
 					}
 				} catch {
 					errorHandler(error)
-					self.logs = nil
-					self.error = error
+					self.viewState = .failure(error)
 				}
-
-				self.isLoading = false
 			}
 			self.fetchTask = task
 			return task
-		}
-	}
-}
-
-// MARK: - ContainerLogsView.ViewModel+ViewState
-
-extension ContainerLogsView.ViewModel {
-	enum ViewState: Identifiable, Equatable {
-		case somethingWentWrong
-		case error(Error)
-		case loading
-		case hasLogs
-		case logsEmpty
-
-		var id: Int {
-			switch self {
-			case .somethingWentWrong:	-2
-			case .error:				-1
-			case .loading:				0
-			case .hasLogs:				2
-			case .logsEmpty:			3
-			}
-		}
-
-		var title: String? {
-			switch self {
-			case .loading:
-				"Generic.Loading"
-			case .error(let error):
-				error.localizedDescription
-			case .logsEmpty:
-				"ContainerLogsView.LogsEmpty"
-			case .somethingWentWrong:
-				nil
-			default:
-				nil
-			}
-		}
-
-		static func == (lhs: Self, rhs: Self) -> Bool {
-			lhs.id == rhs.id
 		}
 	}
 }

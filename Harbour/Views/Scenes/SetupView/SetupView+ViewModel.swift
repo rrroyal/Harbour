@@ -15,18 +15,16 @@ extension SetupView {
 	@MainActor
 	final class ViewModel: ObservableObject {
 		private let portainerStore: PortainerStore = .shared
-
 		private let errorTimeoutInterval: TimeInterval = 3
-
-		@Published var url: String = ""
-		@Published var token: String = ""
-
-		@Published var buttonLabel: String?
-		@Published var buttonColor: Color?
 
 		@Published private(set) var isLoading = false
 		@Published private(set) var loginTask: Task<Void, Error>?
 		@Published private(set) var errorTimer: Timer?
+
+		@Published var url: String = ""
+		@Published var token: String = ""
+		@Published var buttonLabel: String?
+		@Published var buttonColor: Color?
 
 		var canSubmit: Bool {
 			!isLoading && !url.isReallyEmpty && !token.isReallyEmpty

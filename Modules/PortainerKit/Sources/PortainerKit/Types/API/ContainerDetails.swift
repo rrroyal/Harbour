@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - ContainerDetails
 
-public struct ContainerDetails: Identifiable, Decodable, Sendable {
+public struct ContainerDetails: Identifiable, Decodable, Sendable, Equatable {
 	enum CodingKeys: String, CodingKey {
 		case id = "Id"
 		case created = "Created"
@@ -44,7 +44,7 @@ public struct ContainerDetails: Identifiable, Decodable, Sendable {
 // MARK: - ContainerDetails+NetworkSettings
 
 public extension ContainerDetails {
-	struct NetworkSettings: Decodable, Sendable {
+	struct NetworkSettings: Decodable, Sendable, Equatable {
 		enum CodingKeys: String, CodingKey {
 			case bridge = "Bridge"
 			case gateway = "Gateway"
