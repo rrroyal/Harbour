@@ -81,7 +81,7 @@ struct ContentView: View {
 //			}
 //			#endif
 
-			ContainersView(containers: viewModel.containers ?? [])
+			ContainersView(viewModel.containers ?? [])
 				.transition(.opacity)
 				.animation(.easeInOut, value: viewModel.containers)
 		}
@@ -95,7 +95,10 @@ struct ContentView: View {
 				viewModel.viewState.backgroundView
 			}
 		)
-		.searchable(text: $viewModel.searchText)
+//		.searchable(text: $viewModel.searchText)
+		.searchable(text: $viewModel.searchText, tokens: $viewModel.searchTokens, suggestedTokens: .constant(viewModel.suggestedSearchTokens)) { token in
+			Label(token.title, systemImage: token.icon)
+		}
 //		.animation(.easeInOut, value: isSummaryVisible)
 	}
 

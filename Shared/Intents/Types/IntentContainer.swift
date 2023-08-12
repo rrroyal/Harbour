@@ -104,7 +104,7 @@ struct IntentContainerQuery: EntityStringQuery {
 		let containers = try await getContainers(for: endpoint.id,
 												 resolveByName: resolveByName)
 		return containers
-			.filtered(string)
+			.filter(string)
 			.map { Entity(container: $0) }
 	}
 

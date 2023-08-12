@@ -25,7 +25,7 @@ extension ContainerDetailsView {
 				if let _data {
 					let data = _data
 						.map { IdentifiableTuple(key: $0, value: $1) }
-						.sorted { $0.key.caseInsensitiveCompare($1.key) == .orderedAscending }
+						.sorted(by: \.key)
 
 					DetailsListView(title, data: data) { entry in
 						SectionMonospaced(entry.key) {
@@ -56,7 +56,7 @@ extension ContainerDetailsView {
 								return IdentifiableTuple(key: "", value: key)
 							}
 						}
-						.sorted { $0.key.caseInsensitiveCompare($1.key) == .orderedAscending }
+						.sorted(by: \.key)
 
 					DetailsListView(title, data: data) { entry in
 						SectionMonospaced(entry.key) {
@@ -99,7 +99,7 @@ extension ContainerDetailsView {
 
 							return IdentifiableTuple(key: key, value: value)
 						}
-						.sorted { $0.key.caseInsensitiveCompare($1.key) == .orderedAscending }
+						.sorted(by: \.key)
 
 					DetailsListView(title, data: data) { entry in
 						SectionMonospaced(entry.key) {
@@ -123,7 +123,7 @@ extension ContainerDetailsView {
 				if let _data {
 					let data = _data
 						.map { IdentifiableTuple(key: $0.source, value: $0.destination) }
-						.sorted { $0.key.caseInsensitiveCompare($1.key) == .orderedAscending }
+						.sorted(by: \.key)
 					DetailsListView(title, data: data) { entry in
 						SectionMonospaced(entry.key) {
 							Text(entry.value)

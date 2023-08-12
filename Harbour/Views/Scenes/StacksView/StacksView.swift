@@ -12,7 +12,8 @@ import SwiftUI
 // MARK: - StacksView
 
 struct StacksView: View {
-	@Environment(\.errorHandler) var errorHandler
+	@EnvironmentObject private var sceneDelegate: SceneDelegate
+	@Environment(\.errorHandler) private var errorHandler
 	@StateObject private var viewModel = ViewModel()
 
 	var body: some View {
@@ -84,11 +85,11 @@ private extension StacksView {
 		private var iconSize = 6
 
 		var body: some View {
-			NavigationLink {
-				ContainersList(stack: stack)
+			Button {
+				// TODO: Navigate back & set stack tag
 			} label: {
 				VStack(alignment: .leading) {
-					Text(stack.name)
+					Text(verbatim: stack.name)
 						.font(.body)
 						.fontWeight(.medium)
 
@@ -97,18 +98,18 @@ private extension StacksView {
 							.symbolVariant(isLoading ? .none : .fill)
 							.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
 							.font(.system(size: iconSize))
-							.foregroundStyle(isLoading ? Color.gray : stack.status.color)
 							.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
 
 						Text(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
 							.font(.footnote)
 							.fontWeight(.medium)
-							.foregroundStyle(isLoading ? Color.gray : stack.status.color)
 					}
+					.foregroundStyle(isLoading ? Color.gray : stack.status.color.opacity(isOn ? 1 : Constants.secondaryOpacity))
 					.transition(.opacity)
 				}
 			}
 			.disabled(!isOn)
+			.tint(Color.primary)
 			.padding(.vertical, 2)
 			.transition(.opacity)
 			.animation(.easeInOut, value: isLoading)

@@ -46,18 +46,14 @@ extension SettingsView {
 			appState.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
 		}
 
-		func removeServer(_ url: URL, errorHandler: ErrorHandler?) {
-			do {
-				if portainerStore.serverURL == url {
-					activeURL = nil
-					portainerStore.reset()
-				}
-
-				try portainerStore.removeServer(url)
-				refreshServers()
-			} catch {
-				errorHandler?(error, ._debugInfo())
+		func removeServer(_ url: URL) throws {
+			if portainerStore.serverURL == url {
+				activeURL = nil
+				portainerStore.reset()
 			}
+
+			try portainerStore.removeServer(url)
+			refreshServers()
 		}
 	}
 }

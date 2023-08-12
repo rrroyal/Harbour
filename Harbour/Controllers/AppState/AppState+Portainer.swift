@@ -19,7 +19,7 @@ extension AppState {
 			let portainerStore = PortainerStore.shared
 			do {
 				try await portainerStore.switchServer(to: serverURL)
-				try await portainerStore.refresh().value
+				_ = try await portainerStore.refresh().value
 			} catch {
 				logger.error("Failed to switch Portainer server: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				errorHandler?(error, String._debugInfo())

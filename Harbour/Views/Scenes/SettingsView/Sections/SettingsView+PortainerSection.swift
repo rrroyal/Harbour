@@ -42,7 +42,7 @@ private extension SettingsView.PortainerSection {
 		}
 
 		var body: some View {
-			let urls = viewModel.serverURLs.sorted { $0.absoluteString > $1.absoluteString }
+			let urls = viewModel.serverURLs.sorted(by: \.absoluteString)
 			Menu {
 				ForEach(urls, id: \.absoluteString) { url in
 					urlMenu(for: url)
@@ -101,7 +101,11 @@ private extension SettingsView.PortainerSection {
 				Menu {
 					Button(role: .destructive) {
 						Haptics.generateIfEnabled(.buttonPress)
-						viewModel.removeServer(url, errorHandler: errorHandler)
+						do {
+							try viewModel.removeServer(url)
+						} catch {
+							errorHandler(error)
+						}
 					} label: {
 						Label("SettingsView.Portainer.EndpointsMenu.Server.Remove!", systemImage: SFSymbol.remove)
 					}

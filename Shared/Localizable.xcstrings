@@ -395,6 +395,36 @@
         }
       }
     },
+    "ContentView.NoEndpointSelected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Endpoint Selected"
+          }
+        }
+      }
+    },
+    "ContentView.SearchToken.Status.Off" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopped"
+          }
+        }
+      }
+    },
+    "ContentView.SearchToken.Status.On" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Running"
+          }
+        }
+      }
+    },
     "DebugView.BuildInfoSection.BuildDate" : {
       "localizations" : {
         "en" : {
@@ -870,7 +900,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\\\"%@\\\" changed it's state!"
+            "value" : "\"%@\" changed it's state!"
           }
         }
       }

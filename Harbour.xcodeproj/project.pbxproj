@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0000114B2A32085500A08C52 /* StacksView+ContainersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000114A2A32085500A08C52 /* StacksView+ContainersList.swift */; };
 		0000114E2A3208BF00A08C52 /* NavigationWrapped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000114D2A3208BF00A08C52 /* NavigationWrapped.swift */; };
 		000011502A320AAD00A08C52 /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000114F2A320AAD00A08C52 /* ViewState.swift */; };
 		0000115E2A321AA800A08C52 /* Error+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000115D2A321AA800A08C52 /* Error+Equatable.swift */; };
@@ -32,6 +31,8 @@
 		0078D0292A8704BA009C4374 /* ContainerDetailsView+SubviewsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0078D0282A8704BA009C4374 /* ContainerDetailsView+SubviewsSection.swift */; };
 		0078D0322A870814009C4374 /* ButtonScalesDownOnPressModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0078D0312A870814009C4374 /* ButtonScalesDownOnPressModifier.swift */; };
 		0078D03B2A870DC9009C4374 /* ExecuteAction+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78C661428E9D64A0033D0E4 /* ExecuteAction+UI.swift */; };
+		0078D0572A8812DD009C4374 /* Sequence+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0078D0562A8812DD009C4374 /* Sequence+sorted.swift */; };
+		0078D0582A8812DD009C4374 /* Sequence+sorted.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0078D0562A8812DD009C4374 /* Sequence+sorted.swift */; };
 		007B577B2A2FCE6400873A32 /* StacksView+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */; };
 		0098F5BF2A3636FB006CB3AB /* InsetViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0098F5BE2A3636FB006CB3AB /* InsetViewModifier.swift */; };
 		00A4AB882A34ECB60074E940 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA76D28EB662300C33EA3 /* WidgetKit.framework */; };
@@ -217,7 +218,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0000114A2A32085500A08C52 /* StacksView+ContainersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StacksView+ContainersList.swift"; sourceTree = "<group>"; };
 		0000114D2A3208BF00A08C52 /* NavigationWrapped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationWrapped.swift; sourceTree = "<group>"; };
 		0000114F2A320AAD00A08C52 /* ViewState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewState.swift; sourceTree = "<group>"; };
 		0000115D2A321AA800A08C52 /* Error+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Equatable.swift"; sourceTree = "<group>"; };
@@ -227,6 +227,7 @@
 		00687F852A6E9D340099BFE5 /* Haptics.HapticStyle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Haptics.HapticStyle+.swift"; sourceTree = "<group>"; };
 		0078D0282A8704BA009C4374 /* ContainerDetailsView+SubviewsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+SubviewsSection.swift"; sourceTree = "<group>"; };
 		0078D0312A870814009C4374 /* ButtonScalesDownOnPressModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonScalesDownOnPressModifier.swift; sourceTree = "<group>"; };
+		0078D0562A8812DD009C4374 /* Sequence+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+sorted.swift"; sourceTree = "<group>"; };
 		007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StacksView+ViewModel.swift"; sourceTree = "<group>"; };
 		0098F5BE2A3636FB006CB3AB /* InsetViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetViewModifier.swift; sourceTree = "<group>"; };
 		00A4AB872A34ECB60074E940 /* HarbourWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HarbourWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -565,7 +566,6 @@
 			isa = PBXGroup;
 			children = (
 				E7207DDB2988860B00F7504C /* StacksView.swift */,
-				0000114A2A32085500A08C52 /* StacksView+ContainersList.swift */,
 				007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */,
 			);
 			path = StacksView;
@@ -766,6 +766,7 @@
 			isa = PBXGroup;
 			children = (
 				00EAFE0E2A354FEB00BC69D6 /* Collection+safe.swift */,
+				0078D0562A8812DD009C4374 /* Sequence+sorted.swift */,
 				0000115D2A321AA800A08C52 /* Error+Equatable.swift */,
 				E7811170297572CB000CB98A /* URLSessionConfiguration+intents.swift */,
 			);
@@ -1170,6 +1171,7 @@
 				00F558152A34FDCB002939A2 /* Endpoint+.swift in Sources */,
 				00F96BFC2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift in Sources */,
 				00C969E12A44A0CD002AC8D4 /* Color+.swift in Sources */,
+				0078D0582A8812DD009C4374 /* Sequence+sorted.swift in Sources */,
 				00A4ABED2A34F8090074E940 /* ContainerStatusWidgetView.swift in Sources */,
 				00A4ABE52A34F30E0074E940 /* IntentEndpoint.swift in Sources */,
 				00FD0FD62A35365C008D68DF /* ContainerStatusWidgetView+ContainerView.swift in Sources */,
@@ -1231,7 +1233,6 @@
 				E7D6E62A2884771200C79732 /* ContentView.swift in Sources */,
 				E7ACE73C288C4215000E6FF6 /* SettingsView+InterfaceSection.swift in Sources */,
 				E7AF688D290DB14C00E48EAC /* View+hidden.swift in Sources */,
-				0000114B2A32085500A08C52 /* StacksView+ContainersList.swift in Sources */,
 				00EAFE0F2A354FEB00BC69D6 /* Collection+safe.swift in Sources */,
 				002D1BAF2A5A18360044753E /* IntentEndpoint.swift in Sources */,
 				E78C661528E9D64A0033D0E4 /* ExecuteAction+UI.swift in Sources */,
@@ -1287,6 +1288,7 @@
 				007B577B2A2FCE6400873A32 /* StacksView+ViewModel.swift in Sources */,
 				00BE56542A3376AB00A45CC5 /* AppIcon.swift in Sources */,
 				E7B1F43C28E9E685004D4999 /* ExecuteAction+expectedState.swift in Sources */,
+				0078D0572A8812DD009C4374 /* Sequence+sorted.swift in Sources */,
 				E777698928E9A71300C5AFE9 /* Container+isStored.swift in Sources */,
 				E78111AF297574B2000CB98A /* PortainerStore.swift in Sources */,
 				002D1BB12A5A18360044753E /* IntentContainer.swift in Sources */,

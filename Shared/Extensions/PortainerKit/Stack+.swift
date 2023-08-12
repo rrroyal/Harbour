@@ -17,10 +17,10 @@ extension [Stack] {
 	}
 }
 
-// MARK: - [Stack]+filtered
+// MARK: - [Stack]+filter
 
 extension [Stack] {
-	func filtered(_ query: String) -> Self {
+	func filter(_ query: String) -> Self {
 		if query.isReallyEmpty { return self }
 		return filter {
 			$0.name.localizedCaseInsensitiveContains(query) ||

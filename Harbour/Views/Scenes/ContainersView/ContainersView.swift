@@ -15,6 +15,10 @@ struct ContainersView: View {
 	@Environment(\.cvUseGrid) private var useGrid
 	let containers: [Container]
 
+	init(_ containers: [Container]) {
+		self.containers = containers
+	}
+
 	@ViewBuilder
 	private var containersList: some View {
 		if useGrid {
@@ -48,10 +52,7 @@ extension ContainersView {
 		var body: some View {
 			VStack {
 				if isEmpty {
-					Text("ContainersView.NoContainersPlaceholder")
-						.foregroundStyle(.secondary)
-						.padding()
-						.transition(.opacity)
+					ContentUnavailableView("ContainersView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
 				}
 			}
 			.animation(.easeInOut, value: isEmpty)
@@ -87,5 +88,5 @@ extension ContainersView {
 // MARK: - Previews
 
 #Preview {
-	ContainersView(containers: [])
+	ContainersView([])
 }

@@ -24,7 +24,7 @@ extension StacksView {
 
 		@MainActor
 		var stacks: [Stack]? {
-			viewState.unwrappedValue?.filtered(searchText)
+			viewState.unwrappedValue?.filter(searchText)
 		}
 
 		@MainActor
