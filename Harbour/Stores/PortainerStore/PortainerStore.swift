@@ -8,13 +8,12 @@
 // swiftlint:disable file_length
 
 import Combine
-import CommonCoreData
 import CommonFoundation
 import CommonOSLog
-import CoreData
 import KeychainKit
 import OSLog
 import PortainerKit
+import SwiftData
 
 // MARK: - PortainerStore
 
@@ -88,9 +87,9 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 				try? await setup(url: url, token: token, saveToken: false)
 			}
 
-			let storedContainers = loadStoredContainers()
 			Task { @MainActor in
-				if !self.containers.contains(where: { !$0.isStored }) {
+				if let storedContainers = await loadStoredContainers(),
+				   !self.containers.contains(where: { !$0.isStored }) {
 					self.containers = storedContainers
 				}
 			}
@@ -549,66 +548,46 @@ private extension PortainerStore {
 		return Endpoint(id: storedEndpoint.id, name: storedEndpoint.name)
 	}
 
-	/// Stores containers to CoreData store.
+	/// Stores containers to SwiftData.
 	/// - Parameter containers: Containers to store
 	func storeContainers(_ containers: [Container]) {
-		// TODO: SwiftData
+		logger.debug("Storing \(containers.count, privacy: .public) containers... [\(String._debugInfo(), privacy: .public)]")
 
-		logger.debug("Saving \(containers.count, privacy: .public) containers... [\(String._debugInfo(), privacy: .public)]")
-
-		do {
-			let newContainersIDs = containers.map(\.id)
-
-			let context = Persistence.shared.backgroundContext
-
-			let fetchRequestToDelete: NSFetchRequest<NSFetchRequestResult> = StoredContainer.fetchRequest()
-			fetchRequestToDelete.predicate = NSPredicate(format: "NOT (id IN %@)", newContainersIDs)
-
-			let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequestToDelete)
-			_ = try? context.execute(deleteRequest)
-
-			containers.forEach { container in
-				let storedContainer = StoredContainer(context: context)
-				storedContainer.id = container.id
-				storedContainer.name = container.displayName
-				storedContainer.lastState = container.state?.rawValue
+		Task { @MainActor in
+			do {
+				let model = try ModelContainer(for: StoredContainer.self)
+				for container in containers {
+					let storedContainer = StoredContainer(container: container)
+					model.mainContext.insert(storedContainer)
+				}
+				try model.mainContext.save()
+				logger.debug("Stored \(containers.count, privacy: .public) containers. [\(String._debugInfo(), privacy: .public)]")
+			} catch {
+				logger.error("Failed to store containers: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			}
-
-			let didSave = try context.saveIfNeeded()
-			logger.debug("Inserted \(containers.count, privacy: .public) containers, needed to save: \(didSave, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
-		} catch {
-			logger.error("Failed to store containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
 	}
 
 	/// Fetches stored containers and returns them.
-	/// - Returns: Mapped [Container] from CoreData store.
-	func loadStoredContainers() -> [Container] {
-		// TODO: SwiftData
-
+	/// - Returns: Mapped [Container] from SwiftData.
+	@MainActor
+	func loadStoredContainers() async -> [Container]? {
 		logger.debug("Loading stored containers... [\(String._debugInfo(), privacy: .public)]")
 
 		do {
-			let context = Persistence.shared.backgroundContext
-			let fetchRequest = StoredContainer.fetchRequest()
-			let storedContainers = try context.fetch(fetchRequest)
-			let containers = storedContainers
-				.map {
-					let names: [String]?
-					if let name = $0.name {
-						names = [name]
-					} else {
-						names = nil
-					}
-					return Container(id: $0.id ?? "", names: names, state: ContainerState(rawValue: $0.lastState ?? ""))
-				}
-				.sorted()
+			let model = try ModelContainer(for: StoredContainer.self)
 
-			logger.debug("Loaded \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
-			return containers
+			var descriptor = FetchDescriptor<StoredContainer>()
+			descriptor.sortBy = [.init(\.name)]
+
+			let items = try model.mainContext.fetch(descriptor)
+
+			logger.info("Got \(items.count, privacy: .public) stored containers. [\(String._debugInfo(), privacy: .public)]")
+
+			return items.map { .init(storedContainer: $0) }
 		} catch {
-			logger.warning("Failed to fetch stored containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
-			return []
+			logger.error("Failed to load stored containers: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			return nil
 		}
 	}
 }

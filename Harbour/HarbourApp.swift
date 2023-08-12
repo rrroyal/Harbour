@@ -5,6 +5,7 @@
 //  Created by royal on 17/07/2022.
 //
 
+import SwiftData
 import SwiftUI
 
 // MARK: - HarbourApp
@@ -33,6 +34,7 @@ struct HarbourApp: App {
 				.environment(\.cvUseGrid, preferences.cvUseGrid)
 		}
 		.defaultAppStorage(Preferences.userDefaults)
+		.modelContainer(for: [StoredContainer.self])
 		.onChange(of: scenePhase) {
 			onScenePhaseChange(previous: $0, new: $1)
 		}
