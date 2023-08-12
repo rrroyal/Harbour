@@ -83,17 +83,19 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 
 		self.selectedEndpoint = getStoredEndpoint()
 
-		Task { @MainActor in
-			if let (url, token) = getStoredCredentials() {
-				self.setupTask = Task { @MainActor in
-					try? await setup(url: url, token: token, saveToken: false)
-				}
+		if let (url, token) = getStoredCredentials() {
+			self.setupTask = Task { @MainActor in
+				try? await setup(url: url, token: token, saveToken: false)
+			}
 
-				let storedContainers = loadStoredContainers()
+			let storedContainers = loadStoredContainers()
+			Task { @MainActor in
 				if !self.containers.contains(where: { !$0.isStored }) {
 					self.containers = storedContainers
 				}
-			} else {
+			}
+		} else {
+			Task { @MainActor in
 				endpoints = []
 				containers = []
 			}

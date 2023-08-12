@@ -48,11 +48,16 @@ struct ContainersView: View {
 extension ContainersView {
 	struct NoContainersPlaceholder: View {
 		let isEmpty: Bool
+		let searchQuery: String?
 
 		var body: some View {
 			VStack {
 				if isEmpty {
-					ContentUnavailableView("ContainersView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
+					if let searchQuery, !searchQuery.isEmpty {
+						ContentUnavailableView.search(text: searchQuery)
+					} else {
+						ContentUnavailableView("ContainersView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
+					}
 				}
 			}
 			.animation(.easeInOut, value: isEmpty)

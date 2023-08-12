@@ -87,7 +87,7 @@ struct ContentView: View {
 		}
 		.background {
 			if viewModel.shouldShowEmptyPlaceholderView {
-				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers?.isEmpty ?? true)
+				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers?.isEmpty ?? true, searchQuery: viewModel.searchText)
 			}
 		}
 		.modifier(
