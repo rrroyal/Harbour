@@ -18,7 +18,7 @@ extension SceneDelegate {
 		case .containerDetails(let id, let displayName, let endpointID):
 			let navigationItem = ContainerNavigationItem(id: id, displayName: displayName, endpointID: endpointID)
 			isSettingsSheetPresented = false
-//			navigationPath.removeLast(navigationPath.count)
+			navigationPath.removeLast(navigationPath.count)
 			navigationPath.append(navigationItem)
 		}
 	}

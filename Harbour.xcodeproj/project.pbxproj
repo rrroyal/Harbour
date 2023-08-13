@@ -10,6 +10,8 @@
 		0000114E2A3208BF00A08C52 /* NavigationWrapped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000114D2A3208BF00A08C52 /* NavigationWrapped.swift */; };
 		000011502A320AAD00A08C52 /* ViewState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000114F2A320AAD00A08C52 /* ViewState.swift */; };
 		0000115E2A321AA800A08C52 /* Error+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000115D2A321AA800A08C52 /* Error+Equatable.swift */; };
+		000708622A89910C008E6561 /* OpenContainerDetailsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F1EA8D2A360CA3000EEF48 /* OpenContainerDetailsIntent.swift */; };
+		000708652A89910C008E6561 /* OpenContainerDetailsIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F1EA8D2A360CA3000EEF48 /* OpenContainerDetailsIntent.swift */; };
 		0028286A2A86987500ABD7EA /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 002828692A86987500ABD7EA /* CommonFoundation */; };
 		0028286C2A86987500ABD7EA /* CommonHaptics in Frameworks */ = {isa = PBXBuildFile; productRef = 0028286B2A86987500ABD7EA /* CommonHaptics */; };
 		0028286E2A86987500ABD7EA /* CommonOSLog in Frameworks */ = {isa = PBXBuildFile; productRef = 0028286D2A86987500ABD7EA /* CommonOSLog */; };
@@ -1162,6 +1164,7 @@
 				00FD0FDE2A35379E008D68DF /* SelectContainerView.swift in Sources */,
 				00FD0FBD2A3534B2008D68DF /* ErrorView.swift in Sources */,
 				00A4AB8E2A34ECB60074E940 /* ContainerStatusWidget.swift in Sources */,
+				000708652A89910C008E6561 /* OpenContainerDetailsIntent.swift in Sources */,
 				00A4ABCD2A34EFD60074E940 /* ContainerStatusProvider.swift in Sources */,
 				00F558152A34FDCB002939A2 /* Endpoint+.swift in Sources */,
 				0078D06D2A881D24009C4374 /* Container+init.swift in Sources */,
@@ -1309,6 +1312,7 @@
 				E7207DB12988714100F7504C /* ContainerLogsView+ViewModel.swift in Sources */,
 				00AA82BC2A2FFF970064B870 /* ErrorHandler.swift in Sources */,
 				005CC9B82A85AD480051D876 /* SFSymbol.swift in Sources */,
+				000708622A89910C008E6561 /* OpenContainerDetailsIntent.swift in Sources */,
 				00EB4B882A51EC3400FB9A01 /* ContainerDetailsView+DetailsListView.swift in Sources */,
 				E79AD30E2893DABF002D0CD9 /* Constants.swift in Sources */,
 			);

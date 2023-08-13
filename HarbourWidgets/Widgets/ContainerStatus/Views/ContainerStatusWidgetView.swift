@@ -21,10 +21,10 @@ struct ContainerStatusWidgetView: View {
 		} else {
 			switch widgetFamily {
 			case .systemSmall:
-				let firstContainer = entry.configuration.containers.first
-				let widgetURL = HarbourURLScheme.containerDetails(id: firstContainer?._id ?? "", displayName: firstContainer?.name, endpointID: entry.configuration.endpoint?.id).url
+//				let firstContainer = entry.configuration.containers.first
+//				let widgetURL = HarbourURLScheme.containerDetails(id: firstContainer?._id ?? "", displayName: firstContainer?.name, endpointID: entry.configuration.endpoint?.id).url
 				SmallWidgetView(entry: entry)
-					.widgetURL(widgetURL)
+//					.widgetURL(widgetURL)
 			case .systemMedium:
 				MediumWidgetView(entry: entry)
 			case .systemLarge:

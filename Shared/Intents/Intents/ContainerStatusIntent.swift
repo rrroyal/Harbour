@@ -25,7 +25,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		}
 	}
 
-//	static var authenticationPolicy = IntentAuthenticationPolicy.requiresAuthentication
+	static var authenticationPolicy = IntentAuthenticationPolicy.requiresAuthentication
 
 //	static var isDiscoverable = true
 
@@ -38,8 +38,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		size: [
 			.systemSmall: 1,
 			.systemMedium: 2,
-			.systemLarge: 4,
-			.systemExtraLarge: 8
+			.systemLarge: 4
 		]
 	)
 	var containers: [IntentContainer]
@@ -51,41 +50,38 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	)
 	var resolveByName: Bool
 
-	/*
-	func perform() async throws -> some IntentResult & ReturnsValue<Container> & OpensIntent {
-		let containers = if let containers { containers } else { try await $containers.requestValue() }
-		let endpoint: IntentEndpoint = if let endpoint { endpoint } else { try await $endpoint.requestValue() }
+	func perform() async throws -> some OpensIntent & ReturnsValue<IntentContainer> {
+		guard let endpoint else { throw $containers.needsValueError()}
+		guard !containers.isEmpty else { throw $containers.needsValueError() }
 
-//		let containers = try await getContainers(
-//			for: endpoint.id,
-//			ids: containers.map(\._id),
-//			names: containers.map(\.name),
-//			resolveByName: resolveByName
-//		)
-
-//		let intentContainers = containers.map { IntentContainer(container: $0) }
 		// swiftlint:disable switch_case_alignment
-		let intentContainer: IntentContainer = switch intentContainers.count {
+		let intentContainer: IntentContainer = switch containers.count {
 		case 0:
 			throw Error.noContainers
 		case 1:
 			// swiftlint:disable:next force_unwrapping
-			intentContainers.first!
+			containers.first!
 		default:
-			try await $containers.requestDisambiguation(among: intentContainers)
+			try await $containers.requestDisambiguation(among: containers)
 		}
 		// swiftlint:enable switch_case_alignment
 
 		return .result(value: intentContainer, opensIntent: OpenContainerDetailsIntent(endpoint: endpoint, container: intentContainer))
 	}
-	 */
 }
 
 // MARK: - ContainerStatusIntent+Error
 
 extension ContainerStatusIntent {
-	enum Error: Swift.Error {
+	enum Error: LocalizedError {
 		case noContainers
+
+		var errorDescription: String? {
+			switch self {
+			case .noContainers:
+				String(localized: "ContainerStatusIntent.Error.NoContainers")
+			}
+		}
 	}
 }
 

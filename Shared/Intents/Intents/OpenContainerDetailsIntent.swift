@@ -8,6 +8,11 @@
 import AppIntents
 import Foundation
 import OSLog
+import UIKit
+
+// MARK: - logger
+
+private let logger = Logger(category: Logger.Category.intents)
 
 // MARK: - OpenContainerDetailsIntent
 
@@ -43,12 +48,10 @@ struct OpenContainerDetailsIntent: AppIntent {
 	@MainActor
 	func perform() async throws -> some IntentResult {
 		#if TARGET_APP
-		Logger(category: Logger.Category.intents).notice("PERFORMING INTENT APP endpoint: \(endpoint.id); container: \(container.id)")
-//		if let url = HarbourURLScheme.containerDetails(id: container._id, displayName: container.name, endpointID: endpoint.id).url {
-//
-//		}
-		#else
-		Logger(category: Logger.Category.intents).notice("PERFORMING INTENT ELSE endpoint: \(endpoint.id); container: \(container.id)")
+		logger.notice("Handling in-app: \(String(describing: container), privacy: .sensitive) [\(String._debugInfo(), privacy: .public)]")
+		if let url = HarbourURLScheme.containerDetails(id: container._id, displayName: container.name, endpointID: endpoint.id).url {
+			await UIApplication.shared.open(url)
+		}
 		#endif
 
 		return .result()
@@ -56,8 +59,6 @@ struct OpenContainerDetailsIntent: AppIntent {
 }
 
 // MARK: - OpenContainerDetailsShortcut+AppShortcutsProvider
-
-// TODO: AppShortcut
 
 /*
 struct OpenContainerDetailsShortcut: AppShortcutsProvider {

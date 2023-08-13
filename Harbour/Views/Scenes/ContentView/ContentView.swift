@@ -145,13 +145,13 @@ struct ContentView: View {
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) { userActivity in
 			sceneDelegate.onContinueContainerDetailsActivity(userActivity)
 		}
-		.task {
-			do {
-				try await viewModel.refresh()
-			} catch {
-				errorHandler(error)
-			}
-		}
+//		.task {
+//			do {
+//				try await viewModel.refresh()
+//			} catch {
+//				errorHandler(error)
+//			}
+//		}
 		.refreshable {
 			do {
 				try await viewModel.refresh()

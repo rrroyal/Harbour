@@ -78,7 +78,7 @@ extension ContainerStatusWidgetView {
 		}
 
 		var body: some View {
-//			Button(intent: entry.configuration) {
+			Button(intent: entry.configuration) {
 				VStack(spacing: 0) {
 					stateHeadline
 						.padding(.bottom, 2)
@@ -96,7 +96,7 @@ extension ContainerStatusWidgetView {
 					.frame(maxWidth: .infinity, alignment: .leading)
 				}
 				.padding()
-//			}
+			}
 			.buttonStyle(.plain)
 			.tint(nil)
 			.background(Color.widgetBackground)

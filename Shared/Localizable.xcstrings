@@ -51,6 +51,16 @@
         }
       }
     },
+    "AppIntents.Parameter.Container.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container"
+          }
+        }
+      }
+    },
     "AppIntents.Parameter.Containers.Title" : {
       "localizations" : {
         "en" : {
@@ -307,6 +317,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Get the current status of selected container."
+          }
+        }
+      }
+    },
+    "ContainerStatusIntent.Error.NoContainers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Containers"
           }
         }
       }
@@ -921,6 +941,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"%@\" disappeared!"
+          }
+        }
+      }
+    },
+    "OpenContainerDetailsIntent.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opens the in-app detail view for specified container."
+          }
+        }
+      }
+    },
+    "OpenContainerDetailsIntent.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Container Details"
           }
         }
       }

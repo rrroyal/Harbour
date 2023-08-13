@@ -9,7 +9,7 @@ import AppIntents
 import PortainerKit
 
 extension ExecuteAction: AppEnum {
-	public static var typeDisplayRepresentation: TypeDisplayRepresentation = "PortainerKit.ExecuteAction.AppEnumTitle"
+	public static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ExecuteAction.AppEnumTitle")
 
 	public static var caseDisplayRepresentations: [Self: DisplayRepresentation] = [
 		.start: .init(title: .init(stringLiteral: Self.start.title), image: .init(systemName: Self.start.icon)),
