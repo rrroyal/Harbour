@@ -1,17 +1,18 @@
-<img src="https://harbour.shameful.xyz/media/favicon.png" width="196" alt="Harbour App icon">
+<img src="https://harbour.shameful.xyz/media/favicon.png" width="196" alt="Harbour App Icon">
 
 # Harbour
-Docker/Portainer management app for iOS
+Docker/Portainer management app for iOS.
 
 ## Features
-- [x] Multiple servers/endpoints
+- [x] Multiple servers & endpoints
 - [x] Managing container state
+- [x] Managing stacks
 - [x] Widgets
-- [x] Siri Intents & Shortcuts
-- [ ] Container details
+- [x] iPadOS / macOS Catalyst support
+- [x] No telemetry :)
 
 ## Installation
 **Harbour is available on [TestFlight](https://testflight.apple.com/join/F2vK7xo4), and will be available on the App Store too in the near future 😄**
-#### Alternative methods
+#### Alternative Methods
 - Sideload .ipa from [releases](https://github.com/rrroyal/Harbour/releases/latest)
 - Build it yourself
