@@ -22,15 +22,15 @@ extension ContentView {
 		private var fetchTask: Task<Void, Error>?
 		private var suggestedSearchTokensTask: Task<Void, Error>?
 
-		@Published private(set) var viewState: ViewState<[Container]?, Error> = .loading
+		@Published private(set) var viewState: ViewState<Void, Error> = .loading
 		@Published private(set) var suggestedSearchTokens: [SearchToken] = []
 
 		@Published var searchText = ""
 		@Published var searchTokens: [SearchToken] = []
 		@Published var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
-		var containers: [Container]? {
-			viewState.unwrappedValue??
+		var containers: [Container] {
+			portainerStore.containers
 				.filter { container in
 					for token in searchTokens {
 						let matches = token.matches(container: container)
@@ -43,7 +43,7 @@ extension ContentView {
 		}
 
 		var shouldShowEmptyPlaceholderView: Bool {
-			!viewState.isLoading && containers?.isEmpty ?? true
+			!viewState.isLoading && containers.isEmpty
 		}
 
 		var shouldUseColumns: Bool {
@@ -64,7 +64,7 @@ extension ContentView {
 			self.portainerStore = portainerStore
 
 			Task {
-				self.viewState = .success(portainerStore.containers)
+				self.viewState = .success(())
 			}
 		}
 
@@ -74,8 +74,8 @@ extension ContentView {
 				do {
 					viewState = viewState.reloadingUnwrapped
 					let task = portainerStore.refresh()
-					let (_, containers) = try await task.value
-					viewState = .success(containers)
+					_ = try await task.value
+					viewState = .success(())
 				} catch {
 					viewState = .failure(error)
 					throw error
@@ -135,7 +135,7 @@ extension ContentView.ViewModel {
 			case .stack(let stack):
 				stack.name
 			case .status(let isOn):
-				isOn ? String(localized: "ContentView.SearchToken.Status.On") : String(localized: "ContentView.SearchToken.Status.Off")
+				String(localized: isOn ? "ContentView.SearchToken.Status.On" : "ContentView.SearchToken.Status.Off")
 			}
 		}
 

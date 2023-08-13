@@ -59,7 +59,9 @@ struct ContentView: View {
 		#if ENABLE_PREVIEW_FEATURES
 		ToolbarItem(placement: .navigation) {
 			NavigationLink {
-				StacksView(stackTappedAction: viewModel.onStackTapped)
+				StacksView {
+					viewModel.onStackTapped($0)
+				}
 			} label: {
 				Label("ContentView.NavigationButton.Stacks", systemImage: SFSymbol.stack)
 //					.symbolVariant(portainerStore.isSetup ? .none : .slash)
@@ -81,13 +83,13 @@ struct ContentView: View {
 //			}
 //			#endif
 
-			ContainersView(viewModel.containers ?? [])
+			ContainersView(viewModel.containers)
 				.transition(.opacity)
 				.animation(.easeInOut, value: viewModel.containers)
 		}
 		.background {
 			if viewModel.shouldShowEmptyPlaceholderView {
-				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers?.isEmpty ?? true, searchQuery: viewModel.searchText)
+				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers.isEmpty, searchQuery: viewModel.searchText)
 			}
 		}
 		.modifier(
