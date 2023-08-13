@@ -11,7 +11,7 @@ import Foundation
 extension SceneDelegate {
 	@MainActor
 	func onOpenURL(_ url: URL) {
-		logger.notice("Opening from URL: \(url.absoluteString, privacy: .sensitive) [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive)\" [\(String._debugInfo(), privacy: .public)]")
 
 		guard let harbourURL = HarbourURLScheme.fromURL(url) else { return }
 		switch harbourURL {

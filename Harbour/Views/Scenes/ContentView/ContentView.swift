@@ -104,6 +104,13 @@ struct ContentView: View {
 		) { token in
 			Label(token.title, systemImage: token.icon)
 		}
+		.refreshable {
+			do {
+				try await viewModel.refresh()
+			} catch {
+				errorHandler(error)
+			}
+		}
 	}
 
 	// MARK: Body
@@ -152,13 +159,6 @@ struct ContentView: View {
 //				errorHandler(error)
 //			}
 //		}
-		.refreshable {
-			do {
-				try await viewModel.refresh()
-			} catch {
-				errorHandler(error)
-			}
-		}
 	}
 }
 

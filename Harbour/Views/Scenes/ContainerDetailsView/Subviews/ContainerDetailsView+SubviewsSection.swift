@@ -17,7 +17,7 @@ extension ContainerDetailsView {
 		let navigationItem: ContainerNavigationItem
 
 		@ViewBuilder
-		private var labelsSection: some View {
+		private var labelsLink: some View {
 			let title = String(localized: "ContainerDetailsView.Section.Labels")
 			let _data = details?.config?.labels
 
@@ -38,10 +38,11 @@ extension ContainerDetailsView {
 				Label(title, systemImage: "tag")
 			}
 			.disabled(_data == nil)
+			.id("LabelsLink:\(_data == nil ? "1" : "0")")
 		}
 
 		@ViewBuilder
-		private var environmentSection: some View {
+		private var environmentLink: some View {
 			let title = String(localized: "ContainerDetailsView.Section.Environment")
 			let _data = details?.config?.env
 
@@ -69,10 +70,11 @@ extension ContainerDetailsView {
 				Label(title, systemImage: "list.bullet.rectangle")
 			}
 			.disabled(_data == nil)
+			.id("EnvironmentLink:\(_data == nil ? "1" : "0")")
 		}
 
 		@ViewBuilder
-		private var portsSection: some View {
+		private var portsLink: some View {
 			let title = String(localized: "ContainerDetailsView.Section.Ports")
 			let _data = container?.ports
 
@@ -112,10 +114,11 @@ extension ContainerDetailsView {
 				Label(title, systemImage: "externaldrive.connected.to.line.below")
 			}
 			.disabled(_data == nil)
+			.id("PortsLink:\(_data == nil ? "1" : "0")")
 		}
 
 		@ViewBuilder
-		private var mountsSection: some View {
+		private var mountsLink: some View {
 			let title = String(localized: "ContainerDetailsView.Section.Mounts")
 			let _data = details?.mounts
 
@@ -135,10 +138,11 @@ extension ContainerDetailsView {
 				Label(title, systemImage: "externaldrive")
 			}
 			.disabled(_data == nil)
+			.id("MountsLink:\(_data == nil ? "1" : "0")")
 		}
 
 		@ViewBuilder
-		private var logsSection: some View {
+		private var logsLink: some View {
 			NavigationLink {
 				ContainerLogsView(navigationItem: navigationItem)
 			} label: {
@@ -148,11 +152,11 @@ extension ContainerDetailsView {
 
 		var body: some View {
 			Section {
-				labelsSection
-				environmentSection
-				portsSection
-				mountsSection
-				logsSection
+				labelsLink
+				environmentLink
+				portsLink
+				mountsLink
+				logsLink
 			}
 		}
 	}

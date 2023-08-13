@@ -12,7 +12,7 @@ import UIKit
 
 // MARK: - logger
 
-private let logger = Logger(category: Logger.Category.intents)
+private let logger = Logger(.intents(OpenContainerDetailsIntent.self))
 
 // MARK: - OpenContainerDetailsIntent
 

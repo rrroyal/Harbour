@@ -9,14 +9,14 @@ import CommonHaptics
 import CommonOSLog
 import KeychainKit
 import OSLog
+import SwiftData
 import SwiftUI
 import WidgetKit
-import SwiftData
 
 // MARK: - DebugView
 
 struct DebugView: View {
-	private let logger = Logger(category: Logger.Category.debug)
+	private let logger = Logger(.debug)
 
 	var body: some View {
 		List {

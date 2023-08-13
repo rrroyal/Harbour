@@ -48,7 +48,7 @@ extension EnvironmentValues {
 
 extension EnvironmentValues {
 	private struct LoggerEnvironmentKey: EnvironmentKey {
-		static let defaultValue = Logger(category: Logger.Category.app)
+		static let defaultValue = Logger(.app)
 	}
 
 	/// Logging subsystem attached to this view.

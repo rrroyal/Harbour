@@ -95,7 +95,7 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 
 	// MARK: Private properties
 
-	private let logger = Logger(category: String(describing: ContainerStatusProvider.self))
+	private let logger = Logger(.custom(ContainerStatusProvider.self))
 	private let portainerStore = IntentPortainerStore.shared
 
 	// MARK: AppIntentTimelineProvider

@@ -11,7 +11,7 @@ import OSLog
 import SwiftUI
 
 final class SceneDelegate: NSObject, ObservableObject {
-	let logger = Logger(category: String(describing: SceneDelegate.self))
+	let logger = Logger(.custom(SceneDelegate.self))
 	let indicators = Indicators()
 
 	@Published var isSettingsSheetPresented = false

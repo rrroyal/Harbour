@@ -22,7 +22,7 @@ public final class Preferences: ObservableObject {
 	// swiftlint:disable:next force_unwrapping
 	public static let userDefaults: UserDefaults = .group!
 
-	private let logger = Logger(category: String(describing: Preferences.self))
+	private let logger = Logger(.custom(Preferences.self))
 
 	/// Was landing view displayed?
 	@AppStorage(Keys.landingDisplayed, store: Preferences.userDefaults) public var landingDisplayed = false

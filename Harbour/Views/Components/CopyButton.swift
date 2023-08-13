@@ -31,7 +31,7 @@ struct CopyButton: View {
 
 	var body: some View {
 		Button {
-			Haptics.generateIfEnabled(.selectionChanged)
+			Haptics.generateIfEnabled(.buttonPress)
 			if showIndicator {
 				showIndicatorAction(.copied)
 			}

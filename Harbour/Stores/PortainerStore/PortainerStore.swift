@@ -25,7 +25,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 
 	// MARK: Private properties
 
-	private let logger = Logger(category: String(describing: PortainerStore.self))
+	private let logger = Logger(.custom(PortainerStore.self))
 	private let keychain = Keychain.shared
 	private let preferences = Preferences.shared
 	private let portainer: Portainer

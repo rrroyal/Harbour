@@ -20,8 +20,8 @@ final class AppState: ObservableObject {
 
 	// MARK: Internal Properties
 
-	internal let logger = Logger(category: String(describing: AppState.self))
-	internal let loggerBackground = Logger(category: Logger.Category.background)
+	internal let logger = Logger(.custom(AppState.self))
+	internal let loggerBackground = Logger(.background)
 
 	internal var portainerServerSwitchTask: Task<Void, Error>?
 

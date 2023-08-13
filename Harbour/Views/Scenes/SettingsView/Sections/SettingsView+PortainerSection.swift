@@ -57,12 +57,13 @@ private extension SettingsView.PortainerSection {
 					Label("SettingsView.Portainer.EndpointsMenu.Add", systemImage: SFSymbol.plus)
 				}
 			} label: {
-				let _serverURLLabel = serverURLLabel ?? "SettingsView.Portainer.EndpointsMenu.NoServersPlaceholder"
+				let _serverURLLabel = serverURLLabel ?? String(localized: "SettingsView.Portainer.EndpointsMenu.NoServerSelectedPlaceholder")
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
 					Text(_serverURLLabel)
 						.font(SettingsView.labelFontHeadline)
 						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
+						.lineLimit(1)
 
 					Spacer()
 

@@ -1395,6 +1395,16 @@
         }
       }
     },
+    "SettingsView.Portainer.EndpointsMenu.NoServerSelectedPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Server Selected"
+          }
+        }
+      }
+    },
     "SettingsView.Portainer.EndpointsMenu.Server.CopyToken" : {
       "localizations" : {
         "en" : {
