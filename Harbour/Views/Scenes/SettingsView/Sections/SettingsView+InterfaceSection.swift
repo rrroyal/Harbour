@@ -10,8 +10,8 @@ import SwiftUI
 
 extension SettingsView {
 	struct InterfaceSection: View {
-		@EnvironmentObject private var viewModel: ViewModel
 		@EnvironmentObject private var preferences: Preferences
+		@Bindable var viewModel: SettingsView.ViewModel
 
 		var body: some View {
 			Section("SettingsView.Interface.Title") {

@@ -18,18 +18,14 @@ struct ContainerDetailsView: View {
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
-	@StateObject private var viewModel: ViewModel
+	@State private var viewModel: ViewModel
 
 	let navigationItem: ContainerNavigationItem
-
-	private var navigationTitle: String {
-		viewModel.containerDetails?.displayName ?? navigationItem.displayName ?? viewModel.container(for: navigationItem)?.displayName ?? navigationItem.id
-	}
 
 	init(navigationItem: ContainerNavigationItem) {
 		self.navigationItem = navigationItem
 
-		let viewModel = ViewModel()
+		let viewModel = ViewModel(navigationItem: navigationItem)
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
 
@@ -43,7 +39,7 @@ struct ContainerDetailsView: View {
 			)
 		}
 		.background(viewModel.viewState.backgroundView)
-		.navigationTitle(navigationTitle)
+		.navigationTitle(viewModel.navigationTitle)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
 				ToolbarMenu(isLoading: viewModel.viewState.isLoading,

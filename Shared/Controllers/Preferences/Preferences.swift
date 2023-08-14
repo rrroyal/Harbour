@@ -36,23 +36,23 @@ public final class Preferences: ObservableObject {
 	}
 
 	#if DEBUG
-	/// Last background refresh time.
+	/// Last background refresh time
 	@AppStorage(Keys.lastBackgroundRefreshDate, store: Preferences.userDefaults) public var lastBackgroundRefreshDate: TimeInterval?
 	#endif
 
-	/// Selected server.
+	/// Selected server
 	@AppStorage(Keys.selectedServer, store: Preferences.userDefaults) public var selectedServer: String?
 
-	/// Selected endpoint.
+	/// Selected endpoint
 	@AppStorage(Keys.selectedEndpoint, store: Preferences.userDefaults) public var selectedEndpoint: StoredEndpoint?
 
-	/// Display summary in ContainersView.
-	@AppStorage(Keys.cvDisplaySummary, store: Preferences.userDefaults) public var cvDisplaySummary = false
+	// Display summary in ContainersView
+//	@AppStorage(Keys.cvDisplaySummary, store: Preferences.userDefaults) public var cvDisplaySummary = false
 
-	/// Use two-columns layout.
+	/// Use two-columns layout
 	@AppStorage(Keys.cvUseColumns, store: Preferences.userDefaults) public var cvUseColumns = true
 
-	/// Display ContainersView as grid.
+	/// Display ContainersView as grid
 	@AppStorage(Keys.cvUseGrid, store: Preferences.userDefaults) public var cvUseGrid = true
 
 	private init() { }

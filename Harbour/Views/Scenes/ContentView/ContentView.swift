@@ -14,23 +14,14 @@ import SwiftUI
 // MARK: - ContentView
 
 struct ContentView: View {
-	@Environment(\.errorHandler) private var errorHandler
 	@EnvironmentObject private var appDelegate: AppDelegate
 	@EnvironmentObject private var sceneDelegate: SceneDelegate
-	@EnvironmentObject private var appState: AppState
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@EnvironmentObject private var preferences: Preferences
+	@Environment(AppState.self) private var appState
+	@Environment(\.errorHandler) private var errorHandler
 
-	@StateObject private var viewModel: ViewModel
-
-	init() {
-		let viewModel = ViewModel()
-		self._viewModel = .init(wrappedValue: viewModel)
-	}
-
-//	private var isSummaryVisible: Bool {
-//		preferences.cvDisplaySummary && viewModel.viewState == .hasContainers && viewModel.searchText.isReallyEmpty
-//	}
+	@State private var viewModel = ViewModel()
 
 	@ViewBuilder
 	private var titleMenu: some View {
@@ -166,7 +157,7 @@ struct ContentView: View {
 
 #Preview {
 	ContentView()
-		.environmentObject(AppState.shared)
+		.environment(AppState.shared)
 		.environmentObject(PortainerStore.shared)
 		.environmentObject(Preferences.shared)
 }

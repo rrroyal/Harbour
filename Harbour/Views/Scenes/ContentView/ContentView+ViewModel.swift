@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Observation
 import PortainerKit
 #if canImport(UIKit)
 import UIKit
@@ -14,21 +15,22 @@ import UIKit
 // MARK: - ContentView+ViewModel
 
 extension ContentView {
-	@MainActor
-	final class ViewModel: ObservableObject {
+	@Observable
+	final class ViewModel {
 		private let portainerStore: PortainerStore
 		private let preferences = Preferences.shared
 
 		private var fetchTask: Task<Void, Error>?
 		private var suggestedSearchTokensTask: Task<Void, Error>?
 
-		@Published private(set) var viewState: ViewState<Void, Error> = .loading
-		@Published private(set) var suggestedSearchTokens: [SearchToken] = []
+		private(set) var viewState: ViewState<Void, Error> = .loading
+		private(set) var suggestedSearchTokens: [SearchToken] = []
 
-		@Published var searchText = ""
-		@Published var searchTokens: [SearchToken] = []
-		@Published var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+		var searchText = ""
+		var searchTokens: [SearchToken] = []
+		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
+		@MainActor
 		var containers: [Container] {
 			portainerStore.containers
 				.filter { container in
@@ -42,6 +44,7 @@ extension ContentView {
 				.filter(searchText)
 		}
 
+		@MainActor
 		var shouldShowEmptyPlaceholderView: Bool {
 			!viewState.isLoading && containers.isEmpty
 		}
@@ -62,12 +65,9 @@ extension ContentView {
 		init() {
 			let portainerStore = PortainerStore.shared
 			self.portainerStore = portainerStore
-
-			Task {
-				self.viewState = .success(())
-			}
 		}
 
+		@MainActor
 		func refresh() async throws {
 			fetchTask?.cancel()
 			self.fetchTask = Task {
@@ -100,14 +100,17 @@ extension ContentView {
 			try await self.fetchTask?.value
 		}
 
+		@MainActor
 		func selectEndpoint(_ endpoint: Endpoint?) {
 			portainerStore.selectEndpoint(endpoint)
 		}
 
+		@MainActor
 		func onLandingDismissed() {
 			preferences.landingDisplayed = true
 		}
 
+		@MainActor
 		func onStackTapped(_ stack: Stack) {
 			searchTokens = [.stack(stack)]
 		}

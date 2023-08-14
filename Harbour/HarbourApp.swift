@@ -20,16 +20,16 @@ struct HarbourApp: App {
 	#endif
 
 	@Environment(\.scenePhase) private var scenePhase: ScenePhase
-	@StateObject private var appState: AppState = .shared
 	@StateObject private var portainerStore: PortainerStore = .shared
 	@StateObject private var preferences: Preferences = .shared
+	@State private var appState: AppState = .shared
 
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environmentObject(appState)
 				.environmentObject(portainerStore)
 				.environmentObject(preferences)
+				.environment(appState)
 				.environment(\.portainerServerURL, portainerStore.serverURL)
 				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
 				.environment(\.cvUseGrid, preferences.cvUseGrid)

@@ -8,7 +8,7 @@
 import Foundation
 import PortainerKit
 
-public struct StoredEndpoint {
+public struct StoredEndpoint: Identifiable, Codable {
 	public let id: Endpoint.ID
 	public let name: String?
 }
@@ -18,18 +18,6 @@ extension StoredEndpoint {
 		case id
 		case name
 	}
-//
-//	public init(from decoder: Decoder) throws {
-//		let container = try decoder.container(keyedBy: CodingKeys.self)
-//		self.id = try container.decode(Endpoint.ID.self, forKey: .id)
-//		self.name = try container.decode(String.self, forKey: .name)
-//	}
-//
-//	public func encode(to encoder: Encoder) throws {
-//		var container = encoder.container(keyedBy: CodingKeys.self)
-//		try container.encode(self.id, forKey: .id)
-//		try container.encode(self.name, forKey: .name)
-//	}
 }
 
 extension StoredEndpoint: RawRepresentable {

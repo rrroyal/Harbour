@@ -12,15 +12,16 @@ import PortainerKit
 // MARK: - StacksView+ViewModel
 
 extension StacksView {
-	final class ViewModel: ObservableObject {
+	@Observable
+	final class ViewModel {
 		private let portainerStore = PortainerStore.shared
 
 		private var refreshTask: Task<Void, Error>?
 
-		@MainActor @Published private(set) var viewState: ViewState<[Stack], Error> = .loading
-		@MainActor @Published private(set) var loadingStacks: Set<Stack.ID> = []
+		private(set) var viewState: ViewState<[Stack], Error> = .loading
+		private(set) var loadingStacks: Set<Stack.ID> = []
 
-		@MainActor @Published var searchText = ""
+		var searchText = ""
 
 		@MainActor
 		var stacks: [Stack]? {

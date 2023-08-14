@@ -14,11 +14,11 @@ import SwiftUI
 
 extension SettingsView {
 	struct PortainerSection: View {
-		@EnvironmentObject private var viewModel: ViewModel
+		@Bindable var viewModel: SettingsView.ViewModel
 
 		var body: some View {
 			Section("SettingsView.Portainer.Title") {
-				EndpointsMenu()
+				EndpointsMenu(viewModel: viewModel)
 			}
 			.sheet(isPresented: $viewModel.isSetupSheetPresented) {
 				viewModel.refreshServers()
@@ -33,8 +33,8 @@ extension SettingsView {
 
 private extension SettingsView.PortainerSection {
 	struct EndpointsMenu: View {
-		@EnvironmentObject private var viewModel: SettingsView.ViewModel
 		@Environment(\.errorHandler) private var errorHandler
+		@Bindable var viewModel: SettingsView.ViewModel
 
 		private var serverURLLabel: String? {
 			guard let url = viewModel.activeURL else { return nil }

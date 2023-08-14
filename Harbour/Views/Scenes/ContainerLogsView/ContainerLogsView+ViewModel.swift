@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Observation
 #if canImport(UIKit)
 import UIKit.UIPasteboard
 #elseif canImport(AppKit)
@@ -15,7 +16,8 @@ import AppKit.NSPasteboard
 // MARK: - ContainerLogsView+ViewModel
 
 extension ContainerLogsView {
-	final class ViewModel: ObservableObject, @unchecked Sendable {
+	@Observable
+	final class ViewModel: Sendable {
 		typealias _ViewState = ViewState<String, Error>
 
 		private let portainerStore = PortainerStore.shared
@@ -23,23 +25,22 @@ extension ContainerLogsView {
 		private var fetchTask: Task<Void, Never>?
 		private var parseTask: Task<Void, Never>?
 
-		@Published @MainActor private(set) var viewState: _ViewState = .loading
-		@Published @MainActor private(set) var logsParsed: AttributedString?
+		private(set) var viewState: _ViewState = .loading
+		private(set) var logsParsed: AttributedString?
 
-		let containerNavigationItem: ContainerNavigationItem
+		let navigationItem: ContainerNavigationItem
 
-		@Published var includeTimestamps = false
-		@Published var lineCount = 100
+		var includeTimestamps = false
+		var lineCount = 100
 
-		@MainActor
 		var logsViewable: AttributedString? {
 			if let logsParsed { return logsParsed }
 			if let logs = viewState.unwrappedValue { return AttributedString(stringLiteral: ANSIParser.trim(logs)) }
 			return nil
 		}
 
-		init(containerNavigationItem: ContainerNavigationItem) {
-			self.containerNavigationItem = containerNavigationItem
+		init(navigationItem: ContainerNavigationItem) {
+			self.navigationItem = navigationItem
 		}
 
 		@discardableResult
@@ -50,7 +51,7 @@ extension ContainerLogsView {
 				self.parseTask?.cancel()
 
 				do {
-					let logs = try await portainerStore.getLogs(for: containerNavigationItem.id,
+					let logs = try await portainerStore.getLogs(for: navigationItem.id,
 																tail: lineCount,
 																timestamps: includeTimestamps)
 					self.viewState = .success(logs)

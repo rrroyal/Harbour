@@ -15,14 +15,14 @@ struct ContainerLogsView: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.showIndicator) private var showIndicator
 
-	@StateObject private var viewModel: ViewModel
+	@State private var viewModel: ViewModel
 
 	let navigationItem: ContainerNavigationItem
 
 	init(navigationItem: ContainerNavigationItem) {
 		self.navigationItem = navigationItem
 
-		let viewModel = ViewModel(containerNavigationItem: navigationItem)
+		let viewModel = ViewModel(navigationItem: navigationItem)
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
 

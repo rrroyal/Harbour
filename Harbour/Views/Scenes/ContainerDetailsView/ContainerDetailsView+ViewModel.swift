@@ -7,25 +7,36 @@
 
 import CoreSpotlight
 import Foundation
+import Observation
 import PortainerKit
 
 // MARK: - ContainerDetailsView+ViewModel
 
 extension ContainerDetailsView {
-	@MainActor
-	final class ViewModel: ObservableObject, @unchecked Sendable {
+	@Observable
+	final class ViewModel {
 		private let portainerStore = PortainerStore.shared
 
-		@Published @MainActor private(set) var viewState: ViewState<ContainerDetails, Error> = .loading
-		@Published @MainActor private(set) var container: Container?
-		@Published private(set) var fetchTask: Task<Void, Never>?
+		private(set) var viewState: ViewState<ContainerDetails, Error> = .loading
+		private(set) var container: Container?
+		private(set) var fetchTask: Task<Void, Never>?
+
+		let navigationItem: ContainerNavigationItem
 
 		var containerDetails: ContainerDetails? {
 			viewState.unwrappedValue
 		}
 
-		init() { }
+		@MainActor
+		var navigationTitle: String {
+			containerDetails?.displayName ?? navigationItem.displayName ?? container(for: navigationItem)?.displayName ?? navigationItem.id
+		}
 
+		init(navigationItem: ContainerNavigationItem) {
+			self.navigationItem = navigationItem
+		}
+
+		@MainActor
 		func createUserActivity(for navigationItem: ContainerNavigationItem,
 								userActivity: NSUserActivity,
 								errorHandler: ErrorHandler) {
@@ -75,7 +86,7 @@ extension ContainerDetailsView {
 			}
 		}
 
-		@discardableResult
+		@MainActor @discardableResult
 		func getContainerDetails(navigationItem: ContainerNavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task {
@@ -98,6 +109,7 @@ extension ContainerDetailsView {
 			return task
 		}
 
+		@MainActor
 		func container(for navigationItem: ContainerNavigationItem) -> Container? {
 			if self.container?.id == navigationItem.id { return self.container }
 			return portainerStore.containers.first { $0.id == navigationItem.id }

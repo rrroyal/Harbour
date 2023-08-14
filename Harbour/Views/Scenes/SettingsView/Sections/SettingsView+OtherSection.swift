@@ -11,6 +11,8 @@ import SwiftUI
 
 extension SettingsView {
 	struct OtherSection: View {
+		@Bindable var viewModel: SettingsView.ViewModel
+
 		var body: some View {
 			Section(header: Text("SettingsView.Other.Title"), footer: FooterView()) {
 				NavigationLinkOption("SettingsView.Other.Debug", iconSymbolName: "wrench.and.screwdriver") {

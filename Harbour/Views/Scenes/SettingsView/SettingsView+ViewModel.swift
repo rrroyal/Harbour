@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Observation
 #if canImport(UIKit)
 import UIKit.UIDevice
 #endif
@@ -13,15 +14,15 @@ import UIKit.UIDevice
 // MARK: - SettingsView+ViewModel
 
 extension SettingsView {
-	@MainActor
-	final class ViewModel: ObservableObject {
+	@Observable
+	final class ViewModel {
 		private let portainerStore: PortainerStore = .shared
 		private let appState: AppState = .shared
 
-		@Published var isSetupSheetPresented = false
-		@Published var serverURLs: [URL]
+		var isSetupSheetPresented = false
+		var serverURLs: [URL]
 
-		@Published var activeURL: URL?
+		var activeURL: URL?
 
 		var displayiPadOptions: Bool {
 			#if os(macOS)
@@ -36,24 +37,29 @@ extension SettingsView {
 			activeURL = portainerStore.serverURL
 		}
 
+		@MainActor
 		func refreshServers() {
 			serverURLs = portainerStore.savedURLs
 			activeURL = portainerStore.serverURL
 		}
 
 		func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
-			activeURL = serverURL
-			appState.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
+			Task { @MainActor in
+				activeURL = serverURL
+				appState.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
+			}
 		}
 
 		func removeServer(_ url: URL) throws {
-			if portainerStore.serverURL == url {
-				activeURL = nil
-				portainerStore.reset()
-			}
+			Task { @MainActor in
+				if portainerStore.serverURL == url {
+					activeURL = nil
+					portainerStore.reset()
+				}
 
-			try portainerStore.removeServer(url)
-			refreshServers()
+				try portainerStore.removeServer(url)
+				refreshServers()
+			}
 		}
 	}
 }

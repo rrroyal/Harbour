@@ -15,7 +15,7 @@ struct SetupView: View {
 	@Environment(\.dismiss) private var dismiss: DismissAction
 	@Environment(\.errorHandler) private var errorHandler
 
-	@StateObject private var viewModel: ViewModel
+	@State private var viewModel: ViewModel
 	@FocusState private var focusedField: ViewModel.FocusedField?
 
 	private let urlPlaceholder: String = "https://172.17.0.2"

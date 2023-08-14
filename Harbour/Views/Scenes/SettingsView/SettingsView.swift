@@ -11,7 +11,7 @@ import SwiftUI
 struct SettingsView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
-	@StateObject private var viewModel: ViewModel
+	@State private var viewModel: ViewModel
 
 	init() {
 		let viewModel = ViewModel()
@@ -21,10 +21,10 @@ struct SettingsView: View {
 	var body: some View {
 		NavigationStack {
 			List {
-				PortainerSection()
-				GeneralSection()
-				InterfaceSection()
-				OtherSection()
+				PortainerSection(viewModel: viewModel)
+				GeneralSection(viewModel: viewModel)
+				InterfaceSection(viewModel: viewModel)
+				OtherSection(viewModel: viewModel)
 			}
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			.navigationTitle("SettingsView.Title")
@@ -39,7 +39,6 @@ struct SettingsView: View {
 				#endif
 			}
 		}
-		.environmentObject(viewModel)
 	}
 }
 

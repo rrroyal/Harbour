@@ -7,24 +7,25 @@
 
 import CommonHaptics
 import Foundation
+import Observation
 import SwiftUI
 
 // MARK: - SetupView+ViewModel
 
 extension SetupView {
-	@MainActor
-	final class ViewModel: ObservableObject {
+	@Observable
+	final class ViewModel: Sendable {
 		private let portainerStore: PortainerStore = .shared
 		private let errorTimeoutInterval: TimeInterval = 3
 
-		@Published private(set) var isLoading = false
-		@Published private(set) var loginTask: Task<Void, Error>?
-		@Published private(set) var errorTimer: Timer?
+		private(set) var isLoading = false
+		private(set) var loginTask: Task<Void, Error>?
+		private(set) var errorTimer: Timer?
 
-		@Published var url: String = ""
-		@Published var token: String = ""
-		@Published var buttonLabel: String?
-		@Published var buttonColor: Color?
+		var url: String = ""
+		var token: String = ""
+		var buttonLabel: String?
+		var buttonColor: Color?
 
 		var canSubmit: Bool {
 			!isLoading && !url.isReallyEmpty && !token.isReallyEmpty
@@ -61,7 +62,7 @@ extension SetupView {
 
 		func login(dismissAction: DismissAction?, errorHandler: ErrorHandler?) {
 			loginTask?.cancel()
-			loginTask = Task {
+			loginTask = Task { @MainActor in
 				isLoading = true
 
 				do {
@@ -85,10 +86,11 @@ extension SetupView {
 					buttonLabel = error.localizedDescription
 
 					errorTimer?.invalidate()
-					errorTimer = Timer.scheduledTimer(withTimeInterval: errorTimeoutInterval, repeats: false) { [weak self] _ in
-						DispatchQueue.main.async { [weak self] in
-							self?.buttonLabel = nil
-							self?.buttonColor = nil
+					Task {
+						try? await Task.sleep(for: .seconds(errorTimeoutInterval))
+						await MainActor.run {
+							self.buttonLabel = nil
+							self.buttonColor = nil
 						}
 					}
 

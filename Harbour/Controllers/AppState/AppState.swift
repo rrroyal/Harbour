@@ -7,12 +7,14 @@
 
 import CommonOSLog
 import Foundation
+import Observation
 import OSLog
 
 // MARK: - AppState
 
 /// Main place for all of the app-related state management.
-final class AppState: ObservableObject {
+@Observable
+final class AppState {
 
 	// MARK: Static Properties
 

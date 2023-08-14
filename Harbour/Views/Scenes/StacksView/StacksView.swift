@@ -15,7 +15,7 @@ struct StacksView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
-	@StateObject private var viewModel = ViewModel()
+	@State private var viewModel = ViewModel()
 
 	let stackTappedAction: (Stack) -> Void
 
