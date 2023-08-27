@@ -6,10 +6,23 @@
 	<string>$(AppIdentifierPrefix)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>__MainBundleIdentifier__.BackgroundRefresh</string>
+		<string>__MAIN_BUNDLE_IDENTIFIER__.BackgroundRefresh</string>
 	</array>
 	<key>BuildDate</key>
-	<string>__BUILD_DATE__</string>
+	<string>__TIMESTAMP__</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>NSAppIconActionTintColorName</key>
+			<string>AccentColor</string>
+			<key>NSAppIconComplementingColorNames</key>
+			<array>
+				<string>AccentColor</string>
+				<string>AccentColor</string>
+			</array>
+		</dict>
+	</dict>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -25,8 +38,10 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>MDItemKeywords</key>
+	<string>Harbour, Harbor, Docker, Portainer, Containers</string>
 	<key>MainBundleIdentifier</key>
-	<string>__MainBundleIdentifier__</string>
+	<string>__MAIN_BUNDLE_IDENTIFIER__</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -36,7 +51,7 @@
 	</dict>
 	<key>NSUserActivityTypes</key>
 	<array>
-		<string>__MainBundleIdentifier__.ContainerDetailsActivity</string>
+		<string>__MAIN_BUNDLE_IDENTIFIER__.ContainerDetailsActivity</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -53,20 +68,5 @@
 		<string>fetch</string>
 		<string>processing</string>
 	</array>
-	<key>MDItemKeywords</key>
-	<string>Harbour, Harbor, Docker, Portainer, Containers</string>
-	<key>CFBundleIcons</key>
-	<dict>
-		<key>CFBundlePrimaryIcon</key>
-		<dict>
-			<key>NSAppIconActionTintColorName</key>
-			<string>AccentColor</string>
-			<key>NSAppIconComplementingColorNames</key>
-			<array>
-				<string>AccentColor</string>
-				<string>AccentColor</string>
-			</array>
-		</dict>
-	</dict>
 </dict>
 </plist>

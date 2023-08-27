@@ -3,6 +3,7 @@
 //  PortainerKit
 //
 //  Created by royal on 17/10/2021.
+//  Copyright © 2023 shameful. All rights reserved.
 //
 
 import Foundation

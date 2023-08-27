@@ -3,6 +3,7 @@
 //  HarbourWidgets
 //
 //  Created by royal on 11/06/2023.
+//  Copyright © 2023 shameful. All rights reserved.
 //
 
 import PortainerKit

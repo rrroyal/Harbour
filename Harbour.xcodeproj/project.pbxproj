@@ -1093,6 +1093,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = shameful;
 				TargetAttributes = {
 					00A4AB862A34ECB60074E940 = {
 						CreatedOnToolsVersion = 15.0;
@@ -1354,7 +1355,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HarbourWidgets;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = __COPYRIGHT__;
 				INFOPLIST_PREFIX_HEADER = Shared/Info.h;
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -1399,7 +1401,8 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HarbourWidgets;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
+				INFOPLIST_KEY_NSHumanReadableCopyright = __COPYRIGHT__;
 				INFOPLIST_PREFIX_HEADER = Shared/Info.h;
 				INFOPLIST_PREPROCESS = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
@@ -1563,6 +1566,7 @@
 				INFOPLIST_FILE = Harbour/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Harbour;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = __COPYRIGHT__;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
@@ -1607,6 +1611,7 @@
 				INFOPLIST_FILE = Harbour/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Harbour;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_NSHumanReadableCopyright = __COPYRIGHT__;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";

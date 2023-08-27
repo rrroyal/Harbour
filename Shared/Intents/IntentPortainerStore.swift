@@ -3,6 +3,7 @@
 //  HarbourIntents
 //
 //  Created by royal on 03/10/2022.
+//  Copyright © 2023 shameful. All rights reserved.
 //
 
 import CommonOSLog

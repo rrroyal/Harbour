@@ -3,6 +3,7 @@
 //  Harbour
 //
 //  Created by royal on 28/07/2022.
+//  Copyright © 2023 shameful. All rights reserved.
 //
 
 import CommonFoundation

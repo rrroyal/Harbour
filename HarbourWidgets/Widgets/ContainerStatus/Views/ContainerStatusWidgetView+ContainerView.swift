@@ -3,6 +3,7 @@
 //  HarbourWidgets
 //
 //  Created by royal on 11/06/2023.
+//  Copyright © 2023 shameful. All rights reserved.
 //
 
 import PortainerKit
@@ -100,17 +101,13 @@ extension ContainerStatusWidgetView {
 			.buttonStyle(.plain)
 			.tint(nil)
 			.background(Color.widgetBackground)
+			.id("ContainerStatusWidgetView.ContainerView.\(container?.id ?? "")")
 		}
 	}
 }
 
 // MARK: - Previews
 
-/*
 #Preview {
-	ContainerStatusWidgetView.ContainerView(
-		intentContainer: ContainerStatusProvider.Entry.placeholder.configuration.containers.first!,
-		container: ContainerStatusProvider.Entry.placeholder.containers?.first
-	)
+	ContainerStatusWidgetView.ContainerView(entry: .placeholder, intentContainer: .preview(), intentEndpoint: .preview())
 }
-*/

@@ -5,9 +5,9 @@
 	<key>AppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
 	<key>BuildDate</key>
-	<string>__BUILD_DATE__</string>
+	<string>__TIMESTAMP__</string>
 	<key>MainBundleIdentifier</key>
-	<string>__MainBundleIdentifier__</string>
+	<string>__MAIN_BUNDLE_IDENTIFIER__</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>
