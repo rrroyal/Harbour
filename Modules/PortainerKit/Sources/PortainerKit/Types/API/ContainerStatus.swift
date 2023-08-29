@@ -33,17 +33,18 @@ public struct ContainerStatus: Decodable, Sendable, Equatable {
 	public let startedAt: Date?
 	public let finishedAt: Date?
 
-	#if DEBUG
-	public init(state: ContainerState,
-				running: Bool,
-				paused: Bool,
-				restarting: Bool,
-				oomKilled: Bool,
-				dead: Bool,
-				pid: Int,
-				error: String?,
-				startedAt: Date?,
-				finishedAt: Date?) {
+	public init(
+		state: ContainerState,
+		running: Bool,
+		paused: Bool,
+		restarting: Bool,
+		oomKilled: Bool,
+		dead: Bool,
+		pid: Int,
+		error: String?,
+		startedAt: Date?,
+		finishedAt: Date?
+	) {
 		self.state = state
 		self.running = running
 		self.paused = paused
@@ -55,5 +56,4 @@ public struct ContainerStatus: Decodable, Sendable, Equatable {
 		self.startedAt = startedAt
 		self.finishedAt = finishedAt
 	}
-	#endif
 }

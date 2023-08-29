@@ -36,10 +36,8 @@ public final class Preferences: ObservableObject {
 		didSet { onEnableBackgroundRefreshChange(enableBackgroundRefresh) }
 	}
 
-	#if DEBUG
 	/// Last background refresh time
 	@AppStorage(Keys.lastBackgroundRefreshDate, store: Preferences.userDefaults) public var lastBackgroundRefreshDate: TimeInterval?
-	#endif
 
 	/// Selected server
 	@AppStorage(Keys.selectedServer, store: Preferences.userDefaults) public var selectedServer: String?

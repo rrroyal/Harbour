@@ -144,13 +144,6 @@ struct ContentView: View {
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) { userActivity in
 			sceneDelegate.onContinueContainerDetailsActivity(userActivity)
 		}
-//		.task {
-//			do {
-//				try await viewModel.refresh()
-//			} catch {
-//				errorHandler(error)
-//			}
-//		}
 	}
 }
 
@@ -161,4 +154,5 @@ struct ContentView: View {
 		.environment(AppState.shared)
 		.environmentObject(PortainerStore.shared)
 		.environmentObject(Preferences.shared)
+		.environmentObject(SceneDelegate())
 }

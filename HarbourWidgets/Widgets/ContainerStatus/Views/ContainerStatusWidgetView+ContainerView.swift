@@ -34,6 +34,14 @@ extension ContainerStatusWidgetView {
 			return String(localized: "Generic.Unknown")
 		}
 
+		private var buttonIntent: ContainerStatusProvider.Intent {
+			.init(
+				endpoint: entry.configuration.endpoint,
+				containers: [intentContainer],
+				resolveByName: entry.configuration.resolveByName
+			)
+		}
+
 		@ViewBuilder
 		private var stateHeadline: some View {
 			HStack {
@@ -79,7 +87,7 @@ extension ContainerStatusWidgetView {
 		}
 
 		var body: some View {
-			Button(intent: entry.configuration) {
+			Button(intent: buttonIntent) {
 				VStack(spacing: 0) {
 					stateHeadline
 						.padding(.bottom, 2)

@@ -10,6 +10,8 @@ import OSLog
 import PortainerKit
 import WidgetKit
 
+// TODO: Make sure that "Resolve by name" works as it should.
+
 // MARK: - ContainerStatusProvider
 
 struct ContainerStatusProvider: AppIntentTimelineProvider {

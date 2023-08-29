@@ -25,6 +25,9 @@ extension SettingsView {
 
 		var activeURL: URL?
 
+		var isEndpointRemovalAlertPresented = false
+		var endpointToDelete: URL?
+
 		var displayiPadOptions: Bool {
 			#if os(macOS)
 			true

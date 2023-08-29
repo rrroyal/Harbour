@@ -51,6 +51,19 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	)
 	var resolveByName: Bool
 
+	init() {
+		self.endpoint = nil
+		self.containers = []
+		self.resolveByName = false
+	}
+
+	init(endpoint: IntentEndpoint? = nil, containers: [IntentContainer], resolveByName: Bool) {
+		self.endpoint = endpoint
+		self.containers = containers
+		self.resolveByName = resolveByName
+	}
+
+	@MainActor
 	func perform() async throws -> some OpensIntent & ReturnsValue<IntentContainer> {
 		guard let endpoint else { throw $containers.needsValueError()}
 		guard !containers.isEmpty else { throw $containers.needsValueError() }

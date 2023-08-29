@@ -57,13 +57,29 @@ struct SetupView: View {
 			.disableAutocorrection(true)
 			.autocapitalization(.none)
 			.focused($focusedField, equals: .token)
-			.onSubmit { viewModel.onTokenTextFieldSubmit(dismissAction: dismiss, errorHandler: errorHandler) }
+			.onSubmit {
+				Task {
+					do {
+						try await viewModel.onTokenTextFieldSubmit()
+						dismiss()
+					} catch {
+						errorHandler(error)
+					}
+				}
+			}
 	}
 
 	@ViewBuilder
 	private var continueButton: some View {
 		Button {
-			viewModel.onContinueButtonPress(dismissAction: dismiss, errorHandler: errorHandler)
+			Task {
+				do {
+					try await viewModel.onContinueButtonPress()
+					dismiss()
+				} catch {
+					errorHandler(error)
+				}
+			}
 		} label: {
 			if viewModel.isLoading {
 				ProgressView()
@@ -72,7 +88,7 @@ struct SetupView: View {
 					if let buttonLabel = viewModel.buttonLabel {
 						Text(LocalizedStringKey(buttonLabel))
 					} else {
-						Text("SetupView.LoginButton")
+						Text("SetupView.LoginButton.Login")
 					}
 				}
 				.transition(.opacity)
@@ -81,7 +97,9 @@ struct SetupView: View {
 		.keyboardShortcut(.defaultAction)
 		.foregroundColor(.white)
 		.buttonStyle(.customPrimary(backgroundColor: viewModel.buttonColor ?? .accentColor))
+		.animation(.easeInOut, value: viewModel.buttonLabel)
 		.animation(.easeInOut, value: viewModel.buttonColor)
+		.animation(.easeInOut, value: viewModel.isLoading)
 		.disabled(!viewModel.canSubmit)
 	}
 

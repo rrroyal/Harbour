@@ -1385,6 +1385,36 @@
         }
       }
     },
+    "SettingsView.Portainer.EndpointRemovalAlert.Message URL:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" will be removed, but you will always be able to add it back in."
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointRemovalAlert.RemoveButton" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "SettingsView.Portainer.EndpointRemovalAlert.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure?"
+          }
+        }
+      }
+    },
     "SettingsView.Portainer.EndpointsMenu.Add" : {
       "localizations" : {
         "en" : {
@@ -1431,16 +1461,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Remove"
-          }
-        }
-      }
-    },
-    "SettingsView.Portainer.EndpointsMenu.Server.Remove!" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove!"
           }
         }
       }
@@ -1495,12 +1515,22 @@
         }
       }
     },
-    "SetupView.LoginButton" : {
+    "SetupView.LoginButton.Login" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Login"
+          }
+        }
+      }
+    },
+    "SetupView.LoginButton.Success" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Success!"
           }
         }
       }

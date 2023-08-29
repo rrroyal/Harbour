@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+// TODO: Speed it up
+
 // MARK: - ANSIParser
 
 enum ANSIParser {

@@ -52,7 +52,7 @@ private extension DebugView {
 		var body: some View {
 			Section("DebugView.WidgetsSection.Title") {
 				Button("DebugView.WidgetsSection.RefreshTimelines") {
-					logger.debug("Refreshing timelines... [\(String._debugInfo(), privacy: .public)]")
+					logger.notice("Refreshing timelines... [\(String._debugInfo(), privacy: .public)]")
 					Haptics.generateIfEnabled(.buttonPress)
 					WidgetCenter.shared.reloadAllTimelines()
 				}
@@ -63,6 +63,7 @@ private extension DebugView {
 	struct PersistenceSection: View {
 		@Environment(\.logger) private var logger
 		@Environment(\.errorHandler) private var errorHandler
+		@Environment(\.modelContext) private var modelContext
 
 		var lastBackgroundRefreshDateString: String {
 			if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
@@ -77,35 +78,34 @@ private extension DebugView {
 				LabeledContent("DebugView.PersistenceSection.LastBackgroundRefresh", value: lastBackgroundRefreshDateString)
 
 				Button("DebugView.PersistenceSection.DeleteUserActivities", role: .destructive) {
-					logger.debug("Deleting saved user activities... [\(String._debugInfo(), privacy: .public)]")
+					logger.warning("Deleting saved user activities... [\(String._debugInfo(), privacy: .public)]")
 					Haptics.generateIfEnabled(.heavy)
 					UIApplication.shared.shortcutItems = nil
 					NSUserActivity.deleteAllSavedUserActivities {
-						logger.debug("Deleted user activities! [\(String._debugInfo(), privacy: .public)]")
+						logger.notice("Deleted user activities! [\(String._debugInfo(), privacy: .public)]")
 					}
 				}
 
 				Button("DebugView.PersistenceSection.ResetSwiftData", role: .destructive) {
-					logger.debug("Resetting SwiftData... [\(String._debugInfo(), privacy: .public)]")
+					logger.warning("Resetting SwiftData... [\(String._debugInfo(), privacy: .public)]")
 					Haptics.generateIfEnabled(.heavy)
 					do {
-						let model = try ModelContainer(for: StoredContainer.self)
-						try model.mainContext.delete(model: StoredContainer.self)
-						logger.debug("SwiftData has been reset! [\(String._debugInfo(), privacy: .public)]")
+						try modelContext.delete(model: StoredContainer.self)
+						logger.notice("SwiftData has been reset! [\(String._debugInfo(), privacy: .public)]")
 					} catch {
 						errorHandler(error)
 					}
 				}
 
 				Button("DebugView.PersistenceSection.ResetKeychain", role: .destructive) {
-					logger.debug("Resetting Keychain... [\(String._debugInfo(), privacy: .public)]")
+					logger.warning("Resetting Keychain... [\(String._debugInfo(), privacy: .public)]")
 					Haptics.generateIfEnabled(.heavy)
 					do {
 						let urls = try Keychain.shared.getSavedURLs()
 						for url in urls {
 							try Keychain.shared.removeContent(for: url)
 						}
-						exit(0)
+						logger.notice("Keychain has been reset! [\(String._debugInfo(), privacy: .public)]")
 					} catch {
 						errorHandler(error)
 					}
@@ -118,7 +118,7 @@ private extension DebugView {
 		var body: some View {
 			Section {
 				NavigationLink("DebugView.OtherSection.Logs") {
-					LogsView()
+					DebugView.LogsView()
 				}
 			}
 		}

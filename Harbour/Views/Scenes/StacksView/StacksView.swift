@@ -178,11 +178,11 @@ private extension StacksView {
 			.animation(.easeInOut, value: isLoading)
 			.animation(.easeInOut, value: stack.status)
 			.contextMenu {
-				StackToggleButton(stack: stack, toggleAction: toggleAction)
+				StacksView.StackToggleButton(stack: stack, toggleAction: toggleAction)
 					.disabled(isLoading)
 			}
 			.swipeActions(edge: .trailing) {
-				StackToggleButton(stack: stack, toggleAction: toggleAction)
+				StacksView.StackToggleButton(stack: stack, toggleAction: toggleAction)
 					.tint(isOn ? .red : .green)
 					.disabled(isLoading)
 			}
@@ -214,8 +214,7 @@ private extension StacksView {
 
 // MARK: - Previews
 
-/*
 #Preview("StacksView") {
-	StacksView()
+	StacksView(stackTappedAction: { _ in })
+		.environmentObject(PortainerStore.shared)
 }
-*/

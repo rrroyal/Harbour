@@ -18,12 +18,14 @@ import AppKit.NSPasteboard
 
 extension ContainerLogsView {
 	@Observable
-	final class ViewModel: Sendable {
+	final class ViewModel: @unchecked Sendable {
 		typealias _ViewState = ViewState<String, Error>
 
 		private let portainerStore = PortainerStore.shared
 
+		@ObservationIgnored
 		private var fetchTask: Task<Void, Never>?
+		@ObservationIgnored
 		private var parseTask: Task<Void, Never>?
 
 		private(set) var viewState: _ViewState = .loading

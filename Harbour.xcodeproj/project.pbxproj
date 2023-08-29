@@ -39,6 +39,8 @@
 		0078D06C2A881D24009C4374 /* Container+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0078D06B2A881D24009C4374 /* Container+init.swift */; };
 		0078D06D2A881D24009C4374 /* Container+init.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0078D06B2A881D24009C4374 /* Container+init.swift */; };
 		007B577B2A2FCE6400873A32 /* StacksView+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */; };
+		00928C112A9E9F8F0004FC5C /* DismissAction+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00928C102A9E9F8F0004FC5C /* DismissAction+Sendable.swift */; };
+		00928C122A9E9F8F0004FC5C /* DismissAction+Sendable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00928C102A9E9F8F0004FC5C /* DismissAction+Sendable.swift */; };
 		0098F5BF2A3636FB006CB3AB /* InsetViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0098F5BE2A3636FB006CB3AB /* InsetViewModifier.swift */; };
 		00A4AB882A34ECB60074E940 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA76D28EB662300C33EA3 /* WidgetKit.framework */; };
 		00A4AB892A34ECB60074E940 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E72AA76F28EB662400C33EA3 /* SwiftUI.framework */; };
@@ -230,6 +232,7 @@
 		0078D0622A8819FF009C4374 /* StoredContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoredContainer.swift; sourceTree = "<group>"; };
 		0078D06B2A881D24009C4374 /* Container+init.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+init.swift"; sourceTree = "<group>"; };
 		007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StacksView+ViewModel.swift"; sourceTree = "<group>"; };
+		00928C102A9E9F8F0004FC5C /* DismissAction+Sendable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DismissAction+Sendable.swift"; sourceTree = "<group>"; };
 		0098F5BE2A3636FB006CB3AB /* InsetViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetViewModifier.swift; sourceTree = "<group>"; };
 		00A4AB872A34ECB60074E940 /* HarbourWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HarbourWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		00A4AB8B2A34ECB60074E940 /* WidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetsBundle.swift; sourceTree = "<group>"; };
@@ -885,8 +888,9 @@
 		E7AF688A290DB13C00E48EAC /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				E7AF688C290DB14C00E48EAC /* View+hidden.swift */,
 				00C969DB2A44A0C0002AC8D4 /* Color+.swift */,
+				00928C102A9E9F8F0004FC5C /* DismissAction+Sendable.swift */,
+				E7AF688C290DB14C00E48EAC /* View+hidden.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1181,6 +1185,7 @@
 				00F558302A34FF5C002939A2 /* GenericError.swift in Sources */,
 				00F558162A34FDCB002939A2 /* Stack+.swift in Sources */,
 				00F5581A2A34FDCB002939A2 /* ContainerDetails+displayName.swift in Sources */,
+				00928C122A9E9F8F0004FC5C /* DismissAction+Sendable.swift in Sources */,
 				00F558342A34FF60002939A2 /* PortainerURLScheme.swift in Sources */,
 				0078D0602A8819E3009C4374 /* StoredEndpoint.swift in Sources */,
 				0098F5BF2A3636FB006CB3AB /* InsetViewModifier.swift in Sources */,
@@ -1309,6 +1314,7 @@
 				E7ACE74B288C487E000E6FF6 /* SettingsView+SliderOption.swift in Sources */,
 				E768A59B28E4FF6A00AE5A08 /* Indicator+ErrorInit.swift in Sources */,
 				E7207DB62988768200F7504C /* ContainerNavigationItem.swift in Sources */,
+				00928C112A9E9F8F0004FC5C /* DismissAction+Sendable.swift in Sources */,
 				E78111B7297574B2000CB98A /* AppDelegate.swift in Sources */,
 				E7207DB12988714100F7504C /* ContainerLogsView+ViewModel.swift in Sources */,
 				00AA82BC2A2FFF970064B870 /* ErrorHandler.swift in Sources */,

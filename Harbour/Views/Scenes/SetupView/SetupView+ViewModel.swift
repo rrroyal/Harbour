@@ -15,7 +15,7 @@ import SwiftUI
 
 extension SetupView {
 	@Observable
-	final class ViewModel: Sendable {
+	final class ViewModel: @unchecked Sendable {
 		private let portainerStore: PortainerStore = .shared
 		private let errorTimeoutInterval: TimeInterval = 3
 
@@ -49,22 +49,24 @@ extension SetupView {
 			}
 		}
 
-		func onTokenTextFieldSubmit(dismissAction: DismissAction?, errorHandler: ErrorHandler?) {
+		func onTokenTextFieldSubmit() async throws {
 			guard canSubmit else { return }
 
 			Haptics.generateIfEnabled(.light)
-			login(dismissAction: dismissAction, errorHandler: errorHandler)
+			try await login()
 		}
 
-		func onContinueButtonPress(dismissAction: DismissAction?, errorHandler: ErrorHandler?) {
+		func onContinueButtonPress() async throws {
 			Haptics.generateIfEnabled(.light)
-			login(dismissAction: dismissAction, errorHandler: errorHandler)
+			try await login()
 		}
 
-		func login(dismissAction: DismissAction?, errorHandler: ErrorHandler?) {
+		func login() async throws {
 			loginTask?.cancel()
 			loginTask = Task { @MainActor in
 				isLoading = true
+
+				let previousURL = portainerStore.serverURL
 
 				do {
 					guard let url = URL(string: url) else {
@@ -77,9 +79,7 @@ extension SetupView {
 					Haptics.generateIfEnabled(.success)
 
 					buttonColor = .green
-					buttonLabel = "SetupView.Button.Success"
-
-					dismissAction?()
+					buttonLabel = String(localized: "SetupView.LoginButton.Success")
 				} catch {
 					isLoading = false
 
@@ -87,6 +87,7 @@ extension SetupView {
 					buttonLabel = error.localizedDescription
 
 					errorTimer?.invalidate()
+
 					Task {
 						try? await Task.sleep(for: .seconds(errorTimeoutInterval))
 						await MainActor.run {
@@ -95,11 +96,16 @@ extension SetupView {
 						}
 					}
 
-					errorHandler?(error, ._debugInfo())
+					Task.detached {
+						if let previousURL {
+							try await self.portainerStore.setup(url: previousURL, token: nil)
+						}
+					}
 
 					throw error
 				}
 			}
+			try await loginTask?.value
 		}
 
 	}

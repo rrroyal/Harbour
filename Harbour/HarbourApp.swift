@@ -60,7 +60,7 @@ private extension HarbourApp {
 		case .inactive:
 			break
 		case .active:
-			if portainerStore.isSetup {
+			if portainerStore.isSetup || portainerStore.setupTask != nil {
 				portainerStore.refresh()
 			}
 		@unknown default:

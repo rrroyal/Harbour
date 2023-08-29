@@ -74,6 +74,23 @@ private extension SettingsView.PortainerSection {
 				.transition(.opacity)
 				.animation(.easeInOut, value: _serverURLLabel)
 			}
+			.confirmationDialog(
+				"SettingsView.Portainer.EndpointRemovalAlert.Title",
+				isPresented: $viewModel.isEndpointRemovalAlertPresented,
+				presenting: viewModel.endpointToDelete
+			) { url in
+				Button("SettingsView.Portainer.EndpointRemovalAlert.RemoveButton", role: .destructive) {
+					do {
+						Haptics.generateIfEnabled(.heavy)
+						try viewModel.removeServer(url)
+						viewModel.endpointToDelete = nil
+					} catch {
+						errorHandler(error)
+					}
+				}
+			} message: { url in
+				Text("SettingsView.Portainer.EndpointRemovalAlert.Message URL:\(url.absoluteString)")
+			}
 		}
 
 		@ViewBuilder
@@ -100,21 +117,13 @@ private extension SettingsView.PortainerSection {
 
 				Divider()
 
-				Menu {
-					Button(role: .destructive) {
-						Haptics.generateIfEnabled(.buttonPress)
-						do {
-							try viewModel.removeServer(url)
-						} catch {
-							errorHandler(error)
-						}
-					} label: {
-						Label("SettingsView.Portainer.EndpointsMenu.Server.Remove!", systemImage: SFSymbol.remove)
-					}
+				Button(role: .destructive) {
+					Haptics.generateIfEnabled(.warning)
+					viewModel.endpointToDelete = url
+					viewModel.isEndpointRemovalAlertPresented = true
 				} label: {
 					Label("SettingsView.Portainer.EndpointsMenu.Server.Remove", systemImage: SFSymbol.remove)
 				}
-				.foregroundStyle(.red)
 			})
 		}
 

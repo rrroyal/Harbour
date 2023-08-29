@@ -14,9 +14,7 @@ extension Preferences {
 		static let enableHaptics = "EnableHaptics"
 
 		static let enableBackgroundRefresh = "EnableBackgroundRefresh"
-		#if DEBUG
 		static let lastBackgroundRefreshDate = "LastBackgroundRefreshDate"
-		#endif
 
 		static let selectedServer = "SelectedServer"
 		static let selectedEndpoint = "SelectedEndpoint"

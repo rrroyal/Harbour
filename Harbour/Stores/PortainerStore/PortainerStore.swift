@@ -79,7 +79,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	init(urlSessionConfiguration: URLSessionConfiguration = .default) {
 //		urlSessionConfiguration.shouldUseExtendedBackgroundIdleMode = true
 //		urlSessionConfiguration.sessionSendsLaunchEvents = true
-		portainer = Portainer(urlSessionConfiguration: urlSessionConfiguration)
+		self.portainer = Portainer(urlSessionConfiguration: urlSessionConfiguration)
 
 		self.selectedEndpoint = getStoredEndpoint()
 
@@ -559,11 +559,20 @@ private extension PortainerStore {
 		Task { @MainActor in
 			do {
 				let model = try ModelContainer(for: StoredContainer.self)
+				let containerIDs = Set(containers.map(\.id))
+
+				let nonExistingContainersPredicate = #Predicate<StoredContainer> {
+					!containerIDs.contains($0.id)
+				}
+				try model.mainContext.delete(model: StoredContainer.self, where: nonExistingContainersPredicate)
+
 				for container in containers {
 					let storedContainer = StoredContainer(container: container)
 					model.mainContext.insert(storedContainer)
 				}
+
 				try model.mainContext.save()
+
 				logger.debug("Stored \(containers.count, privacy: .public) containers. [\(String._debugInfo(), privacy: .public)]")
 			} catch {
 				logger.error("Failed to store containers: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
