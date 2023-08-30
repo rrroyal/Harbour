@@ -8,6 +8,7 @@ Docker/Portainer management app for iOS.
 - [x] Managing container state
 - [x] Managing stacks
 - [x] Widgets
+- [x] Handoff
 - [x] iPadOS / macOS Catalyst support
 - [x] No telemetry :)
 
