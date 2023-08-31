@@ -22,15 +22,10 @@ extension ContainerDetailsView {
 		private(set) var container: Container?
 		private(set) var fetchTask: Task<Void, Never>?
 
-		let navigationItem: ContainerNavigationItem
+		var navigationItem: ContainerNavigationItem
 
 		var containerDetails: ContainerDetails? {
 			viewState.unwrappedValue
-		}
-
-		@MainActor
-		var navigationTitle: String {
-			containerDetails?.displayName ?? navigationItem.displayName ?? container(for: navigationItem)?.displayName ?? navigationItem.id
 		}
 
 		init(navigationItem: ContainerNavigationItem) {
@@ -77,11 +72,9 @@ extension ContainerDetailsView {
 
 			do {
 				try userActivity.setTypedPayload(navigationItem)
-
-				let requiredUserInfoKeys: [String] = [
+				userActivity.requiredUserInfoKeys = [
 					ContainerNavigationItem.CodingKeys.id.stringValue
 				]
-				userActivity.requiredUserInfoKeys = Set(requiredUserInfoKeys)
 			} catch {
 				errorHandler(error)
 			}
@@ -91,8 +84,14 @@ extension ContainerDetailsView {
 		func getContainerDetails(navigationItem: ContainerNavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task {
-				viewState = viewState.reloadingUnwrapped
-				container = container(for: navigationItem)
+				if self.navigationItem == navigationItem {
+					viewState = viewState.reloadingUnwrapped
+				} else {
+					viewState = .loading
+				}
+
+				self.navigationItem = navigationItem
+				self.container = container(for: navigationItem)
 
 				do {
 					if !portainerStore.isSetup {
@@ -100,8 +99,11 @@ extension ContainerDetailsView {
 					}
 
 					let containerDetails = try await portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
+
+					guard !Task.isCancelled else { return }
 					viewState = .success(containerDetails)
 				} catch {
+					guard !Task.isCancelled else { return }
 					viewState = .failure(error)
 					errorHandler(error)
 				}

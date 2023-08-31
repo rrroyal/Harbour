@@ -20,6 +20,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 			Summary("Get container status on \(\.$endpoint)") {
 				\.$containers
 				\.$resolveByName
+				\.$resolveOffline
 			}
 		} otherwise: {
 			Summary("Get container status on \(\.$endpoint)")
@@ -51,16 +52,21 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	)
 	var resolveByName: Bool
 
+	@Parameter(
+		title: "AppIntents.Parameter.ResolveOffline.Title",
+		description: "AppIntents.Parameter.ResolveOffline.Description",
+		default: false
+	)
+	var resolveOffline: Bool
+
 	init() {
 		self.endpoint = nil
 		self.containers = []
-		self.resolveByName = false
 	}
 
-	init(endpoint: IntentEndpoint? = nil, containers: [IntentContainer], resolveByName: Bool) {
+	init(endpoint: IntentEndpoint? = nil, containers: [IntentContainer]) {
 		self.endpoint = endpoint
 		self.containers = containers
-		self.resolveByName = resolveByName
 	}
 
 	@MainActor
@@ -102,10 +108,12 @@ extension ContainerStatusIntent {
 // MARK: - ContainerStatusIntent+Private
 
 private extension ContainerStatusIntent {
-	func getContainers(for endpointID: Endpoint.ID,
-					   ids: [Container.ID]? = nil,
-					   names: [Container.Name?]? = nil,
-					   resolveByName: Bool) async throws -> [Container] {
+	func getContainers(
+		for endpointID: Endpoint.ID,
+		ids: [Container.ID]? = nil,
+		names: [Container.Name?]? = nil,
+		resolveByName: Bool
+	) async throws -> [Container] {
 		let portainerStore = IntentPortainerStore.shared
 		try portainerStore.setupIfNeeded()
 

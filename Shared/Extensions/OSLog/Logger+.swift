@@ -28,7 +28,8 @@ extension Logger {
 		case background
 		case debug
 		case view(any View.Type)
-		case intents(any AppIntent.Type)
+		case widgets(Any.Type)
+		case intents(Any.Type)
 		case custom(Any.Type)
 
 		var stringValue: String {
@@ -41,6 +42,8 @@ extension Logger {
 				"Debug"
 			case .view(let view):
 				"View (\(view))"
+			case .widgets(let widget):
+				"Widgets (\(widget))"
 			case .intents(let appIntent):
 				"Intents (\(appIntent))"
 			case .custom(let any):

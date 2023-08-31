@@ -38,21 +38,21 @@ struct ExecuteActionIntent: AppIntent {
 	var container: IntentContainer
 
 	// TODO: Unable to determine value type for type `PortainerKit.ExecuteAction`
-//	@Parameter(title: "AppIntents.Parameter.ExecuteAction.Title")
-//	var action: ExecuteAction
+	@Parameter(title: "AppIntents.Parameter.ExecuteAction.Title")
+	var action: ExecuteAction
 
 	init() { }
 
 	init(endpoint: IntentEndpoint, container: IntentContainer, action: ExecuteAction) {
 		self.endpoint = endpoint
 		self.container = container
-//		self.action = action
+		self.action = action
 	}
 
 	@MainActor
 	func perform() async throws -> some IntentResult {
-//		let portainerStore = IntentPortainerStore.shared
-//		try await portainerStore.execute(action, containerID: container.id, endpointID: endpoint.id)
+		let portainerStore = IntentPortainerStore.shared
+		try await portainerStore.execute(action, containerID: container.id, endpointID: endpoint.id)
 		return .result()
 	}
 }

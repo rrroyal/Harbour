@@ -7,16 +7,19 @@
 //
 
 import AppIntents
+import OSLog
 import PortainerKit
+
+private let logger = Logger(.intents(IntentEndpoint.self))
 
 // MARK: - IntentEndpoint
 
 struct IntentEndpoint: AppEntity, Identifiable, Hashable {
-	let id: Endpoint.ID
-	let name: String?
-
 	static var typeDisplayRepresentation: TypeDisplayRepresentation = "IntentEndpoint.TypeDisplayRepresentation"
 	static var defaultQuery = IntentEndpointQuery()
+
+	let id: Endpoint.ID
+	let name: String?
 
 	var displayRepresentation: DisplayRepresentation {
 		DisplayRepresentation(title: .init(stringLiteral: name ?? ""), subtitle: .init(stringLiteral: "\(id)"))
@@ -36,8 +39,10 @@ struct IntentEndpoint: AppEntity, Identifiable, Hashable {
 // MARK: - IntentEndpoint+preview
 
 extension IntentEndpoint {
-	static func preview(id: Endpoint.ID = 0,
-						name: Endpoint.Name? = String(localized: "IntentEndpoint.Preview.Name")) -> Self {
+	static func preview(
+		id: Endpoint.ID = 0,
+		name: Endpoint.Name? = String(localized: "IntentEndpoint.Preview.Name")
+	) -> Self {
 		.init(id: id, name: name)
 	}
 }
@@ -47,14 +52,30 @@ extension IntentEndpoint {
 struct IntentEndpointQuery: EntityQuery {
 	typealias Entity = IntentEndpoint
 
-	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-		let portainerStore = IntentPortainerStore.shared
-		try portainerStore.setupIfNeeded()
-		let endpoints = try await portainerStore.getEndpoints()
+	@IntentParameterDependency<ContainerStatusIntent>(\.$resolveOffline)
+	var statusIntent
 
-		return endpoints
-			.filter { identifiers.contains($0.id) }
-			.map { Entity(endpoint: $0) }
+	private var resolveOffline: Bool {
+		statusIntent?.resolveOffline ?? false
+	}
+
+	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+		if resolveOffline {
+			return identifiers.map { .init(id: $0, name: nil) }
+		}
+
+		do {
+			let portainerStore = IntentPortainerStore.shared
+			try portainerStore.setupIfNeeded()
+			let endpoints = try await portainerStore.getEndpoints()
+
+			return endpoints
+				.filter { identifiers.contains($0.id) }
+				.map { Entity(endpoint: $0) }
+		} catch {
+			logger.error("\(String(describing: error), privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			return []
+		}
 	}
 
 	func suggestedEntities() async throws -> [Entity] {

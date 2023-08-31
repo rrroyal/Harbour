@@ -21,7 +21,7 @@ struct ContainerDetailsView: View {
 
 	@State private var viewModel: ViewModel
 
-	let navigationItem: ContainerNavigationItem
+	var navigationItem: ContainerNavigationItem
 
 	init(navigationItem: ContainerNavigationItem) {
 		self.navigationItem = navigationItem
@@ -40,7 +40,7 @@ struct ContainerDetailsView: View {
 			)
 		}
 		.background(viewModel.viewState.backgroundView)
-		.navigationTitle(viewModel.navigationTitle)
+		.navigationTitle(viewModel.navigationItem.displayName ?? viewModel.navigationItem.id)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
 				ToolbarMenu(isLoading: viewModel.viewState.isLoading,
@@ -54,11 +54,29 @@ struct ContainerDetailsView: View {
 		.task(id: "\(navigationItem.endpointID ?? -1).\(navigationItem.id)") {
 			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
 		}
+		.animation(.easeInOut, value: navigationItem)
 		.animation(.easeInOut, value: viewModel.containerDetails != nil)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: navigationItem) { navigationItem, userActivity in
 			viewModel.createUserActivity(for: navigationItem, userActivity: userActivity, errorHandler: errorHandler)
 		}
+		.id("\(Self.self):\(navigationItem.id)")
+	}
+}
+
+// MARK: - ContainerDetailsView+Identifiable
+
+extension ContainerDetailsView: Identifiable {
+	var id: String {
+		"\(Self.self):\(navigationItem.id)"
+	}
+}
+
+// MARK: - ContainerDetailsView+Equatable
+
+extension ContainerDetailsView: Equatable {
+	static func == (lhs: ContainerDetailsView, rhs: ContainerDetailsView) -> Bool {
+		lhs.navigationItem == rhs.navigationItem
 	}
 }
 

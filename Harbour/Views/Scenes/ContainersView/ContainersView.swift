@@ -35,6 +35,7 @@ struct ContainersView: View {
 			.padding(.bottom)
 			.navigationDestination(for: ContainerNavigationItem.self) { navigationItem in
 				ContainerDetailsView(navigationItem: navigationItem)
+					.equatable()
 			}
 			.transition(.opacity)
 			.animation(.easeInOut, value: useGrid)

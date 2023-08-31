@@ -86,7 +86,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If enabled, containers will be resolved by their name, instead of their ID."
+            "value" : "If enabled (and possible), parameters will be resolved by their name, instead of their ID."
           }
         }
       }
@@ -97,6 +97,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resolve By Name"
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.ResolveOffline.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "If enabled (and possible), parameters will be resolved offline, keeping their initial (when selected) state."
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.ResolveOffline.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resolve Offline"
           }
         }
       }

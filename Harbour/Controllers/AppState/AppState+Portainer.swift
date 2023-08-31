@@ -13,7 +13,7 @@ import WidgetKit
 extension AppState {
 	@MainActor
 	func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
-		logger.notice("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .sensitive)\" [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .sensitive(mask: .hash))\" [\(String._debugInfo(), privacy: .public)]")
 
 		portainerServerSwitchTask?.cancel()
 		portainerServerSwitchTask = Task {

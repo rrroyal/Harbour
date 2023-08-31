@@ -10,15 +10,50 @@ import OSLog
 import PortainerKit
 import WidgetKit
 
-// TODO: Make sure that "Resolve by name" works as it should.
+private let logger = Logger(.widgets(ContainerStatusProvider.self))
 
 // MARK: - ContainerStatusProvider
 
 struct ContainerStatusProvider: AppIntentTimelineProvider {
 	typealias Intent = ContainerStatusIntent
 
-	// MARK: Entry
+	// MARK: Private Properties
 
+	private let portainerStore = IntentPortainerStore.shared
+
+	// MARK: AppIntentTimelineProvider
+
+	func placeholder(in context: Context) -> Entry {
+		.placeholder
+	}
+
+	func snapshot(for configuration: Intent, in context: Context) async -> Entry {
+		logger.info("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)... [\(String._debugInfo(), privacy: .public)]")
+
+		guard !context.isPreview else {
+			logger.debug("Running in preview. [\(String._debugInfo(), privacy: .public)]")
+			return placeholder(in: context)
+		}
+
+		let entry = await getEntry(for: configuration, in: context)
+		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash)). [\(String._debugInfo(), privacy: .public)]")
+
+		return entry
+	}
+
+	func timeline(for configuration: Intent, in context: Context) async -> Timeline<Entry> {
+		logger.info("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
+
+		let entry = await getEntry(for: configuration, in: context)
+		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash)). [\(String._debugInfo(), privacy: .public)]")
+
+		return .init(entries: [entry], policy: .atEnd)
+	}
+}
+
+// MARK: - ContainerStatusProvider+Entry
+
+extension ContainerStatusProvider {
 	struct Entry: TimelineEntry {
 		let date: Date
 		let configuration: ContainerStatusProvider.Intent
@@ -94,40 +129,6 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 			)
 		}
 		// swiftlint:enable force_unwrapping
-	}
-
-	// MARK: Private properties
-
-	private let logger = Logger(.custom(ContainerStatusProvider.self))
-	private let portainerStore = IntentPortainerStore.shared
-
-	// MARK: AppIntentTimelineProvider
-
-	func placeholder(in context: Context) -> Entry {
-		.placeholder
-	}
-
-	func snapshot(for configuration: Intent, in context: Context) async -> Entry {
-		logger.info("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)... [\(String._debugInfo(), privacy: .public)]")
-
-		guard !context.isPreview else {
-			logger.debug("Running in preview. [\(String._debugInfo(), privacy: .public)]")
-			return placeholder(in: context)
-		}
-
-		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive). [\(String._debugInfo(), privacy: .public)]")
-
-		return entry
-	}
-
-	func timeline(for configuration: Intent, in context: Context) async -> Timeline<Entry> {
-		logger.info("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
-
-		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive). [\(String._debugInfo(), privacy: .public)]")
-
-		return .init(entries: [entry], policy: .atEnd)
 	}
 }
 

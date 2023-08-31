@@ -77,16 +77,17 @@ private extension SettingsView.PortainerSection {
 			.confirmationDialog(
 				"SettingsView.Portainer.EndpointRemovalAlert.Title",
 				isPresented: $viewModel.isEndpointRemovalAlertPresented,
+				titleVisibility: .visible,
 				presenting: viewModel.endpointToDelete
 			) { url in
 				Button("SettingsView.Portainer.EndpointRemovalAlert.RemoveButton", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
 					do {
-						Haptics.generateIfEnabled(.heavy)
 						try viewModel.removeServer(url)
-						viewModel.endpointToDelete = nil
 					} catch {
 						errorHandler(error)
 					}
+					viewModel.endpointToDelete = nil
 				}
 			} message: { url in
 				Text("SettingsView.Portainer.EndpointRemovalAlert.Message URL:\(url.absoluteString)")

@@ -35,11 +35,13 @@ extension ContainerStatusWidgetView {
 		}
 
 		private var buttonIntent: ContainerStatusProvider.Intent {
-			.init(
+			let intent = ContainerStatusProvider.Intent(
 				endpoint: entry.configuration.endpoint,
-				containers: [intentContainer],
-				resolveByName: entry.configuration.resolveByName
+				containers: [intentContainer]
 			)
+			intent.resolveByName = entry.configuration.resolveByName
+			intent.resolveOffline = true
+			return intent
 		}
 
 		@ViewBuilder

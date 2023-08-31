@@ -12,10 +12,13 @@ import KeychainKit
 import OSLog
 import PortainerKit
 
+private let logger = Logger(.intents(IntentPortainerStore.self))
+
+// MARK: - IntentPortainerStore
+
 public final class IntentPortainerStore: @unchecked Sendable {
 	static let shared = IntentPortainerStore()
 
-	private let logger = Logger(.custom(IntentPortainerStore.self))
 	// swiftlint:disable:next force_unwrapping
 	private let keychain = Keychain(accessGroup: Bundle.main.groupIdentifier!)
 	private let portainer = Portainer(urlSessionConfiguration: .intents)

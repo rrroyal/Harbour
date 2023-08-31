@@ -113,7 +113,7 @@ public extension PortainerStore {
 	///   - saveToken: Should the token be saved to the keychain?
 	@Sendable @MainActor
 	func setup(url: URL, token: String?, saveToken: Bool = true, _refresh: Bool = true) async throws {
-		logger.notice("Setting up, URL: \(url.absoluteString, privacy: .sensitive)... [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String._debugInfo(), privacy: .public)]")
 
 		do {
 			isSetup = false
@@ -138,7 +138,7 @@ public extension PortainerStore {
 
 			isSetup = true
 
-			logger.debug("Setup with URL: \"\(url.absoluteString, privacy: .sensitive)\" sucessfully! [\(String._debugInfo(), privacy: .public)]")
+			logger.debug("Setup with URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\" sucessfully! [\(String._debugInfo(), privacy: .public)]")
 		} catch {
 			logger.error("Failed to setup: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			throw error
@@ -170,7 +170,7 @@ public extension PortainerStore {
 	/// Removes authorization data from Keychain for the provided server URL.
 	/// - Parameter serverURL: Server URL to remove data for
 	func removeServer(_ serverURL: URL) throws {
-		logger.notice("Removing token for url: \"\(serverURL.absoluteString, privacy: .sensitive)\" [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Removing token for url: \"\(serverURL.absoluteString, privacy: .sensitive(mask: .hash))\" [\(String._debugInfo(), privacy: .public)]")
 		do {
 			try keychain.removeContent(for: serverURL)
 			logger.debug("Removed token successfully! [\(String._debugInfo(), privacy: .public)]")
@@ -204,7 +204,7 @@ public extension PortainerStore {
 	/// - Parameter endpoint: Endpoint to switch to
 	@MainActor
 	func selectEndpoint(_ endpoint: Endpoint?) {
-		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive)\" (\(endpoint?.id.description ?? "<none>")) [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive(mask: .hash))\" (\(endpoint?.id.description ?? "<none>")) [\(String._debugInfo(), privacy: .public)]")
 		self.selectedEndpoint = endpoint
 
 		if endpoint != nil {
@@ -228,7 +228,7 @@ public extension PortainerStore {
 	/// - Returns: `ContainerDetails`
 	@Sendable
 	func inspectContainer(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
-		logger.info("Getting details for containerID: \"\(containerID, privacy: .public)\"... [\(String._debugInfo(), privacy: .public)]")
+		logger.info("Getting details for containerID: \"\(containerID, privacy: .private(mask: .hash))\"... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			guard portainer.isSetup else {
 				throw PortainerError.notSetup
@@ -237,7 +237,7 @@ public extension PortainerStore {
 				throw PortainerError.noSelectedEndpoint
 			}
 			let details = try await portainer.inspectContainer(containerID, endpointID: endpointID)
-			logger.debug("Got details for containerID: \(containerID, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.debug("Got details for containerID: \"\(containerID, privacy: .private(mask: .hash))\" [\(String._debugInfo(), privacy: .public)]")
 			return details
 		} catch {
 			logger.error("Failed to get container details: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
@@ -344,7 +344,7 @@ extension PortainerStore {
 	/// - Returns: Array of containers
 	@Sendable
 	func getContainers(for stackName: String) async throws -> [Container] {
-		logger.info("Getting containers for stack \"\(stackName, privacy: .sensitive)\"... [\(String._debugInfo(), privacy: .public)]")
+		logger.info("Getting containers for stack \"\(stackName, privacy: .sensitive(mask: .hash))\"... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpoint) = try getPortainerAndEndpoint()
 			let containers = try await portainer.fetchContainers(endpointID: endpoint.id, stackName: stackName)
@@ -536,7 +536,7 @@ private extension PortainerStore {
 			}
 
 			let token = try keychain.getString(for: selectedServerURL)
-			logger.debug("Got token for URL: \"\(selectedServerURL.absoluteString, privacy: .sensitive)\" [\(String._debugInfo(), privacy: .public)]")
+			logger.debug("Got token for URL: \"\(selectedServerURL.absoluteString, privacy: .sensitive(mask: .hash))\" [\(String._debugInfo(), privacy: .public)]")
 			return (selectedServerURL, token)
 		} catch {
 			logger.warning("Failed to load token: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")

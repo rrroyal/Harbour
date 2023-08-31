@@ -7,22 +7,27 @@
 //
 
 import AppIntents
+import OSLog
 import PortainerKit
+
+private let logger = Logger(.intents(IntentContainer.self))
 
 // MARK: - IntentContainer
 
 struct IntentContainer: AppEntity, Identifiable, Hashable {
+	static var typeDisplayRepresentation: TypeDisplayRepresentation = "IntentContainer.TypeDisplayRepresentation"
+	static var defaultQuery = IntentContainerQuery()
+
+	/// Container ID + display name
+	var id: String {
+		"\(_id):\(name ?? "")"
+	}
+
 	/// Actual container ID
 	let _id: Container.ID
 
-	/// Container ID + display name
-	let id: String
-
 	/// Container display name
 	let name: String?
-
-	static var typeDisplayRepresentation: TypeDisplayRepresentation = "IntentContainer.TypeDisplayRepresentation"
-	static var defaultQuery = IntentContainerQuery()
 
 	var displayRepresentation: DisplayRepresentation {
 		DisplayRepresentation(title: .init(stringLiteral: name ?? ""), subtitle: .init(stringLiteral: _id))
@@ -30,13 +35,11 @@ struct IntentContainer: AppEntity, Identifiable, Hashable {
 
 	init(id: Container.ID, name: String?) {
 		self._id = id
-		self.id = id
 		self.name = name
 	}
 
 	init(container: Container) {
 		self._id = container.id
-		self.id = "\(container.id):\(container.displayName ?? "")"
 		self.name = container.displayName
 	}
 }
@@ -44,8 +47,10 @@ struct IntentContainer: AppEntity, Identifiable, Hashable {
 // MARK: - IntentContainer+preview
 
 extension IntentContainer {
-	static func preview(id: String = "PreviewContainerID",
-						name: String = String(localized: "IntentContainer.Preview.Name")) -> Self {
+	static func preview(
+		id: String = "PreviewContainerID",
+		name: String = String(localized: "IntentContainer.Preview.Name")
+	) -> Self {
 		.init(id: id, name: name)
 	}
 }
@@ -55,7 +60,7 @@ extension IntentContainer {
 struct IntentContainerQuery: EntityStringQuery {
 	typealias Entity = IntentContainer
 
-	@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveByName)
+	@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveByName, \.$resolveOffline)
 	var statusIntent
 
 	private var endpoint: IntentEndpoint? {
@@ -66,9 +71,11 @@ struct IntentContainerQuery: EntityStringQuery {
 		statusIntent?.resolveByName ?? false
 	}
 
-	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-		guard let endpoint else { return [] }
+	private var resolveOffline: Bool {
+		statusIntent?.resolveOffline ?? false
+	}
 
+	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
 		let parsed: [(Container.ID, Container.Name?)] = identifiers
 			.compactMap {
 				// <containerID>:<containerName>
@@ -89,31 +96,42 @@ struct IntentContainerQuery: EntityStringQuery {
 				return ($0, nil)
 			}
 
+		if resolveOffline {
+			return parsed.map { .init(id: $0, name: $1) }
+		}
+
+		guard let endpoint else { return [] }
+
 		let ids = parsed.map(\.0)
 		let names = parsed.map(\.1)
 
-		let containers = try await getContainers(for: endpoint.id,
-												 ids: ids,
-												 names: names,
-												 resolveByName: resolveByName)
+		let containers = try await getContainers(
+			for: endpoint.id,
+			ids: ids,
+			names: names,
+			resolveByName: resolveByName
+		)
 		return containers.map { Entity(container: $0) }
 	}
 
 	func entities(matching string: String) async throws -> [Entity] {
-		guard let endpoint else { return [] }
+		do {
+			guard let endpoint else { return [] }
 
-		let containers = try await getContainers(for: endpoint.id,
-												 resolveByName: resolveByName)
-		return containers
-			.filter(string)
-			.map { Entity(container: $0) }
+			let containers = try await getContainers(for: endpoint.id, resolveByName: resolveByName)
+			return containers
+				.filter(string)
+				.map { Entity(container: $0) }
+		} catch {
+			logger.error("\(String(describing: error), privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			return []
+		}
 	}
 
 	func suggestedEntities() async throws -> [Entity] {
 		guard let endpoint else { return [] }
 
-		let containers = try await getContainers(for: endpoint.id,
-												 resolveByName: resolveByName)
+		let containers = try await getContainers(for: endpoint.id, resolveByName: resolveByName)
 		return containers.map { Entity(container: $0) }
 	}
 }
@@ -121,10 +139,12 @@ struct IntentContainerQuery: EntityStringQuery {
 // MARK: - IntentContainerQuery+Static
 
 extension IntentContainerQuery {
-	func getContainers(for endpointID: Endpoint.ID,
-					   ids: [Container.ID]? = nil,
-					   names: [Container.Name?]? = nil,
-					   resolveByName: Bool) async throws -> [Container] {
+	func getContainers(
+		for endpointID: Endpoint.ID,
+		ids: [Container.ID]? = nil,
+		names: [Container.Name?]? = nil,
+		resolveByName: Bool
+	) async throws -> [Container] {
 		let portainerStore = IntentPortainerStore.shared
 		try portainerStore.setupIfNeeded()
 

@@ -49,10 +49,12 @@ struct OpenContainerDetailsIntent: AppIntent {
 	@MainActor
 	func perform() async throws -> some IntentResult {
 		#if TARGET_APP
-		logger.notice("Handling in-app: \(String(describing: container), privacy: .sensitive) [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Handling in-app: \(String(describing: container), privacy: .sensitive(mask: .hash)) [\(String._debugInfo(), privacy: .public)]")
 		if let url = HarbourURLScheme.containerDetails(id: container._id, displayName: container.name, endpointID: endpoint.id).url {
 			await UIApplication.shared.open(url)
 		}
+		#else
+		logger.notice("Handling NOT in-app: \(String(describing: container), privacy: .sensitive(mask: .hash)) [\(String._debugInfo(), privacy: .public)]")
 		#endif
 
 		return .result()

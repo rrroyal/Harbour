@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import WidgetKit
 
 // MARK: - ErrorView
 
@@ -15,10 +16,9 @@ struct ErrorView: View {
 
 	var body: some View {
 		Text(verbatim: error.localizedDescription)
-			.font(.body)
+			.font(.footnote)
 			.fontDesign(.monospaced)
-			.fontWeight(.medium)
-			.foregroundStyle(.red)
+			.foregroundStyle(.secondary)
 			.multilineTextAlignment(.center)
 			.lineLimit(nil)
 			.minimumScaleFactor(0.7)
@@ -34,4 +34,5 @@ struct ErrorView: View {
 
 #Preview {
 	ErrorView(error: GenericError.invalidURL)
+		.previewContext(WidgetPreviewContext(family: .systemSmall))
 }
