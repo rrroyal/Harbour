@@ -55,8 +55,8 @@ struct ContainerDetailsView: View {
 			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
 		}
 		.animation(.easeInOut, value: navigationItem)
-		.animation(.easeInOut, value: viewModel.containerDetails != nil)
-		.animation(.easeInOut, value: viewModel.viewState)
+		.animation(.easeInOut, value: viewModel.container?.id)
+		.animation(.easeInOut, value: viewModel.containerDetails?.id)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: navigationItem) { navigationItem, userActivity in
 			viewModel.createUserActivity(for: navigationItem, userActivity: userActivity, errorHandler: errorHandler)
 		}

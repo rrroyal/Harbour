@@ -57,7 +57,7 @@ public final class IntentPortainerStore: @unchecked Sendable {
 		}
 	}
 
-	public func getContainers(for endpointID: Endpoint.ID, filters: Portainer.ContainersFilters = [:]) async throws -> [Container] {
+	public func getContainers(for endpointID: Endpoint.ID, filters: Portainer.FetchFilters? = nil) async throws -> [Container] {
 		logger.info("Getting containers... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let containers = try await portainer.fetchContainers(endpointID: endpointID, filters: filters)
@@ -81,17 +81,5 @@ public final class IntentPortainerStore: @unchecked Sendable {
 			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			throw error
 		}
-	}
-}
-
-// MARK: - IntentPortainerStore+Static
-
-public extension IntentPortainerStore {
-	static func filters(for containerIDs: [Container.ID]?, names containerNames: [Container.Name?]?, resolveByName: Bool) -> Portainer.ContainersFilters {
-		let filters: Portainer.ContainersFilters = [
-			"id": resolveByName ? [] : (containerIDs ?? []),
-			"name": resolveByName ? (containerNames?.compactMap { $0 } ?? []) : []
-		]
-		return filters
 	}
 }

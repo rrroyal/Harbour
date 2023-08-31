@@ -10,18 +10,16 @@ import Foundation
 
 public extension Portainer {
 
-	typealias ContainersFilters = [String: [String]]
-
 	/// Returns a list of containers. For details on the format, see the inspect endpoint.
 	/// - Parameter endpointID: Endpoint ID
 	/// - Parameter filters: Query filters
 	/// - Returns: `[Container]`
 	@Sendable
-	func fetchContainers(endpointID: Endpoint.ID, filters: ContainersFilters = [:]) async throws -> [Container] {
+	func fetchContainers(endpointID: Endpoint.ID, filters: FetchFilters? = nil) async throws -> [Container] {
 		var queryItems = [
 			URLQueryItem(name: "all", value: "true")
 		]
-		if !filters.isEmpty {
+		if let filters {
 			let filtersEncoded = try JSONEncoder().encode(filters)
 			guard let queryItemString = String(data: filtersEncoded, encoding: .utf8) else {
 				throw PortainerError.encodingFailed
@@ -40,10 +38,10 @@ public extension Portainer {
 	/// - Returns: `[Container]`
 	@Sendable @inlinable
 	func fetchContainers(endpointID: Endpoint.ID, stackName: String) async throws -> [Container] {
-		let filters = [
-			// This will probably break with Swarm projects, but it will be a problem for future me :)
-			"label": ["\(Label.stack)=\(stackName)"]
-		]
+		// This will probably break with Swarm projects, but it will be a problem for future me :)
+		let filters = FetchFilters(
+			label: ["\(Label.stack)=\(stackName)"]
+		)
 		return try await fetchContainers(endpointID: endpointID, filters: filters)
 	}
 

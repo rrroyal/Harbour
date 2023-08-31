@@ -15,21 +15,25 @@ import PortainerKit
 
 extension ContainerDetailsView {
 	@Observable
-	final class ViewModel {
-		private let portainerStore = PortainerStore.shared
+	final class ViewModel: @unchecked Sendable {
+		private nonisolated let portainerStore: PortainerStore = .shared
 
-		private(set) var viewState: ViewState<ContainerDetails, Error> = .loading
-		private(set) var container: Container?
+		private(set) var viewState: ViewState<(Container?, ContainerDetails?), Error> = .loading
 		private(set) var fetchTask: Task<Void, Never>?
 
 		var navigationItem: ContainerNavigationItem
 
+		var container: Container? {
+			viewState.unwrappedValue?.0
+		}
+
 		var containerDetails: ContainerDetails? {
-			viewState.unwrappedValue
+			viewState.unwrappedValue?.1
 		}
 
 		init(navigationItem: ContainerNavigationItem) {
 			self.navigationItem = navigationItem
+			self.viewState = .reloading((self.container(for: navigationItem), nil))
 		}
 
 		@MainActor
@@ -84,24 +88,20 @@ extension ContainerDetailsView {
 		func getContainerDetails(navigationItem: ContainerNavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task {
-				if self.navigationItem == navigationItem {
-					viewState = viewState.reloadingUnwrapped
-				} else {
-					viewState = .loading
-				}
-
 				self.navigationItem = navigationItem
-				self.container = container(for: navigationItem)
+				self.viewState = viewState.reloadingUnwrapped
 
 				do {
 					if !portainerStore.isSetup {
 						await portainerStore.setupTask?.value
 					}
 
-					let containerDetails = try await portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
+					async let _containers = portainerStore.fetchContainers(filters: .init(id: [navigationItem.id]))
+					async let _containerDetails = portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
+					let (container, containerDetails) = try await (_containers.first, _containerDetails)
 
 					guard !Task.isCancelled else { return }
-					viewState = .success(containerDetails)
+					self.viewState = .success((container, containerDetails))
 				} catch {
 					guard !Task.isCancelled else { return }
 					viewState = .failure(error)
@@ -112,7 +112,6 @@ extension ContainerDetailsView {
 			return task
 		}
 
-		@MainActor
 		func container(for navigationItem: ContainerNavigationItem) -> Container? {
 			if self.container?.id == navigationItem.id { return self.container }
 			return portainerStore.containers.first { $0.id == navigationItem.id }

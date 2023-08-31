@@ -148,10 +148,9 @@ extension IntentContainerQuery {
 		let portainerStore = IntentPortainerStore.shared
 		try portainerStore.setupIfNeeded()
 
-		let filters = IntentPortainerStore.filters(
-			for: ids,
-			names: names,
-			resolveByName: resolveByName
+		let filters = Portainer.FetchFilters(
+			id: resolveByName ? nil : ids,
+			name: resolveByName ? names?.compactMap { $0 } : nil
 		)
 		let containers = try await portainerStore.getContainers(for: endpointID, filters: filters)
 		return containers

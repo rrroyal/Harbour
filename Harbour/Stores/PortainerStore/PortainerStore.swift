@@ -63,13 +63,13 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	}
 
 	/// Endpoints
-	@MainActor @Published
+	@Published
 	private(set) var endpoints: [Endpoint] = [] {
 		didSet { onEndpointsChange(endpoints) }
 	}
 
 	/// Containers
-	@MainActor @Published
+	@Published
 	private(set) var containers: [Container] = []
 
 	// MARK: init
@@ -204,6 +204,7 @@ public extension PortainerStore {
 	/// - Parameter endpoint: Endpoint to switch to
 	@MainActor
 	func selectEndpoint(_ endpoint: Endpoint?) {
+		// swiftlint:disable:next line_length
 		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive(mask: .hash))\" (\(endpoint?.id.description ?? "<none>")) [\(String._debugInfo(), privacy: .public)]")
 		self.selectedEndpoint = endpoint
 
@@ -218,9 +219,53 @@ public extension PortainerStore {
 	}
 }
 
-// MARK: - PortainerStore+Containers
+// MARK: - PortainerStore+General
 
 public extension PortainerStore {
+	@Sendable
+	func fetchEndpoints() async throws -> [Endpoint] {
+		logger.info("Getting endpoints... [\(String._debugInfo(), privacy: .public)]")
+		do {
+			let endpoints = try await portainer.fetchEndpoints()
+			logger.debug("Got \(endpoints.count, privacy: .public) endpoints [\(String._debugInfo(), privacy: .public)]")
+			return endpoints.sorted()
+		} catch {
+			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			throw error
+		}
+	}
+
+	@Sendable
+	func fetchContainers(filters: Portainer.FetchFilters? = nil) async throws -> [Container] {
+		logger.info("Getting containers... (filters: \(String(describing: filters), privacy: .sensitive(mask: .hash))) [\(String._debugInfo(), privacy: .public)]")
+		do {
+			let (portainer, endpoint) = try getPortainerAndEndpoint()
+			let containers = try await portainer.fetchContainers(endpointID: endpoint.id, filters: filters)
+			logger.debug("Got \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
+			return containers.sorted()
+		} catch {
+			logger.error("Failed to get containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			throw error
+		}
+	}
+
+	/// Fetches all of the containers belonging to specified stack name.
+	/// - Parameter stackName: Stack name
+	/// - Returns: Array of containers
+	@Sendable
+	func getContainers(for stackName: String) async throws -> [Container] {
+		logger.info("Getting containers for stack \"\(stackName, privacy: .sensitive(mask: .hash))\"... [\(String._debugInfo(), privacy: .public)]")
+		do {
+			let (portainer, endpoint) = try getPortainerAndEndpoint()
+			let containers = try await portainer.fetchContainers(endpointID: endpoint.id, stackName: stackName)
+			logger.debug("Got \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
+			return containers.sorted()
+		} catch {
+			logger.error("Failed to get containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			throw error
+		}
+	}
+
 	/// Fetches the details for the provided container ID.
 	/// - Parameters:
 	///   - containerID: ID of the inspected container
@@ -253,10 +298,12 @@ public extension PortainerStore {
 	///   - includeTimestamps: Include timestamps?
 	/// - Returns: Logs of the container
 	@Sendable
-	func getLogs(for containerID: Container.ID,
-				 since logsSince: TimeInterval = 0,
-				 tail lastEntriesAmount: Int = 100,
-				 timestamps includeTimestamps: Bool = false) async throws -> String {
+	func getLogs(
+		for containerID: Container.ID,
+		since logsSince: TimeInterval = 0,
+		tail lastEntriesAmount: Int = 100,
+		timestamps includeTimestamps: Bool = false
+	) async throws -> String {
 		logger.info("Getting logs for containerID: \"\(containerID, privacy: .public)\"... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpoint) = try getPortainerAndEndpoint()
@@ -335,23 +382,6 @@ extension PortainerStore {
 			return stack
 		} catch {
 			logger.error("Failed to \(started ? "start" : "stop", privacy: .public) stack with ID: \(stackID): \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
-			throw error
-		}
-	}
-
-	/// Fetches all of the containers belonging to specified stack name.
-	/// - Parameter stackName: Stack name
-	/// - Returns: Array of containers
-	@Sendable
-	func getContainers(for stackName: String) async throws -> [Container] {
-		logger.info("Getting containers for stack \"\(stackName, privacy: .sensitive(mask: .hash))\"... [\(String._debugInfo(), privacy: .public)]")
-		do {
-			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			let containers = try await portainer.fetchContainers(endpointID: endpoint.id, stackName: stackName)
-			logger.debug("Got \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
-			return containers.sorted()
-		} catch {
-			logger.error("Failed to get containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			throw error
 		}
 	}
@@ -443,37 +473,6 @@ extension PortainerStore {
 	}
 }
 
-// MARK: - PortainerStore+Private
-
-private extension PortainerStore {
-	@Sendable
-	func fetchEndpoints() async throws -> [Endpoint] {
-		logger.info("Getting endpoints... [\(String._debugInfo(), privacy: .public)]")
-		do {
-			let endpoints = try await portainer.fetchEndpoints()
-			logger.debug("Got \(endpoints.count, privacy: .public) endpoints [\(String._debugInfo(), privacy: .public)]")
-			return endpoints.sorted()
-		} catch {
-			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
-			throw error
-		}
-	}
-
-	@Sendable
-	func fetchContainers() async throws -> [Container] {
-		logger.info("Getting containers... [\(String._debugInfo(), privacy: .public)]")
-		do {
-			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			let containers = try await portainer.fetchContainers(endpointID: endpoint.id)
-			logger.debug("Got \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
-			return containers.sorted()
-		} catch {
-			logger.error("Failed to get containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
-			throw error
-		}
-	}
-}
-
 // MARK: - PortainerStore+Helpers
 
 private extension PortainerStore {
@@ -503,7 +502,6 @@ private extension PortainerStore {
 		}
 	}
 
-	@MainActor
 	func onEndpointsChange(_ endpoints: [Endpoint]) {
 		if endpoints.isEmpty {
 			containers = []
