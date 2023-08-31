@@ -22,26 +22,28 @@ extension ContainerStatusWidgetView {
 		private let circleSize: Double = 8
 		private let minimumScaleFactor: Double = 0.8
 
+		private var harbourURL: URL {
+			HarbourURLScheme.containerDetails(
+				id: container?.id ?? intentContainer._id,
+				displayName: container?.displayName ?? intentContainer.name,
+				endpointID: intentEndpoint.id
+			).url ?? HarbourURLScheme.app
+		}
+
 		private var namePlaceholder: String {
 			String(localized: "Generic.Unknown")
 		}
 
 		private var statusPlaceholder: String {
-			if let error = entry.error {
-				return error.localizedDescription
+			switch entry.result {
+			case .containers:
+				// Shouldn't ever be displayed
+				String(localized: "Generic.Unknown")
+			case .error(let error):
+				error.localizedDescription
+			case .unreachable:
+				String(localized: "Generic.Unreachable")
 			}
-
-			return String(localized: "Generic.Unknown")
-		}
-
-		private var buttonIntent: ContainerStatusProvider.Intent {
-			let intent = ContainerStatusProvider.Intent(
-				endpoint: entry.configuration.endpoint,
-				containers: [intentContainer]
-			)
-			intent.resolveByName = entry.configuration.resolveByName
-			intent.resolveOffline = true
-			return intent
 		}
 
 		@ViewBuilder
@@ -89,7 +91,7 @@ extension ContainerStatusWidgetView {
 		}
 
 		var body: some View {
-			Button(intent: buttonIntent) {
+			Link(destination: harbourURL) {
 				VStack(spacing: 0) {
 					stateHeadline
 						.padding(.bottom, 2)

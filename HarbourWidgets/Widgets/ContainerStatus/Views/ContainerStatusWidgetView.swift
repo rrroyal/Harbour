@@ -17,15 +17,11 @@ struct ContainerStatusWidgetView: View {
 	var entry: ContainerStatusProvider.Entry
 
 	var body: some View {
-		if let error = entry.error {
-			ErrorView(error: error)
-		} else {
+		switch entry.result {
+		case .containers, .unreachable:
 			switch widgetFamily {
 			case .systemSmall:
-//				let firstContainer = entry.configuration.containers.first
-//				let widgetURL = HarbourURLScheme.containerDetails(id: firstContainer?._id ?? "", displayName: firstContainer?.name, endpointID: entry.configuration.endpoint?.id).url
 				SmallWidgetView(entry: entry)
-//					.widgetURL(widgetURL)
 			case .systemMedium:
 				MediumWidgetView(entry: entry)
 			case .systemLarge:
@@ -34,6 +30,8 @@ struct ContainerStatusWidgetView: View {
 				// Fallback
 				SmallWidgetView(entry: entry)
 			}
+		case .error(let error):
+			ErrorView(error: error)
 		}
 	}
 }
@@ -49,7 +47,10 @@ extension ContainerStatusWidgetView {
 		}
 
 		private var container: Container? {
-			entry.containers?.first { $0.id == intentContainer?._id }
+			if case .containers(let containers) = entry.result {
+				return containers.first { $0.id == intentContainer?._id }
+			}
+			return nil
 		}
 
 		var body: some View {
@@ -78,13 +79,20 @@ extension ContainerStatusWidgetView {
 	struct MediumWidgetView: View {
 		var entry: ContainerStatusProvider.Entry
 
+		private var containers: [Container]? {
+			if case .containers(let containers) = entry.result {
+				return containers
+			}
+			return nil
+		}
+
 		var body: some View {
 			HStack {
 				ForEach(0..<2, id: \.self) { index in
 					Group {
 						if let intentEndpoint = entry.configuration.endpoint,
 						   let intentContainer = entry.configuration.containers[safe: index] {
-							let container = entry.containers?.first { $0.id == intentContainer ._id }
+							let container = containers?.first { $0.id == intentContainer._id }
 							ContainerStatusWidgetView.ContainerView(
 								entry: entry,
 								intentContainer: intentContainer,
@@ -112,6 +120,13 @@ extension ContainerStatusWidgetView {
 	struct LargeWidgetView: View {
 		var entry: ContainerStatusProvider.Entry
 
+		private var containers: [Container]? {
+			if case .containers(let containers) = entry.result {
+				return containers
+			}
+			return nil
+		}
+
 		var body: some View {
 			VStack {
 				ForEach(0...1, id: \.self) { yIndex in
@@ -121,7 +136,7 @@ extension ContainerStatusWidgetView {
 								let index = (yIndex * 2) + xIndex
 								if let intentEndpoint = entry.configuration.endpoint,
 								   let intentContainer = entry.configuration.containers[safe: index] {
-									let container = entry.containers?.first { $0.id == intentContainer._id }
+									let container = containers?.first { $0.id == intentContainer._id }
 									ContainerStatusWidgetView.ContainerView(
 										entry: entry,
 										intentContainer: intentContainer,

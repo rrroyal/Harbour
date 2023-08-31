@@ -55,28 +55,10 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 
 extension ContainerStatusProvider {
 	struct Entry: TimelineEntry {
-		let date: Date
-		let configuration: ContainerStatusProvider.Intent
-		let containers: [Container]?
-		let error: Error?
-
-		var relevance: TimelineEntryRelevance? {
-			let score: Float = (containers ?? []).reduce(into: 0) { absoluteScore, container in
-				// swiftlint:disable switch_case_alignment
-				let containerScore: Float = switch container.state {
-				case .none:				0.0
-				case .running:			0.1
-				case .paused:			0.2
-				case .exited:			0.3
-				case .created:			0.4
-				case .removing:			0.4
-				case .restarting:		0.5
-				case .dead:				0.6
-				}
-				// swiftlint:enable switch_case_alignment
-				absoluteScore += containerScore
-			}
-			return .init(score: score)
+		enum Result {
+			case containers([Container])
+			case error(Error)
+			case unreachable
 		}
 
 		// swiftlint:disable force_unwrapping
@@ -86,7 +68,6 @@ extension ContainerStatusProvider {
 			let intentContainer1 = IntentContainer.preview(id: "1")
 			let intentContainer2 = IntentContainer.preview(id: "2")
 			let intentContainer3 = IntentContainer.preview(id: "3")
-//			let intentContainer4 = IntentContainer.preview(id: "4")
 			let intentContainers = [intentContainer1, intentContainer2, intentContainer3]
 
 			let date = Date(timeIntervalSince1970: 1584296700)
@@ -107,28 +88,42 @@ extension ContainerStatusProvider {
 				state: .paused,
 				status: String(localized: "IntentContainer.Preview.Status")
 			)
-//			let container3 = Container(
-//				id: "3",
-//				names: [intentContainer3.name!],
-//				state: .running,
-//				status: String(localized: "IntentContainer.Preview.Status")
-//			)
-//			let container4 = Container(
-//				id: "4",
-//				names: [intentContainer4.name!],
-//				state: .running,
-//				status: String(localized: "IntentContainer.Preview.Status")
-//			)
 			let containers = [container1, container2]
 
 			return .init(
 				date: date,
 				configuration: intent,
-				containers: containers,
-				error: nil
+				result: .containers(containers)
 			)
 		}
 		// swiftlint:enable force_unwrapping
+
+		let date: Date
+		let configuration: ContainerStatusProvider.Intent
+		let result: Result
+
+		var relevance: TimelineEntryRelevance? {
+			guard case .containers(let containers) = self.result else {
+				return .init(score: 0)
+			}
+
+			let score: Float = containers.reduce(into: 0) { absoluteScore, container in
+				// swiftlint:disable switch_case_alignment
+				let containerScore: Float = switch container.state {
+				case .none:				0.0
+				case .running:			0.1
+				case .paused:			0.2
+				case .exited:			0.3
+				case .created:			0.4
+				case .removing:			0.4
+				case .restarting:		0.5
+				case .dead:				0.6
+				}
+				// swiftlint:enable switch_case_alignment
+				absoluteScore += containerScore
+			}
+			return .init(score: score)
+		}
 	}
 }
 
@@ -140,29 +135,33 @@ private extension ContainerStatusProvider {
 		let containers = configuration.containers
 
 		guard let endpoint = configuration.endpoint, !containers.isEmpty else {
-			let entry = Entry(date: now, configuration: configuration, containers: nil, error: nil)
+			let entry = Entry(date: now, configuration: configuration, result: .containers([]))
 			return entry
 		}
 
 		do {
 			try portainerStore.setupIfNeeded()
 
-			let filters = IntentPortainerStore.filters(
-				for: containers.map(\._id),
-				names: containers.map(\.name),
-				resolveByName: configuration.resolveByName
+			let filters = Portainer.FetchFilters(
+				id: configuration.resolveByName ? nil : containers.map(\._id),
+				name: configuration.resolveByName ? containers.compactMap(\.name) : nil
 			)
-			let containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
+			let _containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
 
 			// Remake containers to make the payload smaller
-			let _containers = containers.map {
+			let containers = _containers.map {
 				Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status)
 			}
 
-			return Entry(date: now, configuration: configuration, containers: _containers, error: nil)
+			return Entry(date: now, configuration: configuration, result: .containers(containers))
 		} catch {
 			logger.error("Error getting containers: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
-			return Entry(date: now, configuration: configuration, containers: nil, error: error)
+
+			if error is URLError {
+				return Entry(date: now, configuration: configuration, result: .unreachable)
+			}
+
+			return Entry(date: now, configuration: configuration, result: .error(error))
 		}
 	}
 }

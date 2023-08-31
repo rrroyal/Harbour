@@ -51,16 +51,6 @@
         }
       }
     },
-    "AppIntents.Parameter.Container.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Container"
-          }
-        }
-      }
-    },
     "AppIntents.Parameter.Containers.Title" : {
       "localizations" : {
         "en" : {
@@ -795,6 +785,16 @@
         }
       }
     },
+    "Generic.Unreachable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unreachable"
+          }
+        }
+      }
+    },
     "Indicators.Copied" : {
       "localizations" : {
         "en" : {
@@ -961,26 +961,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "\"%@\" disappeared!"
-          }
-        }
-      }
-    },
-    "OpenContainerDetailsIntent.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Opens the in-app detail view for specified container."
-          }
-        }
-      }
-    },
-    "OpenContainerDetailsIntent.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Container Details"
           }
         }
       }

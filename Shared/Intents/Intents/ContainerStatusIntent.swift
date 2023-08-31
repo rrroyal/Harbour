@@ -70,8 +70,8 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	}
 
 	@MainActor
-	func perform() async throws -> some OpensIntent & ReturnsValue<IntentContainer> {
-		guard let endpoint else { throw $containers.needsValueError()}
+	func perform() async throws -> some ReturnsValue<IntentContainer> {
+//		guard let endpoint else { throw $containers.needsValueError()}
 		guard !containers.isEmpty else { throw $containers.needsValueError() }
 
 		// swiftlint:disable switch_case_alignment
@@ -86,7 +86,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		}
 		// swiftlint:enable switch_case_alignment
 
-		return .result(value: intentContainer, opensIntent: OpenContainerDetailsIntent(endpoint: endpoint, container: intentContainer))
+		return .result(value: intentContainer)
 	}
 }
 
@@ -117,10 +117,9 @@ private extension ContainerStatusIntent {
 		let portainerStore = IntentPortainerStore.shared
 		try portainerStore.setupIfNeeded()
 
-		let filters = IntentPortainerStore.filters(
-			for: ids,
-			names: names,
-			resolveByName: resolveByName
+		let filters = Portainer.FetchFilters(
+			id: resolveByName ? nil : ids,
+			name: resolveByName ? names?.compactMap { $0 } : nil
 		)
 		let containers = try await portainerStore.getContainers(for: endpointID, filters: filters)
 		return containers

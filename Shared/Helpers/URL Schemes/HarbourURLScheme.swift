@@ -14,6 +14,9 @@ import PortainerKit
 enum HarbourURLScheme {
 	static let scheme = "harbour"
 
+	// swiftlint:disable:next force_unwrapping
+	static let app = URL(string: "\(scheme)://")!
+
 	case containerDetails(id: Container.ID, displayName: String?, endpointID: Endpoint.ID?)
 }
 
