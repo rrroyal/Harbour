@@ -13,7 +13,7 @@ import PortainerKit
 // MARK: - Container+displayName
 
 extension Container {
-	var displayName: Container.Name? {
+	var displayName: String? {
 		guard let firstName = names?.first else { return nil }
 		return firstName.starts(with: "/") ? String(firstName.dropFirst()) : firstName
 	}

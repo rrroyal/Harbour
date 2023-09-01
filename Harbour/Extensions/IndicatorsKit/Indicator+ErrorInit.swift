@@ -22,15 +22,17 @@ extension Indicator {
 			subheadline = failureReason
 			expandedText = error.recoverySuggestion ?? failureReason
 		} else {
-			headline = "Indicators.Error"
+			headline = String(localized: "Indicators.Error")
 			subheadline = error.localizedDescription
 			expandedText = nil
 		}
 
-		self.init(id: String(describing: error).hashValue.description,
-				  headline: headline,
-				  subheadline: subheadline,
-				  expandedText: expandedText,
-				  style: style)
+		self.init(
+			id: String(describing: error).hashValue.description,
+			headline: headline.localizedCapitalized,
+			subheadline: subheadline.localizedCapitalized,
+			expandedText: expandedText,
+			style: style
+		)
 	}
 }

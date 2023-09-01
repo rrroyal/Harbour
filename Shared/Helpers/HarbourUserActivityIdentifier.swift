@@ -8,7 +8,10 @@
 
 import Foundation
 
+// swiftlint:disable force_unwrapping
+
 enum HarbourUserActivityIdentifier {
-	// swiftlint:disable:next force_unwrapping
 	static let containerDetails = "\(Bundle.main.mainBundleIdentifier!).ContainerDetailsActivity"
 }
+
+// swiftlint:enable force_unwrapping

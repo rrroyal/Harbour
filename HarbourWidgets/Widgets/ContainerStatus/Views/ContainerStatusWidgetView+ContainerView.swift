@@ -22,12 +22,15 @@ extension ContainerStatusWidgetView {
 		private let circleSize: Double = 8
 		private let minimumScaleFactor: Double = 0.8
 
-		private var harbourURL: URL {
-			HarbourURLScheme.containerDetails(
+		private var url: URL? {
+			guard !entry.isPlaceholder else { return nil }
+
+			let containerURL = HarbourURLScheme.containerDetails(
 				id: container?.id ?? intentContainer._id,
 				displayName: container?.displayName ?? intentContainer.name,
 				endpointID: intentEndpoint.id
-			).url ?? HarbourURLScheme.app
+			).url
+			return containerURL ?? HarbourURLScheme.appURL
 		}
 
 		private var namePlaceholder: String {
@@ -91,29 +94,42 @@ extension ContainerStatusWidgetView {
 		}
 
 		var body: some View {
-			Link(destination: harbourURL) {
-				VStack(spacing: 0) {
-					stateHeadline
-						.padding(.bottom, 2)
+			VStack(spacing: 0) {
+				stateHeadline
+					.padding(.bottom, 2)
 
-					dateLabel
+				dateLabel
 
-					Spacer()
+				Spacer()
 
-					Group {
-						nameLabel
-						statusLabel
-					}
-					.multilineTextAlignment(.leading)
-					.minimumScaleFactor(minimumScaleFactor)
-					.frame(maxWidth: .infinity, alignment: .leading)
+				Group {
+					nameLabel
+					statusLabel
 				}
-				.padding()
+				.multilineTextAlignment(.leading)
+				.minimumScaleFactor(minimumScaleFactor)
+				.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			.buttonStyle(.plain)
-			.tint(nil)
+			.padding()
+			.modifier(LinkWrappedViewModifier(url: url))
 			.background(Color.widgetBackground)
 			.id("ContainerStatusWidgetView.ContainerView.\(container?.id ?? "")")
+		}
+	}
+}
+
+// MARK: - LinkWrappedViewModifier
+
+private struct LinkWrappedViewModifier: ViewModifier {
+	let url: URL?
+
+	func body(content: Content) -> some View {
+		if let url {
+			Link(destination: url) {
+				content
+			}
+		} else {
+			content
 		}
 	}
 }

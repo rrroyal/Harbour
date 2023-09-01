@@ -7,8 +7,10 @@
 //
 
 import IndicatorsKit
+import PortainerKit
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 // MARK: - HarbourApp
 
@@ -21,9 +23,15 @@ struct HarbourApp: App {
 	#endif
 
 	@Environment(\.scenePhase) private var scenePhase: ScenePhase
-	@StateObject private var portainerStore: PortainerStore = .shared
+	@StateObject private var portainerStore: PortainerStore
 	@StateObject private var preferences: Preferences = .shared
 	@State private var appState: AppState = .shared
+
+	init() {
+		let portainerStore = PortainerStore.shared
+		portainerStore.loadStoredContainersIfNeeded()
+		self._portainerStore = .init(wrappedValue: portainerStore)
+	}
 
 	var body: some Scene {
 		WindowGroup {
@@ -39,7 +47,10 @@ struct HarbourApp: App {
 		.defaultAppStorage(Preferences.userDefaults)
 		.modelContainer(for: [StoredContainer.self])
 		.onChange(of: scenePhase) {
-			onScenePhaseChange(previous: $0, new: $1)
+			onScenePhaseChange(from: $0, to: $1)
+		}
+		.onChange(of: portainerStore.containers) {
+			onContainersChange(from: $0, to: $1)
 		}
 		#if os(iOS)
 		.backgroundTask(.appRefresh(HarbourBackgroundTaskIdentifier.backgroundRefresh), action: appState.handleBackgroundRefresh)
@@ -51,7 +62,7 @@ struct HarbourApp: App {
 
 private extension HarbourApp {
 	@MainActor
-	func onScenePhaseChange(previous previousScenePhase: ScenePhase, new newScenePhase: ScenePhase) {
+	func onScenePhaseChange(from previousScenePhase: ScenePhase, to newScenePhase: ScenePhase) {
 		switch newScenePhase {
 		case .background:
 			#if os(iOS)
@@ -66,5 +77,13 @@ private extension HarbourApp {
 		@unknown default:
 			break
 		}
+	}
+
+	func onContainersChange(from previousContainers: [Container], to newContainers: [Container]) {
+		Task.detached {
+			WidgetCenter.shared.reloadAllTimelines()
+		}
+
+		// TODO: Index in spotlight (https://www.donnywals.com/adding-your-apps-content-to-spotlight)
 	}
 }

@@ -44,7 +44,7 @@ struct IntentContainer: AppEntity, Identifiable, Hashable {
 	}
 }
 
-// MARK: - IntentContainer+preview
+// MARK: - IntentContainer+Static
 
 extension IntentContainer {
 	static func preview(
@@ -52,6 +52,20 @@ extension IntentContainer {
 		name: String = String(localized: "IntentContainer.Preview.Name")
 	) -> Self {
 		.init(id: id, name: name)
+	}
+
+	static func expandID(_ id: IntentContainer.ID) -> (Container.ID, String?) {
+		// <containerID>:<containerName>
+		let parts = id.split(separator: ":")
+		if parts.count == 2 {
+			return (String(parts[0]), String(parts[1]))
+		}
+
+		if let first = parts[safe: 0] {
+			return (String(first), nil)
+		}
+
+		return (id, nil)
 	}
 }
 
@@ -76,42 +90,27 @@ struct IntentContainerQuery: EntityStringQuery {
 	}
 
 	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-		let parsed: [(Container.ID, Container.Name?)] = identifiers
-			.compactMap {
-				// <containerID>:<containerName>
-				let parts = $0.split(separator: ":")
-				if parts.count == 2 {
-					return (String(parts[0]), String(parts[1]))
-				}
+		let parsed: [(Container.ID, String?)] = identifiers
+			.compactMap { IntentContainer.expandID($0) }
 
-				if resolveByName {
-					// Ignore container, as we only want names
-					return nil
-				}
+		do {
+			guard let endpoint else { return [] }
 
-				if let first = parts[safe: 0] {
-					return (String(first), nil)
-				}
-
-				return ($0, nil)
+			let containers = try await getContainers(
+				for: endpoint.id,
+				ids: parsed.map(\.0),
+				names: parsed.map(\.1),
+				resolveByName: resolveByName
+			)
+			return containers.map { Entity(container: $0) }
+		} catch {
+			if resolveOffline && error is URLError {
+				return parsed.map { .init(id: $0, name: $1) }
 			}
 
-		if resolveOffline {
-			return parsed.map { .init(id: $0, name: $1) }
+			logger.error("\(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			throw error
 		}
-
-		guard let endpoint else { return [] }
-
-		let ids = parsed.map(\.0)
-		let names = parsed.map(\.1)
-
-		let containers = try await getContainers(
-			for: endpoint.id,
-			ids: ids,
-			names: names,
-			resolveByName: resolveByName
-		)
-		return containers.map { Entity(container: $0) }
 	}
 
 	func entities(matching string: String) async throws -> [Entity] {
@@ -123,7 +122,7 @@ struct IntentContainerQuery: EntityStringQuery {
 				.filter(string)
 				.map { Entity(container: $0) }
 		} catch {
-			logger.error("\(String(describing: error), privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("\(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			return []
 		}
 	}
@@ -142,7 +141,7 @@ extension IntentContainerQuery {
 	func getContainers(
 		for endpointID: Endpoint.ID,
 		ids: [Container.ID]? = nil,
-		names: [Container.Name?]? = nil,
+		names: [String?]? = nil,
 		resolveByName: Bool
 	) async throws -> [Container] {
 		let portainerStore = IntentPortainerStore.shared

@@ -18,10 +18,17 @@ struct ContainerDetailsView: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
-
 	@State private var viewModel: ViewModel
-
 	var navigationItem: ContainerNavigationItem
+
+	private var navigationTitle: String {
+		viewModel.container?.displayName ??
+			viewModel.containerDetails?.displayName ??
+			viewModel.container?.id ??
+			viewModel.containerDetails?.id ??
+			navigationItem.displayName ??
+			navigationItem.id
+	}
 
 	init(navigationItem: ContainerNavigationItem) {
 		self.navigationItem = navigationItem
@@ -40,12 +47,14 @@ struct ContainerDetailsView: View {
 			)
 		}
 		.background(viewModel.viewState.backgroundView)
-		.navigationTitle(viewModel.navigationItem.displayName ?? viewModel.navigationItem.id)
+		.navigationTitle(navigationTitle)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
-				ToolbarMenu(isLoading: viewModel.viewState.isLoading,
-							containerID: navigationItem.id,
-							container: viewModel.container(for: navigationItem))
+				ToolbarMenu(
+					isLoading: viewModel.viewState.isLoading,
+					containerID: navigationItem.id,
+					container: viewModel.container(for: navigationItem)
+				)
 			}
 		}
 		.refreshable {
@@ -58,9 +67,9 @@ struct ContainerDetailsView: View {
 		.animation(.easeInOut, value: viewModel.container?.id)
 		.animation(.easeInOut, value: viewModel.containerDetails?.id)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: navigationItem) { navigationItem, userActivity in
-			viewModel.createUserActivity(for: navigationItem, userActivity: userActivity, errorHandler: errorHandler)
+			viewModel.createUserActivity(userActivity, navigationItem: navigationItem)
 		}
-		.id("\(Self.self):\(navigationItem.id)")
+		.id(self.id)
 	}
 }
 
@@ -68,7 +77,7 @@ struct ContainerDetailsView: View {
 
 extension ContainerDetailsView: Identifiable {
 	var id: String {
-		"\(Self.self):\(navigationItem.id)"
+		"\(Self.self).\(navigationItem.id)"
 	}
 }
 

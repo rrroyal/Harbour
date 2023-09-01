@@ -17,6 +17,6 @@ extension Container {
 		} else {
 			names = nil
 		}
-		self.init(id: storedContainer.id, names: names, state: storedContainer.lastState)
+		self.init(id: storedContainer.id, names: names)
 	}
 }

@@ -93,7 +93,8 @@ extension ContainerStatusProvider {
 			return .init(
 				date: date,
 				configuration: intent,
-				result: .containers(containers)
+				result: .containers(containers),
+				isPlaceholder: true
 			)
 		}
 		// swiftlint:enable force_unwrapping
@@ -101,6 +102,7 @@ extension ContainerStatusProvider {
 		let date: Date
 		let configuration: ContainerStatusProvider.Intent
 		let result: Result
+		var isPlaceholder = false
 
 		var relevance: TimelineEntryRelevance? {
 			guard case .containers(let containers) = self.result else {
@@ -155,7 +157,7 @@ private extension ContainerStatusProvider {
 
 			return Entry(date: now, configuration: configuration, result: .containers(containers))
 		} catch {
-			logger.error("Error getting containers: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Error getting containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 
 			if error is URLError {
 				return Entry(date: now, configuration: configuration, result: .unreachable)

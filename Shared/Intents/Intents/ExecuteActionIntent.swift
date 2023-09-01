@@ -17,11 +17,11 @@ struct ExecuteActionIntent: AppIntent {
 
 	static var parameterSummary: some ParameterSummary {
 		When(\.$endpoint, .hasAnyValue) {
-			Summary("Execute (.$action) on \(\.$container)") {
+			Summary("Execute \(\.$action) on \(\.$container)") {
 				\.$endpoint
 			}
 		} otherwise: {
-			Summary("Execute (.$action) on a container") {
+			Summary("Execute \(\.$action) on a container") {
 				\.$endpoint
 			}
 		}
@@ -37,7 +37,6 @@ struct ExecuteActionIntent: AppIntent {
 	@Parameter(title: "AppIntents.Parameter.Container.Title")
 	var container: IntentContainer
 
-	// TODO: Unable to determine value type for type `PortainerKit.ExecuteAction`
 	@Parameter(title: "AppIntents.Parameter.ExecuteAction.Title")
 	var action: ExecuteAction
 

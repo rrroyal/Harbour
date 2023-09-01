@@ -24,7 +24,7 @@ extension ContentView {
 		private var fetchTask: Task<Void, Error>?
 		private var suggestedSearchTokensTask: Task<Void, Error>?
 
-		private(set) var viewState: ViewState<Void, Error> = .loading
+		private(set) var viewState: ViewState<Void, Error>
 		private(set) var suggestedSearchTokens: [SearchToken] = []
 
 		var searchText = ""
@@ -66,6 +66,8 @@ extension ContentView {
 		init() {
 			let portainerStore = PortainerStore.shared
 			self.portainerStore = portainerStore
+
+			self.viewState = portainerStore.isSetup ? .loading : .success(())
 		}
 
 		@MainActor

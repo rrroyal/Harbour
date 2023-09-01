@@ -60,10 +60,6 @@ struct IntentEndpointQuery: EntityQuery {
 	}
 
 	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-		if resolveOffline {
-			return identifiers.map { .init(id: $0, name: nil) }
-		}
-
 		do {
 			let portainerStore = IntentPortainerStore.shared
 			try portainerStore.setupIfNeeded()
@@ -73,7 +69,11 @@ struct IntentEndpointQuery: EntityQuery {
 				.filter { identifiers.contains($0.id) }
 				.map { Entity(endpoint: $0) }
 		} catch {
-			logger.error("\(String(describing: error), privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			if resolveOffline && error is URLError {
+				return identifiers.map { .init(id: $0, name: nil) }
+			}
+
+			logger.error("\(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			return []
 		}
 	}

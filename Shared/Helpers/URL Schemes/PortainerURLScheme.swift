@@ -21,18 +21,20 @@ struct PortainerURLScheme {
 		// <address.absoluteString>/#!/<endpointID>/docker/containers/<containerID>
 		guard let endpointID else { return nil }
 
-		let addressString = address.absoluteString
+		guard var urlComponents = URLComponents(url: address, resolvingAgainstBaseURL: true) else {
+			return nil
+		}
 
 		let pathParts = [
 			"#!",
-			endpointID.description,
+			"\(endpointID)",
 			"docker",
 			"containers",
 			containerID
 		]
-		let path = pathParts.joined(separator: "/")
+		let path = "/" + pathParts.joined(separator: "/")
+		urlComponents.path = path
 
-		let urlString = "\(addressString)/\(path)"
-		return URL(string: urlString)
+		return urlComponents.url
 	}
 }

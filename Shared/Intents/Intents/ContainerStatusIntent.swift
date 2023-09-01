@@ -29,7 +29,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 	static var authenticationPolicy = IntentAuthenticationPolicy.requiresAuthentication
 
-//	static var isDiscoverable = true
+	static var isDiscoverable = false
 
 	@Parameter(title: "AppIntents.Parameter.Endpoint.Title")
 	var endpoint: IntentEndpoint?
@@ -71,6 +71,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 	@MainActor
 	func perform() async throws -> some ReturnsValue<IntentContainer> {
+		// TODO: Fetch new container status here
 //		guard let endpoint else { throw $containers.needsValueError()}
 		guard !containers.isEmpty else { throw $containers.needsValueError() }
 
@@ -111,7 +112,7 @@ private extension ContainerStatusIntent {
 	func getContainers(
 		for endpointID: Endpoint.ID,
 		ids: [Container.ID]? = nil,
-		names: [Container.Name?]? = nil,
+		names: [String?]? = nil,
 		resolveByName: Bool
 	) async throws -> [Container] {
 		let portainerStore = IntentPortainerStore.shared

@@ -84,7 +84,7 @@ extension DebugView {
 					let logStore = try OSLogStore(scope: .currentProcessIdentifier)
 					let position = logStore.position(date: Date().addingTimeInterval(-(6 * 60 * 60)))
 					// swiftlint:disable:next force_unwrapping
-					let predicate = NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)
+					let predicate = NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier!)
 					let entries = try logStore.getEntries(with: [],
 														  at: position,
 														  matching: predicate)

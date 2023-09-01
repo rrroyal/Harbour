@@ -6,9 +6,12 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import CommonFoundation
+import CommonOSLog
 import CoreSpotlight
 import Foundation
 import Observation
+import OSLog
 import PortainerKit
 
 // MARK: - ContainerDetailsView+ViewModel
@@ -17,6 +20,7 @@ extension ContainerDetailsView {
 	@Observable
 	final class ViewModel: @unchecked Sendable {
 		private nonisolated let portainerStore: PortainerStore = .shared
+		private nonisolated let logger = Logger(.view(ContainerDetailsView.self))
 
 		private(set) var viewState: ViewState<(Container?, ContainerDetails?), Error> = .loading
 		private(set) var fetchTask: Task<Void, Never>?
@@ -37,9 +41,8 @@ extension ContainerDetailsView {
 		}
 
 		@MainActor
-		func createUserActivity(for navigationItem: ContainerNavigationItem,
-								userActivity: NSUserActivity,
-								errorHandler: ErrorHandler) {
+		func createUserActivity(_ userActivity: NSUserActivity, navigationItem: ContainerNavigationItem?) {
+			let navigationItem = navigationItem ?? self.navigationItem
 			let identifier = "\(HarbourUserActivityIdentifier.containerDetails).\(navigationItem.endpointID ?? -1).\(navigationItem.id)"
 
 			let container = self.container(for: navigationItem)
@@ -50,13 +53,19 @@ extension ContainerDetailsView {
 			#endif
 			userActivity.isEligibleForSearch = true
 
-			let displayName = navigationItem.displayName ?? navigationItem.id
-			userActivity.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
+//			let displayName = navigationItem.displayName ?? navigationItem.id
+//			userActivity.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
+			userActivity.title = navigationItem.displayName
 //			userActivity.suggestedInvocationPhrase = Localization.title(displayName)
 
 			let attributeSet = CSSearchableItemAttributeSet()
-			attributeSet.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
-			attributeSet.contentDescription = String(localized: "UserActivity.ContainerDetails.Description Name:\(displayName)")
+			attributeSet.contentType = HarbourItemType.container
+//			attributeSet.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
+			attributeSet.title = navigationItem.displayName
+//			attributeSet.contentDescription = String(localized: "UserActivity.ContainerDetails.Description Name:\(displayName)")
+			if navigationItem.displayName != nil {
+				attributeSet.contentDescription = navigationItem.id
+			}
 			userActivity.contentAttributeSet = attributeSet
 
 			if let serverURL = portainerStore.serverURL,
@@ -80,8 +89,10 @@ extension ContainerDetailsView {
 					ContainerNavigationItem.CodingKeys.id.stringValue
 				]
 			} catch {
-				errorHandler(error)
+				logger.error("Failed to set payload: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			}
+
+//			userActivity.becomeCurrent()
 		}
 
 		@MainActor @discardableResult

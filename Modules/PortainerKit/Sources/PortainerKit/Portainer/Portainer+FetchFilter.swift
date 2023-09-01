@@ -11,7 +11,7 @@ import Foundation
 // MARK: - Portainer+FetchFilters
 
 public extension Portainer {
-	struct FetchFilters: Codable {
+	struct FetchFilters: Codable, Sendable {
 		public let id: [Container.ID]?
 		public let name: [String]?
 		public let label: [String]?

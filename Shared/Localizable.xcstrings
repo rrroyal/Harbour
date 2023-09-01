@@ -76,7 +76,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If enabled (and possible), parameters will be resolved by their name, instead of their ID."
+            "value" : "If enabled, parameters will be resolved by their name, instead of their ID."
           }
         }
       }
@@ -96,7 +96,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If enabled (and possible), parameters will be resolved offline, keeping their initial (when selected) state."
+            "value" : "If enabled, parameters will be resolved offline, keeping their initial (when selected) state."
           }
         }
       }
@@ -357,7 +357,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See the status of selected container right on your Home Screen :)"
+            "value" : "See the status of selected container right on your Home screen :)"
           }
         }
       }
@@ -695,6 +695,66 @@
         }
       }
     },
+    "FeaturesView.Feature1.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage state, inspect details or check logs right on your phone."
+          }
+        }
+      }
+    },
+    "FeaturesView.Feature1.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Control In Your Pocket"
+          }
+        }
+      }
+    },
+    "FeaturesView.Feature2.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start and stop stacks, or filter containers by their parent stack."
+          }
+        }
+      }
+    },
+    "FeaturesView.Feature2.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stacks Management"
+          }
+        }
+      }
+    },
+    "FeaturesView.Feature3.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stay informed about container status with widgets on your Home screen."
+          }
+        }
+      }
+    },
+    "FeaturesView.Feature3.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home Screen Widgets"
+          }
+        }
+      }
+    },
     "FeaturesView.Headline AppName:%@" : {
       "localizations" : {
         "en" : {
@@ -805,6 +865,16 @@
         }
       }
     },
+    "Indicators.Error" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error!"
+          }
+        }
+      }
+    },
     "IntentContainer.Preview.Name" : {
       "localizations" : {
         "en" : {
@@ -851,6 +921,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endpoint"
+          }
+        }
+      }
+    },
+    "Keychain.KeychainError.DecodingFailed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decoding Failed"
+          }
+        }
+      }
+    },
+    "Keychain.KeychainError.EncodingFailed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encoding Failed"
           }
         }
       }
@@ -1571,28 +1661,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stacks"
-          }
-        }
-      }
-    },
-    "UserActivity.ContainerDetails.Description Name:%@" : {
-      "comment" : "Description for ContainerDetails user activity",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "See the details of the \"%@\" container."
-          }
-        }
-      }
-    },
-    "UserActivity.ContainerDetails.Title Name:%@" : {
-      "comment" : "Title for ContainerDetails user activity",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@"
           }
         }
       }

@@ -25,15 +25,21 @@ struct FeaturesView: View {
 			Spacer()
 
 			VStack(spacing: 20) {
-				FeatureCell(headline: "FeaturesView.Feature1.Title",
-							subheadline: "FeaturesView.Feature1.Description",
-							icon: "ipad.and.iphone")
-//				FeatureCell(headline: "LandingView.Feature2.Title",
-//							subheadline: "LandingView.Feature2.Description",
-//							icon: "questionmark")
-//				FeatureCell(headline: "LandingView.Feature3.Title",
-//							subheadline: "LandingView.Feature3.Description",
-//							icon: "questionmark")
+				FeatureCell(
+					headline: "FeaturesView.Feature1.Title",
+					subheadline: "FeaturesView.Feature1.Description",
+					icon: "command"
+				)
+				FeatureCell(
+					headline: "FeaturesView.Feature2.Title",
+					subheadline: "FeaturesView.Feature2.Description",
+					icon: SFSymbol.stack
+				)
+				FeatureCell(
+					headline: "FeaturesView.Feature3.Title",
+					subheadline: "FeaturesView.Feature3.Description",
+					icon: "sparkles.square.filled.on.square"
+				)
 			}
 
 			Spacer()
@@ -52,8 +58,8 @@ struct FeaturesView: View {
 
 extension FeaturesView {
 	struct FeatureCell: View {
-		let headline: String
-		let subheadline: String
+		let headline: LocalizedStringKey
+		let subheadline: LocalizedStringKey
 		let icon: String
 
 		let imageWidth: Double = 50
@@ -84,7 +90,6 @@ extension FeaturesView {
 
 // MARK: - Previews
 
-/*
 #Preview("FeaturesView") {
 		FeaturesView(continueAction: { })
 			.previewDisplayName("FeaturesView")
@@ -96,4 +101,3 @@ extension FeaturesView {
 		.padding()
 		.previewDisplayName("FeatureCell")
 }
-*/

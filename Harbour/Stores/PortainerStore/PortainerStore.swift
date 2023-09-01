@@ -53,7 +53,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	public private(set) var containersTask: Task<[Container], Error>?
 
 	/// Is `PortainerStore` setup?
-	@MainActor @Published
+	@Published
 	private(set) var isSetup = false
 
 	/// Currently selected endpoint's ID
@@ -86,13 +86,6 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 		if let (url, token) = getStoredCredentials() {
 			self.setupTask = Task { @MainActor in
 				try? await setup(url: url, token: token, saveToken: false, _refresh: false)
-			}
-
-			Task { @MainActor in
-				if let storedContainers = await loadStoredContainers(),
-				   !self.containers.contains(where: { !$0._isStored }) {
-					self.containers = storedContainers
-				}
 			}
 		} else {
 			Task { @MainActor in
@@ -132,7 +125,7 @@ public extension PortainerStore {
 				do {
 					try keychain.setString(_token, for: url, itemDescription: Keychain.tokenItemDescription)
 				} catch {
-					logger.error("Unable to save token to Keychain: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+					logger.error("Unable to save token to Keychain: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 				}
 			}
 
@@ -461,6 +454,7 @@ extension PortainerStore {
 				let containers = try await fetchContainers()
 				self.containers = containers
 				storeContainers(containers)
+
 				return containers
 			} catch {
 				if error.isCancellationError { return self.containers }
@@ -521,10 +515,18 @@ private extension PortainerStore {
 
 // MARK: - PortainerStore+Persistence
 
-private extension PortainerStore {
+extension PortainerStore {
+	@MainActor
+	func loadStoredContainersIfNeeded() {
+		if let storedContainers = loadStoredContainers(),
+		   !self.containers.contains(where: { !$0._isStored }) {
+			self.containers = storedContainers
+		}
+	}
+
 	/// Loads authorization token for saved server if available.
 	/// - Returns: Credentials for Portainer
-	func getStoredCredentials() -> (url: URL, token: String)? {
+	private func getStoredCredentials() -> (url: URL, token: String)? {
 		logger.debug("Looking for credentials... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			guard let selectedServer = preferences.selectedServer,
@@ -537,21 +539,21 @@ private extension PortainerStore {
 			logger.debug("Got token for URL: \"\(selectedServerURL.absoluteString, privacy: .sensitive(mask: .hash))\" [\(String._debugInfo(), privacy: .public)]")
 			return (selectedServerURL, token)
 		} catch {
-			logger.warning("Failed to load token: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.warning("Failed to load token: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			return nil
 		}
 	}
 
 	/// Loads stored selected endpoint if available.
 	/// - Returns: `Endpoint` if anything is stored, `nil` otherwise.
-	func getStoredEndpoint() -> Endpoint? {
+	private func getStoredEndpoint() -> Endpoint? {
 		guard let storedEndpoint = preferences.selectedEndpoint else { return nil }
 		return Endpoint(id: storedEndpoint.id, name: storedEndpoint.name)
 	}
 
 	/// Stores containers to SwiftData.
 	/// - Parameter containers: Containers to store
-	func storeContainers(_ containers: [Container]) {
+	private func storeContainers(_ containers: [Container]) {
 		logger.debug("Storing \(containers.count, privacy: .public) containers... [\(String._debugInfo(), privacy: .public)]")
 
 		Task { @MainActor in
@@ -573,7 +575,7 @@ private extension PortainerStore {
 
 				logger.debug("Stored \(containers.count, privacy: .public) containers. [\(String._debugInfo(), privacy: .public)]")
 			} catch {
-				logger.error("Failed to store containers: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+				logger.error("Failed to store containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			}
 		}
 	}
@@ -581,7 +583,7 @@ private extension PortainerStore {
 	/// Fetches stored containers and returns them.
 	/// - Returns: Mapped [Container] from SwiftData.
 	@MainActor
-	func loadStoredContainers() async -> [Container]? {
+	private func loadStoredContainers() -> [Container]? {
 		logger.debug("Loading stored containers... [\(String._debugInfo(), privacy: .public)]")
 
 		do {
@@ -596,7 +598,7 @@ private extension PortainerStore {
 
 			return items.map { .init(storedContainer: $0) }
 		} catch {
-			logger.error("Failed to load stored containers: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Failed to load stored containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 			return nil
 		}
 	}

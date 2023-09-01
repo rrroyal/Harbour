@@ -11,12 +11,10 @@ import CommonFoundation
 import Foundation
 import PortainerKit
 import UserNotifications
-import WidgetKit
 
 // MARK: - AppState+scheduleBackgroundRefresh
 
 extension AppState {
-	@available(iOS 17, *)
 	func scheduleBackgroundRefresh() {
 		guard Preferences.shared.enableBackgroundRefresh else {
 			logger.info("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String._debugInfo(), privacy: .public)]")
@@ -34,7 +32,7 @@ extension AppState {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
 			// swiftlint:disable:next line_length
-			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
 	}
 }
@@ -80,7 +78,7 @@ extension AppState {
 			let portainerStore = PortainerStore(urlSessionConfiguration: .intents)
 			await portainerStore.setupTask?.value
 
-			let oldContainers = await portainerStore.containers
+			let oldContainers = portainerStore.containers
 				.map { Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status) }
 
 			let newContainersTask = portainerStore.refreshContainers()
@@ -89,7 +87,7 @@ extension AppState {
 
 			try await handleContainersUpdate(from: oldContainers, to: newContainers)
 		} catch {
-			loggerBackground.error("Error handling background refresh: \(error.localizedDescription, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			loggerBackground.error("Error handling background refresh: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
 		}
 	}
 

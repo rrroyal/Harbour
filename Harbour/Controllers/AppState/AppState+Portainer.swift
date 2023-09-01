@@ -8,7 +8,6 @@
 
 import CommonFoundation
 import Foundation
-import WidgetKit
 
 extension AppState {
 	@MainActor
@@ -26,8 +25,6 @@ extension AppState {
 				errorHandler?(error, String._debugInfo())
 				throw error
 			}
-
-			WidgetCenter.shared.reloadAllTimelines()
 		}
 	}
 }

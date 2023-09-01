@@ -10,7 +10,7 @@ import Foundation
 import PortainerKit
 
 extension ContainerDetails {
-	var displayName: Container.Name? {
+	var displayName: String? {
 		name.starts(with: "/") ? String(name.dropFirst()) : name
 	}
 }
