@@ -140,7 +140,6 @@ public extension PortainerStore {
 
 	/// Switches server to provided `serverURL`.
 	/// - Parameter serverURL: Server URL to switch to
-	@MainActor
 	func switchServer(to serverURL: URL) async throws {
 		logger.notice("Switching to \"\(serverURL.absoluteString, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
 
@@ -149,7 +148,7 @@ public extension PortainerStore {
 		do {
 			let token = try keychain.getString(for: serverURL)
 
-			reset()
+//			reset()
 
 			try await setup(url: serverURL, token: token, saveToken: false)
 
@@ -487,24 +486,26 @@ private extension PortainerStore {
 
 private extension PortainerStore {
 	func onSelectedEndpointChange(_ selectedEndpoint: Endpoint?) {
-		guard let selectedEndpoint else {
-			preferences.selectedEndpoint = nil
-			return
-		}
 		Task { @MainActor in
+			guard let selectedEndpoint else {
+				preferences.selectedEndpoint = nil
+				return
+			}
 			preferences.selectedEndpoint = StoredEndpoint(id: selectedEndpoint.id, name: selectedEndpoint.name)
 		}
 	}
 
 	func onEndpointsChange(_ endpoints: [Endpoint]) {
-		if endpoints.isEmpty {
-			containers = []
-			selectedEndpoint = nil
-			storeContainers([])
-		} else if endpoints.count == 1 {
-			selectedEndpoint = endpoints.first
-		} else {
-			selectedEndpoint = endpoints.first(where: { $0.id == preferences.selectedEndpoint?.id })
+		Task { @MainActor in
+			if endpoints.isEmpty {
+				containers = []
+				selectedEndpoint = nil
+				storeContainers([])
+			} else if endpoints.count == 1 {
+				selectedEndpoint = endpoints.first
+			} else {
+				selectedEndpoint = endpoints.first(where: { $0.id == preferences.selectedEndpoint?.id })
+			}
 		}
 	}
 

@@ -8,6 +8,11 @@
 	<string>__TIMESTAMP__</string>
 	<key>MainBundleIdentifier</key>
 	<string>__MAIN_BUNDLE_IDENTIFIER__</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>

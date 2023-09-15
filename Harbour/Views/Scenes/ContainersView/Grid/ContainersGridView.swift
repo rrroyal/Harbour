@@ -16,7 +16,16 @@ struct ContainersGridView: View {
 	@Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
-	private let cellMinimumSize: Double = 100
+	private var cellMinimumSize: Double {
+		switch horizontalSizeClass {
+		case .compact:
+			100
+		case .regular:
+			120
+		default:
+			100
+		}
+	}
 	private let cellSpacing: Double = 8
 
 	let containers: [Container]

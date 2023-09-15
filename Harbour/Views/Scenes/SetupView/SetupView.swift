@@ -32,15 +32,18 @@ struct SetupView: View {
 
 	@ViewBuilder
 	private var urlTextField: some View {
-		TextField(urlPlaceholder, text: $viewModel.url, onEditingChanged: { finished in
-			viewModel.onURLTextFieldEditingChanged(finished)
-		})
+		TextField(urlPlaceholder, text: $viewModel.url) { _ in
+			viewModel.cancelLogin()
+		}
 		.textFieldStyle(.rounded(fontDesign: .monospaced, backgroundColor: textFieldBackgroundColor))
 		.keyboardType(.URL)
 		.submitLabel(.next)
 		.disableAutocorrection(true)
 		.autocapitalization(.none)
 		.focused($focusedField, equals: .url)
+		.onChange(of: viewModel.url) {
+			viewModel.cancelLogin()
+		}
 		.onSubmit {
 			viewModel.onURLTextFieldSubmit()
 			focusedField = .token
@@ -57,11 +60,16 @@ struct SetupView: View {
 			.disableAutocorrection(true)
 			.autocapitalization(.none)
 			.focused($focusedField, equals: .token)
+			.onChange(of: viewModel.token) {
+				viewModel.cancelLogin()
+			}
 			.onSubmit {
 				Task {
 					do {
-						try await viewModel.onTokenTextFieldSubmit()
-						dismiss()
+						let success = try await viewModel.onTokenTextFieldSubmit()
+						if success {
+							dismiss()
+						}
 					} catch {
 						errorHandler(error)
 					}
@@ -74,8 +82,10 @@ struct SetupView: View {
 		Button {
 			Task {
 				do {
-					try await viewModel.onContinueButtonPress()
-					dismiss()
+					let success = try await viewModel.onContinueButtonPress()
+					if success {
+						dismiss()
+					}
 				} catch {
 					errorHandler(error)
 				}

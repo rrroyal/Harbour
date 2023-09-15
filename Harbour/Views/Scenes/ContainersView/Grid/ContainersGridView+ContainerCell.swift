@@ -25,14 +25,13 @@ extension ContainersGridView {
 			HStack {
 				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
 					.font(.footnote.weight(.medium))
-					.foregroundColor(container._isStored ? ContainerState?.none.color : container.state.color)
-//					.foregroundStyle(container.state != nil ? .secondary : .tertiary)
+					.foregroundStyle(container._isStored ? ContainerState?.none.color : container.state.color)
 					.transition(.opacity)
 
 				Spacer()
 
 				Circle()
-					.fill(container._isStored ? ContainerState?.none.color : container.state.color)
+					.foregroundStyle(container._isStored ? ContainerState?.none.color : container.state.color)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 			}
@@ -73,6 +72,7 @@ extension ContainersGridView {
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
+			.animation(.easeInOut, value: container._isStored)
 		}
 	}
 }
@@ -87,6 +87,7 @@ extension ContainersGridView.ContainerCell: Identifiable {
 
 extension ContainersGridView.ContainerCell: Equatable {
 	static func == (lhs: ContainersGridView.ContainerCell, rhs: ContainersGridView.ContainerCell) -> Bool {
+		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&
 		lhs.container.displayName == rhs.container.displayName &&

@@ -48,7 +48,6 @@ struct ContentView: View {
 			}
 		}
 
-		#if ENABLE_PREVIEW_FEATURES
 		ToolbarItem(placement: .navigation) {
 			NavigationLink {
 				StacksView {
@@ -59,7 +58,6 @@ struct ContentView: View {
 //					.symbolVariant(portainerStore.isSetup ? .none : .slash)
 			}
 		}
-		#endif
 	}
 
 	@ViewBuilder

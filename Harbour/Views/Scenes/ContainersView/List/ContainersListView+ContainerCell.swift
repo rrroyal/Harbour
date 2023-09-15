@@ -63,7 +63,7 @@ extension ContainersListView {
 				Spacer()
 
 				Circle()
-					.fill(container._isStored ? ContainerState?.none.color : container.state.color)
+					.foregroundStyle(container._isStored ? ContainerState?.none.color : container.state.color)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
@@ -73,6 +73,7 @@ extension ContainersListView {
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
+			.animation(.easeInOut, value: container._isStored)
 		}
 	}
 }
@@ -87,6 +88,7 @@ extension ContainersListView.ContainerCell: Identifiable {
 
 extension ContainersListView.ContainerCell: Equatable {
 	static func == (lhs: ContainersListView.ContainerCell, rhs: ContainersListView.ContainerCell) -> Bool {
+		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&
 		lhs.container.displayName == rhs.container.displayName &&

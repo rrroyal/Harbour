@@ -74,9 +74,8 @@ public final class Portainer {
 	///   - urlSessionConfiguration: Configuration of underlying URLSession
 	@Sendable
 	public init(serverURL: URL? = nil, token: String? = nil, urlSessionConfiguration: URLSessionConfiguration = .default) {
-		urlSessionConfiguration.httpAdditionalHeaders = [
-			"Accept-Encoding": "gzip, deflate"
-		]
+		urlSessionConfiguration.httpAdditionalHeaders = urlSessionConfiguration.httpAdditionalHeaders ?? [:]
+		urlSessionConfiguration.httpAdditionalHeaders?["Accept-Encoding"] = urlSessionConfiguration.httpAdditionalHeaders?["Accept-Encoding"] ?? "gzip, deflate"
 
 		let delegate = Portainer.URLSessionDelegate()
 		self.session = URLSession(configuration: urlSessionConfiguration, delegate: delegate, delegateQueue: nil)

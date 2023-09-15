@@ -19,7 +19,9 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 		NavigationSplitView {
 			content()
 		} detail: {
-			placeholderContent()
+			NavigationStack(path: $sceneDelegate.navigationPath) {
+				placeholderContent()
+			}
 		}
 		.navigationSplitViewColumnWidth(min: 100, ideal: 200, max: .infinity)
 	}

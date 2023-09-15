@@ -16,11 +16,11 @@ import SwiftUI
 extension SetupView {
 	@Observable
 	final class ViewModel: @unchecked Sendable {
-		private let portainerStore: PortainerStore = .shared
+		private let portainerStore = PortainerStore()
 		private let errorTimeoutInterval: TimeInterval = 3
 
 		private(set) var isLoading = false
-		private(set) var loginTask: Task<Void, Error>?
+		private(set) var loginTask: Task<Bool, Error>?
 		private(set) var errorTimer: Timer?
 
 		var url: String = ""
@@ -34,14 +34,6 @@ extension SetupView {
 
 		init() { }
 
-		func onViewDisappear() {
-			errorTimer?.invalidate()
-		}
-
-		func onURLTextFieldEditingChanged(_ finished: Bool) {
-			loginTask?.cancel()
-		}
-
 		func onURLTextFieldSubmit() {
 			if !url.isReallyEmpty && !url.starts(with: "http") {
 				Haptics.generateIfEnabled(.selectionChanged)
@@ -49,40 +41,53 @@ extension SetupView {
 			}
 		}
 
-		func onTokenTextFieldSubmit() async throws {
-			guard canSubmit else { return }
+		@discardableResult
+		func onTokenTextFieldSubmit() async throws -> Bool {
+			guard canSubmit else { return false }
 
 			Haptics.generateIfEnabled(.light)
-			try await login()
+			return try await login()
 		}
 
-		func onContinueButtonPress() async throws {
+		@discardableResult
+		func onContinueButtonPress() async throws -> Bool {
 			Haptics.generateIfEnabled(.light)
-			try await login()
+			return try await login()
 		}
 
-		func login() async throws {
+		func cancelLogin() {
 			loginTask?.cancel()
+			isLoading = false
+		}
+
+		@discardableResult
+		func login() async throws -> Bool {
+			cancelLogin()
 			loginTask = Task { @MainActor in
 				isLoading = true
-
-				let previousURL = portainerStore.serverURL
+				defer { isLoading = false }
 
 				do {
 					guard let url = URL(string: url) else {
 						throw GenericError.invalidURL
 					}
 
-					try await portainerStore.setup(url: url, token: token)
+					let token = self.token
 
-					isLoading = false
+					try await portainerStore.setup(url: url, token: token, saveToken: false, _refresh: true)
+
 					Haptics.generateIfEnabled(.success)
 
 					buttonColor = .green
 					buttonLabel = String(localized: "SetupView.LoginButton.Success")
-				} catch {
-					isLoading = false
 
+					Task.detached {
+						guard !Task.isCancelled else { return }
+						try? await PortainerStore.shared.setup(url: url, token: token, saveToken: true, _refresh: true)
+					}
+
+					return true
+				} catch {
 					buttonColor = .red
 					buttonLabel = error.localizedDescription
 
@@ -90,24 +95,23 @@ extension SetupView {
 
 					Task {
 						try? await Task.sleep(for: .seconds(errorTimeoutInterval))
+						guard !Task.isCancelled else { return }
 						await MainActor.run {
 							self.buttonLabel = nil
 							self.buttonColor = nil
 						}
 					}
 
-					Task.detached {
-						if let previousURL {
-							try await self.portainerStore.setup(url: previousURL, token: nil)
-						}
-					}
-
 					throw error
 				}
 			}
-			try await loginTask?.value
+			return try await loginTask?.value ?? false
 		}
 
+		func onViewDisappear() {
+			errorTimer?.invalidate()
+			loginTask?.cancel()
+		}
 	}
 }
 
