@@ -32,7 +32,7 @@ struct SettingsView: View {
 			.toolbar {
 				#if targetEnvironment(macCatalyst)
 				ToolbarItem(placement: .cancellationAction) {
-					Button("Generic.Close") {
+					CloseButton {
 //						Haptics.generateIfEnabled(.sheetPresentation)
 						dismiss()
 					}

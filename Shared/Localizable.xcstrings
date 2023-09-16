@@ -765,6 +765,16 @@
         }
       }
     },
+    "Generic.Close" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        }
+      }
+    },
     "Generic.Copy" : {
       "localizations" : {
         "en" : {
