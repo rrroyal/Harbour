@@ -369,7 +369,8 @@ extension PortainerStore {
 	func setStackStatus(stackID: Stack.ID, started: Bool) async throws -> Stack {
 		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with ID: \(stackID)... [\(String._debugInfo(), privacy: .public)]")
 		do {
-			let stack = try await portainer.setStackStatus(stackID: stackID, started: started)
+			let (portainer, endpoint) = try getPortainerAndEndpoint()
+			let stack = try await portainer.setStackStatus(endpointID: endpoint.id, stackID: stackID, started: started)
 			logger.debug("\(started ? "Started" : "Stopped", privacy: .public) stack with ID: \(stackID) [\(String._debugInfo(), privacy: .public)]")
 			return stack
 		} catch {
