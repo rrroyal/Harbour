@@ -29,6 +29,16 @@ extension ContentView {
 
 		var searchText = ""
 		var searchTokens: [SearchToken] = []
+//		var selectedStack: Stack? {
+//			didSet {
+//				if let selectedStack {
+//					searchTokens = [.stack(selectedStack)]
+//				} else {
+//					searchTokens = []
+//				}
+//			}
+//		}
+		var isSearchActive = false
 		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
 		@MainActor
@@ -114,8 +124,12 @@ extension ContentView {
 		}
 
 		@MainActor
-		func onStackTapped(_ stack: Stack) {
-			searchTokens = [.stack(stack)]
+		func onStackTapped(_ stack: Stack?) {
+			if let stack {
+				searchTokens = [.stack(stack)]
+			} else {
+				searchTokens = []
+			}
 		}
 	}
 }

@@ -1,4 +1,4 @@
-<img src="https://harbour.shameful.xyz/media/favicon.png" width="196" alt="Harbour App Icon">
+<img src="Shared/Assets.xcassets/AppIcon.appiconset/AppIcon.png" width="196" alt="Harbour App Icon">
 
 # Harbour
 Docker/Portainer management app for iOS.

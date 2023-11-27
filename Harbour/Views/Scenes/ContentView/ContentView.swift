@@ -24,6 +24,11 @@ struct ContentView: View {
 
 	@State private var viewModel = ViewModel()
 
+	private let supportedKeyShortcuts: Set<KeyEquivalent> = [
+		"f",	// ⌘F - Search
+		"r"		// ⌘R - Refresh
+	]
+
 	@ViewBuilder
 	private var titleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
@@ -42,21 +47,21 @@ struct ContentView: View {
 		ToolbarItem(placement: .primaryAction) {
 			Button {
 //				Haptics.generateIfEnabled(.sheetPresentation)
-				sceneDelegate.isSettingsSheetPresented.toggle()
+				sceneDelegate.isSettingsSheetPresented = true
 			} label: {
 				Label("ContentView.NavigationButton.Settings", systemImage: SFSymbol.settings)
 			}
+			.keyboardShortcut(",", modifiers: .command)
 		}
 
 		ToolbarItem(placement: .navigation) {
-			NavigationLink {
-				StacksView {
-					viewModel.onStackTapped($0)
-				}
+			Button {
+				sceneDelegate.isStacksSheetPresented = true
 			} label: {
 				Label("ContentView.NavigationButton.Stacks", systemImage: SFSymbol.stack)
 //					.symbolVariant(portainerStore.isSetup ? .none : .slash)
 			}
+			.keyboardShortcut("s", modifiers: .command)
 		}
 	}
 
@@ -90,7 +95,8 @@ struct ContentView: View {
 		.searchable(
 			text: $viewModel.searchText,
 			tokens: $viewModel.searchTokens,
-			suggestedTokens: .constant(viewModel.suggestedSearchTokens)
+			suggestedTokens: .constant(viewModel.suggestedSearchTokens),
+			isPresented: $viewModel.isSearchActive
 		) { token in
 			Label(token.title, systemImage: token.icon)
 		}
@@ -126,6 +132,10 @@ struct ContentView: View {
 			SettingsView()
 				.indicatorOverlay(model: sceneDelegate.indicators)
 		}
+		.sheet(isPresented: $sceneDelegate.isStacksSheetPresented) {
+			let selectedStackBinding = Binding<Stack?>(get: { nil }, set: { viewModel.onStackTapped($0) })
+			StacksView(selectedStack: selectedStackBinding)
+		}
 		.sheet(isPresented: $viewModel.isLandingSheetPresented) {
 			viewModel.onLandingDismissed()
 		} content: {
@@ -136,11 +146,33 @@ struct ContentView: View {
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.showIndicator, sceneDelegate.showIndicator)
 		.environmentObject(sceneDelegate.indicators)
-		.onOpenURL { url in
-			sceneDelegate.onOpenURL(url)
-		}
-		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) { userActivity in
-			sceneDelegate.onContinueContainerDetailsActivity(userActivity)
+		.onOpenURL(perform: sceneDelegate.onOpenURL)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneDelegate.onContinueContainerDetailsActivity)
+		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
+	}
+}
+
+// MARK: - ContentView+Actions
+
+private extension ContentView {
+	func onKeyPress(_ keyPress: KeyPress) -> KeyPress.Result {
+		switch keyPress.key {
+		// ⌘F
+		case "f" where keyPress.modifiers.contains(.command):
+			viewModel.isSearchActive = true
+			return .handled
+		// ⌘R
+		case "r" where keyPress.modifiers.contains(.command):
+			Task {
+				do {
+					try await viewModel.refresh()
+				} catch {
+					errorHandler(error)
+				}
+			}
+			return .handled
+		default:
+			return .ignored
 		}
 	}
 }

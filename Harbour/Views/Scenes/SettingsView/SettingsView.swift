@@ -12,12 +12,7 @@ import SwiftUI
 struct SettingsView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
-	@State private var viewModel: ViewModel
-
-	init() {
-		let viewModel = ViewModel()
-		self._viewModel = .init(wrappedValue: viewModel)
-	}
+	@State private var viewModel = ViewModel()
 
 	var body: some View {
 		NavigationStack {
@@ -40,9 +35,13 @@ struct SettingsView: View {
 				#endif
 			}
 		}
+		.sheet(isPresented: $viewModel.isNegraSheetPresented) {
+			Text(verbatim: "🐕")
+		}
 	}
 }
 
 #Preview {
 	SettingsView()
+		.environmentObject(Preferences.shared)
 }

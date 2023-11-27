@@ -74,17 +74,20 @@ extension SetupView {
 
 					let token = self.token
 
-					try await portainerStore.setup(url: url, token: token, saveToken: false, _refresh: true)
+					try await portainerStore.setup(url: url, token: token, saveToken: false, checkAuth: true)
+
+					Task.detached {
+						guard !Task.isCancelled else { return }
+						try? await PortainerStore.shared.setup(url: url, token: token, saveToken: true, checkAuth: false)
+						PortainerStore.shared.refresh()
+					}
 
 					Haptics.generateIfEnabled(.success)
 
 					buttonColor = .green
 					buttonLabel = String(localized: "SetupView.LoginButton.Success")
 
-					Task.detached {
-						guard !Task.isCancelled else { return }
-						try? await PortainerStore.shared.setup(url: url, token: token, saveToken: true, _refresh: true)
-					}
+					try? await Task.sleep(for: .seconds(2))
 
 					return true
 				} catch {

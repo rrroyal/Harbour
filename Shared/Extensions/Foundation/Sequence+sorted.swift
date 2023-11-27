@@ -9,14 +9,6 @@
 import Foundation
 
 extension Sequence {
-	func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>) -> [Element] {
-		sorted {
-			$0[keyPath: keyPath] < $1[keyPath: keyPath]
-		}
-	}
-}
-
-extension Sequence {
 	func sorted<T: Comparable>(
 		by keyPath: KeyPath<Element, T>,
 		using comparator: (T, T) -> Bool = (<)

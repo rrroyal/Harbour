@@ -3,7 +3,7 @@
     {
       "identity" : "commonkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rrroyal/CommonKit.git",
+      "location" : "https://github.com/rrroyal/CommonKit",
       "state" : {
         "branch" : "main",
         "revision" : "c2378a006798dcbc32593548527956df41166eba"
@@ -12,16 +12,16 @@
     {
       "identity" : "indicatorskit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rrroyal/IndicatorsKit.git",
+      "location" : "https://github.com/rrroyal/IndicatorsKit",
       "state" : {
         "branch" : "main",
-        "revision" : "c9966850d33436f842958905fc732759fa7da074"
+        "revision" : "278ba1e2a2ab2ba4fbf113ca1b951690de1eda50"
       }
     },
     {
       "identity" : "keychainkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rrroyal/KeychainKit.git",
+      "location" : "https://github.com/rrroyal/KeychainKit",
       "state" : {
         "branch" : "main",
         "revision" : "79b079730cef0ee5b5a22031ad932962aca51bd1"

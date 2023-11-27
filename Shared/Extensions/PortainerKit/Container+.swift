@@ -23,20 +23,32 @@ extension Container {
 
 extension Container {
 	var stack: String? {
-		labels?.first(where: { $0.key == Portainer.Label.stack })?.value
+		labels?.first(where: { $0.key.lowercased() == Portainer.Label.stack.lowercased() })?.value
+	}
+
+	var associationID: String? {
+		labels?.first(where: { $0.key.lowercased() == Portainer.Label.associationID.lowercased() })?.value
 	}
 }
 
-// MARK: - Container+_exitCode
+// MARK: - Container+exitCode
 
 extension Container {
-	var _exitCode: Int? {
+	var exitCode: Int? {
 		guard let status else { return nil }
 
 		let regex = #/Exited \((\d*)\).*/#
 		guard let firstMatch = status.firstMatch(of: regex) else { return nil }
 		let str = firstMatch.output.1
 		return Int(str)
+	}
+}
+
+// MARK: - Container+isSame
+
+extension Container {
+	func isSame(as other: Self) -> Bool {
+		self.id == other.id || (self.associationID != nil && self.associationID == other.associationID) || (self.image == other.image && self.names == other.names)
 	}
 }
 

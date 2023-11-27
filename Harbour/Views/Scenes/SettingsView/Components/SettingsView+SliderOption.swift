@@ -12,8 +12,8 @@ import SwiftUI
 internal extension SettingsView {
 	struct SliderOption: View {
 		@Environment(\.isEnabled) private var isEnabled: Bool
-		let label: LocalizedStringResource
-		let description: LocalizedStringResource?
+		let label: LocalizedStringKey
+		let description: LocalizedStringKey?
 		let iconSymbolName: String
 		@Binding var value: Double
 		let range: ClosedRange<Double>

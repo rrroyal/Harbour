@@ -53,7 +53,7 @@ private extension SettingsView.PortainerSection {
 
 				Button {
 //					Haptics.generateIfEnabled(.sheetPresentation)
-					viewModel.isSetupSheetPresented.toggle()
+					viewModel.isSetupSheetPresented = true
 				} label: {
 					Label("SettingsView.Portainer.EndpointsMenu.Add", systemImage: SFSymbol.plus)
 				}

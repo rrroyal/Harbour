@@ -96,8 +96,11 @@ extension FeaturesView {
 }
 
 #Preview("FeatureCell") {
-	FeaturesView.FeatureCell(headline: "Headline", subheadline: "Subheadline", icon: "globe")
-		.previewLayout(.sizeThatFits)
-		.padding()
-		.previewDisplayName("FeatureCell")
+	FeaturesView.FeatureCell(
+		headline: "FeaturesView.Feature1.Title",
+		subheadline: "FeaturesView.Feature1.Description",
+		icon: "globe"
+	)
+	.previewLayout(.sizeThatFits)
+	.padding()
 }

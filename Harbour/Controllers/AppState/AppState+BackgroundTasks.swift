@@ -42,19 +42,25 @@ extension AppState {
 private extension AppState {
 	struct AppRefreshContainerChange: Hashable, Codable {
 		enum ChangeType: Int, Hashable, Codable {
-			case inserted = 0
-			case removed
-			case changed
+			case removed = -1
+			case changed = 0
+			case inserted = 1
 		}
 
 		static let dictionaryKey = "changes"
 
 		let id: Container.ID
-		let name: String
+		let name: String?
 		let oldState: ContainerState?
 		let newState: ContainerState?
 		let status: String?
+		let image: String?
+		let associationID: String?
 		let changeType: ChangeType
+
+		func isSame(as other: Self) -> Bool {
+			self.id == other.id || (self.associationID != nil && self.associationID == other.associationID) || (self.image == other.image && self.name == other.name)
+		}
 	}
 }
 
@@ -77,13 +83,14 @@ extension AppState {
 
 			let portainerStore = PortainerStore(urlSessionConfiguration: .intents)
 			await portainerStore.setupTask?.value
+			await portainerStore.loadStoredContainersIfNeeded()
 
 			let oldContainers = portainerStore.containers
-				.map { Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status) }
+				.map { Container(id: $0.id, names: $0.names, image: $0.image, labels: $0.labels, state: $0.state, status: $0.status) }
 
 			let newContainersTask = portainerStore.refreshContainers()
 			let newContainers = try await newContainersTask.value
-				.map { Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status) }
+				.map { Container(id: $0.id, names: $0.names, image: $0.image, labels: $0.labels, state: $0.state, status: $0.status) }
 
 			try await handleContainersUpdate(from: oldContainers, to: newContainers)
 		} catch {
@@ -98,73 +105,104 @@ extension AppState {
 	@Sendable
 	nonisolated func handleContainersUpdate(from oldContainers: [Container], to newContainers: [Container]) async throws {
 		let differences: [AppRefreshContainerChange] = newContainers
-			.difference(from: oldContainers) { $0.id == $1.id }
+			.difference(from: oldContainers) { $0.isSame(as: $1) }
 			.inferringMoves()
 			.map {
 				switch $0 {
 				case .insert(_, let container, _):
-					return .init(id: container.id,
-								 name: container.displayName ?? container.id,
-								 oldState: nil,
-								 newState: container.state,
-								 status: container.status,
-								 changeType: .inserted)
+					return .init(
+						id: container.id,
+						name: "D:I:" + (container.displayName ?? ""),
+						oldState: nil,
+						newState: container.state,
+						status: container.status,
+						image: container.image,
+						associationID: container.associationID,
+						changeType: .inserted
+					)
 				case .remove(_, let container, _):
 					let oldContainer = oldContainers.first(where: { $0.id == container.id })
-					return .init(id: container.id,
-								 name: container.displayName ?? container.id,
-								 oldState: oldContainer?.state,
-								 newState: nil,
-								 status: nil,
-								 changeType: .removed)
+					return .init(
+						id: container.id,
+						name: "D:R:" + (container.displayName ?? ""),
+						oldState: oldContainer?.state,
+						newState: nil,
+						status: nil,
+						image: container.image,
+						associationID: container.associationID,
+						changeType: .removed
+					)
 				}
 			}
 
-		let changes: [AppRefreshContainerChange] = oldContainers
-			.map { oldContainer in
-				let newContainer = newContainers.first(where: { $0.id == oldContainer.id })
-				return .init(id: oldContainer.id,
-							 name: oldContainer.displayName ?? oldContainer.id,
-							 oldState: oldContainer.state,
-							 newState: newContainer?.state,
-							 status: newContainer?.status,
-							 changeType: newContainer != nil ? .changed : .removed)
-			}
-
-		let changesAndDifferences = (changes + differences)
-			.filter { $0.oldState != $0.newState }
-			.sorted { $0.id < $1.id }
-
-//		#if DEBUG
-//		let noticeContent = changesAndDifferences
-//			.map {
-//				"\t- \($0.id) (\($0.name)) [\(String(describing: $0.changeType))]:\n" +
-//				"\t\t- \($0.oldState.description) -> \($0.newState.description) (\($0.status ?? "none"))"
+//		let changesOld: [AppRefreshContainerChange] = oldContainers
+//			.map { oldContainer in
+//				let newContainer = newContainers.first(where: { $0.isSame(as: oldContainer) })
+//				return .init(
+//					id: oldContainer.id,
+//					name: "O:" + (oldContainer.displayName ?? ""),
+//					oldState: oldContainer.state,
+//					newState: newContainer?.state,
+//					status: newContainer?.status,
+//					image: newContainer?.image ?? oldContainer.image,
+//					associationID: newContainer?.associationID ?? oldContainer.associationID,
+//					changeType: newContainer != nil ? .changed : .removed
+//				)
 //			}
-//			.joined(separator: "\n")
-//		logger.notice("Changes:\n\(noticeContent, privacy: .public)\n")
-//		#endif
 //
-//		#if DEBUG
-//		Task {
-//			let debugNotification = UNMutableNotificationContent()
-//			debugNotification.title = "🚧 Background refresh (oh my god it happened)"
-//			debugNotification.body = String(describing: changesAndDifferences)
-//			debugNotification.threadIdentifier = "debug"
-//			let debugNotificationIdentifier = "Debug.BackgroundRefreshHappening"
-//			let debugNotificationRequest = UNNotificationRequest(identifier: debugNotificationIdentifier, content: debugNotification, trigger: nil)
-//			try? await UNUserNotificationCenter.current().add(debugNotificationRequest)
-//		}
-//		#endif
+//		let changesNew: [AppRefreshContainerChange] = newContainers
+//			.compactMap { newContainer in
+//				let oldContainer = oldContainers.first(where: { $0.isSame(as: newContainer) })
+//				return .init(
+//					id: newContainer.id,
+//					name: "N:" + (newContainer.displayName ?? ""),
+//					oldState: oldContainer?.state,
+//					newState: newContainer.state,
+//					status: newContainer.status,
+//					image: newContainer.image,
+//					associationID: newContainer.associationID ?? oldContainer?.associationID,
+//					changeType: oldContainer != nil ? .changed : .removed
+//				)
+//			}
 
-		loggerBackground.notice("Differences: \(changesAndDifferences, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+//		let changesAndDifferences: [AppRefreshContainerChange] = (changes + differences)
+//			.filter { $0.oldState != $0.newState }
+//			.sorted { $0.changeType.rawValue > $1.changeType.rawValue } // Place `removed` at the end
+//			.reduce(into: []) { result, change in
+//				if change.changeType == .removed {
+//					if !result.contains(where: { $0.isSame(as: change) }) {
+//						result.append(change)
+//					}
+//				} else {
+//					result.append(change)
+//				}
+//			}
+//			.sorted { ($0.name ?? "", $0.id) < ($1.name ?? "", $1.id) }
 
-		if changesAndDifferences.isEmpty {
+//		let differencesSorted = (changesOld + changesNew)
+//			.filter { $0.oldState != $0.newState }
+//			.sorted { ($0.name ?? "", $0.id) < ($1.name ?? "", $1.id) }
+
+		let differencesSorted: [AppRefreshContainerChange] = differences
+			.filter { $0.oldState != $0.newState }
+			.sorted { ($0.changeType.rawValue, $0.name ?? "") > ($1.changeType.rawValue, $1.name ?? "") } // Place `removed` at the end
+//			.reduce(into: []) { result, change in
+//				if change.changeType == .removed && result.contains(where: { $0.isSame(as: change) }) {
+//					return
+//				}
+//
+//				result.append(change)
+//			}
+//			.sorted { ($0.name ?? "", $0.id) < ($1.name ?? "", $1.id) }
+
+		loggerBackground.notice("Differences: \(differencesSorted, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+
+		if differencesSorted.isEmpty {
 			return
 		}
 
-		if let notificationContent = notificationContent(for: changesAndDifferences) {
-			let notificationIdentifier = "\(HarbourNotificationIdentifier.containersChanged).\(changesAndDifferences.description.hashValue)"
+		if let notificationContent = notificationContent(for: differencesSorted) {
+			let notificationIdentifier = "\(HarbourNotificationIdentifier.containersChanged).\(differencesSorted.description.hashValue)"
 			let notificationRequest = UNNotificationRequest(identifier: notificationIdentifier, content: notificationContent, trigger: nil)
 			try await UNUserNotificationCenter.current().add(notificationRequest)
 		} else {
@@ -201,33 +239,36 @@ extension AppState {
 				let newStateReadable = change.newState.description.localizedCapitalized
 
 				if change.changeType == .inserted {
-					title = String(localized: "Notification.ContainersChanged.Single.Inserted.Title Name:\(change.name)")
+					title = String(localized: "Notification.ContainersChanged.Single.Inserted.Title Name:\(change.name ?? change.id)")
 					body = String(localized: "Notification.ContainersChanged.Single.Inserted.Body Status:\(change.status ?? newStateReadable)")
 				} else {
-					title = String(localized: "Notification.ContainersChanged.Single.Changed.Title Name:\(change.name)")
+					title = String(localized: "Notification.ContainersChanged.Single.Changed.Title Name:\(change.name ?? change.id)")
 					body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\(oldStateReadable) New:\(change.status ?? newStateReadable)")
 				}
 			case .removed:
 				emoji = String(localized: "Notification.ContainersChanged.Single.Removed.Emoji")
-				title = String(localized: "Notification.ContainersChanged.Single.Removed.Title Name:\(change.name)")
+				title = String(localized: "Notification.ContainersChanged.Single.Removed.Title Name:\(change.name ?? change.id)")
 				body = String(localized: "Notification.ContainersChanged.Single.Removed.Body Change:\(change.oldState.description.localizedCapitalized)")
 			}
-		case 2...4:
+//		case 2...4:
+		case 2...:
 			let namesJoined = changes
-				.map(\.name)
+				.map { $0.name ?? $0.id }
 				.formatted(.list(type: .and))
 
 			let changesJoined = changes
-				.map { "\($0.name): \($0.status ?? $0.newState.description.localizedCapitalized)" }
+				.map { "\($0.name ?? $0.id): \($0.status ?? $0.newState.description.localizedCapitalized)" }
 				.joined(separator: "\n")
 
 			emoji = String(localized: "Notification.ContainersChanged.MultipleReadable.Emoji")
 			title = String(localized: "Notification.ContainersChanged.MultipleReadable.Title Names:\(namesJoined)")
 			body = changesJoined
-		case 5...:
-			emoji = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Emoji")
-			title = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Title ChangeCount:\(changes.count)")
-			body = changes.map(\.name).formatted(.list(type: .and))
+//		case 5...:
+//			emoji = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Emoji")
+//			title = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Title ChangeCount:\(changes.count)")
+//			body = changes
+//				.map { $0.name ?? $0.id }
+//				.formatted(.list(type: .and))
 		default:
 			return nil
 		}

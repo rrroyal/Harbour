@@ -11,28 +11,26 @@ import SwiftUI
 
 extension Indicator {
 	init(error: Error) {
-		let style = Indicator.Style(headlineColor: Color.red, iconColor: Color.red)
-
-		let headline: String
-		let subheadline: String
+		let title: String
+		let subtitle: String
 		let expandedText: String?
 
 		if let error = error as? LocalizedError, let failureReason = error.failureReason {
-			headline = error.localizedDescription
-			subheadline = failureReason
+			title = error.localizedDescription
+			subtitle = failureReason
 			expandedText = error.recoverySuggestion ?? failureReason
 		} else {
-			headline = String(localized: "Indicators.Error")
-			subheadline = error.localizedDescription
+			title = String(localized: "Indicators.Error")
+			subtitle = error.localizedDescription
 			expandedText = nil
 		}
 
 		self.init(
 			id: String(describing: error).hashValue.description,
-			headline: headline.localizedCapitalized,
-			subheadline: subheadline.localizedCapitalized,
+			title: title.localizedCapitalized,
+			subtitle: subtitle.localizedCapitalized,
 			expandedText: expandedText,
-			style: style
+			style: .error
 		)
 	}
 }

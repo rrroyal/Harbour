@@ -16,6 +16,7 @@ final class SceneDelegate: NSObject, ObservableObject {
 	let indicators = Indicators()
 
 	@Published var isSettingsSheetPresented = false
+	@Published var isStacksSheetPresented = false
 	@Published var navigationPath = NavigationPath()
 
 	// MARK: Data State

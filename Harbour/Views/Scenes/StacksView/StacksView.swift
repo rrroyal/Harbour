@@ -17,39 +17,49 @@ struct StacksView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
-
-	let stackTappedAction: (Stack) -> Void
+	@Binding var selectedStack: Stack?
 
 	var body: some View {
-		List {
-			if let stacks = viewModel.stacks {
-				ForEach(stacks) { stack in
-					let isLoading = viewModel.loadingStacks.contains(stack.id)
-					let isStackOn = stack.status == .active
-					let containers = portainerStore.containers.filter { $0.stack == stack.name }
+		NavigationView {
+			List {
+				if let stacks = viewModel.stacks {
+					ForEach(stacks) { stack in
+						let isLoading = viewModel.loadingStacks.contains(stack.id)
+						let isStackOn = stack.status == .active
+						let containers = portainerStore.containers.filter { $0.stack == stack.name }
 
-					StackCell(stack, containers: containers, isLoading: isLoading) {
-						stackTappedAction(stack)
-						dismiss()
-					} toggleAction: {
-						setStackState(stack, started: !isStackOn)
+						StackCell(stack, containers: containers, isLoading: isLoading) {
+							selectedStack = stack
+							dismiss()
+						} toggleAction: {
+							setStackState(stack, started: !isStackOn)
+						}
+						.transition(.opacity)
 					}
-					.transition(.opacity)
 				}
 			}
-		}
-		.searchable(text: $viewModel.searchText)
-		.overlay(viewModel.viewState.backgroundView)
-		.overlay {
-			if viewModel.shouldShowEmptyPlaceholderView {
-				if !viewModel.searchText.isEmpty {
-					ContentUnavailableView.search(text: viewModel.searchText)
-				} else {
-					ContentUnavailableView("StacksView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
+			.searchable(text: $viewModel.searchText)
+			.overlay(viewModel.viewState.backgroundView)
+			.overlay {
+				if viewModel.shouldShowEmptyPlaceholderView {
+					if !viewModel.searchText.isEmpty {
+						ContentUnavailableView.search(text: viewModel.searchText)
+					} else {
+						ContentUnavailableView("StacksView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
+					}
 				}
 			}
+			.navigationTitle("StacksView.Title")
+			.toolbar {
+				#if targetEnvironment(macCatalyst)
+				ToolbarItem(placement: .cancellationAction) {
+					CloseButton {
+						dismiss()
+					}
+				}
+				#endif
+			}
 		}
-		.navigationTitle("StacksView.Title")
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState.id)
 		.animation(.easeInOut, value: viewModel.stacks)
@@ -120,7 +130,7 @@ private extension StacksView {
 				return stack.status.color
 			} else {
 				let hasFailedContainers = containers.contains {
-					if let exitCode = $0._exitCode {
+					if let exitCode = $0.exitCode {
 						return exitCode != 0
 					}
 					return false
@@ -215,6 +225,6 @@ private extension StacksView {
 // MARK: - Previews
 
 #Preview("StacksView") {
-	StacksView(stackTappedAction: { _ in })
+	StacksView(selectedStack: .constant(nil))
 		.environmentObject(PortainerStore.shared)
 }

@@ -56,6 +56,7 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 extension ContainerStatusProvider {
 	struct Entry: TimelineEntry {
 		enum Result {
+			case unconfigured
 			case containers([Container])
 			case error(Error)
 			case unreachable
@@ -134,30 +135,44 @@ extension ContainerStatusProvider {
 private extension ContainerStatusProvider {
 	func getEntry(for configuration: Intent, in context: Context) async -> Entry {
 		let now = Date.now
-		let containers = configuration.containers
+		let configurationContainers = configuration.containers
 
-		guard let endpoint = configuration.endpoint, !containers.isEmpty else {
-			let entry = Entry(date: now, configuration: configuration, result: .containers([]))
-			return entry
+		guard let endpoint = configuration.endpoint else {
+			logger.notice("Configuration invalid, returning empty containers!")
+			return Entry(date: now, configuration: configuration, result: .unconfigured)
 		}
+
+		guard let configurationContainers, !configurationContainers.isEmpty else {
+			logger.notice("No configuration containers, returning empty containers!")
+			return Entry(date: now, configuration: configuration, result: .containers([]))
+		}
+
+		let (configurationIDs, configurationNames, configurationAssociationIDs, configurationImageIDs) = (
+			configurationContainers.map(\.id),
+			configurationContainers.map(\.name),
+			configurationContainers.map(\.associationID),
+			configurationContainers.map(\.imageID)
+		)
 
 		do {
 			try portainerStore.setupIfNeeded()
 
-			let filters = Portainer.FetchFilters(
-				id: configuration.resolveByName ? nil : containers.map(\._id),
-				name: configuration.resolveByName ? containers.compactMap(\.name) : nil
-			)
-			let _containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
+//			let filters = Portainer.FetchFilters(
+//				id: configuration.resolveByName ? nil : containers.map(\._id),
+//				name: configuration.resolveByName ? containers.compactMap(\.name) : nil
+//			)
+			let filters: Portainer.FetchFilters? = nil
+			let containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
+				.filter {
+					// swiftlint:disable:next line_length
+					configurationIDs.contains($0.id) || configurationNames.contains($0.displayName) || configurationAssociationIDs.contains($0.associationID) || configurationImageIDs.contains($0.imageID)
+				}
+				.map { Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status) }
 
-			// Remake containers to make the payload smaller
-			let containers = _containers.map {
-				Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status)
-			}
-
+			logger.info("Returning \(String(describing: containers), privacy: .sensitive)")
 			return Entry(date: now, configuration: configuration, result: .containers(containers))
 		} catch {
-			logger.error("Error getting containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Error getting entry: \(error, privacy: .public)")
 
 			if error is URLError {
 				return Entry(date: now, configuration: configuration, result: .unreachable)

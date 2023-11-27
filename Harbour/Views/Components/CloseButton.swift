@@ -32,6 +32,7 @@ struct CloseButton: View {
 			 */
 			Text("Generic.Close")
 		}
+		.keyboardShortcut(.cancelAction)
 	}
 }
 

@@ -7,7 +7,10 @@
 //
 
 import AppIntents
+import OSLog
 import PortainerKit
+
+private let logger = Logger(.intents(ContainerStatusIntent.self))
 
 // MARK: - ContainerStatusIntent
 
@@ -20,7 +23,6 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 			Summary("Get container status on \(\.$endpoint)") {
 				\.$containers
 				\.$resolveByName
-				\.$resolveOffline
 			}
 		} otherwise: {
 			Summary("Get container status on \(\.$endpoint)")
@@ -36,14 +38,14 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 	@Parameter(
 		title: "AppIntents.Parameter.Containers.Title",
-		default: [],
+		default: nil,
 		size: [
 			.systemSmall: 1,
 			.systemMedium: 2,
 			.systemLarge: 4
 		]
 	)
-	var containers: [IntentContainer]
+	var containers: [IntentContainer]?
 
 	@Parameter(
 		title: "AppIntents.Parameter.ResolveByName.Title",
@@ -52,42 +54,51 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	)
 	var resolveByName: Bool
 
-	@Parameter(
-		title: "AppIntents.Parameter.ResolveOffline.Title",
-		description: "AppIntents.Parameter.ResolveOffline.Description",
-		default: false
-	)
-	var resolveOffline: Bool
+//	@Parameter(
+//		title: "AppIntents.Parameter.ResolveOffline.Title",
+//		description: "AppIntents.Parameter.ResolveOffline.Description",
+//		default: false
+//	)
+//	var resolveOffline: Bool
 
 	init() {
 		self.endpoint = nil
-		self.containers = []
+		self.containers = nil
 	}
 
-	init(endpoint: IntentEndpoint? = nil, containers: [IntentContainer]) {
+	init(endpoint: IntentEndpoint? = nil, containers: [IntentContainer]?) {
 		self.endpoint = endpoint
 		self.containers = containers
 	}
 
 	@MainActor
 	func perform() async throws -> some ReturnsValue<IntentContainer> {
-		// TODO: Fetch new container status here
-//		guard let endpoint else { throw $containers.needsValueError()}
-		guard !containers.isEmpty else { throw $containers.needsValueError() }
+		do {
+			// TODO: Fetch new container status here
+			guard endpoint != nil else {
+				throw $endpoint.needsValueError()
+			}
+			guard let containers, !containers.isEmpty else {
+				throw $containers.needsValueError()
+			}
 
-		// swiftlint:disable switch_case_alignment
-		let intentContainer: IntentContainer = switch containers.count {
-		case 0:
-			throw Error.noContainers
-		case 1:
-			// swiftlint:disable:next force_unwrapping
-			containers.first!
-		default:
-			try await $containers.requestDisambiguation(among: containers)
+			// swiftlint:disable switch_case_alignment
+			let intentContainer: IntentContainer = switch containers.count {
+			case 0:
+				throw Error.noContainers
+			case 1:
+				// swiftlint:disable:next force_unwrapping
+				containers.first!
+			default:
+				try await $containers.requestDisambiguation(among: containers)
+			}
+			// swiftlint:enable switch_case_alignment
+
+			return .result(value: intentContainer)
+		} catch {
+			logger.error("Error performing: \(error, privacy: .public)")
+			throw error
 		}
-		// swiftlint:enable switch_case_alignment
-
-		return .result(value: intentContainer)
 	}
 }
 

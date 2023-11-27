@@ -18,10 +18,12 @@ extension SettingsView {
 		var body: some View {
 			Section("SettingsView.General.Title") {
 				// Enable Background Refresh
-				ToggleOption("SettingsView.General.EnableBackgroundRefresh.Title",
-							 description: "SettingsView.General.EnableBackgroundRefresh.Description",
-							 iconSymbolName: SFSymbol.reload,
-							 isOn: $preferences.enableBackgroundRefresh)
+				ToggleOption(
+					"SettingsView.General.EnableBackgroundRefresh.Title",
+					description: "SettingsView.General.EnableBackgroundRefresh.Description",
+					iconSymbolName: SFSymbol.reload,
+					isOn: $preferences.enableBackgroundRefresh
+				)
 //				.symbolVariant(preferences.enableBackgroundRefresh ? .none : .slash)
 			}
 		}

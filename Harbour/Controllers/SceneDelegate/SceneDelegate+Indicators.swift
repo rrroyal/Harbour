@@ -24,21 +24,21 @@ extension SceneDelegate {
 			indicator = Indicator(error: error)
 		case .copied:
 			let style: Indicator.Style = .default
-			indicator = Indicator(id: presentedIndicator.id,
-								  icon: SFSymbol.copy,
-								  headline: String(localized: "Indicators.Copied"),
-								  style: style)
+			indicator = Indicator(
+				id: presentedIndicator.id,
+				icon: SFSymbol.copy,
+				title: String(localized: "Indicators.Copied"),
+				style: style
+			)
 		case .containerActionExecuted(let containerID, let containerName, let action):
-			let style: Indicator.Style = .init(subheadlineColor: action.color,
-											   subheadlineStyle: .primary,
-											   iconColor: action.color,
-											   iconStyle: .primary,
-											   iconVariants: .fill)
-			indicator = .init(id: presentedIndicator.id,
-							  icon: action.icon,
-							  headline: containerName ?? containerID,
-							  subheadline: action.title,
-							  style: style)
+			let style = Indicator.Style(iconStyle: .primary, tintColor: action.color)
+			indicator = .init(
+				id: presentedIndicator.id,
+				icon: action.icon,
+				title: containerName ?? containerID,
+				subtitle: action.title,
+				style: style
+			)
 		}
 
 		Task { @MainActor in
@@ -57,8 +57,8 @@ extension SceneDelegate {
 
 		var id: String {
 			switch self {
-			case .containerActionExecuted(let containerID, _, let action):
-				"ContainerActionExecutedIndicator.\(containerID).\(action.rawValue)"
+			case .containerActionExecuted(let containerID, _, _):
+				"ContainerActionExecutedIndicator.\(containerID)"
 			case .copied:
 				"CopiedIndicator.\(UUID().uuidString)"
 			case .error(let error):

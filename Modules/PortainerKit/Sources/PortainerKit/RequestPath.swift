@@ -45,6 +45,8 @@ internal enum RequestPath {
 	/// Starts a stopped Stack OR Stops a stopped Stack.
 	case stackStatus(stackID: Stack.ID, started: Bool)
 
+	case systemStatus
+
 }
 
 // MARK: - RequestPath+path
@@ -70,6 +72,8 @@ extension RequestPath {
 			"/api/stacks/\(stackID)"
 		case .stackStatus(let stackID, let started):
 			"/api/stacks/\(stackID)/\(started ? "start" : "stop")"
+		case .systemStatus:
+			"/api/system/status"
 		}
 	}
 }

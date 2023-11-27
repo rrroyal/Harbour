@@ -12,12 +12,14 @@
 		0000115E2A321AA800A08C52 /* Error+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000115D2A321AA800A08C52 /* Error+Equatable.swift */; };
 		0007055B2AB5270E007BC696 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0007055A2AB5270E007BC696 /* CloseButton.swift */; };
 		000BEDDB2AB4A2F20092D2A3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */; };
-		0028286A2A86987500ABD7EA /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 002828692A86987500ABD7EA /* CommonFoundation */; };
-		0028286C2A86987500ABD7EA /* CommonHaptics in Frameworks */ = {isa = PBXBuildFile; productRef = 0028286B2A86987500ABD7EA /* CommonHaptics */; };
-		0028286E2A86987500ABD7EA /* CommonOSLog in Frameworks */ = {isa = PBXBuildFile; productRef = 0028286D2A86987500ABD7EA /* CommonOSLog */; };
-		002828702A86987500ABD7EA /* CommonSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0028286F2A86987500ABD7EA /* CommonSwiftUI */; };
-		002828742A86989200ABD7EA /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 002828732A86989200ABD7EA /* CommonFoundation */; };
-		002828762A86989500ABD7EA /* CommonOSLog in Frameworks */ = {isa = PBXBuildFile; productRef = 002828752A86989500ABD7EA /* CommonOSLog */; };
+		00242F492B2C911300636A5B /* IndicatorsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F482B2C911300636A5B /* IndicatorsKit */; };
+		00242F4E2B2C917F00636A5B /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F4D2B2C917F00636A5B /* KeychainKit */; };
+		00242F512B2C919F00636A5B /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F502B2C919F00636A5B /* KeychainKit */; };
+		00242F552B2C91B500636A5B /* CommonOSLog in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F542B2C91B500636A5B /* CommonOSLog */; };
+		00242F592B2C91C000636A5B /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F582B2C91C000636A5B /* CommonFoundation */; };
+		00242F5D2B2C91DB00636A5B /* CommonHaptics in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F5C2B2C91DB00636A5B /* CommonHaptics */; };
+		00242F612B2C91ED00636A5B /* CommonOSLog in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F602B2C91ED00636A5B /* CommonOSLog */; };
+		00242F652B2C91FA00636A5B /* CommonFoundation in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F642B2C91FA00636A5B /* CommonFoundation */; };
 		002828842A869EDA00ABD7EA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 002828832A869EDA00ABD7EA /* Localizable.xcstrings */; };
 		0028288B2A86F46200ABD7EA /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 002828832A869EDA00ABD7EA /* Localizable.xcstrings */; };
 		002D0EEB2A81B53900A914E5 /* CopyButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 002D0EEA2A81B53900A914E5 /* CopyButton.swift */; };
@@ -65,6 +67,8 @@
 		00C969D12A449F91002AC8D4 /* AppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C969D02A449F91002AC8D4 /* AppDelegate+NSApplicationDelegate.swift */; };
 		00C969DC2A44A0C0002AC8D4 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C969DB2A44A0C0002AC8D4 /* Color+.swift */; };
 		00C969E12A44A0CD002AC8D4 /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00C969DB2A44A0C0002AC8D4 /* Color+.swift */; };
+		00D004E92AC1B3BA00434E9D /* Portainer.Label+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D004E82AC1B3BA00434E9D /* Portainer.Label+.swift */; };
+		00D004EA2AC1B3BA00434E9D /* Portainer.Label+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00D004E82AC1B3BA00434E9D /* Portainer.Label+.swift */; };
 		00DEB0762A89186F00D253BF /* ContainerState+isRunning.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00DEB0752A89186F00D253BF /* ContainerState+isRunning.swift */; };
 		00EAFE0F2A354FEB00BC69D6 /* Collection+safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EAFE0E2A354FEB00BC69D6 /* Collection+safe.swift */; };
 		00EAFE112A354FEB00BC69D6 /* Collection+safe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EAFE0E2A354FEB00BC69D6 /* Collection+safe.swift */; };
@@ -94,7 +98,6 @@
 		00F558402A34FF64002939A2 /* HarbourBackgroundTaskIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7C772EC28E8705500143E8C /* HarbourBackgroundTaskIdentifier.swift */; };
 		00F558412A34FF64002939A2 /* HarbourUserActivityIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7779B2D28E75F8F00AD8569 /* HarbourUserActivityIdentifier.swift */; };
 		00F558542A34FFD2002939A2 /* URLSessionConfiguration+intents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7811170297572CB000CB98A /* URLSessionConfiguration+intents.swift */; };
-		00F558592A34FFE1002939A2 /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00F558582A34FFE1002939A2 /* KeychainKit */; };
 		00F6E0FF2A28D05F0018758C /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00F6E0FE2A28D05F0018758C /* PortainerKit */; };
 		00F96BF62A5AC46C00F5CE22 /* IntentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABD72A34F1570074E940 /* IntentContainer.swift */; };
 		00F96BF72A5AC46E00F5CE22 /* ContainerStatusIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABA32A34ED2A0074E940 /* ContainerStatusIntent.swift */; };
@@ -183,8 +186,6 @@
 		E7D6E62C2884771400C79732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E62B2884771400C79732 /* Assets.xcassets */; };
 		E7D6E62F2884771400C79732 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7D6E62E2884771400C79732 /* Preview Assets.xcassets */; };
 		E7DA4CB82977329000DBA55C /* HarbourApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D6E6272884771200C79732 /* HarbourApp.swift */; };
-		E7DA4CE7297738A500DBA55C /* IndicatorsKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7DA4CE6297738A500DBA55C /* IndicatorsKit */; };
-		E7DA4CEA297738AF00DBA55C /* KeychainKit in Frameworks */ = {isa = PBXBuildFile; productRef = E7DA4CE9297738AF00DBA55C /* KeychainKit */; };
 		E7EB776528EA094800295CA2 /* DebugView+LogsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7EB776428EA094800295CA2 /* DebugView+LogsView.swift */; };
 /* End PBXBuildFile section */
 
@@ -261,6 +262,7 @@
 		00C969C82A449F4C002AC8D4 /* AppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
 		00C969D02A449F91002AC8D4 /* AppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
 		00C969DB2A44A0C0002AC8D4 /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
+		00D004E82AC1B3BA00434E9D /* Portainer.Label+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Portainer.Label+.swift"; sourceTree = "<group>"; };
 		00DEB0752A89186F00D253BF /* ContainerState+isRunning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerState+isRunning.swift"; sourceTree = "<group>"; };
 		00EAFE0E2A354FEB00BC69D6 /* Collection+safe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+safe.swift"; sourceTree = "<group>"; };
 		00EB4B872A51EC3400FB9A01 /* ContainerDetailsView+DetailsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+DetailsListView.swift"; sourceTree = "<group>"; };
@@ -367,12 +369,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				002828762A86989500ABD7EA /* CommonOSLog in Frameworks */,
+				00242F592B2C91C000636A5B /* CommonFoundation in Frameworks */,
+				00242F552B2C91B500636A5B /* CommonOSLog in Frameworks */,
 				00A4ABB22A34EDF30074E940 /* PortainerKit in Frameworks */,
 				00A4AB892A34ECB60074E940 /* SwiftUI.framework in Frameworks */,
 				00A4AB882A34ECB60074E940 /* WidgetKit.framework in Frameworks */,
-				00F558592A34FFE1002939A2 /* KeychainKit in Frameworks */,
-				002828742A86989200ABD7EA /* CommonFoundation in Frameworks */,
+				00242F512B2C919F00636A5B /* KeychainKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,13 +382,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00242F652B2C91FA00636A5B /* CommonFoundation in Frameworks */,
+				00242F612B2C91ED00636A5B /* CommonOSLog in Frameworks */,
 				00F6E0FF2A28D05F0018758C /* PortainerKit in Frameworks */,
-				002828702A86987500ABD7EA /* CommonSwiftUI in Frameworks */,
-				E7DA4CEA297738AF00DBA55C /* KeychainKit in Frameworks */,
-				E7DA4CE7297738A500DBA55C /* IndicatorsKit in Frameworks */,
-				0028286C2A86987500ABD7EA /* CommonHaptics in Frameworks */,
-				0028286E2A86987500ABD7EA /* CommonOSLog in Frameworks */,
-				0028286A2A86987500ABD7EA /* CommonFoundation in Frameworks */,
+				00242F4E2B2C917F00636A5B /* KeychainKit in Frameworks */,
+				00242F5D2B2C91DB00636A5B /* CommonHaptics in Frameworks */,
+				00242F492B2C911300636A5B /* IndicatorsKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -644,7 +645,6 @@
 		E72AA7CE28EB91CE00C33EA3 /* PortainerKit */ = {
 			isa = PBXGroup;
 			children = (
-				00C726122A2F464000243886 /* PortainerError+LocalizedError.swift */,
 				E7811174297572F4000CB98A /* Container+.swift */,
 				0078D06B2A881D24009C4374 /* Container+init.swift */,
 				E7811177297572F4000CB98A /* ContainerDetails+displayName.swift */,
@@ -652,6 +652,8 @@
 				E713179528E5B99600DB82AF /* Endpoint+.swift */,
 				00F96BFF2A5ACCDA00F5CE22 /* ExecuteAction+AppEnum.swift */,
 				E78C661428E9D64A0033D0E4 /* ExecuteAction+UI.swift */,
+				00D004E82AC1B3BA00434E9D /* Portainer.Label+.swift */,
+				00C726122A2F464000243886 /* PortainerError+LocalizedError.swift */,
 				00AA829E2A2FEF440064B870 /* Stack.Status+UI.swift */,
 				00AA82A82A2FF0EE0064B870 /* Stack+.swift */,
 			);
@@ -1068,9 +1070,9 @@
 			name = HarbourWidgets;
 			packageProductDependencies = (
 				00A4ABB12A34EDF30074E940 /* PortainerKit */,
-				00F558582A34FFE1002939A2 /* KeychainKit */,
-				002828732A86989200ABD7EA /* CommonFoundation */,
-				002828752A86989500ABD7EA /* CommonOSLog */,
+				00242F502B2C919F00636A5B /* KeychainKit */,
+				00242F542B2C91B500636A5B /* CommonOSLog */,
+				00242F582B2C91C000636A5B /* CommonFoundation */,
 			);
 			productName = WidgetsExtension;
 			productReference = 00A4AB872A34ECB60074E940 /* HarbourWidgets.appex */;
@@ -1094,13 +1096,12 @@
 			);
 			name = Harbour;
 			packageProductDependencies = (
-				E7DA4CE6297738A500DBA55C /* IndicatorsKit */,
-				E7DA4CE9297738AF00DBA55C /* KeychainKit */,
 				00F6E0FE2A28D05F0018758C /* PortainerKit */,
-				002828692A86987500ABD7EA /* CommonFoundation */,
-				0028286B2A86987500ABD7EA /* CommonHaptics */,
-				0028286D2A86987500ABD7EA /* CommonOSLog */,
-				0028286F2A86987500ABD7EA /* CommonSwiftUI */,
+				00242F482B2C911300636A5B /* IndicatorsKit */,
+				00242F4D2B2C917F00636A5B /* KeychainKit */,
+				00242F5C2B2C91DB00636A5B /* CommonHaptics */,
+				00242F602B2C91ED00636A5B /* CommonOSLog */,
+				00242F642B2C91FA00636A5B /* CommonFoundation */,
 			);
 			productName = Harbour;
 			productReference = E7D6E6242884771200C79732 /* Harbour.app */;
@@ -1136,9 +1137,9 @@
 			mainGroup = E7D6E61B2884771200C79732;
 			packageReferences = (
 				E7DA4CAA2977325A00DBA55C /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
-				E7DA4CE5297738A500DBA55C /* XCRemoteSwiftPackageReference "IndicatorsKit" */,
-				E7DA4CE8297738AF00DBA55C /* XCRemoteSwiftPackageReference "KeychainKit" */,
-				002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */,
+				00242F472B2C911300636A5B /* XCRemoteSwiftPackageReference "IndicatorsKit" */,
+				00242F4C2B2C917F00636A5B /* XCRemoteSwiftPackageReference "KeychainKit" */,
+				00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */,
 			);
 			productRefGroup = E7D6E6252884771200C79732 /* Products */;
 			projectDirPath = "";
@@ -1208,6 +1209,7 @@
 				0078D0602A8819E3009C4374 /* StoredEndpoint.swift in Sources */,
 				0098F5BF2A3636FB006CB3AB /* InsetViewModifier.swift in Sources */,
 				00F558242A34FDDC002939A2 /* Preferences+Keys.swift in Sources */,
+				00D004EA2AC1B3BA00434E9D /* Portainer.Label+.swift in Sources */,
 				00F5580C2A34FDC8002939A2 /* Logger+.swift in Sources */,
 				00F96BF62A5AC46C00F5CE22 /* IntentContainer.swift in Sources */,
 				00A810042AA222ED0091832A /* Keychain.KeychainError+LocalizedError.swift in Sources */,
@@ -1302,6 +1304,7 @@
 				E7ACE73E288C421C000E6FF6 /* SettingsView+OtherSection.swift in Sources */,
 				E7811182297572F4000CB98A /* ContainerDetails+displayName.swift in Sources */,
 				E7DA4CB82977329000DBA55C /* HarbourApp.swift in Sources */,
+				00D004E92AC1B3BA00434E9D /* Portainer.Label+.swift in Sources */,
 				00C969C92A449F4C002AC8D4 /* AppDelegate+UIApplicationDelegate.swift in Sources */,
 				00687F862A6E9D340099BFE5 /* Haptics.HapticStyle+.swift in Sources */,
 				E72BB35028DE26BD007991D1 /* GenericError.swift in Sources */,
@@ -1699,9 +1702,25 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */ = {
+		00242F472B2C911300636A5B /* XCRemoteSwiftPackageReference "IndicatorsKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rrroyal/CommonKit.git";
+			repositoryURL = "https://github.com/rrroyal/IndicatorsKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		00242F4C2B2C917F00636A5B /* XCRemoteSwiftPackageReference "KeychainKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rrroyal/KeychainKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rrroyal/CommonKit";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -1715,54 +1734,48 @@
 				kind = branch;
 			};
 		};
-		E7DA4CE5297738A500DBA55C /* XCRemoteSwiftPackageReference "IndicatorsKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rrroyal/IndicatorsKit.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		E7DA4CE8297738AF00DBA55C /* XCRemoteSwiftPackageReference "KeychainKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rrroyal/KeychainKit.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		002828692A86987500ABD7EA /* CommonFoundation */ = {
+		00242F482B2C911300636A5B /* IndicatorsKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F472B2C911300636A5B /* XCRemoteSwiftPackageReference "IndicatorsKit" */;
+			productName = IndicatorsKit;
+		};
+		00242F4D2B2C917F00636A5B /* KeychainKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00242F4C2B2C917F00636A5B /* XCRemoteSwiftPackageReference "KeychainKit" */;
+			productName = KeychainKit;
+		};
+		00242F502B2C919F00636A5B /* KeychainKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00242F4C2B2C917F00636A5B /* XCRemoteSwiftPackageReference "KeychainKit" */;
+			productName = KeychainKit;
+		};
+		00242F542B2C91B500636A5B /* CommonOSLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
+			productName = CommonOSLog;
+		};
+		00242F582B2C91C000636A5B /* CommonFoundation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
 			productName = CommonFoundation;
 		};
-		0028286B2A86987500ABD7EA /* CommonHaptics */ = {
+		00242F5C2B2C91DB00636A5B /* CommonHaptics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
 			productName = CommonHaptics;
 		};
-		0028286D2A86987500ABD7EA /* CommonOSLog */ = {
+		00242F602B2C91ED00636A5B /* CommonOSLog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
 			productName = CommonOSLog;
 		};
-		0028286F2A86987500ABD7EA /* CommonSwiftUI */ = {
+		00242F642B2C91FA00636A5B /* CommonFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */;
-			productName = CommonSwiftUI;
-		};
-		002828732A86989200ABD7EA /* CommonFoundation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
 			productName = CommonFoundation;
-		};
-		002828752A86989500ABD7EA /* CommonOSLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 002828662A86986100ABD7EA /* XCRemoteSwiftPackageReference "CommonKit" */;
-			productName = CommonOSLog;
 		};
 		0068CE032A3933F200EBD8AA /* SwiftLintPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1778,24 +1791,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = PortainerKit;
 		};
-		00F558582A34FFE1002939A2 /* KeychainKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E7DA4CE8297738AF00DBA55C /* XCRemoteSwiftPackageReference "KeychainKit" */;
-			productName = KeychainKit;
-		};
 		00F6E0FE2A28D05F0018758C /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PortainerKit;
-		};
-		E7DA4CE6297738A500DBA55C /* IndicatorsKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E7DA4CE5297738A500DBA55C /* XCRemoteSwiftPackageReference "IndicatorsKit" */;
-			productName = IndicatorsKit;
-		};
-		E7DA4CE9297738AF00DBA55C /* KeychainKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E7DA4CE8297738AF00DBA55C /* XCRemoteSwiftPackageReference "KeychainKit" */;
-			productName = KeychainKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

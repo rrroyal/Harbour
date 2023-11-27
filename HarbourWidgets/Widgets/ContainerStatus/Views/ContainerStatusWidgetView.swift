@@ -32,7 +32,42 @@ struct ContainerStatusWidgetView: View {
 			}
 		case .error(let error):
 			ErrorView(error: error)
+		case .unconfigured:
+			SelectContainerView(entry: entry)
 		}
+
+//		VStack(spacing: 2) {
+//			switch entry.result {
+//			case .containers(let array):
+//				Group {
+//					Text(entry.configuration.endpoint?.id.description ?? "nil")
+//					Text(entry.configuration.containers?.map(\._id).sorted().joined(separator: ", ") ?? "nil")
+//					if case .containers(let containers) = entry.result {
+//						Text(containers.map(\.id).sorted().joined(separator: ", "))
+//					} else {
+//						Text(verbatim: "nil")
+//					}
+//				}
+//			case .error(let error):
+//				Text(error.localizedDescription)
+//					.foregroundStyle(.red)
+//			case .unreachable:
+//				Text(verbatim: "Unreachable")
+//					.foregroundStyle(.red)
+//			case .unconfigured:
+//				Text(verbatim: "Unconfigured")
+//			case .noContainers:
+//				Text(verbatim: "No containers")
+//			}
+//		}
+//		.font(.caption2)
+//		.fontDesign(.monospaced)
+//		.minimumScaleFactor(0.6)
+//		.multilineTextAlignment(.center)
+//		.padding(4)
+//		.containerBackground(for: .widget) {
+//			Color.widgetBackground
+//		}
 	}
 }
 
@@ -43,7 +78,7 @@ extension ContainerStatusWidgetView {
 		var entry: ContainerStatusProvider.Entry
 
 		private var intentContainer: IntentContainer? {
-			entry.configuration.containers.first
+			entry.configuration.containers?.first
 		}
 
 		private var container: Container? {
@@ -91,7 +126,7 @@ extension ContainerStatusWidgetView {
 				ForEach(0..<2, id: \.self) { index in
 					Group {
 						if let intentEndpoint = entry.configuration.endpoint,
-						   let intentContainer = entry.configuration.containers[safe: index] {
+						   let intentContainer = entry.configuration.containers?[safe: index] {
 							let container = containers?.first { $0.id == intentContainer._id }
 							ContainerStatusWidgetView.ContainerView(
 								entry: entry,
@@ -135,7 +170,7 @@ extension ContainerStatusWidgetView {
 							Group {
 								let index = (yIndex * 2) + xIndex
 								if let intentEndpoint = entry.configuration.endpoint,
-								   let intentContainer = entry.configuration.containers[safe: index] {
+								   let intentContainer = entry.configuration.containers?[safe: index] {
 									let container = containers?.first { $0.id == intentContainer._id }
 									ContainerStatusWidgetView.ContainerView(
 										entry: entry,

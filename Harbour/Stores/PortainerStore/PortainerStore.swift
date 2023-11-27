@@ -85,7 +85,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 
 		if let (url, token) = getStoredCredentials() {
 			self.setupTask = Task { @MainActor in
-				try? await setup(url: url, token: token, saveToken: false, _refresh: false)
+				try? await setup(url: url, token: token, saveToken: false, checkAuth: false)
 			}
 		} else {
 			Task { @MainActor in
@@ -104,8 +104,9 @@ public extension PortainerStore {
 	///   - url: Server URL
 	///   - token: Authorization token (if `nil`, it's searched in the keychain)
 	///   - saveToken: Should the token be saved to the keychain?
+	///   - checkAuth: Should we check authorization state?
 	@Sendable @MainActor
-	func setup(url: URL, token: String?, saveToken: Bool = true, _refresh: Bool = true) async throws {
+	func setup(url: URL, token: String?, saveToken: Bool = true, checkAuth: Bool = false) async throws {
 		logger.notice("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String._debugInfo(), privacy: .public)]")
 
 		do {
@@ -116,9 +117,11 @@ public extension PortainerStore {
 
 			preferences.selectedServer = url.absoluteString
 
-			if _refresh {
-				let refreshTask = refresh(_awaitSetup: false)
-				_ = try await refreshTask.value
+			if checkAuth {
+				logger.debug("Fetching instance status... [\(String._debugInfo(), privacy: .public)]")
+				let systemStatus = try await portainer.fetchSystemStatus()
+				// swiftlint:disable:next line_length
+				logger.debug("Instance ID: \"\(systemStatus.instanceID, privacy: .sensitive(mask: .hash))\" (\(systemStatus.version, privacy: .sensitive(mask: .hash))) [\(String._debugInfo(), privacy: .public)]")
 			}
 
 			if saveToken {
@@ -143,14 +146,16 @@ public extension PortainerStore {
 	func switchServer(to serverURL: URL) async throws {
 		logger.notice("Switching to \"\(serverURL.absoluteString, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
 
-		preferences.selectedServer = serverURL.absoluteString
-
 		do {
 			let token = try keychain.getString(for: serverURL)
 
-//			reset()
+			reset()
 
-			try await setup(url: serverURL, token: token, saveToken: false)
+			try await setup(url: serverURL, token: token, saveToken: false, checkAuth: false)
+
+			Task { @MainActor in
+				preferences.selectedServer = serverURL.absoluteString
+			}
 
 			logger.debug("Switched successfully! [\(String._debugInfo(), privacy: .public)]")
 		} catch {
@@ -172,24 +177,24 @@ public extension PortainerStore {
 		}
 	}
 
-	/// Resets `PortainerStore` state.
-	@MainActor
+	/// Resets the `PortainerStore` state.
 	func reset() {
 		logger.notice("Resetting state [\(String._debugInfo(), privacy: .public)]")
 
 		portainer.reset()
 
-		isSetup = false
+		Task { @MainActor in
+			isSetup = false
 
-		preferences.selectedEndpoint = nil
-		preferences.selectedServer = nil
+			preferences.selectedEndpoint = nil
+			preferences.selectedServer = nil
 
-		endpointsTask?.cancel()
-		endpoints = []
+			endpointsTask?.cancel()
+			endpoints = []
 
-		containersTask?.cancel()
-		containers = []
-		storeContainers([])
+			containersTask?.cancel()
+			containers = []
+		}
 	}
 
 	/// Selects the currently active endpoint.
@@ -299,11 +304,13 @@ public extension PortainerStore {
 		logger.info("Getting logs for containerID: \"\(containerID, privacy: .public)\"... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			let logs = try await portainer.fetchLogs(containerID: containerID,
-													 endpointID: endpoint.id,
-													 since: logsSince,
-													 tail: lastEntriesAmount,
-													 timestamps: includeTimestamps)
+			let logs = try await portainer.fetchLogs(
+				containerID: containerID,
+				endpointID: endpoint.id,
+				since: logsSince,
+				tail: lastEntriesAmount,
+				timestamps: includeTimestamps
+			)
 			// TODO: https://github.com/portainer/portainer/blob/develop/app/docker/helpers/logHelper/formatLogs.ts
 
 			logger.debug("Got logs for containerID: \"\(containerID, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
@@ -369,7 +376,8 @@ extension PortainerStore {
 	func setStackStatus(stackID: Stack.ID, started: Bool) async throws -> Stack {
 		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with ID: \(stackID)... [\(String._debugInfo(), privacy: .public)]")
 		do {
-			let stack = try await portainer.setStackStatus(stackID: stackID, started: started)
+			let (portainer, endpoint) = try getPortainerAndEndpoint()
+			let stack = try await portainer.setStackStatus(endpointID: endpoint.id, stackID: stackID, started: started)
 			logger.debug("\(started ? "Started" : "Stopped", privacy: .public) stack with ID: \(stackID) [\(String._debugInfo(), privacy: .public)]")
 			return stack
 		} catch {

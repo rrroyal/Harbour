@@ -46,6 +46,9 @@ extension ContainerStatusWidgetView {
 				error.localizedDescription
 			case .unreachable:
 				String(localized: "Generic.Unreachable")
+			case .unconfigured:
+				// Shouldn't ever be displayed
+				String(localized: "Generic.Unknown")
 			}
 		}
 

@@ -131,7 +131,7 @@ struct SetupView: View {
 
 				Spacer()
 
-				VStack(spacing: 24) {
+				VStack {
 					continueButton
 
 					Link(destination: howToLoginURL) {

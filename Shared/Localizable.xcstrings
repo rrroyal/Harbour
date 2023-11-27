@@ -92,6 +92,7 @@
       }
     },
     "AppIntents.Parameter.ResolveOffline.Description" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -102,6 +103,7 @@
       }
     },
     "AppIntents.Parameter.ResolveOffline.Title" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -976,6 +978,7 @@
       }
     },
     "Notification.ContainersChanged.MultipleUnreadable.Emoji" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -986,11 +989,12 @@
       }
     },
     "Notification.ContainersChanged.MultipleUnreadable.Title ChangeCount:%lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ containers changed their states."
+            "value" : "%lld containers changed their states."
           }
         }
       }
@@ -1290,7 +1294,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Response Code Unacceptable (%@)"
+            "value" : "Response Code Unacceptable (%lld)"
           }
         }
       }
@@ -1460,7 +1464,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Made with ❤️ (and ☕) by @rrroyal"
+            "value" : "Made with ❤️ (and 🐕) by @rrroyal"
           }
         }
       }

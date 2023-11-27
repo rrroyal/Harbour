@@ -19,7 +19,7 @@ extension ContainerDetailsView {
 		var body: some View {
 			// Status / State
 			Section("ContainerDetailsView.Section.State") {
-				let state = details?.status.state ?? container?.state ?? ContainerState?.none
+				let state = details?.status.state ?? ((!(container?._isStored ?? true) ? container?.state : nil) ?? ContainerState?.none)
 				let title = container?.status ?? state.description.capitalized
 				let icon = state.icon
 				LabeledWithIcon(title, icon: icon)

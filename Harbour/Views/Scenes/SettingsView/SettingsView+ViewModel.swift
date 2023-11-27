@@ -21,6 +21,7 @@ extension SettingsView {
 		private let appState: AppState = .shared
 
 		var isSetupSheetPresented = false
+		var isNegraSheetPresented = false
 		var serverURLs: [URL]
 
 		var activeURL: URL?

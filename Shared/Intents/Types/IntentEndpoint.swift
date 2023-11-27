@@ -52,36 +52,44 @@ extension IntentEndpoint {
 struct IntentEndpointQuery: EntityQuery {
 	typealias Entity = IntentEndpoint
 
-	@IntentParameterDependency<ContainerStatusIntent>(\.$resolveOffline)
-	var statusIntent
+	//	@IntentParameterDependency<ContainerStatusIntent>()
+	//	var statusIntent
 
-	private var resolveOffline: Bool {
-		statusIntent?.resolveOffline ?? false
-	}
-
-	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-		do {
-			let portainerStore = IntentPortainerStore.shared
-			try portainerStore.setupIfNeeded()
-			let endpoints = try await portainerStore.getEndpoints()
-
-			return endpoints
-				.filter { identifiers.contains($0.id) }
-				.map { Entity(endpoint: $0) }
-		} catch {
-			if resolveOffline && error is URLError {
-				return identifiers.map { .init(id: $0, name: nil) }
-			}
-
-			logger.error("\(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
-			return []
-		}
+	private var requiresOnline: Bool {
+		// Check if in Shortcut
+		false
 	}
 
 	func suggestedEntities() async throws -> [Entity] {
 		let portainerStore = IntentPortainerStore.shared
 		try portainerStore.setupIfNeeded()
 		let endpoints = try await portainerStore.getEndpoints()
-		return endpoints.map { Entity(endpoint: $0) }
+		return endpoints
+			.map { Entity(endpoint: $0) }
+			.sorted { $0.id < $1.id }
+	}
+
+	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+		do {
+			let portainerStore = IntentPortainerStore.shared
+			try portainerStore.setupIfNeeded()
+
+			let endpoints = try await portainerStore.getEndpoints()
+				.filter { identifiers.contains($0.id) }
+				.map { Entity(endpoint: $0) }
+
+			logger.info("Returning \(String(describing: endpoints), privacy: .sensitive) (live) [\(String._debugInfo(), privacy: .public)]")
+			return endpoints
+		} catch {
+			logger.error("Error getting entities: \(error, privacy: .public)")
+
+			if !requiresOnline && error is URLError {
+				let parsed = identifiers.map { Entity(id: $0, name: nil) }
+				logger.notice("Returning \(String(describing: parsed), privacy: .sensitive) (offline) [\(String._debugInfo(), privacy: .public)]")
+				return parsed
+			}
+
+			throw error
+		}
 	}
 }
