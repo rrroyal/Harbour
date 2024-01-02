@@ -8,4 +8,4 @@
 
 import Foundation
 
-protocol NavigationItem: Codable, Hashable, Identifiable { }
+protocol NavigationItem: Codable, Equatable, Hashable, Identifiable { }

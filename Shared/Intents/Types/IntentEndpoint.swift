@@ -70,6 +70,8 @@ struct IntentEndpointQuery: EntityQuery {
 	}
 
 	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+		logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
+
 		do {
 			let portainerStore = IntentPortainerStore.shared
 			try portainerStore.setupIfNeeded()

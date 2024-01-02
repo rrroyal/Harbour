@@ -16,7 +16,6 @@ extension ContainerStatusWidgetView {
 	struct ContainerView: View {
 		var entry: ContainerStatusProvider.Entry
 		var intentContainer: IntentContainer
-		var intentEndpoint: IntentEndpoint
 		var container: Container?
 
 		private let circleSize: Double = 8
@@ -28,9 +27,9 @@ extension ContainerStatusWidgetView {
 			let containerURL = HarbourURLScheme.containerDetails(
 				id: container?.id ?? intentContainer._id,
 				displayName: container?.displayName ?? intentContainer.name,
-				endpointID: intentEndpoint.id
-			).url
-			return containerURL ?? HarbourURLScheme.appURL
+				endpointID: entry.configuration.endpoint?.id
+			)
+			return containerURL.url ?? HarbourURLScheme.appURL
 		}
 
 		private var namePlaceholder: String {
@@ -75,7 +74,6 @@ extension ContainerStatusWidgetView {
 				.font(.caption)
 				.fontWeight(.medium)
 				.foregroundStyle(.tertiary)
-				.frame(maxWidth: .infinity, alignment: .leading)
 		}
 
 		@ViewBuilder
@@ -113,26 +111,11 @@ extension ContainerStatusWidgetView {
 				.minimumScaleFactor(minimumScaleFactor)
 				.frame(maxWidth: .infinity, alignment: .leading)
 			}
+			.contentTransition(.numericText())
 			.padding()
 			.modifier(LinkWrappedViewModifier(url: url))
 			.background(Color.widgetBackground)
-			.id("ContainerStatusWidgetView.ContainerView.\(container?.id ?? "")")
-		}
-	}
-}
-
-// MARK: - LinkWrappedViewModifier
-
-private struct LinkWrappedViewModifier: ViewModifier {
-	let url: URL?
-
-	func body(content: Content) -> some View {
-		if let url {
-			Link(destination: url) {
-				content
-			}
-		} else {
-			content
+			.id("ContainerStatusWidgetView.ContainerView.\(container?.id ?? intentContainer._id)")
 		}
 	}
 }
@@ -140,5 +123,5 @@ private struct LinkWrappedViewModifier: ViewModifier {
 // MARK: - Previews
 
 #Preview {
-	ContainerStatusWidgetView.ContainerView(entry: .placeholder, intentContainer: .preview(), intentEndpoint: .preview())
+	ContainerStatusWidgetView.ContainerView(entry: .placeholder, intentContainer: .preview())
 }

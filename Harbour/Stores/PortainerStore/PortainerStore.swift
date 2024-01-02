@@ -83,14 +83,15 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 
 		self.selectedEndpoint = getStoredEndpoint()
 
-		if let (url, token) = getStoredCredentials() {
-			self.setupTask = Task { @MainActor in
+		self.setupTask = Task { @MainActor in
+			if let (url, token) = getStoredCredentials() {
+				isSetup = true
 				try? await setup(url: url, token: token, saveToken: false, checkAuth: false)
-			}
-		} else {
-			Task { @MainActor in
-				endpoints = []
-				containers = []
+			} else {
+				Task { @MainActor in
+					endpoints = []
+					containers = []
+				}
 			}
 		}
 	}
@@ -105,13 +106,11 @@ public extension PortainerStore {
 	///   - token: Authorization token (if `nil`, it's searched in the keychain)
 	///   - saveToken: Should the token be saved to the keychain?
 	///   - checkAuth: Should we check authorization state?
-	@Sendable @MainActor
+	@MainActor
 	func setup(url: URL, token: String?, saveToken: Bool = true, checkAuth: Bool = false) async throws {
 		logger.notice("Setting up, URL: \(url.absoluteString, privacy: .sensitive(mask: .hash))... [\(String._debugInfo(), privacy: .public)]")
 
 		do {
-			isSetup = false
-
 			let _token = try (token ?? keychain.getString(for: url))
 			portainer.setup(url: url, token: _token)
 

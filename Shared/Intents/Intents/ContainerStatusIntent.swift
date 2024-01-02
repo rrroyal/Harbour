@@ -22,7 +22,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		When(\.$endpoint, .hasAnyValue) {
 			Summary("Get container status on \(\.$endpoint)") {
 				\.$containers
-				\.$resolveByName
+				\.$resolveStrictly
 			}
 		} otherwise: {
 			Summary("Get container status on \(\.$endpoint)")
@@ -48,11 +48,11 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	var containers: [IntentContainer]?
 
 	@Parameter(
-		title: "AppIntents.Parameter.ResolveByName.Title",
-		description: "AppIntents.Parameter.ResolveByName.Description",
+		title: "AppIntents.Parameter.ResolveStrictly.Title",
+		description: "AppIntents.Parameter.ResolveStrictly.Description",
 		default: false
 	)
-	var resolveByName: Bool
+	var resolveStrictly: Bool
 
 //	@Parameter(
 //		title: "AppIntents.Parameter.ResolveOffline.Title",

@@ -107,6 +107,7 @@ struct ContentView: View {
 				errorHandler(error)
 			}
 		}
+		.onChange(of: portainerStore.containers, viewModel.onContainersChange)
 	}
 
 	// MARK: Body
@@ -133,7 +134,10 @@ struct ContentView: View {
 				.indicatorOverlay(model: sceneDelegate.indicators)
 		}
 		.sheet(isPresented: $sceneDelegate.isStacksSheetPresented) {
-			let selectedStackBinding = Binding<Stack?>(get: { nil }, set: { viewModel.onStackTapped($0) })
+			let selectedStackBinding = Binding<Stack?>(
+				get: { nil },
+				set: { viewModel.onStackTapped($0) }
+			)
 			StacksView(selectedStack: selectedStackBinding)
 		}
 		.sheet(isPresented: $viewModel.isLandingSheetPresented) {

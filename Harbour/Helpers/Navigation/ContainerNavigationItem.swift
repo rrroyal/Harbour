@@ -9,7 +9,7 @@
 import Foundation
 import PortainerKit
 
-struct ContainerNavigationItem: NavigationItem, Equatable {
+struct ContainerNavigationItem: NavigationItem {
 	enum CodingKeys: String, CodingKey {
 		case id
 		case displayName

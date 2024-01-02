@@ -27,6 +27,6 @@ struct InsetViewModifier: ViewModifier {
 // MARK: - Previews
 
 #Preview {
-	SelectContainerView(entry: .placeholder)
+	StatusFeedbackView(entry: .placeholder, mode: .containerNotFound)
 		.modifier(InsetViewModifier())
 }

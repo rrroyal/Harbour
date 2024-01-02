@@ -12,7 +12,7 @@ import KeychainKit
 import OSLog
 import PortainerKit
 
-private let logger = Logger(.intents(IntentPortainerStore.self))
+private let logger = Logger(.custom(IntentPortainerStore.self))
 
 // MARK: - IntentPortainerStore
 
@@ -46,10 +46,10 @@ public final class IntentPortainerStore: @unchecked Sendable {
 	}
 
 	public func getEndpoints() async throws -> [Endpoint] {
-		logger.info("Getting endpoints... [\(String._debugInfo(), privacy: .public)]")
+//		logger.info("Getting endpoints... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let endpoints = try await portainer.fetchEndpoints()
-			logger.debug("Got \(endpoints.count, privacy: .public) endpoints [\(String._debugInfo(), privacy: .public)]")
+//			logger.debug("Got \(endpoints.count, privacy: .public) endpoints [\(String._debugInfo(), privacy: .public)]")
 			return endpoints.sorted()
 		} catch {
 			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
@@ -58,10 +58,10 @@ public final class IntentPortainerStore: @unchecked Sendable {
 	}
 
 	public func getContainers(for endpointID: Endpoint.ID, filters: Portainer.FetchFilters? = nil) async throws -> [Container] {
-		logger.info("Getting containers... [\(String._debugInfo(), privacy: .public)]")
+//		logger.info("Getting containers... [\(String._debugInfo(), privacy: .public)]")
 		do {
 			let containers = try await portainer.fetchContainers(endpointID: endpointID, filters: filters)
-			logger.debug("Got \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
+//			logger.debug("Got \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
 			return containers.sorted()
 		} catch {
 			logger.error("Failed to get containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")

@@ -13,12 +13,14 @@ import WidgetKit
 // MARK: - ContainerStatusWidgetView
 
 struct ContainerStatusWidgetView: View {
+	typealias Entry = ContainerStatusProvider.Entry
+
 	@Environment(\.widgetFamily) private var widgetFamily
-	var entry: ContainerStatusProvider.Entry
+	var entry: Entry
 
 	var body: some View {
 		switch entry.result {
-		case .containers, .unreachable:
+		case .containers, .unreachable, .unconfigured:
 			switch widgetFamily {
 			case .systemSmall:
 				SmallWidgetView(entry: entry)
@@ -32,42 +34,29 @@ struct ContainerStatusWidgetView: View {
 			}
 		case .error(let error):
 			ErrorView(error: error)
-		case .unconfigured:
-			SelectContainerView(entry: entry)
 		}
+	}
+}
 
-//		VStack(spacing: 2) {
-//			switch entry.result {
-//			case .containers(let array):
-//				Group {
-//					Text(entry.configuration.endpoint?.id.description ?? "nil")
-//					Text(entry.configuration.containers?.map(\._id).sorted().joined(separator: ", ") ?? "nil")
-//					if case .containers(let containers) = entry.result {
-//						Text(containers.map(\.id).sorted().joined(separator: ", "))
-//					} else {
-//						Text(verbatim: "nil")
-//					}
-//				}
-//			case .error(let error):
-//				Text(error.localizedDescription)
-//					.foregroundStyle(.red)
-//			case .unreachable:
-//				Text(verbatim: "Unreachable")
-//					.foregroundStyle(.red)
-//			case .unconfigured:
-//				Text(verbatim: "Unconfigured")
-//			case .noContainers:
-//				Text(verbatim: "No containers")
-//			}
-//		}
-//		.font(.caption2)
-//		.fontDesign(.monospaced)
-//		.minimumScaleFactor(0.6)
-//		.multilineTextAlignment(.center)
-//		.padding(4)
-//		.containerBackground(for: .widget) {
-//			Color.widgetBackground
-//		}
+// MARK: - ContainerStatusWidgetView+SingleContainerSlotView
+
+extension ContainerStatusWidgetView {
+	struct SingleContainerSlotView: View {
+		var entry: ContainerStatusWidgetView.Entry
+		var intentContainer: IntentContainer?
+		var container: Container?
+
+		var body: some View {
+			if let intentContainer {
+				ContainerStatusWidgetView.ContainerView(
+					entry: entry,
+					intentContainer: intentContainer,
+					container: container
+				)
+			} else {
+				StatusFeedbackView(entry: entry, mode: .selectContainer)
+			}
+		}
 	}
 }
 
@@ -81,26 +70,19 @@ extension ContainerStatusWidgetView {
 			entry.configuration.containers?.first
 		}
 
-		private var container: Container? {
+		private var containers: [Container?]? {
 			if case .containers(let containers) = entry.result {
-				return containers.first { $0.id == intentContainer?._id }
+				return containers
 			}
 			return nil
 		}
 
 		var body: some View {
-			Group {
-				if let intentEndpoint = entry.configuration.endpoint, let intentContainer {
-					ContainerStatusWidgetView.ContainerView(
-						entry: entry,
-						intentContainer: intentContainer,
-						intentEndpoint: intentEndpoint,
-						container: container
-					)
-				} else {
-					SelectContainerView(entry: entry)
-				}
-			}
+			SingleContainerSlotView(
+				entry: entry,
+				intentContainer: intentContainer,
+				container: containers?.first as? Container
+			)
 			.containerBackground(for: .widget) {
 				Color.widgetBackground
 			}
@@ -114,7 +96,7 @@ extension ContainerStatusWidgetView {
 	struct MediumWidgetView: View {
 		var entry: ContainerStatusProvider.Entry
 
-		private var containers: [Container]? {
+		private var containers: [Container?]? {
 			if case .containers(let containers) = entry.result {
 				return containers
 			}
@@ -123,21 +105,15 @@ extension ContainerStatusWidgetView {
 
 		var body: some View {
 			HStack {
-				ForEach(0..<2, id: \.self) { index in
-					Group {
-						if let intentEndpoint = entry.configuration.endpoint,
-						   let intentContainer = entry.configuration.containers?[safe: index] {
-							let container = containers?.first { $0.id == intentContainer._id }
-							ContainerStatusWidgetView.ContainerView(
-								entry: entry,
-								intentContainer: intentContainer,
-								intentEndpoint: intentEndpoint,
-								container: container
-							)
-						} else {
-							SelectContainerView(entry: entry)
-						}
-					}
+				ForEach(0...1, id: \.self) { index in
+					let intentContainer = entry.configuration.containers?[safe: index]
+					let container = containers?[safe: index] as? Container
+
+					SingleContainerSlotView(
+						entry: entry,
+						intentContainer: intentContainer,
+						container: container
+					)
 					.modifier(InsetViewModifier())
 					.containerRelativeFrame(.horizontal, count: 2, spacing: 0)
 				}
@@ -155,7 +131,7 @@ extension ContainerStatusWidgetView {
 	struct LargeWidgetView: View {
 		var entry: ContainerStatusProvider.Entry
 
-		private var containers: [Container]? {
+		private var containers: [Container?]? {
 			if case .containers(let containers) = entry.result {
 				return containers
 			}
@@ -166,22 +142,16 @@ extension ContainerStatusWidgetView {
 			VStack {
 				ForEach(0...1, id: \.self) { yIndex in
 					HStack(spacing: 0) {
-						ForEach(0..<2, id: \.self) { xIndex in
-							Group {
-								let index = (yIndex * 2) + xIndex
-								if let intentEndpoint = entry.configuration.endpoint,
-								   let intentContainer = entry.configuration.containers?[safe: index] {
-									let container = containers?.first { $0.id == intentContainer._id }
-									ContainerStatusWidgetView.ContainerView(
-										entry: entry,
-										intentContainer: intentContainer,
-										intentEndpoint: intentEndpoint,
-										container: container
-									)
-								} else {
-									SelectContainerView(entry: entry)
-								}
-							}
+						ForEach(0...1, id: \.self) { xIndex in
+							let index = (yIndex * 2) + xIndex
+							let intentContainer = entry.configuration.containers?[safe: index]
+							let container = containers?[safe: index] as? Container
+
+							SingleContainerSlotView(
+								entry: entry,
+								intentContainer: intentContainer,
+								container: container
+							)
 							.modifier(InsetViewModifier())
 							.containerRelativeFrame(.horizontal, count: 2, spacing: 0)
 							.containerRelativeFrame(.vertical, count: 2, spacing: 0)

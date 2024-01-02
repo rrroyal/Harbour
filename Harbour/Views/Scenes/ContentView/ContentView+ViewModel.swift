@@ -77,7 +77,21 @@ extension ContentView {
 			let portainerStore = PortainerStore.shared
 			self.portainerStore = portainerStore
 
-			self.viewState = portainerStore.isSetup ? .loading : .success(())
+			self.viewState = {
+				if !portainerStore.containers.isEmpty {
+					if !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
+						return .reloading(())
+					} else {
+						return .success(())
+					}
+				}
+
+				if !(portainerStore.setupTask?.isCancelled ?? true) {
+					return .loading
+				}
+
+				return .success(())
+			}()
 		}
 
 		@MainActor
@@ -130,6 +144,11 @@ extension ContentView {
 			} else {
 				searchTokens = []
 			}
+		}
+
+		@MainActor
+		func onContainersChange(_ before: [Container], after: [Container]) {
+			viewState = .success(())
 		}
 	}
 }

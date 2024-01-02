@@ -74,6 +74,7 @@ extension ContainersListView {
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
 			.animation(.easeInOut, value: container._isStored)
+			.contentTransition(.opacity)
 		}
 	}
 }

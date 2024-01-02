@@ -27,6 +27,8 @@
 		002D1BAF2A5A18360044753E /* IntentEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABDD2A34F2990074E940 /* IntentEndpoint.swift */; };
 		002D1BB12A5A18360044753E /* IntentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABD72A34F1570074E940 /* IntentContainer.swift */; };
 		002D1BB52A5A18680044753E /* IntentPortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F558042A34FD80002939A2 /* IntentPortainerStore.swift */; };
+		005229442B3A366400D45650 /* LinkWrappedViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005229432B3A366400D45650 /* LinkWrappedViewModifier.swift */; };
+		005229452B3A366400D45650 /* LinkWrappedViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005229432B3A366400D45650 /* LinkWrappedViewModifier.swift */; };
 		005CC9B82A85AD480051D876 /* SFSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005CC9B72A85AD480051D876 /* SFSymbol.swift */; };
 		005CC9B92A85AD480051D876 /* SFSymbol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005CC9B72A85AD480051D876 /* SFSymbol.swift */; };
 		00687F862A6E9D340099BFE5 /* Haptics.HapticStyle+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00687F852A6E9D340099BFE5 /* Haptics.HapticStyle+.swift */; };
@@ -106,7 +108,7 @@
 		00FD0FB82A3533CF008D68DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00FD0FB72A3533CF008D68DF /* Assets.xcassets */; };
 		00FD0FBD2A3534B2008D68DF /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FD0FBC2A3534B2008D68DF /* ErrorView.swift */; };
 		00FD0FD62A35365C008D68DF /* ContainerStatusWidgetView+ContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FD0FD52A35365C008D68DF /* ContainerStatusWidgetView+ContainerView.swift */; };
-		00FD0FDE2A35379E008D68DF /* SelectContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FD0FDD2A35379E008D68DF /* SelectContainerView.swift */; };
+		00FD0FDE2A35379E008D68DF /* StatusFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00FD0FDD2A35379E008D68DF /* StatusFeedbackView.swift */; };
 		E703A4DF2A1EC3C700ECE328 /* Keychain+.swift in Sources */ = {isa = PBXBuildFile; fileRef = E703A4DE2A1EC3C700ECE328 /* Keychain+.swift */; };
 		E706997A2986D9B30001A823 /* SceneDelegate+Indicators.swift in Sources */ = {isa = PBXBuildFile; fileRef = E70699792986D9B30001A823 /* SceneDelegate+Indicators.swift */; };
 		E71180F228E737D40019774A /* PortainerURLScheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = E71180F128E737D40019774A /* PortainerURLScheme.swift */; };
@@ -231,6 +233,7 @@
 		000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		002828832A869EDA00ABD7EA /* Localizable.xcstrings */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		002D0EEA2A81B53900A914E5 /* CopyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopyButton.swift; sourceTree = "<group>"; };
+		005229432B3A366400D45650 /* LinkWrappedViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWrappedViewModifier.swift; sourceTree = "<group>"; };
 		005CC9B72A85AD480051D876 /* SFSymbol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbol.swift; sourceTree = "<group>"; };
 		00687F852A6E9D340099BFE5 /* Haptics.HapticStyle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Haptics.HapticStyle+.swift"; sourceTree = "<group>"; };
 		0078D0282A8704BA009C4374 /* ContainerDetailsView+SubviewsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContainerDetailsView+SubviewsSection.swift"; sourceTree = "<group>"; };
@@ -274,7 +277,7 @@
 		00FD0FB72A3533CF008D68DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		00FD0FBC2A3534B2008D68DF /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		00FD0FD52A35365C008D68DF /* ContainerStatusWidgetView+ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerStatusWidgetView+ContainerView.swift"; sourceTree = "<group>"; };
-		00FD0FDD2A35379E008D68DF /* SelectContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectContainerView.swift; sourceTree = "<group>"; };
+		00FD0FDD2A35379E008D68DF /* StatusFeedbackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusFeedbackView.swift; sourceTree = "<group>"; };
 		E703A4DE2A1EC3C700ECE328 /* Keychain+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keychain+.swift"; sourceTree = "<group>"; };
 		E70699792986D9B30001A823 /* SceneDelegate+Indicators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+Indicators.swift"; sourceTree = "<group>"; };
 		E71180F128E737D40019774A /* PortainerURLScheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerURLScheme.swift; sourceTree = "<group>"; };
@@ -413,6 +416,22 @@
 			path = Intents;
 			sourceTree = "<group>";
 		};
+		0052293F2B3A363300D45650 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				005229402B3A363D00D45650 /* ViewModifiers */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		005229402B3A363D00D45650 /* ViewModifiers */ = {
+			isa = PBXGroup;
+			children = (
+				005229432B3A366400D45650 /* LinkWrappedViewModifier.swift */,
+			);
+			path = ViewModifiers;
+			sourceTree = "<group>";
+		};
 		0078D02C2A870802009C4374 /* ViewModifiers */ = {
 			isa = PBXGroup;
 			children = (
@@ -520,7 +539,7 @@
 			children = (
 				0098F5C72A363811006CB3AB /* ViewModifiers */,
 				00FD0FBC2A3534B2008D68DF /* ErrorView.swift */,
-				00FD0FDD2A35379E008D68DF /* SelectContainerView.swift */,
+				00FD0FDD2A35379E008D68DF /* StatusFeedbackView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -606,6 +625,7 @@
 				E72AA7C228EB904C00C33EA3 /* Helpers */,
 				002D1BA72A5A17BE0044753E /* Intents */,
 				0078D0612A8819EF009C4374 /* Persistence */,
+				0052293F2B3A363300D45650 /* Views */,
 				E7D6E62B2884771400C79732 /* Assets.xcassets */,
 				002828832A869EDA00ABD7EA /* Localizable.xcstrings */,
 				E78C660528E9B90D0033D0E4 /* Info.h */,
@@ -996,8 +1016,6 @@
 				E7BEBA1D28857C3900FCD7DC /* Extensions */,
 				E7BEBA1928857BE700FCD7DC /* Helpers */,
 				00F5580A2A34FD91002939A2 /* Stores */,
-				E79AD3082893D9DE002D0CD9 /* Styles */,
-				0078D02C2A870802009C4374 /* ViewModifiers */,
 				E7E240F828847FD600CC4F4C /* Views */,
 				E7BEBA2628857E6F00FCD7DC /* Harbour.entitlements */,
 				E7BEBA1C28857C1C00FCD7DC /* Info.plist */,
@@ -1038,6 +1056,8 @@
 			children = (
 				E7BEBA162885758B00FCD7DC /* Components */,
 				E766D931288C3CA400F2DB99 /* Scenes */,
+				E79AD3082893D9DE002D0CD9 /* Styles */,
+				0078D02C2A870802009C4374 /* ViewModifiers */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1139,7 +1159,7 @@
 				E7DA4CAA2977325A00DBA55C /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				00242F472B2C911300636A5B /* XCRemoteSwiftPackageReference "IndicatorsKit" */,
 				00242F4C2B2C917F00636A5B /* XCRemoteSwiftPackageReference "KeychainKit" */,
-				00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */,
+				00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonsKit" */,
 			);
 			productRefGroup = E7D6E6252884771200C79732 /* Products */;
 			projectDirPath = "";
@@ -1186,7 +1206,7 @@
 				00F558202A34FDCE002939A2 /* Keychain+.swift in Sources */,
 				00A4AB8C2A34ECB60074E940 /* WidgetsBundle.swift in Sources */,
 				00EB4B8F2A51EDE400FB9A01 /* IdentifiableTuple.swift in Sources */,
-				00FD0FDE2A35379E008D68DF /* SelectContainerView.swift in Sources */,
+				00FD0FDE2A35379E008D68DF /* StatusFeedbackView.swift in Sources */,
 				00FD0FBD2A3534B2008D68DF /* ErrorView.swift in Sources */,
 				00A4AB8E2A34ECB60074E940 /* ContainerStatusWidget.swift in Sources */,
 				00A4ABCD2A34EFD60074E940 /* ContainerStatusProvider.swift in Sources */,
@@ -1227,6 +1247,7 @@
 				00EAFE112A354FEB00BC69D6 /* Collection+safe.swift in Sources */,
 				00B579AD2AACE0DA004AF20A /* HarbourItemType.swift in Sources */,
 				00F558542A34FFD2002939A2 /* URLSessionConfiguration+intents.swift in Sources */,
+				005229452B3A366400D45650 /* LinkWrappedViewModifier.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1237,6 +1258,7 @@
 				00F96C002A5ACCDA00F5CE22 /* ExecuteAction+AppEnum.swift in Sources */,
 				E7207DDC2988860B00F7504C /* StacksView.swift in Sources */,
 				E71180F228E737D40019774A /* PortainerURLScheme.swift in Sources */,
+				005229442B3A366400D45650 /* LinkWrappedViewModifier.swift in Sources */,
 				E7BEBA1B28857BF300FCD7DC /* HarbourURLScheme.swift in Sources */,
 				E782550D2977415000CFBF92 /* StoredEndpoint.swift in Sources */,
 				E7207DCD29887C7D00F7504C /* ContentView+ViewModel.swift in Sources */,
@@ -1718,9 +1740,9 @@
 				kind = branch;
 			};
 		};
-		00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */ = {
+		00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonsKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/rrroyal/CommonKit";
+			repositoryURL = "https://github.com/rrroyal/CommonsKit";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -1754,27 +1776,27 @@
 		};
 		00242F542B2C91B500636A5B /* CommonOSLog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonsKit" */;
 			productName = CommonOSLog;
 		};
 		00242F582B2C91C000636A5B /* CommonFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonsKit" */;
 			productName = CommonFoundation;
 		};
 		00242F5C2B2C91DB00636A5B /* CommonHaptics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonsKit" */;
 			productName = CommonHaptics;
 		};
 		00242F602B2C91ED00636A5B /* CommonOSLog */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonsKit" */;
 			productName = CommonOSLog;
 		};
 		00242F642B2C91FA00636A5B /* CommonFoundation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonKit" */;
+			package = 00242F4F2B2C918A00636A5B /* XCRemoteSwiftPackageReference "CommonsKit" */;
 			productName = CommonFoundation;
 		};
 		0068CE032A3933F200EBD8AA /* SwiftLintPlugin */ = {

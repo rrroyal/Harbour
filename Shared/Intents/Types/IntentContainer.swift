@@ -23,10 +23,10 @@ struct IntentContainer: AppEntity, Hashable {
 	}
 
 	/// Actual container ID
-	let _id: Container.ID
-	let name: String?
-	let imageID: String?
-	let associationID: String?
+	var _id: Container.ID
+	var name: String?
+	var imageID: String?
+	var associationID: String?
 
 	init(id: Container.ID, name: String?, imageID: String?, associationID: String?) {
 		self._id = id
@@ -53,26 +53,21 @@ extension IntentContainer: Identifiable {
 		[_id, name ?? "", imageID ?? "", associationID ?? ""].joined(separator: Self.partJoiner)
 	}
 
-	init?(id: String) {
+	static func fromID(_ id: String) -> Self? {
 		let parts = id.split(separator: Self.partJoiner)
-		if parts.count == 4 {
-			self.init(
-				id: String(parts[0]),
-				name: String(parts[1]),
-				imageID: String(parts[2]),
-				associationID: String(parts[3])
-			)
-			return
-		}
 
-		if let first = parts[safe: 0] {
-			self.init(
-				id: String(first),
-				name: nil,
-				imageID: nil,
-				associationID: nil
+		let id: String? = if let id = parts[safe: 0] { String(id) } else { nil }
+		let name: String? = if let name = parts[safe: 1] { String(name) } else { nil }
+		let imageID: String? = if let imageID = parts[safe: 2] { String(imageID) } else { nil }
+		let associationID: String? = if let associationID = parts[safe: 3] { String(associationID) } else { nil }
+
+		if let id {
+			return self.init(
+				id: id,
+				name: name,
+				imageID: imageID,
+				associationID: associationID
 			)
-			return
 		}
 
 		return nil
@@ -90,20 +85,28 @@ extension IntentContainer {
 	}
 }
 
+// MARK: - IntentContainer+matchesContainer
+
+extension IntentContainer {
+	func matchesContainer(_ container: Container) -> Bool {
+		self._id == container.id || self.associationID == container.associationID || self.imageID == container.imageID || self.name == container.displayName
+	}
+}
+
 // MARK: - IntentContainerQuery
 
 struct IntentContainerQuery: EntityStringQuery {
 	typealias Entity = IntentContainer
 
-	@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveByName)
+	@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveStrictly)
 	var statusIntent
 
 	private var endpoint: IntentEndpoint? {
 		statusIntent?.endpoint
 	}
 
-	private var resolveByName: Bool {
-		statusIntent?.resolveByName ?? false
+	private var resolveStrictly: Bool {
+		statusIntent?.resolveStrictly ?? false
 	}
 
 	private var requiresOnline: Bool {
@@ -115,7 +118,7 @@ struct IntentContainerQuery: EntityStringQuery {
 		do {
 			guard let endpoint else { return [] }
 
-			let containers = try await getContainers(for: endpoint.id, resolveByName: resolveByName)
+			let containers = try await getContainers(for: endpoint.id)
 			return containers.map { Entity(container: $0) }
 		} catch {
 			logger.error("Error getting suggested entities: \(error, privacy: .public)")
@@ -124,6 +127,8 @@ struct IntentContainerQuery: EntityStringQuery {
 	}
 
 	func entities(matching string: String) async throws -> [Entity] {
+		logger.info("Getting entities matching \"\(string, privacy: .sensitive)\"...")
+
 		do {
 			guard let endpoint else {
 				logger.notice("Returning empty (no endpoint) [\(String._debugInfo(), privacy: .public)]")
@@ -132,17 +137,12 @@ struct IntentContainerQuery: EntityStringQuery {
 
 			// TODO: Filter in request
 
-			let containers = try await _getContainers(for: endpoint.id)
+			let containers = try await getContainers(for: endpoint.id)
 				.filter(string)
 				.sorted()
 				.map { Entity(container: $0) }
 
-			if containers.isEmpty {
-				logger.notice("Returning empty (empty query) [\(String._debugInfo(), privacy: .public)]")
-				return []
-			}
-
-			logger.info("Returning \(String(describing: containers), privacy: .sensitive) (live) [\(String._debugInfo(), privacy: .public)]")
+			logger.notice("Returning \(String(describing: containers), privacy: .sensitive) (live) [\(String._debugInfo(), privacy: .public)]")
 			return containers
 		} catch {
 			logger.error("Error getting matching entities: \(error, privacy: .public)")
@@ -151,41 +151,47 @@ struct IntentContainerQuery: EntityStringQuery {
 	}
 
 	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+		logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
 
 		guard let endpoint else {
 			logger.notice("Returning empty (no endpoint) [\(String._debugInfo(), privacy: .public)]")
 			return []
 		}
 
-		let parsed = identifiers.compactMap { Entity(id: $0) }
-		let (parsedIDs, parsedNames, parsedAssociationIDs, parsedImageIDs) = (
-			parsed.map(\._id),
-			parsed.map(\.name),
-			parsed.map(\.associationID),
-			parsed.map(\.imageID)
-		)
+		let parsedContainers = identifiers.compactMap { Entity.fromID($0) }
 
 		do {
-			let containers = try await _getContainers(for: endpoint.id)
-				.filter {
-					parsedIDs.contains($0.id) || parsedNames.contains($0.displayName) || parsedAssociationIDs.contains($0.associationID) || parsedImageIDs.contains($0.imageID)
+			let entities: [Entity] = try await {
+				if requiresOnline {
+					let filters = Portainer.FetchFilters(
+						id: resolveStrictly ? parsedContainers.map(\._id) : nil
+					)
+					return try await getContainers(for: endpoint.id, filters: filters)
+						.filter { container in
+							if resolveStrictly {
+								return parsedContainers.contains { $0._id == container.id }
+							} else {
+								return parsedContainers.contains { $0.matchesContainer(container) }
+							}
+						}
+						.compactMap { container in
+							let entity = Entity(container: container)
+							return entity
+						}
+				} else {
+					return parsedContainers
 				}
-				.map { Entity(container: $0) }
+			}()
 
-			logger.info("Returning \(String(describing: containers), privacy: .sensitive) (live) [\(String._debugInfo(), privacy: .public)]")
+			logger.notice("Returning \(String(describing: entities), privacy: .sensitive) (\(requiresOnline ? "live" : "parsed"))")
 
-			if containers.isEmpty {
-				logger.notice("Returning empty (empty query) [\(String._debugInfo(), privacy: .public)]")
-				return []
-			}
-
-			return containers
+			return entities
 		} catch {
 			logger.error("Error getting entities: \(error, privacy: .public)")
 
 			if !requiresOnline && error is URLError {
-				logger.notice("Returning \(String(describing: parsed), privacy: .sensitive) (offline) [\(String._debugInfo(), privacy: .public)]")
-				return parsed
+				logger.notice("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline) [\(String._debugInfo(), privacy: .public)]")
+				return parsedContainers
 			}
 
 			throw error
@@ -198,25 +204,11 @@ struct IntentContainerQuery: EntityStringQuery {
 extension IntentContainerQuery {
 	func getContainers(
 		for endpointID: Endpoint.ID,
-		ids: [Container.ID]? = nil,
-		names: [String?]? = nil,
-		resolveByName: Bool
+		filters: Portainer.FetchFilters? = nil
 	) async throws -> [Container] {
 		let portainerStore = IntentPortainerStore.shared
 		try portainerStore.setupIfNeeded()
-
-		let filters = Portainer.FetchFilters(
-			id: resolveByName ? nil : ids,
-			name: resolveByName ? names?.compactMap { $0 } : nil
-		)
 		let containers = try await portainerStore.getContainers(for: endpointID, filters: filters)
-
 		return containers
-	}
-
-	func _getContainers(for endpointID: Endpoint.ID) async throws -> [Container] {
-		let portainerStore = IntentPortainerStore.shared
-		try portainerStore.setupIfNeeded()
-		return try await portainerStore.getContainers(for: endpointID)
 	}
 }

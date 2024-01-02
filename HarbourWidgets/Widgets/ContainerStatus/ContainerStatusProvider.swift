@@ -28,24 +28,24 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 	}
 
 	func snapshot(for configuration: Intent, in context: Context) async -> Entry {
-		logger.info("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)... [\(String._debugInfo(), privacy: .public)]")
+		logger.info("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)...")
 
 		guard !context.isPreview else {
-			logger.debug("Running in preview. [\(String._debugInfo(), privacy: .public)]")
+			logger.debug("Running in preview")
 			return placeholder(in: context)
 		}
 
 		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash)). [\(String._debugInfo(), privacy: .public)]")
+		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash))")
 
 		return entry
 	}
 
 	func timeline(for configuration: Intent, in context: Context) async -> Timeline<Entry> {
-		logger.info("Getting timeline... [\(String._debugInfo(), privacy: .public)]")
+		logger.info("Getting timeline...")
 
 		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash)). [\(String._debugInfo(), privacy: .public)]")
+		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash))")
 
 		return .init(entries: [entry], policy: .atEnd)
 	}
@@ -57,7 +57,7 @@ extension ContainerStatusProvider {
 	struct Entry: TimelineEntry {
 		enum Result {
 			case unconfigured
-			case containers([Container])
+			case containers([Container?])
 			case error(Error)
 			case unreachable
 		}
@@ -69,7 +69,8 @@ extension ContainerStatusProvider {
 			let intentContainer1 = IntentContainer.preview(id: "1")
 			let intentContainer2 = IntentContainer.preview(id: "2")
 			let intentContainer3 = IntentContainer.preview(id: "3")
-			let intentContainers = [intentContainer1, intentContainer2, intentContainer3]
+			let intentContainer4 = IntentContainer.preview(id: "4")
+			let intentContainers = [intentContainer1, intentContainer2, intentContainer3, intentContainer4]
 
 			let date = Date(timeIntervalSince1970: 1584296700)
 
@@ -78,18 +79,30 @@ extension ContainerStatusProvider {
 			intent.containers = intentContainers
 
 			let container1 = Container(
-				id: "1",
+				id: intentContainer1._id,
 				names: [intentContainer1.name!],
 				state: .running,
 				status: String(localized: "IntentContainer.Preview.Status")
 			)
 			let container2 = Container(
-				id: "2",
+				id: intentContainer2._id,
 				names: [intentContainer2.name!],
 				state: .paused,
 				status: String(localized: "IntentContainer.Preview.Status")
 			)
-			let containers = [container1, container2]
+			let container3 = Container(
+				id: intentContainer3._id,
+				names: [intentContainer3.name!],
+				state: .restarting,
+				status: String(localized: "IntentContainer.Preview.Status")
+			)
+			let container4 = Container(
+				id: intentContainer4._id,
+				names: [intentContainer4.name!],
+				state: .exited,
+				status: String(localized: "IntentContainer.Preview.Status")
+			)
+			let containers = [container1, container2, container3, container4]
 
 			return .init(
 				date: date,
@@ -112,7 +125,7 @@ extension ContainerStatusProvider {
 
 			let score: Float = containers.reduce(into: 0) { absoluteScore, container in
 				// swiftlint:disable switch_case_alignment
-				let containerScore: Float = switch container.state {
+				let containerScore: Float = switch container?.state {
 				case .none:				0.0
 				case .running:			0.1
 				case .paused:			0.2
@@ -147,30 +160,37 @@ private extension ContainerStatusProvider {
 			return Entry(date: now, configuration: configuration, result: .containers([]))
 		}
 
-		let (configurationIDs, configurationNames, configurationAssociationIDs, configurationImageIDs) = (
-			configurationContainers.map(\.id),
-			configurationContainers.map(\.name),
-			configurationContainers.map(\.associationID),
-			configurationContainers.map(\.imageID)
-		)
-
 		do {
 			try portainerStore.setupIfNeeded()
 
-//			let filters = Portainer.FetchFilters(
-//				id: configuration.resolveByName ? nil : containers.map(\._id),
-//				name: configuration.resolveByName ? containers.compactMap(\.name) : nil
-//			)
-			let filters: Portainer.FetchFilters? = nil
+			let filters = Portainer.FetchFilters(
+				id: configuration.resolveStrictly ? configurationContainers.map(\._id) : nil
+			)
 			let containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
-				.filter {
-					// swiftlint:disable:next line_length
-					configurationIDs.contains($0.id) || configurationNames.contains($0.displayName) || configurationAssociationIDs.contains($0.associationID) || configurationImageIDs.contains($0.imageID)
-				}
-				.map { Container(id: $0.id, names: $0.names, state: $0.state, status: $0.status) }
 
-			logger.info("Returning \(String(describing: containers), privacy: .sensitive)")
-			return Entry(date: now, configuration: configuration, result: .containers(containers))
+			let entities: [Container?] = configurationContainers
+				.map { configurationContainer in
+					if let foundContainer = containers.first(where: {
+						if configuration.resolveStrictly {
+							return configurationContainer._id == $0.id
+						} else {
+							return configurationContainer.matchesContainer($0)
+						}
+					}) {
+						return Container(
+							id: foundContainer.id,
+							names: foundContainer.names,
+							imageID: foundContainer.imageID,
+							labels: foundContainer.labels,
+							state: foundContainer.state,
+							status: foundContainer.status
+						)
+					}
+					return nil
+				}
+
+			logger.notice("Returning \(String(describing: entities), privacy: .sensitive)")
+			return Entry(date: now, configuration: configuration, result: .containers(entities))
 		} catch {
 			logger.error("Error getting entry: \(error, privacy: .public)")
 

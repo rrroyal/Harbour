@@ -10,6 +10,7 @@ import SwiftUI
 
 // MARK: - ViewState
 
+/// Enum indicating the state of a (optionally asynchronous) view.
 enum ViewState<Success, Failure: Error> {
 	/// View is loading.
 	case loading
@@ -53,6 +54,7 @@ extension ViewState {
 		}
 	}
 
+	/// Is the current state a "loading" state?
 	var isLoading: Bool {
 		switch self {
 		case .loading:
@@ -73,10 +75,14 @@ extension ViewState: Identifiable {
 	/// ID of the state.
 	var id: Int {
 		switch self {
-		case .loading:		0
-		case .reloading:	-2
-		case .success:		1
-		case .failure:		2
+		case .loading:
+			0
+		case .reloading:
+			-1
+		case .success:
+			1
+		case .failure:
+			-2
 		}
 	}
 }
@@ -103,7 +109,7 @@ extension ViewState: Equatable where Success: Equatable {
 // MARK: - ViewState+backgroundView
 
 extension ViewState {
-	/// Background view for this state.
+	/// Background (or overlay) view for this state.
 	@ViewBuilder
 	var backgroundView: some View {
 		Group {

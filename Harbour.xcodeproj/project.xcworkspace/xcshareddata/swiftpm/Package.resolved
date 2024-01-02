@@ -1,9 +1,9 @@
 {
   "pins" : [
     {
-      "identity" : "commonkit",
+      "identity" : "commonskit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/rrroyal/CommonKit",
+      "location" : "https://github.com/rrroyal/CommonsKit",
       "state" : {
         "branch" : "main",
         "revision" : "c2378a006798dcbc32593548527956df41166eba"
@@ -33,7 +33,7 @@
       "location" : "https://github.com/rrroyal/SwiftLintPlugin",
       "state" : {
         "branch" : "main",
-        "revision" : "83ae63d6ac1594ed6b79d6b2545b1155431101cf"
+        "revision" : "493cc4fd4ee9b5d8316cab23069d09cf4973036f"
       }
     }
   ],

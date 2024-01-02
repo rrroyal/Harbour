@@ -18,7 +18,8 @@ struct ContainerStatusWidget: Widget {
 		AppIntentConfiguration(
 			kind: kind,
 			intent: ContainerStatusProvider.Intent.self,
-			provider: ContainerStatusProvider()) { entry in
+			provider: ContainerStatusProvider()
+		) { entry in
 			ContainerStatusWidgetView(entry: entry)
 		}
 		.configurationDisplayName("ContainerStatusWidget.DisplayName")

@@ -71,44 +71,22 @@
         }
       }
     },
-    "AppIntents.Parameter.ResolveByName.Description" : {
+    "AppIntents.Parameter.ResolveStrictly.Description" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If enabled, parameters will be resolved by their name, instead of their ID."
+            "value" : "If enabled, containers will be resolved strictly by their ID."
           }
         }
       }
     },
-    "AppIntents.Parameter.ResolveByName.Title" : {
+    "AppIntents.Parameter.ResolveStrictly.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resolve By Name"
-          }
-        }
-      }
-    },
-    "AppIntents.Parameter.ResolveOffline.Description" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If enabled, parameters will be resolved offline, keeping their initial (when selected) state."
-          }
-        }
-      }
-    },
-    "AppIntents.Parameter.ResolveOffline.Title" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resolve Offline"
+            "value" : "Resolve Strictly"
           }
         }
       }
@@ -1329,16 +1307,6 @@
         }
       }
     },
-    "SelectContainerView.Headline" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Please select a container 🙈"
-          }
-        }
-      }
-    },
     "SettingsView.General.EnableBackgroundRefresh.Description" : {
       "localizations" : {
         "en" : {
@@ -1675,6 +1643,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stacks"
+          }
+        }
+      }
+    },
+    "StatusFeedbackView.Headline.ContainerNotFound" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container not found 😔"
+          }
+        }
+      }
+    },
+    "StatusFeedbackView.Headline.SelectContainer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please select a container 🙈"
           }
         }
       }

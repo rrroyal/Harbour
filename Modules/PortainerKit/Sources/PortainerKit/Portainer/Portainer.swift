@@ -173,7 +173,7 @@ internal extension Portainer {
 		// ...if not, get the response status code...
 		if let urlResponse = response as? HTTPURLResponse {
 			// ...return response code
-			if !(200...304 ~= urlResponse.statusCode) {
+			if !(200..<400 ~= urlResponse.statusCode) {
 				return PortainerError.responseCodeUnacceptable(urlResponse.statusCode)
 			}
 		} else {
