@@ -36,7 +36,7 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 		}
 
 		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash))")
+		logger.info("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash))")
 
 		return entry
 	}
@@ -45,7 +45,7 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 		logger.info("Getting timeline...")
 
 		let entry = await getEntry(for: configuration, in: context)
-		logger.debug("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash))")
+		logger.info("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash))")
 
 		return .init(entries: [entry], policy: .atEnd)
 	}
@@ -124,7 +124,6 @@ extension ContainerStatusProvider {
 			}
 
 			let score: Float = containers.reduce(into: 0) { absoluteScore, container in
-				// swiftlint:disable switch_case_alignment
 				let containerScore: Float = switch container?.state {
 				case .none:				0.0
 				case .running:			0.1
@@ -135,7 +134,6 @@ extension ContainerStatusProvider {
 				case .restarting:		0.5
 				case .dead:				0.6
 				}
-				// swiftlint:enable switch_case_alignment
 				absoluteScore += containerScore
 			}
 			return .init(score: score)

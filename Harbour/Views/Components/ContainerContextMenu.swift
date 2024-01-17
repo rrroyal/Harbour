@@ -12,8 +12,8 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerContextMenu: View {
-	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(SceneState.self) private var sceneState
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.showIndicator) private var showIndicator
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
@@ -85,6 +85,7 @@ struct ContainerContextMenu: View {
 					button(for: .kill, role: .destructive, haptic: killActionHaptic)
 				}
 			}
+			.labelStyle(.titleAndIcon)
 
 //			#if ENABLE_PREVIEW_FEATURES
 //			Divider()

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
-	@EnvironmentObject private var sceneDelegate: SceneDelegate
+	@Binding var navigationPath: NavigationPath
 	let useColumns: Bool
 	let content: () -> Content
 	let placeholderContent: () -> PlaceholderContent
@@ -18,9 +18,9 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 	private var viewSplit: some View {
 		NavigationSplitView {
 			content()
-				.navigationSplitViewColumnWidth(min: 300, ideal: 400, max: .infinity)
+				.navigationSplitViewColumnWidth(min: 240, ideal: 320, max: 460)
 		} detail: {
-			NavigationStack(path: $sceneDelegate.navigationPath) {
+			NavigationStack(path: $navigationPath) {
 				placeholderContent()
 			}
 		}
@@ -28,7 +28,7 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 
 	@ViewBuilder
 	private var viewStack: some View {
-		NavigationStack(path: $sceneDelegate.navigationPath) {
+		NavigationStack(path: $navigationPath) {
 			content()
 		}
 	}

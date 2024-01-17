@@ -62,14 +62,16 @@ private extension SettingsView.PortainerSection {
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
 					Text(_serverURLLabel)
-						.font(SettingsView.labelFontHeadline)
 						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
 						.lineLimit(1)
+						.font(SettingsView.labelFontHeadline)
 
+					#if os(iOS)
 					Spacer()
 
 					Image(systemName: SFSymbol.chevronDown)
 						.fontWeight(.medium)
+					#endif
 				}
 				.transition(.opacity)
 				.animation(.easeInOut, value: _serverURLLabel)
@@ -96,7 +98,7 @@ private extension SettingsView.PortainerSection {
 
 		@ViewBuilder
 		private func urlMenu(for url: URL) -> some View {
-			Menu(formattedURL(url), content: {
+			Menu {
 				if viewModel.activeURL == url {
 					Label("SettingsView.Portainer.EndpointsMenu.Server.InUse", systemImage: SFSymbol.checkmark)
 						.symbolVariant(.circle.fill)
@@ -125,7 +127,10 @@ private extension SettingsView.PortainerSection {
 				} label: {
 					Label("SettingsView.Portainer.EndpointsMenu.Server.Remove", systemImage: SFSymbol.remove)
 				}
-			})
+			} label: {
+				Label(formattedURL(url), systemImage: viewModel.activeURL == url ? SFSymbol.checkmark : "")
+					.labelStyle(.titleAndIcon)
+			}
 		}
 
 		private func formattedURL(_ url: URL) -> String {

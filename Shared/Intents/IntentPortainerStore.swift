@@ -46,39 +46,37 @@ public final class IntentPortainerStore: @unchecked Sendable {
 	}
 
 	public func getEndpoints() async throws -> [Endpoint] {
-//		logger.info("Getting endpoints... [\(String._debugInfo(), privacy: .public)]")
+//		logger.info("Getting endpoints...")
 		do {
 			let endpoints = try await portainer.fetchEndpoints()
-//			logger.debug("Got \(endpoints.count, privacy: .public) endpoints [\(String._debugInfo(), privacy: .public)]")
+//			logger.debug("Got \(endpoints.count, privacy: .public) endpoints")
 			return endpoints.sorted()
 		} catch {
-			logger.error("Failed to get endpoints: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Failed to get endpoints: \(error, privacy: .public)")
 			throw error
 		}
 	}
 
 	public func getContainers(for endpointID: Endpoint.ID, filters: Portainer.FetchFilters? = nil) async throws -> [Container] {
-//		logger.info("Getting containers... [\(String._debugInfo(), privacy: .public)]")
+//		logger.info("Getting containers...")
 		do {
 			let containers = try await portainer.fetchContainers(endpointID: endpointID, filters: filters)
-//			logger.debug("Got \(containers.count, privacy: .public) containers [\(String._debugInfo(), privacy: .public)]")
+//			logger.debug("Got \(containers.count, privacy: .public) containers")
 			return containers.sorted()
 		} catch {
-			logger.error("Failed to get containers: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Failed to get containers: \(error, privacy: .public)")
 			throw error
 		}
 	}
 
 	public func execute(_ action: ExecuteAction, containerID: Container.ID, endpointID: Endpoint.ID) async throws {
-		// swiftlint:disable:next line_length
-		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"... [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
 			try await portainer.execute(action, containerID: containerID, endpointID: endpointID)
 
-			logger.debug("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
+			logger.notice("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"")
 		} catch {
-			// swiftlint:disable:next line_length
-			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
 			throw error
 		}
 	}

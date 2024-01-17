@@ -36,12 +36,14 @@ struct ContainerLogsView: View {
 			}
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
-					ToolbarMenu(viewState: viewModel.viewState,
-								lineCount: $viewModel.lineCount,
-								includeTimestamps: $viewModel.includeTimestamps,
-								shareableContent: viewModel.viewState.unwrappedValue,
-								scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
-								refreshAction: { viewModel.getLogs(errorHandler: errorHandler) })
+					ToolbarMenu(
+						viewState: viewModel.viewState,
+						lineCount: $viewModel.lineCount,
+						includeTimestamps: $viewModel.includeTimestamps,
+						shareableContent: viewModel.viewState.value,
+						scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
+						refreshAction: { viewModel.getLogs(errorHandler: errorHandler) }
+					)
 				}
 			}
 		}
@@ -172,7 +174,9 @@ private extension ContainerLogsView {
 				}
 			} label: {
 				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+					.labelStyle(.iconOnly)
 			}
+			.labelStyle(.titleAndIcon)
 		}
 	}
 }

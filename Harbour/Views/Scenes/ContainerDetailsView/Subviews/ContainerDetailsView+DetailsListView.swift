@@ -23,10 +23,10 @@ extension ContainerDetailsView {
 		}
 
 		var body: some View {
-			List {
+			Form {
 				ForEach(data, content: content)
 			}
-//			.background {
+			.formStyle(.grouped)
 			.overlay {
 				if data.isEmpty {
 					ContentUnavailableView("Generic.Empty", systemImage: "ellipsis")

@@ -38,6 +38,7 @@ private extension SettingsView.OtherSection {
 				Button("SettingsView.Other.Footer.Headline") {
 //					viewModel.isNegraSheetPresented = true
 				}
+				.buttonStyle(.plain)
 				Link(
 					"SettingsView.Other.Footer.Subheadline BuildVersion:\(Bundle.main.buildVersion) BuildNumber:\(Bundle.main.buildNumber)",
 					destination: githubURL

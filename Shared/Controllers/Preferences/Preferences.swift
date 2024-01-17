@@ -17,7 +17,7 @@ import SwiftUI
 // MARK: - Preferences
 
 /// UserDefaults wrapper; user preferences store.
-public final class Preferences: ObservableObject {
+public final class Preferences: ObservableObject, @unchecked Sendable {
 
 	public static let shared = Preferences()
 	// swiftlint:disable:next force_unwrapping
@@ -32,9 +32,11 @@ public final class Preferences: ObservableObject {
 	@AppStorage(Keys.enableHaptics, store: Preferences.userDefaults) public var enableHaptics = true
 
 	/// Is background refresh enabled?
+	#if os(iOS)
 	@AppStorage(Keys.enableBackgroundRefresh, store: Preferences.userDefaults) public var enableBackgroundRefresh = false {
 		didSet { onEnableBackgroundRefreshChange(enableBackgroundRefresh) }
 	}
+	#endif
 
 	/// Last background refresh time
 	@AppStorage(Keys.lastBackgroundRefreshDate, store: Preferences.userDefaults) public var lastBackgroundRefreshDate: TimeInterval?
@@ -60,9 +62,9 @@ public final class Preferences: ObservableObject {
 // MARK: - Preferences+Handlers
 
 private extension Preferences {
+	#if os(iOS)
 	func onEnableBackgroundRefreshChange(_ isEnabled: Bool) {
-		#if os(iOS)
-		logger.debug("\(Keys.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+		logger.debug("\(Keys.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public)")
 
 		let notificationCenter = UNUserNotificationCenter.current()
 
@@ -71,9 +73,9 @@ private extension Preferences {
 			notificationCenter.requestAuthorization(options: [.alert, .sound, .providesAppNotificationSettings]) { [weak self] allowed, error in
 				guard let self else { return }
 				if let error {
-					self.logger.error("Error requesting notifications authorization: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+					self.logger.error("Error requesting notifications authorization: \(error, privacy: .public)")
 				}
-				self.logger.debug("Notifications authorization allowed: \(allowed, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+				self.logger.debug("Notifications authorization allowed: \(allowed, privacy: .public)")
 
 				if error != nil || !allowed {
 					DispatchQueue.main.async {
@@ -86,6 +88,6 @@ private extension Preferences {
 			BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: HarbourBackgroundTaskIdentifier.backgroundRefresh)
 			notificationCenter.removePendingNotificationRequests(withIdentifiers: [HarbourNotificationIdentifier.containersChanged])
 		}
-		#endif
 	}
+	#endif
 }

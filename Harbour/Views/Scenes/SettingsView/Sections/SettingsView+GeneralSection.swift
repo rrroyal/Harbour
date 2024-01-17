@@ -16,6 +16,7 @@ extension SettingsView {
 		@Bindable var viewModel: SettingsView.ViewModel
 
 		var body: some View {
+			#if os(iOS)
 			Section("SettingsView.General.Title") {
 				// Enable Background Refresh
 				ToggleOption(
@@ -26,6 +27,7 @@ extension SettingsView {
 				)
 //				.symbolVariant(preferences.enableBackgroundRefresh ? .none : .slash)
 			}
+			#endif
 		}
 	}
 }

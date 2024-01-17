@@ -1,5 +1,5 @@
 //
-//  SceneDelegate+Indicators.swift
+//  SceneState+Indicators.swift
 //  Harbour
 //
 //  Created by royal on 29/01/2023.
@@ -10,9 +10,9 @@ import Foundation
 import IndicatorsKit
 import PortainerKit
 
-// MARK: - SceneDelegate+Indicators
+// MARK: - SceneState+Indicators
 
-extension SceneDelegate {
+extension SceneState {
 	typealias ShowIndicatorAction = (PresentedIndicator) -> Void
 
 	@MainActor
@@ -47,9 +47,9 @@ extension SceneDelegate {
 	}
 }
 
-// MARK: - SceneDelegate+PresentedIndicator
+// MARK: - SceneState+PresentedIndicator
 
-extension SceneDelegate {
+extension SceneState {
 	enum PresentedIndicator: Identifiable {
 		case containerActionExecuted(Container.ID, String?, ExecuteAction)
 		case copied

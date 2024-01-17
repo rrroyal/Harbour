@@ -353,16 +353,6 @@
         }
       }
     },
-    "ContainersView.NoContainersPlaceholder" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Containers"
-          }
-        }
-      }
-    },
     "ContentView.NavigationButton.Settings" : {
       "comment" : "Accessibility label for ContentView Settings navigation button",
       "localizations" : {
@@ -395,12 +385,62 @@
         }
       }
     },
+    "ContentView.NoContainersPlaceholder.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Containers"
+          }
+        }
+      }
+    },
+    "ContentView.NoEndpointsAvailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Endpoints"
+          }
+        }
+      }
+    },
     "ContentView.NoEndpointSelected" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Endpoint Selected"
+          }
+        }
+      }
+    },
+    "ContentView.NoEndpointsPlaceholder.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Double check your Portainer connection, as well as configured endpoints."
+          }
+        }
+      }
+    },
+    "ContentView.NoEndpointsPlaceholder.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Endpoints"
+          }
+        }
+      }
+    },
+    "ContentView.NotSetupPlaceholder.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure the Portainer connection in settings."
           }
         }
       }
@@ -801,6 +841,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "None"
+          }
+        }
+      }
+    },
+    "Generic.NotSetup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Setup"
           }
         }
       }
@@ -1207,7 +1257,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.DecodingFailed" : {
+    "PortainerKit.PortainerError.DecodingFailed" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1217,7 +1267,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.EncodingFailed" : {
+    "PortainerKit.PortainerError.EncodingFailed" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1227,7 +1277,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.InvalidPayload" : {
+    "PortainerKit.PortainerError.InvalidPayload" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1237,7 +1287,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.InvalidURL" : {
+    "PortainerKit.PortainerError.InvalidURL" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1247,7 +1297,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.NotSetup" : {
+    "PortainerKit.PortainerError.NotSetup" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1257,7 +1307,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.Other Reason:%@" : {
+    "PortainerKit.PortainerError.Other Reason:%@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1267,7 +1317,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.ResponseCodeUnacceptable Code:%lld" : {
+    "PortainerKit.PortainerError.ResponseCodeUnacceptable Code:%lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1277,7 +1327,7 @@
         }
       }
     },
-    "PortainerKit.PortainerError.PortainerError.Unknown" : {
+    "PortainerKit.PortainerError.Unknown" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1312,7 +1362,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Harbour will notify you if containers change their state in the background."
+            "value" : "App will notify you if containers change their states in the background."
           }
         }
       }

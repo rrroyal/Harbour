@@ -36,10 +36,12 @@ struct SetupView: View {
 			viewModel.cancelLogin()
 		}
 		.textFieldStyle(.rounded(fontDesign: .monospaced, backgroundColor: textFieldBackgroundColor))
-		.keyboardType(.URL)
 		.submitLabel(.next)
-		.disableAutocorrection(true)
+		.autocorrectionDisabled()
+		#if os(iOS)
+		.keyboardType(.URL)
 		.autocapitalization(.none)
+		#endif
 		.focused($focusedField, equals: .url)
 		.onChange(of: viewModel.url) {
 			viewModel.cancelLogin()
@@ -54,11 +56,13 @@ struct SetupView: View {
 	private var tokenTextField: some View {
 		SecureField(tokenPlaceholder, text: $viewModel.token)
 			.textFieldStyle(.rounded(fontDesign: .monospaced, backgroundColor: textFieldBackgroundColor))
-			.keyboardType(.default)
 			.submitLabel(.go)
 			.submitScope(viewModel.token.isReallyEmpty)
-			.disableAutocorrection(true)
+			.autocorrectionDisabled()
+			#if os(iOS)
+			.keyboardType(.default)
 			.autocapitalization(.none)
+			#endif
 			.focused($focusedField, equals: .token)
 			.onChange(of: viewModel.token) {
 				viewModel.cancelLogin()
@@ -114,7 +118,7 @@ struct SetupView: View {
 	}
 
 	var body: some View {
-		NavigationView {
+		NavigationStack {
 			VStack {
 				Spacer()
 
@@ -144,17 +148,20 @@ struct SetupView: View {
 			}
 			.padding()
 			.toolbar {
-				#if targetEnvironment(macCatalyst)
+				#if os(macOS) || targetEnvironment(macCatalyst)
 				ToolbarItem(placement: .cancellationAction) {
 					CloseButton {
-//						Haptics.generateIfEnabled(.sheetPresentation)
 						dismiss()
 					}
 				}
 				#endif
 			}
 		}
+		#if os(iOS)
 		.background(Color(uiColor: .systemBackground), ignoresSafeAreaEdges: .all)
+		#else
+		.background(Color(nsColor: .windowBackgroundColor), ignoresSafeAreaEdges: .all)
+		#endif
 		.animation(.easeInOut, value: viewModel.buttonLabel)
 		.animation(.easeInOut, value: viewModel.buttonColor)
 		.animation(.easeInOut, value: viewModel.isLoading)

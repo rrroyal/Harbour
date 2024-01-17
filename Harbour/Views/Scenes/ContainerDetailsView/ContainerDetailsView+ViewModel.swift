@@ -28,11 +28,11 @@ extension ContainerDetailsView {
 		var navigationItem: ContainerNavigationItem
 
 		var container: Container? {
-			viewState.unwrappedValue?.0
+			viewState.value?.0
 		}
 
 		var containerDetails: ContainerDetails? {
-			viewState.unwrappedValue?.1
+			viewState.value?.1
 		}
 
 		init(navigationItem: ContainerNavigationItem) {
@@ -41,17 +41,16 @@ extension ContainerDetailsView {
 		}
 
 		@MainActor
-		func createUserActivity(_ userActivity: NSUserActivity, navigationItem: ContainerNavigationItem?) {
-			let navigationItem = navigationItem ?? self.navigationItem
+		func createUserActivity(_ userActivity: NSUserActivity, navigationItem: ContainerNavigationItem) {
 			let identifier = "\(HarbourUserActivityIdentifier.containerDetails).\(navigationItem.endpointID ?? -1).\(navigationItem.id)"
 
 			let container = self.container(for: navigationItem)
 
 			userActivity.isEligibleForHandoff = true
+			userActivity.isEligibleForSearch = true
 			#if os(iOS)
 			userActivity.isEligibleForPrediction = false
 			#endif
-			userActivity.isEligibleForSearch = true
 
 //			let displayName = navigationItem.displayName ?? navigationItem.id
 //			userActivity.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
@@ -63,15 +62,14 @@ extension ContainerDetailsView {
 //			attributeSet.title = String(localized: "UserActivity.ContainerDetails.Title Name:\(displayName)")
 			attributeSet.title = navigationItem.displayName
 //			attributeSet.contentDescription = String(localized: "UserActivity.ContainerDetails.Description Name:\(displayName)")
-			if navigationItem.displayName != nil {
-				attributeSet.contentDescription = navigationItem.id
-			}
+			attributeSet.contentDescription = navigationItem.id
+
 			userActivity.contentAttributeSet = attributeSet
 
 			if let serverURL = portainerStore.serverURL,
 			   let endpointID = navigationItem.endpointID {
-				let portainerURLScheme = PortainerURLScheme(address: serverURL)
-				let portainerURL = portainerURLScheme?.containerURL(containerID: navigationItem.id, endpointID: endpointID)
+				let portainerDeeplink = PortainerDeeplink(baseURL: serverURL)
+				let portainerURL = portainerDeeplink?.containerURL(containerID: navigationItem.id, endpointID: endpointID)
 				userActivity.webpageURL = portainerURL
 //				userActivity.referrerURL = portainerURL
 			}
@@ -89,7 +87,7 @@ extension ContainerDetailsView {
 					ContainerNavigationItem.CodingKeys.id.stringValue
 				]
 			} catch {
-				logger.error("Failed to set payload: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+				logger.error("Failed to set payload: \(error, privacy: .public)")
 			}
 
 //			userActivity.becomeCurrent()
@@ -100,13 +98,9 @@ extension ContainerDetailsView {
 			fetchTask?.cancel()
 			let task = Task {
 				self.navigationItem = navigationItem
-				self.viewState = viewState.reloadingUnwrapped
+				self.viewState = viewState.reloading
 
 				do {
-					if !portainerStore.isSetup {
-						await portainerStore.setupTask?.value
-					}
-
 					async let _containers = portainerStore.fetchContainers(filters: .init(id: [navigationItem.id]))
 					async let _containerDetails = portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
 					let (container, containerDetails) = try await (_containers.first, _containerDetails)

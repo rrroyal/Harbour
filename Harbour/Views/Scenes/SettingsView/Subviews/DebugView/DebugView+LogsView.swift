@@ -15,6 +15,8 @@ import SwiftUI
 
 extension DebugView {
 	struct LogsView: View {
+		@State private var isLoading = false
+		@State private var logsTask: Task<Void, Never>?
 		@State private var logs: [LogEntry] = []
 		@State private var filter: String = ""
 
@@ -45,49 +47,93 @@ extension DebugView {
 				}
 			} label: {
 				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+					.labelStyle(.iconOnly)
 			}
+			.labelStyle(.titleAndIcon)
 		}
 
 		var body: some View {
-			List(filteredLogs, id: \.self) { entry in
-				Section(content: {
-					Text(entry.message)
-						.font(.system(.subheadline, design: .monospaced))
-						.multilineTextAlignment(.leading)
-						.lineLimit(nil)
-						.textSelection(.enabled)
-				}, header: {
-					Text(verbatim: "\(entry.category ?? "<none>") - \(entry.date?.ISO8601Format() ?? "<none>") [\(entry.levelReadable)]")
-						.font(.system(.footnote, design: .monospaced))
-						.textCase(.none)
-				})
-				.listRowBackground(entry.color?.opacity(0.1))
+			Form {
+				ForEach(filteredLogs, id: \.self) { entry in
+					Section {
+						Text(entry.message)
+							.font(.footnote)
+							.fontDesign(.monospaced)
+							.multilineTextAlignment(.leading)
+							.lineLimit(nil)
+							.textSelection(.enabled)
+					} header: {
+						Text(verbatim: "\(entry.category ?? "<none>") - \(entry.date?.ISO8601Format() ?? "<none>") [\(entry.levelReadable)]")
+							.font(.caption2)
+							.fontDesign(.monospaced)
+							.textCase(.none)
+							.textSelection(.enabled)
+							.lineLimit(2)
+					}
+					.listRowBackground(entry.color?.opacity(0.1))
+				}
 			}
-			.navigationTitle("DebugView.LogsView.Title")
-			.navigationBarTitleDisplayMode(.inline)
-			.listStyle(.grouped)
+			.formStyle(.grouped)
 			.searchable(text: $filter)
 			.scrollDismissesKeyboard(.interactively)
+			.navigationTitle("DebugView.LogsView.Title")
+			#if os(iOS)
+			.navigationBarTitleDisplayMode(.inline)
+			#endif
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					toolbarMenu
 				}
+
+				ToolbarItem(placement: .status) {
+					if isLoading {
+						ProgressView()
+							#if os(macOS)
+							.controlSize(.small)
+							#endif
+							.transition(.opacity)
+					}
+				}
 			}
-			.onAppear {
-				getLogs()
+			#if os(macOS)
+			.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
+			#endif
+			.refreshable {
+				await getLogs(showIndicator: false).value
 			}
+			.task {
+				await getLogs().value
+			}
+			.animation(.easeInOut, value: isLoading)
+			.animation(.easeInOut, value: logs)
 		}
 
-		func getLogs() {
-			Task {
+		@discardableResult
+		func getLogs(showIndicator: Bool = true) -> Task<Void, Never> {
+			self.logsTask?.cancel()
+			let task = Task {
+				if showIndicator {
+					isLoading = true
+				}
+				defer {
+					if showIndicator {
+						isLoading = false
+					}
+				}
+
 				do {
 					let logStore = try OSLogStore(scope: .currentProcessIdentifier)
 					let position = logStore.position(date: Date().addingTimeInterval(-(6 * 60 * 60)))
 					// swiftlint:disable:next force_unwrapping
 					let predicate = NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier!)
-					let entries = try logStore.getEntries(with: [],
-														  at: position,
-														  matching: predicate)
+					let entries = try logStore.getEntries(
+						with: [],
+						at: position,
+						matching: predicate
+					)
+
+					guard !Task.isCancelled else { return }
+
 					logs = entries
 						.compactMap { $0 as? OSLogEntryLog }
 						.map { LogEntry(message: $0.composedMessage, level: $0.level, date: $0.date, category: $0.category) }
@@ -95,6 +141,8 @@ extension DebugView {
 					logs = [LogEntry(message: error.localizedDescription, level: nil, date: nil, category: nil)]
 				}
 			}
+			self.logsTask = task
+			return task
 		}
 	}
 }

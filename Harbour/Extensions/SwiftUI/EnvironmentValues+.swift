@@ -17,7 +17,7 @@ import SwiftUI
 extension EnvironmentValues {
 	private struct ErrorHandlerEnvironmentKey: EnvironmentKey {
 		static let defaultValue: ErrorHandler = .init { error, _debugInfo in
-			assertionFailure("`errorHandler` has been called, but none is attached!")
+//			assertionFailure("`errorHandler` has been called, but none is attached!")
 			os_log(.error, log: .default, "Error: \(error, privacy: .public) [\(_debugInfo, privacy: .public)]")
 		}
 	}
@@ -33,13 +33,13 @@ extension EnvironmentValues {
 
 extension EnvironmentValues {
 	private struct ShowIndicatorEnvironmentKey: EnvironmentKey {
-		static let defaultValue: SceneDelegate.ShowIndicatorAction = { indicator in
+		static let defaultValue: SceneState.ShowIndicatorAction = { indicator in
 			assertionFailure("`showIndicator` has been called, but none is attached! Indicator: \(indicator)")
 		}
 	}
 
 	/// An action that shows provided indicator.
-	var showIndicator: SceneDelegate.ShowIndicatorAction {
+	var showIndicator: SceneState.ShowIndicatorAction {
 		get { self[ShowIndicatorEnvironmentKey.self] }
 		set { self[ShowIndicatorEnvironmentKey.self] = newValue }
 	}

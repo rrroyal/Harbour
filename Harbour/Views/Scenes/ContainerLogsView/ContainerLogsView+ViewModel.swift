@@ -38,7 +38,7 @@ extension ContainerLogsView {
 
 		var logsViewable: AttributedString? {
 			if let logsParsed { return logsParsed }
-			if let logs = viewState.unwrappedValue { return AttributedString(stringLiteral: ANSIParser.trim(logs)) }
+			if let logs = viewState.value { return AttributedString(stringLiteral: ANSIParser.trim(logs)) }
 			return nil
 		}
 
@@ -50,13 +50,15 @@ extension ContainerLogsView {
 		func getLogs(errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
-				self.viewState = viewState.reloadingUnwrapped
+				self.viewState = viewState.reloading
 				self.parseTask?.cancel()
 
 				do {
-					let logs = try await portainerStore.getLogs(for: navigationItem.id,
-																tail: lineCount,
-																timestamps: includeTimestamps)
+					let logs = try await portainerStore.getLogs(
+						for: navigationItem.id,
+						tail: lineCount,
+						timestamps: includeTimestamps
+					)
 					self.viewState = .success(logs)
 
 					self.parseTask = Task.detached {

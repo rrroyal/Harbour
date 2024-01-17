@@ -10,20 +10,22 @@ import BackgroundTasks
 import CommonFoundation
 import Foundation
 import PortainerKit
+import SwiftData
 import UserNotifications
 
 // MARK: - AppState+scheduleBackgroundRefresh
 
+#if os(iOS)
 extension AppState {
 	func scheduleBackgroundRefresh() {
 		guard Preferences.shared.enableBackgroundRefresh else {
-			logger.info("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled [\(String._debugInfo(), privacy: .public)]")
+			logger.notice("\(Preferences.Keys.enableBackgroundRefresh, privacy: .public) disabled")
 			return
 		}
 
 		let identifier = HarbourBackgroundTaskIdentifier.backgroundRefresh
 
-		logger.info("Scheduling background refresh with identifier: \"\(identifier, privacy: .public)\" [\(String._debugInfo(), privacy: .public)]")
+		logger.notice("Scheduling background refresh with identifier: \"\(identifier, privacy: .public)\"")
 
 		let request = BGAppRefreshTaskRequest(identifier: identifier)
 		request.earliestBeginDate = .now
@@ -31,8 +33,7 @@ extension AppState {
 		do {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
-			// swiftlint:disable:next line_length
-			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error, privacy: .public)")
 		}
 	}
 }
@@ -71,7 +72,7 @@ extension AppState {
 	@Sendable
 	nonisolated func handleBackgroundRefresh() async {
 		do {
-			loggerBackground.notice("Handling background refresh... [\(String._debugInfo(), privacy: .public)]")
+			loggerBackground.notice("Handling background refresh...")
 
 			#if DEBUG
 			Task { @MainActor in
@@ -81,9 +82,11 @@ extension AppState {
 
 			scheduleBackgroundRefresh()
 
-			let portainerStore = PortainerStore(urlSessionConfiguration: .intents)
-			await portainerStore.setupTask?.value
-			await portainerStore.loadStoredContainersIfNeeded()
+			let modelContainer = try ModelContainer(for: StoredContainer.self)
+			let modelContext = ModelContext(modelContainer)
+
+			let portainerStore = PortainerStore(modelContext: modelContext, urlSessionConfiguration: .intents)
+			await portainerStore.setupInitially()
 
 			let oldContainers = portainerStore.containers
 				.map { Container(id: $0.id, names: $0.names, image: $0.image, labels: $0.labels, state: $0.state, status: $0.status) }
@@ -94,7 +97,7 @@ extension AppState {
 
 			try await handleContainersUpdate(from: oldContainers, to: newContainers)
 		} catch {
-			loggerBackground.error("Error handling background refresh: \(error, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+			loggerBackground.error("Error handling background refresh: \(error, privacy: .public)")
 		}
 	}
 
@@ -195,7 +198,7 @@ extension AppState {
 //			}
 //			.sorted { ($0.name ?? "", $0.id) < ($1.name ?? "", $1.id) }
 
-		loggerBackground.notice("Differences: \(differencesSorted, privacy: .public) [\(String._debugInfo(), privacy: .public)]")
+		loggerBackground.notice("Differences: \(differencesSorted, privacy: .public)")
 
 		if differencesSorted.isEmpty {
 			return
@@ -206,7 +209,7 @@ extension AppState {
 			let notificationRequest = UNNotificationRequest(identifier: notificationIdentifier, content: notificationContent, trigger: nil)
 			try await UNUserNotificationCenter.current().add(notificationRequest)
 		} else {
-			loggerBackground.warning("notificationContent(for:) didn't return anything! [\(String._debugInfo(), privacy: .public)]")
+			loggerBackground.warning("notificationContent(for:) didn't return anything!")
 		}
 	}
 
@@ -279,3 +282,4 @@ extension AppState {
 		return notificationContent
 	}
 }
+#endif

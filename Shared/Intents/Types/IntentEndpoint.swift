@@ -80,14 +80,14 @@ struct IntentEndpointQuery: EntityQuery {
 				.filter { identifiers.contains($0.id) }
 				.map { Entity(endpoint: $0) }
 
-			logger.info("Returning \(String(describing: endpoints), privacy: .sensitive) (live) [\(String._debugInfo(), privacy: .public)]")
+			logger.info("Returning \(String(describing: endpoints), privacy: .sensitive) (live)")
 			return endpoints
 		} catch {
 			logger.error("Error getting entities: \(error, privacy: .public)")
 
 			if !requiresOnline && error is URLError {
 				let parsed = identifiers.map { Entity(id: $0, name: nil) }
-				logger.notice("Returning \(String(describing: parsed), privacy: .sensitive) (offline) [\(String._debugInfo(), privacy: .public)]")
+				logger.notice("Returning \(String(describing: parsed), privacy: .sensitive) (offline)")
 				return parsed
 			}
 

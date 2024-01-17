@@ -19,6 +19,7 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 
 	func _body(configuration: TextField<Self._Label>) -> some View {
 		configuration
+			.textFieldStyle(.plain)
 			.font(.system(.callout, design: fontDesign).weight(.regular))
 			.multilineTextAlignment(.center)
 			.padding(10)
@@ -31,8 +32,10 @@ struct RoundedTextFieldStyle: TextFieldStyle {
 
 extension TextFieldStyle where Self == RoundedTextFieldStyle {
 	static var rounded: Self { .init() }
-	static func rounded(fontDesign: Font.Design = .default,
-						backgroundColor: Color = .secondaryBackground) -> Self {
+	static func rounded(
+		fontDesign: Font.Design = .default,
+		backgroundColor: Color = .secondaryBackground
+	) -> Self {
 		RoundedTextFieldStyle(fontDesign: fontDesign, backgroundColor: backgroundColor)
 	}
 }

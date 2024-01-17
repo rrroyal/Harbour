@@ -34,8 +34,9 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.background(isEnabled ? backgroundColor : Color.systemGray)
 			.clipShape(roundedRectangle)
 			.contentShape(roundedRectangle)
-			.animation(.easeInOut, value: isEnabled)
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
+			.animation(Constants.Buttons.pressAnimation, value: isEnabled)
+			.animation(Constants.Buttons.pressAnimation, value: configuration.isPressed)
 	}
 }
 
@@ -43,9 +44,11 @@ struct PrimaryButtonStyle: ButtonStyle {
 
 extension ButtonStyle where Self == PrimaryButtonStyle {
 	static var customPrimary: Self { .init() }
-	static func customPrimary(foregroundColor: Color = .white,
-							  backgroundColor: Color = .accentColor,
-							  font: Font = .body.weight(.semibold)) -> Self {
+	static func customPrimary(
+		foregroundColor: Color = .white,
+		backgroundColor: Color = .accentColor,
+		font: Font = .body.weight(.semibold)
+	) -> Self {
 		.init(foregroundColor: foregroundColor, backgroundColor: backgroundColor, font: font)
 	}
 }

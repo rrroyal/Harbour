@@ -21,6 +21,13 @@ enum Constants {
 		static let circleSize: Double = 8
 	}
 
+	#if os(macOS)
+	enum Window {
+		static let minWidth: Double = 300
+		static let minHeight: Double = 400
+	}
+	#endif
+
 	static let smallCornerRadius: Double = 10
 	static let cornerRadius: Double = 14
 

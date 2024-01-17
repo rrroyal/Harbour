@@ -20,8 +20,8 @@ struct StacksView: View {
 	@Binding var selectedStack: Stack?
 
 	var body: some View {
-		NavigationView {
-			List {
+		NavigationStack {
+			Form {
 				if let stacks = viewModel.stacks {
 					ForEach(stacks) { stack in
 						let isLoading = viewModel.loadingStacks.contains(stack.id)
@@ -38,7 +38,11 @@ struct StacksView: View {
 					}
 				}
 			}
+			.formStyle(.grouped)
 			.searchable(text: $viewModel.searchText)
+			#if os(macOS)
+			.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
+			#endif
 			.overlay(viewModel.viewState.backgroundView)
 			.overlay {
 				if viewModel.shouldShowEmptyPlaceholderView {
@@ -51,7 +55,7 @@ struct StacksView: View {
 			}
 			.navigationTitle("StacksView.Title")
 			.toolbar {
-				#if targetEnvironment(macCatalyst)
+				#if os(macOS) || targetEnvironment(macCatalyst)
 				ToolbarItem(placement: .cancellationAction) {
 					CloseButton {
 						dismiss()
@@ -150,6 +154,7 @@ private extension StacksView {
 						Text(verbatim: stack.name)
 							.font(.body)
 							.fontWeight(.medium)
+							.foregroundStyle(isOn ? Color.primary : Color.secondary)
 
 						HStack(spacing: 4) {
 							Image(systemName: "circle")
@@ -180,9 +185,12 @@ private extension StacksView {
 					Image(systemName: SFSymbol.filter)
 						.tint(Color.accentColor)
 				}
+				.contentShape(Rectangle())
 			}
 			.disabled(!isOn || isLoading)
-			.tint(Color.primary)
+			#if os(macOS)
+			.buttonStyle(.fadesOnPress)
+			#endif
 			.padding(.vertical, 2)
 			.transition(.opacity)
 			.animation(.easeInOut, value: isLoading)
@@ -218,6 +226,7 @@ private extension StacksView {
 				}
 			}
 			.symbolVariant(.fill)
+			.labelStyle(.titleAndIcon)
 		}
 	}
 }

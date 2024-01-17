@@ -82,7 +82,6 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 				throw $containers.needsValueError()
 			}
 
-			// swiftlint:disable switch_case_alignment
 			let intentContainer: IntentContainer = switch containers.count {
 			case 0:
 				throw Error.noContainers
@@ -92,7 +91,6 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 			default:
 				try await $containers.requestDisambiguation(among: containers)
 			}
-			// swiftlint:enable switch_case_alignment
 
 			return .result(value: intentContainer)
 		} catch {

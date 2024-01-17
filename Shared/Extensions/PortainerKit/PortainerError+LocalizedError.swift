@@ -13,21 +13,21 @@ extension Portainer.PortainerError: LocalizedError {
 	public var errorDescription: String? {
 		switch self {
 		case .other(let reason):
-			String(localized: "PortainerKit.PortainerError.PortainerError.Other Reason:\(reason)")
+			String(localized: "PortainerKit.PortainerError.Other Reason:\(reason)")
 		case .unknownError:
-			String(localized: "PortainerKit.PortainerError.PortainerError.Unknown")
+			String(localized: "PortainerKit.PortainerError.Unknown")
 		case .responseCodeUnacceptable(let code):
-			String(localized: "PortainerKit.PortainerError.PortainerError.ResponseCodeUnacceptable Code:\(code)")
+			String(localized: "PortainerKit.PortainerError.ResponseCodeUnacceptable Code:\(code)")
 		case .encodingFailed:
-			String(localized: "PortainerKit.PortainerError.PortainerError.EncodingFailed")
+			String(localized: "PortainerKit.PortainerError.EncodingFailed")
 		case .decodingFailed:
-			String(localized: "PortainerKit.PortainerError.PortainerError.DecodingFailed")
+			String(localized: "PortainerKit.PortainerError.DecodingFailed")
 		case .invalidPayload:
-			String(localized: "PortainerKit.PortainerError.PortainerError.InvalidPayload")
+			String(localized: "PortainerKit.PortainerError.InvalidPayload")
 		case .invalidURL:
-			String(localized: "PortainerKit.PortainerError.PortainerError.InvalidURL")
+			String(localized: "PortainerKit.PortainerError.InvalidURL")
 		case .notSetup:
-			String(localized: "PortainerKit.PortainerError.PortainerError.NotSetup")
+			String(localized: "PortainerKit.PortainerError.NotSetup")
 		}
 	}
 }

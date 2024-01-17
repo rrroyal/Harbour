@@ -26,7 +26,7 @@ extension StacksView {
 
 		@MainActor
 		var stacks: [Stack]? {
-			viewState.unwrappedValue?.filter(searchText)
+			viewState.value?.filter(searchText)
 		}
 
 		@MainActor
@@ -40,7 +40,7 @@ extension StacksView {
 
 			let task = Task {
 				do {
-					viewState = viewState.reloadingUnwrapped
+					viewState = viewState.reloading
 
 					let stacks = try await portainerStore.getStacks()
 					viewState = .success(stacks)
@@ -63,7 +63,7 @@ extension StacksView {
 			try await portainerStore.setStackStatus(stackID: stack.id, started: started)
 
 			let task = Task {
-				if case .success(var stacks) = self.viewState,
+				if var stacks = self.viewState.value,
 				   let stackIndex = stacks.firstIndex(where: { $0.id == stack.id }) {
 					await MainActor.run {
 						stacks[stackIndex].status = started ? .active : .inactive

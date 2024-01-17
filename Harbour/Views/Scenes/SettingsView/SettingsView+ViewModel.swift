@@ -44,8 +44,8 @@ extension SettingsView {
 
 		@MainActor
 		func refreshServers() {
-			serverURLs = portainerStore.savedURLs
 			activeURL = portainerStore.serverURL
+			serverURLs = portainerStore.savedURLs
 		}
 
 		func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {

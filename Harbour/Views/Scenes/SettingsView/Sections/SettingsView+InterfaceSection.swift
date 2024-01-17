@@ -26,30 +26,40 @@ extension SettingsView {
 
 				if viewModel.displayiPadOptions {
 					// Use Two-Column Layout
-					ToggleOption("SettingsView.Interface.UseColumns.Title",
-								 description: "SettingsView.Interface.UseColumns.Description",
-//								 iconSymbolName: preferences.cvUseColumns ? "sidebar.squares.left" : "rectangle.stack",
-								 iconSymbolName: "sidebar.squares.left",
-//								 symbolVariants: .none,
-								 isOn: $preferences.cvUseColumns)
+					ToggleOption(
+						"SettingsView.Interface.UseColumns.Title",
+						description: "SettingsView.Interface.UseColumns.Description",
+//						iconSymbolName: preferences.cvUseColumns ? "sidebar.squares.left" : "rectangle.stack",
+						iconSymbolName: "sidebar.squares.left",
+//						symbolVariants: .none,
+						isOn: $preferences.cvUseColumns
+					)
 				}
 
 				// Use Grid View
-				ToggleOption("SettingsView.Interface.UseGridView.Title",
-							 description: "SettingsView.Interface.UseGridView.Description",
-//							 iconSymbolName: preferences.cvUseGrid ? "square.grid.2x2" : "rectangle.grid.1x2",
-							 iconSymbolName: "square.grid.2x2",
-							 isOn: $preferences.cvUseGrid)
+				ToggleOption(
+					"SettingsView.Interface.UseGridView.Title",
+					description: "SettingsView.Interface.UseGridView.Description",
+//					iconSymbolName: preferences.cvUseGrid ? "square.grid.2x2" : "rectangle.grid.1x2",
+					iconSymbolName: "square.grid.2x2",
+					isOn: $preferences.cvUseGrid
+				)
 
 				// Enable Haptics
-				ToggleOption("SettingsView.Interface.EnableHaptics.Title",
-							 description: "SettingsView.Interface.EnableHaptics.Description",
-							 iconSymbolName: "waveform",
-							 isOn: $preferences.enableHaptics)
+				#if os(iOS)
+				ToggleOption(
+					"SettingsView.Interface.EnableHaptics.Title",
+					description: "SettingsView.Interface.EnableHaptics.Description",
+					iconSymbolName: "waveform",
+					isOn: $preferences.enableHaptics
+				)
 //				.symbolVariant(preferences.enableHaptics ? .none : .slash)
+				#endif
 
+				#if os(iOS)
 				// App Icon
 				AppIconMenu()
+				#endif
 			}
 		}
 	}
@@ -57,6 +67,7 @@ extension SettingsView {
 
 // MARK: - SettingsView.InterfaceSection+AppIconMenu
 
+#if os(iOS)
 private extension SettingsView.InterfaceSection {
 	struct AppIconMenu: View {
 		@Environment(\.errorHandler) private var errorHandler
@@ -102,6 +113,7 @@ private extension SettingsView.InterfaceSection {
 		}
 	}
 }
+#endif
 
 // MARK: - Previews
 

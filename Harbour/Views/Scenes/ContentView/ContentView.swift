@@ -15,22 +15,21 @@ import SwiftUI
 // MARK: - ContentView
 
 struct ContentView: View {
-	@EnvironmentObject private var appDelegate: AppDelegate
-	@EnvironmentObject private var sceneDelegate: SceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@EnvironmentObject private var preferences: Preferences
 	@Environment(AppState.self) private var appState
-	@Environment(\.errorHandler) private var errorHandler
-
+	@State private var sceneState = SceneState()
 	@State private var viewModel = ViewModel()
 
 	private let supportedKeyShortcuts: Set<KeyEquivalent> = [
 		"f",	// ⌘F - Search
-		"r"		// ⌘R - Refresh
+		"r",	// ⌘R - Refresh
+		"s",	// ⇧⌘S - Stacks
+		","		// ⌘, - Settings
 	]
 
 	@ViewBuilder
-	private var titleMenu: some View {
+	private var toolbarTitleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
 			Button {
 				Haptics.generateIfEnabled(.light)
@@ -38,30 +37,71 @@ struct ContentView: View {
 			} label: {
 				let isSelected = portainerStore.selectedEndpoint?.id == endpoint.id
 				Label(endpoint.name ?? endpoint.id.description, systemImage: isSelected ? SFSymbol.checkmark : "")
+					.labelStyle(.titleAndIcon)
 			}
 		}
 	}
 
 	@ToolbarContentBuilder
-	private var toolbarMenu: some ToolbarContent {
-		ToolbarItem(placement: .primaryAction) {
+	private var toolbar: some ToolbarContent {
+		ToolbarItem(placement: .cancellationAction) {
 			Button {
-//				Haptics.generateIfEnabled(.sheetPresentation)
-				sceneDelegate.isSettingsSheetPresented = true
+				sceneState.isStacksSheetPresented = true
+			} label: {
+				Label("ContentView.NavigationButton.Stacks", systemImage: SFSymbol.stack)
+			}
+			.keyboardShortcut("s", modifiers: [.command, .shift])
+		}
+
+		#if os(iOS)
+		ToolbarItem(placement: .automatic) {
+			Button {
+				sceneState.isSettingsSheetPresented = true
 			} label: {
 				Label("ContentView.NavigationButton.Settings", systemImage: SFSymbol.settings)
 			}
 			.keyboardShortcut(",", modifiers: .command)
 		}
+		#endif
 
-		ToolbarItem(placement: .navigation) {
-			Button {
-				sceneDelegate.isStacksSheetPresented = true
+		#if os(macOS)
+		ToolbarItem(placement: .principal) {
+			Menu {
+				toolbarTitleMenu
 			} label: {
-				Label("ContentView.NavigationButton.Stacks", systemImage: SFSymbol.stack)
-//					.symbolVariant(portainerStore.isSetup ? .none : .slash)
+				Text(viewModel.endpointsMenuTitle)
 			}
-			.keyboardShortcut("s", modifiers: .command)
+			.disabled(!viewModel.canUseEndpointsMenu)
+		}
+		#endif
+	}
+
+	@ViewBuilder
+	private var backgroundPlaceholder: some View {
+		Group {
+			if !portainerStore.isSetup {
+				ContentUnavailableView(
+					"Generic.NotSetup",
+					systemImage: SFSymbol.network,
+					description: Text("ContentView.NotSetupPlaceholder.Description")
+				)
+				.symbolVariant(.slash)
+			} else if portainerStore.endpoints.isEmpty {
+				ContentUnavailableView(
+					"ContentView.NoEndpointsPlaceholder.Title",
+					systemImage: SFSymbol.xmark,
+					description: Text("ContentView.NoEndpointsPlaceholder.Description")
+				)
+			} else if viewModel.containers.isEmpty {
+				if !viewModel.searchText.isEmpty {
+					ContentUnavailableView.search(text: viewModel.searchText)
+				} else {
+					ContentUnavailableView(
+						"ContentView.NoContainersPlaceholder.Title",
+						systemImage: SFSymbol.xmark
+					)
+				}
+			}
 		}
 	}
 
@@ -80,18 +120,17 @@ struct ContentView: View {
 
 			ContainersView(viewModel.containers)
 				.transition(.opacity)
-				.animation(.easeInOut, value: viewModel.containers)
 		}
 		.background {
 			if viewModel.shouldShowEmptyPlaceholderView {
-				ContainersView.NoContainersPlaceholder(isEmpty: viewModel.containers.isEmpty, searchQuery: viewModel.searchText)
+				backgroundPlaceholder
 			}
 		}
-		.modifier(
-			ContainersView.ListModifier {
-				viewModel.viewState.backgroundView
-			}
-		)
+		.background {
+			viewModel.viewState.backgroundView
+		}
+		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+		.scrollDismissesKeyboard(.interactively)
 		.searchable(
 			text: $viewModel.searchText,
 			tokens: $viewModel.searchTokens,
@@ -104,7 +143,7 @@ struct ContentView: View {
 			do {
 				try await viewModel.refresh()
 			} catch {
-				errorHandler(error)
+				handleError(error)
 			}
 		}
 		.onChange(of: portainerStore.containers, viewModel.onContainersChange)
@@ -113,27 +152,27 @@ struct ContentView: View {
 	// MARK: Body
 
 	var body: some View {
-		NavigationWrapped(useColumns: viewModel.shouldUseColumns) {
+		NavigationWrapped(navigationPath: $sceneState.navigationPath, useColumns: viewModel.shouldUseColumns) {
 			containersView
 				.navigationTitle(viewModel.navigationTitle)
 				#if os(iOS)
 				.navigationBarTitleDisplayMode(.inline)
 				#endif
-				.toolbarTitleMenu {
-					titleMenu
-				}
 				.toolbar {
-					toolbarMenu
+					toolbar
+				}
+				.if(viewModel.canUseEndpointsMenu) {
+					$0.toolbarTitleMenu { toolbarTitleMenu }
 				}
 		} placeholderContent: {
 			Text("ContentView.NoContainerSelectedPlaceholder")
 				.foregroundStyle(.tertiary)
 		}
-		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
+		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
-				.indicatorOverlay(model: sceneDelegate.indicators)
+				.indicatorOverlay(model: sceneState.indicators)
 		}
-		.sheet(isPresented: $sceneDelegate.isStacksSheetPresented) {
+		.sheet(isPresented: $sceneState.isStacksSheetPresented) {
 			let selectedStackBinding = Binding<Stack?>(
 				get: { nil },
 				set: { viewModel.onStackTapped($0) }
@@ -144,15 +183,21 @@ struct ContentView: View {
 			viewModel.onLandingDismissed()
 		} content: {
 			LandingView()
-				.indicatorOverlay(model: sceneDelegate.indicators)
+				.indicatorOverlay(model: sceneState.indicators)
 		}
-		.indicatorOverlay(model: sceneDelegate.indicators)
-		.environment(\.errorHandler, .init(sceneDelegate.handleError))
-		.environment(\.showIndicator, sceneDelegate.showIndicator)
-		.environmentObject(sceneDelegate.indicators)
-		.onOpenURL(perform: sceneDelegate.onOpenURL)
-		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneDelegate.onContinueContainerDetailsActivity)
+		.focusable()
+		.focusEffectDisabled()
+		.indicatorOverlay(model: sceneState.indicators)
+		.environment(\.errorHandler, .init(handleError))
+		.environment(\.showIndicator, sceneState.showIndicator)
+		.environment(sceneState)
+		.onOpenURL(perform: sceneState.onOpenURL)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueContainerDetailsActivity)
 		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
+		.animation(.easeInOut, value: viewModel.viewState.id)
+		.animation(.easeInOut, value: viewModel.containers)
+		.animation(.easeInOut, value: viewModel.isLoading)
+		.animation(.easeInOut, value: portainerStore.isSetup)
 	}
 }
 
@@ -171,13 +216,17 @@ private extension ContentView {
 				do {
 					try await viewModel.refresh()
 				} catch {
-					errorHandler(error)
+					handleError(error)
 				}
 			}
 			return .handled
 		default:
 			return .ignored
 		}
+	}
+
+	func handleError(_ error: Error, _debugInfo: String = ._debugInfo()) {
+		sceneState.handleError(error, _debugInfo: _debugInfo)
 	}
 }
 
@@ -186,7 +235,7 @@ private extension ContentView {
 #Preview {
 	ContentView()
 		.environment(AppState.shared)
+		.environment(SceneState())
 		.environmentObject(PortainerStore.shared)
 		.environmentObject(Preferences.shared)
-		.environmentObject(SceneDelegate())
 }

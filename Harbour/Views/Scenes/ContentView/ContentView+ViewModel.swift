@@ -17,7 +17,7 @@ import UIKit
 
 extension ContentView {
 	@Observable
-	final class ViewModel {
+	final class ViewModel: @unchecked Sendable {
 		private let portainerStore: PortainerStore
 		private let preferences = Preferences.shared
 
@@ -41,7 +41,10 @@ extension ContentView {
 		var isSearchActive = false
 		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
-		@MainActor
+		var isLoading: Bool {
+			viewState.isLoading || !(fetchTask?.isCancelled ?? true) || !(suggestedSearchTokensTask?.isCancelled ?? true)
+		}
+
 		var containers: [Container] {
 			portainerStore.containers
 				.filter { container in
@@ -55,9 +58,17 @@ extension ContentView {
 				.filter(searchText)
 		}
 
-		@MainActor
 		var shouldShowEmptyPlaceholderView: Bool {
-			!viewState.isLoading && containers.isEmpty
+			switch viewState {
+			case .loading:
+				false
+			case .reloading:
+				false
+			case .success:
+				!viewState.isLoading && containers.isEmpty
+			case .failure:
+				false
+			}
 		}
 
 		var shouldUseColumns: Bool {
@@ -69,8 +80,25 @@ extension ContentView {
 			return preferences.cvUseColumns
 		}
 
+		var endpointsMenuTitle: String {
+			if let selectedEndpoint = portainerStore.selectedEndpoint {
+				return selectedEndpoint.name ?? selectedEndpoint.id.description
+			}
+			if portainerStore.endpoints.isEmpty {
+				return String(localized: "ContentView.NoEndpointsAvailable")
+			}
+			return String(localized: "ContentView.NoEndpointSelected")
+		}
+
+		var canUseEndpointsMenu: Bool {
+			portainerStore.selectedEndpoint != nil || !portainerStore.endpoints.isEmpty
+		}
+
 		var navigationTitle: String {
-			portainerStore.selectedEndpoint?.name ?? String(localized: "ContentView.NoEndpointSelected")
+			if let selectedEndpoint = portainerStore.selectedEndpoint {
+				return selectedEndpoint.name ?? selectedEndpoint.id.description
+			}
+			return String(localized: "AppName")
 		}
 
 		init() {
@@ -86,9 +114,9 @@ extension ContentView {
 					}
 				}
 
-				if !(portainerStore.setupTask?.isCancelled ?? true) {
-					return .loading
-				}
+//				if !(portainerStore.setupTask?.isCancelled ?? true) {
+//					return .loading
+//				}
 
 				return .success(())
 			}()
@@ -98,8 +126,10 @@ extension ContentView {
 		func refresh() async throws {
 			fetchTask?.cancel()
 			self.fetchTask = Task {
+				defer { self.fetchTask = nil }
+
 				do {
-					viewState = viewState.reloadingUnwrapped
+					viewState = viewState.reloading
 					let task = portainerStore.refresh()
 					_ = try await task.value
 					viewState = .success(())
@@ -111,6 +141,8 @@ extension ContentView {
 
 			self.suggestedSearchTokensTask?.cancel()
 			self.suggestedSearchTokensTask = Task {
+				defer { self.suggestedSearchTokensTask = nil }
+
 				let staticTokens: [SearchToken] = [
 					.status(isOn: true),
 					.status(isOn: false)
@@ -124,7 +156,10 @@ extension ContentView {
 				self.suggestedSearchTokens = staticTokens + stacksTokens
 			}
 
-			try await self.fetchTask?.value
+			async let fetchValue: Void? = fetchTask?.value
+			async let suggestedSearchTokensValue: Void? = suggestedSearchTokensTask?.value
+
+			_ = try await (fetchValue, suggestedSearchTokensValue)
 		}
 
 		@MainActor

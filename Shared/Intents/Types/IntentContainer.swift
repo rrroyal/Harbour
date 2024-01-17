@@ -131,7 +131,7 @@ struct IntentContainerQuery: EntityStringQuery {
 
 		do {
 			guard let endpoint else {
-				logger.notice("Returning empty (no endpoint) [\(String._debugInfo(), privacy: .public)]")
+				logger.notice("Returning empty (no endpoint)")
 				return []
 			}
 
@@ -142,7 +142,7 @@ struct IntentContainerQuery: EntityStringQuery {
 				.sorted()
 				.map { Entity(container: $0) }
 
-			logger.notice("Returning \(String(describing: containers), privacy: .sensitive) (live) [\(String._debugInfo(), privacy: .public)]")
+			logger.notice("Returning \(String(describing: containers), privacy: .sensitive) (live)")
 			return containers
 		} catch {
 			logger.error("Error getting matching entities: \(error, privacy: .public)")
@@ -154,7 +154,7 @@ struct IntentContainerQuery: EntityStringQuery {
 		logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
 
 		guard let endpoint else {
-			logger.notice("Returning empty (no endpoint) [\(String._debugInfo(), privacy: .public)]")
+			logger.notice("Returning empty (no endpoint)")
 			return []
 		}
 
@@ -190,7 +190,7 @@ struct IntentContainerQuery: EntityStringQuery {
 			logger.error("Error getting entities: \(error, privacy: .public)")
 
 			if !requiresOnline && error is URLError {
-				logger.notice("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline) [\(String._debugInfo(), privacy: .public)]")
+				logger.notice("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline)")
 				return parsedContainers
 			}
 

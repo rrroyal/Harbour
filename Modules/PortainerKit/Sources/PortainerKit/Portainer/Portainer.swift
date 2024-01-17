@@ -73,7 +73,11 @@ public final class Portainer {
 	///   - token: Authorization JWT token
 	///   - urlSessionConfiguration: Configuration of underlying URLSession
 	@Sendable
-	public init(serverURL: URL? = nil, token: String? = nil, urlSessionConfiguration: URLSessionConfiguration = .default) {
+	public init(
+		serverURL: URL? = nil,
+		token: String? = nil,
+		urlSessionConfiguration: URLSessionConfiguration = .default
+	) {
 		urlSessionConfiguration.httpAdditionalHeaders = urlSessionConfiguration.httpAdditionalHeaders ?? [:]
 		urlSessionConfiguration.httpAdditionalHeaders?["Accept-Encoding"] = urlSessionConfiguration.httpAdditionalHeaders?["Accept-Encoding"] ?? "gzip, deflate"
 

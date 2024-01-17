@@ -7,8 +7,9 @@
 //
 
 import CommonHaptics
-import Foundation
-import Observation
+import CommonOSLog
+import OSLog
+import PortainerKit
 import SwiftUI
 
 // MARK: - SetupView+ViewModel
@@ -16,7 +17,8 @@ import SwiftUI
 extension SetupView {
 	@Observable
 	final class ViewModel: @unchecked Sendable {
-		private let portainerStore = PortainerStore()
+		private let portainer = Portainer()
+		private let logger = Logger(.custom(SetupView.self))
 		private let errorTimeoutInterval: TimeInterval = 3
 
 		private(set) var isLoading = false
@@ -62,6 +64,8 @@ extension SetupView {
 
 		@discardableResult
 		func login() async throws -> Bool {
+			logger.notice("Attempting login with URL \"\(self.url)\"...")
+
 			cancelLogin()
 			loginTask = Task { @MainActor in
 				isLoading = true
@@ -74,11 +78,15 @@ extension SetupView {
 
 					let token = self.token
 
-					try await portainerStore.setup(url: url, token: token, saveToken: false, checkAuth: true)
+					portainer.serverURL = url
+					portainer.token = token
+					let portainerInstanceStatus = try await portainer.fetchSystemStatus()
 
-					Task.detached {
+					logger.info("Portainer instance ID: \"\(portainerInstanceStatus.instanceID, privacy: .sensitive)\", version: \(portainerInstanceStatus.version, privacy: .sensitive)")
+
+					Task.detached { @MainActor in
 						guard !Task.isCancelled else { return }
-						try? await PortainerStore.shared.setup(url: url, token: token, saveToken: true, checkAuth: false)
+						try? PortainerStore.shared.setup(url: url, token: token, saveToken: true)
 						PortainerStore.shared.refresh()
 					}
 

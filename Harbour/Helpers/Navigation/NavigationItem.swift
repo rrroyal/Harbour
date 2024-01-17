@@ -6,6 +6,6 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-import Foundation
+import PortainerKit
 
 protocol NavigationItem: Codable, Equatable, Hashable, Identifiable { }

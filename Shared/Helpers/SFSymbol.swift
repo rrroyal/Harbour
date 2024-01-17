@@ -36,6 +36,12 @@ enum SFSymbol {
 	/// 􀌀 text.alignleft
 	static let logs = "text.alignleft"
 
+	/// 􀤆 network
+	static let network = "network"
+
+	/// 􁣡 network.slash
+	static let networkSlash = "network.slask"
+
 	/// 􀍠 ellipsis
 	static let more = "ellipsis"
 

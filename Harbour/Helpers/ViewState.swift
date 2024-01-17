@@ -27,7 +27,7 @@ enum ViewState<Success, Failure: Error> {
 
 extension ViewState {
 	/// The `Success` value, or `nil` if missing.
-	var unwrappedValue: Success? {
+	var value: Success? {
 		switch self {
 		case .loading:
 			nil
@@ -41,7 +41,7 @@ extension ViewState {
 	}
 
 	/// `.loading`/`.reloading`-bound value, with unwrapped value.
-	var reloadingUnwrapped: Self {
+	var reloading: Self {
 		switch self {
 		case .loading:
 			.loading
@@ -134,6 +134,9 @@ extension ViewState {
 				}
 			}
 		}
+		#if os(macOS)
+		.controlSize(.small)
+		#endif
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.transition(.opacity)
 		.animation(.easeInOut, value: self.id)

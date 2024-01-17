@@ -61,7 +61,7 @@ extension Color {
 extension Color {
 	static var groupedBackground: Color {
 		#if os(macOS)
-		Color(nsColor: .controlBackgroundColor)
+		Color(nsColor: .windowBackgroundColor)
 		#else
 		Color(uiColor: .systemGroupedBackground)
 		#endif
@@ -73,7 +73,7 @@ extension Color {
 extension Color {
 	static var secondaryGroupedBackground: Color {
 		#if os(macOS)
-		Color(nsColor: .windowBackgroundColor)
+		Color(nsColor: .controlBackgroundColor)
 		#else
 		Color(uiColor: .secondarySystemGroupedBackground)
 		#endif

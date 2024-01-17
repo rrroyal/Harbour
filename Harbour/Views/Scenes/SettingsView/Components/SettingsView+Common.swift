@@ -11,7 +11,13 @@ import SwiftUI
 // MARK: - SettingsView+Common
 
 internal extension SettingsView {
-	static let labelFontHeadline: Font = .headline
+	static var labelFontHeadline: Font {
+		#if os(iOS)
+		.headline
+		#else
+		.body.weight(.medium)
+		#endif
+	}
 	static let labelFontSubheadline: Font = .footnote
 
 	static let vstackSpacing: Double = 2

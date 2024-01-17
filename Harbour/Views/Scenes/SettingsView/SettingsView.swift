@@ -16,24 +16,24 @@ struct SettingsView: View {
 
 	var body: some View {
 		NavigationStack {
-			List {
+			Form {
 				PortainerSection(viewModel: viewModel)
 				GeneralSection(viewModel: viewModel)
 				InterfaceSection(viewModel: viewModel)
 				OtherSection(viewModel: viewModel)
 			}
+			.formStyle(.grouped)
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			.navigationTitle("SettingsView.Title")
-			.toolbar {
-				#if targetEnvironment(macCatalyst)
-				ToolbarItem(placement: .cancellationAction) {
-					CloseButton {
-//						Haptics.generateIfEnabled(.sheetPresentation)
-						dismiss()
-					}
-				}
-				#endif
-			}
+//			.toolbar {
+//				#if os(macOS) || targetEnvironment(macCatalyst)
+//				ToolbarItem(placement: .cancellationAction) {
+//					CloseButton {
+//						dismiss()
+//					}
+//				}
+//				#endif
+//			}
 		}
 		.sheet(isPresented: $viewModel.isNegraSheetPresented) {
 			Text(verbatim: "🐕")

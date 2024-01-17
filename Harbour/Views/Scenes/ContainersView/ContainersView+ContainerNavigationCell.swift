@@ -28,6 +28,7 @@ extension ContainersView {
 				content()
 			}
 			.tint(Color.primary)
+			.buttonStyle(.plain)
 		}
 	}
 }

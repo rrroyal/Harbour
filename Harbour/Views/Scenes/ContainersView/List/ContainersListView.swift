@@ -13,7 +13,7 @@ import SwiftUI
 
 struct ContainersListView: View {
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
-	@EnvironmentObject private var sceneDelegate: SceneDelegate
+	@Environment(SceneState.self) private var sceneState
 
 	private let cellSpacing: Double = 8
 
@@ -27,7 +27,9 @@ struct ContainersListView: View {
 						.equatable()
 				}
 				.transition(.opacity)
+				#if os(iOS)
 				.contentShape(.contextMenuPreview, ContainerCell.roundedRectangleBackground)
+				#endif
 				.contextMenu {
 					ContainerContextMenu(container: container)
 				}

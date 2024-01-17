@@ -38,7 +38,7 @@ struct ContainerDetailsView: View {
 	}
 
 	var body: some View {
-		List {
+		Form {
 			DetailsSection(container: viewModel.container, details: viewModel.containerDetails)
 			SubviewsSection(
 				container: viewModel.container,
@@ -46,6 +46,7 @@ struct ContainerDetailsView: View {
 				navigationItem: navigationItem
 			)
 		}
+		.formStyle(.grouped)
 		.background(viewModel.viewState.backgroundView)
 		.navigationTitle(navigationTitle)
 		.toolbar {
@@ -112,13 +113,15 @@ private extension ContainerDetailsView {
 					ContainerContextMenu(container: container)
 				}
 
-				if let portainerURL = PortainerURLScheme(address: portainerServerURL)?.containerURL(containerID: containerID, endpointID: portainerSelectedEndpointID) {
+				if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: containerID, endpointID: portainerSelectedEndpointID) {
 					Divider()
-					ShareLink("Generic.SharePortainerURL", item: portainerURL)
+					ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
 				}
 			} label: {
 				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+					.labelStyle(.automatic)
 			}
+			.labelStyle(.titleAndIcon)
 		}
 	}
 }

@@ -26,7 +26,7 @@ extension Indicator {
 		}
 
 		self.init(
-			id: String(describing: error).hashValue.description,
+			id: "error-\(title.hashValue)-\(subtitle.hashValue)",
 			title: title.localizedCapitalized,
 			subtitle: subtitle.localizedCapitalized,
 			expandedText: expandedText,

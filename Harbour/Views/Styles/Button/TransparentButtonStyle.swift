@@ -11,6 +11,8 @@ import SwiftUI
 // MARK: - TransparentButtonStyle
 
 struct TransparentButtonStyle: ButtonStyle {
+	@Environment(\.isEnabled) private var isEnabled: Bool
+
 	private let paddingHorizontal: Double = 14
 	private let paddingVertical: Double = 14
 	private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius)
@@ -24,6 +26,8 @@ struct TransparentButtonStyle: ButtonStyle {
 			.clipShape(roundedRectangle)
 			.contentShape(roundedRectangle)
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
+			.animation(Constants.Buttons.pressAnimation, value: isEnabled)
+			.animation(Constants.Buttons.pressAnimation, value: configuration.isPressed)
 //			.padding(.horizontal, -paddingHorizontal)
 //			.padding(.vertical, -paddingVertical)
 	}

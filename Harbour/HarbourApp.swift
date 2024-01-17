@@ -16,36 +16,40 @@ import WidgetKit
 
 @main
 struct HarbourApp: App {
-	#if os(iOS)
-	@UIApplicationDelegateAdaptor private var appDelegate: AppDelegate
-	#elseif os(macOS)
-	@NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
-	#endif
-
 	@Environment(\.scenePhase) private var scenePhase: ScenePhase
 	@StateObject private var portainerStore: PortainerStore
 	@StateObject private var preferences: Preferences = .shared
 	@State private var appState: AppState = .shared
+	private let modelContainer: ModelContainer
 
 	init() {
-		let portainerStore = PortainerStore.shared
-		portainerStore.loadStoredContainersIfNeeded()
-		self._portainerStore = .init(wrappedValue: portainerStore)
+		do {
+			self.modelContainer = try ModelContainer(for: StoredContainer.self)
+
+			let portainerStore = PortainerStore.shared
+			portainerStore.modelContext = modelContainer.mainContext
+			portainerStore.setupInitially()
+			self._portainerStore = .init(wrappedValue: portainerStore)
+
+			Task {
+				if portainerStore.isSetup {
+					portainerStore.refresh()
+				}
+			}
+		} catch {
+			fatalError("Failed to create ModelContainer!")
+		}
 	}
 
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.environmentObject(portainerStore)
-				.environmentObject(preferences)
-				.environment(appState)
-				.environment(\.portainerServerURL, portainerStore.serverURL)
-				.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
-				.environment(\.cvUseGrid, preferences.cvUseGrid)
-				.environment(\.ikEnableHaptics, preferences.enableHaptics)
+				.withEnvironment(
+					appState: appState,
+					preferences: preferences,
+					portainerStore: portainerStore
+				)
 		}
-		.defaultAppStorage(Preferences.userDefaults)
-		.modelContainer(for: [StoredContainer.self])
 		.onChange(of: scenePhase) {
 			onScenePhaseChange(from: $0, to: $1)
 		}
@@ -54,6 +58,32 @@ struct HarbourApp: App {
 		}
 		#if os(iOS)
 		.backgroundTask(.appRefresh(HarbourBackgroundTaskIdentifier.backgroundRefresh), action: appState.handleBackgroundRefresh)
+		#endif
+		.commands {
+			CommandGroup(before: .newItem) {
+				Button {
+					portainerStore.refresh()
+				} label: {
+					Label("Generic.Refresh", systemImage: SFSymbol.reload)
+				}
+				.keyboardShortcut("r", modifiers: .command)
+
+				Divider()
+			}
+		}
+		#if os(macOS)
+		.windowToolbarStyle(.unified)
+		#endif
+
+		#if os(macOS)
+		Settings {
+			SettingsView()
+				.withEnvironment(
+					appState: appState,
+					preferences: preferences,
+					portainerStore: portainerStore
+				)
+		}
 		#endif
 	}
 }
@@ -71,7 +101,7 @@ private extension HarbourApp {
 		case .inactive:
 			break
 		case .active:
-			if portainerStore.isSetup || portainerStore.setupTask != nil {
+			if portainerStore.isSetup && !(portainerStore.endpointsTask != nil || portainerStore.containersTask != nil) {
 				portainerStore.refresh()
 			}
 		@unknown default:
@@ -82,6 +112,11 @@ private extension HarbourApp {
 	func onContainersChange(from previousContainers: [Container], to newContainers: [Container]) {
 		Task.detached {
 			WidgetCenter.shared.reloadAllTimelines()
+			await NSUserActivity.deleteAllSavedUserActivities()
+		}
+
+		Task.detached { @MainActor in
+			UIApplication.shared.shortcutItems = nil
 		}
 
 		// TODO: Index in spotlight (https://www.donnywals.com/adding-your-apps-content-to-spotlight)
