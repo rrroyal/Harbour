@@ -16,7 +16,7 @@ extension ContainersView {
 		let container: Container
 		let content: () -> Content
 
-		private var navigationItem: ContainerNavigationItem {
+		private var navigationItem: ContainerDetailsView.NavigationItem {
 			let containerID = container.id
 			let displayName = container.displayName
 			let endpointID = portainerSelectedEndpointID

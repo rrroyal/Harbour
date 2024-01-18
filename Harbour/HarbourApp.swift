@@ -115,9 +115,11 @@ private extension HarbourApp {
 			await NSUserActivity.deleteAllSavedUserActivities()
 		}
 
+		#if os(iOS)
 		Task.detached { @MainActor in
 			UIApplication.shared.shortcutItems = nil
 		}
+		#endif
 
 		// TODO: Index in spotlight (https://www.donnywals.com/adding-your-apps-content-to-spotlight)
 	}

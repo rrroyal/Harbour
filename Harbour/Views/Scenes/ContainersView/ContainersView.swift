@@ -33,7 +33,7 @@ struct ContainersView: View {
 		containersList
 			.padding(.horizontal)
 			.padding(.bottom)
-			.navigationDestination(for: ContainerNavigationItem.self) { navigationItem in
+			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 				ContainerDetailsView(navigationItem: navigationItem)
 					.equatable()
 			}

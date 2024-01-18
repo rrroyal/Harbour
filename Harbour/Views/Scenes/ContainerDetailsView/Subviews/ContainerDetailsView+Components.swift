@@ -8,6 +8,13 @@
 
 import SwiftUI
 
+// MARK: - ContainerDetailsView+Static
+
+extension ContainerDetailsView {
+	static let sectionHeaderFont: Font = .footnote
+	static let sectionContentFont: Font = .callout
+}
+
 // MARK: - ContainerDetailsView+Labeled
 
 extension ContainerDetailsView {

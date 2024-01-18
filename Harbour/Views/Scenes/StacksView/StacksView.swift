@@ -40,6 +40,7 @@ struct StacksView: View {
 			}
 			.formStyle(.grouped)
 			.searchable(text: $viewModel.searchText)
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			#if os(macOS)
 			.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
 			#endif

@@ -14,16 +14,17 @@ extension SceneState {
 	func onOpenURL(_ url: URL) {
 		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
 
-		guard let deeplink = HarbourDeeplink(url: url) else { return }
-		switch deeplink {
-		case .containerDetails(let id, let displayName, let endpointID):
-			isSettingsSheetPresented = false
-			navigationPath = .init()
+		guard let deeplink = HarbourDeeplink(from: url) else { return }
+		switch deeplink.destination {
+		case .containerDetails:
+			typealias Destination = ContainerDetailsView
 
-			let navigationItem = ContainerNavigationItem(id: id, displayName: displayName, endpointID: endpointID)
-			navigationPath.append(navigationItem)
+			isSettingsSheetPresented = false
+			Destination.handleNavigation(&navigationPath, with: deeplink)
 		case .settings:
 			isSettingsSheetPresented = true
+		case .none:
+			break
 		}
 	}
 
@@ -31,13 +32,13 @@ extension SceneState {
 	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
 		logger.notice("Continuing userActivity: \(userActivity, privacy: .sensitive(mask: .hash))")
 
-		guard let navigationItem = try? userActivity.typedPayload(ContainerNavigationItem.self) else {
+		guard let navigationItem = try? userActivity.typedPayload(ContainerDetailsView.NavigationItem.self) else {
 			logger.warning("Invalid payload in userActivity!")
 			return
 		}
 
 		isSettingsSheetPresented = false
-		navigationPath = .init()
+		navigationPath.removeLast(navigationPath.count)
 		navigationPath.append(navigationItem)
 	}
 }

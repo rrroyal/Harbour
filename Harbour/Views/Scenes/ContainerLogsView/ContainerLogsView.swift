@@ -18,9 +18,9 @@ struct ContainerLogsView: View {
 
 	@State private var viewModel: ViewModel
 
-	let navigationItem: ContainerNavigationItem
+	let navigationItem: ContainerDetailsView.NavigationItem
 
-	init(navigationItem: ContainerNavigationItem) {
+	init(navigationItem: ContainerDetailsView.NavigationItem) {
 		self.navigationItem = navigationItem
 
 		let viewModel = ViewModel(navigationItem: navigationItem)

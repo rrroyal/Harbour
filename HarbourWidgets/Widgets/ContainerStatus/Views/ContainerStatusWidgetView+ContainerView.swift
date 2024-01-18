@@ -24,12 +24,13 @@ extension ContainerStatusWidgetView {
 		private var url: URL? {
 			guard !entry.isPlaceholder else { return nil }
 
-			let deeplink = HarbourDeeplink.containerDetails(
+			let destination = HarbourDeeplink.Destination.containerDetails(
 				id: container?.id ?? intentContainer._id,
 				displayName: container?.displayName ?? intentContainer.name,
 				endpointID: entry.configuration.endpoint?.id
 			)
-			return deeplink.url ?? HarbourDeeplink.appURL
+			let deeplink = HarbourDeeplink(destination: destination)
+			return deeplink.url ?? HarbourDeeplink().url
 		}
 
 		private var namePlaceholder: String {

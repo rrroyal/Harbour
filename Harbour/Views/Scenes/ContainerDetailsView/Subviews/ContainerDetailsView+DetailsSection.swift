@@ -18,39 +18,55 @@ extension ContainerDetailsView {
 
 		var body: some View {
 			// Status / State
-			Section("ContainerDetailsView.Section.State") {
+			Section {
 				let state = details?.status.state ?? ((!(container?._isStored ?? true) ? container?.state : nil) ?? ContainerState?.none)
 				let title = container?.status ?? state.description.capitalized
 				let icon = state.icon
 				LabeledWithIcon(title, icon: icon)
+					.font(ContainerDetailsView.sectionContentFont)
 					.foregroundColor(state.color)
+			} header: {
+				Text("ContainerDetailsView.Section.State")
+					.font(ContainerDetailsView.sectionHeaderFont)
 			}
 
 			// ID
 			if let id = container?.id ?? details?.id {
-				Section("ContainerDetailsView.Section.ID") {
+				Section {
 					Labeled(id)
+						.font(ContainerDetailsView.sectionContentFont)
 						.fontDesign(.monospaced)
+				} header: {
+					Text("ContainerDetailsView.Section.ID")
+						.font(ContainerDetailsView.sectionHeaderFont)
 				}
 			}
 
 			// Created At
 			if let createdAt = details?.created ?? container?.created {
-				Section("ContainerDetailsView.Section.CreatedAt") {
+				Section {
 					Labeled(createdAt.formatted(.dateTime))
+						.font(ContainerDetailsView.sectionContentFont)
+				} header: {
+					Text("ContainerDetailsView.Section.CreatedAt")
+						.font(ContainerDetailsView.sectionHeaderFont)
 				}
 			}
 
 			// Finished At
 			if let finishedAt = details?.status.finishedAt {
-				Section("ContainerDetailsView.Section.FinishedAt") {
+				Section {
 					Labeled(finishedAt.formatted(.dateTime))
+						.font(ContainerDetailsView.sectionContentFont)
+				} header: {
+					Text("ContainerDetailsView.Section.FinishedAt")
+						.font(ContainerDetailsView.sectionHeaderFont)
 				}
 			}
 
 			// Image
 			if let image = container?.image {
-				Section("ContainerDetailsView.Section.Image") {
+				Section {
 					Group {
 						if let imageID = container?.imageID {
 							Labeled("\(image)@\(imageID)")
@@ -58,23 +74,35 @@ extension ContainerDetailsView {
 							Labeled(image)
 						}
 					}
+					.font(ContainerDetailsView.sectionContentFont)
 					.fontDesign(.monospaced)
+				} header: {
+					Text("ContainerDetailsView.Section.Image")
+						.font(ContainerDetailsView.sectionHeaderFont)
 				}
 			}
 
 			// CMD
 			if let command = details?.config?.cmd?.joined(separator: " ") {
-				Section("ContainerDetailsView.Section.Cmd") {
+				Section {
 					Labeled(command)
+						.font(ContainerDetailsView.sectionContentFont)
 						.fontDesign(.monospaced)
+				} header: {
+					Text("ContainerDetailsView.Section.Cmd")
+						.font(ContainerDetailsView.sectionHeaderFont)
 				}
 			}
 
 			// Entrypoint
 			if let entrypoint = details?.config?.entrypoint?.joined(separator: " ") {
-				Section("ContainerDetailsView.Section.Entrypoint") {
+				Section {
 					Labeled(entrypoint)
+						.font(ContainerDetailsView.sectionContentFont)
 						.fontDesign(.monospaced)
+				} header: {
+					Text("ContainerDetailsView.Section.Entrypoint")
+						.font(ContainerDetailsView.sectionHeaderFont)
 				}
 			}
 

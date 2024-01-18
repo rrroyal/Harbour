@@ -31,7 +31,7 @@ extension ContainerLogsView {
 		private(set) var viewState: _ViewState = .loading
 		private(set) var logsParsed: AttributedString?
 
-		let navigationItem: ContainerNavigationItem
+		let navigationItem: ContainerDetailsView.NavigationItem
 
 		var includeTimestamps = false
 		var lineCount = 100
@@ -42,7 +42,7 @@ extension ContainerLogsView {
 			return nil
 		}
 
-		init(navigationItem: ContainerNavigationItem) {
+		init(navigationItem: ContainerDetailsView.NavigationItem) {
 			self.navigationItem = navigationItem
 		}
 

@@ -25,7 +25,7 @@ extension ContainerDetailsView {
 		private(set) var viewState: ViewState<(Container?, ContainerDetails?), Error> = .loading
 		private(set) var fetchTask: Task<Void, Never>?
 
-		var navigationItem: ContainerNavigationItem
+		var navigationItem: ContainerDetailsView.NavigationItem
 
 		var container: Container? {
 			viewState.value?.0
@@ -35,13 +35,13 @@ extension ContainerDetailsView {
 			viewState.value?.1
 		}
 
-		init(navigationItem: ContainerNavigationItem) {
+		init(navigationItem: ContainerDetailsView.NavigationItem) {
 			self.navigationItem = navigationItem
 			self.viewState = .reloading((self.container(for: navigationItem), nil))
 		}
 
 		@MainActor
-		func createUserActivity(_ userActivity: NSUserActivity, navigationItem: ContainerNavigationItem) {
+		func createUserActivity(_ userActivity: NSUserActivity, navigationItem: ContainerDetailsView.NavigationItem) {
 			let identifier = "\(HarbourUserActivityIdentifier.containerDetails).\(navigationItem.endpointID ?? -1).\(navigationItem.id)"
 
 			let container = self.container(for: navigationItem)
@@ -84,7 +84,7 @@ extension ContainerDetailsView {
 			do {
 				try userActivity.setTypedPayload(navigationItem)
 				userActivity.requiredUserInfoKeys = [
-					ContainerNavigationItem.CodingKeys.id.stringValue
+					ContainerDetailsView.NavigationItem.CodingKeys.id.stringValue
 				]
 			} catch {
 				logger.error("Failed to set payload: \(error, privacy: .public)")
@@ -94,7 +94,7 @@ extension ContainerDetailsView {
 		}
 
 		@MainActor @discardableResult
-		func getContainerDetails(navigationItem: ContainerNavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
+		func getContainerDetails(navigationItem: ContainerDetailsView.NavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task {
 				self.navigationItem = navigationItem
@@ -117,7 +117,7 @@ extension ContainerDetailsView {
 			return task
 		}
 
-		func container(for navigationItem: ContainerNavigationItem) -> Container? {
+		func container(for navigationItem: ContainerDetailsView.NavigationItem) -> Container? {
 			if self.container?.id == navigationItem.id { return self.container }
 			return portainerStore.containers.first { $0.id == navigationItem.id }
 		}

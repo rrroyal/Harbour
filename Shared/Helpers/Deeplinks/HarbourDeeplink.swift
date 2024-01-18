@@ -2,8 +2,8 @@
 //  HarbourDeeplink.swift
 //  Harbour
 //
-//  Created by royal on 18/07/2022.
-//  Copyright © 2023 shameful. All rights reserved.
+//  Created by royal on 18/01/2024.
+//  Copyright © 2024 shameful. All rights reserved.
 //
 
 import Foundation
@@ -11,13 +11,28 @@ import PortainerKit
 
 // MARK: - HarbourDeeplink
 
-/// An enum that coordinates the deeplinking navigation.
-enum HarbourDeeplink {
-	/// Container details; navigates to ``ContainerDetailsView``.
-	case containerDetails(id: Container.ID, displayName: String?, endpointID: Endpoint.ID?)
+/// A struct containing the needed information about the deeplinking navigation.
+struct HarbourDeeplink {
+	let destination: Destination?
+	let subdestination: [String]?
 
-	/// Settings; opens the ``SettingsView`` sheet.
-	case settings
+	init(destination: Destination? = nil, subdestination: [String]? = nil) {
+		self.destination = destination
+		self.subdestination = subdestination
+	}
+}
+
+// MARK: - HarbourDeeplink+Destination
+
+extension HarbourDeeplink {
+	/// Root destination for the deeplinking navigation.
+	enum Destination {
+		/// Container details; navigates to ``ContainerDetailsView``.
+		case containerDetails(id: Container.ID, displayName: String?, endpointID: Endpoint.ID?)
+
+		/// Settings; opens the ``SettingsView`` sheet.
+		case settings
+	}
 }
 
 // MARK: - HarbourDeeplink+Static
@@ -25,23 +40,12 @@ enum HarbourDeeplink {
 extension HarbourDeeplink {
 	/// URL scheme for this deeplink.
 	static let scheme = "harbour"
-
-	/// Empty deeplink URL, navigating just to the app.
-	static let appURL: URL = {
-		var components = URLComponents()
-		components.scheme = Self.scheme
-		components.host = ""
-		// swiftlint:disable:next force_unwrapping
-		return components.url!
-	}()
 }
 
 // MARK: - HarbourDeeplink+init
 
 extension HarbourDeeplink {
-	/// Initializes the navigation scheme based on the supplied `url`.
-	/// - Parameter url: `URL` to parse
-	init?(url: URL) {
+	init?(from url: URL) {
 		guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
 			// URL is malformed
 			return nil
@@ -50,24 +54,38 @@ extension HarbourDeeplink {
 			// Scheme isn't ours; bail
 			return nil
 		}
+		
 		guard let host = components.host?.lowercased() else {
-			// There's no host, so we don't know what to do; bail
-			return nil
+			self.destination = nil
+			self.subdestination = nil
+			return
 		}
+
+		let path = components.path.split(separator: "/")
 
 		switch Host(rawValue: host) {
 		case .containerDetails:
-			guard let containerID = components.queryItems?.value(for: .id) else { return nil }
-			let displayName = components.queryItems?.value(for: .name)
+			guard let containerID = path.first else { return nil }
 
+			let subdestination = path
+				.dropFirst()
+				.map { $0.lowercased() }
+
+			let displayName = components.queryItems?.value(for: .name)
 			let endpointID: Endpoint.ID? = if let endpointIDStr = components.queryItems?.value(for: .endpointID) {
 				Int(endpointIDStr)
 			} else {
 				nil
 			}
-			self = .containerDetails(id: containerID, displayName: displayName, endpointID: endpointID)
-		default:
-			return nil
+
+			self.destination = .containerDetails(id: String(containerID), displayName: displayName, endpointID: endpointID)
+			self.subdestination = subdestination
+		case .settings:
+			self.destination = .settings
+			self.subdestination = nil
+		case .none:
+			self.destination = nil
+			self.subdestination = nil
 		}
 	}
 }
@@ -75,16 +93,27 @@ extension HarbourDeeplink {
 // MARK: - HarbourDeeplink+url
 
 extension HarbourDeeplink {
-	/// The actual `URL` created for this scheme.
+	/// `URL` created for this deeplink.
 	var url: URL? {
 		var components = URLComponents()
 		components.scheme = Self.scheme
-		components.host = Host(for: self).rawValue
 
-		switch self {
+		guard let destination else {
+			components.host = ""
+			return components.url
+		}
+
+		components.host = Host(for: destination).rawValue
+
+		switch destination {
 		case .containerDetails(let id, let displayName, let endpointID):
+			components.path = "/" + id
+
+			if let subdestination {
+				components.path += "/" + subdestination.joined(separator: "/")
+			}
+
 			components.queryItems = [
-				.init(name: QueryKey.id.rawValue, value: id),
 				.init(name: QueryKey.name.rawValue, value: displayName),
 				.init(name: QueryKey.endpointID.rawValue, value: endpointID?.description ?? "")
 			]
@@ -99,13 +128,13 @@ extension HarbourDeeplink {
 // MARK: - HarbourDeeplink+Host
 
 private extension HarbourDeeplink {
-	/// The `host` URL part, mirroring ``HarbourDeeplink`` cases.
+	/// The `host` URL part, mirroring ``HarbourDeeplink.Destination``.
 	enum Host: String {
 		case containerDetails = "container-details"
 		case settings = "settings"
 
-		init(for deeplink: HarbourDeeplink) {
-			switch deeplink {
+		init(for destination: HarbourDeeplink.Destination) {
+			switch destination {
 			case .containerDetails:
 				self = .containerDetails
 			case .settings:
@@ -120,7 +149,6 @@ private extension HarbourDeeplink {
 private extension HarbourDeeplink {
 	/// Keys for the parameters of `query` URL part.
 	enum QueryKey: String {
-		case id = "id"
 		case name = "n"
 		case endpointID = "eid"
 	}
