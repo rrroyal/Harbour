@@ -45,7 +45,9 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 		logger.info("Getting timeline...")
 
 		let entry = await getEntry(for: configuration, in: context)
-		logger.info("Got entry: \(String(describing: entry), privacy: .sensitive(mask: .hash))")
+		let timeline = Timeline<Entry>(entries: [entry], policy: .atEnd)
+
+		logger.info("Returning timeline: \(String(describing: timeline), privacy: .sensitive(mask: .hash))")
 
 		return .init(entries: [entry], policy: .atEnd)
 	}
@@ -55,11 +57,24 @@ struct ContainerStatusProvider: AppIntentTimelineProvider {
 
 extension ContainerStatusProvider {
 	struct Entry: TimelineEntry {
-		enum Result {
+		enum Result: Identifiable {
 			case unconfigured
 			case containers([Container?])
 			case error(Error)
 			case unreachable
+
+			var id: Int {
+				switch self {
+				case .unconfigured:
+					0
+				case .containers:
+					1
+				case .error:
+					-1
+				case .unreachable:
+					-2
+				}
+			}
 		}
 
 		// swiftlint:disable force_unwrapping
@@ -158,27 +173,29 @@ private extension ContainerStatusProvider {
 			return Entry(date: now, configuration: configuration, result: .containers([]))
 		}
 
+		let entry: Entry
+
 		do {
 			try portainerStore.setupIfNeeded()
 
 			let filters = Portainer.FetchFilters(
-				id: configuration.resolveStrictly ? configurationContainers.map(\._id) : nil
+				id: configuration.resolveByName ? nil : configurationContainers.map(\._id)
 			)
 			let containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
 
 			let entities: [Container?] = configurationContainers
 				.map { configurationContainer in
 					if let foundContainer = containers.first(where: {
-						if configuration.resolveStrictly {
-							return configurationContainer._id == $0.id
-						} else {
+						if configuration.resolveByName {
 							return configurationContainer.matchesContainer($0)
+						} else {
+							return configurationContainer._id == $0.id
 						}
 					}) {
 						return Container(
 							id: foundContainer.id,
 							names: foundContainer.names,
-							imageID: foundContainer.imageID,
+							image: foundContainer.image,
 							labels: foundContainer.labels,
 							state: foundContainer.state,
 							status: foundContainer.status
@@ -187,16 +204,18 @@ private extension ContainerStatusProvider {
 					return nil
 				}
 
-			logger.notice("Returning \(String(describing: entities), privacy: .sensitive)")
-			return Entry(date: now, configuration: configuration, result: .containers(entities))
+			entry = Entry(date: now, configuration: configuration, result: .containers(entities))
 		} catch {
 			logger.error("Error getting entry: \(error, privacy: .public)")
 
 			if error is URLError {
-				return Entry(date: now, configuration: configuration, result: .unreachable)
+				entry = Entry(date: now, configuration: configuration, result: .unreachable)
+			} else {
+				entry = Entry(date: now, configuration: configuration, result: .error(error))
 			}
-
-			return Entry(date: now, configuration: configuration, result: .error(error))
 		}
+
+		logger.info("Returning \(String(describing: entry), privacy: .sensitive) (result: \(entry.result.id, privacy: .public))")
+		return entry
 	}
 }

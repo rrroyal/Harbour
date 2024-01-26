@@ -11,9 +11,9 @@ import IndicatorsKit
 import OSLog
 import SwiftUI
 
-@Observable
+@Observable @MainActor
 final class SceneState {
-	let logger = Logger(.custom(SceneState.self))
+	let logger = Logger(.scene)
 	let indicators = Indicators()
 
 	var isSettingsSheetPresented = false

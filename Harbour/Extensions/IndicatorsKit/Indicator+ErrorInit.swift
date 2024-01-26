@@ -15,10 +15,10 @@ extension Indicator {
 		let subtitle: String
 		let expandedText: String?
 
-		if let error = error as? LocalizedError, let failureReason = error.failureReason {
-			title = error.localizedDescription
-			subtitle = failureReason
-			expandedText = error.recoverySuggestion ?? failureReason
+		if let error = error as? LocalizedError {
+			title = error.failureReason ?? String(localized: "Indicators.Error")
+			subtitle = error.localizedDescription
+			expandedText = error.recoverySuggestion
 		} else {
 			title = String(localized: "Indicators.Error")
 			subtitle = error.localizedDescription

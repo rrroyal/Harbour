@@ -10,7 +10,6 @@ import CommonFoundation
 import Foundation
 
 extension SceneState {
-	@MainActor
 	func onOpenURL(_ url: URL) {
 		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
 
@@ -28,7 +27,6 @@ extension SceneState {
 		}
 	}
 
-	@MainActor
 	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
 		logger.notice("Continuing userActivity: \(userActivity, privacy: .sensitive(mask: .hash))")
 

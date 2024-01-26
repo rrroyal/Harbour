@@ -6,7 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-public struct BindOptions: Equatable, Decodable, Sendable {
+public struct BindOptions: Equatable, Codable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case propagation = "Propagation"
 	}
@@ -15,7 +15,7 @@ public struct BindOptions: Equatable, Decodable, Sendable {
 }
 
 public extension BindOptions {
-	enum Propagation: String, Equatable, Decodable, Sendable {
+	enum Propagation: String, Equatable, Codable, Sendable {
 		case `private`
 		case rprivate
 		case shared

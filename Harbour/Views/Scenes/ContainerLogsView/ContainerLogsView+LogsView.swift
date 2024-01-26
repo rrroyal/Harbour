@@ -14,11 +14,11 @@ extension ContainerLogsView {
 	struct LogsView: View {
 		static let labelID = "LogsLabel"
 
-		let logs: AttributedString
+		let logs: String?
 
 		var body: some View {
 			LazyVStack {
-				Text(logs)
+				Text(logs ?? "")
 					.font(.caption)
 					.fontDesign(.monospaced)
 					.textSelection(.enabled)

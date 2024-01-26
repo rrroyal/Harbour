@@ -16,37 +16,34 @@ struct ContainersView: View {
 	@Environment(\.cvUseGrid) private var useGrid
 	let containers: [Container]
 
-	init(_ containers: [Container]) {
-		self.containers = containers
-	}
-
-	@ViewBuilder
-	private var containersList: some View {
-		if useGrid {
-			ContainersGridView(containers: containers)
-		} else {
-			ContainersListView(containers: containers)
-		}
-	}
-
 	var body: some View {
-		containersList
-			.padding(.horizontal)
-			.padding(.bottom)
-			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-				ContainerDetailsView(navigationItem: navigationItem)
-					.equatable()
+		Group {
+			if useGrid {
+				ContainersGridView(containers: containers)
+			} else {
+				ContainersListView(containers: containers)
 			}
-			.transition(.opacity)
-			.animation(.easeInOut, value: useGrid)
-//			.animation(.easeInOut, value: containers)
-//			.animation(.easeInOut, value: portainerStore.selectedEndpoint == nil)
-//			.animation(.easeInOut, value: portainerStore.containers.isEmpty)
+		}
+		.padding(.horizontal)
+		.padding(.bottom)
+		.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
+			ContainerDetailsView(navigationItem: navigationItem)
+				.equatable()
+		}
+		.transition(.opacity)
+		.animation(.easeInOut, value: useGrid)
+		.animation(.easeInOut, value: containers)
 	}
 }
 
 // MARK: - Previews
 
 #Preview {
-	ContainersView([])
+	ScrollView {
+		ContainersView(containers: [.preview])
+	}
+	.background(Color.groupedBackground)
+	.environment(\.cvUseGrid, true)
+	.environment(SceneState())
+	.withEnvironment(appState: .shared, preferences: .shared, portainerStore: .shared)
 }

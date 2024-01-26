@@ -37,14 +37,10 @@ struct ContainersGridView: View {
 				ContainersView.ContainerNavigationCell(container: container) {
 					ContainerCell(container: container)
 						.equatable()
+						.id("ContainerCell.\(container._persistentID)")
 				}
 				.transition(.opacity)
-				#if os(iOS)
-				.contentShape(.contextMenuPreview, ContainerCell.roundedRectangleBackground)
-				#endif
-				.contextMenu {
-					ContainerContextMenu(container: container)
-				}
+				.environment(\.parentShape, AnyShape(ContainerCell.roundedRectangleBackground))
 			}
 		}
 	}
@@ -53,5 +49,11 @@ struct ContainersGridView: View {
 // MARK: - Previews
 
 #Preview {
-	ContainersGridView(containers: [])
+	ScrollView {
+		ContainersGridView(containers: [.preview])
+			.padding()
+	}
+	.background(Color.groupedBackground)
+	.environment(SceneState())
+	.withEnvironment(appState: .shared, preferences: .shared, portainerStore: .shared)
 }

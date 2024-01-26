@@ -9,7 +9,6 @@
 import Foundation
 
 public extension Portainer {
-	@Sendable
 	func fetchSystemStatus() async throws -> SystemStatus {
 		let request = try request(for: .systemStatus)
 		return try await fetch(request: request)

@@ -6,7 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-public struct MountPoint: Decodable, Sendable, Equatable {
+public struct MountPoint: Codable, Sendable, Equatable {
 	enum CodingKeys: String, CodingKey {
 		case type = "Type"
 		case name = "Name"

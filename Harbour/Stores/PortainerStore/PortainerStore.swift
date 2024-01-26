@@ -46,6 +46,9 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	/// Persistence model context
 	public var modelContext: ModelContext?
 
+	/// Task for global refresh
+	public private(set) var refreshTask: Task<([Endpoint], [Container]?), Error>?
+
 	/// Task for `endpoints` refresh
 	public private(set) var endpointsTask: Task<[Endpoint], Error>?
 
@@ -72,13 +75,19 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	@Published
 	private(set) var containers: [Container] = []
 
+	var isRefreshing: Bool {
+		!(refreshTask?.isCancelled ?? true) || !(endpointsTask?.isCancelled ?? true) || !(containersTask?.isCancelled ?? true)
+	}
+
 	// MARK: init
 
-	/// Initializes `PortainerStore` with provided URLSession configuration.
-	/// - Parameter urlSessionConfiguration: `URLSessionConfiguration`, `.default` if none provided.
+	/// Initializes `PortainerStore` with provided ModelContext and URLSession configuration.
+	/// - Parameters:
+	///   - modelContext: `ModelContext` to use
+	///   - urlSessionConfiguration: `URLSessionConfiguration`, `.app` if none provided
 	init(
 		modelContext: ModelContext? = nil,
-		urlSessionConfiguration: URLSessionConfiguration = .default
+		urlSessionConfiguration: URLSessionConfiguration = .app
 	) {
 		self.modelContext = modelContext
 
@@ -219,6 +228,9 @@ public extension PortainerStore {
 	func fetchEndpoints() async throws -> [Endpoint] {
 		logger.info("Getting endpoints...")
 		do {
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
 			let endpoints = try await portainer.fetchEndpoints()
 			logger.info("Got \(endpoints.count, privacy: .public) endpoints")
 			return endpoints.sorted()
@@ -232,8 +244,14 @@ public extension PortainerStore {
 	func fetchContainers(filters: Portainer.FetchFilters? = nil) async throws -> [Container] {
 		logger.info("Getting containers, filters: \(String(describing: filters), privacy: .sensitive(mask: .hash))...")
 		do {
-			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			let containers = try await portainer.fetchContainers(endpointID: endpoint.id, filters: filters)
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+
+			let containers = try await portainer.fetchContainers(endpointID: selectedEndpoint.id, filters: filters)
 			logger.info("Got \(containers.count, privacy: .public) containers")
 			return containers.sorted()
 		} catch {
@@ -246,11 +264,17 @@ public extension PortainerStore {
 	/// - Parameter stackName: Stack name
 	/// - Returns: Array of containers
 	@Sendable
-	func getContainers(for stackName: String) async throws -> [Container] {
+	func fetchContainers(for stackName: String) async throws -> [Container] {
 		logger.info("Getting containers for stack \"\(stackName, privacy: .sensitive(mask: .hash))\"...")
 		do {
-			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			let containers = try await portainer.fetchContainers(endpointID: endpoint.id, stackName: stackName)
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+
+			let containers = try await portainer.fetchContainers(endpointID: selectedEndpoint.id, stackName: stackName)
 			logger.info("Got \(containers.count, privacy: .public) containers")
 			return containers.sorted()
 		} catch {
@@ -299,15 +323,24 @@ public extension PortainerStore {
 	) async throws -> String {
 		logger.info("Getting logs for containerID: \"\(containerID, privacy: .public)\"...")
 		do {
-			let (portainer, endpoint) = try getPortainerAndEndpoint()
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+
+			// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L124
+
 			let logs = try await portainer.fetchLogs(
 				containerID: containerID,
-				endpointID: endpoint.id,
+				endpointID: selectedEndpoint.id,
 				since: logsSince,
 				tail: lastEntriesAmount,
 				timestamps: includeTimestamps
 			)
-			// TODO: https://github.com/portainer/portainer/blob/develop/app/docker/helpers/logHelper/formatLogs.ts
+			// swiftlint:disable:next opening_brace
+			.replacing(/^(.{8})/.anchorsMatchLineEndings(), with: "")
 
 			logger.info("Got logs for containerID: \"\(containerID, privacy: .public)\"")
 
@@ -326,8 +359,13 @@ public extension PortainerStore {
 	func execute(_ action: ExecuteAction, on containerID: Container.ID) async throws {
 		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
-			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			try await portainer.execute(action, containerID: containerID, endpointID: endpoint.id)
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+			try await portainer.execute(action, containerID: containerID, endpointID: selectedEndpoint.id)
 
 			Task { @MainActor in
 				if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
@@ -352,6 +390,9 @@ extension PortainerStore {
 	func getStacks() async throws -> [Stack] {
 		logger.info("Getting stacks...")
 		do {
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
 			let stacks = try await portainer.fetchStacks()
 			logger.info("Got \(stacks.count, privacy: .public) stacks")
 			return stacks.sorted()
@@ -370,8 +411,13 @@ extension PortainerStore {
 	func setStackStatus(stackID: Stack.ID, started: Bool) async throws -> Stack {
 		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with ID: \(stackID)...")
 		do {
-			let (portainer, endpoint) = try getPortainerAndEndpoint()
-			let stack = try await portainer.setStackStatus(endpointID: endpoint.id, stackID: stackID, started: started)
+			guard portainer.isSetup else {
+				throw PortainerError.notSetup
+			}
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+			let stack = try await portainer.setStackStatus(endpointID: selectedEndpoint.id, stackID: stackID, started: started)
 			logger.notice("\(started ? "Started" : "Stopped", privacy: .public) stack with ID: \(stackID)")
 			return stack
 		} catch {
@@ -394,7 +440,11 @@ extension PortainerStore {
 		errorHandler: ErrorHandler? = nil,
 		_debugInfo: String = ._debugInfo()
 	) -> Task<([Endpoint], [Container]?), Error> {
+		self.refreshTask?.cancel()
+
 		let task = Task { @MainActor in
+			defer { self.refreshTask = nil }
+
 			do {
 				let endpointsTask = refreshEndpoints(errorHandler: errorHandler, _debugInfo: _debugInfo)
 				let endpoints = try await endpointsTask.value
@@ -413,6 +463,8 @@ extension PortainerStore {
 				throw error
 			}
 		}
+		self.refreshTask = task
+
 		return task
 	}
 
@@ -428,6 +480,8 @@ extension PortainerStore {
 	) -> Task<[Endpoint], Error> {
 		endpointsTask?.cancel()
 		let task = Task<[Endpoint], Error> { @MainActor in
+			defer { self.endpointsTask = nil }
+
 			do {
 				let endpoints = try await fetchEndpoints()
 				self.endpoints = endpoints
@@ -439,7 +493,7 @@ extension PortainerStore {
 				throw error
 			}
 		}
-		endpointsTask = task
+		self.endpointsTask = task
 		return task
 	}
 
@@ -455,6 +509,8 @@ extension PortainerStore {
 	) -> Task<[Container], Error> {
 		containersTask?.cancel()
 		let task = Task<[Container], Error> { @MainActor in
+			defer { self.containersTask = nil }
+
 			do {
 				let containers = try await fetchContainers()
 				self.containers = containers
@@ -467,24 +523,8 @@ extension PortainerStore {
 				throw error
 			}
 		}
-		containersTask = task
+		self.containersTask = task
 		return task
-	}
-}
-
-// MARK: - PortainerStore+Helpers
-
-private extension PortainerStore {
-	/// Checks if `portainer` is setup, unwraps `selectedEndpoint`, returns both, or throws an error if there's none.
-	/// - Returns: Unwrapped `(Portainer, Endpoint)`
-	func getPortainerAndEndpoint() throws -> (Portainer, Endpoint) {
-		guard portainer.isSetup else {
-			throw PortainerError.notSetup
-		}
-		guard let selectedEndpoint else {
-			throw PortainerError.noSelectedEndpoint
-		}
-		return (portainer, selectedEndpoint)
 	}
 }
 

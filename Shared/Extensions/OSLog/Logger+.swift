@@ -25,6 +25,7 @@ extension Logger {
 extension Logger {
 	enum Category {
 		case app
+		case scene
 		case background
 		case debug
 		case view(any View.Type)
@@ -36,6 +37,8 @@ extension Logger {
 			switch self {
 			case .app:
 				"App"
+			case .scene:
+				"Scene"
 			case .background:
 				"Background"
 			case .debug:

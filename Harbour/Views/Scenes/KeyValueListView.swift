@@ -16,6 +16,15 @@ struct KeyValueListView: View {
 	var headerFont: Font = .footnote
 	var contentFont: Font = .body
 
+	@ViewBuilder
+	private var placeholderView: some View {
+		if data.isEmpty {
+			ContentUnavailableView("Generic.Empty", systemImage: "ellipsis")
+				.allowsHitTesting(false)
+				.transition(.opacity)
+		}
+	}
+
 	var body: some View {
 		Form {
 			ForEach(data) { entry in
@@ -34,12 +43,15 @@ struct KeyValueListView: View {
 		}
 		.formStyle(.grouped)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
+		.scrollContentBackground(.hidden)
+		.background {
+			placeholderView
+		}
+		#if os(iOS)
+		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+		#endif
 		.overlay {
-			if data.isEmpty {
-				ContentUnavailableView("Generic.Empty", systemImage: "ellipsis")
-					.allowsHitTesting(false)
-					.transition(.opacity)
-			}
+
 		}
 		.animation(.easeInOut, value: data)
 	}

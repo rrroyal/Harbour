@@ -22,16 +22,5 @@ public extension Portainer {
 
 		case invalidPayload
 		case invalidURL
-
-		internal static func fromAPIError(_ apiError: APIError) -> Self? {
-			let reason = apiError.message.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-
-			switch reason {
-			case "invalid request payload":
-				return PortainerError.invalidPayload
-			default:
-				return nil
-			}
-		}
 	}
 }

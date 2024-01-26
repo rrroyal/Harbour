@@ -6,7 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-public struct Mount: Equatable, Decodable, Sendable {
+public struct Mount: Equatable, Codable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case target = "Target"
 		case source = "Source"
@@ -25,14 +25,14 @@ public struct Mount: Equatable, Decodable, Sendable {
 }
 
 public extension Mount {
-	enum Consistency: String, Equatable, Decodable, Sendable {
+	enum Consistency: String, Equatable, Codable, Sendable {
 		case `default`
 		case consistent
 		case cached
 		case delegated
 	}
 
-	enum MountType: String, Equatable, Decodable, Sendable {
+	enum MountType: String, Equatable, Codable, Sendable {
 		case bind
 		case volume
 		case tmpfs

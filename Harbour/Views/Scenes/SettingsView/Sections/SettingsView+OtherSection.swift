@@ -35,14 +35,19 @@ private extension SettingsView.OtherSection {
 
 		var body: some View {
 			VStack(alignment: .center, spacing: 5) {
-				Button("SettingsView.Other.Footer.Headline") {
-//					viewModel.isNegraSheetPresented = true
-				}
-				.buttonStyle(.plain)
 				Link(
-					"SettingsView.Other.Footer.Subheadline BuildVersion:\(Bundle.main.buildVersion) BuildNumber:\(Bundle.main.buildNumber)",
+					"SettingsView.Other.Footer.Headline",
 					destination: githubURL
 				)
+
+				Text("SettingsView.Other.Footer.Subheadline BuildVersion:\(Bundle.main.buildVersion) BuildNumber:\(Bundle.main.buildNumber)")
+
+				if viewModel.shouldDisplayNegraButton {
+					Button("SettingsView.Other.Footer.NegraButton") {
+						viewModel.isNegraSheetPresented = true
+					}
+					.buttonStyle(.plain)
+				}
 			}
 			.font(.subheadline.weight(.semibold))
 			.foregroundStyle(.primary)

@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Container
 
-public struct Container: Identifiable, Decodable, Sendable {
+public struct Container: Identifiable, Codable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case id = "Id"
 		case names = "Names"
@@ -39,18 +39,20 @@ public struct Container: Identifiable, Decodable, Sendable {
 	public let networkSettings: NetworkSettings?
 	public let mounts: [Mount]?
 
-	public init(id: String,
-				names: [String]? = nil,
-				image: String? = nil,
-				imageID: String? = nil,
-				command: String? = nil,
-				created: Date? = nil,
-				ports: [Port]? = nil,
-				labels: [String: String]? = nil,
-				state: ContainerState? = nil,
-				status: String? = nil,
-				networkSettings: NetworkSettings? = nil,
-				mounts: [Mount]? = nil) {
+	public init(
+		id: String,
+		names: [String]? = nil,
+		image: String? = nil,
+		imageID: String? = nil,
+		command: String? = nil,
+		created: Date? = nil,
+		ports: [Port]? = nil,
+		labels: [String: String]? = nil,
+		state: ContainerState? = nil,
+		status: String? = nil,
+		networkSettings: NetworkSettings? = nil,
+		mounts: [Mount]? = nil
+	) {
 		self.id = id
 		self.names = names
 		self.image = image
@@ -85,7 +87,7 @@ public struct Container: Identifiable, Decodable, Sendable {
 // MARK: - Container+NetworkSettings
 
 public extension Container {
-	struct NetworkSettings: Equatable, Decodable, Sendable {
+	struct NetworkSettings: Equatable, Codable, Sendable {
 		enum CodingKeys: String, CodingKey {
 			case network = "Networks"
 		}
@@ -98,14 +100,14 @@ public extension Container {
 
 extension Container: Equatable {
 	public static func == (lhs: Container, rhs: Container) -> Bool {
+		lhs.id == rhs.id &&
+		lhs.image == rhs.image &&
+		lhs.imageID == rhs.imageID &&
 		lhs.state == rhs.state &&
 		lhs.status == rhs.status &&
 		lhs.created == rhs.created &&
 		lhs.names == rhs.names &&
 		lhs.command == rhs.command &&
-		lhs.id == rhs.id &&
-		lhs.image == rhs.image &&
-		lhs.imageID == rhs.imageID &&
 		lhs.labels == rhs.labels &&
 		lhs.ports == rhs.ports &&
 		lhs.mounts == rhs.mounts &&

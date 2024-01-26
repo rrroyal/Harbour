@@ -23,23 +23,26 @@ extension ContainerLogsView {
 
 		private let portainerStore = PortainerStore.shared
 
-		@ObservationIgnored
 		private var fetchTask: Task<Void, Never>?
-		@ObservationIgnored
 		private var parseTask: Task<Void, Never>?
-
-		private(set) var viewState: _ViewState = .loading
-		private(set) var logsParsed: AttributedString?
 
 		let navigationItem: ContainerDetailsView.NavigationItem
 
 		var includeTimestamps = false
 		var lineCount = 100
 
-		var logsViewable: AttributedString? {
-			if let logsParsed { return logsParsed }
-			if let logs = viewState.value { return AttributedString(stringLiteral: ANSIParser.trim(logs)) }
-			return nil
+		private(set) var viewState: _ViewState = .loading
+
+		var logs: String? {
+			viewState.value
+		}
+
+		var isLoading: Bool {
+			viewState.isLoading || !(fetchTask?.isCancelled ?? true) || !(parseTask?.isCancelled ?? true)
+		}
+
+		var showBackgroundPlaceholder: Bool {
+			logs?.isEmpty ?? true
 		}
 
 		init(navigationItem: ContainerDetailsView.NavigationItem) {
@@ -50,6 +53,8 @@ extension ContainerLogsView {
 		func getLogs(errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
+				defer { self.fetchTask = nil }
+
 				self.viewState = viewState.reloading
 				self.parseTask?.cancel()
 
@@ -59,13 +64,12 @@ extension ContainerLogsView {
 						tail: lineCount,
 						timestamps: includeTimestamps
 					)
-					self.viewState = .success(logs)
 
-					self.parseTask = Task.detached {
-						let logsParsed = ANSIParser.parse(logs)
+					Task.detached {
+						let logsParsed = ANSIParser.trim(logs)
+						guard !Task.isCancelled else { return }
 						await MainActor.run {
-							guard !Task.isCancelled else { return }
-							self.logsParsed = logsParsed
+							self.viewState = .success(logsParsed)
 						}
 					}
 				} catch {

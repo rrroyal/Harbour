@@ -13,8 +13,17 @@ extension Sequence {
 		by keyPath: KeyPath<Element, T>,
 		using comparator: (T, T) -> Bool = (<)
 	) -> [Element] {
-		sorted { a, b in
-			comparator(a[keyPath: keyPath], b[keyPath: keyPath])
+		sorted {
+			comparator($0[keyPath: keyPath], $1[keyPath: keyPath])
+		}
+	}
+
+	func localizedSorted(
+		by keyPath: KeyPath<Element, String>,
+		using comparisionResult: ComparisonResult = .orderedAscending
+	) -> [Element] {
+		sorted {
+			$0[keyPath: keyPath].localizedStandardCompare($1[keyPath: keyPath]) == comparisionResult
 		}
 	}
 }

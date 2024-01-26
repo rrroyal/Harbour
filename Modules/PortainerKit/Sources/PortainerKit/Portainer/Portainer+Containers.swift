@@ -20,7 +20,7 @@ public extension Portainer {
 			URLQueryItem(name: "all", value: "true")
 		]
 		if let filters {
-			let filtersEncoded = try JSONEncoder().encode(filters)
+			let filtersEncoded = try jsonEncoder.encode(filters)
 			guard let queryItemString = String(data: filtersEncoded, encoding: .utf8) else {
 				throw PortainerError.encodingFailed
 			}
@@ -40,7 +40,7 @@ public extension Portainer {
 	func fetchContainers(endpointID: Endpoint.ID, stackName: String) async throws -> [Container] {
 		// This will probably break with Swarm projects, but it will be a problem for future me :)
 		let filters = FetchFilters(
-			label: ["\(Label.stack)=\(stackName)"]
+			label: ["\(ContainerLabel.stack)=\(stackName)"]
 		)
 		return try await fetchContainers(endpointID: endpointID, filters: filters)
 	}
@@ -83,11 +83,13 @@ public extension Portainer {
 	///   - timestamps: Display timestamps?
 	/// - Returns: `String` logs
 	@Sendable
-	func fetchLogs(containerID: Container.ID,
-				   endpointID: Endpoint.ID,
-				   since logsSince: TimeInterval = 0,
-				   tail lastEntriesAmount: Int = 100,
-				   timestamps includeTimestamps: Bool = false) async throws -> String {
+	func fetchLogs(
+		containerID: Container.ID,
+		endpointID: Endpoint.ID,
+		since logsSince: TimeInterval = 0,
+		tail lastEntriesAmount: Int = 100,
+		timestamps includeTimestamps: Bool = false
+	) async throws -> String {
 		let queryItems = [
 			URLQueryItem(name: "since", value: "\(Int(logsSince))"),
 			URLQueryItem(name: "stderr", value: "true"),

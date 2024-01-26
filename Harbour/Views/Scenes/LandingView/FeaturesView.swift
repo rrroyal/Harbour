@@ -21,6 +21,7 @@ struct FeaturesView: View {
 			Text("FeaturesView.Headline AppName:\(Text("AppName").foregroundColor(.accentColor))")
 				.font(.largeTitle.bold())
 				.multilineTextAlignment(.center)
+				.padding(.horizontal)
 
 			Spacer()
 

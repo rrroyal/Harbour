@@ -31,11 +31,11 @@ struct HarbourApp: App {
 			portainerStore.setupInitially()
 			self._portainerStore = .init(wrappedValue: portainerStore)
 
-			Task {
-				if portainerStore.isSetup {
-					portainerStore.refresh()
-				}
+			#if os(macOS)
+			if portainerStore.isSetup && !(portainerStore.endpointsTask != nil || portainerStore.containersTask != nil) {
+				portainerStore.refresh()
 			}
+			#endif
 		} catch {
 			fatalError("Failed to create ModelContainer!")
 		}
@@ -57,7 +57,7 @@ struct HarbourApp: App {
 			onContainersChange(from: $0, to: $1)
 		}
 		#if os(iOS)
-		.backgroundTask(.appRefresh(HarbourBackgroundTaskIdentifier.backgroundRefresh), action: appState.handleBackgroundRefresh)
+		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
 		.commands {
 			CommandGroup(before: .newItem) {
@@ -96,7 +96,7 @@ private extension HarbourApp {
 		switch newScenePhase {
 		case .background:
 			#if os(iOS)
-			appState.scheduleBackgroundRefresh()
+			BackgroundHelper.scheduleBackgroundRefreshIfNeeded()
 			#endif
 		case .inactive:
 			break

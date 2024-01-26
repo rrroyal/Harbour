@@ -148,7 +148,7 @@ struct SetupView: View {
 			}
 			.padding()
 			.toolbar {
-				#if os(macOS) || targetEnvironment(macCatalyst)
+				#if os(macOS)
 				ToolbarItem(placement: .cancellationAction) {
 					CloseButton {
 						dismiss()

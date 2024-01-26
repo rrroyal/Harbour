@@ -21,18 +21,18 @@ public final class IntentPortainerStore: @unchecked Sendable {
 
 	// swiftlint:disable:next force_unwrapping
 	private let keychain = Keychain(accessGroup: Bundle.main.groupIdentifier!)
-	private let portainer = Portainer(urlSessionConfiguration: .intents)
+	private let portainer = Portainer(urlSessionConfiguration: .backgroundTasks)
 	private let preferences = Preferences.shared
 
-	public var isSetup: Bool {
-		portainer.isSetup
-	}
+	public private(set) var isSetup = false
 
 	private init() {
 		try? setupIfNeeded()
 	}
 
 	public func setupIfNeeded() throws {
+		isSetup = false
+
 		guard let urlStr = preferences.selectedServer else {
 			throw PortainerError.noServer
 		}
@@ -43,6 +43,8 @@ public final class IntentPortainerStore: @unchecked Sendable {
 
 		let token = try keychain.getString(for: url)
 		portainer.setup(url: url, token: token)
+
+		isSetup = true
 	}
 
 	public func getEndpoints() async throws -> [Endpoint] {

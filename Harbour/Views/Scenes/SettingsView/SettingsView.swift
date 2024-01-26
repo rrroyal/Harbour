@@ -9,6 +9,8 @@
 import CommonHaptics
 import SwiftUI
 
+// MARK: - SettingsView
+
 struct SettingsView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
@@ -26,7 +28,7 @@ struct SettingsView: View {
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			.navigationTitle("SettingsView.Title")
 //			.toolbar {
-//				#if os(macOS) || targetEnvironment(macCatalyst)
+//				#if os(macOS)
 //				ToolbarItem(placement: .cancellationAction) {
 //					CloseButton {
 //						dismiss()
@@ -36,10 +38,34 @@ struct SettingsView: View {
 //			}
 		}
 		.sheet(isPresented: $viewModel.isNegraSheetPresented) {
-			Text(verbatim: "🐕")
+			NegraView()
+		}
+		.sheet(isPresented: $viewModel.isSetupSheetPresented) {
+			viewModel.refreshServers()
+		} content: {
+			SetupView()
 		}
 	}
 }
+
+// MARK: - SettingsView+NegraView
+
+private extension SettingsView {
+	struct NegraView: View {
+		var body: some View {
+			AsyncImage(url: URL(string: "https://shameful.xyz/media/Negra.jpeg")) { image in
+				image
+					.resizable()
+					.aspectRatio(contentMode: .fit)
+					.frame(maxWidth: .infinity, maxHeight: .infinity)
+			} placeholder: {
+				ProgressView()
+			}
+		}
+	}
+}
+
+// MARK: - Previews
 
 #Preview {
 	SettingsView()

@@ -18,7 +18,6 @@ extension SettingsView {
 	@Observable
 	final class ViewModel {
 		private let portainerStore: PortainerStore = .shared
-		private let appState: AppState = .shared
 
 		var isSetupSheetPresented = false
 		var isNegraSheetPresented = false
@@ -28,6 +27,8 @@ extension SettingsView {
 
 		var isEndpointRemovalAlertPresented = false
 		var endpointToDelete: URL?
+
+		var shouldDisplayNegraButton = Int.random(in: 0...19) == 11
 
 		var displayiPadOptions: Bool {
 			#if os(macOS)
@@ -51,7 +52,7 @@ extension SettingsView {
 		func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
 			Task { @MainActor in
 				activeURL = serverURL
-				appState.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
+				AppState.shared.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
 			}
 		}
 

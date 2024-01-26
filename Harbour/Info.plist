@@ -29,7 +29,7 @@
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>harbour</string>
+			<string>xyz.shameful.Harbour</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>harbour</string>

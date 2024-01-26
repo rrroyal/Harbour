@@ -6,7 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-public struct Port: Equatable, Hashable, Decodable, Sendable {
+public struct Port: Equatable, Hashable, Codable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case ip = "IP"
 		case privatePort = "PrivatePort"
@@ -14,7 +14,7 @@ public struct Port: Equatable, Hashable, Decodable, Sendable {
 		case type = "Type"
 	}
 
-	public enum PortType: String, Hashable, Decodable, Sendable {
+	public enum PortType: String, Hashable, Codable, Sendable {
 		case tcp
 		case udp
 	}

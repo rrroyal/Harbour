@@ -30,8 +30,17 @@ struct ContainerLogsView: View {
 	var body: some View {
 		ScrollViewReader { scrollProxy in
 			ScrollView {
-				if let logsViewable = viewModel.logsViewable {
-					LogsView(logs: logsViewable)
+				LogsView(logs: viewModel.logs)
+					.animation(.easeInOut, value: viewModel.logs)
+			}
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
+			.background {
+				if viewModel.showBackgroundPlaceholder {
+					if viewModel.isLoading {
+						ProgressView()
+					} else {
+						Text("Generic.Empty")
+					}
 				}
 			}
 			.toolbar {
@@ -45,9 +54,17 @@ struct ContainerLogsView: View {
 						refreshAction: { viewModel.getLogs(errorHandler: errorHandler) }
 					)
 				}
+
+				ToolbarItem(placement: .status) {
+					if viewModel.isLoading && !viewModel.showBackgroundPlaceholder {
+						ProgressView()
+					}
+				}
 			}
 		}
 		.background(viewModel.viewState.backgroundView)
+		.transition(.opacity)
+		.animation(.easeInOut, value: viewModel.viewState)
 		.navigationTitle("ContainerLogsView.Title")
 		.refreshable {
 			await viewModel.getLogs(errorHandler: errorHandler).value
@@ -55,6 +72,9 @@ struct ContainerLogsView: View {
 //		.searchable(text: $searchQuery)
 		.task(id: navigationItem.id) {
 			await viewModel.getLogs(errorHandler: errorHandler).value
+		}
+		.onChange(of: viewModel.lineCount) {
+			viewModel.getLogs(errorHandler: errorHandler)
 		}
 		.onChange(of: viewModel.includeTimestamps) {
 			viewModel.getLogs(errorHandler: errorHandler)
@@ -117,7 +137,8 @@ private extension ContainerLogsView {
 				Haptics.generateIfEnabled(.selectionChanged)
 				includeTimestamps.toggle()
 			} label: {
-				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: includeTimestamps ? SFSymbol.checkmark : "")
+				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: SFSymbol.checkmark)
+					.labelStyle(.iconOptional(showIcon: includeTimestamps))
 			}
 		}
 
@@ -125,9 +146,9 @@ private extension ContainerLogsView {
 		private var logLinesMenu: some View {
 			let lineCounts: [Int] = [
 				100,
-				1_000,
-				10_000,
-				100_000
+				250,
+				500,
+				1_000
 			]
 			Menu("ContainerLogsView.Menu.LineCount") {
 				ForEach(lineCounts, id: \.self) { amount in
@@ -136,7 +157,8 @@ private extension ContainerLogsView {
 						Haptics.generateIfEnabled(.selectionChanged)
 						lineCount = amount
 					} label: {
-						Label(amount.formatted(), systemImage: isSelected ? SFSymbol.checkmark : "")
+						Label(amount.formatted(), systemImage: SFSymbol.checkmark)
+							.labelStyle(.iconOptional(showIcon: isSelected))
 					}
 				}
 			}

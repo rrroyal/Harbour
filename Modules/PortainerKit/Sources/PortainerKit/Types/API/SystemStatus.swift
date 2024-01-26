@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct SystemStatus: Identifiable, Equatable, Decodable, Sendable {
+public struct SystemStatus: Identifiable, Equatable, Codable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case version = "Version"
 		case instanceID = "InstanceID"

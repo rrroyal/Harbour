@@ -97,8 +97,8 @@ extension ContainerDetailsView {
 		func getContainerDetails(navigationItem: ContainerDetailsView.NavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
 			fetchTask?.cancel()
 			let task = Task {
+				self.viewState = (self.navigationItem == navigationItem && viewState.value != nil) ? viewState.reloading : .loading
 				self.navigationItem = navigationItem
-				self.viewState = viewState.reloading
 
 				do {
 					async let _containers = portainerStore.fetchContainers(filters: .init(id: [navigationItem.id]))

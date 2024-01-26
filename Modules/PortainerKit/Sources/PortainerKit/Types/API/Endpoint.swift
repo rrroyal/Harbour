@@ -8,7 +8,7 @@
 
 // MARK: - Endpoint
 
-public struct Endpoint: Identifiable, Equatable, Decodable, Sendable {
+public struct Endpoint: Identifiable, Equatable, Codable, Sendable {
 	public typealias Name = String
 
 	enum CodingKeys: String, CodingKey {
@@ -41,19 +41,21 @@ public struct Endpoint: Identifiable, Equatable, Decodable, Sendable {
 	public let type: EndpointType?
 	public let url: String?
 
-	public init(authorizedTeams: [Int]? = nil,
-				authorizedUsers: [Int]? = nil,
-				edgeID: String? = nil,
-				groupID: String? = nil,
-				id: Int,
-				name: String? = nil,
-				publicURL: String? = nil,
-				status: Status? = nil,
-				tls: Bool? = nil,
-				tagIDs: [Int]? = nil,
-				tags: [String]? = nil,
-				type: EndpointType? = nil,
-				url: String? = nil) {
+	public init(
+		authorizedTeams: [Int]? = nil,
+		authorizedUsers: [Int]? = nil,
+		edgeID: String? = nil,
+		groupID: String? = nil,
+		id: Int,
+		name: String? = nil,
+		publicURL: String? = nil,
+		status: Status? = nil,
+		tls: Bool? = nil,
+		tagIDs: [Int]? = nil,
+		tags: [String]? = nil,
+		type: EndpointType? = nil,
+		url: String? = nil
+	) {
 		self.authorizedTeams = authorizedTeams
 		self.authorizedUsers = authorizedUsers
 		self.edgeID = edgeID
@@ -73,7 +75,7 @@ public struct Endpoint: Identifiable, Equatable, Decodable, Sendable {
 // MARK: - Endpoint+Status
 
 public extension Endpoint {
-	enum Status: Int, Decodable, Sendable {
+	enum Status: Int, Codable, Sendable {
 		case up = 1
 		case down
 	}
@@ -82,7 +84,7 @@ public extension Endpoint {
 // MARK: - Endpoint+EndpointType
 
 public extension Endpoint {
-	enum EndpointType: Int, Decodable, Sendable {
+	enum EndpointType: Int, Codable, Sendable {
 		case unknown = -1
 		case docker = 1
 		case agent = 2

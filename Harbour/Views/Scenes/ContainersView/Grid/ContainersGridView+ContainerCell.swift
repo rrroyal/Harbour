@@ -25,13 +25,13 @@ extension ContainersGridView {
 			HStack {
 				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
 					.font(.footnote.weight(.medium))
-					.foregroundStyle(container._isStored ? ContainerState?.none.color : container.state.color)
+					.foregroundStyle(.tint)
 					.transition(.opacity)
 
 				Spacer()
 
 				Circle()
-					.foregroundStyle(container._isStored ? ContainerState?.none.color : container.state.color)
+					.foregroundStyle(.tint)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 			}
@@ -52,8 +52,9 @@ extension ContainersGridView {
 					.font(.footnote.weight(.medium))
 					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
 					.transition(.opacity)
-					.lineLimit(1)
+					.lineLimit(2)
 			}
+			.foregroundStyle(Color.primary)
 			.multilineTextAlignment(.leading)
 			.minimumScaleFactor(minimumScaleFactor)
 			.animation(.easeInOut, value: container.displayName)
@@ -69,11 +70,13 @@ extension ContainersGridView {
 			.padding(paddingSize)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.aspectRatio(1, contentMode: .fit)
+			.tint(container._isStored ? ContainerState?.none.color : container.state.color)
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
 			.animation(.easeInOut, value: container._isStored)
 			.contentTransition(.opacity)
+			.geometryGroup()
 		}
 	}
 }
@@ -98,12 +101,12 @@ extension ContainersGridView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-/*
 #Preview {
-	ContainersGridView.ContainerCell(container: .init(id: "id", names: ["PreviewContainer"], state: .running, status: "Status"))
-		.padding()
-		.background(Color(uiColor: .systemGroupedBackground))
-		.frame(width: 184, height: 184)
-		.previewLayout(.sizeThatFits)
+	Button(action: {}) {
+		ContainersGridView.ContainerCell(container: .preview)
+	}
+	.padding()
+	.frame(width: 168, height: 168)
+	.background(Color.groupedBackground)
+	.previewLayout(.sizeThatFits)
 }
-*/

@@ -26,35 +26,35 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 	private let logger = Logger(.custom(Preferences.self))
 
 	/// Was landing view displayed?
-	@AppStorage(Keys.landingDisplayed, store: Preferences.userDefaults) public var landingDisplayed = false
+	@AppStorage(Key.landingDisplayed, store: Preferences.userDefaults) public var landingDisplayed = false
 
 	/// Are haptics enabled?
-	@AppStorage(Keys.enableHaptics, store: Preferences.userDefaults) public var enableHaptics = true
+	@AppStorage(Key.enableHaptics, store: Preferences.userDefaults) public var enableHaptics = true
 
 	/// Is background refresh enabled?
 	#if os(iOS)
-	@AppStorage(Keys.enableBackgroundRefresh, store: Preferences.userDefaults) public var enableBackgroundRefresh = false {
+	@AppStorage(Key.enableBackgroundRefresh, store: Preferences.userDefaults) public var enableBackgroundRefresh = false {
 		didSet { onEnableBackgroundRefreshChange(enableBackgroundRefresh) }
 	}
 	#endif
 
 	/// Last background refresh time
-	@AppStorage(Keys.lastBackgroundRefreshDate, store: Preferences.userDefaults) public var lastBackgroundRefreshDate: TimeInterval?
+	@AppStorage(Key.lastBackgroundRefreshDate, store: Preferences.userDefaults) public var lastBackgroundRefreshDate: TimeInterval?
 
 	/// Selected server
-	@AppStorage(Keys.selectedServer, store: Preferences.userDefaults) public var selectedServer: String?
+	@AppStorage(Key.selectedServer, store: Preferences.userDefaults) public var selectedServer: String?
 
 	/// Selected endpoint
-	@AppStorage(Keys.selectedEndpoint, store: Preferences.userDefaults) public var selectedEndpoint: StoredEndpoint?
+	@AppStorage(Key.selectedEndpoint, store: Preferences.userDefaults) public var selectedEndpoint: StoredEndpoint?
 
 	// Display summary in ContainersView
-//	@AppStorage(Keys.cvDisplaySummary, store: Preferences.userDefaults) public var cvDisplaySummary = false
+//	@AppStorage(Key.cvDisplaySummary, store: Preferences.userDefaults) public var cvDisplaySummary = false
 
 	/// Use two-columns layout
-	@AppStorage(Keys.cvUseColumns, store: Preferences.userDefaults) public var cvUseColumns = true
+	@AppStorage(Key.cvUseColumns, store: Preferences.userDefaults) public var cvUseColumns = false
 
 	/// Display ContainersView as grid
-	@AppStorage(Keys.cvUseGrid, store: Preferences.userDefaults) public var cvUseGrid = true
+	@AppStorage(Key.cvUseGrid, store: Preferences.userDefaults) public var cvUseGrid = true
 
 	private init() { }
 }
@@ -64,28 +64,32 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 private extension Preferences {
 	#if os(iOS)
 	func onEnableBackgroundRefreshChange(_ isEnabled: Bool) {
-		logger.debug("\(Keys.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public)")
+		logger.debug("\(Key.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public)")
 
 		let notificationCenter = UNUserNotificationCenter.current()
 
 		if isEnabled {
 			// Ask for permission
-			notificationCenter.requestAuthorization(options: [.alert, .sound, .providesAppNotificationSettings]) { [weak self] allowed, error in
-				guard let self else { return }
-				if let error {
-					self.logger.error("Error requesting notifications authorization: \(error, privacy: .public)")
-				}
-				self.logger.debug("Notifications authorization allowed: \(allowed, privacy: .public)")
+			Task {
+				do {
+					let allowed = try await notificationCenter.requestAuthorization(options: [.alert, .sound, .providesAppNotificationSettings])
+					logger.debug("Notifications authorization allowed: \(allowed, privacy: .public)")
 
-				if error != nil || !allowed {
-					DispatchQueue.main.async {
+					if !allowed {
+						await MainActor.run {
+							self.enableBackgroundRefresh = false
+						}
+					}
+				} catch {
+					self.logger.error("Error requesting notifications authorization: \(error, privacy: .public)")
+					await MainActor.run {
 						self.enableBackgroundRefresh = false
 					}
 				}
 			}
 		} else {
 			// Remove background refreshes and pending notifications
-			BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: HarbourBackgroundTaskIdentifier.backgroundRefresh)
+			BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: BackgroundHelper.TaskIdentifier.backgroundRefresh)
 			notificationCenter.removePendingNotificationRequests(withIdentifiers: [HarbourNotificationIdentifier.containersChanged])
 		}
 	}

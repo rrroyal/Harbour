@@ -5,14 +5,17 @@
 //  Created by royal on 27/01/2023.
 //  Copyright © 2023 shameful. All rights reserved.
 //
+//	https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts
+//
 
+import OSLog
 import SwiftUI
-
-// TODO: Speed it up
 
 // MARK: - ANSIParser
 
 enum ANSIParser {
+	private static let logger = Logger(.custom(ANSIParser.self))
+
 	#if canImport(UIKit)
 	typealias PlatformColor = UIColor
 	typealias PlatformAttributes = AttributeScopes.UIKitAttributes
@@ -21,10 +24,19 @@ enum ANSIParser {
 	typealias PlatformAttributes = AttributeScopes.AppKitAttributes
 	#endif
 
+	// swiftlint:disable opening_brace
+
 	static let escapeSequenceStart: [Character] = ["\u{001B}", "["]
 	static let escapeSequenceEnd: Character = "m"
 	static let escapeSequenceAllowedCharacters = "([0–9]|[:;<=>?!\"#$%&'()*+,-./ @A–Z[\\]^_`a–z{|}~])*"
 
+	/// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L131
+	static let escapeRegex = /[\u001b\u009b][\[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/
+
+	// swiftlint:enable opening_brace
+
+	// TODO: Make this work
+	// https://github.com/NXMIX/tokenize-ansi/tree/master
 	static func parse(_ string: String) -> AttributedString {
 		var finalAttributedString = AttributedString()
 
@@ -87,10 +99,19 @@ enum ANSIParser {
 	}
 
 	static func trim(_ string: String) -> String {
-		// I know this pattern doesn't cover all sequences, but it's good enough ¯\_(ツ)_/¯
-		let regexPattern = "\(escapeSequenceStart[0])\\\(escapeSequenceStart[1])([0-9;])*\(escapeSequenceEnd)"
-		guard let regex = try? Regex(regexPattern) else { return string }
-		return string.replacing(regex, with: "")
+		#if DEBUG
+		let startDate = Date.now
+		logger.debug("Started trimming text with length: \(string.count)...")
+		#endif
+
+		let final = string
+			.replacing(Self.escapeRegex, with: "")
+
+		#if DEBUG
+		logger.debug("Finished trimming text after \(Date.now.timeIntervalSince(startDate))s.")
+		#endif
+
+		return final
 	}
 
 	private static func parseModifiers(_ modifiersStr: String) -> (reset: Bool, attributes: AttributeContainer) {

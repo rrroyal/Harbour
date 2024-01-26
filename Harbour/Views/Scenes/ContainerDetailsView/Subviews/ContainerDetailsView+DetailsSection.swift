@@ -29,6 +29,8 @@ extension ContainerDetailsView {
 				Text("ContainerDetailsView.Section.State")
 					.font(ContainerDetailsView.sectionHeaderFont)
 			}
+			.animation(.easeInOut, value: container?.state)
+			.animation(.easeInOut, value: details?.status)
 
 			// ID
 			if let id = container?.id ?? details?.id {
@@ -40,6 +42,7 @@ extension ContainerDetailsView {
 					Text("ContainerDetailsView.Section.ID")
 						.font(ContainerDetailsView.sectionHeaderFont)
 				}
+				.animation(.easeInOut, value: id)
 			}
 
 			// Created At
@@ -51,6 +54,7 @@ extension ContainerDetailsView {
 					Text("ContainerDetailsView.Section.CreatedAt")
 						.font(ContainerDetailsView.sectionHeaderFont)
 				}
+				.animation(.easeInOut, value: createdAt)
 			}
 
 			// Finished At
@@ -62,6 +66,7 @@ extension ContainerDetailsView {
 					Text("ContainerDetailsView.Section.FinishedAt")
 						.font(ContainerDetailsView.sectionHeaderFont)
 				}
+				.animation(.easeInOut, value: finishedAt)
 			}
 
 			// Image
@@ -80,6 +85,7 @@ extension ContainerDetailsView {
 					Text("ContainerDetailsView.Section.Image")
 						.font(ContainerDetailsView.sectionHeaderFont)
 				}
+				.animation(.easeInOut, value: image)
 			}
 
 			// CMD
@@ -92,6 +98,7 @@ extension ContainerDetailsView {
 					Text("ContainerDetailsView.Section.Cmd")
 						.font(ContainerDetailsView.sectionHeaderFont)
 				}
+				.animation(.easeInOut, value: command)
 			}
 
 			// Entrypoint
@@ -104,6 +111,7 @@ extension ContainerDetailsView {
 					Text("ContainerDetailsView.Section.Entrypoint")
 						.font(ContainerDetailsView.sectionHeaderFont)
 				}
+				.animation(.easeInOut, value: entrypoint)
 			}
 
 			// Network

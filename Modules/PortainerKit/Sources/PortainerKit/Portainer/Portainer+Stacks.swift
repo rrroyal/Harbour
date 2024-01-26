@@ -18,13 +18,13 @@ public extension Portainer {
 		return try await fetch(request: request)
 	}
 
-	@Sendable
 	/// Starts a stopped Stack or stops a stopped Stack.
 	/// - Parameters:
 	///   - endpointID: Endpoint identifier
 	///   - stackID: Stack identifier
 	///   - started: Should stack be started?
 	/// - Returns: Affected `Stack`
+	@Sendable
 	func setStackStatus(endpointID: Endpoint.ID, stackID: Stack.ID, started: Bool) async throws -> Stack {
 		var request = try request(for: .stackStatus(stackID: stackID, started: started), query: [URLQueryItem(name: "endpointId", value: "\(endpointID)")])
 		request.httpMethod = "POST"

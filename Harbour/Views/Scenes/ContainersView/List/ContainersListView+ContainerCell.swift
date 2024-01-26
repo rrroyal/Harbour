@@ -24,6 +24,7 @@ extension ContainersListView {
 			Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
 				.font(.headline.weight(.semibold))
 				.foregroundStyle(container.displayName != nil ? .primary : .secondary)
+				.foregroundStyle(Color.primary)
 				.transition(.opacity)
 				.animation(.easeInOut, value: container.displayName)
 		}
@@ -32,7 +33,7 @@ extension ContainersListView {
 		private var subheadlineLabel: some View {
 			HStack(spacing: 4) {
 				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
-					.foregroundColor(container._isStored ? ContainerState?.none.color : container.state.color)
+					.foregroundStyle(.tint)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
 					.animation(.easeInOut, value: container._isStored)
@@ -43,6 +44,7 @@ extension ContainersListView {
 						Text(containerStatus)
 					}
 					.foregroundStyle(.secondary)
+					.foregroundStyle(Color.primary)
 				}
 			}
 			.font(.subheadline.weight(.medium))
@@ -63,18 +65,20 @@ extension ContainersListView {
 				Spacer()
 
 				Circle()
-					.foregroundStyle(container._isStored ? ContainerState?.none.color : container.state.color)
+					.foregroundStyle(.tint)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
 			}
 			.padding()
 			.frame(maxWidth: .infinity)
+			.tint(container._isStored ? ContainerState?.none.color : container.state.color)
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
 			.animation(.easeInOut, value: container._isStored)
 			.contentTransition(.opacity)
+			.geometryGroup()
 		}
 	}
 }
@@ -99,11 +103,11 @@ extension ContainersListView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-/*
 #Preview {
-	ContainersListView.ContainerCell(container: .init(id: "id", names: ["PreviewContainer"], state: .running, status: "Status"))
-		.padding()
-		.background(Color(uiColor: .systemGroupedBackground))
-		.previewLayout(.sizeThatFits)
+	Button(action: {}) {
+		ContainersListView.ContainerCell(container: .preview)
+	}
+	.padding()
+	.background(Color.groupedBackground)
+	.previewLayout(.sizeThatFits)
 }
-*/

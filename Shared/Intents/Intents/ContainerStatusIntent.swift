@@ -22,14 +22,14 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		When(\.$endpoint, .hasAnyValue) {
 			Summary("Get container status on \(\.$endpoint)") {
 				\.$containers
-				\.$resolveStrictly
+				\.$resolveByName
 			}
 		} otherwise: {
 			Summary("Get container status on \(\.$endpoint)")
 		}
 	}
 
-	static var authenticationPolicy = IntentAuthenticationPolicy.requiresAuthentication
+	static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
 	static var isDiscoverable = false
 
@@ -38,7 +38,6 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 	@Parameter(
 		title: "AppIntents.Parameter.Containers.Title",
-		default: nil,
 		size: [
 			.systemSmall: 1,
 			.systemMedium: 2,
@@ -48,18 +47,11 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	var containers: [IntentContainer]?
 
 	@Parameter(
-		title: "AppIntents.Parameter.ResolveStrictly.Title",
-		description: "AppIntents.Parameter.ResolveStrictly.Description",
-		default: false
+		title: "AppIntents.Parameter.ResolveByName.Title",
+		description: "AppIntents.Parameter.ResolveByName.Description",
+		default: true
 	)
-	var resolveStrictly: Bool
-
-//	@Parameter(
-//		title: "AppIntents.Parameter.ResolveOffline.Title",
-//		description: "AppIntents.Parameter.ResolveOffline.Description",
-//		default: false
-//	)
-//	var resolveOffline: Bool
+	var resolveByName: Bool
 
 	init() {
 		self.endpoint = nil
@@ -74,15 +66,24 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	@MainActor
 	func perform() async throws -> some ReturnsValue<IntentContainer> {
 		do {
-			// TODO: Fetch new container status here
-			guard endpoint != nil else {
+			guard let endpoint else {
 				throw $endpoint.needsValueError()
 			}
 			guard let containers, !containers.isEmpty else {
 				throw $containers.needsValueError()
 			}
 
-			let intentContainer: IntentContainer = switch containers.count {
+			let portainerStore = IntentPortainerStore.shared
+			try portainerStore.setupIfNeeded()
+
+			let filters = Portainer.FetchFilters(
+				id: resolveByName ? nil : containers.map(\._id),
+				name: resolveByName ? containers.compactMap(\.name) : nil
+			)
+			let newContainers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
+				.map { IntentContainer(container: $0) }
+
+			let newContainer: IntentContainer = switch newContainers.count {
 			case 0:
 				throw Error.noContainers
 			case 1:
@@ -92,7 +93,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 				try await $containers.requestDisambiguation(among: containers)
 			}
 
-			return .result(value: intentContainer)
+			return .result(value: newContainer)
 		} catch {
 			logger.error("Error performing: \(error, privacy: .public)")
 			throw error
@@ -112,27 +113,6 @@ extension ContainerStatusIntent {
 				String(localized: "ContainerStatusIntent.Error.NoContainers")
 			}
 		}
-	}
-}
-
-// MARK: - ContainerStatusIntent+Private
-
-private extension ContainerStatusIntent {
-	func getContainers(
-		for endpointID: Endpoint.ID,
-		ids: [Container.ID]? = nil,
-		names: [String?]? = nil,
-		resolveByName: Bool
-	) async throws -> [Container] {
-		let portainerStore = IntentPortainerStore.shared
-		try portainerStore.setupIfNeeded()
-
-		let filters = Portainer.FetchFilters(
-			id: resolveByName ? nil : ids,
-			name: resolveByName ? names?.compactMap { $0 } : nil
-		)
-		let containers = try await portainerStore.getContainers(for: endpointID, filters: filters)
-		return containers
 	}
 }
 

@@ -6,8 +6,8 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 public typealias WebSocketPassthroughSubject = PassthroughSubject<WebSocketMessage, Error>
 

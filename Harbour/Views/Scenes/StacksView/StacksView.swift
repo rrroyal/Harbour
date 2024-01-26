@@ -19,6 +19,17 @@ struct StacksView: View {
 	@State private var viewModel = ViewModel()
 	@Binding var selectedStack: Stack?
 
+	@ViewBuilder
+	private var placeholderView: some View {
+		if viewModel.shouldShowEmptyPlaceholderView {
+			if !viewModel.searchText.isEmpty {
+				ContentUnavailableView.search(text: viewModel.searchText)
+			} else {
+				ContentUnavailableView("StacksView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
+			}
+		}
+	}
+
 	var body: some View {
 		NavigationStack {
 			Form {
@@ -44,19 +55,19 @@ struct StacksView: View {
 			#if os(macOS)
 			.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
 			#endif
-			.overlay(viewModel.viewState.backgroundView)
-			.overlay {
-				if viewModel.shouldShowEmptyPlaceholderView {
-					if !viewModel.searchText.isEmpty {
-						ContentUnavailableView.search(text: viewModel.searchText)
-					} else {
-						ContentUnavailableView("StacksView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
-					}
-				}
+			.scrollContentBackground(.hidden)
+			.background {
+				placeholderView
 			}
+			.background {
+				viewModel.viewState.backgroundView
+			}
+			#if os(iOS)
+			.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+			#endif
 			.navigationTitle("StacksView.Title")
 			.toolbar {
-				#if os(macOS) || targetEnvironment(macCatalyst)
+				#if os(macOS)
 				ToolbarItem(placement: .cancellationAction) {
 					CloseButton {
 						dismiss()
@@ -68,23 +79,23 @@ struct StacksView: View {
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState.id)
 		.animation(.easeInOut, value: viewModel.stacks)
-		.task {
-			do {
-				try await viewModel.getStacks()
-			} catch {
-				errorHandler(error)
-			}
-		}
-		.refreshable {
-			do {
-				try await viewModel.getStacks()
-			} catch {
-				errorHandler(error)
-			}
+		.task { await fetch() }
+		.refreshable { await fetch() }
+	}
+}
+
+// MARK: - StacksView+Actions
+
+private extension StacksView {
+	func fetch() async {
+		do {
+			try await viewModel.getStacks()
+		} catch {
+			errorHandler(error)
 		}
 	}
 
-	private func setStackState(_ stack: Stack, started: Bool) {
+	func setStackState(_ stack: Stack, started: Bool) {
 		Task {
 			do {
 				Haptics.generateIfEnabled(.light)

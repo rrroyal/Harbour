@@ -10,7 +10,7 @@ import Combine
 import Foundation
 import OSLog
 
-public final class Portainer {
+public final class Portainer: @unchecked Sendable {
 
 	// MARK: Static properties
 
@@ -21,7 +21,9 @@ public final class Portainer {
 	// MARK: Public properties
 
 	/// Is `Portainer` setup?
-	public private(set) var isSetup = false
+	public var isSetup: Bool {
+		serverURL != nil && token != nil
+	}
 
 	/// Server URL
 	public var serverURL: URL?
@@ -64,6 +66,7 @@ public final class Portainer {
 		}
 		return decoder
 	}()
+	internal let jsonEncoder = JSONEncoder()
 
 	// MARK: init
 
@@ -78,9 +81,6 @@ public final class Portainer {
 		token: String? = nil,
 		urlSessionConfiguration: URLSessionConfiguration = .default
 	) {
-		urlSessionConfiguration.httpAdditionalHeaders = urlSessionConfiguration.httpAdditionalHeaders ?? [:]
-		urlSessionConfiguration.httpAdditionalHeaders?["Accept-Encoding"] = urlSessionConfiguration.httpAdditionalHeaders?["Accept-Encoding"] ?? "gzip, deflate"
-
 		let delegate = Portainer.URLSessionDelegate()
 		self.session = URLSession(configuration: urlSessionConfiguration, delegate: delegate, delegateQueue: nil)
 
@@ -90,14 +90,34 @@ public final class Portainer {
 			setup(url: serverURL, token: token)
 		}
 	}
+
+	// MARK: Public methods
+
+	/// Sets up `Portainer` with specfied URL and authorization token.
+	/// - Parameters:
+	///   - url: Server URL
+	///   - token: Authorization token
+	@Sendable
+	public func setup(url: URL, token: String) {
+		self.serverURL = url
+		self.token = token
+	}
+
+	/// Resets the `Portainer` state.
+	@Sendable
+	public func reset() {
+		self.serverURL = nil
+		self.token = nil
+	}
 }
 
 // MARK: - Portainer+Utility
 
 internal extension Portainer {
 	/// Creates an authorized URLRequest.
-	/// - Parameter path: Request path
-	/// - Parameter query: Optional URL query items
+	/// - Parameters:
+	///   - path: Request path
+	///   - query: Optional URL query items
 	/// - Returns: `URLRequest` with authorization header set.
 	@Sendable
 	func request(for path: RequestPath, query: [URLQueryItem]? = nil) throws -> URLRequest {
@@ -123,9 +143,8 @@ internal extension Portainer {
 	}
 
 	/// Fetches & decodes data for supplied request.
-	/// - Parameter request: `URLRequest`
-	/// - Parameter decoder: `JSONDecoder`
-	/// - Returns: `Output`
+	/// - Parameter request: `URLRequest` to execute
+	/// - Returns: Decoded `Output`
 	@Sendable
 	func fetch<Output: Decodable>(request: URLRequest) async throws -> Output {
 		let (data, response) = try await session.data(for: request)
@@ -161,12 +180,12 @@ internal extension Portainer {
 			}
 		}
 	}
-	
+
 	/// Gets the error from the provided data and response.
 	/// - Parameters:
 	///   - data: Response data
-	///   - response: `URLResponse`
-	/// - Returns: `Error` if needed
+	///   - response: Response object
+	/// - Returns: `Error`, if possible
 	@Sendable
 	func getError(from data: Data, response: URLResponse) -> Error? {
 		// Decode error message first...
@@ -181,35 +200,10 @@ internal extension Portainer {
 				return PortainerError.responseCodeUnacceptable(urlResponse.statusCode)
 			}
 		} else {
-			// ...or call assertionFailure and throw a `APIError.unknownError`.
-			assertionFailure("Response isn't HTTPURLResponse 🤨 [\(#fileID):\(#line)]\n\(response)")
-
-			return PortainerError.unknownError
+			// ...or call assertionFailure, as we can't get the response code
+			assertionFailure("Response isn't `HTTPURLResponse`: \(response)")
 		}
 
 		return nil
-	}
-}
-
-// MARK: - Portainer+State
-
-public extension Portainer {
-	/// Sets up `Portainer` with specfied URL and authorization token.
-	/// - Parameters:
-	///   - url: Server URL
-	///   - token: Authorization token
-	@Sendable
-	func setup(url: URL, token: String) {
-		self.serverURL = url
-		self.token = token
-		self.isSetup = true
-	}
-
-	/// Resets the `Portainer` state.
-	@Sendable
-	func reset() {
-		self.serverURL = nil
-		self.token = nil
-		self.isSetup = false
 	}
 }

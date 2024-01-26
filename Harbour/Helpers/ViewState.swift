@@ -78,11 +78,11 @@ extension ViewState: Identifiable {
 		case .loading:
 			0
 		case .reloading:
-			-1
-		case .success:
 			1
+		case .success:
+			2
 		case .failure:
-			-2
+			-1
 		}
 	}
 }

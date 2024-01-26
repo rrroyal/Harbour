@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Stack
 
-public struct Stack: Identifiable, Equatable, Decodable, Sendable {
+public struct Stack: Identifiable, Equatable, Codable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case id = "Id"
 		case name = "Name"
@@ -42,7 +42,7 @@ public struct Stack: Identifiable, Equatable, Decodable, Sendable {
 // MARK: - Stack+StackType
 
 public extension Stack {
-	enum StackType: Int, Equatable, Decodable, Sendable {
+	enum StackType: Int, Equatable, Codable, Sendable {
 		case swarm = 1
 		case dockerCompose = 2
 	}
@@ -51,7 +51,7 @@ public extension Stack {
 // MARK: - Stack+Status
 
 public extension Stack {
-	enum Status: Int, Equatable, Decodable, Sendable {
+	enum Status: Int, Equatable, Codable, Sendable {
 		case active = 1
 		case inactive = 2
 	}
@@ -60,7 +60,7 @@ public extension Stack {
 // MARK: - Stack+EnvironmentEntry
 
 public extension Stack {
-	struct EnvironmentEntry: Equatable, Decodable, Sendable {
+	struct EnvironmentEntry: Equatable, Codable, Sendable {
 		let name: String
 		let value: String
 	}

@@ -62,41 +62,69 @@ extension EnvironmentValues {
 // MARK: - PortainerServerURL
 
 extension EnvironmentValues {
-	private struct PortainerServerURL: EnvironmentKey {
+	private struct PortainerServerURLParentShapeEnvironmentKey: EnvironmentKey {
 		static let defaultValue: URL? = nil
 	}
 
 	/// Active Portainer server URL.
 	var portainerServerURL: URL? {
-		get { self[PortainerServerURL.self] }
-		set { self[PortainerServerURL.self] = newValue }
+		get { self[PortainerServerURLParentShapeEnvironmentKey.self] }
+		set { self[PortainerServerURLParentShapeEnvironmentKey.self] = newValue }
 	}
 }
 
 // MARK: - PortainerSelectedEndpointID
 
 extension EnvironmentValues {
-	private struct PortainerSelectedEndpoint: EnvironmentKey {
+	private struct PortainerSelectedEndpointParentShapeEnvironmentKey: EnvironmentKey {
 		static let defaultValue: Endpoint.ID? = nil
 	}
 
 	/// Active Portainer endpoint ID.
 	var portainerSelectedEndpointID: Endpoint.ID? {
-		get { self[PortainerSelectedEndpoint.self] }
-		set { self[PortainerSelectedEndpoint.self] = newValue }
+		get { self[PortainerSelectedEndpointParentShapeEnvironmentKey.self] }
+		set { self[PortainerSelectedEndpointParentShapeEnvironmentKey.self] = newValue }
 	}
 }
 
 // MARK: - CVUseGrid
 
 extension EnvironmentValues {
-	private struct CVUseGrid: EnvironmentKey {
+	private struct CVUseGridParentShapeEnvironmentKey: EnvironmentKey {
 		static let defaultValue: Bool = Preferences.shared.cvUseGrid
 	}
 
 	/// `ContainersView` uses grid style view.
 	var cvUseGrid: Bool {
-		get { self[CVUseGrid.self] }
-		set { self[CVUseGrid.self] = newValue }
+		get { self[CVUseGridParentShapeEnvironmentKey.self] }
+		set { self[CVUseGridParentShapeEnvironmentKey.self] = newValue }
+	}
+}
+
+// MARK: - ParentShape
+
+extension EnvironmentValues {
+	private struct ParentShapeEnvironmentKey: EnvironmentKey {
+		static let defaultValue: AnyShape? = nil
+	}
+
+	/// Shape of the parent view.
+	var parentShape: AnyShape? {
+		get { self[ParentShapeEnvironmentKey.self] }
+		set { self[ParentShapeEnvironmentKey.self] = newValue }
+	}
+}
+
+// MARK: - NavigationPath
+
+extension EnvironmentValues {
+	private struct NavigationPathEnvironmentKey: EnvironmentKey {
+		static let defaultValue = NavigationPath()
+	}
+
+	/// `NavigationPath` for this view stack.
+	var navigationPath: NavigationPath {
+		get { self[NavigationPathEnvironmentKey.self] }
+		set { self[NavigationPathEnvironmentKey.self] = newValue }
 	}
 }

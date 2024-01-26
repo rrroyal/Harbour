@@ -1,5 +1,5 @@
 //
-//  Preferences+Keys.swift
+//  Preferences+Key.swift
 //  Harbour
 //
 //  Created by royal on 02/11/2022.
@@ -9,7 +9,7 @@
 import Foundation
 
 extension Preferences {
-	enum Keys {
+	enum Key {
 		static let landingDisplayed = "LandingDisplayed"
 		static let enableHaptics = "EnableHaptics"
 

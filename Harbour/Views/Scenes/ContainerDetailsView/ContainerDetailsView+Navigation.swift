@@ -11,7 +11,7 @@ import PortainerKit
 import SwiftUI
 
 extension ContainerDetailsView: Deeplinkable {
-	struct NavigationItem: NavigableItem {
+	struct NavigationItem: Hashable, Identifiable, Codable {
 		enum CodingKeys: String, CodingKey {
 			case id
 			case displayName

@@ -6,7 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-public struct Network: Equatable, Decodable, Sendable {
+public struct Network: Equatable, Codable, Sendable {
 	enum CodingKeys: String, CodingKey {
 		case links = "Links"
 		case aliases = "Aliases"

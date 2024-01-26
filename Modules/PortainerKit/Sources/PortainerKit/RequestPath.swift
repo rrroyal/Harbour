@@ -45,6 +45,7 @@ internal enum RequestPath {
 	/// Starts a stopped Stack OR Stops a stopped Stack.
 	case stackStatus(stackID: Stack.ID, started: Bool)
 
+	/// Check Portainer status
 	case systemStatus
 
 }

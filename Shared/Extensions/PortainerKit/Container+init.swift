@@ -11,12 +11,24 @@ import PortainerKit
 
 extension Container {
 	init(storedContainer: StoredContainer) {
-		let names: [String]?
-		if let name = storedContainer.name {
-			names = [name]
+		let names: [String]? = if let name = storedContainer.name {
+			["/" + name]
 		} else {
-			names = nil
+			nil
 		}
-		self.init(id: storedContainer.id, names: names, state: storedContainer.lastState)
+
+		let labels: [String: String]? = if let associationID = storedContainer.associationID {
+			[ContainerLabel.associationID: associationID]
+		} else {
+			nil
+		}
+
+		self.init(
+			id: storedContainer.id,
+			names: names,
+			image: storedContainer.image,
+			labels: labels,
+			state: storedContainer.lastState
+		)
 	}
 }

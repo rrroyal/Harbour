@@ -14,7 +14,7 @@ import PortainerKit
 
 extension [Stack] {
 	func sorted() -> Self {
-		sorted { ("\($0.name)", $0.id) < ("\($1.name)", $1.id) }
+		localizedSorted(by: \.name)
 	}
 }
 

@@ -21,4 +21,17 @@ extension View {
 			self
 		}
 	}
+
+	/// Applies the given transform if the given optional isn't `nil`.
+	/// - Parameters:
+	///   - value: The value to check.
+	///   - transform: The transform to apply to the source `View`.
+	/// - Returns: Either the original `View` or the modified `View` if the value isn't `nil`.
+	@ViewBuilder func `if`<Content: View, Value>(`let` value: @autoclosure () -> Value?, transform: (Self, Value) -> Content) -> some View {
+		if let value = value() {
+			transform(self, value)
+		} else {
+			self
+		}
+	}
 }

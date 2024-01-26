@@ -54,7 +54,7 @@ extension HarbourDeeplink {
 			// Scheme isn't ours; bail
 			return nil
 		}
-		
+
 		guard let host = components.host?.lowercased() else {
 			self.destination = nil
 			self.subdestination = nil
@@ -67,10 +67,6 @@ extension HarbourDeeplink {
 		case .containerDetails:
 			guard let containerID = path.first else { return nil }
 
-			let subdestination = path
-				.dropFirst()
-				.map { $0.lowercased() }
-
 			let displayName = components.queryItems?.value(for: .name)
 			let endpointID: Endpoint.ID? = if let endpointIDStr = components.queryItems?.value(for: .endpointID) {
 				Int(endpointIDStr)
@@ -79,6 +75,10 @@ extension HarbourDeeplink {
 			}
 
 			self.destination = .containerDetails(id: String(containerID), displayName: displayName, endpointID: endpointID)
+
+			let subdestination = path
+				.dropFirst()
+				.map { $0.lowercased() }
 			self.subdestination = subdestination
 		case .settings:
 			self.destination = .settings
@@ -109,16 +109,16 @@ extension HarbourDeeplink {
 		case .containerDetails(let id, let displayName, let endpointID):
 			components.path = "/" + id
 
-			if let subdestination {
-				components.path += "/" + subdestination.joined(separator: "/")
-			}
-
 			components.queryItems = [
 				.init(name: QueryKey.name.rawValue, value: displayName),
 				.init(name: QueryKey.endpointID.rawValue, value: endpointID?.description ?? "")
 			]
 		case .settings:
 			break
+		}
+
+		if let subdestination {
+			components.path += "/" + subdestination.joined(separator: "/")
 		}
 
 		return components.url
@@ -128,12 +128,12 @@ extension HarbourDeeplink {
 // MARK: - HarbourDeeplink+Host
 
 private extension HarbourDeeplink {
-	/// The `host` URL part, mirroring ``HarbourDeeplink.Destination``.
+	/// The `host` URL part, mirroring ``Destination``.
 	enum Host: String {
 		case containerDetails = "container-details"
 		case settings = "settings"
 
-		init(for destination: HarbourDeeplink.Destination) {
+		init(for destination: Destination) {
 			switch destination {
 			case .containerDetails:
 				self = .containerDetails
@@ -158,6 +158,6 @@ private extension HarbourDeeplink {
 
 private extension [URLQueryItem] {
 	func value(for key: HarbourDeeplink.QueryKey) -> String? {
-		first(where: { $0.name.lowercased() == key.rawValue.lowercased() })?.value
+		first { $0.name.lowercased() == key.rawValue.lowercased() }?.value
 	}
 }

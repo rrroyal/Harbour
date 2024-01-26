@@ -21,11 +21,6 @@ extension SettingsView {
 			Section("SettingsView.Portainer.Title") {
 				EndpointsMenu(viewModel: viewModel)
 			}
-			.sheet(isPresented: $viewModel.isSetupSheetPresented) {
-				viewModel.refreshServers()
-			} content: {
-				SetupView()
-			}
 		}
 	}
 }
@@ -43,7 +38,7 @@ private extension SettingsView.PortainerSection {
 		}
 
 		var body: some View {
-			let urls = viewModel.serverURLs.sorted(by: \.absoluteString)
+			let urls = viewModel.serverURLs.localizedSorted(by: \.absoluteString)
 			Menu {
 				ForEach(urls, id: \.absoluteString) { url in
 					urlMenu(for: url)
@@ -128,8 +123,8 @@ private extension SettingsView.PortainerSection {
 					Label("SettingsView.Portainer.EndpointsMenu.Server.Remove", systemImage: SFSymbol.remove)
 				}
 			} label: {
-				Label(formattedURL(url), systemImage: viewModel.activeURL == url ? SFSymbol.checkmark : "")
-					.labelStyle(.titleAndIcon)
+				Label(formattedURL(url), systemImage: SFSymbol.checkmark)
+					.labelStyle(.iconOptional(showIcon: viewModel.activeURL == url))
 			}
 		}
 

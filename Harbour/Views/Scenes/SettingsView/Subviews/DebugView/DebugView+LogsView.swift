@@ -115,12 +115,8 @@ extension DebugView {
 				if showIndicator {
 					isLoading = true
 				}
-				defer {
-					if showIndicator {
-						isLoading = false
-					}
-				}
 
+			fetchLogs:
 				do {
 					let logStore = try OSLogStore(scope: .currentProcessIdentifier)
 					let position = logStore.position(date: Date().addingTimeInterval(-(6 * 60 * 60)))
@@ -132,13 +128,21 @@ extension DebugView {
 						matching: predicate
 					)
 
-					guard !Task.isCancelled else { return }
+					if showIndicator {
+						isLoading = false
+					}
+
+					guard !Task.isCancelled else { break fetchLogs }
 
 					logs = entries
 						.compactMap { $0 as? OSLogEntryLog }
 						.map { LogEntry(message: $0.composedMessage, level: $0.level, date: $0.date, category: $0.category) }
 				} catch {
 					logs = [LogEntry(message: error.localizedDescription, level: nil, date: nil, category: nil)]
+				}
+
+				if showIndicator {
+					isLoading = false
 				}
 			}
 			self.logsTask = task

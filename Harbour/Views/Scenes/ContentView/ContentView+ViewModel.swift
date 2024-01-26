@@ -24,7 +24,6 @@ extension ContentView {
 		private var fetchTask: Task<Void, Error>?
 		private var suggestedSearchTokensTask: Task<Void, Error>?
 
-		private(set) var viewState: ViewState<Void, Error>
 		private(set) var suggestedSearchTokens: [SearchToken] = []
 
 		var searchText = ""
@@ -41,15 +40,27 @@ extension ContentView {
 		var isSearchActive = false
 		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
-		var isLoading: Bool {
-			viewState.isLoading || !(fetchTask?.isCancelled ?? true) || !(suggestedSearchTokensTask?.isCancelled ?? true)
+		@MainActor
+		var viewState: ViewState<[Container], Error> {
+			let containers = portainerStore.containers
+
+			if !(fetchTask?.isCancelled ?? true) {
+				return .reloading(containers)
+			}
+
+			if portainerStore.isRefreshing {
+				return containers.isEmpty ? .loading : .reloading(containers)
+			}
+
+			return .success(containers)
 		}
 
+		@MainActor
 		var containers: [Container] {
 			portainerStore.containers
 				.filter { container in
 					for token in searchTokens {
-						let matches = token.matches(container: container)
+						let matches = token.matchesContainer(container)
 						if !matches { return false }
 					}
 
@@ -58,6 +69,7 @@ extension ContentView {
 				.filter(searchText)
 		}
 
+		@MainActor
 		var shouldShowEmptyPlaceholderView: Bool {
 			switch viewState {
 			case .loading:
@@ -105,21 +117,23 @@ extension ContentView {
 			let portainerStore = PortainerStore.shared
 			self.portainerStore = portainerStore
 
-			self.viewState = {
-				if !portainerStore.containers.isEmpty {
-					if !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
-						return .reloading(())
-					} else {
-						return .success(())
-					}
-				}
-
+//			self.viewState = {
+//				if !portainerStore.containers.isEmpty {
+//					if !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
+//						return .reloading(())
+//					} else {
+//						return .success(())
+//					}
+//				}
+//
+//				/*
 //				if !(portainerStore.setupTask?.isCancelled ?? true) {
 //					return .loading
 //				}
-
-				return .success(())
-			}()
+//				 */
+//
+//				return .success(())
+//			}()
 		}
 
 		@MainActor
@@ -129,12 +143,12 @@ extension ContentView {
 				defer { self.fetchTask = nil }
 
 				do {
-					viewState = viewState.reloading
+//					viewState = viewState.reloading
 					let task = portainerStore.refresh()
 					_ = try await task.value
-					viewState = .success(())
+//					viewState = .success(())
 				} catch {
-					viewState = .failure(error)
+//					viewState = .failure(error)
 					throw error
 				}
 			}
@@ -181,10 +195,10 @@ extension ContentView {
 			}
 		}
 
-		@MainActor
-		func onContainersChange(_ before: [Container], after: [Container]) {
-			viewState = .success(())
-		}
+//		@MainActor
+//		func onContainersChange(_ before: [Container], after: [Container]) {
+//			viewState = .success(())
+//		}
 	}
 }
 
@@ -222,7 +236,7 @@ extension ContentView.ViewModel {
 			}
 		}
 
-		func matches(container: Container) -> Bool {
+		func matchesContainer(_ container: Container) -> Bool {
 			switch self {
 			case .stack(let stack):
 				return container.stack == stack.name

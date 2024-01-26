@@ -36,8 +36,8 @@ struct ContentView: View {
 				viewModel.selectEndpoint(endpoint)
 			} label: {
 				let isSelected = portainerStore.selectedEndpoint?.id == endpoint.id
-				Label(endpoint.name ?? endpoint.id.description, systemImage: isSelected ? SFSymbol.checkmark : "")
-					.labelStyle(.titleAndIcon)
+				Label(endpoint.name ?? endpoint.id.description, systemImage: SFSymbol.checkmark)
+					.labelStyle(.iconOptional(showIcon: isSelected))
 			}
 		}
 	}
@@ -105,65 +105,58 @@ struct ContentView: View {
 		}
 	}
 
-	@ViewBuilder
-	private var containersView: some View {
-		ScrollView {
-//			#if ENABLE_PREVIEW_FEATURES
-//			if isSummaryVisible {
-//				VStack {
-//					Text("ContentView.Summary")
-//					Divider()
-//				}
-//				.transition(.move(edge: .top).combined(with: .opacity))
-//			}
-//			#endif
-
-			ContainersView(viewModel.containers)
-				.transition(.opacity)
-		}
-		.background {
-			if viewModel.shouldShowEmptyPlaceholderView {
-				backgroundPlaceholder
-			}
-		}
-		.background {
-			viewModel.viewState.backgroundView
-		}
-		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
-		.scrollDismissesKeyboard(.interactively)
-		.searchable(
-			text: $viewModel.searchText,
-			tokens: $viewModel.searchTokens,
-			suggestedTokens: .constant(viewModel.suggestedSearchTokens),
-			isPresented: $viewModel.isSearchActive
-		) { token in
-			Label(token.title, systemImage: token.icon)
-		}
-		.refreshable {
-			do {
-				try await viewModel.refresh()
-			} catch {
-				handleError(error)
-			}
-		}
-		.onChange(of: portainerStore.containers, viewModel.onContainersChange)
-	}
-
 	// MARK: Body
 
 	var body: some View {
 		NavigationWrapped(navigationPath: $sceneState.navigationPath, useColumns: viewModel.shouldUseColumns) {
-			containersView
-				.navigationTitle(viewModel.navigationTitle)
-				#if os(iOS)
-				.navigationBarTitleDisplayMode(.inline)
-				#endif
-				.toolbar {
-					toolbar
+			ScrollView {
+//				#if ENABLE_PREVIEW_FEATURES
+//				if isSummaryVisible {
+//					VStack {
+//						Text("ContentView.Summary")
+//						Divider()
+//					}
+//					.transition(.move(edge: .top).combined(with: .opacity))
+//				}
+//				#endif
+
+				ContainersView(containers: viewModel.containers)
+			}
+			.background {
+				if viewModel.shouldShowEmptyPlaceholderView {
+					backgroundPlaceholder
 				}
-				.if(viewModel.canUseEndpointsMenu) {
-					$0.toolbarTitleMenu { toolbarTitleMenu }
+			}
+			.background {
+				viewModel.viewState.backgroundView
+			}
+			.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+			.scrollDismissesKeyboard(.interactively)
+			.searchable(
+				text: $viewModel.searchText,
+				tokens: $viewModel.searchTokens,
+				suggestedTokens: .constant(viewModel.suggestedSearchTokens),
+				isPresented: $viewModel.isSearchActive
+			) { token in
+				Label(token.title, systemImage: token.icon)
+			}
+			.refreshable {
+				do {
+					try await viewModel.refresh()
+				} catch {
+					handleError(error)
 				}
+			}
+			.navigationTitle(viewModel.navigationTitle)
+			#if os(iOS)
+			.navigationBarTitleDisplayMode(.inline)
+			#endif
+			.toolbar {
+				toolbar
+			}
+			.if(viewModel.canUseEndpointsMenu) {
+				$0.toolbarTitleMenu { toolbarTitleMenu }
+			}
 		} placeholderContent: {
 			Text("ContentView.NoContainerSelectedPlaceholder")
 				.foregroundStyle(.tertiary)
@@ -190,13 +183,13 @@ struct ContentView: View {
 		.indicatorOverlay(model: sceneState.indicators)
 		.environment(\.errorHandler, .init(handleError))
 		.environment(\.showIndicator, sceneState.showIndicator)
+		.environment(\.navigationPath, sceneState.navigationPath)
 		.environment(sceneState)
 		.onOpenURL(perform: sceneState.onOpenURL)
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueContainerDetailsActivity)
 		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
-		.animation(.easeInOut, value: viewModel.viewState.id)
+		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.containers)
-		.animation(.easeInOut, value: viewModel.isLoading)
 		.animation(.easeInOut, value: portainerStore.isSetup)
 	}
 }

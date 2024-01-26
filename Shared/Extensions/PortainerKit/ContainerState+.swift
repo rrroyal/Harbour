@@ -30,7 +30,7 @@ extension ContainerState? {
 		if let self {
 			self.color
 		} else {
-			.systemGray
+			.darkGray
 		}
 	}
 }

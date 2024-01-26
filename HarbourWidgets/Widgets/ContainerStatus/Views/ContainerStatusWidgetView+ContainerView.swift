@@ -58,13 +58,13 @@ extension ContainerStatusWidgetView {
 				Text(verbatim: (container?.state.description ?? ContainerState?.none.description).localizedCapitalized)
 					.font(.subheadline)
 					.fontWeight(.medium)
-					.foregroundColor(container?.state.color ?? ContainerState?.none.color)
+					.foregroundStyle(.tint)
 					.minimumScaleFactor(minimumScaleFactor)
 
 				Spacer()
 
 				Circle()
-					.fill(container?.state.color ?? ContainerState?.none.color)
+					.fill(.tint)
 					.frame(width: circleSize, height: circleSize)
 			}
 		}
@@ -75,6 +75,7 @@ extension ContainerStatusWidgetView {
 				.font(.caption)
 				.fontWeight(.medium)
 				.foregroundStyle(.tertiary)
+				.frame(maxWidth: .infinity, alignment: .leading)
 		}
 
 		@ViewBuilder
@@ -114,6 +115,7 @@ extension ContainerStatusWidgetView {
 			}
 			.contentTransition(.numericText())
 			.padding()
+			.tint(container?.state.color ?? ContainerState?.none.color)
 			.modifier(LinkWrappedViewModifier(url: url))
 			.background(Color.widgetBackground)
 			.id("ContainerStatusWidgetView.ContainerView.\(container?.id ?? intentContainer._id)")

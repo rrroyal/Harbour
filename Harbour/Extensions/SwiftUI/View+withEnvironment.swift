@@ -12,12 +12,12 @@ extension View {
 	@ViewBuilder
 	func withEnvironment(appState: AppState, preferences: Preferences, portainerStore: PortainerStore) -> some View {
 		self
-			.environmentObject(portainerStore)
-			.environmentObject(preferences)
 			.environment(appState)
 			.environment(\.portainerServerURL, portainerStore.serverURL)
 			.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
 			.environment(\.cvUseGrid, preferences.cvUseGrid)
 			.environment(\.ikEnableHaptics, preferences.enableHaptics)
+			.environmentObject(portainerStore)
+			.environmentObject(preferences)
 	}
 }

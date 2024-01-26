@@ -6,7 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
-public struct ContainerConfig: Decodable, Sendable, Equatable {
+public struct ContainerConfig: Codable, Sendable, Equatable {
 	enum CodingKeys: String, CodingKey {
 		case hostname = "Hostname"
 		case domainName = "DomainName"

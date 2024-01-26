@@ -25,20 +25,20 @@ struct IntentContainer: AppEntity, Hashable {
 	/// Actual container ID
 	var _id: Container.ID
 	var name: String?
-	var imageID: String?
+	var image: String?
 	var associationID: String?
 
-	init(id: Container.ID, name: String?, imageID: String?, associationID: String?) {
+	init(id: Container.ID, name: String?, image: String?, associationID: String?) {
 		self._id = id
 		self.name = name
-		self.imageID = imageID
+		self.image = image
 		self.associationID = associationID
 	}
 
 	init(container: Container) {
 		self._id = container.id
 		self.name = container.displayName
-		self.imageID = container.imageID
+		self.image = container.image
 		self.associationID = container.associationID
 	}
 }
@@ -50,7 +50,7 @@ extension IntentContainer: Identifiable {
 
 	/// Container ID + display name
 	var id: String {
-		[_id, name ?? "", imageID ?? "", associationID ?? ""].joined(separator: Self.partJoiner)
+		[_id, name ?? "", image ?? "", associationID ?? ""].joined(separator: Self.partJoiner)
 	}
 
 	static func fromID(_ id: String) -> Self? {
@@ -58,14 +58,14 @@ extension IntentContainer: Identifiable {
 
 		let id: String? = if let id = parts[safe: 0] { String(id) } else { nil }
 		let name: String? = if let name = parts[safe: 1] { String(name) } else { nil }
-		let imageID: String? = if let imageID = parts[safe: 2] { String(imageID) } else { nil }
+		let image: String? = if let image = parts[safe: 2] { String(image) } else { nil }
 		let associationID: String? = if let associationID = parts[safe: 3] { String(associationID) } else { nil }
 
 		if let id {
 			return self.init(
 				id: id,
 				name: name,
-				imageID: imageID,
+				image: image,
 				associationID: associationID
 			)
 		}
@@ -81,7 +81,7 @@ extension IntentContainer {
 		id: String = "PreviewContainerID",
 		name: String = String(localized: "IntentContainer.Preview.Name")
 	) -> Self {
-		.init(id: id, name: name, imageID: nil, associationID: nil)
+		.init(id: id, name: name, image: nil, associationID: nil)
 	}
 }
 
@@ -89,7 +89,7 @@ extension IntentContainer {
 
 extension IntentContainer {
 	func matchesContainer(_ container: Container) -> Bool {
-		self._id == container.id || self.associationID == container.associationID || self.imageID == container.imageID || self.name == container.displayName
+		self._id == container.id || (self.associationID != nil && self.associationID == container.associationID) || self.image == container.image || self.name == container.displayName
 	}
 }
 
@@ -98,15 +98,15 @@ extension IntentContainer {
 struct IntentContainerQuery: EntityStringQuery {
 	typealias Entity = IntentContainer
 
-	@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveStrictly)
+	@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveByName)
 	var statusIntent
 
 	private var endpoint: IntentEndpoint? {
 		statusIntent?.endpoint
 	}
 
-	private var resolveStrictly: Bool {
-		statusIntent?.resolveStrictly ?? false
+	private var resolveByName: Bool {
+		statusIntent?.resolveByName ?? true
 	}
 
 	private var requiresOnline: Bool {
@@ -164,14 +164,14 @@ struct IntentContainerQuery: EntityStringQuery {
 			let entities: [Entity] = try await {
 				if requiresOnline {
 					let filters = Portainer.FetchFilters(
-						id: resolveStrictly ? parsedContainers.map(\._id) : nil
+						id: resolveByName ? nil : parsedContainers.map(\._id)
 					)
 					return try await getContainers(for: endpoint.id, filters: filters)
 						.filter { container in
-							if resolveStrictly {
-								return parsedContainers.contains { $0._id == container.id }
-							} else {
+							if resolveByName {
 								return parsedContainers.contains { $0.matchesContainer(container) }
+							} else {
+								return parsedContainers.contains { $0._id == container.id }
 							}
 						}
 						.compactMap { container in

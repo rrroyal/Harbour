@@ -1,11 +1,7 @@
-disabled_rules:
-  - cyclomatic_complexity
-  - identifier_name
-  - inclusive_language
-  - multiple_closures_with_trailing_closure
-  - redundant_string_enum_value
-  - type_name
-  - vertical_parameter_alignment
+analyzer_rules:
+  - typesafe_array_init
+  - unused_declaration
+  - unused_import
 
 opt_in_rules:
   # - accessibility_label_for_image # TODO: enable later
@@ -65,10 +61,12 @@ opt_in_rules:
   # - weak_delegate
   - yoda_condition
 
-analyzer_rules:
-  - typesafe_array_init
-  - unused_declaration
-  - unused_import
+disabled_rules:
+  - identifier_name
+  - inclusive_language
+  - multiple_closures_with_trailing_closure
+  - redundant_string_enum_value
+  - type_name
 
 line_length:
   warning: 180
@@ -98,7 +96,7 @@ force_cast: error
 force_try: error
 
 custom_rules:
-  tabs_not_spaces:
-    name: "Tabs"
+  indentation_style:
+    name: "Indentation Style"
     regex: "^ {2,4}"
     message: "Use tabs, not spaces"

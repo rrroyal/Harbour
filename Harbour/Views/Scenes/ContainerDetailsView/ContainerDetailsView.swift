@@ -69,8 +69,12 @@ struct ContainerDetailsView: View {
 				}
 			}
 		}
+		.scrollContentBackground(.hidden)
 		.formStyle(.grouped)
-		.background(viewModel.viewState.backgroundView)
+//		.background(viewModel.viewState.backgroundView)
+		#if os(iOS)
+		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+		#endif
 		.navigationTitle(navigationTitle)
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
@@ -80,13 +84,20 @@ struct ContainerDetailsView: View {
 					container: viewModel.container(for: navigationItem)
 				)
 			}
+
+			ToolbarItem(placement: .status) {
+				DelayedView(isVisible: viewModel.viewState.isLoading) {
+					ProgressView()
+				}
+			}
 		}
 		.refreshable {
 			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
 		}
-		.task(id: "\(navigationItem.endpointID ?? -1).\(navigationItem.id)") {
+		.task(id: "refresh.\(navigationItem.endpointID ?? -1).\(navigationItem.id)") {
 			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
 		}
+		.transition(.opacity)
 		.animation(.easeInOut, value: navigationItem)
 		.animation(.easeInOut, value: viewModel.container?.id)
 		.animation(.easeInOut, value: viewModel.containerDetails?.id)
@@ -107,7 +118,8 @@ struct ContainerDetailsView: View {
 				ContainerLogsView(navigationItem: navigationItem)
 			}
 		}
-		.id(self.id)
+
+		.id("\(Self.self).\(self.id)")
 	}
 }
 
@@ -148,11 +160,6 @@ private extension ContainerDetailsView {
 					Label(container.state.description.localizedCapitalized, systemImage: container.state.icon)
 					Divider()
 					ContainerContextMenu(container: container)
-				}
-
-				if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: containerID, endpointID: portainerSelectedEndpointID) {
-					Divider()
-					ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
 				}
 			} label: {
 				Label("Generic.More", systemImage: SFSymbol.moreCircle)

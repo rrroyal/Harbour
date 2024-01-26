@@ -1,5 +1,5 @@
 //
-//  Portainer.Label+.swift
+//  ContainerLabel+.swift
 //  Harbour
 //
 //  Created by royal on 25/09/2023.
@@ -12,7 +12,7 @@ import PortainerKit
 
 // swiftlint:disable force_unwrapping
 
-extension Portainer.Label {
+extension ContainerLabel {
 	static let associationID = "\(Bundle.main.mainBundleIdentifier!).Association_ID"
 }
 

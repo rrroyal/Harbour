@@ -71,22 +71,22 @@
         }
       }
     },
-    "AppIntents.Parameter.ResolveStrictly.Description" : {
+    "AppIntents.Parameter.ResolveByName.Description" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If enabled, containers will be resolved strictly by their ID."
+            "value" : "If enabled, containers will be resolved by their name (if matching ID isn't found)."
           }
         }
       }
     },
-    "AppIntents.Parameter.ResolveStrictly.Title" : {
+    "AppIntents.Parameter.ResolveByName.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resolve Strictly"
+            "value" : "Resolve By Name"
           }
         }
       }
@@ -117,6 +117,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown"
+          }
+        }
+      }
+    },
+    "ContainerChange.Emoji.Recreated" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "♻️"
+          }
+        }
+      }
+    },
+    "ContainerChange.Emoji.Removed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😶‍🌫️"
           }
         }
       }
@@ -337,7 +357,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "See the status of selected container right on your Home screen :)"
+            "value" : "See the status of selected container(s) right on your Home screen :)"
           }
         }
       }
@@ -855,12 +875,32 @@
         }
       }
     },
+    "Generic.Recreated" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recreated"
+          }
+        }
+      }
+    },
     "Generic.Refresh" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Refresh"
+          }
+        }
+      }
+    },
+    "Generic.Removed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removed"
           }
         }
       }
@@ -985,6 +1025,16 @@
         }
       }
     },
+    "Notification.ContainersChanged.MultipleReadable.Body Changes:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
     "Notification.ContainersChanged.MultipleReadable.Emoji" : {
       "localizations" : {
         "en" : {
@@ -1000,13 +1050,22 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ changed their states."
+            "value" : "%@ changed their states"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.MultipleUnreadable.Body Changes:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
           }
         }
       }
     },
     "Notification.ContainersChanged.MultipleUnreadable.Emoji" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1017,12 +1076,11 @@
       }
     },
     "Notification.ContainersChanged.MultipleUnreadable.Title ChangeCount:%lld" : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld containers changed their states."
+            "value" : "%lld containers changed their states"
           }
         }
       }
@@ -1042,47 +1100,57 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"%@\" changed it's state!"
+            "value" : "%@ changed state"
           }
         }
       }
     },
-    "Notification.ContainersChanged.Single.Inserted.Body Status:%@" : {
+    "Notification.ContainersChanged.Single.Created.Body Status:%@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Current status: %@."
+            "value" : "%@"
           }
         }
       }
     },
-    "Notification.ContainersChanged.Single.Inserted.Title Name:%@" : {
+    "Notification.ContainersChanged.Single.Created.Title Name:%@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"%@\" appeared!"
+            "value" : "%@ appeared"
           }
         }
       }
     },
-    "Notification.ContainersChanged.Single.Removed.Body Change:%@" : {
+    "Notification.ContainersChanged.Single.Recreated.Body New:%@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last known state: %@."
+            "value" : "%@"
           }
         }
       }
     },
-    "Notification.ContainersChanged.Single.Removed.Emoji" : {
+    "Notification.ContainersChanged.Single.Recreated.Title Name:%@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "😶‍🌫️"
+            "value" : "%@ was recreated"
+          }
+        }
+      }
+    },
+    "Notification.ContainersChanged.Single.Removed.Body Old:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last known state: %@"
           }
         }
       }
@@ -1092,7 +1160,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"%@\" disappeared!"
+            "value" : "%@ disappeared"
           }
         }
       }
@@ -1482,7 +1550,17 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Made with ❤️ (and 🐕) by @rrroyal"
+            "value" : "Made with ❤️ (and ☕) by @rrroyal"
+          }
+        }
+      }
+    },
+    "SettingsView.Other.Footer.NegraButton" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🐕"
           }
         }
       }

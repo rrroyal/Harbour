@@ -74,6 +74,8 @@ extension StacksView {
 				try await getStacks()
 			}
 			try await task.value
+
+			portainerStore.refreshContainers()
 		}
 	}
 }

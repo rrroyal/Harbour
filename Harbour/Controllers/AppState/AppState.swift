@@ -14,8 +14,8 @@ import OSLog
 // MARK: - AppState
 
 /// Main place for all of the app-related state management.
-@Observable
-final class AppState {
+@Observable @MainActor
+final class AppState: Sendable {
 
 	// MARK: Static Properties
 
@@ -23,8 +23,7 @@ final class AppState {
 
 	// MARK: Internal Properties
 
-	internal let logger = Logger(.custom(AppState.self))
-	internal let loggerBackground = Logger(.background)
+	internal let logger = Logger(.app)
 
 	internal var portainerServerSwitchTask: Task<Void, Error>?
 
