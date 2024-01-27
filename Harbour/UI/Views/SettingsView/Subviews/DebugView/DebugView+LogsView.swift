@@ -19,6 +19,7 @@ extension DebugView {
 		@State private var logsTask: Task<Void, Never>?
 		@State private var logs: [LogEntry] = []
 		@State private var filter: String = ""
+		@State private var scrollViewIsRefreshing = false
 
 		private var filteredLogs: [LogEntry] {
 			guard !filter.isEmpty else { return logs }
@@ -85,20 +86,16 @@ extension DebugView {
 					toolbarMenu
 				}
 
-				ToolbarItem(placement: .status) {
-					if isLoading {
-						ProgressView()
-							#if os(macOS)
-							.controlSize(.small)
-							#endif
-							.transition(.opacity)
-					}
-				}
+//				ToolbarItem(placement: .status) {
+//					DelayedView(isVisible: isLoading && !scrollViewIsRefreshing) {
+//						ProgressView()
+//					}
+//				}
 			}
 			#if os(macOS)
 			.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
 			#endif
-			.refreshable {
+			.refreshable(binding: $scrollViewIsRefreshing) {
 				await getLogs(showIndicator: false).value
 			}
 			.task {

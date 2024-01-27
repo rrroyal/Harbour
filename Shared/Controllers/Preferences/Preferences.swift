@@ -69,6 +69,10 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 	@AppStorage("StacksView.IncludeLimitedStacks", store: Preferences.userDefaults)
 	public var svIncludeLimitedStacks = false
 
+	/// Filter stacks by active endpoint in ``StacksView``
+	@AppStorage("StacksView.FilterByActiveEndpoint", store: Preferences.userDefaults)
+	public var svFilterByActiveEndpoint = false
+
 	private init() { }
 }
 

@@ -25,8 +25,8 @@ extension SetupView {
 		private(set) var loginTask: Task<Bool, Error>?
 		private(set) var errorTimer: Timer?
 
-		var url: String = ""
-		var token: String = ""
+		var url: String = "https://compaq.local:9443"
+		var token: String = "ptr_RiKurhVRNdZDYh9oik/2V/2qNX9d6neTkt2f53pCbKM="
 		var buttonLabel: String?
 		var buttonColor: Color?
 

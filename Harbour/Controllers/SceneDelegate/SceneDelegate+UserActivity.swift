@@ -24,9 +24,8 @@ extension SceneDelegate {
 			}
 
 			Task { @MainActor in
-				navigate(to: .containers)
-				navigationPathContainers.removeLast(navigationPathContainers.count)
-				navigationPathContainers.append(navigationItem)
+				resetSheets()
+				navigate(to: .containers, with: navigationItem)
 			}
 		case HarbourUserActivityIdentifier.stackDetails:
 			guard let navigationItem = try? userActivity.typedPayload(StackDetailsView.NavigationItem.self) else {
@@ -35,9 +34,8 @@ extension SceneDelegate {
 			}
 
 			Task { @MainActor in
-				navigate(to: .stacks)
-				navigationPathStacks.removeLast(navigationPathContainers.count)
-				navigationPathStacks.append(navigationItem)
+				resetSheets()
+				navigate(to: .stacks, with: navigationItem)
 			}
 		default:
 			break
@@ -56,7 +54,16 @@ extension SceneDelegate {
 		case .inactive:
 			break
 		case .active:
-			break
+			switch activeTab {
+			case .containers:
+				if PortainerStore.shared.containersTask?.isCancelled ?? true {
+					PortainerStore.shared.refreshContainers()
+				}
+			case .stacks:
+				if PortainerStore.shared.stacksTask?.isCancelled ?? true {
+					PortainerStore.shared.refreshStacks()
+				}
+			}
 		@unknown default:
 			break
 		}
@@ -82,9 +89,8 @@ extension SceneDelegate {
 					let navigationItem = ContainerDetailsView.NavigationItem(id: changedID, displayName: existingContainer.displayName, endpointID: endpointID)
 
 					Task { @MainActor in
-						resetNavigation()
-						navigationPathContainers.removeLast(navigationPathContainers.count)
-						navigationPathContainers.append(navigationItem)
+						resetSheets()
+						navigate(to: .containers, with: navigationItem)
 					}
 				}
 			default:

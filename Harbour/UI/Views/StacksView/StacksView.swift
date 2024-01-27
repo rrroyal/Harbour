@@ -22,7 +22,7 @@ struct StacksView: View {
 
 	@ViewBuilder
 	private var placeholderView: some View {
-		if viewModel.shouldShowEmptyPlaceholderView {
+		if viewModel.isEmptyPlaceholderViewVisible {
 			if !viewModel.query.isEmpty {
 				ContentUnavailableView.search(text: viewModel.query)
 			} else {
@@ -31,34 +31,36 @@ struct StacksView: View {
 		}
 	}
 
-	@ViewBuilder
+	@ViewBuilder @MainActor
 	private var stacksList: some View {
-		List {
-			if let stacks = viewModel.stacksFiltered {
-				ForEach(stacks) { stackItem in
-					let isLoading = viewModel.loadingStacks.contains(stackItem.id)
-					let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
+		List(selection: $viewModel.selectedStack) {
+			ForEach(viewModel.stacksFiltered) { stackItem in
+				let isLoading = portainerStore.loadingStacks.contains(Stack.ID(stackItem.id) ?? -1)
+				let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
 
-					Group {
-						if let stack = stackItem.stack {
-							NavigationLink(value: StackDetailsView.NavigationItem(stackID: stackItem.id)) {
-								StackCell(stackItem, containers: containers, isLoading: isLoading) {
-									filterByStackName(stackItem.name)
-								} toggleAction: {
-									setStackState(stack, started: !stack.isOn)
-								}
-							}
-						} else {
+				Group {
+					if let stack = stackItem.stack {
+						NavigationLink(value: StackDetailsView.NavigationItem(stackID: stackItem.id, stackName: stackItem.name)) {
 							StackCell(stackItem, containers: containers, isLoading: isLoading) {
 								filterByStackName(stackItem.name)
 							} toggleAction: {
-								// don't do anything, as we can't do much with it
+								setStackState(stack, started: !stack.isOn)
 							}
 						}
+					} else {
+						StackCell(stackItem, containers: containers, isLoading: isLoading) {
+							filterByStackName(stackItem.name)
+						} toggleAction: {
+							// don't do anything, as we can't do much with it
+						}
 					}
-					.transition(.opacity)
-					.tag(stackItem.id)
 				}
+				#if targetEnvironment(macCatalyst)
+				.padding(.vertical, 8)
+				.listRowBackground(Color.secondaryGroupedBackground)
+				#endif
+				.transition(.opacity)
+				.tag(stackItem.id)
 			}
 		}
 		.listStyle(.insetGrouped)
@@ -70,10 +72,12 @@ struct StacksView: View {
 			placeholderView
 		}
 		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
-		.refreshable { await fetch().value }
+		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
+			await fetch().value
+		}
 	}
 
-	@ViewBuilder
+	@ViewBuilder @MainActor
 	private var content: some View {
 		stacksList
 			.toolbar {
@@ -88,6 +92,16 @@ struct StacksView: View {
 
 				ToolbarItem(placement: .automatic) {
 					Menu {
+						Toggle(isOn: $preferences.svFilterByActiveEndpoint) {
+							Label(
+								"StacksView.Menu.FilterByActiveEndpoint",
+								systemImage: "tag"
+							)
+						}
+						.onChange(of: preferences.svFilterByActiveEndpoint) {
+							Haptics.generateIfEnabled(.selectionChanged)
+						}
+
 						Toggle(isOn: $preferences.svIncludeLimitedStacks) {
 							Label(
 								"StacksView.Menu.IncludeLimitedStacks",
@@ -96,7 +110,9 @@ struct StacksView: View {
 						}
 						.onChange(of: preferences.svIncludeLimitedStacks) {
 							Haptics.generateIfEnabled(.selectionChanged)
-							fetch()
+							if preferences.svIncludeLimitedStacks {
+								fetch()
+							}
 						}
 
 						Divider()
@@ -115,19 +131,17 @@ struct StacksView: View {
 					.labelStyle(.titleAndIcon)
 				}
 
-				ToolbarItem(placement: .status) {
-					DelayedView(isVisible: viewModel.viewState.showAdditionalLoadingView) {
-						ProgressView()
-					}
-					.transition(.opacity)
-				}
+//				ToolbarItem(placement: .status) {
+//					DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//						ProgressView()
+//					}
+//					.transition(.opacity)
+//				}
 			}
 			.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
 				StackDetailsView(navigationItem: navigationItem)
 					.equatable()
 					.tag(navigationItem.id)
-					.environment(viewModel)
-					.environment(sceneDelegate)
 			}
 			.navigationTitle("StacksView.Title")
 	}
@@ -152,8 +166,13 @@ struct StacksView: View {
 			.presentationContentInteraction(.resizes)
 		}
 		.transition(.opacity)
-		.animation(.easeInOut, value: viewModel.stacks)
-		.task { await fetch().value }
+		.animation(.easeInOut, value: viewModel.stacksFiltered)
+		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+		.task {
+			if portainerStore.stacksTask?.isCancelled ?? true {
+				await fetch().value
+			}
+		}
 	}
 }
 
@@ -171,7 +190,6 @@ private extension StacksView {
 		}
 	}
 
-	@MainActor
 	func filterByStackName(_ stackName: String?) {
 		Haptics.generateIfEnabled(.light)
 		sceneDelegate.navigate(to: .containers)
@@ -182,7 +200,7 @@ private extension StacksView {
 		Task {
 			do {
 				Haptics.generateIfEnabled(.light)
-				try await viewModel.setStackState(stack, started: started)
+				try await viewModel.setStackState(stack.id, started: started)
 			} catch {
 				errorHandler(error)
 			}

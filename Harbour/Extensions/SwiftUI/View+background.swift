@@ -12,12 +12,17 @@ extension View {
 	@ViewBuilder
 	func background<S, F>(
 		viewState: ViewState<S, F>,
+		isViewStateBackgroundVisible: Bool = true,
 		backgroundVisiblity: Visibility = .hidden,
 		backgroundColor: Color = .clear
 	) -> some View {
 		self
 			.scrollContentBackground(backgroundVisiblity)
-			.background(viewState.backgroundView)
+			.background {
+				if isViewStateBackgroundVisible {
+					viewState.backgroundView
+				}
+			}
 			.background(backgroundColor, ignoresSafeAreaEdges: .all)
 	}
 }

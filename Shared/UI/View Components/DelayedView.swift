@@ -19,12 +19,12 @@ struct DelayedView<Content: View>: View {
 	@State private var task: Task<Void, Never>?
 
 	var body: some View {
-		if !isVisibleAfterDelay {
+		if isVisible && !isVisibleAfterDelay {
 			// swiftlint:disable:next redundant_discardable_let
 			let _ = setupTask()
 		}
 
-		if isVisibleAfterDelay && isVisible {
+		if isVisible && isVisibleAfterDelay {
 			content()
 				.onDisappear {
 					isVisibleAfterDelay = false
@@ -41,7 +41,6 @@ private extension DelayedView {
 		// I wonder when will it break
 		DispatchQueue.main.async {
 			self.isVisibleAfterDelay = false
-
 			self.task?.cancel()
 			self.task = Task {
 				try? await Task.sleep(for: delay)

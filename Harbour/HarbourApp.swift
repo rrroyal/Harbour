@@ -40,9 +40,7 @@ struct HarbourApp: App {
 					portainerStore: portainerStore
 				)
 		}
-		.onChange(of: portainerStore.containers) {
-			onContainersChange(from: $0, to: $1)
-		}
+		.onChange(of: portainerStore.containers, onContainersChange)
 		#if os(iOS)
 		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
@@ -91,7 +89,5 @@ private extension HarbourApp {
 			UIApplication.shared.shortcutItems = nil
 		}
 		#endif
-
-		// TODO: Index in spotlight (https://www.donnywals.com/adding-your-apps-content-to-spotlight)
 	}
 }

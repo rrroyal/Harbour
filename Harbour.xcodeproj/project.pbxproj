@@ -14,6 +14,8 @@
 		0007055B2AB5270E007BC696 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0007055A2AB5270E007BC696 /* CloseButton.swift */; };
 		000A55822BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */; };
 		000BEDDB2AB4A2F20092D2A3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */; };
+		00123A512BCF3F04007CB116 /* View+refreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00123A502BCF3F04007CB116 /* View+refreshable.swift */; };
+		00123A552BCF58A6007CB116 /* ViewTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00123A542BCF58A6007CB116 /* ViewTab.swift */; };
 		001CFE522BC827B2007C979B /* IndicatorPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001CFE512BC827B2007C979B /* IndicatorPresentable.swift */; };
 		001CFE562BC827F2007C979B /* PresentedIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001CFE552BC827F2007C979B /* PresentedIndicator.swift */; };
 		00242F492B2C911300636A5B /* IndicatorsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 00242F482B2C911300636A5B /* IndicatorsKit */; };
@@ -290,6 +292,8 @@
 		0007055A2AB5270E007BC696 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackDetailsView+DownloadStackFileView.swift"; sourceTree = "<group>"; };
 		000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		00123A502BCF3F04007CB116 /* View+refreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+refreshable.swift"; sourceTree = "<group>"; };
+		00123A542BCF58A6007CB116 /* ViewTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTab.swift; sourceTree = "<group>"; };
 		001CFE512BC827B2007C979B /* IndicatorPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPresentable.swift; sourceTree = "<group>"; };
 		001CFE552BC827F2007C979B /* PresentedIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentedIndicator.swift; sourceTree = "<group>"; };
 		002828832A869EDA00ABD7EA /* Localizable.xcstrings */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
@@ -1037,6 +1041,7 @@
 				00F3DD5D2BCD3E7F00E0A6DF /* View+sheetHeader.swift */,
 				007621052B5776ED0083EC34 /* View+withEnvironment.swift */,
 				00D3FF392BCEED230074C633 /* View+listRowAttentionFocus.swift */,
+				00123A502BCF3F04007CB116 /* View+refreshable.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1200,8 +1205,9 @@
 			children = (
 				E756B54A298340D500582631 /* ANSIParser.swift */,
 				00BE56532A3376AB00A45CC5 /* AppIcon.swift */,
-				0000114F2A320AAD00A08C52 /* ViewState.swift */,
 				001CFE552BC827F2007C979B /* PresentedIndicator.swift */,
+				0000114F2A320AAD00A08C52 /* ViewState.swift */,
+				00123A542BCF58A6007CB116 /* ViewTab.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -1539,6 +1545,7 @@
 				00D3FF2C2BCEE7300074C633 /* SceneDelegate+UIWindowSceneDelegate.swift in Sources */,
 				007E3C562B5969390050A62C /* ContainerDetailsView+Navigation.swift in Sources */,
 				E713179628E5B99600DB82AF /* Endpoint+.swift in Sources */,
+				00123A552BCF58A6007CB116 /* ViewTab.swift in Sources */,
 				00FF4FC12BCC9F9A003EECE5 /* KeyValueEditView.swift in Sources */,
 				00F3DD5E2BCD3E7F00E0A6DF /* View+sheetHeader.swift in Sources */,
 				E760CDB92892C1E8007280ED /* LandingView.swift in Sources */,
@@ -1658,6 +1665,7 @@
 				001CFE522BC827B2007C979B /* IndicatorPresentable.swift in Sources */,
 				E7ACE738288C4177000E6FF6 /* SettingsView+PortainerSection.swift in Sources */,
 				E760CDB72892C1D2007280ED /* SetupView.swift in Sources */,
+				00123A512BCF3F04007CB116 /* View+refreshable.swift in Sources */,
 				00499B572BBCBAD6005D503F /* StackDetailsView.swift in Sources */,
 				0065E99A2BB2EFCB007CFF3E /* SceneDelegate+Navigation.swift in Sources */,
 				E742BFCA29C75AC0000D70E3 /* ContainerDetailsView+DetailsSection.swift in Sources */,

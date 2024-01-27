@@ -13,7 +13,8 @@ import SwiftUI
 extension View {
 	@ViewBuilder
 	func listRowAttentionFocus(isFocused: Binding<Bool>, background: Color = .secondaryGroupedBackground) -> some View {
-		modifier(ListRowAttentionFocusViewModifier(isFocused: isFocused, background: background))
+		self
+			.modifier(ListRowAttentionFocusViewModifier(isFocused: isFocused, background: background))
 	}
 }
 

@@ -27,12 +27,18 @@ extension ContainerDetailsView {
 
 		var navigationItem: ContainerDetailsView.NavigationItem
 
+		var scrollViewIsRefreshing = false
+
 		var container: Container? {
 			viewState.value?.0
 		}
 
 		var containerDetails: ContainerDetails? {
 			viewState.value?.1
+		}
+
+		var isStatusProgressViewVisible: Bool {
+			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView
 		}
 
 		init(navigationItem: ContainerDetailsView.NavigationItem) {
@@ -106,7 +112,7 @@ extension ContainerDetailsView {
 					guard !Task.isCancelled else { return }
 					self.viewState = .success((container, containerDetails))
 				} catch {
-					guard !Task.isCancelled else { return }
+					guard !error.isCancellationError else { return }
 					viewState = .failure(error)
 					errorHandler(error)
 				}

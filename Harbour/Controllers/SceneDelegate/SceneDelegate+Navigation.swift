@@ -11,14 +11,26 @@ import Navigation
 
 extension SceneDelegate: DeeplinkHandlable {
 	@MainActor
-	func resetNavigation() {
+	func resetSheets() {
 		isSettingsSheetPresented = false
 	}
 
 	@MainActor
-	func navigate(to tab: ContentView.ViewTab) {
-		resetNavigation()
+	func navigate(to tab: ViewTab, with navigationPath: AnyHashable...) {
 		activeTab = tab
+
+		switch tab {
+		case .containers:
+			navigationPathContainers.removeLast(navigationPathContainers.count)
+			if !navigationPath.isEmpty {
+				navigationPathContainers.append(navigationPath)
+			}
+		case .stacks:
+			navigationPathStacks.removeLast(navigationPathStacks.count)
+			if !navigationPath.isEmpty {
+				navigationPathStacks.append(navigationPath)
+			}
+		}
 	}
 
 	@MainActor
@@ -26,6 +38,9 @@ extension SceneDelegate: DeeplinkHandlable {
 		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
 
 		guard let destination = Deeplink.destination(from: url) else { return }
+
+		resetSheets()
+
 		// swiftlint:disable force_cast
 		switch destination.host {
 		case .containerDetails:
@@ -33,8 +48,12 @@ extension SceneDelegate: DeeplinkHandlable {
 
 			navigate(to: .containers)
 			DestinationView.handleNavigation(&navigationPathContainers, with: destination as! DestinationView.DeeplinkDestination)
+		case .stackDetails:
+			typealias DestinationView = StackDetailsView
+
+			navigate(to: .stacks)
+			DestinationView.handleNavigation(&navigationPathStacks, with: destination as! DestinationView.DeeplinkDestination)
 		case .settings:
-			resetNavigation()
 			isSettingsSheetPresented = true
 		}
 		// swiftlint:enable force_cast

@@ -11,6 +11,7 @@ import Foundation
 public extension Deeplink {
 	enum Host: String {
 		case containerDetails = "container-details"
+		case stackDetails = "stack-details"
 		case settings = "settings"
 	}
 }

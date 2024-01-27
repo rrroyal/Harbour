@@ -516,16 +516,6 @@
         }
       }
     },
-    "ContainersView.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Containers"
-          }
-        }
-      }
-    },
     "CreateStackView.Create" : {
       "localizations" : {
         "en" : {
@@ -931,7 +921,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Start and stop stacks, or filter containers by their parent stack."
+            "value" : "Not only can you control your stacks, but you can also deploy and remove them!"
           }
         }
       }
@@ -2096,6 +2086,16 @@
         }
       }
     },
+    "StacksView.Menu.FilterByActiveEndpoint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter By Endpoint"
+          }
+        }
+      }
+    },
     "StacksView.Menu.IncludeLimitedStacks" : {
       "localizations" : {
         "en" : {
@@ -2192,6 +2192,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please select a container 🙈"
+          }
+        }
+      }
+    },
+    "ViewTab.Containers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Containers"
+          }
+        }
+      }
+    },
+    "ViewTab.Stacks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stacks"
           }
         }
       }

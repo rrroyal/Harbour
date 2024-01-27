@@ -80,8 +80,11 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	@Published
 	var attachedContainer: AttachedContainer?
 
+	@Published
+	var loadingStacks: Set<Stack.ID> = []
+
 	var isRefreshing: Bool {
-		!(refreshTask?.isCancelled ?? true) || !(endpointsTask?.isCancelled ?? true) || !(containersTask?.isCancelled ?? true)
+		!(refreshTask?.isCancelled ?? true) || !(endpointsTask?.isCancelled ?? true) || !(containersTask?.isCancelled ?? true) || !(stacksTask?.isCancelled ?? true)
 	}
 
 	// MARK: init

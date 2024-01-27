@@ -72,13 +72,16 @@ extension ViewState {
 	var showAdditionalLoadingView: Bool {
 		switch self {
 		case .loading:
-			false
-		case .reloading:
-			true
+			return false
+		case .reloading(let content):
+			if let content = content as? any Collection {
+				return !content.isEmpty
+			}
+			return true
 		case .success:
-			false
+			return false
 		case .failure:
-			false
+			return false
 		}
 	}
 }

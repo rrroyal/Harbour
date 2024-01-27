@@ -31,14 +31,14 @@ extension Stack.Status? {
 extension Stack.Status {
 	var color: Color {
 		switch self {
-		case .active:	.green
-		case .inactive:	.red
+		case .active:	Color(uiColor: .systemGreen)
+		case .inactive:	Color(uiColor: .systemRed)
 		}
 	}
 }
 
 extension Stack.Status? {
 	var color: Color {
-		self?.color ?? .gray
+		self?.color ?? Color(uiColor: .gray)
 	}
 }

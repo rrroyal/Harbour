@@ -49,11 +49,11 @@ public protocol Navigable {
 	///
 	/// Typically, this would be a struct containing the necessary properties needed to resolve item for this view:
 	///
-	///     struct NavigationItem: Hashable {
+	///     struct NavigationItem: NavigableItem {
 	///         let itemID: String
 	///     }
 	///
-	associatedtype NavigationItem: Hashable
+	associatedtype NavigationItem: NavigableItem
 
 	/// Subdestinations available from this view.
 	///

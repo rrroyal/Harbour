@@ -42,7 +42,7 @@ extension SettingsView {
 				.id(SettingsView.ViewID.interfaceHaptics)
 				#endif
 
-				#if os(iOS)
+				#if os(iOS) && !targetEnvironment(macCatalyst)
 				// App Icon
 				let appIconIsFocused = Binding<Bool>(
 					get: { sceneDelegate.viewsToFocus.contains(SettingsView.ViewID.interfaceAppIcon) },

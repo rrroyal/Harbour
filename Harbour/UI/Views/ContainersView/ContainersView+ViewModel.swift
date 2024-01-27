@@ -29,6 +29,7 @@ extension ContainersView {
 		var searchTokens: [SearchToken] = []
 		var isSearchActive = false
 		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+		var scrollViewIsRefreshing = false
 
 		var viewState: ViewState<[Container], Error> {
 			let containers = portainerStore.containers
@@ -37,7 +38,7 @@ extension ContainersView {
 				return .reloading(containers)
 			}
 
-			if portainerStore.isRefreshing {
+			if !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
 				return containers.isEmpty ? .loading : .reloading(containers)
 			}
 
@@ -61,7 +62,7 @@ extension ContainersView {
 				.filter(searchText)
 		}
 
-		var shouldShowEmptyPlaceholder: Bool {
+		var isEmptyPlaceholderVisible: Bool {
 			switch viewState {
 			case .loading:
 				false
@@ -74,29 +75,12 @@ extension ContainersView {
 			}
 		}
 
-		var shouldShowViewStateBackground: Bool {
-			containers.isEmpty
-		}
-
-		var endpointsMenuTitle: String {
-			if let selectedEndpoint = portainerStore.selectedEndpoint {
-				return selectedEndpoint.name ?? selectedEndpoint.id.description
-			}
-			if portainerStore.endpoints.isEmpty {
-				return String(localized: "ContainersView.NoEndpointsAvailable")
-			}
-			return String(localized: "ContainersView.NoEndpointSelected")
+		var isStatusProgressViewVisible: Bool {
+			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
 		}
 
 		var canUseEndpointsMenu: Bool {
 			portainerStore.selectedEndpoint != nil || !portainerStore.endpoints.isEmpty
-		}
-
-		var navigationTitle: String {
-			if let selectedEndpoint = portainerStore.selectedEndpoint {
-				return selectedEndpoint.name ?? selectedEndpoint.id.description
-			}
-			return String(localized: "AppName")
 		}
 
 		init() {

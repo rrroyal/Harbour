@@ -13,104 +13,115 @@ import SwiftUI
 
 extension StacksView {
 	@Observable
-	final class ViewModel: Sendable {
+	final class ViewModel {
 		private let portainerStore = PortainerStore.shared
 
-		private var refreshTask: Task<Void, Error>?
-
-		private(set) var viewState: ViewState<Void, Error> = .loading
-		private(set) var loadingStacks: Set<String> = []
+		private var fetchTask: Task<Void, Error>?
+		private var fetchError: Error?
 
 		var query = ""
 		var scrollPosition: StackItem.ID?
 		var selectedStack: StackItem.ID?
-
 		var isCreateStackSheetPresented = false
 		var activeCreateStackSheetDetent: PresentationDetent = .medium
+		var scrollViewIsRefreshing = false
 
-		var stacks: [StackItem]? {
+		var viewState: ViewState<[Stack], Error> {
+			let stacks = portainerStore.stacks
+
+			if !(fetchTask?.isCancelled ?? true) {
+				return .reloading(stacks)
+			}
+
+			if !(portainerStore.stacksTask?.isCancelled ?? true) {
+				return stacks.isEmpty ? .loading : .reloading(stacks)
+			}
+
+			if let fetchError {
+				return .failure(fetchError)
+			}
+
+			return .success(stacks)
+		}
+
+		var stacks: [StackItem] {
 			let realStacks = portainerStore.stacks.map(StackItem.init)
-			let realStackNames = Set(realStacks.map(\.name))
 
-			let limitedStackNames = portainerStore.containers
-				.compactMap(\.stack)
-				.filter { !realStackNames.contains($0) }
-			let limitedStacks = Set(limitedStackNames)
-				.map { StackItem(label: $0) }
+			if Preferences.shared.svIncludeLimitedStacks {
+				let realStackNames = Set(realStacks.map(\.name))
 
-			return realStacks + limitedStacks
-		}
-
-		var stacksFiltered: [StackItem]? {
-			let allStacks = if query.isReallyEmpty {
-				stacks
+				let limitedStackNames = portainerStore.containers
+					.compactMap(\.stack)
+					.filter { !realStackNames.contains($0) }
+				let limitedStacks = Set(limitedStackNames)
+					.map { StackItem(label: $0) }
+				return realStacks + limitedStacks
 			} else {
-				stacks?.filter {
-					$0.name.localizedCaseInsensitiveContains(query) ||
-					$0.id.description.localizedCaseInsensitiveContains(query)
+				return realStacks
+			}
+		}
+
+		var stacksFiltered: [StackItem] {
+			let stacks = if query.isReallyEmpty {
+				self.stacks
+			} else {
+				self.stacks
+					.filter {
+						$0.name.localizedCaseInsensitiveContains(query) ||
+						$0.id.description.localizedCaseInsensitiveContains(query)
+					}
+			}
+
+			let selectedEndpointID = portainerStore.selectedEndpoint?.id
+
+			return stacks
+				.filter {
+					if Preferences.shared.svFilterByActiveEndpoint {
+						// if there's no `stack.endpointID`, that means that this stack was derived from containers, which are already filtered by the active endpoint
+						let stackEndpointID = $0.stack?.endpointID ?? selectedEndpointID
+						return stackEndpointID == selectedEndpointID
+					} else {
+						return true
+					}
 				}
-			}
-			return allStacks?.sorted {
-				$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
-			}
+				.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 		}
 
-		var shouldShowEmptyPlaceholderView: Bool {
-			stacksFiltered?.isEmpty ?? false
+		var isEmptyPlaceholderViewVisible: Bool {
+			!viewState.isLoading && stacksFiltered.isEmpty
 		}
 
-		@MainActor @discardableResult
+		var isStatusProgressViewVisible: Bool {
+			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
+		}
+
+		@discardableResult
 		func getStacks(includingContainers: Bool? = nil) -> Task<Void, Error> {
-			refreshTask?.cancel()
-
+			fetchTask?.cancel()
 			let task = Task {
-				do {
-					viewState = viewState.reloading
+				defer { self.fetchTask = nil }
+				fetchError = nil
 
+				do {
 					if includingContainers ?? Preferences.shared.svIncludeLimitedStacks {
 						async let _containers = portainerStore.refreshContainers().value
 						async let _stacks = portainerStore.refreshStacks().value
 						_ = try await (_containers, _stacks)
-
-						guard !Task.isCancelled else { return }
-
-						viewState = .success(())
 					} else {
 						_ = try await portainerStore.refreshStacks().value
-
-						guard !Task.isCancelled else { return }
-
-						viewState = .success(())
 					}
 				} catch {
 					guard !error.isCancellationError else { return }
-					viewState = .failure(error)
+					fetchError = error
 					throw error
 				}
 			}
-			refreshTask = task
+			fetchTask = task
 			return task
 		}
 
-		@MainActor
-		func setStackState(_ stack: Stack, started: Bool) async throws {
-			loadingStacks.insert(stack.id.description)
-			defer { loadingStacks.remove(stack.id.description) }
-
-			try await portainerStore.setStackStatus(stackID: stack.id, started: started)
-
-			let task = Task {
-				if let stackIndex = portainerStore.stacks.firstIndex(where: { $0.id == stack.id }) {
-					await MainActor.run {
-						portainerStore.stacks[stackIndex].status = started ? .active : .inactive
-						viewState = .success(())
-					}
-				}
-
-				try await getStacks().value
-			}
-			try await task.value
-
+		func setStackState(_ stackID: Stack.ID, started: Bool) async throws {
+			try await portainerStore.setStackState(stackID: stackID, started: started)
 			portainerStore.refreshContainers()
 		}
 	}

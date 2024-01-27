@@ -135,8 +135,6 @@ struct IntentContainerQuery: EntityStringQuery {
 				return []
 			}
 
-			// TODO: Filter in request
-
 			let containers = try await getContainers(for: endpoint.id)
 				.filter(string)
 				.sorted()

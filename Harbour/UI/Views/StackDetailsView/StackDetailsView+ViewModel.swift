@@ -17,6 +17,8 @@ extension StackDetailsView {
 	final class ViewModel {
 		private nonisolated let logger = Logger(.view(StackDetailsView.self))
 
+		private let portainerStore = PortainerStore.shared
+
 		private(set) var fetchTask: Task<Void, Error>?
 		private(set) var fetchStackFileTask: Task<Void, Error>?
 
@@ -25,30 +27,39 @@ extension StackDetailsView {
 
 		var navigationItem: StackDetailsView.NavigationItem
 
+		var isRemovingStack = false
+		var isStackFileSheetPresented = false
+		var isStackRemovalAlertPresented = false
+		var scrollViewIsRefreshing = false
+
+		var isStatusProgressViewVisible: Bool {
+			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
+		}
+
 		var stack: Stack? {
 			viewState.value
 		}
 
-		var isRemovingStack = false
-		var isStackFileSheetPresented = false
-		var isStackRemovalAlertPresented = false
-
 		init(navigationItem: StackDetailsView.NavigationItem) {
 			self.navigationItem = navigationItem
+
+			if let stack = portainerStore.stacks.first(where: { $0.id == Int(navigationItem.stackID) }) {
+				self.viewState = .reloading(stack)
+			}
 		}
 
 		@discardableResult
-		func getStack() -> Task<Void, Error> {
+		func getStack(stackID: Stack.ID) -> Task<Void, Error> {
 			self.fetchTask?.cancel()
 			let task = Task<Void, Error> {
 				do {
 					viewState = viewState.reloading
 					stackFileViewState = .loading
 
-					let stackID = Int(navigationItem.stackID) ?? -1
-					let stack = try await PortainerStore.shared.fetchStack(id: stackID)
+					let stack = try await portainerStore.fetchStack(id: stackID)
 					viewState = .success(stack)
 				} catch {
+					guard !error.isCancellationError else { return }
 					viewState = .failure(error)
 					throw error
 				}
@@ -65,9 +76,10 @@ extension StackDetailsView {
 					stackFileViewState = stackFileViewState.reloading
 
 					let stackID = Int(navigationItem.stackID) ?? -1
-					let stackFile = try await PortainerStore.shared.fetchStackFile(stackID: stackID)
+					let stackFile = try await portainerStore.fetchStackFile(stackID: stackID)
 					stackFileViewState = .success(stackFile)
 				} catch {
+					guard !error.isCancellationError else { return }
 					stackFileViewState = .failure(error)
 					throw error
 				}
@@ -76,10 +88,18 @@ extension StackDetailsView {
 			return task
 		}
 
+		func setStackState(_ stackID: Stack.ID, started: Bool) async throws {
+			let newStack = try await portainerStore.setStackState(stackID: stackID, started: started)
+			if let newStack {
+				self.viewState = .success(newStack)
+			}
+			portainerStore.refreshContainers()
+		}
+
 		func removeStack() -> Task<Void, Error> {
 			Task {
 				let stackID = Int(navigationItem.stackID) ?? -1
-				try await PortainerStore.shared.removeStack(stackID: stackID)
+				try await portainerStore.removeStack(stackID: stackID)
 			}
 		}
 

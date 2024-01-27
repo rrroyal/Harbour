@@ -19,6 +19,10 @@ extension ContainersView.ListView {
 
 		var container: Container
 
+		private var tintColor: Color {
+			container._isStored ? ContainerState?.none.color : container.state.color
+		}
+
 		@ViewBuilder
 		private var headlineLabel: some View {
 			Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
@@ -33,25 +37,26 @@ extension ContainersView.ListView {
 		@ViewBuilder
 		private var subheadlineLabel: some View {
 			HStack(spacing: 4) {
-				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
-					.foregroundStyle(.tint)
-					.transition(.opacity)
-					.animation(.easeInOut, value: container.state)
-					.animation(.easeInOut, value: container._isStored)
+				let stateLabel = container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized
 
 				if let containerStatus = container.status {
-					Group {
-						Text(verbatim: "•")
-						Text(containerStatus)
-					}
-					.foregroundStyle(.secondary)
-					.tint(Color.primary)
+					(
+						Text(stateLabel).foregroundStyle(tintColor) +
+						Text(verbatim: " • ").foregroundStyle(.secondary)
+					) +
+					Text(containerStatus)
+						.foregroundStyle(.secondary)
+				} else {
+					Text(stateLabel)
+						.foregroundStyle(.secondary)
 				}
 			}
 			.font(.subheadline)
 			.fontWeight(.medium)
 			.transition(.opacity)
 			.animation(.easeInOut, value: container.status)
+			.animation(.easeInOut, value: container.state)
+			.animation(.easeInOut, value: container._isStored)
 		}
 
 		var body: some View {
@@ -62,10 +67,10 @@ extension ContainersView.ListView {
 				}
 				.minimumScaleFactor(minimumScaleFactor)
 
-				Spacer()
+				Spacer(minLength: 20)
 
 				Circle()
-					.foregroundStyle(.tint)
+					.foregroundStyle(tintColor)
 					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
@@ -73,7 +78,6 @@ extension ContainersView.ListView {
 			.padding()
 			.lineLimit(1)
 			.frame(maxWidth: .infinity)
-			.tint(container._isStored ? ContainerState?.none.color : container.state.color)
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)

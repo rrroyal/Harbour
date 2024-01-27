@@ -27,10 +27,6 @@ struct ContainerLogsView: View {
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
 
-	var isStatusProgressViewVisible: Bool {
-		(viewModel.viewState.isLoading && viewModel.viewState.showAdditionalLoadingView) || (viewModel.isLoading && !viewModel.showBackgroundPlaceholder)
-	}
-
 	var body: some View {
 		ScrollViewReader { scrollProxy in
 			ScrollView {
@@ -47,34 +43,35 @@ struct ContainerLogsView: View {
 						includeTimestamps: $viewModel.includeTimestamps,
 						shareableContent: viewModel.viewState.value,
 						scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
-						refreshAction: { viewModel.getLogs(errorHandler: errorHandler) }
+						refreshAction: { fetch() }
 					)
 				}
 
-				ToolbarItem(placement: .status) {
-					DelayedView(isVisible: isStatusProgressViewVisible) {
-						ProgressView()
-					}
-					.transition(.opacity)
-				}
+//				ToolbarItem(placement: .status) {
+//					DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//						ProgressView()
+//					}
+//					.transition(.opacity)
+//				}
 			}
 		}
 		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState)
+		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
 		.navigationTitle("ContainerLogsView.Title")
-		.refreshable {
-			await viewModel.getLogs(errorHandler: errorHandler).value
+		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
+			await fetch().value
 		}
 //		.searchable(text: $searchQuery)
-		.task(id: navigationItem.id) {
-			await viewModel.getLogs(errorHandler: errorHandler).value
+		.task {
+			await fetch().value
 		}
 		.onChange(of: viewModel.lineCount) {
-			viewModel.getLogs(errorHandler: errorHandler)
+			fetch()
 		}
 		.onChange(of: viewModel.includeTimestamps) {
-			viewModel.getLogs(errorHandler: errorHandler)
+			fetch()
 		}
 	}
 }
@@ -82,6 +79,17 @@ struct ContainerLogsView: View {
 // MARK: - ContainerLogsView+Actions
 
 private extension ContainerLogsView {
+	@discardableResult
+	func fetch() -> Task<Void, Never> {
+		Task {
+			do {
+				try await viewModel.getLogs().value
+			} catch {
+				errorHandler(error)
+			}
+		}
+	}
+
 	func scrollLogs(anchor: UnitPoint, scrollProxy: ScrollViewProxy) {
 		withAnimation {
 			scrollProxy.scrollTo(LogsView.labelID, anchor: anchor)

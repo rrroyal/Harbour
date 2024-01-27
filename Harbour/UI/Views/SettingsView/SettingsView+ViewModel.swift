@@ -32,7 +32,7 @@ extension SettingsView {
 		var isEndpointRemovalAlertPresented = false
 		var endpointToDelete: URL?
 
-		var shouldDisplayNegraButton = Int.random(in: 0...19) == 11
+		var isNegraButtonVisible = Int.random(in: 0...19) == 11
 
 		var displayiPadOptions: Bool {
 			#if os(macOS)

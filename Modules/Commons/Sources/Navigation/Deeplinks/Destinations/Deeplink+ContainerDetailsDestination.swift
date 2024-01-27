@@ -17,11 +17,11 @@ public extension Deeplink {
 		public let endpointID: Int?
 		public let subdestination: [String]?
 
-		public init(containerID: String, containerName: String?, endpointID: Int?) {
+		public init(containerID: String, containerName: String?, endpointID: Int?, subdestination: [String]? = nil) {
 			self.containerID = containerID
 			self.containerName = containerName
 			self.endpointID = endpointID
-			self.subdestination = nil
+			self.subdestination = subdestination
 		}
 	}
 }
@@ -54,8 +54,7 @@ extension Deeplink.ContainerDetailsDestination: Deeplink.Destination {
 		guard let containerID = path.first else { return nil }
 		self.containerID = String(containerID)
 
-		let containerName = components.queryItems?.value(for: .name)
-		self.containerName = containerName
+		self.containerName = components.queryItems?.value(for: .name)
 
 		let endpointID: Int? = if let endpointIDStr = components.queryItems?.value(for: .endpointID) {
 			Int(endpointIDStr)

@@ -23,15 +23,17 @@ extension ContainerLogsView {
 
 		private let portainerStore = PortainerStore.shared
 
-		private var fetchTask: Task<Void, Never>?
+		private var fetchTask: Task<Void, Error>?
 		private var parseTask: Task<Void, Never>?
 
-		let navigationItem: ContainerDetailsView.NavigationItem
+		private(set) var viewState: _ViewState = .loading
+
+		var navigationItem: ContainerDetailsView.NavigationItem
+
+		var scrollViewIsRefreshing = false
 
 		var includeTimestamps = false
 		var lineCount = 100
-
-		private(set) var viewState: _ViewState = .loading
 
 		var logs: String? {
 			viewState.value
@@ -39,6 +41,14 @@ extension ContainerLogsView {
 
 		var isLoading: Bool {
 			viewState.isLoading || !(fetchTask?.isCancelled ?? true) || !(parseTask?.isCancelled ?? true)
+		}
+
+		var isStatusProgressViewVisible: Bool {
+			!scrollViewIsRefreshing &&
+			(
+				(viewState.isLoading && viewState.showAdditionalLoadingView) ||
+				(isLoading && !showBackgroundPlaceholder)
+			)
 		}
 
 		var showBackgroundPlaceholder: Bool {
@@ -50,7 +60,7 @@ extension ContainerLogsView {
 		}
 
 		@discardableResult
-		func getLogs(errorHandler: ErrorHandler) -> Task<Void, Never> {
+		func getLogs() -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
 				defer { self.fetchTask = nil }
@@ -73,8 +83,9 @@ extension ContainerLogsView {
 						}
 					}
 				} catch {
-					errorHandler(error)
+					guard !error.isCancellationError else { return }
 					self.viewState = .failure(error)
+					throw error
 				}
 			}
 			self.fetchTask = task

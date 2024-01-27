@@ -30,6 +30,23 @@ struct ContainersView: View {
 		","		// ⌘, - Settings
 	]
 
+	private var navigationTitle: String {
+		if let selectedEndpoint = portainerStore.selectedEndpoint {
+			return selectedEndpoint.name ?? selectedEndpoint.id.description
+		}
+		return String(localized: "AppName")
+	}
+
+	private var endpointsMenuTitle: String {
+		if let selectedEndpoint = portainerStore.selectedEndpoint {
+			return selectedEndpoint.name ?? selectedEndpoint.id.description
+		}
+		if portainerStore.endpoints.isEmpty {
+			return String(localized: "ContainersView.NoEndpointsAvailable")
+		}
+		return String(localized: "ContainersView.NoEndpointSelected")
+	}
+
 	@ViewBuilder
 	private var toolbarTitleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
@@ -129,16 +146,20 @@ struct ContainersView: View {
 		}
 		.scrollDismissesKeyboard(.interactively)
 		.background {
-			if viewModel.shouldShowEmptyPlaceholder {
+			if viewModel.isEmptyPlaceholderVisible {
 				backgroundPlaceholder
 			}
 		}
-		.background {
-			if viewModel.shouldShowViewStateBackground {
-				viewModel.viewState.backgroundView
-			}
-		}
-		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+		.background(
+			viewState: viewModel.viewState,
+			isViewStateBackgroundVisible: viewModel.isEmptyPlaceholderVisible,
+			backgroundColor: .groupedBackground
+		)
+//		.background {
+//			if viewModel.isViewStateBackgroundVisible {
+//				viewModel.viewState.backgroundView
+//			}
+//		}
 		.searchable(
 			text: $viewModel.searchText,
 			tokens: $viewModel.searchTokens,
@@ -147,15 +168,15 @@ struct ContainersView: View {
 		) { token in
 			Label(token.title, systemImage: token.icon)
 		}
-		.refreshable {
-			await refresh()
+		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
+			await fetch().value
 		}
 		.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 			ContainerDetailsView(navigationItem: navigationItem)
 				.equatable()
 				.tag(navigationItem.id)
 		}
-		.navigationTitle(viewModel.navigationTitle)
+		.navigationTitle(navigationTitle)
 		#if os(iOS)
 		.navigationBarTitleDisplayMode(.inline)
 		#endif
@@ -165,7 +186,7 @@ struct ContainersView: View {
 				Menu {
 					toolbarTitleMenu
 				} label: {
-					Text(viewModel.endpointsMenuTitle)
+					Text(endpointsMenuTitle)
 				}
 				.disabled(!viewModel.canUseEndpointsMenu)
 				.labelStyle(.titleAndIcon)
@@ -175,6 +196,13 @@ struct ContainersView: View {
 			#if os(iOS)
 			toolbarMenu
 			#endif
+
+//			ToolbarItem(placement: .status) {
+//				DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//					ProgressView()
+//				}
+//				.transition(.opacity)
+//			}
 		}
 		.if(viewModel.canUseEndpointsMenu) {
 			$0.toolbarTitleMenu { toolbarTitleMenu }
@@ -196,6 +224,7 @@ struct ContainersView: View {
 		.animation(.easeInOut, value: useGrid)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.containers)
+		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
 		.environment(viewModel)
 		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
 		.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
@@ -211,13 +240,28 @@ struct ContainersView: View {
 				}
 				.last
 		}
-		.task { await refresh() }
+		.task {
+			if portainerStore.containersTask?.isCancelled ?? true {
+				await fetch().value
+			}
+		}
 	}
 }
 
 // MARK: - ContainersView+Actions
 
 private extension ContainersView {
+	@discardableResult
+	func fetch() -> Task<Void, Never> {
+		Task {
+			do {
+				try await viewModel.refresh()
+			} catch {
+				errorHandler(error)
+			}
+		}
+	}
+
 	func onKeyPress(_ keyPress: KeyPress) -> KeyPress.Result {
 		switch keyPress.key {
 		// ⌘F
@@ -236,14 +280,6 @@ private extension ContainersView {
 			return .handled
 		default:
 			return .ignored
-		}
-	}
-
-	func refresh() async {
-		do {
-			try await viewModel.refresh()
-		} catch {
-			errorHandler(error)
 		}
 	}
 }

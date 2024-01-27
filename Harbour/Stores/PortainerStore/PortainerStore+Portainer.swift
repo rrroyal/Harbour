@@ -213,21 +213,42 @@ public extension PortainerStore {
 		}
 	}
 
-	/// Sets stack status (started/stopped) for provided stack ID.
+	/// Sets stack state (started/stopped) for provided stack ID.
 	/// - Parameters:
 	///   - stackID: Stack ID to start/stop
 	///   - started: Should stack be started?
 	/// - Returns: `Stack`
 	@Sendable @discardableResult
-	func setStackStatus(stackID: Stack.ID, started: Bool) async throws -> Stack? {
+	func setStackState(stackID: Stack.ID, started: Bool) async throws -> Stack? {
+		defer {
+			Task { @MainActor in
+				loadingStacks.remove(stackID)
+			}
+		}
+
 		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with stackID: \(stackID)...")
+
 		do {
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
-			let stack = try await portainer.setStackStatus(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
+
+			Task { @MainActor in
+				loadingStacks.insert(stackID)
+			}
+
+			let newStack = try await portainer.setStackState(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
 			logger.notice("\(started ? "Started" : "Stopped", privacy: .public) stack with stackID: \(stackID)")
-			return stack
+
+			Task {
+				if let newStack, let stackIndex = stacks.firstIndex(where: { $0.id == stackID }) {
+					Task { @MainActor in
+						stacks[stackIndex] = newStack
+					}
+				}
+			}
+
+			return newStack
 		} catch {
 			logger.error("Failed to \(started ? "start" : "stop", privacy: .public) stack with stackID: \(stackID): \(error, privacy: .public)")
 			throw error

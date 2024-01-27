@@ -10,8 +10,6 @@ import CommonFoundation
 import PortainerKit
 import SwiftUI
 
-// TODO: View doesn't update when subview details are active & is navigated from deeplink
-
 // MARK: - ContainerDetailsView
 
 /// View fetching and displaying details for associated container ID.
@@ -21,18 +19,22 @@ struct ContainerDetailsView: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
-	@State var viewModel: ViewModel
+	@State private var viewModel: ViewModel
+
+	var navigationItem: NavigationItem
 
 	private var navigationTitle: String {
 		viewModel.container?.displayName ??
 		viewModel.containerDetails?.displayName ??
 		viewModel.container?.id ??
 		viewModel.containerDetails?.id ??
-		viewModel.navigationItem.displayName ??
-		viewModel.navigationItem.id
+		navigationItem.displayName ??
+		navigationItem.id
 	}
 
 	init(navigationItem: NavigationItem) {
+		self.navigationItem = navigationItem
+
 		let viewModel = ViewModel(navigationItem: navigationItem)
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
@@ -82,14 +84,14 @@ struct ContainerDetailsView: View {
 				)
 			}
 
-			ToolbarItem(placement: .status) {
-				DelayedView(isVisible: viewModel.viewState.showAdditionalLoadingView) {
-					ProgressView()
-				}
-				.transition(.opacity)
-			}
+//			ToolbarItem(placement: .status) {
+//				DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//					ProgressView()
+//				}
+//				.transition(.opacity)
+//			}
 		}
-		.refreshable {
+		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await viewModel.getContainerDetails(navigationItem: viewModel.navigationItem, errorHandler: errorHandler).value
 		}
 		.task {
@@ -99,6 +101,7 @@ struct ContainerDetailsView: View {
 		.animation(.easeInOut, value: viewModel.navigationItem)
 		.animation(.easeInOut, value: viewModel.container)
 		.animation(.easeInOut, value: viewModel.containerDetails)
+		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
 			viewModel.createUserActivity(userActivity)
 		}
@@ -115,6 +118,9 @@ struct ContainerDetailsView: View {
 			case .logs:
 				ContainerLogsView(navigationItem: viewModel.navigationItem)
 			}
+		}
+		.onChange(of: navigationItem) { _, newNavigationItem in
+			viewModel.navigationItem = newNavigationItem
 		}
 		.navigationTitle(navigationTitle)
 		.id(self.id)
@@ -133,7 +139,7 @@ extension ContainerDetailsView: Identifiable {
 
 extension ContainerDetailsView: Equatable {
 	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.viewModel.navigationItem == rhs.viewModel.navigationItem && lhs.viewModel.container == rhs.viewModel.container
+		lhs.navigationItem == rhs.navigationItem && lhs.viewModel.container == rhs.viewModel.container
 	}
 }
 

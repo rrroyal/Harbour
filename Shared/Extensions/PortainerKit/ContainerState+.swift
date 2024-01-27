@@ -14,20 +14,20 @@ import SwiftUI
 extension ContainerState {
 	var color: Color {
 		switch self {
-		case .created:		.yellow
-		case .running:		.green
-		case .paused:		.orange
-		case .restarting:	.blue
-		case .removing:		.lightGray
-		case .exited:		.darkGray
-		case .dead:			.gray
+		case .created:		Color(uiColor: .systemYellow)
+		case .running:		Color(uiColor: .systemGreen)
+		case .paused:		Color(uiColor: .systemOrange)
+		case .restarting:	Color(uiColor: .systemBlue)
+		case .removing:		Color(uiColor: .lightGray)
+		case .exited:		Color(uiColor: .darkGray)
+		case .dead:			Color(uiColor: .gray)
 		}
 	}
 }
 
 extension ContainerState? {
 	var color: Color {
-		self?.color ?? .darkGray
+		self?.color ?? Color(uiColor: .darkGray)
 	}
 }
 

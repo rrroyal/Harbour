@@ -44,7 +44,7 @@ private extension SettingsView.OtherSection {
 
 				Text("SettingsView.Other.Footer.Subheadline BuildVersion:\(Bundle.main.buildVersion) BuildNumber:\(Bundle.main.buildNumber)")
 
-				if viewModel.shouldDisplayNegraButton {
+				if viewModel.isNegraButtonVisible {
 					Button("SettingsView.Other.Footer.NegraButton") {
 						Haptics.generateIfEnabled(.sheetPresentation)
 						viewModel.isNegraSheetPresented = true

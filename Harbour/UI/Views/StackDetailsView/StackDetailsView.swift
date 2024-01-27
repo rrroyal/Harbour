@@ -14,21 +14,23 @@ import SwiftUI
 
 struct StackDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(StacksView.ViewModel.self) private var stacksViewViewModel
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel: ViewModel
 
+	var navigationItem: NavigationItem
+
 	private var navigationTitle: String {
-		viewModel.stack?.name ??
-			stacksViewViewModel.stacks?.first(where: { $0.id == viewModel.navigationItem.id.description })?.name ??
-			viewModel.navigationItem.stackID.description
+		viewModel.stack?.name ?? navigationItem.stackName ?? navigationItem.stackID.description
 	}
 
 	init(navigationItem: NavigationItem) {
-		self.viewModel = .init(navigationItem: navigationItem)
+		self.navigationItem = navigationItem
+
+		let viewModel = ViewModel(navigationItem: navigationItem)
+		self._viewModel = .init(wrappedValue: viewModel)
 	}
 
 	@ViewBuilder
@@ -102,7 +104,7 @@ struct StackDetailsView: View {
 			ToolbarItem(placement: .destructiveAction) {
 				if !viewModel.isRemovingStack {
 					Group {
-						if stacksViewViewModel.loadingStacks.contains(stack.id.description) {
+						if portainerStore.loadingStacks.contains(stack.id) {
 							ProgressView()
 						} else {
 							Button {
@@ -120,6 +122,13 @@ struct StackDetailsView: View {
 				}
 			}
 		}
+
+//		ToolbarItem(placement: .status) {
+//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//				ProgressView()
+//			}
+//			.transition(.opacity)
+//		}
 	}
 
 	var body: some View {
@@ -167,7 +176,7 @@ struct StackDetailsView: View {
 				DownloadStackFileView(stackID: viewModel.navigationItem.stackID)
 					.sheetHeader("StackDetailsView.StackFileContents")
 			}
-			.presentationDetents([.fraction(0.18)])
+			.presentationDetents([.fraction(0.24)])
 			.presentationDragIndicator(.hidden)
 			.environment(viewModel)
 		}
@@ -181,11 +190,19 @@ struct StackDetailsView: View {
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.stack)
 		.animation(.easeInOut, value: viewModel.isRemovingStack)
+		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
 		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneDelegate.activeTab == .stacks) { userActivity in
 			viewModel.createUserActivity(userActivity)
 		}
-		.task { await fetch() }
-		.refreshable { await fetch() }
+		.task {
+			await fetch()
+		}
+		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
+			await fetch()
+		}
+		.onChange(of: navigationItem) { _, newNavigationItem in
+			viewModel.navigationItem = newNavigationItem
+		}
 		.id(self.id)
 	}
 }
@@ -196,40 +213,36 @@ private extension StackDetailsView {
 	@MainActor
 	func fetch() async {
 		do {
-			try await viewModel.getStack().value
+			try await viewModel.getStack(stackID: Stack.ID(navigationItem.stackID) ?? -1).value
 		} catch {
 			errorHandler(error)
 		}
 	}
 
-	@MainActor
 	func setStackState(_ stack: Stack, started: Bool) {
 		Task {
 			do {
 				Haptics.generateIfEnabled(.light)
-				try await stacksViewViewModel.setStackState(stack, started: started)
-				try await viewModel.getStack().value
+				try await viewModel.setStackState(stack.id, started: started)
 			} catch {
 				errorHandler(error)
 			}
 		}
 	}
 
-	@MainActor
 	func filterByStackName(_ stackName: String?) {
 		Haptics.generateIfEnabled(.light)
 		sceneDelegate.navigate(to: .containers)
 		sceneDelegate.selectedStackName = stackName
 	}
 
-	@MainActor
 	func removeStack() {
 		Haptics.generateIfEnabled(.heavy)
 		Task {
 			do {
 				viewModel.isRemovingStack = true
 				try await viewModel.removeStack().value
-				stacksViewViewModel.getStacks(includingContainers: true)
+				portainerStore.refreshStacks()
 				dismiss()
 
 				let stackName = viewModel.stack?.name ?? viewModel.navigationItem.stackName ?? "ID:\(viewModel.navigationItem.stackID)"
@@ -246,7 +259,7 @@ private extension StackDetailsView {
 
 extension StackDetailsView: Identifiable {
 	var id: String {
-		"\(Self.self).\(viewModel.navigationItem.id)"
+		"\(Self.self).\(navigationItem.id)"
 	}
 }
 
@@ -254,13 +267,13 @@ extension StackDetailsView: Identifiable {
 
 extension StackDetailsView: Equatable {
 	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.viewModel.navigationItem == rhs.viewModel.navigationItem && lhs.viewModel.stack == rhs.viewModel.stack
+		lhs.navigationItem == rhs.navigationItem
 	}
 }
 
 // MARK: - Previews
 
 #Preview {
-	StackDetailsView(navigationItem: .init(stackID: Stack.preview.id.description))
+	StackDetailsView(navigationItem: .init(stackID: Stack.preview.id.description, stackName: Stack.preview.name))
 		.withEnvironment(appState: .shared)
 }

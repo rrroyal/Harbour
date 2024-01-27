@@ -78,33 +78,6 @@ private extension ContentView {
 	}
 }
 
-// MARK: - ContentView+ViewTab
-
-extension ContentView {
-	enum ViewTab {
-		case containers
-		case stacks
-
-		var label: String {
-			switch self {
-			case .containers:
-				String(localized: "ContainersView.Title")
-			case .stacks:
-				String(localized: "StacksView.Title")
-			}
-		}
-
-		var icon: String {
-			switch self {
-			case .containers:
-				SFSymbol.container
-			case .stacks:
-				SFSymbol.stack
-			}
-		}
-	}
-}
-
 // MARK: - Previews
 
 #Preview {

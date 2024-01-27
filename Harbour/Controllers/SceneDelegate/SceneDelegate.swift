@@ -20,7 +20,7 @@ final class SceneDelegate: NSObject, IndicatorPresentable {
 
 	var scenePhase: ScenePhase?
 
-	var activeTab: ContentView.ViewTab = .containers
+	var activeTab: ViewTab = .containers
 
 	var navigationPathContainers = NavigationPath()
 	var navigationPathStacks = NavigationPath()

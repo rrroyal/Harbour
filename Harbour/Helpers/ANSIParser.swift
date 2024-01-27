@@ -35,8 +35,7 @@ enum ANSIParser {
 
 	// swiftlint:enable opening_brace
 
-	// TODO: Make this work
-	// https://github.com/NXMIX/tokenize-ansi/tree/master
+	@available(*, unavailable, message: "Not working :)")
 	static func parse(_ string: String) -> AttributedString {
 		var finalAttributedString = AttributedString()
 

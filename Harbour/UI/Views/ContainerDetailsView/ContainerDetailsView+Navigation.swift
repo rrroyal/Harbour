@@ -14,7 +14,7 @@ import SwiftUI
 extension ContainerDetailsView: Deeplinkable {
 	typealias DeeplinkDestination = Deeplink.ContainerDetailsDestination
 
-	struct NavigationItem: Hashable, Identifiable, Codable {
+	struct NavigationItem: NavigableItem, Identifiable, Codable {
 		enum CodingKeys: String, CodingKey {
 			case id
 			case displayName
@@ -52,10 +52,10 @@ extension ContainerDetailsView: Deeplinkable {
 	}
 
 	var deeplinkDestination: DeeplinkDestination {
-		DeeplinkDestination(
-			containerID: viewModel.navigationItem.id,
-			containerName: viewModel.navigationItem.displayName,
-			endpointID: viewModel.navigationItem.endpointID
+		.init(
+			containerID: navigationItem.id,
+			containerName: navigationItem.displayName,
+			endpointID: navigationItem.endpointID
 		)
 	}
 

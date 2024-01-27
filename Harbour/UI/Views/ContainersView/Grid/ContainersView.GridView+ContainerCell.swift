@@ -79,7 +79,6 @@ extension ContainersView.GridView {
 			.clipShape(Self.roundedRectangleBackground)
 			.animation(.easeInOut, value: container._isStored)
 			.contentTransition(.opacity)
-			.geometryGroup()
 		}
 	}
 }

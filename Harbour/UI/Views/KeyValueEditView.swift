@@ -12,7 +12,7 @@ import SwiftUI
 // MARK: - KeyValueEditView
 
 struct KeyValueEditView: View {
-	static let presentationDetents: Set<PresentationDetent> = [.fraction(0.45)]
+	static let presentationDetents: Set<PresentationDetent> = [.medium]
 
 	@Environment(\.dismiss) private var dismiss
 	var entry: KeyValueEntry?

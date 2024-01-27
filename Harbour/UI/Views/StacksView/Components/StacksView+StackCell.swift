@@ -13,11 +13,12 @@ import SwiftUI
 
 extension StacksView {
 	struct StackCell: View {
-		let stack: StackItem
-		let containers: [Container]
-		let isLoading: Bool
-		let filterAction: () -> Void
-		let toggleAction: () -> Void
+		@Environment(\.portainerServerURL) private var portainerServerURL
+		var stack: StackItem
+		var containers: [Container]
+		var isLoading: Bool
+		var filterAction: () -> Void
+		var toggleAction: () -> Void
 
 		init(
 			_ stack: StackItem,
@@ -105,6 +106,12 @@ extension StacksView {
 				if let stack = stack.stack {
 					StackToggleButton(stack: stack, toggleAction: toggleAction)
 						.disabled(isLoading)
+
+					Divider()
+
+					if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
+						ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+					}
 				}
 			}
 			.swipeActions(edge: .leading) {
