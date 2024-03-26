@@ -1,8 +1,8 @@
 //
 //  Deeplinkable.swift
-//  Harbour
+//  Navigation
 //
-//  Created by royal on 18/01/2024.
+//  Created by royal on 26/03/2024.
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
@@ -64,9 +64,11 @@ import SwiftUI
 ///             }
 ///         }
 ///
-protocol Deeplinkable: Navigable {
+public protocol Deeplinkable: Navigable {
+	associatedtype DeeplinkDestination = Deeplink.Destination
+
 	/// Deeplink destination for this object.
-	var destination: HarbourDeeplink.Destination { get }
+	var deeplinkDestination: DeeplinkDestination { get }
 
 	/// Handles the navigation for this object.
 	///
@@ -77,5 +79,5 @@ protocol Deeplinkable: Navigable {
 	///   - navigationPath: Root `NavigationPath`
 	///   - deeplink: Deeplink to handle
 	@MainActor
-	static func handleNavigation(_ navigationPath: inout NavigationPath, with deeplink: HarbourDeeplink)
+	static func handleNavigation(_ navigationPath: inout NavigationPath, with deeplink: DeeplinkDestination)
 }

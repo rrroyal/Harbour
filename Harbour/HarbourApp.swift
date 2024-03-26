@@ -24,7 +24,7 @@ struct HarbourApp: App {
 
 	init() {
 		do {
-			self.modelContainer = try ModelContainer(for: StoredContainer.self)
+			self.modelContainer = try ModelContainer.default()
 
 			let portainerStore = PortainerStore.shared
 			portainerStore.modelContext = modelContainer.mainContext
@@ -47,7 +47,8 @@ struct HarbourApp: App {
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
-					portainerStore: portainerStore
+					portainerStore: portainerStore,
+					modelContext: modelContainer.mainContext
 				)
 		}
 		.onChange(of: scenePhase) {
@@ -81,7 +82,8 @@ struct HarbourApp: App {
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
-					portainerStore: portainerStore
+					portainerStore: portainerStore,
+					modelContext: modelContainer.mainContext
 				)
 		}
 		#endif

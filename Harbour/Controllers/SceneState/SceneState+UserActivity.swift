@@ -10,23 +10,6 @@ import CommonFoundation
 import Foundation
 
 extension SceneState {
-	func onOpenURL(_ url: URL) {
-		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
-
-		guard let deeplink = HarbourDeeplink(from: url) else { return }
-		switch deeplink.destination {
-		case .containerDetails:
-			typealias Destination = ContainerDetailsView
-
-			isSettingsSheetPresented = false
-			Destination.handleNavigation(&navigationPath, with: deeplink)
-		case .settings:
-			isSettingsSheetPresented = true
-		case .none:
-			break
-		}
-	}
-
 	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
 		logger.notice("Continuing userActivity: \(userActivity, privacy: .sensitive(mask: .hash))")
 

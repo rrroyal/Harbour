@@ -24,12 +24,10 @@ extension StacksView {
 
 		var searchText = ""
 
-		@MainActor
 		var stacks: [Stack]? {
 			viewState.value?.filter(searchText)
 		}
 
-		@MainActor
 		var shouldShowEmptyPlaceholderView: Bool {
 			stacks?.isEmpty ?? false
 		}

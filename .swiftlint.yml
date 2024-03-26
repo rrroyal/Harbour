@@ -80,9 +80,12 @@ closure_body_length:
   warning: 60
   error: 80
 
+cyclomatic_complexity:
+  ignores_case_statements: true
+
 function_body_length:
-  warning: 60
-  error: 80
+  warning: 80
+  error: 100
 
 nesting:
   type_level: 3

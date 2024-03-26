@@ -1036,6 +1036,7 @@
       }
     },
     "Notification.ContainersChanged.MultipleReadable.Emoji" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1066,6 +1067,7 @@
       }
     },
     "Notification.ContainersChanged.MultipleUnreadable.Emoji" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

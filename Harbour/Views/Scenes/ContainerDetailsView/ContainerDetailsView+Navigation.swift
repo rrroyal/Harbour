@@ -7,10 +7,13 @@
 //
 
 import Foundation
+import Navigation
 import PortainerKit
 import SwiftUI
 
 extension ContainerDetailsView: Deeplinkable {
+	typealias DeeplinkDestination = Deeplink.ContainerDetailsDestination
+
 	struct NavigationItem: Hashable, Identifiable, Codable {
 		enum CodingKeys: String, CodingKey {
 			case id
@@ -21,6 +24,18 @@ extension ContainerDetailsView: Deeplinkable {
 		let id: Container.ID
 		let displayName: String?
 		let endpointID: Endpoint.ID?
+
+		init(id: Container.ID, displayName: String?, endpointID: Endpoint.ID?) {
+			self.id = id
+			self.displayName = displayName
+			self.endpointID = endpointID
+		}
+
+		init(from deeplink: DeeplinkDestination) {
+			self.id = deeplink.containerID
+			self.displayName = deeplink.containerName
+			self.endpointID = deeplink.endpointID
+		}
 	}
 
 	enum Subdestination: String {
@@ -36,24 +51,23 @@ extension ContainerDetailsView: Deeplinkable {
 		case logs
 	}
 
-	var destination: HarbourDeeplink.Destination {
-		.containerDetails(id: navigationItem.id, displayName: navigationItem.displayName, endpointID: navigationItem.endpointID)
+	var deeplinkDestination: DeeplinkDestination {
+		DeeplinkDestination(
+			containerID: navigationItem.id,
+			containerName: navigationItem.displayName,
+			endpointID: navigationItem.endpointID
+		)
 	}
 
-	@MainActor
-	static func handleNavigation(_ navigationPath: inout NavigationPath, with deeplink: HarbourDeeplink) {
-		guard case .containerDetails(let id, let displayName, let endpointID) = deeplink.destination else {
-			return
-		}
-
+	static func handleNavigation(_ navigationPath: inout NavigationPath, with deeplink: DeeplinkDestination) {
 		navigationPath.removeLast(navigationPath.count)
 
-		let navigationItem = NavigationItem(id: id, displayName: displayName, endpointID: endpointID)
+		let navigationItem = NavigationItem(from: deeplink)
 		navigationPath.append(navigationItem)
 
 		if let subdestination = deeplink.subdestination {
 			subdestination
-				.compactMap { Subdestination(rawValue: $0) }
+				.compactMap { Subdestination(rawValue: $0.lowercased()) }
 				.forEach { navigationPath.append($0) }
 		}
 	}

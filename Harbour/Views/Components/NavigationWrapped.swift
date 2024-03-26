@@ -18,7 +18,7 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 	private var viewSplit: some View {
 		NavigationSplitView {
 			content()
-				.navigationSplitViewColumnWidth(min: 240, ideal: 320, max: 460)
+				.navigationSplitViewColumnWidth(min: 240, ideal: 240, max: 460)
 		} detail: {
 			NavigationStack(path: $navigationPath) {
 				placeholderContent()

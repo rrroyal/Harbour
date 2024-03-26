@@ -40,7 +40,6 @@ extension ContentView {
 		var isSearchActive = false
 		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
-		@MainActor
 		var viewState: ViewState<[Container], Error> {
 			let containers = portainerStore.containers
 
@@ -55,7 +54,6 @@ extension ContentView {
 			return .success(containers)
 		}
 
-		@MainActor
 		var containers: [Container] {
 			portainerStore.containers
 				.filter { container in
@@ -69,8 +67,7 @@ extension ContentView {
 				.filter(searchText)
 		}
 
-		@MainActor
-		var shouldShowEmptyPlaceholderView: Bool {
+		var shouldShowEmptyPlaceholder: Bool {
 			switch viewState {
 			case .loading:
 				false
@@ -81,6 +78,10 @@ extension ContentView {
 			case .failure:
 				false
 			}
+		}
+
+		var shouldShowViewStateBackground: Bool {
+			containers.isEmpty
 		}
 
 		var shouldUseColumns: Bool {

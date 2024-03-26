@@ -593,7 +593,7 @@ extension PortainerStore {
 	private func storeContainers(_ containers: [Container]?) {
 		logger.debug("Storing \(containers?.count ?? 0, privacy: .public) containers...")
 
-		Task {
+		Task { @MainActor in
 			guard let modelContext else {
 				logger.warning("No `modelContext` set!")
 				return

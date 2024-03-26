@@ -6,6 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import Navigation
 import PortainerKit
 import SwiftUI
 import WidgetKit
@@ -24,13 +25,12 @@ extension ContainerStatusWidgetView {
 		private var url: URL? {
 			guard !entry.isPlaceholder else { return nil }
 
-			let destination = HarbourDeeplink.Destination.containerDetails(
-				id: container?.id ?? intentContainer._id,
-				displayName: container?.displayName ?? intentContainer.name,
+			let deeplink = Deeplink.ContainerDetailsDestination(
+				containerID: container?.id ?? intentContainer._id,
+				containerName: container?.displayName ?? intentContainer.name,
 				endpointID: entry.configuration.endpoint?.id
 			)
-			let deeplink = HarbourDeeplink(destination: destination)
-			return deeplink.url ?? HarbourDeeplink().url
+			return deeplink.url ?? Deeplink.appURL
 		}
 
 		private var namePlaceholder: String {
@@ -127,4 +127,5 @@ extension ContainerStatusWidgetView {
 
 #Preview {
 	ContainerStatusWidgetView.ContainerView(entry: .placeholder, intentContainer: .preview())
+		.previewContext(WidgetPreviewContext(family: .systemSmall))
 }

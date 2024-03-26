@@ -55,5 +55,6 @@ struct ContainersGridView: View {
 	}
 	.background(Color.groupedBackground)
 	.environment(SceneState())
-	.withEnvironment(appState: .shared, preferences: .shared, portainerStore: .shared)
+	// swiftlint:disable:next force_try
+	.withEnvironment(appState: .shared, preferences: .shared, portainerStore: .shared, modelContext: .init(try! .default()))
 }

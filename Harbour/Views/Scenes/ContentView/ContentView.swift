@@ -9,6 +9,7 @@
 import CommonFoundation
 import CommonHaptics
 import IndicatorsKit
+import Navigation
 import PortainerKit
 import SwiftUI
 
@@ -72,6 +73,7 @@ struct ContentView: View {
 				Text(viewModel.endpointsMenuTitle)
 			}
 			.disabled(!viewModel.canUseEndpointsMenu)
+			.labelStyle(.titleAndIcon)
 		}
 		#endif
 	}
@@ -105,58 +107,65 @@ struct ContentView: View {
 		}
 	}
 
+	@ViewBuilder
+	private var content: some View {
+		ScrollView {
+//			#if ENABLE_PREVIEW_FEATURES
+//			if isSummaryVisible {
+//				VStack {
+//					Text("ContentView.Summary")
+//					Divider()
+//				}
+//				.transition(.move(edge: .top).combined(with: .opacity))
+//			}
+//			#endif
+
+			ContainersView(containers: viewModel.containers)
+		}
+		.background {
+			if viewModel.shouldShowEmptyPlaceholder {
+				backgroundPlaceholder
+			}
+		}
+		.background {
+			if viewModel.shouldShowViewStateBackground {
+				viewModel.viewState.backgroundView
+			}
+		}
+		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+		.scrollDismissesKeyboard(.interactively)
+		.searchable(
+			text: $viewModel.searchText,
+			tokens: $viewModel.searchTokens,
+			suggestedTokens: .constant(viewModel.suggestedSearchTokens),
+			isPresented: $viewModel.isSearchActive
+		) { token in
+			Label(token.title, systemImage: token.icon)
+		}
+		.refreshable {
+			do {
+				try await viewModel.refresh()
+			} catch {
+				handleError(error)
+			}
+		}
+		.navigationTitle(viewModel.navigationTitle)
+		#if os(iOS)
+		.navigationBarTitleDisplayMode(.inline)
+		#endif
+		.toolbar {
+			toolbar
+		}
+		.if(viewModel.canUseEndpointsMenu) {
+			$0.toolbarTitleMenu { toolbarTitleMenu }
+		}
+	}
+
 	// MARK: Body
 
 	var body: some View {
 		NavigationWrapped(navigationPath: $sceneState.navigationPath, useColumns: viewModel.shouldUseColumns) {
-			ScrollView {
-//				#if ENABLE_PREVIEW_FEATURES
-//				if isSummaryVisible {
-//					VStack {
-//						Text("ContentView.Summary")
-//						Divider()
-//					}
-//					.transition(.move(edge: .top).combined(with: .opacity))
-//				}
-//				#endif
-
-				ContainersView(containers: viewModel.containers)
-			}
-			.background {
-				if viewModel.shouldShowEmptyPlaceholderView {
-					backgroundPlaceholder
-				}
-			}
-			.background {
-				viewModel.viewState.backgroundView
-			}
-			.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
-			.scrollDismissesKeyboard(.interactively)
-			.searchable(
-				text: $viewModel.searchText,
-				tokens: $viewModel.searchTokens,
-				suggestedTokens: .constant(viewModel.suggestedSearchTokens),
-				isPresented: $viewModel.isSearchActive
-			) { token in
-				Label(token.title, systemImage: token.icon)
-			}
-			.refreshable {
-				do {
-					try await viewModel.refresh()
-				} catch {
-					handleError(error)
-				}
-			}
-			.navigationTitle(viewModel.navigationTitle)
-			#if os(iOS)
-			.navigationBarTitleDisplayMode(.inline)
-			#endif
-			.toolbar {
-				toolbar
-			}
-			.if(viewModel.canUseEndpointsMenu) {
-				$0.toolbarTitleMenu { toolbarTitleMenu }
-			}
+			content
 		} placeholderContent: {
 			Text("ContentView.NoContainerSelectedPlaceholder")
 				.foregroundStyle(.tertiary)
@@ -184,8 +193,7 @@ struct ContentView: View {
 		.environment(\.errorHandler, .init(handleError))
 		.environment(\.showIndicator, sceneState.showIndicator)
 		.environment(\.navigationPath, sceneState.navigationPath)
-		.environment(sceneState)
-		.onOpenURL(perform: sceneState.onOpenURL)
+		.withNavigation(handler: sceneState)
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueContainerDetailsActivity)
 		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
 		.animation(.easeInOut, value: viewModel.viewState)

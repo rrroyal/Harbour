@@ -1,8 +1,8 @@
 //
 //  Navigable.swift
-//  Harbour
+//  Navigation
 //
-//  Created by royal on 07/02/2024.
+//  Created by royal on 26/03/2024.
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
@@ -44,7 +44,7 @@ import Foundation
 ///             case settings
 ///         }
 ///
-protocol Navigable {
+public protocol Navigable {
 	/// Item navigating to this view.
 	///
 	/// Typically, this would be a struct containing the necessary properties needed to resolve item for this view:
