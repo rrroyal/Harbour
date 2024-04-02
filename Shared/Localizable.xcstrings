@@ -1800,6 +1800,16 @@
         }
       }
     },
+    "StacksView.Stack.FilterBy" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filter By"
+          }
+        }
+      }
+    },
     "StacksView.Stack.Start" : {
       "localizations" : {
         "en" : {

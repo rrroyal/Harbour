@@ -37,6 +37,22 @@ public struct Stack: Identifiable, Equatable, Codable, Sendable {
 
 	/// Stack status (1 - active, 2 - inactive)
 	public var status: Status
+
+	public init(
+		id: Int,
+		name: String,
+		type: StackType,
+		endpointID: Int,
+		env: [EnvironmentEntry],
+		status: Status
+	) {
+		self.id = id
+		self.name = name
+		self.type = type
+		self.endpointID = endpointID
+		self.env = env
+		self.status = status
+	}
 }
 
 // MARK: - Stack+StackType
@@ -63,5 +79,10 @@ public extension Stack {
 	struct EnvironmentEntry: Equatable, Codable, Sendable {
 		let name: String
 		let value: String
+
+		public init(name: String, value: String) {
+			self.name = name
+			self.value = value
+		}
 	}
 }

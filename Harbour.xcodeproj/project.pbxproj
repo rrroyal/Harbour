@@ -30,6 +30,12 @@
 		002D1BAF2A5A18360044753E /* IntentEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABDD2A34F2990074E940 /* IntentEndpoint.swift */; };
 		002D1BB12A5A18360044753E /* IntentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00A4ABD72A34F1570074E940 /* IntentContainer.swift */; };
 		002D1BB52A5A18680044753E /* IntentPortainerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00F558042A34FD80002939A2 /* IntentPortainerStore.swift */; };
+		00499B572BBCBAD6005D503F /* StackDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00499B562BBCBAD6005D503F /* StackDetailsView.swift */; };
+		00499B5B2BBCBB08005D503F /* Stack+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00499B5A2BBCBB08005D503F /* Stack+preview.swift */; };
+		00499B5C2BBCBB08005D503F /* Stack+preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00499B5A2BBCBB08005D503F /* Stack+preview.swift */; };
+		00499B5E2BBCBE69005D503F /* StacksView+StackCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00499B5D2BBCBE69005D503F /* StacksView+StackCell.swift */; };
+		00499B632BBCBEFD005D503F /* StackDetailsView+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00499B622BBCBEFD005D503F /* StackDetailsView+Navigation.swift */; };
+		00499B672BBCBF58005D503F /* StackDetailsView+ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00499B662BBCBF58005D503F /* StackDetailsView+ViewModel.swift */; };
 		005229442B3A366400D45650 /* LinkWrappedViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005229432B3A366400D45650 /* LinkWrappedViewModifier.swift */; };
 		005229452B3A366400D45650 /* LinkWrappedViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005229432B3A366400D45650 /* LinkWrappedViewModifier.swift */; };
 		00530E092BB8979B009A0568 /* NotificationHelper+ContainersChanged.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00530E082BB8979B009A0568 /* NotificationHelper+ContainersChanged.swift */; };
@@ -256,6 +262,11 @@
 		002828832A869EDA00ABD7EA /* Localizable.xcstrings */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; tabWidth = 2; usesTabs = 0; };
 		0029EA702B6C2E9D00912EBC /* IconOptionalLabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconOptionalLabelStyle.swift; sourceTree = "<group>"; };
 		002D0EEA2A81B53900A914E5 /* CopyButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CopyButton.swift; sourceTree = "<group>"; };
+		00499B562BBCBAD6005D503F /* StackDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StackDetailsView.swift; sourceTree = "<group>"; };
+		00499B5A2BBCBB08005D503F /* Stack+preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stack+preview.swift"; sourceTree = "<group>"; };
+		00499B5D2BBCBE69005D503F /* StacksView+StackCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StacksView+StackCell.swift"; sourceTree = "<group>"; };
+		00499B622BBCBEFD005D503F /* StackDetailsView+Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackDetailsView+Navigation.swift"; sourceTree = "<group>"; };
+		00499B662BBCBF58005D503F /* StackDetailsView+ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackDetailsView+ViewModel.swift"; sourceTree = "<group>"; };
 		005229432B3A366400D45650 /* LinkWrappedViewModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkWrappedViewModifier.swift; sourceTree = "<group>"; };
 		00530E082BB8979B009A0568 /* NotificationHelper+ContainersChanged.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NotificationHelper+ContainersChanged.swift"; sourceTree = "<group>"; };
 		00530E0C2BB898A9009A0568 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -466,6 +477,24 @@
 				00F96BFA2A5ACC3B00F5CE22 /* ExecuteActionIntent.swift */,
 			);
 			path = Intents;
+			sourceTree = "<group>";
+		};
+		00499B552BBCBAC8005D503F /* StackDetailsView */ = {
+			isa = PBXGroup;
+			children = (
+				00499B562BBCBAD6005D503F /* StackDetailsView.swift */,
+				00499B622BBCBEFD005D503F /* StackDetailsView+Navigation.swift */,
+				00499B662BBCBF58005D503F /* StackDetailsView+ViewModel.swift */,
+			);
+			path = StackDetailsView;
+			sourceTree = "<group>";
+		};
+		00499B612BBCBE72005D503F /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				00499B5D2BBCBE69005D503F /* StacksView+StackCell.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		0052293F2B3A363300D45650 /* Views */ = {
@@ -711,6 +740,7 @@
 		E7207DE02988860F00F7504C /* StacksView */ = {
 			isa = PBXGroup;
 			children = (
+				00499B612BBCBE72005D503F /* Components */,
 				E7207DDB2988860B00F7504C /* StacksView.swift */,
 				007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */,
 			);
@@ -780,6 +810,7 @@
 				00C726122A2F464000243886 /* PortainerError+LocalizedError.swift */,
 				00AA829E2A2FEF440064B870 /* Stack.Status+UI.swift */,
 				00AA82A82A2FF0EE0064B870 /* Stack+.swift */,
+				00499B5A2BBCBB08005D503F /* Stack+preview.swift */,
 			);
 			path = PortainerKit;
 			sourceTree = "<group>";
@@ -897,6 +928,7 @@
 				E760CDB32892C130007280ED /* LandingView */,
 				E766D930288C3C9100F2DB99 /* SettingsView */,
 				E7207DCB29887C6B00F7504C /* SetupView */,
+				00499B552BBCBAC8005D503F /* StackDetailsView */,
 				E7207DE02988860F00F7504C /* StacksView */,
 				007E3C652B596EB90050A62C /* KeyValueListView.swift */,
 			);
@@ -1348,6 +1380,7 @@
 				00F5581B2A34FDCB002939A2 /* ContainerState+.swift in Sources */,
 				00F558412A34FF64002939A2 /* HarbourUserActivityIdentifier.swift in Sources */,
 				00F5583E2A34FF64002939A2 /* Constants.swift in Sources */,
+				00499B5C2BBCBB08005D503F /* Stack+preview.swift in Sources */,
 				00EAFE112A354FEB00BC69D6 /* Collection+safe.swift in Sources */,
 				00C481D02B63173F00B7082A /* Logger+Sendable.swift in Sources */,
 				00B579AD2AACE0DA004AF20A /* HarbourItemType.swift in Sources */,
@@ -1378,6 +1411,7 @@
 				E760CDB92892C1E8007280ED /* LandingView.swift in Sources */,
 				00C481CF2B63173F00B7082A /* Logger+Sendable.swift in Sources */,
 				007E3C702B5974A30050A62C /* ContainerDetailsView+EnvironmentDetailsView.swift in Sources */,
+				00499B5B2BBCBB08005D503F /* Stack+preview.swift in Sources */,
 				E78111B3297574B2000CB98A /* SceneState.swift in Sources */,
 				E78C661128E9C2030033D0E4 /* DebugView.swift in Sources */,
 				0000115E2A321AA800A08C52 /* Error+Equatable.swift in Sources */,
@@ -1399,6 +1433,7 @@
 				007E3C722B5974A30050A62C /* ContainerDetailsView+MountsDetailsView.swift in Sources */,
 				E713177B28E59E8200DB82AF /* ContainersListView+ContainerCell.swift in Sources */,
 				E78111B9297574DC000CB98A /* ContainerContextMenu.swift in Sources */,
+				00499B672BBCBF58005D503F /* StackDetailsView+ViewModel.swift in Sources */,
 				0029EA712B6C2E9D00912EBC /* IconOptionalLabelStyle.swift in Sources */,
 				E713178828E5A66D00DB82AF /* ContainerDetailsView.swift in Sources */,
 				E75F9B0429128372001EF707 /* NotificationHelper.swift in Sources */,
@@ -1446,6 +1481,7 @@
 				E72BB35028DE26BD007991D1 /* GenericError.swift in Sources */,
 				E766D91E288C379800F2DB99 /* ContainersView.swift in Sources */,
 				007E3C712B5974A30050A62C /* ContainerDetailsView+PortsDetailsView.swift in Sources */,
+				00499B632BBCBEFD005D503F /* StackDetailsView+Navigation.swift in Sources */,
 				007621062B5776ED0083EC34 /* View+withEnvironment.swift in Sources */,
 				E7ACE749288C47C7000E6FF6 /* SettingsView+Common.swift in Sources */,
 				0003D7CB2B9E7CE60047E451 /* DelayedView.swift in Sources */,
@@ -1469,8 +1505,10 @@
 				E72BB34C28DE2627007991D1 /* TransparentButtonStyle.swift in Sources */,
 				E7811179297572F4000CB98A /* Container+.swift in Sources */,
 				00C969DC2A44A0C0002AC8D4 /* Color+.swift in Sources */,
+				00499B5E2BBCBE69005D503F /* StacksView+StackCell.swift in Sources */,
 				E7ACE738288C4177000E6FF6 /* SettingsView+PortainerSection.swift in Sources */,
 				E760CDB72892C1D2007280ED /* SetupView.swift in Sources */,
+				00499B572BBCBAD6005D503F /* StackDetailsView.swift in Sources */,
 				0065E99A2BB2EFCB007CFF3E /* SceneState+Navigation.swift in Sources */,
 				E742BFCA29C75AC0000D70E3 /* ContainerDetailsView+DetailsSection.swift in Sources */,
 				00F225A72B9F63BC0055FC37 /* Container+preview.swift in Sources */,
