@@ -7,11 +7,13 @@
 //
 
 import CommonHaptics
+import IndicatorsKit
 import SwiftUI
 
 // MARK: - SettingsView
 
 struct SettingsView: View {
+	@Environment(SceneState.self) private var sceneState
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
@@ -45,6 +47,8 @@ struct SettingsView: View {
 		} content: {
 			SetupView()
 		}
+		.environment(\.showIndicator, sceneState.showIndicator)
+		.indicatorOverlay(model: sceneState.indicators)
 	}
 }
 

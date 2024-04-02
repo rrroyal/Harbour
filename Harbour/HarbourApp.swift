@@ -16,7 +16,11 @@ import WidgetKit
 
 @main
 struct HarbourApp: App {
-	@Environment(\.scenePhase) private var scenePhase: ScenePhase
+	#if os(iOS)
+	@UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+	#elseif os(macOS)
+	@NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+	#endif
 	@StateObject private var portainerStore: PortainerStore
 	@StateObject private var preferences: Preferences = .shared
 	@State private var appState: AppState = .shared
@@ -51,9 +55,6 @@ struct HarbourApp: App {
 					modelContext: modelContainer.mainContext
 				)
 		}
-		.onChange(of: scenePhase) {
-			onScenePhaseChange(from: $0, to: $1)
-		}
 		.onChange(of: portainerStore.containers) {
 			onContainersChange(from: $0, to: $1)
 		}
@@ -79,6 +80,7 @@ struct HarbourApp: App {
 		#if os(macOS)
 		Settings {
 			SettingsView()
+				.environment(SceneState())
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
@@ -93,24 +95,6 @@ struct HarbourApp: App {
 // MARK: - HarbourApp+Actions
 
 private extension HarbourApp {
-	@MainActor
-	func onScenePhaseChange(from previousScenePhase: ScenePhase, to newScenePhase: ScenePhase) {
-		switch newScenePhase {
-		case .background:
-			#if os(iOS)
-			BackgroundHelper.scheduleBackgroundRefreshIfNeeded()
-			#endif
-		case .inactive:
-			break
-		case .active:
-			if portainerStore.isSetup && !(portainerStore.endpointsTask != nil || portainerStore.containersTask != nil) {
-				portainerStore.refresh()
-			}
-		@unknown default:
-			break
-		}
-	}
-
 	func onContainersChange(from previousContainers: [Container], to newContainers: [Container]) {
 		Task.detached {
 			WidgetCenter.shared.reloadAllTimelines()

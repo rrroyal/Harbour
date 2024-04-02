@@ -1,6 +1,29 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
+    "Alert.ContainerNotFound.Message ContainerID:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container with ID: %@ wasn't found."
+          }
+        }
+      }
+    },
+    "Alert.ContainerNotFound.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container not found"
+          }
+        }
+      }
+    },
     "AppIcon.BoxDark" : {
       "localizations" : {
         "en" : {
@@ -485,6 +508,46 @@
         }
       }
     },
+    "DebugView.BackgroundSection.LastBackgroundRefresh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last Background Refresh"
+          }
+        }
+      }
+    },
+    "DebugView.BackgroundSection.LastBackgroundRefresh.Never" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Never"
+          }
+        }
+      }
+    },
+    "DebugView.BackgroundSection.SimulateBackgroundRefresh" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simulate Background Refresh"
+          }
+        }
+      }
+    },
+    "DebugView.BackgroundSection.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background"
+          }
+        }
+      }
+    },
     "DebugView.BuildInfoSection.BuildDate" : {
       "localizations" : {
         "en" : {
@@ -601,26 +664,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Delete User Activities"
-          }
-        }
-      }
-    },
-    "DebugView.PersistenceSection.LastBackgroundRefresh" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last Background Refresh"
-          }
-        }
-      }
-    },
-    "DebugView.PersistenceSection.LastBackgroundRefresh.Never" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Never"
           }
         }
       }
@@ -871,6 +914,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not Setup"
+          }
+        }
+      }
+    },
+    "Generic.OK" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
           }
         }
       }

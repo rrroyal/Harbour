@@ -24,6 +24,7 @@ struct DebugView: View {
 			#if DEBUG
 			BuildInfoSection()
 			#endif
+			BackgroundSection()
 			WidgetsSection()
 			PersistenceSection()
 			OtherSection()
@@ -34,7 +35,7 @@ struct DebugView: View {
 	}
 }
 
-// MARK: - DebugView+Components
+// MARK: - DebugView+BuildInfoSection
 
 private extension DebugView {
 	#if DEBUG
@@ -49,7 +50,11 @@ private extension DebugView {
 		}
 	}
 	#endif
+}
 
+// MARK: - DebugView+WidgetsSection
+
+private extension DebugView {
 	struct WidgetsSection: View {
 		@Environment(\.logger) private var logger
 
@@ -63,24 +68,52 @@ private extension DebugView {
 			}
 		}
 	}
+}
 
+// MARK: - DebugView+BackgroundSection
+
+private extension DebugView {
+	struct BackgroundSection: View {
+		@Environment(\.errorHandler) private var errorHandler
+		@Environment(\.logger) private var logger
+
+		private var lastBackgroundRefreshDateString: String? {
+			if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
+				return Date(timeIntervalSince1970: lastBackgroundRefreshDate).formatted(.dateTime)
+			}
+			return nil
+		}
+
+		var body: some View {
+			Section("DebugView.BackgroundSection.Title") {
+				LabeledContent(
+					"DebugView.BackgroundSection.LastBackgroundRefresh",
+					value: lastBackgroundRefreshDateString ?? String(localized: "DebugView.BackgroundSection.LastBackgroundRefresh.Never")
+				)
+
+				Button("DebugView.BackgroundSection.SimulateBackgroundRefresh") {
+					logger.notice("Simulating background refresh...")
+					Haptics.generateIfEnabled(.buttonPress)
+
+					Task {
+						await BackgroundHelper.handleBackgroundRefresh()
+					}
+				}
+			}
+		}
+	}
+}
+
+// MARK: - DebugView+PersistenceSection
+
+private extension DebugView {
 	struct PersistenceSection: View {
 		@Environment(\.logger) private var logger
 		@Environment(\.errorHandler) private var errorHandler
 		@Environment(\.modelContext) private var modelContext
 
-		var lastBackgroundRefreshDateString: String {
-			if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
-				Date(timeIntervalSince1970: lastBackgroundRefreshDate).formatted(.dateTime)
-			} else {
-				String(localized: "DebugView.PersistenceSection.LastBackgroundRefresh.Never")
-			}
-		}
-
 		var body: some View {
 			Section("DebugView.PersistenceSection.Title") {
-				LabeledContent("DebugView.PersistenceSection.LastBackgroundRefresh", value: lastBackgroundRefreshDateString)
-
 				#if os(iOS)
 				Button("DebugView.PersistenceSection.DeleteUserActivities", role: .destructive) {
 					logger.warning("Deleting saved user activities...")
@@ -121,7 +154,11 @@ private extension DebugView {
 			}
 		}
 	}
+}
 
+// MARK: - DebugView+OtherSection
+
+private extension DebugView {
 	struct OtherSection: View {
 		var body: some View {
 			Section {

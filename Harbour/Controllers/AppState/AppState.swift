@@ -10,6 +10,7 @@ import CommonOSLog
 import Foundation
 import Observation
 import OSLog
+import UserNotifications
 
 // MARK: - AppState
 
@@ -26,6 +27,9 @@ final class AppState: Sendable {
 	internal let logger = Logger(.app)
 
 	internal var portainerServerSwitchTask: Task<Void, Error>?
+
+	@MainActor
+	internal var notificationsToHandle: Set<UNNotificationResponse> = []
 
 	// MARK: init
 

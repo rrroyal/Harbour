@@ -16,7 +16,12 @@ final class SceneState {
 	let logger = Logger(.scene)
 	let indicators = Indicators()
 
+	var scenePhase: ScenePhase?
+
+	var navigationPath = NavigationPath()
+
 	var isSettingsSheetPresented = false
 	var isStacksSheetPresented = false
-	var navigationPath = NavigationPath()
+
+	var activeAlert: Alert?
 }

@@ -19,6 +19,7 @@ struct ContentView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@EnvironmentObject private var preferences: Preferences
 	@Environment(AppState.self) private var appState
+	@Environment(\.scenePhase) private var scenePhase
 	@State private var sceneState = SceneState()
 	@State private var viewModel = ViewModel()
 
@@ -172,7 +173,6 @@ struct ContentView: View {
 		}
 		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
 			SettingsView()
-				.indicatorOverlay(model: sceneState.indicators)
 		}
 		.sheet(isPresented: $sceneState.isStacksSheetPresented) {
 			let selectedStackBinding = Binding<Stack?>(
@@ -185,7 +185,17 @@ struct ContentView: View {
 			viewModel.onLandingDismissed()
 		} content: {
 			LandingView()
-				.indicatorOverlay(model: sceneState.indicators)
+		}
+		.alert(
+			sceneState.activeAlert?.title ?? "",
+			isPresented: .constant(sceneState.activeAlert != nil),
+			presenting: sceneState.activeAlert
+		) { _ in
+			Button("Generic.OK") { }
+		} message: { details in
+			if let message = details.message {
+				Text(message)
+			}
 		}
 		.focusable()
 		.focusEffectDisabled()
@@ -194,11 +204,13 @@ struct ContentView: View {
 		.environment(\.showIndicator, sceneState.showIndicator)
 		.environment(\.navigationPath, sceneState.navigationPath)
 		.withNavigation(handler: sceneState)
-		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueContainerDetailsActivity)
-		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.containers)
 		.animation(.easeInOut, value: portainerStore.isSetup)
+		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueContainerDetailsActivity)
+		.onChange(of: appState.notificationsToHandle, sceneState.onNotificationsToHandleChange)
+		.onChange(of: scenePhase, sceneState.onScenePhaseChange)
 	}
 }
 

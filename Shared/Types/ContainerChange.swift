@@ -14,6 +14,8 @@ struct ContainerChange: Identifiable, Hashable, Sendable {
 	let changeType: ChangeType
 	let containerName: String
 
+	let endpointID: Endpoint.ID
+
 	let oldID: Container.ID?
 	let oldState: ContainerState?
 	let oldStatus: String?
@@ -22,7 +24,31 @@ struct ContainerChange: Identifiable, Hashable, Sendable {
 	let newState: ContainerState?
 	let newStatus: String?
 
-	init?(oldContainer: Container?, newContainer: Container?, changeType: ChangeType) {
+	init(
+		id: Int,
+		changeType: ChangeType,
+		containerName: String,
+		endpointID: Endpoint.ID,
+		oldID: Container.ID?,
+		oldState: ContainerState?,
+		oldStatus: String?,
+		newID: Container.ID?,
+		newState: ContainerState?,
+		newStatus: String?
+	) {
+		self.id = id
+		self.changeType = changeType
+		self.containerName = containerName
+		self.endpointID = endpointID
+		self.oldID = oldID
+		self.oldState = oldState
+		self.oldStatus = oldStatus
+		self.newID = newID
+		self.newState = newState
+		self.newStatus = newStatus
+	}
+
+	init?(oldContainer: Container?, newContainer: Container?, endpointID: Endpoint.ID, changeType: ChangeType) {
 		guard oldContainer != nil || newContainer != nil else {
 			return nil
 		}
@@ -35,6 +61,7 @@ struct ContainerChange: Identifiable, Hashable, Sendable {
 		}
 		self.id = oldPersistentID
 
+		self.endpointID = endpointID
 		self.changeType = changeType
 
 		guard let containerName = newContainer?.displayName ?? oldContainer?.displayName ?? newContainer?.id ?? oldContainer?.id else {

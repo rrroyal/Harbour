@@ -13,8 +13,8 @@ extension View {
 	@ViewBuilder
 	func withEnvironment(
 		appState: AppState,
-		preferences: Preferences,
-		portainerStore: PortainerStore,
+		preferences: Preferences = .shared,
+		portainerStore: PortainerStore = .shared,
 		modelContext: ModelContext
 	) -> some View {
 		self

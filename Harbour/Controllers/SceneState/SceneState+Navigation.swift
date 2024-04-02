@@ -10,6 +10,13 @@ import Foundation
 import Navigation
 
 extension SceneState: DeeplinkHandlable {
+	@MainActor
+	func resetNavigation() {
+		isSettingsSheetPresented = false
+		isStacksSheetPresented = false
+	}
+
+	@MainActor
 	func handleURL(_ url: URL) {
 		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
 
@@ -19,9 +26,10 @@ extension SceneState: DeeplinkHandlable {
 		case .containerDetails:
 			typealias DestinationView = ContainerDetailsView
 
-			isSettingsSheetPresented = false
+			resetNavigation()
 			DestinationView.handleNavigation(&navigationPath, with: destination as! DestinationView.DeeplinkDestination)
 		case .settings:
+			resetNavigation()
 			isSettingsSheetPresented = true
 		}
 		// swiftlint:enable force_cast

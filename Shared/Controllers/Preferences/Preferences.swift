@@ -90,7 +90,7 @@ private extension Preferences {
 		} else {
 			// Remove background refreshes and pending notifications
 			BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: BackgroundHelper.TaskIdentifier.backgroundRefresh)
-			notificationCenter.removePendingNotificationRequests(withIdentifiers: [HarbourNotificationIdentifier.containersChanged])
+			notificationCenter.removePendingNotificationRequests(withIdentifiers: [NotificationHelper.NotificationIdentifier.containersChanged])
 		}
 	}
 	#endif
