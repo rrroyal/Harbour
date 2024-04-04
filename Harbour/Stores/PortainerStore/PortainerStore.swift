@@ -29,7 +29,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	private let logger = Logger(.custom(PortainerStore.self))
 	private let keychain = Keychain.shared
 	private let preferences = Preferences.shared
-	private let portainer: Portainer
+	private let portainer: PortainerClient
 
 	// MARK: Public properties
 
@@ -67,9 +67,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 
 	/// Endpoints
 	@Published
-	private(set) var endpoints: [Endpoint] = [] {
-		didSet { onEndpointsChange(endpoints) }
-	}
+	private(set) var endpoints: [Endpoint] = []
 
 	/// Containers
 	@Published
@@ -82,18 +80,18 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	// MARK: init
 
 	/// Initializes `PortainerStore` with provided ModelContext and URLSession configuration.
-	/// - Parameters:
-	///   - modelContext: `ModelContext` to use
-	///   - urlSessionConfiguration: `URLSessionConfiguration`, `.app` if none provided
-	init(
-		modelContext: ModelContext? = nil,
-		urlSessionConfiguration: URLSessionConfiguration = .app
-	) {
-		self.modelContext = modelContext
-
+	/// - Parameter urlSessionConfiguration: `URLSessionConfiguration`, `.app` if none
+	init(urlSessionConfiguration: URLSessionConfiguration = .app) {
 //		urlSessionConfiguration.shouldUseExtendedBackgroundIdleMode = true
 //		urlSessionConfiguration.sessionSendsLaunchEvents = true
-		self.portainer = Portainer(urlSessionConfiguration: urlSessionConfiguration)
+		self.portainer = PortainerClient(urlSessionConfiguration: urlSessionConfiguration)
+
+		do {
+			let container = try ModelContainer.default()
+			self.modelContext = ModelContext(container)
+		} catch {
+			logger.warning("Failed to create `ModelContainer`!")
+		}
 	}
 }
 
@@ -112,7 +110,8 @@ public extension PortainerStore {
 
 		do {
 			let _token = try (token ?? keychain.getString(for: url))
-			portainer.setup(url: url, token: _token)
+			portainer.serverURL = url
+			portainer.token = _token
 
 			preferences.selectedServer = url.absoluteString
 
@@ -136,10 +135,15 @@ public extension PortainerStore {
 	@MainActor
 	/// Sets up PortainerStore after init.
 	func setupInitially() {
-		selectedEndpoint = getStoredEndpoint()
+		if self.endpoints.isEmpty || self.endpoints.contains(where: \._isStored), let storedEndpoints = fetchStoredEndpoints() {
+			self.endpoints = storedEndpoints
 
-		if !self.containers.contains(where: { !$0._isStored }),
-		   let storedContainers = fetchStoredContainers() {
+			if self.selectedEndpoint == nil {
+				self.selectedEndpoint = storedEndpoints.first { $0.id == preferences.selectedEndpointID }
+			}
+		}
+
+		if self.containers.isEmpty || self.containers.contains(where: \._isStored), let storedContainers = fetchStoredContainers() {
 			self.containers = storedContainers
 		}
 
@@ -191,9 +195,10 @@ public extension PortainerStore {
 	func reset() {
 		logger.notice("Resetting state")
 
-		portainer.reset()
+		portainer.serverURL = nil
+		portainer.token = nil
 
-		preferences.selectedEndpoint = nil
+		preferences.selectedEndpointID = nil
 		preferences.selectedServer = nil
 
 		endpointsTask?.cancel()
@@ -228,9 +233,6 @@ public extension PortainerStore {
 	func fetchEndpoints() async throws -> [Endpoint] {
 		logger.info("Getting endpoints...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			let endpoints = try await portainer.fetchEndpoints()
 			logger.info("Got \(endpoints.count, privacy: .public) endpoints")
 			return endpoints.sorted()
@@ -241,12 +243,9 @@ public extension PortainerStore {
 	}
 
 	@Sendable
-	func fetchContainers(filters: Portainer.FetchFilters? = nil) async throws -> [Container] {
+	func fetchContainers(filters: FetchFilters? = nil) async throws -> [Container] {
 		logger.info("Getting containers, filters: \(String(describing: filters), privacy: .sensitive(mask: .hash))...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
@@ -267,9 +266,6 @@ public extension PortainerStore {
 	func fetchContainers(for stackName: String) async throws -> [Container] {
 		logger.info("Getting containers for stack \"\(stackName, privacy: .sensitive(mask: .hash))\"...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
@@ -292,13 +288,10 @@ public extension PortainerStore {
 	func inspectContainer(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
 		logger.info("Getting details for containerID: \"\(containerID, privacy: .private(mask: .hash))\"...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			guard let endpointID = endpointID ?? selectedEndpoint?.id else {
 				throw PortainerError.noSelectedEndpoint
 			}
-			let details = try await portainer.inspectContainer(containerID, endpointID: endpointID)
+			let details = try await portainer.fetchContainerDetails(for: containerID, endpointID: endpointID)
 			logger.info("Got details for containerID: \"\(containerID, privacy: .private(mask: .hash))\"")
 			return details
 		} catch {
@@ -318,26 +311,25 @@ public extension PortainerStore {
 	func getLogs(
 		for containerID: Container.ID,
 		since logsSince: TimeInterval = 0,
-		tail lastEntriesAmount: Int = 100,
-		timestamps includeTimestamps: Bool = false
+		tail logsTailAmount: LogsAmount? = 100,
+		timestamps includeTimestamps: Bool? = false
 	) async throws -> String {
 		logger.info("Getting logs for containerID: \"\(containerID, privacy: .public)\"...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
 
 			// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L124
 
-			let logs = try await portainer.fetchLogs(
-				containerID: containerID,
+			let logs = try await portainer.fetchContainerLogs(
+				for: containerID,
 				endpointID: selectedEndpoint.id,
+				stderr: true,
+				stdout: true,
 				since: logsSince,
-				tail: lastEntriesAmount,
-				timestamps: includeTimestamps
+				tail: logsTailAmount,
+				includeTimestamps: includeTimestamps
 			)
 			// swiftlint:disable:next opening_brace
 			.replacing(/^(.{8})/.anchorsMatchLineEndings(), with: "")
@@ -356,16 +348,13 @@ public extension PortainerStore {
 	///   - action: Action to execute
 	///   - containerID: ID of the container we want to execute the action on.
 	@Sendable
-	func execute(_ action: ExecuteAction, on containerID: Container.ID) async throws {
+	func execute(_ action: ContainerAction, on containerID: Container.ID) async throws {
 		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
-			try await portainer.execute(action, containerID: containerID, endpointID: selectedEndpoint.id)
+			try await portainer.executeContainerAction(action, containerID: containerID, endpointID: selectedEndpoint.id)
 
 			Task { @MainActor in
 				if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
@@ -390,9 +379,6 @@ extension PortainerStore {
 	func getStacks() async throws -> [Stack] {
 		logger.info("Getting stacks...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			let stacks = try await portainer.fetchStacks()
 			logger.info("Got \(stacks.count, privacy: .public) stacks")
 			return stacks.sorted()
@@ -408,16 +394,13 @@ extension PortainerStore {
 	///   - started: Should stack be started?
 	/// - Returns: `Stack`
 	@Sendable @discardableResult
-	func setStackStatus(stackID: Stack.ID, started: Bool) async throws -> Stack {
+	func setStackStatus(stackID: Stack.ID, started: Bool) async throws -> Stack? {
 		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with ID: \(stackID)...")
 		do {
-			guard portainer.isSetup else {
-				throw PortainerError.notSetup
-			}
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
-			let stack = try await portainer.setStackStatus(endpointID: selectedEndpoint.id, stackID: stackID, started: started)
+			let stack = try await portainer.setStackStatus(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
 			logger.notice("\(started ? "Started" : "Stopped", privacy: .public) stack with ID: \(stackID)")
 			return stack
 		} catch {
@@ -437,8 +420,7 @@ extension PortainerStore {
 	/// - Returns: `Task<Void, Error>` of refresh.
 	@discardableResult
 	func refresh(
-		errorHandler: ErrorHandler? = nil,
-		_debugInfo: String = ._debugInfo()
+		errorHandler: ErrorHandler? = nil
 	) -> Task<([Endpoint], [Container]?), Error> {
 		self.refreshTask?.cancel()
 
@@ -446,12 +428,12 @@ extension PortainerStore {
 			defer { self.refreshTask = nil }
 
 			do {
-				let endpointsTask = refreshEndpoints(errorHandler: errorHandler, _debugInfo: _debugInfo)
+				let endpointsTask = refreshEndpoints(errorHandler: errorHandler)
 				let endpoints = try await endpointsTask.value
 
 				let containers: [Container]?
 				if selectedEndpoint != nil {
-					let containersTask = refreshContainers(errorHandler: errorHandler, _debugInfo: _debugInfo)
+					let containersTask = refreshContainers(errorHandler: errorHandler)
 					containers = try await containersTask.value
 				} else {
 					containers = nil
@@ -459,7 +441,7 @@ extension PortainerStore {
 
 				return (endpoints, containers)
 			} catch {
-				errorHandler?(error, _debugInfo)
+				errorHandler?(error)
 				throw error
 			}
 		}
@@ -514,7 +496,7 @@ extension PortainerStore {
 			do {
 				let containers = try await fetchContainers()
 				self.containers = containers
-				storeContainers(containers)
+				onContainersChange(containers)
 
 				return containers
 			} catch {
@@ -534,10 +516,10 @@ private extension PortainerStore {
 	func onSelectedEndpointChange(_ selectedEndpoint: Endpoint?) {
 		Task { @MainActor in
 			guard let selectedEndpoint else {
-				preferences.selectedEndpoint = nil
+				preferences.selectedEndpointID = nil
 				return
 			}
-			preferences.selectedEndpoint = StoredEndpoint(id: selectedEndpoint.id, name: selectedEndpoint.name)
+			preferences.selectedEndpointID = selectedEndpoint.id
 		}
 	}
 
@@ -549,8 +531,10 @@ private extension PortainerStore {
 		} else if endpoints.count == 1 {
 			selectedEndpoint = endpoints.first
 		} else {
-			selectedEndpoint = endpoints.first(where: { $0.id == preferences.selectedEndpoint?.id })
+			selectedEndpoint = endpoints.first { $0.id == preferences.selectedEndpointID }
 		}
+
+		storeEndpoints(endpoints)
 	}
 
 	func onContainersChange(_ containers: [Container]) {
@@ -560,10 +544,10 @@ private extension PortainerStore {
 
 // MARK: - PortainerStore+Persistence
 
-extension PortainerStore {
+private extension PortainerStore {
 	/// Loads authorization token for saved server if available.
 	/// - Returns: Credentials for Portainer
-	private func getStoredCredentials() -> (url: URL, token: String)? {
+	func getStoredCredentials() -> (url: URL, token: String)? {
 		logger.info("Looking for credentials...")
 		do {
 			guard let selectedServer = preferences.selectedServer,
@@ -581,17 +565,66 @@ extension PortainerStore {
 		}
 	}
 
-	/// Loads stored selected endpoint if available.
-	/// - Returns: `Endpoint` if anything is stored, `nil` otherwise.
-	private func getStoredEndpoint() -> Endpoint? {
-		guard let storedEndpoint = preferences.selectedEndpoint else { return nil }
-		return Endpoint(id: storedEndpoint.id, name: storedEndpoint.name)
+	func storeEndpoints(_ endpoints: [Endpoint]?) {
+//		logger.debug("Storing \(endpoints?.count ?? 0, privacy: .public) endpoints...")
+
+		Task { @MainActor in
+			guard let modelContext else {
+				logger.warning("No `modelContext` set!")
+				return
+			}
+
+			do {
+				guard let endpoints, !endpoints.isEmpty else {
+					try modelContext.delete(model: StoredEndpoint.self)
+					return
+				}
+
+				let existingIDs = Set(endpoints.map(\.id))
+				let nonExistingContainersPredicate = #Predicate<StoredEndpoint> {
+					!existingIDs.contains($0.id)
+				}
+				try modelContext.delete(model: StoredEndpoint.self, where: nonExistingContainersPredicate)
+
+				for endpoint in endpoints {
+					let storedContainer = StoredEndpoint(endpoint: endpoint)
+					modelContext.insert(storedContainer)
+				}
+
+				try modelContext.save()
+
+//				logger.debug("Stored \(endpoints.count, privacy: .public) endpoints.")
+			} catch {
+				logger.error("Failed to store endpoints: \(error, privacy: .public)")
+			}
+		}
+	}
+
+	func fetchStoredEndpoints() -> [Endpoint]? {
+//		logger.debug("Loading stored endpoints...")
+
+		guard let modelContext else {
+			logger.warning("No `modelContext` set!")
+			return nil
+		}
+
+		do {
+			let descriptor = FetchDescriptor<StoredEndpoint>(sortBy: [.init(\.name)])
+			let items = try modelContext.fetch(descriptor)
+
+//			logger.debug("Got \(items.count, privacy: .public) stored endpoints.")
+
+			return items.map { .init(storedEndpoint: $0) }
+		} catch {
+			logger.error("Failed to load stored endpoints: \(error, privacy: .public)")
+			return nil
+		}
 	}
 
 	/// Stores containers to SwiftData.
 	/// - Parameter containers: Containers to store
-	private func storeContainers(_ containers: [Container]?) {
-		logger.debug("Storing \(containers?.count ?? 0, privacy: .public) containers...")
+	func storeContainers(_ containers: [Container]?) {
+//		logger.debug("Storing \(containers?.count ?? 0, privacy: .public) containers...")
 
 		Task { @MainActor in
 			guard let modelContext else {
@@ -605,10 +638,9 @@ extension PortainerStore {
 					return
 				}
 
-				let containerIDs = Set(containers.map(\.id))
-
+				let existingIDs = Set(containers.map(\.id))
 				let nonExistingContainersPredicate = #Predicate<StoredContainer> {
-					!containerIDs.contains($0.id)
+					!existingIDs.contains($0.id)
 				}
 				try modelContext.delete(model: StoredContainer.self, where: nonExistingContainersPredicate)
 
@@ -619,7 +651,7 @@ extension PortainerStore {
 
 				try modelContext.save()
 
-				logger.debug("Stored \(containers.count, privacy: .public) containers.")
+//				logger.debug("Stored \(containers.count, privacy: .public) containers.")
 			} catch {
 				logger.error("Failed to store containers: \(error, privacy: .public)")
 			}
@@ -628,9 +660,8 @@ extension PortainerStore {
 
 	/// Fetches stored containers and returns them.
 	/// - Returns: Mapped [Container] from SwiftData.
-	@MainActor
-	private func fetchStoredContainers() -> [Container]? {
-		logger.debug("Loading stored containers...")
+	func fetchStoredContainers() -> [Container]? {
+//		logger.debug("Loading stored containers...")
 
 		guard let modelContext else {
 			logger.warning("No `modelContext` set!")
@@ -641,7 +672,7 @@ extension PortainerStore {
 			let descriptor = FetchDescriptor<StoredContainer>(sortBy: [.init(\.name)])
 			let items = try modelContext.fetch(descriptor)
 
-			logger.debug("Got \(items.count, privacy: .public) stored containers.")
+//			logger.debug("Got \(items.count, privacy: .public) stored containers.")
 
 			return items.map { .init(storedContainer: $0) }
 		} catch {

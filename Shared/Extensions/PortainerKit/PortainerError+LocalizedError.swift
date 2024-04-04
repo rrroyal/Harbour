@@ -9,7 +9,7 @@
 import Foundation
 import PortainerKit
 
-extension Portainer.PortainerError: LocalizedError {
+extension PortainerClient.Error: LocalizedError {
 	public var errorDescription: String? {
 		switch self {
 		case .other(let reason):
@@ -22,8 +22,10 @@ extension Portainer.PortainerError: LocalizedError {
 			String(localized: "PortainerKit.PortainerError.EncodingFailed")
 		case .decodingFailed:
 			String(localized: "PortainerKit.PortainerError.DecodingFailed")
-		case .invalidPayload:
-			String(localized: "PortainerKit.PortainerError.InvalidPayload")
+		case .invalidResponse:
+			String(localized: "PortainerKit.PortainerError.InvalidResponse")
+		case .invalidRequest:
+			String(localized: "PortainerKit.PortainerError.InvalidRequest")
 		case .invalidURL:
 			String(localized: "PortainerKit.PortainerError.InvalidURL")
 		case .notSetup:

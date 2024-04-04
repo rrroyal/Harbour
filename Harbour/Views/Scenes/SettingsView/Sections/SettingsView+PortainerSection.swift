@@ -37,60 +37,6 @@ private extension SettingsView.PortainerSection {
 			return formattedURL(url)
 		}
 
-		var body: some View {
-			let urls = viewModel.serverURLs.localizedSorted(by: \.absoluteString)
-			Menu {
-				ForEach(urls, id: \.absoluteString) { url in
-					urlMenu(for: url)
-				}
-
-				Divider()
-
-				Button {
-//					Haptics.generateIfEnabled(.sheetPresentation)
-					viewModel.isSetupSheetPresented = true
-				} label: {
-					Label("SettingsView.Portainer.EndpointsMenu.Add", systemImage: SFSymbol.plus)
-				}
-			} label: {
-				let _serverURLLabel = serverURLLabel ?? String(localized: "SettingsView.Portainer.EndpointsMenu.NoServerSelectedPlaceholder")
-				HStack {
-//					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
-					Text(_serverURLLabel)
-						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
-						.lineLimit(1)
-						.font(SettingsView.labelFontHeadline)
-
-					#if os(iOS)
-					Spacer()
-
-					Image(systemName: SFSymbol.chevronDown)
-						.fontWeight(.medium)
-					#endif
-				}
-				.transition(.opacity)
-				.animation(.easeInOut, value: _serverURLLabel)
-			}
-			.confirmationDialog(
-				"SettingsView.Portainer.EndpointRemovalAlert.Title",
-				isPresented: $viewModel.isEndpointRemovalAlertPresented,
-				titleVisibility: .visible,
-				presenting: viewModel.endpointToDelete
-			) { url in
-				Button("SettingsView.Portainer.EndpointRemovalAlert.RemoveButton", role: .destructive) {
-					Haptics.generateIfEnabled(.heavy)
-					do {
-						try viewModel.removeServer(url)
-					} catch {
-						errorHandler(error)
-					}
-					viewModel.endpointToDelete = nil
-				}
-			} message: { url in
-				Text("SettingsView.Portainer.EndpointRemovalAlert.Message URL:\(url.absoluteString)")
-			}
-		}
-
 		@ViewBuilder
 		private func urlMenu(for url: URL) -> some View {
 			Menu {
@@ -125,6 +71,61 @@ private extension SettingsView.PortainerSection {
 			} label: {
 				Label(formattedURL(url), systemImage: SFSymbol.checkmark)
 					.labelStyle(.iconOptional(showIcon: viewModel.activeURL == url))
+			}
+		}
+
+		var body: some View {
+			let urls = viewModel.serverURLs.localizedSorted(by: \.absoluteString)
+			Menu {
+				ForEach(urls, id: \.absoluteString) { url in
+					urlMenu(for: url)
+				}
+
+				Divider()
+
+				Button {
+//					Haptics.generateIfEnabled(.sheetPresentation)
+					viewModel.isSetupSheetPresented = true
+				} label: {
+					Label("SettingsView.Portainer.EndpointsMenu.Add", systemImage: SFSymbol.plus)
+				}
+			} label: {
+				let _serverURLLabel = serverURLLabel ?? String(localized: "SettingsView.Portainer.EndpointsMenu.NoServerSelectedPlaceholder")
+				HStack {
+//					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
+					Text(_serverURLLabel)
+						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
+						.lineLimit(1)
+						.font(SettingsView.labelFontHeadline)
+
+					#if os(iOS)
+					Spacer()
+
+					Image(systemName: SFSymbol.chevronDown)
+						.fontWeight(.medium)
+					#endif
+				}
+				.transition(.opacity)
+				.animation(.easeInOut, value: _serverURLLabel)
+			}
+			.labelStyle(.titleAndIcon)
+			.confirmationDialog(
+				"SettingsView.Portainer.EndpointRemovalAlert.Title",
+				isPresented: $viewModel.isEndpointRemovalAlertPresented,
+				titleVisibility: .visible,
+				presenting: viewModel.endpointToDelete
+			) { url in
+				Button("SettingsView.Portainer.EndpointRemovalAlert.RemoveButton", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					do {
+						try viewModel.removeServer(url)
+					} catch {
+						errorHandler(error)
+					}
+					viewModel.endpointToDelete = nil
+				}
+			} message: { url in
+				Text("SettingsView.Portainer.EndpointRemovalAlert.Message URL:\(url.absoluteString)")
 			}
 		}
 

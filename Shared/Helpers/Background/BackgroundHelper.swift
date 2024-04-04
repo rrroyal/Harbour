@@ -118,7 +118,7 @@ extension BackgroundHelper {
 	@Sendable
 	static func scheduleBackgroundRefreshIfNeeded() {
 		guard Preferences.shared.enableBackgroundRefresh else {
-			logger.debug("\(Preferences.Key.enableBackgroundRefresh, privacy: .public) disabled")
+			logger.debug("Background refresh is disabled!")
 			return
 		}
 
@@ -154,11 +154,7 @@ extension BackgroundHelper {
 			scheduleBackgroundRefreshIfNeeded()
 			#endif
 
-			let modelContainer = try ModelContainer(for: StoredContainer.self)
-			let modelContext = ModelContext(modelContainer)
-//			let modelContext = await modelContainer.mainContext
-
-			let portainerStore = PortainerStore(modelContext: modelContext, urlSessionConfiguration: .backgroundTasks)
+			let portainerStore = PortainerStore(urlSessionConfiguration: .backgroundTasks)
 			if !portainerStore.isSetup {
 				await portainerStore.setupInitially()
 			}

@@ -178,7 +178,7 @@ private extension ContainerStatusProvider {
 		do {
 			try portainerStore.setupIfNeeded()
 
-			let filters = Portainer.FetchFilters(
+			let filters = FetchFilters(
 				id: configuration.resolveByName ? nil : configurationContainers.map(\._id)
 			)
 			let containers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)

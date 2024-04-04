@@ -9,6 +9,15 @@
 import Foundation
 import PortainerKit
 
+// MARK: - Endpoint+_isStored
+
+extension Endpoint {
+	/// Is this endpoint not-live (i.e. created from ``StoredEndpoint``)?
+	var _isStored: Bool {
+		status == nil
+	}
+}
+
 // MARK: - [Endpoint]+sorted
 
 extension [Endpoint] {

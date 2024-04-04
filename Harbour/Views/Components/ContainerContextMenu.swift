@@ -115,13 +115,13 @@ private extension ContainerContextMenu {
 		@Environment(\.showIndicator) private var showIndicator
 		@Environment(\.errorHandler) private var errorHandler
 		var container: Container
-		var action: ExecuteAction
+		var action: ContainerAction
 		var role: ButtonRole?
 		var haptic: Haptics.HapticStyle
 
 		init(
 			container: Container,
-			action: ExecuteAction,
+			action: ContainerAction,
 			role: ButtonRole? = nil,
 			haptic: Haptics.HapticStyle = .medium
 		) {

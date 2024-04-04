@@ -58,7 +58,7 @@ extension ContainerDetailsView {
 			}
 
 			// Finished At
-			if let finishedAt = details?.status.finishedAt {
+			if let finishedAt = details?.status.finishedAt, !(details?.status.running ?? false) {
 				Section {
 					Labeled(finishedAt.formatted(.dateTime))
 						.font(ContainerDetailsView.sectionContentFont)

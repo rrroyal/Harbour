@@ -17,7 +17,7 @@ import SwiftUI
 extension SetupView {
 	@Observable
 	final class ViewModel: @unchecked Sendable {
-		private let portainer = Portainer()
+		private let portainer = PortainerClient()
 		private let logger = Logger(.custom(SetupView.self))
 		private let errorTimeoutInterval: TimeInterval = 3
 
@@ -80,7 +80,7 @@ extension SetupView {
 
 					portainer.serverURL = url
 					portainer.token = token
-					let portainerInstanceStatus = try await portainer.fetchSystemStatus()
+					let portainerInstanceStatus = try await portainer.fetchPortainerStatus()
 
 					logger.info("Portainer instance ID: \"\(portainerInstanceStatus.instanceID, privacy: .sensitive)\", version: \(portainerInstanceStatus.version, privacy: .sensitive)")
 

@@ -14,8 +14,7 @@ extension View {
 	func withEnvironment(
 		appState: AppState,
 		preferences: Preferences = .shared,
-		portainerStore: PortainerStore = .shared,
-		modelContext: ModelContext
+		portainerStore: PortainerStore = .shared
 	) -> some View {
 		self
 			.environment(appState)
@@ -23,7 +22,6 @@ extension View {
 			.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
 			.environment(\.cvUseGrid, preferences.cvUseGrid)
 			.environment(\.ikEnableHaptics, preferences.enableHaptics)
-			.environment(\.modelContext, modelContext)
 			.environmentObject(portainerStore)
 			.environmentObject(preferences)
 	}

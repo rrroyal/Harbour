@@ -76,7 +76,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 			let portainerStore = IntentPortainerStore.shared
 			try portainerStore.setupIfNeeded()
 
-			let filters = Portainer.FetchFilters(
+			let filters = FetchFilters(
 				id: resolveByName ? nil : containers.map(\._id),
 				name: resolveByName ? containers.compactMap(\.name) : nil
 			)

@@ -45,6 +45,5 @@ struct ContainersView: View {
 	.background(Color.groupedBackground)
 	.environment(\.cvUseGrid, true)
 	.environment(SceneState())
-	// swiftlint:disable:next force_try
-	.withEnvironment(appState: .shared, preferences: .shared, portainerStore: .shared, modelContext: .init(try! .default()))
+	.withEnvironment(appState: .shared, preferences: .shared, portainerStore: .shared)
 }

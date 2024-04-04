@@ -24,25 +24,11 @@ struct HarbourApp: App {
 	@StateObject private var portainerStore: PortainerStore
 	@StateObject private var preferences: Preferences = .shared
 	@State private var appState: AppState = .shared
-	private let modelContainer: ModelContainer
 
 	init() {
-		do {
-			self.modelContainer = try ModelContainer.default()
-
-			let portainerStore = PortainerStore.shared
-			portainerStore.modelContext = modelContainer.mainContext
-			portainerStore.setupInitially()
-			self._portainerStore = .init(wrappedValue: portainerStore)
-
-			#if os(macOS)
-			if portainerStore.isSetup && !(portainerStore.endpointsTask != nil || portainerStore.containersTask != nil) {
-				portainerStore.refresh()
-			}
-			#endif
-		} catch {
-			fatalError("Failed to create ModelContainer!")
-		}
+		let portainerStore = PortainerStore.shared
+		portainerStore.setupInitially()
+		self._portainerStore = .init(wrappedValue: portainerStore)
 	}
 
 	var body: some Scene {
@@ -51,8 +37,7 @@ struct HarbourApp: App {
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
-					portainerStore: portainerStore,
-					modelContext: modelContainer.mainContext
+					portainerStore: portainerStore
 				)
 		}
 		.onChange(of: portainerStore.containers) {
@@ -76,6 +61,7 @@ struct HarbourApp: App {
 		#if os(macOS)
 		.windowToolbarStyle(.unified)
 		#endif
+		.modelContainer(for: ModelContainer.allModelTypes)
 
 		#if os(macOS)
 		Settings {
@@ -84,10 +70,10 @@ struct HarbourApp: App {
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
-					portainerStore: portainerStore,
-					modelContext: modelContainer.mainContext
+					portainerStore: portainerStore
 				)
 		}
+		.modelContainer(for: ModelContainer.allModelTypes)
 		#endif
 	}
 }

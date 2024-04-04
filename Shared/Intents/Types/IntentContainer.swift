@@ -163,7 +163,7 @@ struct IntentContainerQuery: EntityStringQuery {
 		do {
 			let entities: [Entity] = try await {
 				if requiresOnline {
-					let filters = Portainer.FetchFilters(
+					let filters = FetchFilters(
 						id: resolveByName ? nil : parsedContainers.map(\._id)
 					)
 					return try await getContainers(for: endpoint.id, filters: filters)
@@ -204,7 +204,7 @@ struct IntentContainerQuery: EntityStringQuery {
 extension IntentContainerQuery {
 	func getContainers(
 		for endpointID: Endpoint.ID,
-		filters: Portainer.FetchFilters? = nil
+		filters: FetchFilters? = nil
 	) async throws -> [Container] {
 		let portainerStore = IntentPortainerStore.shared
 		try portainerStore.setupIfNeeded()

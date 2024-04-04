@@ -1,4 +1,5 @@
 {
+  "originHash" : "33c832d0cf6417546886e926c6db495d67979cb0983b2efdb9540a03787bbb65",
   "pins" : [
     {
       "identity" : "commonskit",
@@ -28,6 +29,15 @@
       }
     },
     {
+      "identity" : "networkkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rrroyal/NetworkKit",
+      "state" : {
+        "branch" : "main",
+        "revision" : "9c31e8d590567981e063966c5dd5af58066afff6"
+      }
+    },
+    {
       "identity" : "swiftlintplugin",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
@@ -37,5 +47,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }

@@ -12,6 +12,7 @@ import CommonFoundation
 import CommonOSLog
 import NotificationCenter
 import OSLog
+import PortainerKit
 import SwiftUI
 
 // MARK: - Preferences
@@ -26,35 +27,43 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 	private let logger = Logger(.custom(Preferences.self))
 
 	/// Was landing view displayed?
-	@AppStorage(Key.landingDisplayed, store: Preferences.userDefaults) public var landingDisplayed = false
+	@AppStorage("LandingDisplayed", store: Preferences.userDefaults)
+	public var landingDisplayed = false
 
 	/// Are haptics enabled?
-	@AppStorage(Key.enableHaptics, store: Preferences.userDefaults) public var enableHaptics = true
+	@AppStorage("EnableHaptics", store: Preferences.userDefaults)
+	public var enableHaptics = true
 
 	/// Is background refresh enabled?
 	#if os(iOS)
-	@AppStorage(Key.enableBackgroundRefresh, store: Preferences.userDefaults) public var enableBackgroundRefresh = false {
+	@AppStorage("EnableBackgroundRefresh", store: Preferences.userDefaults)
+	public var enableBackgroundRefresh = false {
 		didSet { onEnableBackgroundRefreshChange(enableBackgroundRefresh) }
 	}
 	#endif
 
 	/// Last background refresh time
-	@AppStorage(Key.lastBackgroundRefreshDate, store: Preferences.userDefaults) public var lastBackgroundRefreshDate: TimeInterval?
+	@AppStorage("LastBackgroundRefreshDate", store: Preferences.userDefaults)
+	public var lastBackgroundRefreshDate: TimeInterval?
 
 	/// Selected server
-	@AppStorage(Key.selectedServer, store: Preferences.userDefaults) public var selectedServer: String?
+	@AppStorage("SelectedServer", store: Preferences.userDefaults)
+	public var selectedServer: String?
 
 	/// Selected endpoint
-	@AppStorage(Key.selectedEndpoint, store: Preferences.userDefaults) public var selectedEndpoint: StoredEndpoint?
+	@AppStorage("SelectedEndpointID", store: Preferences.userDefaults)
+	public var selectedEndpointID: Endpoint.ID?
 
-	// Display summary in ContainersView
-//	@AppStorage(Key.cvDisplaySummary, store: Preferences.userDefaults) public var cvDisplaySummary = false
+//	@AppStorage("DisplaySummary", store: Preferences.userDefaults)
+//	public var displaySummary = false
 
 	/// Use two-columns layout
-	@AppStorage(Key.cvUseColumns, store: Preferences.userDefaults) public var cvUseColumns = false
+	@AppStorage("ContainersView.UseColumns", store: Preferences.userDefaults)
+	public var cvUseColumns = true
 
 	/// Display ContainersView as grid
-	@AppStorage(Key.cvUseGrid, store: Preferences.userDefaults) public var cvUseGrid = true
+	@AppStorage("ContainersView.UseGrid", store: Preferences.userDefaults)
+	public var cvUseGrid = true
 
 	private init() { }
 }
@@ -64,8 +73,6 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 private extension Preferences {
 	#if os(iOS)
 	func onEnableBackgroundRefreshChange(_ isEnabled: Bool) {
-		logger.debug("\(Key.enableBackgroundRefresh, privacy: .public): \(isEnabled, privacy: .public)")
-
 		let notificationCenter = UNUserNotificationCenter.current()
 
 		if isEnabled {

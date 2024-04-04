@@ -21,7 +21,7 @@ public final class IntentPortainerStore: @unchecked Sendable {
 
 	// swiftlint:disable:next force_unwrapping
 	private let keychain = Keychain(accessGroup: Bundle.main.groupIdentifier!)
-	private let portainer = Portainer(urlSessionConfiguration: .backgroundTasks)
+	private let portainer = PortainerClient(urlSessionConfiguration: .backgroundTasks)
 	private let preferences = Preferences.shared
 
 	public private(set) var isSetup = false
@@ -42,7 +42,8 @@ public final class IntentPortainerStore: @unchecked Sendable {
 		if isSetup && portainer.serverURL == url { return }
 
 		let token = try keychain.getString(for: url)
-		portainer.setup(url: url, token: token)
+		portainer.serverURL = url
+		portainer.token = token
 
 		isSetup = true
 	}
@@ -59,7 +60,7 @@ public final class IntentPortainerStore: @unchecked Sendable {
 		}
 	}
 
-	public func getContainers(for endpointID: Endpoint.ID, filters: Portainer.FetchFilters? = nil) async throws -> [Container] {
+	public func getContainers(for endpointID: Endpoint.ID, filters: FetchFilters? = nil) async throws -> [Container] {
 //		logger.info("Getting containers...")
 		do {
 			let containers = try await portainer.fetchContainers(endpointID: endpointID, filters: filters)
@@ -71,10 +72,10 @@ public final class IntentPortainerStore: @unchecked Sendable {
 		}
 	}
 
-	public func execute(_ action: ExecuteAction, containerID: Container.ID, endpointID: Endpoint.ID) async throws {
+	public func execute(_ action: ContainerAction, containerID: Container.ID, endpointID: Endpoint.ID) async throws {
 		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
-			try await portainer.execute(action, containerID: containerID, endpointID: endpointID)
+			try await portainer.executeContainerAction(action, containerID: containerID, endpointID: endpointID)
 
 			logger.notice("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"")
 		} catch {

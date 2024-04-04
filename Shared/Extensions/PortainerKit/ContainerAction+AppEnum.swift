@@ -1,5 +1,5 @@
 //
-//  ExecuteAction+AppEnum.swift
+//  ContainerAction+AppEnum.swift
 //  Harbour
 //
 //  Created by royal on 09/07/2023.
@@ -9,8 +9,8 @@
 import AppIntents
 import PortainerKit
 
-extension ExecuteAction: AppEnum {
-	public static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ExecuteAction.AppEnumTitle")
+extension ContainerAction: AppEnum {
+	public static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ContainerAction.AppEnumTitle")
 
 	public static var caseDisplayRepresentations: [Self: DisplayRepresentation] = [
 		.start: .init(title: .init(stringLiteral: Self.start.title), image: .init(systemName: Self.start.icon)),

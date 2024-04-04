@@ -61,7 +61,7 @@ extension ContainerLogsView {
 				do {
 					let logs = try await portainerStore.getLogs(
 						for: navigationItem.id,
-						tail: lineCount,
+						tail: .limit(lineCount),
 						timestamps: includeTimestamps
 					)
 

@@ -51,7 +51,7 @@ extension SceneState {
 
 extension SceneState {
 	enum PresentedIndicator: Identifiable {
-		case containerActionExecuted(Container.ID, String?, ExecuteAction)
+		case containerActionExecuted(Container.ID, String?, ContainerAction)
 		case copied
 		case error(Error)
 

@@ -1220,6 +1220,76 @@
         }
       }
     },
+    "PortainerKit.ContainerAction.AppEnumTitle" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerAction.Kill" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kill"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerAction.Pause" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pause"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerAction.Restart" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restart"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerAction.Start" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerAction.Stop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
+    "PortainerKit.ContainerAction.Unpause" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resume"
+          }
+        }
+      }
+    },
     "PortainerKit.ContainerState.Icon.Created" : {
       "localizations" : {
         "en" : {
@@ -1310,76 +1380,6 @@
         }
       }
     },
-    "PortainerKit.ExecuteAction.AppEnumTitle" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Action"
-          }
-        }
-      }
-    },
-    "PortainerKit.ExecuteAction.Kill" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kill"
-          }
-        }
-      }
-    },
-    "PortainerKit.ExecuteAction.Pause" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pause"
-          }
-        }
-      }
-    },
-    "PortainerKit.ExecuteAction.Restart" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Restart"
-          }
-        }
-      }
-    },
-    "PortainerKit.ExecuteAction.Start" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start"
-          }
-        }
-      }
-    },
-    "PortainerKit.ExecuteAction.Stop" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stop"
-          }
-        }
-      }
-    },
-    "PortainerKit.ExecuteAction.Unpause" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resume"
-          }
-        }
-      }
-    },
     "PortainerKit.PortainerError.DecodingFailed" : {
       "localizations" : {
         "en" : {
@@ -1401,6 +1401,7 @@
       }
     },
     "PortainerKit.PortainerError.InvalidPayload" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1409,6 +1410,12 @@
           }
         }
       }
+    },
+    "PortainerKit.PortainerError.InvalidRequest" : {
+
+    },
+    "PortainerKit.PortainerError.InvalidResponse" : {
+
     },
     "PortainerKit.PortainerError.InvalidURL" : {
       "localizations" : {
