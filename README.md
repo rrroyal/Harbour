@@ -14,7 +14,9 @@ Docker/Portainer management app for iOS and macOS.
 - No telemetry :)
 
 ## Installation
-**Harbour is available on [TestFlight](https://testflight.apple.com/join/F2vK7xo4), and will be available on the App Store too in the near future 😄**
+<a href="https://apps.apple.com/us/app/harbour-docker-manager/id1582439659?itsct=apps_box_badge&amp;itscg=30200"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1712361600" alt="Download on the App Store" style="border-radius: 13px; width: 200px; height: 66px;"></a>
+
 #### Alternative Methods
+- [TestFlight](https://testflight.apple.com/join/F2vK7xo4) (might not be updated all the time)
 - Sideload .ipa from [releases](https://github.com/rrroyal/Harbour/releases/latest)
 - Build it yourself
