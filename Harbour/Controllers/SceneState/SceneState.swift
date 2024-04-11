@@ -12,7 +12,7 @@ import OSLog
 import SwiftUI
 
 @Observable @MainActor
-final class SceneState {
+final class SceneState: IndicatorPresentable {
 	let logger = Logger(.scene)
 	let indicators = Indicators()
 

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PortainerKit
 
 // MARK: - PortainerError
 
@@ -19,6 +20,9 @@ enum PortainerError: Error {
 
 	/// No endpoint is selected.
 	case noSelectedEndpoint
+
+	/// Container with specified ID hasn't been found
+	case containerNotFound(Container.ID)
 }
 
 // MARK: - PortainerError+LocalizedError
@@ -32,6 +36,8 @@ extension PortainerError: LocalizedError {
 			String(localized: "Error.Portainer.NoServer")
 		case .noSelectedEndpoint:
 			String(localized: "Error.Portainer.NoSelectedEndpoint")
+		case .containerNotFound(let containerID):
+			String(localized: "Error.Portainer.ContainerNotFound ID:\(containerID)")
 		}
 	}
 }

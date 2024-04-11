@@ -33,17 +33,16 @@ struct StacksView: View {
 	var body: some View {
 		NavigationStack {
 			Form {
-				if let stacks = viewModel.stacks {
+				if let stacks = viewModel.stacksFiltered {
 					ForEach(stacks) { stack in
 						let isLoading = viewModel.loadingStacks.contains(stack.id)
-						let isStackOn = stack.status == .active
 						let containers = portainerStore.containers.filter { $0.stack == stack.name }
 
 						StackCell(stack, containers: containers, isLoading: isLoading) {
 							selectedStack = stack
 							dismiss()
 						} toggleAction: {
-							setStackState(stack, started: !isStackOn)
+							setStackState(stack, started: !stack.isOn)
 						}
 						.transition(.opacity)
 					}
@@ -55,16 +54,10 @@ struct StacksView: View {
 			#if os(macOS)
 			.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
 			#endif
-			.scrollContentBackground(.hidden)
 			.background {
 				placeholderView
 			}
-			.background {
-				viewModel.viewState.backgroundView
-			}
-			#if os(iOS)
-			.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
-			#endif
+			.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
 			.navigationTitle("StacksView.Title")
 			.toolbar {
 				#if os(macOS)
@@ -76,12 +69,14 @@ struct StacksView: View {
 				#endif
 			}
 			.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-				StackDetailsView(navigationItem: navigationItem)
+				StackDetailsView(navigationItem: navigationItem, selectedStack: $selectedStack)
+					.environment(viewModel)
 			}
 		}
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState.id)
 		.animation(.easeInOut, value: viewModel.stacks)
+		.scrollDismissesKeyboard(.interactively)
 		.task { await fetch() }
 		.refreshable { await fetch() }
 	}

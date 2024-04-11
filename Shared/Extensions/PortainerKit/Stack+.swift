@@ -10,6 +10,12 @@ import CommonFoundation
 import Foundation
 import PortainerKit
 
+// MARK: - Stack+isOn
+
+extension Stack {
+	var isOn: Bool { status == .active }
+}
+
 // MARK: - [Stack]+sorted
 
 extension [Stack] {

@@ -75,7 +75,6 @@ extension DebugView {
 			}
 			.formStyle(.grouped)
 			.searchable(text: $filter)
-			.scrollDismissesKeyboard(.interactively)
 			.navigationTitle("DebugView.LogsView.Title")
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)

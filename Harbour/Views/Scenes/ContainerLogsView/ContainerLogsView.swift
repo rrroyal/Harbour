@@ -14,7 +14,7 @@ import SwiftUI
 struct ContainerLogsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.errorHandler) private var errorHandler
-	@Environment(\.showIndicator) private var showIndicator
+	@Environment(\.presentIndicator) private var presentIndicator
 
 	@State private var viewModel: ViewModel
 
@@ -34,15 +34,6 @@ struct ContainerLogsView: View {
 					.animation(.easeInOut, value: viewModel.logs)
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.background {
-				if viewModel.showBackgroundPlaceholder {
-					if viewModel.isLoading {
-						ProgressView()
-					} else {
-						Text("Generic.Empty")
-					}
-				}
-			}
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					ToolbarMenu(
@@ -62,7 +53,7 @@ struct ContainerLogsView: View {
 				}
 			}
 		}
-		.background(viewModel.viewState.backgroundView)
+		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.navigationTitle("ContainerLogsView.Title")
@@ -96,7 +87,7 @@ private extension ContainerLogsView {
 
 private extension ContainerLogsView {
 	struct ToolbarMenu: View {
-		@Environment(\.showIndicator) private var showIndicator
+		@Environment(\.presentIndicator) private var presentIndicator
 		let viewState: ViewModel._ViewState
 		@Binding var lineCount: Int
 		@Binding var includeTimestamps: Bool
@@ -207,4 +198,5 @@ private extension ContainerLogsView {
 
 #Preview {
 	ContainerLogsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
+		.environmentObject(PortainerStore.preview)
 }

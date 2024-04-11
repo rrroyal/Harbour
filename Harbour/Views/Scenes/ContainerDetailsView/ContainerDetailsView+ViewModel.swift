@@ -102,7 +102,7 @@ extension ContainerDetailsView {
 
 				do {
 					async let _containers = portainerStore.fetchContainers(filters: .init(id: [navigationItem.id]))
-					async let _containerDetails = portainerStore.inspectContainer(navigationItem.id, endpointID: navigationItem.endpointID)
+					async let _containerDetails = portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
 					let (container, containerDetails) = try await (_containers.first, _containerDetails)
 
 					guard !Task.isCancelled else { return }

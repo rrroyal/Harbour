@@ -24,8 +24,14 @@ enum SFSymbol {
 	/// 􀆅 checkmark
 	static let checkmark = "checkmark"
 
+	/// 􀐘 cube
+	static let container = "cube"
+
 	/// 􀉁 doc.on.doc
 	static let copy = "doc.on.doc"
+
+	/// 􀩳 list.bullet.rectangle
+	static let environment = "list.bullet.rectangle"
 
 	/// 􀇿 exclamationmark.triangle.fill
 	static let error = "exclamationmark.triangle.fill"

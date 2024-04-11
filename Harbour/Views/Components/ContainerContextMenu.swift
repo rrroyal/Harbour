@@ -15,7 +15,7 @@ struct ContainerContextMenu: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(SceneState.self) private var sceneState
 	@Environment(\.errorHandler) private var errorHandler
-	@Environment(\.showIndicator) private var showIndicator
+	@Environment(\.presentIndicator) private var presentIndicator
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 	var container: Container
@@ -112,7 +112,7 @@ private extension ContainerContextMenu {
 private extension ContainerContextMenu {
 	struct ActionButton: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
-		@Environment(\.showIndicator) private var showIndicator
+		@Environment(\.presentIndicator) private var presentIndicator
 		@Environment(\.errorHandler) private var errorHandler
 		var container: Container
 		var action: ContainerAction
@@ -142,7 +142,7 @@ private extension ContainerContextMenu {
 		func executeAction() {
 			Haptics.generateIfEnabled(haptic)
 
-			showIndicator(.containerActionExecuted(container.id, container.displayName, action))
+			presentIndicator(.containerActionExecuted(container.id, container.displayName, action))
 
 			Task {
 				do {

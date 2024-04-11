@@ -93,7 +93,6 @@ extension StacksView {
 					.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
 				}
 			}
-			.disabled(!isOn || isLoading)
 			#if os(macOS)
 			.buttonStyle(.fadesOnPress)
 			#endif
@@ -127,11 +126,10 @@ private extension StacksView.StackCell {
 
 		var body: some View {
 			Button(action: toggleAction) {
-				if stack.status == .active {
-					Label("StacksView.Stack.Stop", systemImage: SFSymbol.stop)
-				} else {
-					Label("StacksView.Stack.Start", systemImage: SFSymbol.start)
-				}
+				Label(
+					stack.isOn ? "StacksView.Stack.Stop" : "StacksView.Stack.Start",
+					systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
+				)
 			}
 			.symbolVariant(.fill)
 			.labelStyle(.titleAndIcon)
@@ -148,7 +146,7 @@ private extension StacksView.StackCell {
 
 		var body: some View {
 			Button(action: filterAction) {
-				Label("StacksView.Stack.FilterBy", systemImage: SFSymbol.filter)
+				Label("StacksView.ShowContainers", systemImage: SFSymbol.container)
 			}
 		}
 	}

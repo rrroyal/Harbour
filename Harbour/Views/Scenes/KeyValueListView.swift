@@ -11,10 +11,12 @@ import SwiftUI
 // MARK: - KeyValueListView
 
 struct KeyValueListView: View {
+	@State private var query: String = ""
+
 	var data: [Entry]
 
-	var headerFont: Font = .footnote
-	var contentFont: Font = .body
+	var headerFontDesign: Font.Design?
+	var contentFontDesign: Font.Design?
 
 	@ViewBuilder
 	private var placeholderView: some View {
@@ -25,22 +27,30 @@ struct KeyValueListView: View {
 		}
 	}
 
+	private var dataFiltered: [Entry] {
+		guard !query.isReallyEmpty else { return data }
+		return data.filter {
+			$0.key.localizedCaseInsensitiveContains(query) || $0.value.localizedCaseInsensitiveContains(query)
+		}
+	}
+
 	var body: some View {
 		Form {
-			ForEach(data) { entry in
-				Section {
+			ForEach(dataFiltered) { entry in
+				NormalizedSection {
 					Text(entry.value)
-						.font(contentFont)
+						.fontDesign(contentFontDesign)
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.contentShape(Rectangle())
 						.textSelection(.enabled)
 				} header: {
 					Text(entry.key)
-						.font(headerFont)
+						.fontDesign(headerFontDesign)
 						.textCase(.none)
 				}
 			}
 		}
+		.searchable(text: $query)
 		.formStyle(.grouped)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.scrollContentBackground(.hidden)
@@ -50,9 +60,6 @@ struct KeyValueListView: View {
 		#if os(iOS)
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
 		#endif
-		.overlay {
-
-		}
 		.animation(.easeInOut, value: data)
 	}
 }
@@ -60,15 +67,15 @@ struct KeyValueListView: View {
 // MARK: - KeyValueListView+Modifiers
 
 extension KeyValueListView {
-	func headerFont(_ font: Font) -> Self {
+	func headerFontDesign(_ fontDesign: Font.Design?) -> Self {
 		var s = self
-		s.headerFont = font
+		s.headerFontDesign = fontDesign
 		return s
 	}
 
-	func contentFont(_ font: Font) -> Self {
+	func contentFontDesign(_ fontDesign: Font.Design?) -> Self {
 		var s = self
-		s.contentFont = font
+		s.contentFontDesign = fontDesign
 		return s
 	}
 }

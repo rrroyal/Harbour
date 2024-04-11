@@ -16,7 +16,6 @@ extension ContainerState {
 
 extension ContainerState? {
 	var isRunning: Bool {
-		guard let self else { return false }
-		return self.isRunning
+		self?.isRunning ?? false
 	}
 }

@@ -27,11 +27,7 @@ extension ContainerState {
 
 extension ContainerState? {
 	var color: Color {
-		if let self {
-			self.color
-		} else {
-			.darkGray
-		}
+		self?.color ?? .darkGray
 	}
 }
 
@@ -45,11 +41,7 @@ extension ContainerState {
 
 extension ContainerState? {
 	var description: String {
-		if let self {
-			return self.rawValue
-		} else {
-			return String(localized: "PortainerKit.ContainerState.Unknown")
-		}
+		self?.rawValue ?? String(localized: "PortainerKit.ContainerState.Unknown")
 	}
 }
 
@@ -71,11 +63,7 @@ extension ContainerState {
 
 extension ContainerState? {
 	var icon: String {
-		if let self {
-			return self.icon
-		} else {
-			return "questionmark"
-		}
+		self?.icon ?? "questionmark"
 	}
 }
 
@@ -97,11 +85,7 @@ extension ContainerState {
 
 extension ContainerState? {
 	var emoji: String {
-		if let self {
-			self.emoji
-		} else {
-			String(localized: "PortainerKit.ContainerState.Icon.Unknown")
-		}
+		self?.emoji ?? String(localized: "PortainerKit.ContainerState.Icon.Unknown")
 	}
 }
 
@@ -115,10 +99,6 @@ extension ContainerState {
 
 extension ContainerState? {
 	var isContainerOn: Bool {
-		if let self {
-			self.isContainerOn
-		} else {
-			false
-		}
+		self?.isContainerOn ?? false
 	}
 }

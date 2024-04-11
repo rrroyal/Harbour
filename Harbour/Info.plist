@@ -6,10 +6,8 @@
 	<string>$(AppIdentifierPrefix)</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>__MAIN_BUNDLE_IDENTIFIER__.BackgroundRefresh</string>
+		<string>xyz.shameful.Harbour.BackgroundRefresh</string>
 	</array>
-	<key>BuildDate</key>
-	<string>__TIMESTAMP__</string>
 	<key>CFBundleIcons</key>
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
@@ -41,7 +39,7 @@
 	<key>MDItemKeywords</key>
 	<string>Harbour, Harbor, Docker, Portainer, Containers</string>
 	<key>MainBundleIdentifier</key>
-	<string>__MAIN_BUNDLE_IDENTIFIER__</string>
+	<string>xyz.shameful.Harbour</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -49,7 +47,7 @@
 	</dict>
 	<key>NSUserActivityTypes</key>
 	<array>
-		<string>__MAIN_BUNDLE_IDENTIFIER__.ContainerDetailsActivity</string>
+		<string>xyz.shameful.Harbour.ContainerDetailsActivity</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

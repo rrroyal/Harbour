@@ -59,7 +59,7 @@ extension ContainerLogsView {
 				self.parseTask?.cancel()
 
 				do {
-					let logs = try await portainerStore.getLogs(
+					let logs = try await portainerStore.fetchContainerLogs(
 						for: navigationItem.id,
 						tail: .limit(lineCount),
 						timestamps: includeTimestamps

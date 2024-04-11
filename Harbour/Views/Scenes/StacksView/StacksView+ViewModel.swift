@@ -25,7 +25,11 @@ extension StacksView {
 		var searchText = ""
 
 		var stacks: [Stack]? {
-			viewState.value?.filter(searchText)
+			viewState.value
+		}
+
+		var stacksFiltered: [Stack]? {
+			stacks?.filter(searchText)
 		}
 
 		var shouldShowEmptyPlaceholderView: Bool {
@@ -40,7 +44,7 @@ extension StacksView {
 				do {
 					viewState = viewState.reloading
 
-					let stacks = try await portainerStore.getStacks()
+					let stacks = try await portainerStore.fetchStacks()
 					viewState = .success(stacks)
 				} catch {
 					guard !error.isCancellationError else { return }

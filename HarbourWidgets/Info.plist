@@ -4,10 +4,8 @@
 <dict>
 	<key>AppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
-	<key>BuildDate</key>
-	<string>__TIMESTAMP__</string>
 	<key>MainBundleIdentifier</key>
-	<string>__MAIN_BUNDLE_IDENTIFIER__</string>
+	<string>xyz.shameful.Harbour</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

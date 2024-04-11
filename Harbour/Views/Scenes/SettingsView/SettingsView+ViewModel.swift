@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Observation
+import IndicatorsKit
 #if canImport(UIKit)
 import UIKit.UIDevice
 #endif
@@ -16,8 +16,10 @@ import UIKit.UIDevice
 
 extension SettingsView {
 	@Observable
-	final class ViewModel {
+	final class ViewModel: IndicatorPresentable {
 		private let portainerStore: PortainerStore = .shared
+
+		let indicators = Indicators()
 
 		var isSetupSheetPresented = false
 		var isNegraSheetPresented = false

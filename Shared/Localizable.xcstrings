@@ -548,26 +548,6 @@
         }
       }
     },
-    "DebugView.BuildInfoSection.BuildDate" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Build Date"
-          }
-        }
-      }
-    },
-    "DebugView.BuildInfoSection.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Build Info"
-          }
-        }
-      }
-    },
     "DebugView.LogsView.LogLevel.Debug" : {
       "localizations" : {
         "en" : {
@@ -734,6 +714,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid URL"
+          }
+        }
+      }
+    },
+    "Error.Portainer.ContainerNotFound ID:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container with ID: \"%@\" not found"
           }
         }
       }
@@ -1400,22 +1390,25 @@
         }
       }
     },
-    "PortainerKit.PortainerError.InvalidPayload" : {
-      "extractionState" : "stale",
+    "PortainerKit.PortainerError.InvalidRequest" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Invalid Payload"
+            "value" : "Invalid Request"
           }
         }
       }
     },
-    "PortainerKit.PortainerError.InvalidRequest" : {
-
-    },
     "PortainerKit.PortainerError.InvalidResponse" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid Response"
+          }
+        }
+      }
     },
     "PortainerKit.PortainerError.InvalidURL" : {
       "localizations" : {
@@ -1463,6 +1456,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Unknown Error"
+          }
+        }
+      }
+    },
+    "PortainerKit.Stack.StackType.DockerCompose" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker Compose"
+          }
+        }
+      }
+    },
+    "PortainerKit.Stack.StackType.Swarm" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Swarm"
           }
         }
       }
@@ -1797,6 +1810,56 @@
         }
       }
     },
+    "StackDetailsView.Environment" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Environment"
+          }
+        }
+      }
+    },
+    "StackDetailsView.Section.ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID"
+          }
+        }
+      }
+    },
+    "StackDetailsView.Section.Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "StackDetailsView.Section.Status" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
+          }
+        }
+      }
+    },
+    "StackDetailsView.Section.Type" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        }
+      }
+    },
     "StacksView.NoContainersPlaceholder" : {
       "localizations" : {
         "en" : {
@@ -1807,12 +1870,12 @@
         }
       }
     },
-    "StacksView.Stack.FilterBy" : {
+    "StacksView.ShowContainers" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter By"
+            "value" : "Show Containers"
           }
         }
       }

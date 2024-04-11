@@ -33,13 +33,13 @@ extension EnvironmentValues {
 
 extension EnvironmentValues {
 	private struct ShowIndicatorEnvironmentKey: EnvironmentKey {
-		static let defaultValue: SceneState.ShowIndicatorAction = { indicator in
+		static let defaultValue: IndicatorPresentable.PresentIndicatorAction = { indicator in
 			assertionFailure("`showIndicator` has been called, but none is attached! Indicator: \(indicator)")
 		}
 	}
 
-	/// An action that shows provided indicator.
-	var showIndicator: SceneState.ShowIndicatorAction {
+	/// An action that presents a provided indicator.
+	var presentIndicator: IndicatorPresentable.PresentIndicatorAction {
 		get { self[ShowIndicatorEnvironmentKey.self] }
 		set { self[ShowIndicatorEnvironmentKey.self] = newValue }
 	}

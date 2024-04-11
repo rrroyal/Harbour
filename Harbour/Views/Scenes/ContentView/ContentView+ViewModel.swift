@@ -163,7 +163,7 @@ extension ContentView {
 					.status(isOn: false)
 				]
 
-				let stacksTokens = try await portainerStore.getStacks()
+				let stacksTokens = try await portainerStore.fetchStacks()
 					.filter { $0.status == .active }
 					.sorted(by: \.name)
 					.map { SearchToken.stack($0) }
@@ -179,7 +179,7 @@ extension ContentView {
 
 		@MainActor
 		func selectEndpoint(_ endpoint: Endpoint?) {
-			portainerStore.selectEndpoint(endpoint)
+			portainerStore.setSelectedEndpoint(endpoint)
 		}
 
 		@MainActor

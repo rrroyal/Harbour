@@ -21,6 +21,6 @@ extension SceneState {
 		logger.error("Error: \(error, privacy: .public)")
 
 		Haptics.generateIfEnabled(.error)
-		showIndicator(.error(error))
+		presentIndicator(.error(error))
 	}
 }

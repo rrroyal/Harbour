@@ -47,8 +47,9 @@ struct SettingsView: View {
 		} content: {
 			SetupView()
 		}
-		.environment(\.showIndicator, sceneState.showIndicator)
-		.indicatorOverlay(model: sceneState.indicators)
+		.environment(\.presentIndicator, viewModel.presentIndicator)
+		.indicatorOverlay(model: viewModel.indicators)
+		.scrollDismissesKeyboard(.interactively)
 	}
 }
 

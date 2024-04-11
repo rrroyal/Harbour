@@ -20,8 +20,8 @@ extension ContainerDetailsView {
 
 		var body: some View {
 			KeyValueListView(data: data)
-				.headerFont(ContainerDetailsView.sectionHeaderFont.monospaced())
-				.contentFont(ContainerDetailsView.sectionContentFont.monospaced())
+				.headerFontDesign(.monospaced)
+				.contentFontDesign(.monospaced)
 				.navigationTitle("ContainerDetailsView.Section.Labels")
 		}
 	}

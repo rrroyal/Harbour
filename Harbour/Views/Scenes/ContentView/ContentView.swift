@@ -134,7 +134,6 @@ struct ContentView: View {
 			}
 		}
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
-		.scrollDismissesKeyboard(.interactively)
 		.searchable(
 			text: $viewModel.searchText,
 			tokens: $viewModel.searchTokens,
@@ -199,9 +198,10 @@ struct ContentView: View {
 		}
 		.focusable()
 		.focusEffectDisabled()
+		.scrollDismissesKeyboard(.interactively)
 		.indicatorOverlay(model: sceneState.indicators)
 		.environment(\.errorHandler, .init(handleError))
-		.environment(\.showIndicator, sceneState.showIndicator)
+		.environment(\.presentIndicator, sceneState.presentIndicator)
 		.environment(\.navigationPath, sceneState.navigationPath)
 		.withNavigation(handler: sceneState)
 		.animation(.easeInOut, value: viewModel.viewState)

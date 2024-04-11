@@ -21,9 +21,6 @@ struct DebugView: View {
 
 	var body: some View {
 		Form {
-			#if DEBUG
-			BuildInfoSection()
-			#endif
 			BackgroundSection()
 			WidgetsSection()
 			PersistenceSection()
@@ -33,23 +30,6 @@ struct DebugView: View {
 		.navigationTitle("DebugView.Title")
 		.environment(\.logger, logger)
 	}
-}
-
-// MARK: - DebugView+BuildInfoSection
-
-private extension DebugView {
-	#if DEBUG
-	struct BuildInfoSection: View {
-		var body: some View {
-			Section("DebugView.BuildInfoSection.Title") {
-				LabeledContent(
-					"DebugView.BuildInfoSection.BuildDate",
-					value: Bundle.main.infoDictionary?["BuildDate"] as? String ?? String(localized: "Generic.Unknown")
-				)
-			}
-		}
-	}
-	#endif
 }
 
 // MARK: - DebugView+WidgetsSection

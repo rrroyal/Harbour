@@ -10,7 +10,7 @@ import CommonHaptics
 import SwiftUI
 
 struct CopyButton: View {
-	@Environment(\.showIndicator) private var showIndicatorAction
+	@Environment(\.presentIndicator) private var presentIndicator
 	let title: LocalizedStringKey
 	let content: String?
 	let showIndicator: Bool
@@ -34,7 +34,7 @@ struct CopyButton: View {
 		Button {
 			Haptics.generateIfEnabled(.buttonPress)
 			if showIndicator {
-				showIndicatorAction(.copied)
+				presentIndicator(.copied)
 			}
 
 			let content = self.content ?? self.action?()

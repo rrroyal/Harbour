@@ -64,12 +64,19 @@ extension SetupView {
 
 		@discardableResult
 		func login() async throws -> Bool {
-			logger.notice("Attempting login with URL \"\(self.url)\"...")
+			logger.notice("Attempting to login with URL: \"\(self.url)\"...")
 
 			cancelLogin()
-			loginTask = Task { @MainActor in
-				isLoading = true
-				defer { isLoading = false }
+			loginTask = Task {
+				Task { @MainActor in
+					isLoading = true
+				}
+
+				defer {
+					Task { @MainActor in
+						isLoading = false
+					}
+				}
 
 				do {
 					guard let url = URL(string: url) else {
@@ -80,27 +87,39 @@ extension SetupView {
 
 					portainer.serverURL = url
 					portainer.token = token
-					let portainerInstanceStatus = try await portainer.fetchPortainerStatus()
 
-					logger.info("Portainer instance ID: \"\(portainerInstanceStatus.instanceID, privacy: .sensitive)\", version: \(portainerInstanceStatus.version, privacy: .sensitive)")
+					let endpoints = try await portainer.fetchEndpoints()
+					logger.info("Got \(endpoints.count, privacy: .public) endpoint(s) from the new server, switching...")
 
 					Task.detached { @MainActor in
 						guard !Task.isCancelled else { return }
+
+						PortainerStore.shared.reset()
 						try? PortainerStore.shared.setup(url: url, token: token, saveToken: true)
-						PortainerStore.shared.refresh()
+
+						PortainerStore.shared.setEndpoints(endpoints)
+						if PortainerStore.shared.selectedEndpoint != nil {
+							PortainerStore.shared.refreshContainers()
+						}
 					}
 
-					Haptics.generateIfEnabled(.success)
-
-					buttonColor = .green
-					buttonLabel = String(localized: "SetupView.LoginButton.Success")
+					Task { @MainActor in
+						isLoading = false
+						buttonColor = .green
+						buttonLabel = String(localized: "SetupView.LoginButton.Success")
+						Haptics.generateIfEnabled(.success)
+					}
 
 					try? await Task.sleep(for: .seconds(2))
 
 					return true
 				} catch {
-					buttonColor = .red
-					buttonLabel = error.localizedDescription
+					Task { @MainActor in
+						isLoading = false
+						buttonColor = .red
+						buttonLabel = error.localizedDescription
+						Haptics.generateIfEnabled(.error)
+					}
 
 					errorTimer?.invalidate()
 

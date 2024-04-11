@@ -43,14 +43,14 @@ struct ContainerDetailsView: View {
 		Form {
 			DetailsSection(container: viewModel.container, details: viewModel.containerDetails)
 
-			Section {
+			NormalizedSection {
 				NavigationLink(value: Subdestination.labels) {
 					Label("ContainerDetailsView.Section.Labels", systemImage: "tag")
 				}
 				.disabled(viewModel.containerDetails?.config?.labels == nil)
 
 				NavigationLink(value: Subdestination.environment) {
-					Label("ContainerDetailsView.Section.Environment", systemImage: "list.bullet.rectangle")
+					Label("ContainerDetailsView.Section.Environment", systemImage: SFSymbol.environment)
 				}
 				.disabled(viewModel.containerDetails?.config?.env == nil)
 
@@ -71,7 +71,6 @@ struct ContainerDetailsView: View {
 		}
 		.scrollContentBackground(.hidden)
 		.formStyle(.grouped)
-//		.background(viewModel.viewState.backgroundView)
 		#if os(iOS)
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
 		#endif

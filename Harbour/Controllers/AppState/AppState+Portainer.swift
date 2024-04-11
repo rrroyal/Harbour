@@ -12,7 +12,7 @@ import Foundation
 extension AppState {
 	@MainActor
 	func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
-		logger.notice("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .sensitive(mask: .hash))\"")
+//		logger.notice("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .sensitive(mask: .hash))\"")
 
 		portainerServerSwitchTask?.cancel()
 		portainerServerSwitchTask = Task {
