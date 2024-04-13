@@ -14,26 +14,45 @@ import PortainerKit
 
 extension StacksView {
 	@Observable
-	final class ViewModel {
+	final class ViewModel: Sendable {
 		private let portainerStore = PortainerStore.shared
 
 		private var refreshTask: Task<Void, Error>?
 
 		private(set) var viewState: ViewState<[Stack], Error> = .loading
-		private(set) var loadingStacks: Set<Stack.ID> = []
+		private(set) var loadingStacks: Set<String> = []
 
-		var searchText = ""
+		var query = ""
 
-		var stacks: [Stack]? {
-			viewState.value
+		var stacks: [StackItem]? {
+			guard let realStacks = viewState.value?.compactMap(StackItem.init) else { return nil }
+			let realStackNames = Set(realStacks.map(\.name))
+
+			let limitedStackNames = portainerStore.containers
+				.compactMap(\.stack)
+				.filter { !realStackNames.contains($0) }
+			let limitedStacks = Set(limitedStackNames)
+				.map { StackItem(label: $0) }
+
+			return realStacks + limitedStacks
 		}
 
-		var stacksFiltered: [Stack]? {
-			stacks?.filter(searchText)
+		var stacksFiltered: [StackItem]? {
+			let allStacks = if query.isReallyEmpty {
+				stacks
+			} else {
+				stacks?.filter {
+					$0.name.localizedCaseInsensitiveContains(query) ||
+					$0.id.description.localizedCaseInsensitiveContains(query)
+				}
+			}
+			return allStacks?.sorted {
+				$0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending
+			}
 		}
 
 		var shouldShowEmptyPlaceholderView: Bool {
-			stacks?.isEmpty ?? false
+			stacksFiltered?.isEmpty ?? false
 		}
 
 		@MainActor
@@ -44,8 +63,15 @@ extension StacksView {
 				do {
 					viewState = viewState.reloading
 
-					let stacks = try await portainerStore.fetchStacks()
-					viewState = .success(stacks)
+					if Preferences.shared.svIncludeLimitedStacks {
+						async let _containers = portainerStore.refreshContainers().value
+						async let _stacks = portainerStore.fetchStacks()
+						let (_, stacks) = try await (_containers, _stacks)
+						viewState = .success(stacks)
+					} else {
+						let stacks = try await portainerStore.fetchStacks()
+						viewState = .success(stacks)
+					}
 				} catch {
 					guard !error.isCancellationError else { return }
 					viewState = .failure(error)
@@ -59,8 +85,8 @@ extension StacksView {
 
 		@MainActor
 		func setStackState(_ stack: Stack, started: Bool) async throws {
-			loadingStacks.insert(stack.id)
-			defer { loadingStacks.remove(stack.id) }
+			loadingStacks.insert(stack.id.description)
+			defer { loadingStacks.remove(stack.id.description) }
 
 			try await portainerStore.setStackStatus(stackID: stack.id, started: started)
 

@@ -47,7 +47,7 @@ struct ContainerLogsView: View {
 				}
 
 				ToolbarItem(placement: .status) {
-					if viewModel.isLoading && !viewModel.showBackgroundPlaceholder {
+					DelayedView(isVisible: viewModel.isLoading && !viewModel.showBackgroundPlaceholder) {
 						ProgressView()
 					}
 				}
@@ -108,14 +108,14 @@ private extension ContainerLogsView {
 		@ViewBuilder
 		private var scrollButtons: some View {
 			Button {
-				Haptics.generateIfEnabled(.light)
+				Haptics.generateIfEnabled(.rigid)
 				scrollAction(.top)
 			} label: {
 				Label("ContainerLogsView.Menu.ScrollToTop", systemImage: SFSymbol.arrowUpLine)
 			}
 
 			Button {
-				Haptics.generateIfEnabled(.light)
+				Haptics.generateIfEnabled(.rigid)
 				scrollAction(.bottom)
 			} label: {
 				Label("ContainerLogsView.Menu.ScrollToBottom", systemImage: SFSymbol.arrowDownLine)
@@ -124,13 +124,10 @@ private extension ContainerLogsView {
 
 		@ViewBuilder
 		private var includeTimestampsButton: some View {
-			Button {
-				Haptics.generateIfEnabled(.selectionChanged)
-				includeTimestamps.toggle()
-			} label: {
-				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: SFSymbol.checkmark)
-					.labelStyle(.iconOptional(showIcon: includeTimestamps))
-			}
+			Toggle("ContainerLogsView.Menu.IncludeTimestamps", isOn: $includeTimestamps)
+				.onChange(of: includeTimestamps) {
+					Haptics.generateIfEnabled(.selectionChanged)
+				}
 		}
 
 		@ViewBuilder
@@ -143,14 +140,14 @@ private extension ContainerLogsView {
 			]
 			Menu("ContainerLogsView.Menu.LineCount") {
 				ForEach(lineCounts, id: \.self) { amount in
-					let isSelected = lineCount == amount
-					Button {
-						Haptics.generateIfEnabled(.selectionChanged)
-						lineCount = amount
-					} label: {
-						Label(amount.formatted(), systemImage: SFSymbol.checkmark)
-							.labelStyle(.iconOptional(showIcon: isSelected))
-					}
+					let binding = Binding<Bool>(
+						get: { lineCount == amount },
+						set: { _ in
+							lineCount = amount
+							Haptics.generateIfEnabled(.selectionChanged)
+						}
+					)
+					Toggle(String(amount.formatted()), isOn: binding)
 				}
 			}
 		}

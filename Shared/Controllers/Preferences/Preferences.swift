@@ -61,9 +61,13 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 	@AppStorage("ContainersView.UseColumns", store: Preferences.userDefaults)
 	public var cvUseColumns = true
 
-	/// Display ContainersView as grid
+	/// Display ``ContainersView`` as grid
 	@AppStorage("ContainersView.UseGrid", store: Preferences.userDefaults)
 	public var cvUseGrid = true
+
+	/// Include limited stacks in ``StacksView``
+	@AppStorage("StacksView.IncludeLimitedStacks", store: Preferences.userDefaults)
+	public var svIncludeLimitedStacks = false
 
 	private init() { }
 }

@@ -1860,6 +1860,16 @@
         }
       }
     },
+    "StacksView.IncludeLimitedStacks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include Limited Stacks"
+          }
+        }
+      }
+    },
     "StacksView.NoContainersPlaceholder" : {
       "localizations" : {
         "en" : {
@@ -1876,6 +1886,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Show Containers"
+          }
+        }
+      }
+    },
+    "StacksView.Stack.Limited" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limited"
           }
         }
       }

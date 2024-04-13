@@ -191,7 +191,7 @@ public extension PortainerStore {
 	func fetchStacks() async throws -> [Stack] {
 		logger.info("Getting stacks...")
 		do {
-			let stacks = try await portainer.fetchStacks()
+			let stacks = try await portainer.fetchStacks(endpointID: selectedEndpoint?.id)
 			logger.info("Got \(stacks.count, privacy: .public) stack(s).")
 			return stacks.sorted()
 		} catch {

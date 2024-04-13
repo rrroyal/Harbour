@@ -31,7 +31,8 @@ extension StackDetailsView {
 				do {
 					viewState = viewState.reloading
 
-					let stack = try await PortainerStore.shared.fetchStack(id: navigationItem.stackID)
+					let stackID = Int(navigationItem.stackID) ?? -1
+					let stack = try await PortainerStore.shared.fetchStack(id: stackID)
 					viewState = .success(stack)
 				} catch {
 					viewState = .failure(error)

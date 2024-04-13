@@ -103,6 +103,7 @@
 		00AA82BC2A2FFF970064B870 /* ErrorHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AA82BB2A2FFF970064B870 /* ErrorHandler.swift */; };
 		00B579AC2AACE0DA004AF20A /* HarbourItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B579AB2AACE0DA004AF20A /* HarbourItemType.swift */; };
 		00B579AD2AACE0DA004AF20A /* HarbourItemType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B579AB2AACE0DA004AF20A /* HarbourItemType.swift */; };
+		00BACAB92BCB2F160087F256 /* StacksView+StackItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BACAB82BCB2F160087F256 /* StacksView+StackItem.swift */; };
 		00BD47882B58223F000E8403 /* FadesOnPressButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BD47872B58223F000E8403 /* FadesOnPressButtonStyle.swift */; };
 		00BE564F2A3373D200A45CC5 /* SettingsView+MenuOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BE564E2A3373D200A45CC5 /* SettingsView+MenuOption.swift */; };
 		00BE56542A3376AB00A45CC5 /* AppIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00BE56532A3376AB00A45CC5 /* AppIcon.swift */; };
@@ -327,6 +328,7 @@
 		00AA82BB2A2FFF970064B870 /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
 		00AB95512BBF17E8006F6AF9 /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PortainerKit; sourceTree = "<group>"; };
 		00B579AB2AACE0DA004AF20A /* HarbourItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourItemType.swift; sourceTree = "<group>"; };
+		00BACAB82BCB2F160087F256 /* StacksView+StackItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StacksView+StackItem.swift"; sourceTree = "<group>"; };
 		00BD47872B58223F000E8403 /* FadesOnPressButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadesOnPressButtonStyle.swift; sourceTree = "<group>"; };
 		00BE564E2A3373D200A45CC5 /* SettingsView+MenuOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SettingsView+MenuOption.swift"; sourceTree = "<group>"; };
 		00BE56532A3376AB00A45CC5 /* AppIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIcon.swift; sourceTree = "<group>"; };
@@ -778,6 +780,7 @@
 			children = (
 				00499B612BBCBE72005D503F /* Components */,
 				E7207DDB2988860B00F7504C /* StacksView.swift */,
+				00BACAB82BCB2F160087F256 /* StacksView+StackItem.swift */,
 				007B577A2A2FCE6400873A32 /* StacksView+ViewModel.swift */,
 			);
 			path = StacksView;
@@ -1541,6 +1544,7 @@
 				00AA829F2A2FEF440064B870 /* Stack.Status+UI.swift in Sources */,
 				007B577B2A2FCE6400873A32 /* StacksView+ViewModel.swift in Sources */,
 				00BE56542A3376AB00A45CC5 /* AppIcon.swift in Sources */,
+				00BACAB92BCB2F160087F256 /* StacksView+StackItem.swift in Sources */,
 				E7B1F43C28E9E685004D4999 /* ContainerAction+expectedState.swift in Sources */,
 				0078D0572A8812DD009C4374 /* Sequence+sorted.swift in Sources */,
 				00530E232BB8A506009A0568 /* AppDelegate+NSApplicationDelegate.swift in Sources */,

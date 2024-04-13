@@ -18,15 +18,17 @@ struct StackDetailsView: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel: ViewModel
 
-	@Binding var selectedStack: Stack?
+	@Binding var selectedStackName: String?
 
 	private var navigationTitle: String {
-		viewModel.stack?.name ?? stacksViewViewModel.stacks?.first(where: { $0.id == viewModel.navigationItem.id })?.name ?? viewModel.navigationItem.stackID.description
+		viewModel.stack?.name ??
+			stacksViewViewModel.stacks?.first(where: { $0.id == viewModel.navigationItem.id.description })?.name ??
+			viewModel.navigationItem.stackID.description
 	}
 
-	init(navigationItem: NavigationItem, selectedStack: Binding<Stack?>) {
+	init(navigationItem: NavigationItem, selectedStackName: Binding<String?>) {
 		self.viewModel = .init(navigationItem: navigationItem)
-		self._selectedStack = selectedStack
+		self._selectedStackName = selectedStackName
 	}
 
 	var body: some View {
@@ -69,7 +71,7 @@ struct StackDetailsView: View {
 
 				NormalizedSection {
 					Button {
-						selectedStack = stack
+						selectedStackName = stack.name
 						sceneState.isStacksSheetPresented = false
 					} label: {
 						Label("StacksView.ShowContainers", systemImage: SFSymbol.container)
@@ -81,7 +83,7 @@ struct StackDetailsView: View {
 			if let stack = viewModel.stack {
 				ToolbarItem(placement: .destructiveAction) {
 					Group {
-						if stacksViewViewModel.loadingStacks.contains(stack.id) {
+						if stacksViewViewModel.loadingStacks.contains(stack.id.description) {
 							ProgressView()
 						} else {
 							Button {
@@ -143,6 +145,6 @@ private extension StackDetailsView {
 // MARK: - Previews
 
 #Preview {
-	StackDetailsView(navigationItem: .init(stackID: Stack.preview.id), selectedStack: .constant(nil))
+	StackDetailsView(navigationItem: .init(stackID: Stack.preview.id.description), selectedStackName: .constant(nil))
 		.environmentObject(PortainerStore.preview)
 }

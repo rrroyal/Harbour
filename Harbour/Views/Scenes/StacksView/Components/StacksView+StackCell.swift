@@ -13,14 +13,14 @@ import SwiftUI
 
 extension StacksView {
 	struct StackCell: View {
-		let stack: Stack
+		let stack: StackItem
 		let containers: [Container]
 		let isLoading: Bool
 		let filterAction: () -> Void
 		let toggleAction: () -> Void
 
 		init(
-			_ stack: Stack,
+			_ stack: StackItem,
 			containers: [Container],
 			isLoading: Bool,
 			filterAction: @escaping () -> Void,
@@ -37,10 +37,11 @@ extension StacksView {
 		private var iconSize = 6
 
 		private var isOn: Bool {
-			stack.status == .active
+			stack.stack?.isOn ?? true
 		}
 
 		private var stackColor: Color {
+			guard let stack = stack.stack else { return .orange }
 			if isLoading { return Color.gray }
 			if !isOn { return stack.status.color.opacity(Constants.secondaryOpacity) }
 
@@ -53,8 +54,13 @@ extension StacksView {
 					}
 					return false
 				}
-				return hasFailedContainers ? Color.orange : stack.status.color
+				return hasFailedContainers ? Color.purple : stack.status.color
 			}
+		}
+
+		private var stackStatusLabel: String {
+			guard let stack = stack.stack else { return String(localized: "StacksView.Stack.Limited") }
+			return stack.status.title
 		}
 
 		private var runningContainersCount: Int {
@@ -62,36 +68,34 @@ extension StacksView {
 		}
 
 		var body: some View {
-			NavigationLink(value: StackDetailsView.NavigationItem(stackID: stack.id)) {
-				VStack(alignment: .leading) {
-					Text(verbatim: stack.name)
-						.font(.body)
-						.fontWeight(.medium)
-						.foregroundStyle(isOn ? Color.primary : Color.secondary)
+			VStack(alignment: .leading) {
+				Text(verbatim: stack.name)
+					.font(.body)
+					.fontWeight(.medium)
+					.foregroundStyle(isOn ? Color.primary : Color.secondary)
 
-					HStack(spacing: 4) {
-						Image(systemName: "circle")
-							.font(.system(size: iconSize))
-							.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stack.status.title)
+				HStack(spacing: 4) {
+					Image(systemName: "circle")
+						.font(.system(size: iconSize))
+						.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stackStatusLabel)
 
-						Group {
-							if isLoading {
-								Text("Generic.Loading")
+					Group {
+						if isLoading {
+							Text("Generic.Loading")
+						} else {
+							if isOn {
+								Text(verbatim: "\(stackStatusLabel) (\(runningContainersCount)/\(containers.count))")
 							} else {
-								if isOn {
-									Text(verbatim: "\(stack.status.title) (\(runningContainersCount)/\(containers.count))")
-								} else {
-									Text(verbatim: stack.status.title)
-								}
+								Text(verbatim: stackStatusLabel)
 							}
 						}
-						.font(.footnote)
-						.fontWeight(.medium)
 					}
-					.foregroundStyle(stackColor)
-					.symbolVariant(isLoading ? .none : .fill)
-					.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
+					.font(.footnote)
+					.fontWeight(.medium)
 				}
+				.foregroundStyle(stackColor)
+				.symbolVariant(isLoading ? .none : .fill)
+				.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
 			}
 			#if os(macOS)
 			.buttonStyle(.fadesOnPress)
@@ -99,19 +103,23 @@ extension StacksView {
 			.padding(.vertical, 2)
 			.transition(.opacity)
 			.animation(.easeInOut, value: isLoading)
-			.animation(.easeInOut, value: stack.status)
+			.animation(.easeInOut, value: stack.stack?.status)
 			.contextMenu {
-				StackToggleButton(stack: stack, toggleAction: toggleAction)
-					.disabled(isLoading)
+				if let stack = stack.stack {
+					StackToggleButton(stack: stack, toggleAction: toggleAction)
+						.disabled(isLoading)
+				}
 			}
 			.swipeActions(edge: .leading) {
-				FilterButton(stack: stack, filterAction: filterAction)
+				FilterButton(filterAction: filterAction)
 					.tint(Color.accentColor)
 			}
 			.swipeActions(edge: .trailing) {
-				StackToggleButton(stack: stack, toggleAction: toggleAction)
-					.tint(isOn ? .red : .green)
-					.disabled(isLoading)
+				if let stack = stack.stack {
+					StackToggleButton(stack: stack, toggleAction: toggleAction)
+						.tint(isOn ? .red : .green)
+						.disabled(isLoading)
+				}
 			}
 		}
 	}
@@ -141,7 +149,6 @@ private extension StacksView.StackCell {
 
 private extension StacksView.StackCell {
 	struct FilterButton: View {
-		let stack: Stack
 		let filterAction: () -> Void
 
 		var body: some View {
@@ -155,5 +162,5 @@ private extension StacksView.StackCell {
 // MARK: - Previews
 
 #Preview {
-	StacksView.StackCell(.preview, containers: [.preview], isLoading: false, filterAction: { }, toggleAction: { })
+	StacksView.StackCell(.init(stack: .preview), containers: [.preview], isLoading: false, filterAction: { }, toggleAction: { })
 }

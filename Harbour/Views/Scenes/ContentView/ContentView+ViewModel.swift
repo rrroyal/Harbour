@@ -22,21 +22,12 @@ extension ContentView {
 		private let preferences = Preferences.shared
 
 		private var fetchTask: Task<Void, Error>?
-		private var suggestedSearchTokensTask: Task<Void, Error>?
+		private var fetchError: Error?
 
 		private(set) var suggestedSearchTokens: [SearchToken] = []
 
 		var searchText = ""
 		var searchTokens: [SearchToken] = []
-//		var selectedStack: Stack? {
-//			didSet {
-//				if let selectedStack {
-//					searchTokens = [.stack(selectedStack)]
-//				} else {
-//					searchTokens = []
-//				}
-//			}
-//		}
 		var isSearchActive = false
 		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 
@@ -49,6 +40,10 @@ extension ContentView {
 
 			if portainerStore.isRefreshing {
 				return containers.isEmpty ? .loading : .reloading(containers)
+			}
+
+			if let fetchError {
+				return .failure(fetchError)
 			}
 
 			return .success(containers)
@@ -117,24 +112,6 @@ extension ContentView {
 		init() {
 			let portainerStore = PortainerStore.shared
 			self.portainerStore = portainerStore
-
-//			self.viewState = {
-//				if !portainerStore.containers.isEmpty {
-//					if !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
-//						return .reloading(())
-//					} else {
-//						return .success(())
-//					}
-//				}
-//
-//				/*
-//				if !(portainerStore.setupTask?.isCancelled ?? true) {
-//					return .loading
-//				}
-//				 */
-//
-//				return .success(())
-//			}()
 		}
 
 		@MainActor
@@ -143,38 +120,29 @@ extension ContentView {
 			self.fetchTask = Task {
 				defer { self.fetchTask = nil }
 
+				fetchError = nil
+
 				do {
-//					viewState = viewState.reloading
 					let task = portainerStore.refresh()
 					_ = try await task.value
-//					viewState = .success(())
+
+					let staticTokens: [SearchToken] = [
+						.status(isOn: true),
+						.status(isOn: false)
+					]
+
+					let stacks = Set(portainerStore.containers.compactMap(\.stack))
+					let stacksTokens = stacks
+						.sorted()
+						.map { SearchToken.stack($0) }
+
+					self.suggestedSearchTokens = staticTokens + stacksTokens
 				} catch {
-//					viewState = .failure(error)
+					fetchError = error
 					throw error
 				}
 			}
-
-			self.suggestedSearchTokensTask?.cancel()
-			self.suggestedSearchTokensTask = Task {
-				defer { self.suggestedSearchTokensTask = nil }
-
-				let staticTokens: [SearchToken] = [
-					.status(isOn: true),
-					.status(isOn: false)
-				]
-
-				let stacksTokens = try await portainerStore.fetchStacks()
-					.filter { $0.status == .active }
-					.sorted(by: \.name)
-					.map { SearchToken.stack($0) }
-
-				self.suggestedSearchTokens = staticTokens + stacksTokens
-			}
-
-			async let fetchValue: Void? = fetchTask?.value
-			async let suggestedSearchTokensValue: Void? = suggestedSearchTokensTask?.value
-
-			_ = try await (fetchValue, suggestedSearchTokensValue)
+			try await fetchTask?.value
 		}
 
 		@MainActor
@@ -183,17 +151,17 @@ extension ContentView {
 		}
 
 		@MainActor
-		func onLandingDismissed() {
-			preferences.landingDisplayed = true
-		}
-
-		@MainActor
-		func onStackTapped(_ stack: Stack?) {
-			if let stack {
-				searchTokens = [.stack(stack)]
+		func filterByStackName(_ stackName: String?) {
+			if let stackName {
+				searchTokens = [.stack(stackName)]
 			} else {
 				searchTokens = []
 			}
+		}
+
+		@MainActor
+		func onLandingDismissed() {
+			preferences.landingDisplayed = true
 		}
 
 //		@MainActor
@@ -207,13 +175,13 @@ extension ContentView {
 
 extension ContentView.ViewModel {
 	enum SearchToken: Identifiable {
-		case stack(Stack)
+		case stack(String)
 		case status(isOn: Bool)
 
 		var id: String {
 			switch self {
-			case .stack(let stack):
-				"stack:\(stack.id)"
+			case .stack(let stackName):
+				"stack:\(stackName)"
 			case .status(let isOn):
 				"status:\(isOn)"
 			}
@@ -221,8 +189,8 @@ extension ContentView.ViewModel {
 
 		var title: String {
 			switch self {
-			case .stack(let stack):
-				stack.name
+			case .stack(let stackName):
+				stackName
 			case .status(let isOn):
 				String(localized: isOn ? "ContentView.SearchToken.Status.On" : "ContentView.SearchToken.Status.Off")
 			}
@@ -239,8 +207,8 @@ extension ContentView.ViewModel {
 
 		func matchesContainer(_ container: Container) -> Bool {
 			switch self {
-			case .stack(let stack):
-				return container.stack == stack.name
+			case .stack(let stackName):
+				return container.stack == stackName
 			case .status(let isOn):
 				let isContainerOn = container.state.isRunning
 				return isOn ? isContainerOn : !isContainerOn

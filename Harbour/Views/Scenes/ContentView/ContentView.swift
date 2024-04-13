@@ -33,14 +33,14 @@ struct ContentView: View {
 	@ViewBuilder
 	private var toolbarTitleMenu: some View {
 		ForEach(portainerStore.endpoints) { endpoint in
-			Button {
-				Haptics.generateIfEnabled(.light)
-				viewModel.selectEndpoint(endpoint)
-			} label: {
-				let isSelected = portainerStore.selectedEndpoint?.id == endpoint.id
-				Label(endpoint.name ?? endpoint.id.description, systemImage: SFSymbol.checkmark)
-					.labelStyle(.iconOptional(showIcon: isSelected))
-			}
+			let binding = Binding<Bool>(
+				get: { portainerStore.selectedEndpoint?.id == endpoint.id },
+				set: { _ in
+					viewModel.selectEndpoint(endpoint)
+					Haptics.generateIfEnabled(.light)
+				}
+			)
+			Toggle(String(endpoint.name ?? endpoint.id.description), isOn: binding)
 		}
 	}
 
@@ -174,11 +174,11 @@ struct ContentView: View {
 			SettingsView()
 		}
 		.sheet(isPresented: $sceneState.isStacksSheetPresented) {
-			let selectedStackBinding = Binding<Stack?>(
+			let selectedStackNameBinding = Binding<String?>(
 				get: { nil },
-				set: { viewModel.onStackTapped($0) }
+				set: { viewModel.filterByStackName($0) }
 			)
-			StacksView(selectedStack: selectedStackBinding)
+			StacksView(selectedStackName: selectedStackNameBinding)
 		}
 		.sheet(isPresented: $viewModel.isLandingSheetPresented) {
 			viewModel.onLandingDismissed()

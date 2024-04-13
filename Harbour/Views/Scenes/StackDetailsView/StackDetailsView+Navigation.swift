@@ -12,20 +12,20 @@ import PortainerKit
 
 extension StackDetailsView: Navigable {
 	struct NavigationItem: Hashable, Identifiable {
-		let stackID: Stack.ID
+		let stackID: String
 		let stackName: String?
 
-		var id: Stack.ID {
+		var id: String {
 			stackID
 		}
 
-		init(stackID: Stack.ID, stackName: String? = nil) {
+		init(stackID: String, stackName: String? = nil) {
 			self.stackID = stackID
 			self.stackName = stackName
 		}
 
 		init(stack: Stack) {
-			self.stackID = stack.id
+			self.stackID = stack.id.description
 			self.stackName = stack.name
 		}
 	}
