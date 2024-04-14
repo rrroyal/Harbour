@@ -55,21 +55,27 @@ extension StacksView {
 			stacksFiltered?.isEmpty ?? false
 		}
 
-		@MainActor
-		func getStacks() async throws {
+		@MainActor @discardableResult
+		func getStacks(includingContainers: Bool? = nil) -> Task<Void, Error> {
 			refreshTask?.cancel()
 
 			let task = Task {
 				do {
 					viewState = viewState.reloading
 
-					if Preferences.shared.svIncludeLimitedStacks {
+					if includingContainers ?? Preferences.shared.svIncludeLimitedStacks {
 						async let _containers = portainerStore.refreshContainers().value
 						async let _stacks = portainerStore.fetchStacks()
 						let (_, stacks) = try await (_containers, _stacks)
+
+						guard !Task.isCancelled else { return }
+
 						viewState = .success(stacks)
 					} else {
 						let stacks = try await portainerStore.fetchStacks()
+
+						guard !Task.isCancelled else { return }
+
 						viewState = .success(stacks)
 					}
 				} catch {
@@ -79,8 +85,7 @@ extension StacksView {
 				}
 			}
 			refreshTask = task
-
-			try await task.value
+			return task
 		}
 
 		@MainActor
@@ -99,7 +104,7 @@ extension StacksView {
 					}
 				}
 
-				try await getStacks()
+				try await getStacks().value
 			}
 			try await task.value
 

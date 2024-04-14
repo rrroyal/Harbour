@@ -16,9 +16,7 @@ extension Stack {
 			name: "PreviewStack",
 			type: .dockerCompose,
 			endpointID: 0,
-			env: [
-				.init(name: "name", value: "value")
-			],
+			env: [],
 			status: .active
 		)
 	}

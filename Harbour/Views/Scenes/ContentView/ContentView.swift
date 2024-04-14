@@ -179,6 +179,7 @@ struct ContentView: View {
 				set: { viewModel.filterByStackName($0) }
 			)
 			StacksView(selectedStackName: selectedStackNameBinding)
+				.indicatorOverlay(model: sceneState.indicators)
 		}
 		.sheet(isPresented: $viewModel.isLandingSheetPresented) {
 			viewModel.onLandingDismissed()

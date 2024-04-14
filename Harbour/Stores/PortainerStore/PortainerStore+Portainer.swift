@@ -189,26 +189,26 @@ public extension PortainerStore {
 	/// - Returns: `[Stack]`
 	@Sendable
 	func fetchStacks() async throws -> [Stack] {
-		logger.info("Getting stacks...")
+		logger.info("Fetching stacks...")
 		do {
 			let stacks = try await portainer.fetchStacks(endpointID: selectedEndpoint?.id)
 			logger.info("Got \(stacks.count, privacy: .public) stack(s).")
 			return stacks.sorted()
 		} catch {
-			logger.error("Failed to get stacks: \(error, privacy: .public)")
+			logger.error("Failed to fetch stacks: \(error, privacy: .public)")
 			throw error
 		}
 	}
 
 	@Sendable
 	func fetchStack(id stackID: Stack.ID) async throws -> Stack {
-		logger.info("Getting stack with ID: \"\(stackID, privacy: .private(mask: .hash))\"...")
+		logger.info("Fetching stack for stackID: \"\(stackID)\"...")
 		do {
 			let details = try await portainer.fetchStackDetails(stackID: stackID)
-			logger.info("Got stack with ID: \"\(stackID, privacy: .private(mask: .hash))\"")
+			logger.info("Got stack for stackID: \"\(stackID)\"")
 			return details
 		} catch {
-			logger.error("Failed to get stack: \(error, privacy: .public)")
+			logger.error("Failed to fetch stack for stackID: \(stackID): \(error, privacy: .public)")
 			throw error
 		}
 	}
@@ -220,16 +220,44 @@ public extension PortainerStore {
 	/// - Returns: `Stack`
 	@Sendable @discardableResult
 	func setStackStatus(stackID: Stack.ID, started: Bool) async throws -> Stack? {
-		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with ID: \(stackID)...")
+		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with stackID: \(stackID)...")
 		do {
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
 			let stack = try await portainer.setStackStatus(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
-			logger.notice("\(started ? "Started" : "Stopped", privacy: .public) stack with ID: \(stackID)")
+			logger.notice("\(started ? "Started" : "Stopped", privacy: .public) stack with stackID: \(stackID)")
 			return stack
 		} catch {
-			logger.error("Failed to \(started ? "start" : "stop", privacy: .public) stack with ID: \(stackID): \(error, privacy: .public)")
+			logger.error("Failed to \(started ? "start" : "stop", privacy: .public) stack with stackID: \(stackID): \(error, privacy: .public)")
+			throw error
+		}
+	}
+
+	@Sendable
+	func fetchStackFile(stackID: Stack.ID) async throws -> String {
+		logger.info("Fetching stack file for stackID: \"\(stackID)\"...")
+		do {
+			let stackFile = try await portainer.fetchStackFile(stackID: stackID)
+			logger.info("Got stack file for stackID: \"\(stackID)\"")
+			return stackFile
+		} catch {
+			logger.error("Failed to fetch stack file for stackID: \(stackID): \(error, privacy: .public)")
+			throw error
+		}
+	}
+
+	@Sendable
+	func removeStack(stackID: Stack.ID) async throws {
+		logger.info("Removing stack with ID: \"\(stackID)\"...")
+		do {
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+			try await portainer.removeStack(stackID: stackID, endpointID: selectedEndpoint.id)
+			logger.info("Removed stack with ID: \"\(stackID)\"")
+		} catch {
+			logger.error("Failed to remove stack with ID: \(stackID): \(error, privacy: .public)")
 			throw error
 		}
 	}

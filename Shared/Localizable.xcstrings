@@ -838,6 +838,16 @@
         }
       }
     },
+    "Generic.AreYouSure?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure?"
+          }
+        }
+      }
+    },
     "Generic.Close" : {
       "localizations" : {
         "en" : {
@@ -854,6 +864,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy"
+          }
+        }
+      }
+    },
+    "Generic.Download" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download"
           }
         }
       }
@@ -938,6 +958,16 @@
         }
       }
     },
+    "Generic.Remove" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
     "Generic.Removed" : {
       "localizations" : {
         "en" : {
@@ -994,6 +1024,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error!"
+          }
+        }
+      }
+    },
+    "Indicators.StackRemoved" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stack Removed"
           }
         }
       }
@@ -1470,6 +1510,16 @@
         }
       }
     },
+    "PortainerKit.Stack.StackType.Kubernetes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kubernetes"
+          }
+        }
+      }
+    },
     "PortainerKit.Stack.StackType.Swarm" : {
       "localizations" : {
         "en" : {
@@ -1670,26 +1720,6 @@
         }
       }
     },
-    "SettingsView.Portainer.EndpointRemovalAlert.RemoveButton" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove"
-          }
-        }
-      }
-    },
-    "SettingsView.Portainer.EndpointRemovalAlert.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Are you sure?"
-          }
-        }
-      }
-    },
     "SettingsView.Portainer.EndpointsMenu.Add" : {
       "localizations" : {
         "en" : {
@@ -1820,6 +1850,16 @@
         }
       }
     },
+    "StackDetailsView.RemovingStack StackName:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removing \"%@\"..."
+          }
+        }
+      }
+    },
     "StackDetailsView.Section.ID" : {
       "localizations" : {
         "en" : {
@@ -1860,6 +1900,36 @@
         }
       }
     },
+    "StackDetailsView.StackFileContents" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stack File Contents"
+          }
+        }
+      }
+    },
+    "StackDetailsView.StackRemovalAlert.Message StackName:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" and all of the associated services will be removed."
+          }
+        }
+      }
+    },
+    "StacksView.GetStackFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Stack File"
+          }
+        }
+      }
+    },
     "StacksView.IncludeLimitedStacks" : {
       "localizations" : {
         "en" : {
@@ -1876,6 +1946,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Containers"
+          }
+        }
+      }
+    },
+    "StacksView.RemoveStack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Stack"
           }
         }
       }

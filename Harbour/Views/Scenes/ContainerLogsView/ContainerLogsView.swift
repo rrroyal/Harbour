@@ -27,6 +27,10 @@ struct ContainerLogsView: View {
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
 
+	var isStatusProgressViewVisible: Bool {
+		(viewModel.viewState.isLoading && viewModel.viewState.showAdditionalLoadingView) || (viewModel.isLoading && !viewModel.showBackgroundPlaceholder)
+	}
+
 	var body: some View {
 		ScrollViewReader { scrollProxy in
 			ScrollView {
@@ -47,9 +51,10 @@ struct ContainerLogsView: View {
 				}
 
 				ToolbarItem(placement: .status) {
-					DelayedView(isVisible: viewModel.isLoading && !viewModel.showBackgroundPlaceholder) {
+					DelayedView(isVisible: isStatusProgressViewVisible) {
 						ProgressView()
 					}
+					.transition(.opacity)
 				}
 			}
 		}

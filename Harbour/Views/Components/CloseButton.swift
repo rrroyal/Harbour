@@ -9,32 +9,47 @@
 import SwiftUI
 
 struct CloseButton: View {
-	let action: () -> Void
+	var style: Style
+	var action: () -> Void
 
-	init(action: @escaping () -> Void) {
+	init(style: Style = .text, action: @escaping () -> Void) {
+		self.style = style
 		self.action = action
 	}
 
 	var body: some View {
 		Button(action: action) {
-			/*
-			Image(systemName: "xmark")
-				.font(.caption2)
-				.fontWeight(.black)
-				.foregroundStyle(.tertiary)
-				.padding(6)
-				.background(.quaternary)
-				.clipShape(Circle())
-				.accessibilityLabel(Text("Generic.Close"))
-				.accessibilityAddTraits(.isButton)
-				.accessibilityRemoveTraits(.isImage)
-				.tint(.primary)
-			 */
-			Text("Generic.Close")
+			switch style {
+			case .text:
+				Text("Generic.Close")
+			case .circleButton:
+				Image(systemName: "xmark")
+					.font(.caption2)
+					.fontWeight(.bold)
+					.foregroundStyle(.secondary)
+					.padding(6)
+					.background(.quaternary)
+					.clipShape(Circle())
+					.accessibilityRemoveTraits(.isImage)
+					.tint(.primary)
+			}
 		}
 		.keyboardShortcut(.cancelAction)
+		.accessibilityLabel(Text("Generic.Close"))
+		.accessibilityAddTraits(.isButton)
 	}
 }
+
+// MARK: - CloseButton+Style
+
+extension CloseButton {
+	enum Style {
+		case text
+		case circleButton
+	}
+}
+
+// MARK: - Previews
 
 #Preview {
 	CloseButton(action: { })

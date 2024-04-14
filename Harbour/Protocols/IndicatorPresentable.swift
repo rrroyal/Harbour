@@ -26,30 +26,6 @@ protocol IndicatorPresentable {
 extension IndicatorPresentable {
 	@MainActor
 	func presentIndicator(_ presentedIndicator: PresentedIndicator) {
-		let indicator: Indicator
-
-		switch presentedIndicator {
-		case .error(let error):
-			indicator = Indicator(error: error)
-		case .copied:
-			let style: Indicator.Style = .default
-			indicator = Indicator(
-				id: presentedIndicator.id,
-				icon: SFSymbol.copy,
-				title: String(localized: "Indicators.Copied"),
-				style: style
-			)
-		case .containerActionExecuted(let containerID, let containerName, let action):
-			let style = Indicator.Style(iconStyle: .primary, tintColor: action.color)
-			indicator = .init(
-				id: presentedIndicator.id,
-				icon: action.icon,
-				title: containerName ?? containerID,
-				subtitle: action.title,
-				style: style
-			)
-		}
-
-		indicators.display(indicator)
+		indicators.display(presentedIndicator.indicator)
 	}
 }

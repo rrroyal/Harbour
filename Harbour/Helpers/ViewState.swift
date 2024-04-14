@@ -67,6 +67,20 @@ extension ViewState {
 			false
 		}
 	}
+
+	/// Should additional loading view be visible?
+	var showAdditionalLoadingView: Bool {
+		switch self {
+		case .loading:
+			false
+		case .reloading:
+			true
+		case .success:
+			false
+		case .failure:
+			false
+		}
+	}
 }
 
 // MARK: - ViewState+Identifiable

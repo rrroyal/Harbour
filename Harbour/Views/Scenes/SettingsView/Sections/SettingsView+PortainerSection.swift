@@ -110,12 +110,12 @@ private extension SettingsView.PortainerSection {
 			}
 			.labelStyle(.titleAndIcon)
 			.confirmationDialog(
-				"SettingsView.Portainer.EndpointRemovalAlert.Title",
+				"Generic.AreYouSure?",
 				isPresented: $viewModel.isEndpointRemovalAlertPresented,
 				titleVisibility: .visible,
 				presenting: viewModel.endpointToDelete
 			) { url in
-				Button("SettingsView.Portainer.EndpointRemovalAlert.RemoveButton", role: .destructive) {
+				Button("Generic.Remove", role: .destructive) {
 					Haptics.generateIfEnabled(.heavy)
 					do {
 						try viewModel.removeServer(url)

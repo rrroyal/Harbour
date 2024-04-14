@@ -30,6 +30,9 @@ enum SFSymbol {
 	/// 􀉁 doc.on.doc
 	static let copy = "doc.on.doc"
 
+	/// 􀈄 square.and.arrow.down
+	static let download = "square.and.arrow.down"
+
 	/// 􀩳 list.bullet.rectangle
 	static let environment = "list.bullet.rectangle"
 

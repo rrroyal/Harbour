@@ -85,9 +85,10 @@ struct ContainerDetailsView: View {
 			}
 
 			ToolbarItem(placement: .status) {
-				DelayedView(isVisible: viewModel.viewState.isLoading) {
+				DelayedView(isVisible: viewModel.viewState.showAdditionalLoadingView) {
 					ProgressView()
 				}
+				.transition(.opacity)
 			}
 		}
 		.refreshable {
@@ -117,7 +118,6 @@ struct ContainerDetailsView: View {
 				ContainerLogsView(navigationItem: navigationItem)
 			}
 		}
-
 		.id("\(Self.self).\(self.id)")
 	}
 }

@@ -15,6 +15,7 @@ extension Stack.StackType {
 		switch self {
 		case .swarm:			String(localized: "PortainerKit.Stack.StackType.Swarm")
 		case .dockerCompose:	String(localized: "PortainerKit.Stack.StackType.DockerCompose")
+		case .kubernetes:		String(localized: "PortainerKit.Stack.StackType.Kubernetes")
 		}
 	}
 }

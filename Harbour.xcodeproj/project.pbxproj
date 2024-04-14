@@ -12,6 +12,7 @@
 		0000115E2A321AA800A08C52 /* Error+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000115D2A321AA800A08C52 /* Error+Equatable.swift */; };
 		0003D7CB2B9E7CE60047E451 /* DelayedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0003D7CA2B9E7CE60047E451 /* DelayedView.swift */; };
 		0007055B2AB5270E007BC696 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0007055A2AB5270E007BC696 /* CloseButton.swift */; };
+		000A55822BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */; };
 		000BEDDB2AB4A2F20092D2A3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */; };
 		001CFE522BC827B2007C979B /* IndicatorPresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001CFE512BC827B2007C979B /* IndicatorPresentable.swift */; };
 		001CFE562BC827F2007C979B /* PresentedIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001CFE552BC827F2007C979B /* PresentedIndicator.swift */; };
@@ -269,6 +270,7 @@
 		0000115D2A321AA800A08C52 /* Error+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Equatable.swift"; sourceTree = "<group>"; };
 		0003D7CA2B9E7CE60047E451 /* DelayedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedView.swift; sourceTree = "<group>"; };
 		0007055A2AB5270E007BC696 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
+		000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackDetailsView+DownloadStackFileView.swift"; sourceTree = "<group>"; };
 		000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		001CFE512BC827B2007C979B /* IndicatorPresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndicatorPresentable.swift; sourceTree = "<group>"; };
 		001CFE552BC827F2007C979B /* PresentedIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentedIndicator.swift; sourceTree = "<group>"; };
@@ -326,7 +328,6 @@
 		00AA829E2A2FEF440064B870 /* Stack.Status+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stack.Status+UI.swift"; sourceTree = "<group>"; };
 		00AA82A82A2FF0EE0064B870 /* Stack+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Stack+.swift"; sourceTree = "<group>"; };
 		00AA82BB2A2FFF970064B870 /* ErrorHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
-		00AB95512BBF17E8006F6AF9 /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PortainerKit; sourceTree = "<group>"; };
 		00B579AB2AACE0DA004AF20A /* HarbourItemType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HarbourItemType.swift; sourceTree = "<group>"; };
 		00BACAB82BCB2F160087F256 /* StacksView+StackItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StacksView+StackItem.swift"; sourceTree = "<group>"; };
 		00BD47872B58223F000E8403 /* FadesOnPressButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FadesOnPressButtonStyle.swift; sourceTree = "<group>"; };
@@ -355,6 +356,7 @@
 		00FD0FBC2A3534B2008D68DF /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		00FD0FD52A35365C008D68DF /* ContainerStatusWidgetView+ContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainerStatusWidgetView+ContainerView.swift"; sourceTree = "<group>"; };
 		00FD0FDD2A35379E008D68DF /* StatusFeedbackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusFeedbackView.swift; sourceTree = "<group>"; };
+		00FF4F962BCC7483003EECE5 /* PortainerKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = PortainerKit; sourceTree = "<group>"; };
 		E703A4DE2A1EC3C700ECE328 /* Keychain+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keychain+.swift"; sourceTree = "<group>"; };
 		E71180F128E737D40019774A /* PortainerDeeplink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortainerDeeplink.swift; sourceTree = "<group>"; };
 		E713177A28E59E8200DB82AF /* ContainersListView+ContainerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContainersListView+ContainerCell.swift"; sourceTree = "<group>"; };
@@ -698,6 +700,7 @@
 			isa = PBXGroup;
 			children = (
 				00F33E4C2BC6B2D000E5F386 /* StackDetailsView+StackEnvironmentView.swift */,
+				000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -1212,7 +1215,7 @@
 			isa = PBXGroup;
 			children = (
 				005F292F2BB2EAAF0014000F /* Commons */,
-				00AB95512BBF17E8006F6AF9 /* PortainerKit */,
+				00FF4F962BCC7483003EECE5 /* PortainerKit */,
 			);
 			path = Modules;
 			sourceTree = "<group>";
@@ -1476,6 +1479,7 @@
 				E7AF688D290DB14C00E48EAC /* View+hidden.swift in Sources */,
 				00EAFE0F2A354FEB00BC69D6 /* Collection+safe.swift in Sources */,
 				002D1BAF2A5A18360044753E /* IntentEndpoint.swift in Sources */,
+				000A55822BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift in Sources */,
 				E78C661528E9D64A0033D0E4 /* ContainerAction+UI.swift in Sources */,
 				E7207DCF29887CC400F7504C /* SetupView+ViewModel.swift in Sources */,
 				00AA82A92A2FF0EE0064B870 /* Stack+.swift in Sources */,
@@ -1848,7 +1852,6 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TARGET_APP ENABLE_PREVIEW_FEATURES";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1888,7 +1891,6 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TARGET_APP";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_STRICT_CONCURRENCY = targeted;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

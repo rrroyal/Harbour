@@ -16,7 +16,7 @@
       "location" : "https://github.com/rrroyal/IndicatorsKit",
       "state" : {
         "branch" : "main",
-        "revision" : "6ece5a513169e279bde117e2dc5b6e0c7d9e4ae2"
+        "revision" : "312624512f8bb73193ff30d4d1f2c5cc882e205a"
       }
     },
     {
@@ -34,7 +34,7 @@
       "location" : "https://github.com/rrroyal/NetworkKit",
       "state" : {
         "branch" : "main",
-        "revision" : "9c31e8d590567981e063966c5dd5af58066afff6"
+        "revision" : "82a5a1e450c64898982c378b517bb5ecae2f3d75"
       }
     },
     {
