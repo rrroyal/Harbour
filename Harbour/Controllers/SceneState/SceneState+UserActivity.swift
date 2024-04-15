@@ -13,7 +13,7 @@ import UserNotifications
 
 extension SceneState {
 	@MainActor
-	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
+	func onContinueUserActivity(_ userActivity: NSUserActivity) {
 		logger.notice("Continuing userActivity: \(userActivity, privacy: .sensitive(mask: .hash))")
 
 		switch userActivity.persistentIdentifier {
@@ -24,9 +24,20 @@ extension SceneState {
 			}
 
 			Task { @MainActor in
-				resetNavigation()
+				navigate(to: .containers)
 				navigationPathContainers.removeLast(navigationPathContainers.count)
 				navigationPathContainers.append(navigationItem)
+			}
+		case HarbourUserActivityIdentifier.stackDetails:
+			guard let navigationItem = try? userActivity.typedPayload(StackDetailsView.NavigationItem.self) else {
+				logger.warning("Invalid payload in userActivity!")
+				return
+			}
+
+			Task { @MainActor in
+				navigate(to: .stacks)
+				navigationPathStacks.removeLast(navigationPathContainers.count)
+				navigationPathStacks.append(navigationItem)
 			}
 		default:
 			break

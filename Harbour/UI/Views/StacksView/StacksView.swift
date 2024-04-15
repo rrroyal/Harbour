@@ -76,68 +76,68 @@ struct StacksView: View {
 		.refreshable { await fetch().value }
 	}
 
-	var body: some View {
-		@Bindable var sceneState = sceneState
-		NavigationStack(path: $sceneState.navigationPathStacks) {
-			stacksList
-				.toolbar {
-					#if os(macOS)
-					ToolbarItem(placement: .cancellationAction) {
-						CloseButton {
-							dismiss()
-						}
+	@ViewBuilder
+	private var content: some View {
+		stacksList
+			.toolbar {
+				ToolbarItem(placement: .navigation) {
+					Button {
+						Haptics.generateIfEnabled(.sheetPresentation)
+						viewModel.isCreateStackSheetPresented = true
+					} label: {
+						Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
 					}
-					#endif
+				}
 
-					ToolbarItem(placement: .navigation) {
+				ToolbarItem(placement: .automatic) {
+					Menu {
+						Toggle(isOn: $preferences.svIncludeLimitedStacks) {
+							Label("StacksView.IncludeLimitedStacks", systemImage: "square.stack.3d.up.trianglebadge.exclamationmark")
+						}
+						.onChange(of: preferences.svIncludeLimitedStacks) {
+							Haptics.generateIfEnabled(.selectionChanged)
+							fetch()
+						}
+
+						Divider()
+
 						Button {
 							Haptics.generateIfEnabled(.sheetPresentation)
-							viewModel.isCreateStackSheetPresented = true
+							sceneState.isSettingsSheetPresented = true
 						} label: {
-							Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
+							Label("SettingsView.Title", systemImage: SFSymbol.settings)
 						}
-					}
-
-					ToolbarItem(placement: .automatic) {
-						Menu {
-							Toggle(isOn: $preferences.svIncludeLimitedStacks) {
-								Label("StacksView.IncludeLimitedStacks", systemImage: "square.stack.3d.up.trianglebadge.exclamationmark")
-							}
-							.onChange(of: preferences.svIncludeLimitedStacks) {
-								Haptics.generateIfEnabled(.selectionChanged)
-								fetch()
-							}
-
-							Divider()
-
-							Button {
-								Haptics.generateIfEnabled(.sheetPresentation)
-								sceneState.isSettingsSheetPresented = true
-							} label: {
-								Label("SettingsView.Title", systemImage: SFSymbol.settings)
-							}
-							.keyboardShortcut(",", modifiers: .command)
-						} label: {
-							Label("Generic.More", systemImage: SFSymbol.moreCircle)
-						}
-					}
-
-					ToolbarItem(placement: .status) {
-						DelayedView(isVisible: viewModel.viewState.showAdditionalLoadingView) {
-							ProgressView()
-						}
-						.transition(.opacity)
+						.keyboardShortcut(",", modifiers: .command)
+					} label: {
+						Label("Generic.More", systemImage: SFSymbol.moreCircle)
 					}
 				}
-				.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-					StackDetailsView(navigationItem: navigationItem)
-						.environment(viewModel)
-						.environment(sceneState)
+
+				ToolbarItem(placement: .status) {
+					DelayedView(isVisible: viewModel.viewState.showAdditionalLoadingView) {
+						ProgressView()
+					}
+					.transition(.opacity)
 				}
-				.navigationTitle("StacksView.Title")
+			}
+			.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
+				StackDetailsView(navigationItem: navigationItem)
+					.environment(viewModel)
+					.environment(sceneState)
+			}
+			.navigationTitle("StacksView.Title")
+	}
+
+	var body: some View {
+		@Bindable var sceneState = sceneState
+		NavigationWrapped(navigationPath: $sceneState.navigationPathStacks) {
+			content
+		} placeholderContent: {
+			Text("StacksView.NoStackSelectedPlaceholder")
+				.foregroundStyle(.tertiary)
 		}
-		.transition(.opacity)
-		.animation(.easeInOut, value: viewModel.stacks)
+		.focusable()
+		.focusEffectDisabled()
 		.sheet(isPresented: $viewModel.isCreateStackSheetPresented) {
 			NavigationStack {
 				CreateStackView(onStackFileSelection: onStackFileSelection)
@@ -147,6 +147,8 @@ struct StacksView: View {
 			.presentationDragIndicator(.hidden)
 			.presentationContentInteraction(.resizes)
 		}
+		.transition(.opacity)
+		.animation(.easeInOut, value: viewModel.stacks)
 		.task { await fetch().value }
 	}
 }

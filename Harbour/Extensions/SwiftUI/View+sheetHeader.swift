@@ -29,9 +29,18 @@ private struct WithSheetHeaderViewModifier: ViewModifier {
 
 	func body(content: Content) -> some View {
 		content
+			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
+			#endif
 			.toolbar {
-				ToolbarItem(placement: .topBarLeading) {
+				var leadingPlacement: ToolbarItemPlacement {
+					#if os(iOS)
+					.topBarLeading
+					#else
+					.primaryAction
+					#endif
+				}
+				ToolbarItem(placement: leadingPlacement) {
 					HStack {
 						if let systemIcon {
 							Image(systemName: systemIcon)
@@ -42,7 +51,14 @@ private struct WithSheetHeaderViewModifier: ViewModifier {
 					.font(.headline)
 				}
 
-				ToolbarItem(placement: .topBarTrailing) {
+				var trailingPlacement: ToolbarItemPlacement {
+					#if os(iOS)
+					.topBarTrailing
+					#else
+					.destructiveAction
+					#endif
+				}
+				ToolbarItem(placement: trailingPlacement) {
 					CloseButton(style: .circleButton) {
 						dismissAction?() ?? _dismiss()
 					}

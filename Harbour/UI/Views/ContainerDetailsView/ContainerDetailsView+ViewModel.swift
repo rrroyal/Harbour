@@ -41,7 +41,7 @@ extension ContainerDetailsView {
 		}
 
 		@MainActor
-		func createUserActivity(_ userActivity: NSUserActivity, navigationItem: ContainerDetailsView.NavigationItem) {
+		func createUserActivity(_ userActivity: NSUserActivity) {
 			let container = self.container(for: navigationItem)
 
 			userActivity.isEligibleForHandoff = true

@@ -32,7 +32,7 @@ extension SettingsView {
 //						iconSymbolName: preferences.cvUseColumns ? "sidebar.squares.left" : "rectangle.stack",
 						iconSymbolName: "sidebar.squares.left",
 //						symbolVariants: .none,
-						isOn: $preferences.cvUseColumns
+						isOn: $preferences.useColumns
 					)
 				}
 

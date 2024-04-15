@@ -57,9 +57,9 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 //	@AppStorage("DisplaySummary", store: Preferences.userDefaults)
 //	public var displaySummary = false
 
-	/// Use two-columns layout
-	@AppStorage("ContainersView.UseColumns", store: Preferences.userDefaults)
-	public var cvUseColumns = true
+	/// Use two-columns layouts
+	@AppStorage("UseColumns", store: Preferences.userDefaults)
+	public var useColumns = true
 
 	/// Display ``ContainersView`` as grid
 	@AppStorage("ContainersView.UseGrid", store: Preferences.userDefaults)

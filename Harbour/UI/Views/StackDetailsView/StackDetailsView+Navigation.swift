@@ -11,7 +11,7 @@ import Navigation
 import PortainerKit
 
 extension StackDetailsView: Navigable {
-	struct NavigationItem: Hashable, Identifiable {
+	struct NavigationItem: Hashable, Identifiable, Codable {
 		let stackID: String
 		let stackName: String?
 

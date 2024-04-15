@@ -181,6 +181,9 @@ struct StackDetailsView: View {
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.stack)
 		.animation(.easeInOut, value: viewModel.isRemovingStack)
+		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneState.activeTab == .stacks) { userActivity in
+			viewModel.createUserActivity(userActivity)
+		}
 		.task { await fetch() }
 		.refreshable { await fetch() }
 	}
@@ -235,6 +238,14 @@ private extension StackDetailsView {
 				errorHandler(error)
 			}
 		}
+	}
+}
+
+// MARK: - StackDetailsView+Equatable
+
+extension StackDetailsView: Equatable {
+	static func == (lhs: StackDetailsView, rhs: StackDetailsView) -> Bool {
+		lhs.viewModel.navigationItem == rhs.viewModel.navigationItem && lhs.viewModel.stack == rhs.viewModel.stack
 	}
 }
 

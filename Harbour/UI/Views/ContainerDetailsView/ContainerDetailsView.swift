@@ -17,24 +17,22 @@ import SwiftUI
 /// View fetching and displaying details for associated container ID.
 struct ContainerDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(SceneState.self) private var sceneState
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
-	@State private var viewModel: ViewModel
-	var navigationItem: NavigationItem
+	@State var viewModel: ViewModel
 
 	private var navigationTitle: String {
 		viewModel.container?.displayName ??
-			viewModel.containerDetails?.displayName ??
-			viewModel.container?.id ??
-			viewModel.containerDetails?.id ??
-			navigationItem.displayName ??
-			navigationItem.id
+		viewModel.containerDetails?.displayName ??
+		viewModel.container?.id ??
+		viewModel.containerDetails?.id ??
+		viewModel.navigationItem.displayName ??
+		viewModel.navigationItem.id
 	}
 
 	init(navigationItem: NavigationItem) {
-		self.navigationItem = navigationItem
-
 		let viewModel = ViewModel(navigationItem: navigationItem)
 		self._viewModel = .init(wrappedValue: viewModel)
 	}
@@ -79,8 +77,8 @@ struct ContainerDetailsView: View {
 			ToolbarItem(placement: .primaryAction) {
 				ToolbarMenu(
 					isLoading: viewModel.viewState.isLoading,
-					containerID: navigationItem.id,
-					container: viewModel.container(for: navigationItem)
+					containerID: viewModel.navigationItem.id,
+					container: viewModel.container(for: viewModel.navigationItem)
 				)
 			}
 
@@ -92,17 +90,17 @@ struct ContainerDetailsView: View {
 			}
 		}
 		.refreshable {
-			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
+			await viewModel.getContainerDetails(navigationItem: viewModel.navigationItem, errorHandler: errorHandler).value
 		}
-		.task(id: "refresh.\(navigationItem.endpointID ?? -1).\(navigationItem.id)") {
-			await viewModel.getContainerDetails(navigationItem: navigationItem, errorHandler: errorHandler).value
+		.task {
+			await viewModel.getContainerDetails(navigationItem: viewModel.navigationItem, errorHandler: errorHandler).value
 		}
 		.transition(.opacity)
-		.animation(.easeInOut, value: navigationItem)
-		.animation(.easeInOut, value: viewModel.container?.id)
-		.animation(.easeInOut, value: viewModel.containerDetails?.id)
-		.userActivity(HarbourUserActivityIdentifier.containerDetails, element: navigationItem) { navigationItem, userActivity in
-			viewModel.createUserActivity(userActivity, navigationItem: navigationItem)
+		.animation(.easeInOut, value: viewModel.navigationItem)
+		.animation(.easeInOut, value: viewModel.container)
+		.animation(.easeInOut, value: viewModel.containerDetails)
+		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneState.activeTab == .containers) { userActivity in
+			viewModel.createUserActivity(userActivity)
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
@@ -115,7 +113,7 @@ struct ContainerDetailsView: View {
 			case .mounts:
 				MountsDetailsView(mounts: viewModel.containerDetails?.mounts)
 			case .logs:
-				ContainerLogsView(navigationItem: navigationItem)
+				ContainerLogsView(navigationItem: viewModel.navigationItem)
 			}
 		}
 		.navigationTitle(navigationTitle)
@@ -127,7 +125,7 @@ struct ContainerDetailsView: View {
 
 extension ContainerDetailsView: Identifiable {
 	var id: String {
-		"\(Self.self).\(navigationItem.id)"
+		"\(Self.self).\(viewModel.navigationItem.id)"
 	}
 }
 
@@ -135,7 +133,7 @@ extension ContainerDetailsView: Identifiable {
 
 extension ContainerDetailsView: Equatable {
 	static func == (lhs: ContainerDetailsView, rhs: ContainerDetailsView) -> Bool {
-		lhs.navigationItem == rhs.navigationItem && lhs.viewModel.container?.id == rhs.viewModel.container?.id
+		lhs.viewModel.navigationItem == rhs.viewModel.navigationItem && lhs.viewModel.container == rhs.viewModel.container
 	}
 }
 

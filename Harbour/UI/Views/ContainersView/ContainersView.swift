@@ -156,7 +156,7 @@ struct ContainersView: View {
 
 	var body: some View {
 		@Bindable var sceneState = sceneState
-		NavigationWrapped(navigationPath: $sceneState.navigationPathContainers, useColumns: viewModel.shouldUseColumns) {
+		NavigationWrapped(navigationPath: $sceneState.navigationPathContainers) {
 			content
 		} placeholderContent: {
 			Text("ContainersView.NoContainerSelectedPlaceholder")

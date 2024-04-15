@@ -18,7 +18,6 @@ struct PortainerDeeplink {
 	}
 
 	func containerURL(containerID: Container.ID, endpointID: Endpoint.ID?) -> URL? {
-		// <address>/#!/<endpointID>/docker/containers/<containerID>
 		guard let endpointID else { return nil }
 
 		guard var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) else {
@@ -35,6 +34,34 @@ struct PortainerDeeplink {
 			containerID
 		]
 		urlComponents.fragment = fragmentParts.joined(separator: "/")
+
+		return urlComponents.url
+	}
+
+	func stackURL(stack: Stack) -> URL? {
+		guard var urlComponents = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) else {
+			return nil
+		}
+
+		urlComponents.path = "/"
+
+		var fragment = ""
+
+		fragment += [
+			"!",
+			"\(stack.endpointID)",
+			"docker",
+			"stacks",
+			stack.name
+		].joined(separator: "/")
+
+		fragment += "?" + [
+			"id=\(stack.id)",
+			"type=\(stack.type.rawValue)",
+			"regular=\(true)"
+		].joined(separator: "&")
+
+		urlComponents.fragment = fragment
 
 		return urlComponents.url
 	}

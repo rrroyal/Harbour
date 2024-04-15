@@ -56,7 +56,8 @@ struct ContentView: View {
 		}
 		.indicatorOverlay(model: sceneState.indicators)
 		.animation(.easeInOut, value: portainerStore.isSetup)
-		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueContainerDetailsActivity)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueUserActivity)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneState.onContinueUserActivity)
 		.onChange(of: appState.notificationsToHandle, sceneState.onNotificationsToHandleChange)
 		.onChange(of: scenePhase, sceneState.onScenePhaseChange)
 		.environment(sceneState)

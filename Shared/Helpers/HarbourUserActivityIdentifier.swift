@@ -12,6 +12,7 @@ import Foundation
 
 enum HarbourUserActivityIdentifier {
 	static let containerDetails = "\(Bundle.main.mainBundleIdentifier!).ContainerDetailsActivity"
+	static let stackDetails = "\(Bundle.main.mainBundleIdentifier!).StackDetailsActivity"
 }
 
 // swiftlint:enable force_unwrapping

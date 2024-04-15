@@ -78,15 +78,6 @@ extension ContainersView {
 			containers.isEmpty
 		}
 
-		var shouldUseColumns: Bool {
-			#if os(iOS)
-			guard UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac else {
-				return false
-			}
-			#endif
-			return preferences.cvUseColumns
-		}
-
 		var endpointsMenuTitle: String {
 			if let selectedEndpoint = portainerStore.selectedEndpoint {
 				return selectedEndpoint.name ?? selectedEndpoint.id.description

@@ -53,9 +53,9 @@ extension ContainerDetailsView: Deeplinkable {
 
 	var deeplinkDestination: DeeplinkDestination {
 		DeeplinkDestination(
-			containerID: navigationItem.id,
-			containerName: navigationItem.displayName,
-			endpointID: navigationItem.endpointID
+			containerID: viewModel.navigationItem.id,
+			containerName: viewModel.navigationItem.displayName,
+			endpointID: viewModel.navigationItem.endpointID
 		)
 	}
 

@@ -10,9 +10,17 @@ import SwiftUI
 
 struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 	@Binding var navigationPath: NavigationPath
-	let useColumns: Bool
 	let content: () -> Content
 	let placeholderContent: () -> PlaceholderContent
+
+	private var useColumns: Bool {
+		#if os(iOS)
+		guard UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac else {
+			return false
+		}
+		#endif
+		return Preferences.shared.useColumns
+	}
 
 	@ViewBuilder
 	private var viewSplit: some View {

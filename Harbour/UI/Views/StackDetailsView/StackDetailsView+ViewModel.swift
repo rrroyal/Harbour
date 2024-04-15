@@ -6,12 +6,17 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CommonOSLog
+import CoreSpotlight
 import Foundation
+import OSLog
 import PortainerKit
 
 extension StackDetailsView {
 	@Observable
 	final class ViewModel {
+		private nonisolated let logger = Logger(.view(StackDetailsView.self))
+
 		private(set) var fetchTask: Task<Void, Error>?
 		private(set) var fetchStackFileTask: Task<Void, Error>?
 
@@ -76,6 +81,49 @@ extension StackDetailsView {
 				let stackID = Int(navigationItem.stackID) ?? -1
 				try await PortainerStore.shared.removeStack(stackID: stackID)
 			}
+		}
+
+		func createUserActivity(_ userActivity: NSUserActivity) {
+			guard let stack else { return }
+
+			userActivity.isEligibleForHandoff = true
+			userActivity.isEligibleForSearch = true
+			#if os(iOS)
+			userActivity.isEligibleForPrediction = false
+			#endif
+
+			userActivity.title = stack.name
+
+			let attributeSet = CSSearchableItemAttributeSet()
+			attributeSet.contentType = HarbourItemType.stack
+			attributeSet.title = stack.name
+			attributeSet.contentDescription = stack.id.description
+
+			userActivity.contentAttributeSet = attributeSet
+
+			if let serverURL = PortainerStore.shared.serverURL {
+				let endpointID = stack.endpointID
+				let portainerDeeplink = PortainerDeeplink(baseURL: serverURL)
+				let portainerURL = portainerDeeplink?.stackURL(stack: stack)
+				userActivity.webpageURL = portainerURL
+//				userActivity.referrerURL = portainerURL
+			}
+
+			userActivity.keywords = [stack.name]
+
+			userActivity.persistentIdentifier = HarbourUserActivityIdentifier.containerDetails
+			userActivity.targetContentIdentifier = "\(HarbourUserActivityIdentifier.stackDetails).\(stack.endpointID).\(stack.id)"
+
+			do {
+				try userActivity.setTypedPayload(navigationItem)
+				userActivity.requiredUserInfoKeys = [
+					ContainerDetailsView.NavigationItem.CodingKeys.id.stringValue
+				]
+			} catch {
+				logger.error("Failed to set payload: \(error, privacy: .public)")
+			}
+
+//			userActivity.becomeCurrent()
 		}
 	}
 }

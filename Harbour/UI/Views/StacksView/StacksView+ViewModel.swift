@@ -70,7 +70,7 @@ extension StacksView {
 					if includingContainers ?? Preferences.shared.svIncludeLimitedStacks {
 						async let _containers = portainerStore.refreshContainers().value
 						async let _stacks = portainerStore.refreshStacks().value
-						let (_, stacks) = try await (_containers, _stacks)
+						_ = try await (_containers, _stacks)
 
 						guard !Task.isCancelled else { return }
 
@@ -100,11 +100,10 @@ extension StacksView {
 			try await portainerStore.setStackStatus(stackID: stack.id, started: started)
 
 			let task = Task {
-				if var stacks = self.viewState.value,
-				   let stackIndex = portainerStore.stacks.firstIndex(where: { $0.id == stack.id }) {
+				if let stackIndex = portainerStore.stacks.firstIndex(where: { $0.id == stack.id }) {
 					await MainActor.run {
 						portainerStore.stacks[stackIndex].status = started ? .active : .inactive
-						viewState = .success(stacks)
+						viewState = .success(())
 					}
 				}
 
