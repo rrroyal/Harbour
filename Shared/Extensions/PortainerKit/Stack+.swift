@@ -16,6 +16,15 @@ extension Stack {
 	var isOn: Bool { status == .active }
 }
 
+// MARK: - Stack+_isStored
+
+extension Stack {
+	/// Is this endpoint not-live (i.e. created from ``StoredStack``)?
+	var _isStored: Bool {
+		status == nil
+	}
+}
+
 // MARK: - [Stack]+sorted
 
 extension [Stack] {

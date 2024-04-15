@@ -235,6 +235,22 @@ public extension PortainerStore {
 	}
 
 	@Sendable
+	func createStack(stackSettings: some StackDeploymentSettings) async throws -> Stack {
+		logger.info("Creating a new stack...")
+		do {
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+			let stack = try await portainer.deployStack(endpointID: selectedEndpoint.id, settings: stackSettings)
+			logger.info("Created a new stack, stackID: \"\(stack.id)\"")
+			return stack
+		} catch {
+			logger.error("Failed to create a new stack: \(error, privacy: .public)")
+			throw error
+		}
+	}
+
+	@Sendable
 	func fetchStackFile(stackID: Stack.ID) async throws -> String {
 		logger.info("Fetching stack file for stackID: \"\(stackID)\"...")
 		do {

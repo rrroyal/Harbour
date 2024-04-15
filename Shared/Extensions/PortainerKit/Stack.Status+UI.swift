@@ -20,6 +20,12 @@ extension Stack.Status {
 	}
 }
 
+extension Stack.Status? {
+	var title: String {
+		self?.title ?? String(localized: "PortainerKit.Stack.Status.Unknown")
+	}
+}
+
 // MARK: - Stack.Status+color
 
 extension Stack.Status {
@@ -28,5 +34,11 @@ extension Stack.Status {
 		case .active:	.green
 		case .inactive:	.red
 		}
+	}
+}
+
+extension Stack.Status? {
+	var color: Color {
+		self?.color ?? .gray
 	}
 }

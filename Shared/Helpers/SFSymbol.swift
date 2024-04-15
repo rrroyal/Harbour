@@ -33,6 +33,9 @@ enum SFSymbol {
 	/// 􀈄 square.and.arrow.down
 	static let download = "square.and.arrow.down"
 
+	/// 􀈊 pencil
+	static let edit = "pencil"
+
 	/// 􀩳 list.bullet.rectangle
 	static let environment = "list.bullet.rectangle"
 

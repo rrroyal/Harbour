@@ -29,7 +29,7 @@ enum Constants {
 	#endif
 
 	static let smallCornerRadius: Double = 10
-	static let cornerRadius: Double = 14
+	static let cornerRadius: Double = 12
 
 	static let secondaryOpacity: Double = 0.3
 }

@@ -47,11 +47,35 @@ extension Color {
 // MARK: - Color+secondaryBackground
 
 extension Color {
+	static var primaryBackground: Color {
+		#if os(macOS)
+		Color(nsColor: .controlBackgroundColor)
+		#else
+		Color(uiColor: .systemBackground)
+		#endif
+	}
+}
+
+// MARK: - Color+secondaryBackground
+
+extension Color {
 	static var secondaryBackground: Color {
 		#if os(macOS)
 		Color(nsColor: .controlBackgroundColor)
 		#else
 		Color(uiColor: .secondarySystemBackground)
+		#endif
+	}
+}
+
+// MARK: - Color+tertiaryBackground
+
+extension Color {
+	static var tertiaryBackground: Color {
+		#if os(macOS)
+		Color(nsColor: .controlBackgroundColor)
+		#else
+		Color(uiColor: .tertiarySystemBackground)
 		#endif
 	}
 }

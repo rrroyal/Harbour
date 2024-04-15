@@ -19,7 +19,7 @@ final class StoredContainer: Identifiable {
 	let image: String?
 	let associationID: String?
 
-	init(id: Container.ID, name: String?, lastState: ContainerState?, image: String, associationID: String?) {
+	init(id: ID, name: String?, lastState: ContainerState?, image: String, associationID: String?) {
 		self.id = id
 		self.name = name
 		self.lastState = lastState

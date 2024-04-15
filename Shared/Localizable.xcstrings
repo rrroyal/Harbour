@@ -396,29 +396,7 @@
         }
       }
     },
-    "ContentView.NavigationButton.Settings" : {
-      "comment" : "Accessibility label for ContentView Settings navigation button",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Settings"
-          }
-        }
-      }
-    },
-    "ContentView.NavigationButton.Stacks" : {
-      "comment" : "Accessibility label for ContentView Stacks navigation button",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stacks"
-          }
-        }
-      }
-    },
-    "ContentView.NoContainerSelectedPlaceholder" : {
+    "ContainersView.NoContainerSelectedPlaceholder" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -428,7 +406,7 @@
         }
       }
     },
-    "ContentView.NoContainersPlaceholder.Title" : {
+    "ContainersView.NoContainersPlaceholder.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -438,7 +416,7 @@
         }
       }
     },
-    "ContentView.NoEndpointsAvailable" : {
+    "ContainersView.NoEndpointsAvailable" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -448,7 +426,7 @@
         }
       }
     },
-    "ContentView.NoEndpointSelected" : {
+    "ContainersView.NoEndpointSelected" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -458,7 +436,7 @@
         }
       }
     },
-    "ContentView.NoEndpointsPlaceholder.Description" : {
+    "ContainersView.NoEndpointsPlaceholder.Description" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -468,7 +446,7 @@
         }
       }
     },
-    "ContentView.NoEndpointsPlaceholder.Title" : {
+    "ContainersView.NoEndpointsPlaceholder.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -478,7 +456,7 @@
         }
       }
     },
-    "ContentView.NotSetupPlaceholder.Description" : {
+    "ContainersView.NotSetupPlaceholder.Description" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -488,7 +466,7 @@
         }
       }
     },
-    "ContentView.SearchToken.Status.Off" : {
+    "ContainersView.SearchToken.Status.Off" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -498,12 +476,122 @@
         }
       }
     },
-    "ContentView.SearchToken.Status.On" : {
+    "ContainersView.SearchToken.Status.On" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Running"
+          }
+        }
+      }
+    },
+    "ContainersView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Containers"
+          }
+        }
+      }
+    },
+    "CreateStackView.Create" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        }
+      }
+    },
+    "CreateStackView.EditEnvironmentValue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Environment Value"
+          }
+        }
+      }
+    },
+    "CreateStackView.Environment" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Environment"
+          }
+        }
+      }
+    },
+    "CreateStackView.Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "CreateStackView.SelectStackFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Stack File"
+          }
+        }
+      }
+    },
+    "CreateStackView.StackFileContents" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stack File Contents"
+          }
+        }
+      }
+    },
+    "CreateStackView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Stack"
+          }
+        }
+      }
+    },
+    "CreateStackView.ViewModel.Error.InvalidDeploymentSettings" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Invalid deployment settings"
+          }
+        }
+      }
+    },
+    "CreateStackView.ViewModel.Error.UnableToAccessFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to access file"
+          }
+        }
+      }
+    },
+    "CreateStackView.ViewModel.Error.UnableToReadFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to read file"
           }
         }
       }
@@ -708,6 +796,26 @@
         }
       }
     },
+    "EnvironmentEntryView.Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
+          }
+        }
+      }
+    },
+    "EnvironmentEntryView.Value" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value"
+          }
+        }
+      }
+    },
     "Error.Generic.InvalidURL" : {
       "localizations" : {
         "en" : {
@@ -838,12 +946,32 @@
         }
       }
     },
+    "Generic.Add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
     "Generic.AreYouSure?" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure?"
+          }
+        }
+      }
+    },
+    "Generic.Clear" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear"
           }
         }
       }
@@ -978,6 +1106,16 @@
         }
       }
     },
+    "Generic.Save" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
     "Generic.SharePortainerURL" : {
       "localizations" : {
         "en" : {
@@ -1024,6 +1162,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Error!"
+          }
+        }
+      }
+    },
+    "Indicators.StackCreated" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stack Created"
           }
         }
       }
@@ -1118,17 +1266,6 @@
         }
       }
     },
-    "Notification.ContainersChanged.MultipleReadable.Emoji" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📫"
-          }
-        }
-      }
-    },
     "Notification.ContainersChanged.MultipleReadable.Title Names:%@" : {
       "localizations" : {
         "en" : {
@@ -1145,17 +1282,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@"
-          }
-        }
-      }
-    },
-    "Notification.ContainersChanged.MultipleUnreadable.Emoji" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📫"
           }
         }
       }
@@ -1550,6 +1676,16 @@
         }
       }
     },
+    "PortainerKit.Stack.Status.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
     "SettingsView.General.EnableBackgroundRefresh.Description" : {
       "localizations" : {
         "en" : {
@@ -1850,6 +1986,26 @@
         }
       }
     },
+    "StackDetailsView.GetStackFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Get Stack File"
+          }
+        }
+      }
+    },
+    "StackDetailsView.RemoveStack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Stack"
+          }
+        }
+      }
+    },
     "StackDetailsView.RemovingStack StackName:%@" : {
       "localizations" : {
         "en" : {
@@ -1920,12 +2076,12 @@
         }
       }
     },
-    "StacksView.GetStackFile" : {
+    "StacksView.CreateStack" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get Stack File"
+            "value" : "Create Stack"
           }
         }
       }
@@ -1946,16 +2102,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Containers"
-          }
-        }
-      }
-    },
-    "StacksView.RemoveStack" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove Stack"
           }
         }
       }

@@ -45,13 +45,16 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	var modelContext: ModelContext?
 
 	/// Task for global refresh
-	var refreshTask: Task<([Endpoint], [Container]?), Error>?
+	var refreshTask: Task<([Endpoint], [Container], [Stack]), Error>?
 
 	/// Task for `endpoints` refresh
 	var endpointsTask: Task<[Endpoint], Error>?
 
 	/// Task for `containers` refresh
 	var containersTask: Task<[Container], Error>?
+
+	/// Task for `stacks` refresh
+	var stacksTask: Task<[Stack], Error>?
 
 	/// Is `PortainerStore` setup?
 	@Published
@@ -70,6 +73,9 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	/// Containers
 	@Published
 	var containers: [Container] = []
+
+	@Published
+	var stacks: [Stack] = []
 
 	@Published
 	var attachedContainer: AttachedContainer?
@@ -146,6 +152,10 @@ public extension PortainerStore {
 
 		if self.containers.isEmpty || self.containers.contains(where: \._isStored), let storedContainers = fetchStoredContainers() {
 			self.containers = storedContainers
+		}
+
+		if self.stacks.isEmpty || self.stacks.contains(where: \._isStored), let storedStacks = fetchStoredStacks() {
+			self.stacks = storedStacks
 		}
 
 		if let (url, token) = getStoredCredentials() {
@@ -256,8 +266,13 @@ extension PortainerStore {
 	@MainActor
 	func setContainers(_ containers: [Container]?) {
 		self.containers = containers ?? []
-
 		storeContainers(containers)
+	}
+
+	@MainActor
+	func setStacks(_ stacks: [Stack]?) {
+		self.stacks = stacks ?? []
+		storeStacks(stacks)
 	}
 }
 

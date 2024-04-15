@@ -16,15 +16,20 @@ extension SceneState {
 	func onContinueContainerDetailsActivity(_ userActivity: NSUserActivity) {
 		logger.notice("Continuing userActivity: \(userActivity, privacy: .sensitive(mask: .hash))")
 
-		guard let navigationItem = try? userActivity.typedPayload(ContainerDetailsView.NavigationItem.self) else {
-			logger.warning("Invalid payload in userActivity!")
-			return
-		}
+		switch userActivity.persistentIdentifier {
+		case HarbourUserActivityIdentifier.containerDetails:
+			guard let navigationItem = try? userActivity.typedPayload(ContainerDetailsView.NavigationItem.self) else {
+				logger.warning("Invalid payload in userActivity!")
+				return
+			}
 
-		Task { @MainActor in
-			resetNavigation()
-			navigationPath.removeLast(navigationPath.count)
-			navigationPath.append(navigationItem)
+			Task { @MainActor in
+				resetNavigation()
+				navigationPathContainers.removeLast(navigationPathContainers.count)
+				navigationPathContainers.append(navigationItem)
+			}
+		default:
+			break
 		}
 	}
 
@@ -69,8 +74,8 @@ extension SceneState {
 
 					Task { @MainActor in
 						resetNavigation()
-						navigationPath.removeLast(navigationPath.count)
-						navigationPath.append(navigationItem)
+						navigationPathContainers.removeLast(navigationPathContainers.count)
+						navigationPathContainers.append(navigationItem)
 					}
 				}
 			default:

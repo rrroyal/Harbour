@@ -53,10 +53,10 @@ extension PortainerStore {
 				}
 
 				let existingIDs = Set(endpoints.map(\.id))
-				let nonExistingContainersPredicate = #Predicate<StoredEndpoint> {
+				let nonExistingPredicate = #Predicate<StoredEndpoint> {
 					!existingIDs.contains($0.id)
 				}
-				try modelContext.delete(model: StoredEndpoint.self, where: nonExistingContainersPredicate)
+				try modelContext.delete(model: StoredEndpoint.self, where: nonExistingPredicate)
 
 				for endpoint in endpoints {
 					let storedContainer = StoredEndpoint(endpoint: endpoint)
@@ -115,10 +115,10 @@ extension PortainerStore {
 				}
 
 				let existingIDs = Set(containers.map(\.id))
-				let nonExistingContainersPredicate = #Predicate<StoredContainer> {
+				let nonExistingPredicate = #Predicate<StoredContainer> {
 					!existingIDs.contains($0.id)
 				}
-				try modelContext.delete(model: StoredContainer.self, where: nonExistingContainersPredicate)
+				try modelContext.delete(model: StoredContainer.self, where: nonExistingPredicate)
 
 				for container in containers {
 					let storedContainer = StoredContainer(container: container)
@@ -153,6 +153,58 @@ extension PortainerStore {
 			return items.map { .init(storedContainer: $0) }
 		} catch {
 			logger.error("Failed to load stored containers: \(error, privacy: .public)")
+			return nil
+		}
+	}
+}
+
+// MARK: - PortainerStore+Stacks
+
+extension PortainerStore {
+	func storeStacks(_ stacks: [Stack]?) {
+		Task { @MainActor in
+			guard let modelContext else {
+				logger.warning("No `modelContext` set!")
+				return
+			}
+
+			do {
+				guard let stacks, !stacks.isEmpty else {
+					try modelContext.delete(model: StoredStack.self)
+					return
+				}
+
+				let existingIDs = Set(stacks.map(\.id))
+				let nonExistingPredicate = #Predicate<StoredStack> {
+					!existingIDs.contains($0.id)
+				}
+				try modelContext.delete(model: StoredStack.self, where: nonExistingPredicate)
+
+				for stack in stacks {
+					let storedStack = StoredStack(stack: stack)
+					modelContext.insert(storedStack)
+				}
+
+				try modelContext.save()
+			} catch {
+				logger.error("Failed to store stacks: \(error, privacy: .public)")
+			}
+		}
+	}
+
+	func fetchStoredStacks() -> [Stack]? {
+		guard let modelContext else {
+			logger.warning("No `modelContext` set!")
+			return nil
+		}
+
+		do {
+			let descriptor = FetchDescriptor<StoredStack>(sortBy: [.init(\.name)])
+			let items = try modelContext.fetch(descriptor)
+
+			return items.map { .init(storedStack: $0) }
+		} catch {
+			logger.error("Failed to load stored stacks: \(error, privacy: .public)")
 			return nil
 		}
 	}

@@ -13,7 +13,12 @@ extension SceneState: DeeplinkHandlable {
 	@MainActor
 	func resetNavigation() {
 		isSettingsSheetPresented = false
-		isStacksSheetPresented = false
+	}
+
+	@MainActor
+	func navigate(to tab: ContentView.ViewTab) {
+		resetNavigation()
+		activeTab = tab
 	}
 
 	@MainActor
@@ -26,8 +31,8 @@ extension SceneState: DeeplinkHandlable {
 		case .containerDetails:
 			typealias DestinationView = ContainerDetailsView
 
-			resetNavigation()
-			DestinationView.handleNavigation(&navigationPath, with: destination as! DestinationView.DeeplinkDestination)
+			navigate(to: .containers)
+			DestinationView.handleNavigation(&navigationPathContainers, with: destination as! DestinationView.DeeplinkDestination)
 		case .settings:
 			resetNavigation()
 			isSettingsSheetPresented = true

@@ -10,13 +10,18 @@ import SwiftData
 
 extension ModelContainer {
 	static func `default`() throws -> ModelContainer {
-		try ModelContainer(for: StoredContainer.self, StoredEndpoint.self)
+		try ModelContainer(
+			for: StoredContainer.self,
+			StoredEndpoint.self,
+			StoredStack.self
+		)
 	}
 
 	static var allModelTypes: [any PersistentModel.Type] {
 		[
 			StoredContainer.self,
-			StoredEndpoint.self
+			StoredEndpoint.self,
+			StoredStack.self
 		]
 	}
 }

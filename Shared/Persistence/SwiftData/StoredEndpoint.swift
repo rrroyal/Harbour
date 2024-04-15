@@ -15,7 +15,7 @@ final class StoredEndpoint: Identifiable {
 	let id: Endpoint.ID
 	let name: String?
 
-	init(id: Endpoint.ID, name: String?) {
+	init(id: ID, name: String?) {
 		self.id = id
 		self.name = name
 	}

@@ -16,6 +16,7 @@ enum PresentedIndicator {
 	case containerActionExecuted(Container.ID, String?, ContainerAction)
 	case copied
 	case error(Error)
+	case stackCreated(String)
 	case stackRemoved(String)
 }
 
@@ -30,6 +31,8 @@ extension PresentedIndicator: Identifiable {
 			"CopiedIndicator.\(UUID().uuidString)"
 		case .error(let error):
 			"ErrorIndicator.\(String(describing: error).hashValue)"
+		case .stackCreated(let stackName):
+			"StackCreated.\(stackName)"
 		case .stackRemoved(let stackName):
 			"StackRemoved.\(stackName)"
 		}
@@ -42,24 +45,32 @@ extension PresentedIndicator {
 	var indicator: Indicator {
 		switch self {
 		case .error(let error):
-			return Indicator(error: error)
+			.init(error: error)
 		case .copied:
-			return Indicator(
+			.init(
 				id: self.id,
 				icon: SFSymbol.copy,
 				title: String(localized: "Indicators.Copied")
 			)
 		case .containerActionExecuted(let containerID, let containerName, let action):
-			let style = Indicator.Style(iconStyle: .primary, tintColor: action.color)
-			return .init(
+			.init(
 				id: self.id,
 				icon: action.icon,
 				title: containerName ?? containerID,
 				subtitle: action.title,
-				style: style
+				style: .init(
+					iconStyle: .primary,
+					tintColor: action.color
+				)
+			)
+		case .stackCreated(let stackName):
+			.init(
+				id: self.id,
+				title: String(localized: "Indicators.StackCreated"),
+				subtitle: stackName
 			)
 		case .stackRemoved(let stackName):
-			return .init(
+			.init(
 				id: self.id,
 				title: String(localized: "Indicators.StackRemoved"),
 				subtitle: stackName

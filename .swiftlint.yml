@@ -87,6 +87,10 @@ function_body_length:
   warning: 80
   error: 100
 
+large_tuple:
+  warning: 3
+  error: 5
+
 nesting:
   type_level: 3
   function_level: 2

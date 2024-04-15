@@ -10,7 +10,7 @@ import SwiftUI
 
 /// An object that can handle deeplink navigation.
 @MainActor
-public protocol DeeplinkHandlable: NavigationHandlable {
+public protocol DeeplinkHandlable: AnyObject, Observable {
 	/// A function that handles the deeplink navigation.
 	func handleURL(_ url: URL)
 }

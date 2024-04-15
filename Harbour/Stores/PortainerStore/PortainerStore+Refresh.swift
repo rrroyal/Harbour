@@ -18,25 +18,18 @@ extension PortainerStore {
 	@discardableResult
 	func refresh(
 		errorHandler: ErrorHandler? = nil
-	) -> Task<([Endpoint], [Container]?), Error> {
+	) -> Task<([Endpoint], [Container], [Stack]), Error> {
 		self.refreshTask?.cancel()
 
 		let task = Task { @MainActor in
 			defer { self.refreshTask = nil }
 
 			do {
-				let endpointsTask = refreshEndpoints(errorHandler: errorHandler)
-				let endpoints = try await endpointsTask.value
+				async let _endpoints = refreshEndpoints(errorHandler: errorHandler).value
+				async let _containers = refreshContainers(errorHandler: errorHandler).value
+				async let _stacks = refreshStacks(errorHandler: errorHandler).value
 
-				let containers: [Container]?
-				if selectedEndpoint != nil {
-					let containersTask = refreshContainers(errorHandler: errorHandler)
-					containers = try await containersTask.value
-				} else {
-					containers = nil
-				}
-
-				return (endpoints, containers)
+				return try await (_endpoints, _containers, _stacks)
 			} catch {
 				errorHandler?(error)
 				throw error
@@ -100,6 +93,34 @@ extension PortainerStore {
 			}
 		}
 		self.containersTask = task
+		return task
+	}
+
+	/// Refreshes stacks, storing the task and handling errors.
+	/// Used as user-accessible method of refreshing central data.
+	/// - Parameters:
+	///   - errorHandler: `ErrorHandler` used to notify the user of errors.
+	/// - Returns: `Task<[Stack], Error>` of refresh.
+	@discardableResult
+	func refreshStacks(
+		errorHandler: ErrorHandler? = nil,
+		_debugInfo: String = ._debugInfo()
+	) -> Task<[Stack], Error> {
+		stacksTask?.cancel()
+		let task = Task<[Stack], Error> { @MainActor in
+			defer { self.stacksTask = nil }
+
+			do {
+				let stacks = try await fetchStacks()
+				self.setStacks(stacks)
+				return stacks
+			} catch {
+				if error.isCancellationError { return self.stacks }
+				errorHandler?(error, _debugInfo)
+				throw error
+			}
+		}
+		self.stacksTask = task
 		return task
 	}
 }

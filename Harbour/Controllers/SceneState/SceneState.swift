@@ -11,17 +11,31 @@ import IndicatorsKit
 import OSLog
 import SwiftUI
 
-@Observable @MainActor
+// MARK: - SceneState
+
+@Observable
 final class SceneState: IndicatorPresentable {
 	let logger = Logger(.scene)
 	let indicators = Indicators()
 
 	var scenePhase: ScenePhase?
 
-	var navigationPath = NavigationPath()
+	var activeTab: ContentView.ViewTab = .containers
+	var navigationPathContainers = NavigationPath()
+	var navigationPathStacks = NavigationPath()
 
+	var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 	var isSettingsSheetPresented = false
-	var isStacksSheetPresented = false
+
+	var selectedStackName: String?
 
 	var activeAlert: Alert?
+}
+
+// MARK: - SceneState+Actions
+
+extension SceneState {
+	func onLandingDismissed() {
+		Preferences.shared.landingDisplayed = true
+	}
 }
