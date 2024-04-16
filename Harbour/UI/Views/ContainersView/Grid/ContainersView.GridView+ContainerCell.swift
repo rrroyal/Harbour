@@ -1,5 +1,5 @@
 //
-//  ContainersGridView+ContainerCell.swift
+//  ContainersView.GridView+ContainerCell.swift
 //  Harbour
 //
 //  Created by royal on 29/09/2022.
@@ -9,22 +9,23 @@
 import PortainerKit
 import SwiftUI
 
-// MARK: - ContainersGridView+ContainerCell
+// MARK: - ContainersView.GridView+ContainerCell
 
-extension ContainersGridView {
+extension ContainersView.GridView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
 
-		let container: Container
+		var container: Container
 
 		@ViewBuilder
 		private var stateHeader: some View {
 			HStack {
 				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
-					.font(.footnote.weight(.medium))
+					.font(.footnote)
+					.fontWeight(.medium)
 					.foregroundStyle(.tint)
 					.transition(.opacity)
 
@@ -43,13 +44,15 @@ extension ContainersGridView {
 		private var nameAndStatusLabels: some View {
 			VStack(alignment: .leading, spacing: 2) {
 				Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
-					.font(.callout.weight(.semibold))
+					.font(.callout)
+					.fontWeight(.semibold)
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.transition(.opacity)
 					.lineLimit(2)
 
 				Text(container.status ?? String(localized: "ContainerCell.UnknownStatus"))
-					.font(.footnote.weight(.medium))
+					.font(.footnote)
+					.fontWeight(.semibold)
 					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
 					.transition(.opacity)
 					.lineLimit(2)
@@ -81,16 +84,16 @@ extension ContainersGridView {
 	}
 }
 
-// MARK: - ContainersGridView.ContainerCell+Identifiable
+// MARK: - ContainersView.GridView.ContainerCell+Identifiable
 
-extension ContainersGridView.ContainerCell: Identifiable {
+extension ContainersView.GridView.ContainerCell: Identifiable {
 	var id: String { container.id }
 }
 
-// MARK: - ContainersGridView.ContainerCell+Equatable
+// MARK: - ContainersView.GridView.ContainerCell+Equatable
 
-extension ContainersGridView.ContainerCell: Equatable {
-	static func == (lhs: ContainersGridView.ContainerCell, rhs: ContainersGridView.ContainerCell) -> Bool {
+extension ContainersView.GridView.ContainerCell: Equatable {
+	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&
@@ -103,7 +106,7 @@ extension ContainersGridView.ContainerCell: Equatable {
 
 #Preview {
 	Button(action: {}) {
-		ContainersGridView.ContainerCell(container: .preview)
+		ContainersView.GridView.ContainerCell(container: .preview)
 	}
 	.padding()
 	.frame(width: 168, height: 168)

@@ -396,6 +396,36 @@
         }
       }
     },
+    "ContainersView.Menu.ContainersLayout" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Containers Layout"
+          }
+        }
+      }
+    },
+    "ContainersView.Menu.ContainersLayout.Grid" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grid"
+          }
+        }
+      }
+    },
+    "ContainersView.Menu.ContainersLayout.List" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "List"
+          }
+        }
+      }
+    },
     "ContainersView.NoContainerSelectedPlaceholder" : {
       "localizations" : {
         "en" : {
@@ -1776,26 +1806,6 @@
         }
       }
     },
-    "SettingsView.Interface.UseGridView.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You can fit more containers, but it may be harder to read."
-          }
-        }
-      }
-    },
-    "SettingsView.Interface.UseGridView.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use Grid View"
-          }
-        }
-      }
-    },
     "SettingsView.Other.Debug" : {
       "localizations" : {
         "en" : {
@@ -2086,7 +2096,7 @@
         }
       }
     },
-    "StacksView.IncludeLimitedStacks" : {
+    "StacksView.Menu.IncludeLimitedStacks" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {

@@ -21,6 +21,8 @@ extension SettingsView {
 
 		let indicators = Indicators()
 
+		var scrollPosition: SettingsView.ViewID?
+
 		var isSetupSheetPresented = false
 		var isNegraSheetPresented = false
 		var serverURLs: [URL]

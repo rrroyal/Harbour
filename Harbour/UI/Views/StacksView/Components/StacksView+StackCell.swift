@@ -97,9 +97,6 @@ extension StacksView {
 				.symbolVariant(isLoading ? .none : .fill)
 				.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
 			}
-			#if os(macOS)
-			.buttonStyle(.fadesOnPress)
-			#endif
 			.padding(.vertical, 2)
 			.transition(.opacity)
 			.animation(.easeInOut, value: isLoading)

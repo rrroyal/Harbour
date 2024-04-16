@@ -66,7 +66,6 @@ struct HarbourApp: App {
 		#if os(macOS)
 		Settings {
 			SettingsView()
-				.environment(SceneState())
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,

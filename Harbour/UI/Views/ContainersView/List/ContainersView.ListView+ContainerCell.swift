@@ -1,5 +1,5 @@
 //
-//  ContainersListView+ContainerCell.swift
+//  ContainersView.ListView+ContainerCell.swift
 //  Harbour
 //
 //  Created by royal on 29/09/2022.
@@ -9,22 +9,23 @@
 import PortainerKit
 import SwiftUI
 
-// MARK: - ContainersListView+ContainerCell
+// MARK: - ContainersView.ListView+ContainerCell
 
-extension ContainersListView {
+extension ContainersView.ListView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
 		private let minimumScaleFactor: Double = 0.8
 
-		let container: Container
+		var container: Container
 
 		@ViewBuilder
 		private var headlineLabel: some View {
 			Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
-				.font(.headline.weight(.semibold))
+				.font(.headline)
+				.fontWeight(.semibold)
 				.foregroundStyle(container.displayName != nil ? .primary : .secondary)
-				.foregroundStyle(Color.primary)
+				.tint(Color.primary)
 				.transition(.opacity)
 				.animation(.easeInOut, value: container.displayName)
 		}
@@ -44,10 +45,11 @@ extension ContainersListView {
 						Text(containerStatus)
 					}
 					.foregroundStyle(.secondary)
-					.foregroundStyle(Color.primary)
+					.tint(Color.primary)
 				}
 			}
-			.font(.subheadline.weight(.medium))
+			.font(.subheadline)
+			.fontWeight(.medium)
 			.transition(.opacity)
 			.animation(.easeInOut, value: container.status)
 		}
@@ -58,8 +60,6 @@ extension ContainersListView {
 					headlineLabel
 					subheadlineLabel
 				}
-				.lineLimit(2)
-				.multilineTextAlignment(.leading)
 				.minimumScaleFactor(minimumScaleFactor)
 
 				Spacer()
@@ -71,6 +71,7 @@ extension ContainersListView {
 					.animation(.easeInOut, value: container.state)
 			}
 			.padding()
+			.lineLimit(1)
 			.frame(maxWidth: .infinity)
 			.tint(container._isStored ? ContainerState?.none.color : container.state.color)
 			.background(Color.secondaryGroupedBackground)
@@ -83,16 +84,16 @@ extension ContainersListView {
 	}
 }
 
-// MARK: - ContainersListView.ContainerCell+Identifiable
+// MARK: - ContainersView.ListView.ContainerCell+Identifiable
 
-extension ContainersListView.ContainerCell: Identifiable {
+extension ContainersView.ListView.ContainerCell: Identifiable {
 	var id: String { container.id }
 }
 
 // MARK: - ContainersListView.ContainerCell+Equatable
 
-extension ContainersListView.ContainerCell: Equatable {
-	static func == (lhs: ContainersListView.ContainerCell, rhs: ContainersListView.ContainerCell) -> Bool {
+extension ContainersView.ListView.ContainerCell: Equatable {
+	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&
@@ -105,7 +106,7 @@ extension ContainersListView.ContainerCell: Equatable {
 
 #Preview {
 	Button(action: {}) {
-		ContainersListView.ContainerCell(container: .preview)
+		ContainersView.ListView.ContainerCell(container: .preview)
 	}
 	.padding()
 	.background(Color.groupedBackground)

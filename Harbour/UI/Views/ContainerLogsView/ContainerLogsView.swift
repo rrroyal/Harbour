@@ -130,10 +130,12 @@ private extension ContainerLogsView {
 
 		@ViewBuilder
 		private var includeTimestampsButton: some View {
-			Toggle("ContainerLogsView.Menu.IncludeTimestamps", isOn: $includeTimestamps)
-				.onChange(of: includeTimestamps) {
-					Haptics.generateIfEnabled(.selectionChanged)
-				}
+			Toggle(isOn: $includeTimestamps) {
+				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: "clock")
+			}
+			.onChange(of: includeTimestamps) {
+				Haptics.generateIfEnabled(.selectionChanged)
+			}
 		}
 
 		@ViewBuilder
@@ -144,17 +146,17 @@ private extension ContainerLogsView {
 				500,
 				1_000
 			]
-			Menu("ContainerLogsView.Menu.LineCount") {
+			Picker(selection: $lineCount) {
 				ForEach(lineCounts, id: \.self) { amount in
-					let binding = Binding<Bool>(
-						get: { lineCount == amount },
-						set: { _ in
-							lineCount = amount
-							Haptics.generateIfEnabled(.selectionChanged)
-						}
-					)
-					Toggle(String(amount.formatted()), isOn: binding)
+					Text(amount.formatted())
+						.tag(amount)
 				}
+			} label: {
+				Label("ContainerLogsView.Menu.LineCount", systemImage: SFSymbol.logs)
+			}
+			.pickerStyle(.menu)
+			.onChange(of: lineCount) {
+				Haptics.generateIfEnabled(.selectionChanged)
 			}
 		}
 

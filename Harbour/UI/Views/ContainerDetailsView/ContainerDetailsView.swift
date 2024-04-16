@@ -17,7 +17,7 @@ import SwiftUI
 /// View fetching and displaying details for associated container ID.
 struct ContainerDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(SceneState.self) private var sceneState
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
@@ -99,7 +99,7 @@ struct ContainerDetailsView: View {
 		.animation(.easeInOut, value: viewModel.navigationItem)
 		.animation(.easeInOut, value: viewModel.container)
 		.animation(.easeInOut, value: viewModel.containerDetails)
-		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneState.activeTab == .containers) { userActivity in
+		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
 			viewModel.createUserActivity(userActivity)
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
@@ -117,7 +117,7 @@ struct ContainerDetailsView: View {
 			}
 		}
 		.navigationTitle(navigationTitle)
-		.id("\(Self.self).\(self.id)")
+		.id(self.id)
 	}
 }
 
@@ -132,7 +132,7 @@ extension ContainerDetailsView: Identifiable {
 // MARK: - ContainerDetailsView+Equatable
 
 extension ContainerDetailsView: Equatable {
-	static func == (lhs: ContainerDetailsView, rhs: ContainerDetailsView) -> Bool {
+	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.viewModel.navigationItem == rhs.viewModel.navigationItem && lhs.viewModel.container == rhs.viewModel.container
 	}
 }

@@ -1,5 +1,5 @@
 //
-//  SceneState+Alert.swift
+//  SceneDelegate+Alert.swift
 //  Harbour
 //
 //  Created by royal on 30/03/2024.
@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-extension SceneState {
+extension SceneDelegate {
 	struct Alert {
 		let title: LocalizedStringKey
 		let message: LocalizedStringKey?

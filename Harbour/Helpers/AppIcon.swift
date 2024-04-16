@@ -24,6 +24,7 @@ struct AppIcon: Identifiable, Equatable {
 // MARK: - AppIcon+setIcon
 
 extension AppIcon {
+	@MainActor
 	static func setIcon(_ icon: AppIcon) async throws {
 		#if canImport(UIKit)
 		try await UIApplication.shared.setAlternateIconName(icon.id)

@@ -1,5 +1,5 @@
 //
-//  SceneState+Navigation.swift
+//  SceneDelegate+Navigation.swift
 //  Harbour
 //
 //  Created by royal on 26/03/2024.
@@ -9,7 +9,7 @@
 import Foundation
 import Navigation
 
-extension SceneState: DeeplinkHandlable {
+extension SceneDelegate: DeeplinkHandlable {
 	@MainActor
 	func resetNavigation() {
 		isSettingsSheetPresented = false

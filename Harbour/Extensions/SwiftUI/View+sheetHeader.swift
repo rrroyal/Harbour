@@ -21,8 +21,6 @@ extension View {
 // MARK: - WithSheetHeaderViewModifier
 
 private struct WithSheetHeaderViewModifier: ViewModifier {
-	@Environment(\.dismiss) private var _dismiss
-
 	var title: LocalizedStringKey
 	var systemIcon: String?
 	var dismissAction: (() -> Void)?
@@ -59,9 +57,7 @@ private struct WithSheetHeaderViewModifier: ViewModifier {
 					#endif
 				}
 				ToolbarItem(placement: trailingPlacement) {
-					CloseButton(style: .circleButton) {
-						dismissAction?() ?? _dismiss()
-					}
+					CloseButton(style: .circleButton, dismissAction: dismissAction)
 				}
 			}
 	}

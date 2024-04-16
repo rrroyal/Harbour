@@ -55,7 +55,12 @@ extension StackDetailsView {
 			VStack {
 				Group {
 					if let stackFileContents = viewModel.stackFileViewState.value {
-						ShareLink(item: stackFileContents)
+						HStack {
+							ShareLink(item: stackFileContents)
+							#if os(macOS) || targetEnvironment(macCatalyst)
+							CopyButton(content: stackFileContents)
+							#endif
+						}
 					} else {
 						downloadButton
 					}

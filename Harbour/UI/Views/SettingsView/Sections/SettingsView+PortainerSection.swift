@@ -20,6 +20,7 @@ extension SettingsView {
 		var body: some View {
 			Section("SettingsView.Portainer.Title") {
 				EndpointsMenu(viewModel: viewModel)
+					.id(SettingsView.ViewID.portainerEndpointMenu)
 			}
 		}
 	}

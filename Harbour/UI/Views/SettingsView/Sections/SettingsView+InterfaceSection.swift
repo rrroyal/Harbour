@@ -11,19 +11,12 @@ import SwiftUI
 
 extension SettingsView {
 	struct InterfaceSection: View {
+		@Environment(SceneDelegate.self) private var sceneDelegate
 		@EnvironmentObject private var preferences: Preferences
 		@Bindable var viewModel: SettingsView.ViewModel
 
 		var body: some View {
 			Section("SettingsView.Interface.Title") {
-//				#if ENABLE_PREVIEW_FEATURES
-//				// Display Summary
-//				ToggleOption(label: "SettingsView.Interface.DisplaySummary.Title",
-//							 description: "SettingsView.Interface.DisplaySummary.Description",
-//							 iconSymbolName: "square.text.square",
-//							 isOn: $preferences.cvDisplaySummary)
-//				#endif
-
 				if viewModel.displayiPadOptions {
 					// Use Two-Column Layout
 					ToggleOption(
@@ -34,16 +27,8 @@ extension SettingsView {
 //						symbolVariants: .none,
 						isOn: $preferences.useColumns
 					)
+					.id(SettingsView.ViewID.interfaceTwoColumnLayout)
 				}
-
-				// Use Grid View
-				ToggleOption(
-					"SettingsView.Interface.UseGridView.Title",
-					description: "SettingsView.Interface.UseGridView.Description",
-//					iconSymbolName: preferences.cvUseGrid ? "square.grid.2x2" : "rectangle.grid.1x2",
-					iconSymbolName: "square.grid.2x2",
-					isOn: $preferences.cvUseGrid
-				)
 
 				// Enable Haptics
 				#if os(iOS)
@@ -54,11 +39,25 @@ extension SettingsView {
 					isOn: $preferences.enableHaptics
 				)
 //				.symbolVariant(preferences.enableHaptics ? .none : .slash)
+				.id(SettingsView.ViewID.interfaceHaptics)
 				#endif
 
 				#if os(iOS)
 				// App Icon
+				let appIconIsFocused = Binding<Bool>(
+					get: { sceneDelegate.viewsToFocus.contains(SettingsView.ViewID.interfaceAppIcon) },
+					set: { isFocused in
+						let viewID = SettingsView.ViewID.interfaceAppIcon
+						if isFocused {
+							sceneDelegate.viewsToFocus.insert(viewID)
+						} else {
+							sceneDelegate.viewsToFocus.remove(viewID)
+						}
+					}
+				)
 				AppIconMenu()
+					.id(SettingsView.ViewID.interfaceAppIcon)
+					.listRowAttentionFocus(isFocused: appIconIsFocused)
 				#endif
 			}
 		}

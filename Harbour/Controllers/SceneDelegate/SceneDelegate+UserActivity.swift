@@ -1,5 +1,5 @@
 //
-//  SceneState+UserActivity.swift
+//  SceneDelegate+UserActivity.swift
 //  Harbour
 //
 //  Created by royal on 19/12/2022.
@@ -11,7 +11,7 @@ import PortainerKit
 import SwiftUI
 import UserNotifications
 
-extension SceneState {
+extension SceneDelegate {
 	@MainActor
 	func onContinueUserActivity(_ userActivity: NSUserActivity) {
 		logger.notice("Continuing userActivity: \(userActivity, privacy: .sensitive(mask: .hash))")
@@ -56,9 +56,7 @@ extension SceneState {
 		case .inactive:
 			break
 		case .active:
-			if PortainerStore.shared.isSetup && !(PortainerStore.shared.endpointsTask != nil || PortainerStore.shared.containersTask != nil) {
-				PortainerStore.shared.refresh()
-			}
+			break
 		@unknown default:
 			break
 		}

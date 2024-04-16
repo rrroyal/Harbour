@@ -6,7 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
-#if canImport(AppKit)
+#if canImport(AppKit) && os(macOS)
 import AppKit
 
 extension AppDelegate: NSApplicationDelegate { }

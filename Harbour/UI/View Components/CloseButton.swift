@@ -10,18 +10,19 @@ import CommonHaptics
 import SwiftUI
 
 struct CloseButton: View {
+	@Environment(\.dismiss) private var _dismiss
 	var style: Style
-	var action: () -> Void
+	var dismissAction: (() -> Void)?
 
-	init(style: Style = .text, action: @escaping () -> Void) {
+	init(style: Style = .text, dismissAction: (() -> Void)? = nil) {
 		self.style = style
-		self.action = action
+		self.dismissAction = dismissAction
 	}
 
 	var body: some View {
 		Button {
 			Haptics.generateIfEnabled(.sheetPresentation)
-			action()
+			dismissAction?() ?? _dismiss()
 		} label: {
 			switch style {
 			case .text:
@@ -57,7 +58,14 @@ extension CloseButton {
 // MARK: - Previews
 
 #Preview {
-	CloseButton(action: { })
+	CloseButton(style: .circleButton)
+		.padding(4)
+		.background(Color.groupedBackground)
+		.previewLayout(.sizeThatFits)
+}
+
+#Preview {
+	CloseButton(style: .text)
 		.padding(4)
 		.background(Color.groupedBackground)
 		.previewLayout(.sizeThatFits)

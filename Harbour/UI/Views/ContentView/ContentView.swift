@@ -15,38 +15,41 @@ import SwiftUI
 struct ContentView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(AppState.self) private var appState
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.scenePhase) private var scenePhase
-	@State private var sceneState = SceneState()
 
 	var body: some View {
-		TabView(selection: $sceneState.activeTab) {
+		@Bindable var sceneDelegate = sceneDelegate
+		TabView(selection: $sceneDelegate.activeTab) {
 			ContainersView()
 				.tag(ViewTab.containers)
 				.tabItem {
 					Label(ViewTab.containers.label, systemImage: ViewTab.containers.icon)
-						.labelsHidden()
+//						.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
 				}
-				.environment(\.navigationPath, sceneState.navigationPathContainers)
+				.environment(\.navigationPath, sceneDelegate.navigationPathContainers)
 
 			StacksView()
 				.tag(ViewTab.stacks)
 				.tabItem {
 					Label(ViewTab.stacks.label, systemImage: ViewTab.stacks.icon)
+//						.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
 				}
-				.environment(\.navigationPath, sceneState.navigationPathStacks)
+				.environment(\.navigationPath, sceneDelegate.navigationPathStacks)
 		}
-		.sheet(isPresented: $sceneState.isSettingsSheetPresented) {
+		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 			SettingsView()
+				.environment(sceneDelegate)
 		}
-		.sheet(isPresented: $sceneState.isLandingSheetPresented) {
-			sceneState.onLandingDismissed()
+		.sheet(isPresented: $sceneDelegate.isLandingSheetPresented) {
+			sceneDelegate.onLandingDismissed()
 		} content: {
 			LandingView()
 		}
 		.alert(
-			sceneState.activeAlert?.title ?? "",
-			isPresented: .constant(sceneState.activeAlert != nil),
-			presenting: sceneState.activeAlert
+			sceneDelegate.activeAlert?.title ?? "",
+			isPresented: .constant(sceneDelegate.activeAlert != nil),
+			presenting: sceneDelegate.activeAlert
 		) { _ in
 			Button("Generic.OK") { }
 		} message: { details in
@@ -54,16 +57,16 @@ struct ContentView: View {
 				Text(message)
 			}
 		}
-		.indicatorOverlay(model: sceneState.indicators)
+		.indicatorOverlay(model: sceneDelegate.indicators)
 		.animation(.easeInOut, value: portainerStore.isSetup)
-		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneState.onContinueUserActivity)
-		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneState.onContinueUserActivity)
-		.onChange(of: appState.notificationsToHandle, sceneState.onNotificationsToHandleChange)
-		.onChange(of: scenePhase, sceneState.onScenePhaseChange)
-		.environment(sceneState)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneDelegate.onContinueUserActivity)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneDelegate.onContinueUserActivity)
+		.onChange(of: appState.notificationsToHandle, sceneDelegate.onNotificationsToHandleChange)
+		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
+		.environment(sceneDelegate)
 		.environment(\.errorHandler, .init(handleError))
-		.environment(\.presentIndicator, sceneState.presentIndicator)
-		.withNavigation(handler: sceneState)
+		.environment(\.presentIndicator, sceneDelegate.presentIndicator)
+		.withNavigation(handler: sceneDelegate)
 	}
 }
 
@@ -71,7 +74,7 @@ struct ContentView: View {
 
 private extension ContentView {
 	func handleError(_ error: Error, _debugInfo: String = ._debugInfo()) {
-		sceneState.handleError(error, _debugInfo: _debugInfo)
+		sceneDelegate.handleError(error, _debugInfo: _debugInfo)
 	}
 }
 

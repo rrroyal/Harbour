@@ -15,7 +15,7 @@ import SwiftUI
 struct StacksView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@EnvironmentObject private var preferences: Preferences
-	@Environment(SceneState.self) private var sceneState
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
@@ -33,7 +33,7 @@ struct StacksView: View {
 
 	@ViewBuilder
 	private var stacksList: some View {
-		Form {
+		List {
 			if let stacks = viewModel.stacksFiltered {
 				ForEach(stacks) { stackItem in
 					let isLoading = viewModel.loadingStacks.contains(stackItem.id)
@@ -56,19 +56,16 @@ struct StacksView: View {
 							}
 						}
 					}
-					.id(stackItem.id)
 					.transition(.opacity)
+					.tag(stackItem.id)
 				}
 			}
 		}
-		.formStyle(.grouped)
+		.listStyle(.insetGrouped)
 		.scrollDismissesKeyboard(.interactively)
 		.scrollPosition(id: $viewModel.scrollPosition)
 		.searchable(text: $viewModel.query)
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		#if os(macOS)
-		.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
-		#endif
 		.background {
 			placeholderView
 		}
@@ -92,7 +89,10 @@ struct StacksView: View {
 				ToolbarItem(placement: .automatic) {
 					Menu {
 						Toggle(isOn: $preferences.svIncludeLimitedStacks) {
-							Label("StacksView.IncludeLimitedStacks", systemImage: "square.stack.3d.up.trianglebadge.exclamationmark")
+							Label(
+								"StacksView.Menu.IncludeLimitedStacks",
+								systemImage: "square.stack.3d.up.trianglebadge.exclamationmark"
+							)
 						}
 						.onChange(of: preferences.svIncludeLimitedStacks) {
 							Haptics.generateIfEnabled(.selectionChanged)
@@ -103,14 +103,16 @@ struct StacksView: View {
 
 						Button {
 							Haptics.generateIfEnabled(.sheetPresentation)
-							sceneState.isSettingsSheetPresented = true
+							sceneDelegate.isSettingsSheetPresented = true
 						} label: {
 							Label("SettingsView.Title", systemImage: SFSymbol.settings)
 						}
 						.keyboardShortcut(",", modifiers: .command)
 					} label: {
 						Label("Generic.More", systemImage: SFSymbol.moreCircle)
+							.labelStyle(.iconOnly)
 					}
+					.labelStyle(.titleAndIcon)
 				}
 
 				ToolbarItem(placement: .status) {
@@ -122,15 +124,17 @@ struct StacksView: View {
 			}
 			.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
 				StackDetailsView(navigationItem: navigationItem)
+					.equatable()
+					.tag(navigationItem.id)
 					.environment(viewModel)
-					.environment(sceneState)
+					.environment(sceneDelegate)
 			}
 			.navigationTitle("StacksView.Title")
 	}
 
 	var body: some View {
-		@Bindable var sceneState = sceneState
-		NavigationWrapped(navigationPath: $sceneState.navigationPathStacks) {
+		@Bindable var sceneDelegate = sceneDelegate
+		NavigationWrapped(navigationPath: $sceneDelegate.navigationPathStacks) {
 			content
 		} placeholderContent: {
 			Text("StacksView.NoStackSelectedPlaceholder")
@@ -170,8 +174,8 @@ private extension StacksView {
 	@MainActor
 	func filterByStackName(_ stackName: String?) {
 		Haptics.generateIfEnabled(.light)
-		sceneState.navigate(to: .containers)
-		sceneState.selectedStackName = stackName
+		sceneDelegate.navigate(to: .containers)
+		sceneDelegate.selectedStackName = stackName
 	}
 
 	func setStackState(_ stack: Stack, started: Bool) {
@@ -204,5 +208,5 @@ private extension StacksView {
 #Preview("StacksView") {
 	StacksView()
 		.withEnvironment(appState: .shared)
-		.environment(SceneState())
+		.environment(SceneDelegate())
 }

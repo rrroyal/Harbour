@@ -151,11 +151,9 @@ struct SetupView: View {
 			.multilineTextAlignment(.center)
 			.padding()
 			.toolbar {
-				#if os(macOS)
-				ToolbarItem(placement: .cancellationAction) {
-					CloseButton {
-						dismiss()
-					}
+				#if targetEnvironment(macCatalyst)
+				ToolbarItem(placement: .destructiveAction) {
+					CloseButton(style: .circleButton)
 				}
 				#endif
 			}

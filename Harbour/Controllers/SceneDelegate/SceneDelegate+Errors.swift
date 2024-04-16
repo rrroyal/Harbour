@@ -1,5 +1,5 @@
 //
-//  SceneState+Errors.swift
+//  SceneDelegate+Errors.swift
 //  Harbour
 //
 //  Created by royal on 19/12/2022.
@@ -10,7 +10,7 @@ import CommonFoundation
 import CommonHaptics
 import Foundation
 
-extension SceneState {
+extension SceneDelegate {
 	@MainActor
 	func handleError(_ error: Error, _debugInfo: String = ._debugInfo()) {
 		guard !error.isCancellationError else {

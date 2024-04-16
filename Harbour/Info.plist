@@ -48,6 +48,7 @@
 	<key>NSUserActivityTypes</key>
 	<array>
 		<string>xyz.shameful.Harbour.ContainerDetailsActivity</string>
+		<string>xyz.shameful.Harbour.StackDetailsActivity</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
@@ -59,6 +60,17 @@
 			<array/>
 		</dict>
 	</dict>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>app</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>HomeScreenShortcut.ChangeAppIcon</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>ChangeAppIcon</string>
+		</dict>
+	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

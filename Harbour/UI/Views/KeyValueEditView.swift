@@ -48,7 +48,9 @@ struct KeyValueEditView: View {
 				.focused($focusedField, equals: .textfieldValue)
 				.submitLabel(.done)
 				.onSubmit {
+					focusedField = nil
 					if canSave {
+						Haptics.generateIfEnabled(.light)
 						submit()
 					}
 				}
@@ -56,6 +58,7 @@ struct KeyValueEditView: View {
 			Spacer()
 
 			Button {
+				Haptics.generateIfEnabled(.light)
 				submit()
 			} label: {
 				Label(
@@ -71,9 +74,9 @@ struct KeyValueEditView: View {
 		}
 		.padding()
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
-		.onAppear {
-			focusedField = .textfieldKey
-		}
+//		.onAppear {
+//			focusedField = .textfieldKey
+//		}
 	}
 }
 
@@ -81,7 +84,6 @@ struct KeyValueEditView: View {
 
 private extension KeyValueEditView {
 	func submit() {
-		Haptics.generateIfEnabled(.light)
 		saveAction(.init(key, value))
 		dismiss()
 	}

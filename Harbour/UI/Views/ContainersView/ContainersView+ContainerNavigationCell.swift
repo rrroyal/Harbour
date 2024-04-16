@@ -48,9 +48,9 @@ extension ContainersView {
 			.contextMenu {
 				ContainerContextMenu(container: container)
 			}
-			.if(let: portainerDeeplink) {
-				$0.draggable($1)
-			}
+//			.if(let: portainerDeeplink) {
+//				$0.draggable($1)
+//			}
 		}
 	}
 }

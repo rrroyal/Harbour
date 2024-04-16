@@ -26,6 +26,7 @@ extension SettingsView {
 					isOn: $preferences.enableBackgroundRefresh
 				)
 //				.symbolVariant(preferences.enableBackgroundRefresh ? .none : .slash)
+				.id(SettingsView.ViewID.generalBackgroundRefresh)
 			}
 			#endif
 		}

@@ -102,7 +102,6 @@ extension StackDetailsView {
 			userActivity.contentAttributeSet = attributeSet
 
 			if let serverURL = PortainerStore.shared.serverURL {
-				let endpointID = stack.endpointID
 				let portainerDeeplink = PortainerDeeplink(baseURL: serverURL)
 				let portainerURL = portainerDeeplink?.stackURL(stack: stack)
 				userActivity.webpageURL = portainerURL

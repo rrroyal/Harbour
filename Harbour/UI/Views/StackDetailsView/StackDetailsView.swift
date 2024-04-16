@@ -15,7 +15,7 @@ import SwiftUI
 struct StackDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(StacksView.ViewModel.self) private var stacksViewViewModel
-	@Environment(SceneState.self) private var sceneState
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
@@ -181,11 +181,12 @@ struct StackDetailsView: View {
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.stack)
 		.animation(.easeInOut, value: viewModel.isRemovingStack)
-		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneState.activeTab == .stacks) { userActivity in
+		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneDelegate.activeTab == .stacks) { userActivity in
 			viewModel.createUserActivity(userActivity)
 		}
 		.task { await fetch() }
 		.refreshable { await fetch() }
+		.id(self.id)
 	}
 }
 
@@ -217,8 +218,8 @@ private extension StackDetailsView {
 	@MainActor
 	func filterByStackName(_ stackName: String?) {
 		Haptics.generateIfEnabled(.light)
-		sceneState.navigate(to: .containers)
-		sceneState.selectedStackName = stackName
+		sceneDelegate.navigate(to: .containers)
+		sceneDelegate.selectedStackName = stackName
 	}
 
 	@MainActor
@@ -241,10 +242,18 @@ private extension StackDetailsView {
 	}
 }
 
+// MARK: - StackDetailsView+Identifiable
+
+extension StackDetailsView: Identifiable {
+	var id: String {
+		"\(Self.self).\(viewModel.navigationItem.id)"
+	}
+}
+
 // MARK: - StackDetailsView+Equatable
 
 extension StackDetailsView: Equatable {
-	static func == (lhs: StackDetailsView, rhs: StackDetailsView) -> Bool {
+	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.viewModel.navigationItem == rhs.viewModel.navigationItem && lhs.viewModel.stack == rhs.viewModel.stack
 	}
 }

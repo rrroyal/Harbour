@@ -19,7 +19,7 @@ struct ContainersView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@EnvironmentObject private var preferences: Preferences
 	@Environment(AppState.self) private var appState
-	@Environment(SceneState.self) private var sceneState
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.cvUseGrid) private var useGrid
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
@@ -41,6 +41,46 @@ struct ContainersView: View {
 				}
 			)
 			Toggle(String(endpoint.name ?? endpoint.id.description), isOn: binding)
+		}
+	}
+
+	@ToolbarContentBuilder
+	private var toolbarMenu: some ToolbarContent {
+		ToolbarItem(placement: .automatic) {
+			Menu {
+				let useGridBinding = Binding<Bool>(
+					get: { preferences.cvUseGrid },
+					set: {
+						Haptics.generateIfEnabled(.selectionChanged)
+						preferences.cvUseGrid = $0
+					}
+				)
+				Picker(selection: useGridBinding) {
+					Label("ContainersView.Menu.ContainersLayout.Grid", systemImage: "square.grid.2x2")
+						.tag(true)
+
+					Label("ContainersView.Menu.ContainersLayout.List", systemImage: "rectangle.grid.1x2")
+						.tag(false)
+				} label: {
+					Label("ContainersView.Menu.ContainersLayout", systemImage: "rectangle.3.group")
+				}
+				.pickerStyle(.menu)
+
+				Divider()
+
+				Button {
+					Haptics.generateIfEnabled(.sheetPresentation)
+					sceneDelegate.isSettingsSheetPresented = true
+				} label: {
+					Label("SettingsView.Title", systemImage: SFSymbol.settings)
+				}
+				.keyboardShortcut(",", modifiers: .command)
+				.labelStyle(.titleAndIcon)
+			} label: {
+				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+					.labelStyle(.iconOnly)
+			}
+			.labelStyle(.titleAndIcon)
 		}
 	}
 
@@ -78,9 +118,9 @@ struct ContainersView: View {
 		ScrollView {
 			Group {
 				if useGrid {
-					ContainersGridView(containers: viewModel.containers)
+					GridView(containers: viewModel.containers)
 				} else {
-					ContainersListView(containers: viewModel.containers)
+					ListView(containers: viewModel.containers)
 				}
 			}
 			.padding(.horizontal)
@@ -113,6 +153,7 @@ struct ContainersView: View {
 		.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 			ContainerDetailsView(navigationItem: navigationItem)
 				.equatable()
+				.tag(navigationItem.id)
 		}
 		.navigationTitle(viewModel.navigationTitle)
 		#if os(iOS)
@@ -132,19 +173,7 @@ struct ContainersView: View {
 			#endif
 
 			#if os(iOS)
-			ToolbarItem(placement: .automatic) {
-				Menu {
-					Button {
-						Haptics.generateIfEnabled(.sheetPresentation)
-						sceneState.isSettingsSheetPresented = true
-					} label: {
-						Label("SettingsView.Title", systemImage: SFSymbol.settings)
-					}
-					.keyboardShortcut(",", modifiers: .command)
-				} label: {
-					Label("Generic.More", systemImage: SFSymbol.moreCircle)
-				}
-			}
+			toolbarMenu
 			#endif
 		}
 		.if(viewModel.canUseEndpointsMenu) {
@@ -155,8 +184,8 @@ struct ContainersView: View {
 	// MARK: Body
 
 	var body: some View {
-		@Bindable var sceneState = sceneState
-		NavigationWrapped(navigationPath: $sceneState.navigationPathContainers) {
+		@Bindable var sceneDelegate = sceneDelegate
+		NavigationWrapped(navigationPath: $sceneDelegate.navigationPathContainers) {
 			content
 		} placeholderContent: {
 			Text("ContainersView.NoContainerSelectedPlaceholder")
@@ -167,12 +196,13 @@ struct ContainersView: View {
 		.animation(.easeInOut, value: useGrid)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.containers)
+		.environment(viewModel)
 		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
-		.onChange(of: sceneState.selectedStackName) { _, stackName in
+		.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
 			viewModel.filterByStackName(stackName)
 		}
 		.onChange(of: viewModel.searchTokens) { _, tokens in
-			sceneState.selectedStackName = tokens
+			sceneDelegate.selectedStackName = tokens
 				.compactMap {
 					if case .stack(let stackName) = $0 {
 						return stackName
@@ -223,5 +253,5 @@ private extension ContainersView {
 #Preview {
 	ContainersView()
 		.withEnvironment(appState: .shared)
-		.environment(SceneState())
+		.environment(SceneDelegate())
 }

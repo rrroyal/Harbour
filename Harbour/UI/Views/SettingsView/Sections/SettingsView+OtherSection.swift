@@ -20,6 +20,7 @@ extension SettingsView {
 				NavigationLinkOption("SettingsView.Other.Debug", iconSymbolName: "wrench.and.screwdriver") {
 					DebugView()
 				}
+				.id(SettingsView.ViewID.otherDebugNavigation)
 			}
 		}
 	}

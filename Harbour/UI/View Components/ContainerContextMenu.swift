@@ -13,7 +13,7 @@ import SwiftUI
 
 struct ContainerContextMenu: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
-	@Environment(SceneState.self) private var sceneState
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
@@ -100,9 +100,9 @@ private extension ContainerContextMenu {
 		Haptics.generateIfEnabled(.sheetPresentation)
 //		do {
 //			try Portainer.shared.attach(to: container)
-//			sceneState.isContainerConsoleSheetPresented = true
+//			sceneDelegate.isContainerConsoleSheetPresented = true
 //		} catch {
-//			sceneState.handle(error)
+//			sceneDelegate.handle(error)
 //		}
 	}
 }
