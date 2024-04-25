@@ -1,0 +1,3 @@
+[submodule "Modules/PortainerKit"]
+    path = Modules/PortainerKit
+    url = https://github.com/rrroyal/PortainerKit

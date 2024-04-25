@@ -209,7 +209,9 @@ private extension ContainerLogsView {
 
 // MARK: - Previews
 
+#if DEBUG
 #Preview {
 	ContainerLogsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
 		.environmentObject(PortainerStore.preview)
 }
+#endif
