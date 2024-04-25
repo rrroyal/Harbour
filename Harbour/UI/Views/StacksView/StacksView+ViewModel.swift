@@ -21,7 +21,7 @@ extension StacksView {
 
 		var query = ""
 		var scrollPosition: StackItem.ID?
-		var selectedStack: StackItem.ID?
+		var selectedStackID: StackItem.ID?
 		var isCreateStackSheetPresented = false
 		var activeCreateStackSheetDetent: PresentationDetent = .medium
 		var scrollViewIsRefreshing = false

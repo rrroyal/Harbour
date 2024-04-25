@@ -73,13 +73,6 @@ struct StackDetailsView: View {
 
 			NormalizedSection {
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
-					viewModel.isStackFileSheetPresented = true
-				} label: {
-					Label("StackDetailsView.GetStackFile", systemImage: "arrow.down.doc")
-				}
-
-				Button {
 					filterByStackName(stack.name)
 				} label: {
 					Label("StacksView.ShowContainers", systemImage: SFSymbol.container)
@@ -87,6 +80,28 @@ struct StackDetailsView: View {
 			}
 
 			NormalizedSection {
+				Group {
+					if let stackFileContents = viewModel.stackFileContents {
+						ShareLink("StackDetailsView.StackFile.Share", item: stackFileContents)
+					} else {
+						Button {
+							fetchStackFile()
+						} label: {
+							HStack {
+								Label("StackDetailsView.StackFile.Download", systemImage: "arrow.down.doc")
+
+								Spacer()
+
+								if viewModel.isFetchingStackFileContents {
+									ProgressView()
+								}
+							}
+						}
+						.disabled(viewModel.isFetchingStackFileContents)
+					}
+				}
+				.id(ViewID.stackFileButton)
+
 				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.warning)
 					viewModel.isStackRemovalAlertPresented = true
@@ -171,15 +186,6 @@ struct StackDetailsView: View {
 		} message: { stack in
 			Text("StackDetailsView.StackRemovalAlert.Message StackName:\(stack.name)")
 		}
-		.sheet(isPresented: $viewModel.isStackFileSheetPresented) {
-			NavigationStack {
-				DownloadStackFileView(stackID: viewModel.navigationItem.stackID)
-					.sheetHeader("StackDetailsView.StackFileContents")
-			}
-			.presentationDetents([.fraction(0.24)])
-			.presentationDragIndicator(.hidden)
-			.environment(viewModel)
-		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
 			case .environment(let environment):
@@ -188,6 +194,7 @@ struct StackDetailsView: View {
 		}
 		.navigationTitle(navigationTitle)
 		.animation(.easeInOut, value: viewModel.viewState)
+		.animation(.easeInOut, value: viewModel.stackFileViewState)
 		.animation(.easeInOut, value: viewModel.stack)
 		.animation(.easeInOut, value: viewModel.isRemovingStack)
 		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
@@ -195,10 +202,10 @@ struct StackDetailsView: View {
 			viewModel.createUserActivity(userActivity)
 		}
 		.task {
-			await fetch()
+			await fetch().value
 		}
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
-			await fetch()
+			await fetch().value
 		}
 		.onChange(of: navigationItem) { _, newNavigationItem in
 			viewModel.navigationItem = newNavigationItem
@@ -210,12 +217,26 @@ struct StackDetailsView: View {
 // MARK: - StackDetailsView+Actions
 
 private extension StackDetailsView {
-	@MainActor
-	func fetch() async {
-		do {
-			try await viewModel.getStack(stackID: Stack.ID(navigationItem.stackID) ?? -1).value
-		} catch {
-			errorHandler(error)
+	@discardableResult
+	func fetch() -> Task<Void, Never> {
+		Task {
+			do {
+				try await viewModel.getStack(stackID: Stack.ID(navigationItem.stackID) ?? -1).value
+			} catch {
+				errorHandler(error)
+			}
+		}
+	}
+
+	@discardableResult
+	func fetchStackFile() -> Task<Void, Never> {
+		Task {
+			do {
+				Haptics.generateIfEnabled(.light)
+				try await viewModel.fetchStackFile().value
+			} catch {
+				errorHandler(error)
+			}
 		}
 	}
 
@@ -268,6 +289,14 @@ extension StackDetailsView: Identifiable {
 extension StackDetailsView: Equatable {
 	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.navigationItem == rhs.navigationItem
+	}
+}
+
+// MARK: - StackDetailsView+ViewID
+
+private extension StackDetailsView {
+	enum ViewID {
+		case stackFileButton
 	}
 }
 

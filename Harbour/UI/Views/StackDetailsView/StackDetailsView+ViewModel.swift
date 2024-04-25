@@ -23,21 +23,28 @@ extension StackDetailsView {
 		private(set) var fetchStackFileTask: Task<Void, Error>?
 
 		private(set) var viewState: ViewState<Stack, Error> = .loading
-		private(set) var stackFileViewState: ViewState<String, Error> = .loading
+		private(set) var stackFileViewState: ViewState<String, Error>?
 
 		var navigationItem: StackDetailsView.NavigationItem
 
 		var isRemovingStack = false
-		var isStackFileSheetPresented = false
 		var isStackRemovalAlertPresented = false
 		var scrollViewIsRefreshing = false
 
-		var isStatusProgressViewVisible: Bool {
-			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
-		}
-
 		var stack: Stack? {
 			viewState.value
+		}
+
+		var stackFileContents: String? {
+			stackFileViewState?.value
+		}
+
+		var isFetchingStackFileContents: Bool {
+			!(fetchStackFileTask?.isCancelled ?? true) || (stackFileViewState?.isLoading ?? false)
+		}
+
+		var isStatusProgressViewVisible: Bool {
+			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
 		}
 
 		init(navigationItem: StackDetailsView.NavigationItem) {
@@ -52,9 +59,11 @@ extension StackDetailsView {
 		func getStack(stackID: Stack.ID) -> Task<Void, Error> {
 			self.fetchTask?.cancel()
 			let task = Task<Void, Error> {
+				defer { self.fetchTask = nil }
+
 				do {
 					viewState = viewState.reloading
-					stackFileViewState = .loading
+					stackFileViewState = nil
 
 					let stack = try await portainerStore.fetchStack(id: stackID)
 					viewState = .success(stack)
@@ -69,11 +78,13 @@ extension StackDetailsView {
 		}
 
 		@discardableResult
-		func getStackFile() -> Task<Void, Error> {
+		func fetchStackFile() -> Task<Void, Error> {
 			self.fetchStackFileTask?.cancel()
 			let task = Task<Void, Error> {
+				defer { self.fetchStackFileTask = nil }
+
 				do {
-					stackFileViewState = stackFileViewState.reloading
+					stackFileViewState = stackFileViewState?.reloading ?? .loading
 
 					let stackID = Int(navigationItem.stackID) ?? -1
 					let stackFile = try await portainerStore.fetchStackFile(stackID: stackID)

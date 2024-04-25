@@ -32,8 +32,8 @@ struct StacksView: View {
 	}
 
 	@ViewBuilder @MainActor
-	private var stacksList: some View {
-		List(selection: $viewModel.selectedStack) {
+	private var content: some View {
+		List {
 			ForEach(viewModel.stacksFiltered) { stackItem in
 				let isLoading = portainerStore.loadingStacks.contains(Stack.ID(stackItem.id) ?? -1)
 				let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
@@ -75,61 +75,56 @@ struct StacksView: View {
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
 		}
-	}
+		.toolbar {
+			ToolbarItem(placement: .navigation) {
+				Button {
+					Haptics.generateIfEnabled(.sheetPresentation)
+					viewModel.isCreateStackSheetPresented = true
+				} label: {
+					Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
+				}
+			}
 
-	@ViewBuilder @MainActor
-	private var content: some View {
-		stacksList
-			.toolbar {
-				ToolbarItem(placement: .navigation) {
+			ToolbarItem(placement: .automatic) {
+				Menu {
+					Toggle(isOn: $preferences.svFilterByActiveEndpoint) {
+						Label(
+							"StacksView.Menu.FilterByActiveEndpoint",
+							systemImage: "tag"
+						)
+					}
+					.onChange(of: preferences.svFilterByActiveEndpoint) {
+						Haptics.generateIfEnabled(.selectionChanged)
+					}
+
+					Toggle(isOn: $preferences.svIncludeLimitedStacks) {
+						Label(
+							"StacksView.Menu.IncludeLimitedStacks",
+							systemImage: "square.stack.3d.up.trianglebadge.exclamationmark"
+						)
+					}
+					.onChange(of: preferences.svIncludeLimitedStacks) {
+						Haptics.generateIfEnabled(.selectionChanged)
+						if preferences.svIncludeLimitedStacks {
+							fetch()
+						}
+					}
+
+					Divider()
+
 					Button {
 						Haptics.generateIfEnabled(.sheetPresentation)
-						viewModel.isCreateStackSheetPresented = true
+						sceneDelegate.isSettingsSheetPresented = true
 					} label: {
-						Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
+						Label("SettingsView.Title", systemImage: SFSymbol.settings)
 					}
+					.keyboardShortcut(",", modifiers: .command)
+				} label: {
+					Label("Generic.More", systemImage: SFSymbol.moreCircle)
+						.labelStyle(.iconOnly)
 				}
-
-				ToolbarItem(placement: .automatic) {
-					Menu {
-						Toggle(isOn: $preferences.svFilterByActiveEndpoint) {
-							Label(
-								"StacksView.Menu.FilterByActiveEndpoint",
-								systemImage: "tag"
-							)
-						}
-						.onChange(of: preferences.svFilterByActiveEndpoint) {
-							Haptics.generateIfEnabled(.selectionChanged)
-						}
-
-						Toggle(isOn: $preferences.svIncludeLimitedStacks) {
-							Label(
-								"StacksView.Menu.IncludeLimitedStacks",
-								systemImage: "square.stack.3d.up.trianglebadge.exclamationmark"
-							)
-						}
-						.onChange(of: preferences.svIncludeLimitedStacks) {
-							Haptics.generateIfEnabled(.selectionChanged)
-							if preferences.svIncludeLimitedStacks {
-								fetch()
-							}
-						}
-
-						Divider()
-
-						Button {
-							Haptics.generateIfEnabled(.sheetPresentation)
-							sceneDelegate.isSettingsSheetPresented = true
-						} label: {
-							Label("SettingsView.Title", systemImage: SFSymbol.settings)
-						}
-						.keyboardShortcut(",", modifiers: .command)
-					} label: {
-						Label("Generic.More", systemImage: SFSymbol.moreCircle)
-							.labelStyle(.iconOnly)
-					}
-					.labelStyle(.titleAndIcon)
-				}
+				.labelStyle(.titleAndIcon)
+			}
 
 //				ToolbarItem(placement: .status) {
 //					DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
@@ -137,13 +132,16 @@ struct StacksView: View {
 //					}
 //					.transition(.opacity)
 //				}
-			}
-			.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-				StackDetailsView(navigationItem: navigationItem)
-					.equatable()
-					.tag(navigationItem.id)
-			}
-			.navigationTitle("StacksView.Title")
+		}
+		.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
+			StackDetailsView(navigationItem: navigationItem)
+				.equatable()
+				.tag(navigationItem.id)
+				.onDisappear {
+					viewModel.selectedStackID = nil
+				}
+		}
+		.navigationTitle("StacksView.Title")
 	}
 
 	var body: some View {
@@ -166,8 +164,10 @@ struct StacksView: View {
 			.presentationContentInteraction(.resizes)
 		}
 		.transition(.opacity)
+		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.stacksFiltered)
 		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+		.animation(.easeInOut, value: viewModel.selectedStackID)
 		.task {
 			if portainerStore.stacksTask?.isCancelled ?? true {
 				await fetch().value

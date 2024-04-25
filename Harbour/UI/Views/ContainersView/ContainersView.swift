@@ -73,13 +73,13 @@ struct ContainersView: View {
 					}
 				)
 				Picker(selection: useGridBinding) {
-					Label("ContainersView.Menu.ContainersLayout.Grid", systemImage: "square.grid.2x2")
+					Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
 						.tag(true)
 
-					Label("ContainersView.Menu.ContainersLayout.List", systemImage: "rectangle.grid.1x2")
+					Label("ContainersView.Menu.ContainerLayout.List", systemImage: "rectangle.grid.1x2")
 						.tag(false)
 				} label: {
-					Label("ContainersView.Menu.ContainersLayout", systemImage: "rectangle.3.group")
+					Label("ContainersView.Menu.ContainerLayout", systemImage: "rectangle.3.group")
 				}
 				.pickerStyle(.menu)
 

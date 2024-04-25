@@ -12,7 +12,6 @@
 		0000115E2A321AA800A08C52 /* Error+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0000115D2A321AA800A08C52 /* Error+Equatable.swift */; };
 		0003D7CB2B9E7CE60047E451 /* DelayedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0003D7CA2B9E7CE60047E451 /* DelayedView.swift */; };
 		0007055B2AB5270E007BC696 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0007055A2AB5270E007BC696 /* CloseButton.swift */; };
-		000A55822BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */; };
 		000BEDDB2AB4A2F20092D2A3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */; };
 		00123A512BCF3F04007CB116 /* View+refreshable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00123A502BCF3F04007CB116 /* View+refreshable.swift */; };
 		00123A552BCF58A6007CB116 /* ViewTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00123A542BCF58A6007CB116 /* ViewTab.swift */; };
@@ -290,7 +289,6 @@
 		0000115D2A321AA800A08C52 /* Error+Equatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Equatable.swift"; sourceTree = "<group>"; };
 		0003D7CA2B9E7CE60047E451 /* DelayedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedView.swift; sourceTree = "<group>"; };
 		0007055A2AB5270E007BC696 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
-		000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StackDetailsView+DownloadStackFileView.swift"; sourceTree = "<group>"; };
 		000BEDD82AB4A0420092D2A3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		00123A502BCF3F04007CB116 /* View+refreshable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+refreshable.swift"; sourceTree = "<group>"; };
 		00123A542BCF58A6007CB116 /* ViewTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewTab.swift; sourceTree = "<group>"; };
@@ -594,12 +592,12 @@
 			path = AppDelegate;
 			sourceTree = "<group>";
 		};
-		0078D02C2A870802009C4374 /* View Modifiers */ = {
+		0078D02C2A870802009C4374 /* Modifiers */ = {
 			isa = PBXGroup;
 			children = (
 				0078D0312A870814009C4374 /* ButtonScalesDownOnPressModifier.swift */,
 			);
-			path = "View Modifiers";
+			path = Modifiers;
 			sourceTree = "<group>";
 		};
 		0078D0612A8819EF009C4374 /* Persistence */ = {
@@ -704,6 +702,18 @@
 			path = Subviews;
 			sourceTree = "<group>";
 		};
+		00D2663A2BDAD75E00FDA1DB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				00F33E3B2BC6A8ED00E5F386 /* View+background.swift */,
+				00D3FF392BCEED230074C633 /* View+listRowAttentionFocus.swift */,
+				00123A502BCF3F04007CB116 /* View+refreshable.swift */,
+				00F3DD5D2BCD3E7F00E0A6DF /* View+sheetHeader.swift */,
+				007621052B5776ED0083EC34 /* View+withEnvironment.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		00EB4B832A51EC0D00FB9A01 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
@@ -728,7 +738,6 @@
 		00F33E492BC6B2C300E5F386 /* Subviews */ = {
 			isa = PBXGroup;
 			children = (
-				000A55812BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift */,
 				00F33E4C2BC6B2D000E5F386 /* StackDetailsView+StackEnvironmentView.swift */,
 			);
 			path = Subviews;
@@ -794,9 +803,10 @@
 		00FF4FA52BCC87AD003EECE5 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				E7BEBA162885758B00FCD7DC /* View Components */,
-				0078D02C2A870802009C4374 /* View Modifiers */,
-				E79AD3082893D9DE002D0CD9 /* View Styles */,
+				E7BEBA162885758B00FCD7DC /* Components */,
+				00D2663A2BDAD75E00FDA1DB /* Extensions */,
+				0078D02C2A870802009C4374 /* Modifiers */,
+				E79AD3082893D9DE002D0CD9 /* Styles */,
 				E7E240F828847FD600CC4F4C /* Views */,
 			);
 			path = UI;
@@ -1037,11 +1047,6 @@
 			isa = PBXGroup;
 			children = (
 				E766D929288C381900F2DB99 /* EnvironmentValues+.swift */,
-				00F33E3B2BC6A8ED00E5F386 /* View+background.swift */,
-				00F3DD5D2BCD3E7F00E0A6DF /* View+sheetHeader.swift */,
-				007621052B5776ED0083EC34 /* View+withEnvironment.swift */,
-				00D3FF392BCEED230074C633 /* View+listRowAttentionFocus.swift */,
-				00123A502BCF3F04007CB116 /* View+refreshable.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1136,13 +1141,13 @@
 			path = AppState;
 			sourceTree = "<group>";
 		};
-		E79AD3082893D9DE002D0CD9 /* View Styles */ = {
+		E79AD3082893D9DE002D0CD9 /* Styles */ = {
 			isa = PBXGroup;
 			children = (
 				E72BB34928DE25EA007991D1 /* Button */,
 				E72BB34A28DE25F2007991D1 /* TextField */,
 			);
-			path = "View Styles";
+			path = Styles;
 			sourceTree = "<group>";
 		};
 		E7ACE736288C4166000E6FF6 /* Sections */ = {
@@ -1187,7 +1192,7 @@
 			path = Deeplinks;
 			sourceTree = "<group>";
 		};
-		E7BEBA162885758B00FCD7DC /* View Components */ = {
+		E7BEBA162885758B00FCD7DC /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				0007055A2AB5270E007BC696 /* CloseButton.swift */,
@@ -1197,7 +1202,7 @@
 				00F33E452BC6AC4B00E5F386 /* NormalizedSection.swift */,
 				E7BEBA17288575A800FCD7DC /* ToolbarTitle.swift */,
 			);
-			path = "View Components";
+			path = Components;
 			sourceTree = "<group>";
 		};
 		E7BEBA1928857BE700FCD7DC /* Helpers */ = {
@@ -1567,7 +1572,6 @@
 				E7AF688D290DB14C00E48EAC /* View+hidden.swift in Sources */,
 				00EAFE0F2A354FEB00BC69D6 /* Collection+safe.swift in Sources */,
 				002D1BAF2A5A18360044753E /* IntentEndpoint.swift in Sources */,
-				000A55822BCC3649006D0E16 /* StackDetailsView+DownloadStackFileView.swift in Sources */,
 				E78C661528E9D64A0033D0E4 /* ContainerAction+UI.swift in Sources */,
 				E7207DCF29887CC400F7504C /* SetupView+ViewModel.swift in Sources */,
 				00AA82A92A2FF0EE0064B870 /* Stack+.swift in Sources */,

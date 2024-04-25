@@ -72,6 +72,9 @@ enum SFSymbol {
 	/// 􀍟 gear
 	static let settings = "gear"
 
+	/// 􀈂 square.and.arrow.up
+	static let share = "square.and.arrow.up"
+
 	/// 􀆨 power
 	static let start = "power"
 

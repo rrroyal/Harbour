@@ -396,17 +396,17 @@
         }
       }
     },
-    "ContainersView.Menu.ContainersLayout" : {
+    "ContainersView.Menu.ContainerLayout" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Containers Layout"
+            "value" : "Container Layout"
           }
         }
       }
     },
-    "ContainersView.Menu.ContainersLayout.Grid" : {
+    "ContainersView.Menu.ContainerLayout.Grid" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -416,7 +416,7 @@
         }
       }
     },
-    "ContainersView.Menu.ContainersLayout.List" : {
+    "ContainersView.Menu.ContainerLayout.List" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1012,16 +1012,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy"
-          }
-        }
-      }
-    },
-    "Generic.Download" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Download"
           }
         }
       }
@@ -1986,16 +1976,6 @@
         }
       }
     },
-    "StackDetailsView.GetStackFile" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get Stack File"
-          }
-        }
-      }
-    },
     "StackDetailsView.RemoveStack" : {
       "localizations" : {
         "en" : {
@@ -2056,12 +2036,22 @@
         }
       }
     },
-    "StackDetailsView.StackFileContents" : {
+    "StackDetailsView.StackFile.Download" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stack File Contents"
+            "value" : "Download Stack File"
+          }
+        }
+      }
+    },
+    "StackDetailsView.StackFile.Share" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Stack File"
           }
         }
       }

@@ -63,7 +63,6 @@ struct ContentView: View {
 		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneDelegate.onContinueUserActivity)
 		.onChange(of: appState.notificationsToHandle, sceneDelegate.onNotificationsToHandleChange)
 		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
-		.environment(sceneDelegate)
 		.environment(\.errorHandler, .init(handleError))
 		.environment(\.presentIndicator, sceneDelegate.presentIndicator)
 		.withNavigation(handler: sceneDelegate)
