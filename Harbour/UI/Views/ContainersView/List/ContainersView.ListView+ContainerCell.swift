@@ -15,12 +15,13 @@ extension ContainersView.ListView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
+		@ScaledMetric(relativeTo: .body) private var circleSize = 12
 		private let minimumScaleFactor: Double = 0.8
 
 		var container: Container
 
 		private var tintColor: Color {
-			container._isStored ? ContainerState?.none.color : container.state.color
+			container._isStored ? Container.State?.none.color : container.state.color
 		}
 
 		@ViewBuilder
@@ -37,7 +38,7 @@ extension ContainersView.ListView {
 		@ViewBuilder
 		private var subheadlineLabel: some View {
 			HStack(spacing: 4) {
-				let stateLabel = container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized
+				let stateLabel = container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized
 
 				if let containerStatus = container.status {
 					(
@@ -53,6 +54,7 @@ extension ContainersView.ListView {
 			}
 			.font(.subheadline)
 			.fontWeight(.medium)
+			.tint(.primary)
 			.transition(.opacity)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.state)
@@ -69,9 +71,11 @@ extension ContainersView.ListView {
 
 				Spacer(minLength: 20)
 
-				Circle()
+				Image(systemName: "circle")
+					.symbolVariant(container._isStored ? .none : .fill)
+					.imageScale(.small)
+					.font(.system(size: circleSize))
 					.foregroundStyle(tintColor)
-					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
 			}
@@ -110,7 +114,7 @@ extension ContainersView.ListView.ContainerCell: Equatable {
 
 #Preview {
 	Button(action: {}) {
-		ContainersView.ListView.ContainerCell(container: .preview)
+		ContainersView.ListView.ContainerCell(container: .preview())
 	}
 	.padding()
 	.background(Color.groupedBackground)

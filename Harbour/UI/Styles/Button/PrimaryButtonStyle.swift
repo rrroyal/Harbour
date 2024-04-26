@@ -31,7 +31,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.foregroundStyle(isEnabled ? foregroundColor : .secondary)
 			.padding()
 			.frame(maxWidth: .infinity, alignment: .center)
-			.background(isEnabled ? backgroundColor : Color.systemGray)
+			.background(isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2))
 			.clipShape(roundedRectangle)
 			.contentShape(roundedRectangle)
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))

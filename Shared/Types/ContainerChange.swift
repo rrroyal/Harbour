@@ -17,11 +17,11 @@ struct ContainerChange: Identifiable, Hashable, Sendable {
 	let endpointID: Endpoint.ID
 
 	let oldID: Container.ID?
-	let oldState: ContainerState?
+	let oldState: Container.State?
 	let oldStatus: String?
 
 	let newID: Container.ID?
-	let newState: ContainerState?
+	let newState: Container.State?
 	let newStatus: String?
 
 	init(
@@ -30,10 +30,10 @@ struct ContainerChange: Identifiable, Hashable, Sendable {
 		containerName: String,
 		endpointID: Endpoint.ID,
 		oldID: Container.ID?,
-		oldState: ContainerState?,
+		oldState: Container.State?,
 		oldStatus: String?,
 		newID: Container.ID?,
-		newState: ContainerState?,
+		newState: Container.State?,
 		newStatus: String?
 	) {
 		self.id = id

@@ -15,11 +15,11 @@ final class StoredContainer: Identifiable {
 	@Attribute(.unique)
 	let id: Container.ID
 	let name: String?
-	let lastState: ContainerState?
+	let lastState: Container.State?
 	let image: String?
 	let associationID: String?
 
-	init(id: ID, name: String?, lastState: ContainerState?, image: String, associationID: String?) {
+	init(id: ID, name: String?, lastState: Container.State?, image: String, associationID: String?) {
 		self.id = id
 		self.name = name
 		self.lastState = lastState

@@ -25,11 +25,20 @@ extension PortainerStore {
 			defer { self.refreshTask = nil }
 
 			do {
-				async let _endpoints = refreshEndpoints(errorHandler: errorHandler).value
-				async let _containers = refreshContainers(errorHandler: errorHandler).value
-				async let _stacks = refreshStacks(errorHandler: errorHandler).value
+				if selectedEndpoint != nil {
+					async let _endpoints = refreshEndpoints(errorHandler: errorHandler).value
+					async let _containers = refreshContainers(errorHandler: errorHandler).value
+					async let _stacks = refreshStacks(errorHandler: errorHandler).value
 
-				return try await (_endpoints, _containers, _stacks)
+					return try await (_endpoints, _containers, _stacks)
+				} else {
+					let _endpoints = try await refreshEndpoints(errorHandler: errorHandler).value
+
+					async let _containers = refreshContainers(errorHandler: errorHandler).value
+					async let _stacks = refreshStacks(errorHandler: errorHandler).value
+
+					return try await (_endpoints, _containers, _stacks)
+				}
 			} catch {
 				errorHandler?(error)
 				throw error
@@ -55,7 +64,7 @@ extension PortainerStore {
 			defer { self.endpointsTask = nil }
 
 			do {
-				let endpoints = try await fetchEndpoints()
+				let endpoints = try await fetchEndpoints().sorted()
 				self.setEndpoints(endpoints)
 				return endpoints
 			} catch {
@@ -83,7 +92,7 @@ extension PortainerStore {
 			defer { self.containersTask = nil }
 
 			do {
-				let containers = try await fetchContainers()
+				let containers = try await fetchContainers().sorted()
 				self.setContainers(containers)
 				return containers
 			} catch {
@@ -111,7 +120,7 @@ extension PortainerStore {
 			defer { self.stacksTask = nil }
 
 			do {
-				let stacks = try await fetchStacks()
+				let stacks = try await fetchStacks().sorted()
 				self.setStacks(stacks)
 				return stacks
 			} catch {

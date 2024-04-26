@@ -1,0 +1,48 @@
+{
+  "colors" : [
+    {
+      "color" : {
+        "platform" : "ios",
+        "reference" : "secondarySystemBackgroundColor"
+      },
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "color" : {
+        "platform" : "ios",
+        "reference" : "secondarySystemBackgroundColor"
+      },
+      "idiom" : "universal"
+    },
+    {
+      "color" : {
+        "platform" : "osx",
+        "reference" : "windowBackgroundColor"
+      },
+      "idiom" : "mac"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "color" : {
+        "platform" : "osx",
+        "reference" : "windowBackgroundColor"
+      },
+      "idiom" : "mac"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -31,12 +31,31 @@ struct CreateStackView: View {
 		viewModel.stackName.isReallyEmpty ? String(localized: "CreateStackView.Title") : viewModel.stackName
 	}
 
+	@ViewBuilder @MainActor
+	private var createButton: some View {
+		Button {
+			createStack()
+		} label: {
+			if viewModel.isLoading {
+				ProgressView()
+					.padding(.vertical, 2)
+			} else {
+				Label("CreateStackView.Create", systemImage: SFSymbol.plus)
+			}
+		}
+		.transition(.opacity)
+		.disabled(!viewModel.canCreateStack)
+		.disabled(viewModel.isLoading)
+		.background(Color.groupedBackground)
+	}
+
 	var body: some View {
 		Form {
 			NormalizedSection {
 				TextField("CreateStackView.Name", text: $viewModel.stackName)
 					.fontDesign(.monospaced)
 					.autocorrectionDisabled()
+					.labelsHidden()
 			} header: {
 				Text("CreateStackView.Name")
 			}
@@ -56,26 +75,16 @@ struct CreateStackView: View {
 				removeEntryAction: viewModel.removeEnvironmentEntry
 			)
 		}
+		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
 //		.navigationTitle(navigationTitle)
+		#if os(iOS)
 		.safeAreaInset(edge: .bottom) {
-			Button {
-				createStack()
-			} label: {
-				if viewModel.isLoading {
-					ProgressView()
-						.padding(.vertical, 2)
-				} else {
-					Label("CreateStackView.Create", systemImage: SFSymbol.plus)
-				}
-			}
-			.buttonStyle(.customPrimary)
-			.padding()
-			.transition(.opacity)
-			.disabled(!viewModel.canCreateStack)
-			.disabled(viewModel.isLoading)
-			.background(Color.groupedBackground)
+			createButton
+				.buttonStyle(.customPrimary)
+				.padding()
 		}
+		#endif
 		.fileImporter(isPresented: $viewModel.isFileImporterPresented, allowedContentTypes: allowedContentTypes) { result in
 			handleFileResult(result)
 		}
@@ -86,12 +95,32 @@ struct CreateStackView: View {
 			NavigationStack {
 				KeyValueEditView(entry: oldEntry) { newEntry in
 					viewModel.addOrEditEnvironmentEntry(old: oldEntry, new: newEntry)
+				} removeAction: {
+					if let oldEntry {
+						viewModel.removeEnvironmentEntry(oldEntry)
+					}
 				}
-				.sheetHeader("CreateStackView.EditEnvironmentValue")
+				#if os(iOS)
+				.navigationBarTitleDisplayMode(.inline)
+				#endif
+				.navigationTitle(oldEntry != nil ? "CreateStackView.EditEnvironmentValue" : "CreateStackView.AddEnvironmentValue")
+				.addingCloseButton()
 			}
-			.presentationDetents(KeyValueEditView.presentationDetents)
+			.presentationDetents([.medium])
 			.presentationDragIndicator(.hidden)
+			.presentationContentInteraction(.resizes)
+			#if os(macOS)
+			.sheetMinimumFrame(width: 320, height: 240)
+			#endif
 		}
+		.toolbar {
+			#if os(macOS)
+			ToolbarItem(placement: .primaryAction) {
+				createButton
+			}
+			#endif
+		}
+		.navigationTitle("CreateStackView.Title")
 		.animation(.easeInOut, value: viewModel.isLoading)
 		.animation(.easeInOut, value: viewModel.stackFileContent)
 		.animation(.easeInOut, value: viewModel.stackEnvironment)

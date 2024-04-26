@@ -1,4 +1,4 @@
-<img src="Shared/Assets.xcassets/AppIcon.appiconset/AppIcon-macOS-1024x1024.png" width="196" alt="Harbour App Icon">
+<img src="Harbour/Assets.xcassets/AppIcon.appiconset/AppIcon-macOS-1024x1024.png" width="196" alt="Harbour App Icon">
 
 # Harbour
 Docker/Portainer management app for iOS and macOS.

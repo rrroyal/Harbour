@@ -10,7 +10,7 @@ import Foundation
 import PortainerKit
 
 extension Container {
-	static var preview: Self {
+	static func preview(state: Container.State = .running) -> Self {
 		self.init(
 			id: "preview",
 			names: ["PreviewContainer"],
@@ -20,7 +20,7 @@ extension Container {
 			created: Date.now,
 			ports: nil,
 			labels: nil,
-			state: .running,
+			state: state,
 			status: "Running (5 days)",
 			networkSettings: nil,
 			mounts: nil

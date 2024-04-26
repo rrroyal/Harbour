@@ -60,14 +60,26 @@ enum SFSymbol {
 	/// 􀍡 ellipsis.circle
 	static let moreCircle = "ellipsis.circle"
 
+	/// 􀊅 pause
+	static let pause = "pause"
+
 	/// 􀅼 plus
 	static let plus = "plus"
+
+	/// 􀅍 questionmark
+	static let questionMark = "questionmark"
 
 	/// 􀅈 reload
 	static let reload = "arrow.clockwise"
 
+	/// 􀯆 restart
+	static let restart = "restart"
+
 	/// 􀈑 trash
 	static let remove = "trash"
+
+	/// 􀈄 square.and.arrow.down
+	static let save = "square.and.arrow.down"
 
 	/// 􀍟 gear
 	static let settings = "gear"

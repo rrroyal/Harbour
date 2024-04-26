@@ -95,9 +95,14 @@ private extension SettingsView.PortainerSection {
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
 					Text(_serverURLLabel)
+						.font(SettingsView.labelFontHeadline)
+						#if os(iOS)
+						.fontWeight(.medium)
+						#elseif os(macOS)
+						.fontWeight(.regular)
+						#endif
 						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
 						.lineLimit(1)
-						.font(SettingsView.labelFontHeadline)
 
 					#if os(iOS)
 					Spacer()

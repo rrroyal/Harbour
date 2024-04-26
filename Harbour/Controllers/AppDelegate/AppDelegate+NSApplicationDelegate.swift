@@ -9,5 +9,14 @@
 #if canImport(AppKit) && os(macOS)
 import AppKit
 
-extension AppDelegate: NSApplicationDelegate { }
+extension AppDelegate: NSApplicationDelegate {
+	func applicationDidFinishLaunching(_ notification: Notification) {
+//		for window in NSApplication.shared.windows {
+//			window.titleVisibility = .hidden
+//			window.titlebarAppearsTransparent = true
+//			window.isOpaque = false
+//			window.backgroundColor = NSColor.clear
+//		}
+	}
+}
 #endif

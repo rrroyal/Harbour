@@ -30,11 +30,11 @@ extension ContainerAction {
 extension ContainerAction {
 	var icon: String {
 		switch self {
-		case .start:	"play"
-		case .stop:		"stop"
-		case .restart:	"restart"
+		case .start:	SFSymbol.start
+		case .stop:		SFSymbol.stop
+		case .restart:	SFSymbol.restart
 		case .kill:		"bolt"
-		case .pause:	"pause"
+		case .pause:	SFSymbol.pause
 		case .unpause:	"wake"
 		}
 	}
@@ -46,7 +46,7 @@ extension ContainerAction {
 	var color: Color {
 		switch self {
 		case .start:	.green
-		case .stop:		.darkGray
+		case .stop:		.primaryGray
 		case .restart:	.blue
 		case .kill:		.red
 		case .pause:	.orange

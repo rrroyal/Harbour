@@ -11,22 +11,14 @@ import SwiftUI
 
 enum Constants {
 	enum Buttons {
-		static let pressedOpacity: Double = 0.6
+		static let pressedOpacity: Double = 0.8
 		static let pressedScale: Double = 0.975
-		static let pressAnimation: Animation = .interpolatingSpring(stiffness: 250, damping: 30)
+		static let pressAnimation: Animation = .spring
 	}
 
 	enum ContainerCell {
 		static let cornerRadius: Double = 18
-		static let circleSize: Double = 8
 	}
-
-	#if os(macOS)
-	enum Window {
-		static let minWidth: Double = 300
-		static let minHeight: Double = 400
-	}
-	#endif
 
 	static let smallCornerRadius: Double = 10
 	static let cornerRadius: Double = 12

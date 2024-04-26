@@ -63,7 +63,10 @@ extension StackDetailsView {
 
 				do {
 					viewState = viewState.reloading
-					stackFileViewState = nil
+
+					if stackFileContents != nil {
+						fetchStackFile()
+					}
 
 					let stack = try await portainerStore.fetchStack(id: stackID)
 					viewState = .success(stack)

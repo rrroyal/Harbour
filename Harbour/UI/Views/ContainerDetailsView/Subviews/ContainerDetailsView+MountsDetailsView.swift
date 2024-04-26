@@ -14,7 +14,9 @@ extension ContainerDetailsView {
 		let mounts: [PortainerKit.MountPoint]?
 
 		private var data: [KeyValueEntry] {
-			mounts?.map { .init($0.source, $0.destination) } ?? []
+			mounts?
+				.map { .init($0.source, $0.destination) }
+				.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending } ?? []
 		}
 
 		var body: some View {

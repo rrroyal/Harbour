@@ -19,6 +19,7 @@ struct StacksView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
+	@FocusState private var isFocused: Bool
 
 	@ViewBuilder
 	private var placeholderView: some View {
@@ -31,8 +32,7 @@ struct StacksView: View {
 		}
 	}
 
-	@ViewBuilder @MainActor
-	private var content: some View {
+	var body: some View {
 		List {
 			ForEach(viewModel.stacksFiltered) { stackItem in
 				let isLoading = portainerStore.loadingStacks.contains(Stack.ID(stackItem.id) ?? -1)
@@ -55,28 +55,41 @@ struct StacksView: View {
 						}
 					}
 				}
-				#if targetEnvironment(macCatalyst)
-				.padding(.vertical, 8)
-				.listRowBackground(Color.secondaryGroupedBackground)
-				#endif
 				.transition(.opacity)
 				.tag(stackItem.id)
+				#if os(macOS)
+				.padding(.horizontal, 8)
+				.padding(.vertical, 4)
+				#endif
 			}
 		}
+		#if os(iOS)
 		.listStyle(.insetGrouped)
-		.scrollDismissesKeyboard(.interactively)
+		#elseif os(macOS)
+		.listStyle(.sidebar)
+		#endif
 		.scrollPosition(id: $viewModel.scrollPosition)
-		.searchable(text: $viewModel.query)
-		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.background {
-			placeholderView
-		}
-		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
+		.searchable(text: $viewModel.query, isPresented: $viewModel.isSearchActive)
+//		.background {
+//			placeholderView
+//		}
+		#if os(iOS)
+		.background(viewState: viewModel.viewState, backgroundVisiblity: .hidden, backgroundColor: .groupedBackground)
+		#elseif os(macOS)
+		.background(viewState: viewModel.viewState, backgroundVisiblity: .hidden, backgroundColor: .clear)
+		#endif
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
 		}
 		.toolbar {
-			ToolbarItem(placement: .navigation) {
+			var createStackToolbarItemPlacement: ToolbarItemPlacement {
+				#if os(iOS)
+				.navigation
+				#elseif os(macOS)
+				.primaryAction
+				#endif
+			}
+			ToolbarItem(placement: createStackToolbarItemPlacement) {
 				Button {
 					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isCreateStackSheetPresented = true
@@ -110,6 +123,7 @@ struct StacksView: View {
 						}
 					}
 
+					#if os(iOS)
 					Divider()
 
 					Button {
@@ -119,6 +133,7 @@ struct StacksView: View {
 						Label("SettingsView.Title", systemImage: SFSymbol.settings)
 					}
 					.keyboardShortcut(",", modifiers: .command)
+					#endif
 				} label: {
 					Label("Generic.More", systemImage: SFSymbol.moreCircle)
 						.labelStyle(.iconOnly)
@@ -126,52 +141,50 @@ struct StacksView: View {
 				.labelStyle(.titleAndIcon)
 			}
 
-//				ToolbarItem(placement: .status) {
-//					DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
-//						ProgressView()
-//					}
-//					.transition(.opacity)
+//			ToolbarItem(placement: .status) {
+//				DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//					ProgressView()
 //				}
+//				.transition(.opacity)
+//			}
 		}
 		.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
 			StackDetailsView(navigationItem: navigationItem)
 				.equatable()
 				.tag(navigationItem.id)
-				.onDisappear {
-					viewModel.selectedStackID = nil
-				}
 		}
 		.navigationTitle("StacksView.Title")
-	}
-
-	var body: some View {
-		@Bindable var sceneDelegate = sceneDelegate
-		NavigationWrapped(navigationPath: $sceneDelegate.navigationPathStacks) {
-			content
-		} placeholderContent: {
-			Text("StacksView.NoStackSelectedPlaceholder")
-				.foregroundStyle(.tertiary)
-		}
-		.focusable()
-		.focusEffectDisabled()
 		.sheet(isPresented: $viewModel.isCreateStackSheetPresented) {
 			NavigationStack {
 				CreateStackView(onStackFileSelection: onStackFileSelection)
-					.sheetHeader("CreateStackView.Title")
+					#if os(iOS)
+					.navigationBarTitleDisplayMode(.inline)
+					#endif
+					.addingCloseButton()
 			}
 			.presentationDetents([.medium, .large], selection: $viewModel.activeCreateStackSheetDetent)
 			.presentationDragIndicator(.hidden)
 			.presentationContentInteraction(.resizes)
+			#if os(macOS)
+			.sheetMinimumFrame(width: 380, height: 400)
+			#endif
 		}
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.stacksFiltered)
 		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
-		.animation(.easeInOut, value: viewModel.selectedStackID)
+//		.animation(.easeInOut, value: viewModel.selectedStackID)
+		.focusable()
+		.focused($isFocused)
+		.focusEffectDisabled()
+		.onKeyPress(action: onKeyPress)
 		.task {
 			if portainerStore.stacksTask?.isCancelled ?? true {
 				await fetch().value
 			}
+		}
+		.onAppear {
+			isFocused = true
 		}
 	}
 }
@@ -218,6 +231,20 @@ private extension StacksView {
 		viewModel.scrollPosition = stack.id.description
 //		viewModel.navigationPath.removeLast(viewModel.navigationPath.count)
 //		viewModel.navigationPath.append(StackDetailsView.NavigationItem(stack: stack))
+	}
+
+	func onKeyPress(_ keyPress: KeyPress) -> KeyPress.Result {
+		switch keyPress.key {
+			// ⌘F
+		case "f" where keyPress.modifiers.contains(.command):
+			viewModel.isSearchActive = true
+			return .handled
+		case "n" where keyPress.modifiers.contains(.command):
+			viewModel.isCreateStackSheetPresented = true
+			return .handled
+		default:
+			return .ignored
+		}
 	}
 }
 

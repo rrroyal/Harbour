@@ -25,38 +25,74 @@ extension CreateStackView {
 
 		var body: some View {
 			NormalizedSection {
-				ForEach(environmentSorted) { entry in
+				Group {
+					ForEach(environmentSorted) { entry in
+						Button {
+							Haptics.generateIfEnabled(.sheetPresentation)
+							editedEnvironmentEntry = entry
+							isEnvironmentEntrySheetPresented = true
+						} label: {
+							LabeledContent(entry.key, value: entry.value)
+								#if os(macOS)
+								.frame(maxWidth: .infinity, alignment: .leading)
+								.contentShape(Rectangle())
+								#endif
+						}
+						.fontDesign(.monospaced)
+						.contextMenu {
+							RemoveButton {
+								Haptics.generateIfEnabled(.light)
+								removeEntryAction(entry)
+							}
+							.labelStyle(.titleAndIcon)
+						}
+						.swipeActions(edge: .trailing) {
+							RemoveButton {
+								Haptics.generateIfEnabled(.light)
+								removeEntryAction(entry)
+							}
+						}
+						.transition(.opacity)
+					}
+
 					Button {
 						Haptics.generateIfEnabled(.sheetPresentation)
-						editedEnvironmentEntry = entry
+						editedEnvironmentEntry = nil
 						isEnvironmentEntrySheetPresented = true
 					} label: {
-						LabeledContent(entry.key, value: entry.value)
+						Label("Generic.Add", systemImage: SFSymbol.plus)
+							#if os(macOS)
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.contentShape(Rectangle())
+							#endif
 					}
-					.fontDesign(.monospaced)
-					.swipeActions(edge: .trailing) {
-						Button(role: .destructive) {
-							Haptics.generateIfEnabled(.selectionChanged)
-							removeEntryAction(entry)
-						} label: {
-							Label("Generic.Remove", systemImage: SFSymbol.remove)
-						}
-					}
-					.transition(.opacity)
 				}
-
-				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
-					editedEnvironmentEntry = nil
-					isEnvironmentEntrySheetPresented = true
-				} label: {
-					Label("Generic.Add", systemImage: SFSymbol.plus)
-				}
+				#if os(macOS)
+				.foregroundStyle(.accent)
+				.buttonStyle(.plain)
+				#endif
 			} header: {
 				Text("CreateStackView.Environment")
 			}
 			.transition(.opacity)
 			.animation(.easeInOut, value: environmentSorted)
+		}
+	}
+}
+
+// MARK: - CreateStackView.StackEnvironmentView+RemoveButton
+
+private extension CreateStackView.StackEnvironmentView {
+	struct RemoveButton: View {
+		var removeAction: () -> Void
+
+		var body: some View {
+			Button(role: .destructive) {
+				removeAction()
+			} label: {
+				Label("Generic.Remove", systemImage: SFSymbol.remove)
+			}
+			.foregroundStyle(.red)
 		}
 	}
 }

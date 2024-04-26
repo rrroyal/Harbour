@@ -55,7 +55,7 @@ extension ContainerStatusWidgetView {
 		@ViewBuilder
 		private var stateHeadline: some View {
 			HStack {
-				Text(verbatim: (container?.state.description ?? ContainerState?.none.description).localizedCapitalized)
+				Text(verbatim: (container?.state.description ?? Container.State?.none.description).localizedCapitalized)
 					.font(.subheadline)
 					.fontWeight(.medium)
 					.foregroundStyle(.tint)
@@ -115,7 +115,7 @@ extension ContainerStatusWidgetView {
 			}
 			.contentTransition(.numericText())
 			.padding()
-			.tint(container?.state.color ?? ContainerState?.none.color)
+			.tint(container?.state.color ?? Container.State?.none.color)
 			.modifier(LinkWrappedViewModifier(url: url))
 			.background(Color.widgetBackground)
 			.id("ContainerStatusWidgetView.ContainerView.\(container?.id ?? intentContainer._id)")

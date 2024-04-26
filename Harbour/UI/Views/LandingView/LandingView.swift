@@ -37,9 +37,14 @@ struct LandingView: View {
 					.tag(Screen.features)
 					.transition(viewAnimation(edge: .leading))
 			case .setup:
-				SetupView()
-					.tag(Screen.setup)
-					.transition(viewAnimation(edge: .trailing))
+				NavigationStack {
+					SetupView()
+						#if os(macOS)
+						.addingCloseButton()
+						#endif
+				}
+				.tag(Screen.setup)
+				.transition(viewAnimation(edge: .trailing))
 			}
 		}
 		.animation(.easeInOut, value: currentScreen)
@@ -50,11 +55,11 @@ struct LandingView: View {
 
 private extension LandingView {
 	func navigateToSetupIfNeeded() {
-		if PortainerStore.shared.savedURLs.isEmpty {
+//		if PortainerStore.shared.savedURLs.isEmpty {
 			currentScreen = .setup
-		} else {
-			dismiss()
-		}
+//		} else {
+//			dismiss()
+//		}
 	}
 }
 

@@ -23,12 +23,7 @@ struct ContainersView: View {
 	@Environment(\.cvUseGrid) private var useGrid
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
-
-	private let supportedKeyShortcuts: Set<KeyEquivalent> = [
-		"f",	// ⌘F - Search
-		"r",	// ⌘R - Refresh
-		","		// ⌘, - Settings
-	]
+	@FocusState private var isFocused: Bool
 
 	private var navigationTitle: String {
 		if let selectedEndpoint = portainerStore.selectedEndpoint {
@@ -37,68 +32,31 @@ struct ContainersView: View {
 		return String(localized: "AppName")
 	}
 
-	private var endpointsMenuTitle: String {
-		if let selectedEndpoint = portainerStore.selectedEndpoint {
-			return selectedEndpoint.name ?? selectedEndpoint.id.description
-		}
-		if portainerStore.endpoints.isEmpty {
-			return String(localized: "ContainersView.NoEndpointsAvailable")
-		}
-		return String(localized: "ContainersView.NoEndpointSelected")
-	}
-
 	@ViewBuilder
-	private var toolbarTitleMenu: some View {
-		ForEach(portainerStore.endpoints) { endpoint in
-			let binding = Binding<Bool>(
-				get: { portainerStore.selectedEndpoint?.id == endpoint.id },
-				set: { _ in
-					viewModel.selectEndpoint(endpoint)
-					Haptics.generateIfEnabled(.light)
-				}
-			)
-			Toggle(String(endpoint.name ?? endpoint.id.description), isOn: binding)
-		}
-	}
-
-	@ToolbarContentBuilder
-	private var toolbarMenu: some ToolbarContent {
-		ToolbarItem(placement: .automatic) {
-			Menu {
-				let useGridBinding = Binding<Bool>(
-					get: { preferences.cvUseGrid },
-					set: {
-						Haptics.generateIfEnabled(.selectionChanged)
-						preferences.cvUseGrid = $0
-					}
-				)
-				Picker(selection: useGridBinding) {
-					Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
-						.tag(true)
-
-					Label("ContainersView.Menu.ContainerLayout.List", systemImage: "rectangle.grid.1x2")
-						.tag(false)
-				} label: {
-					Label("ContainersView.Menu.ContainerLayout", systemImage: "rectangle.3.group")
-				}
-				.pickerStyle(.menu)
-
-				Divider()
-
-				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
-					sceneDelegate.isSettingsSheetPresented = true
-				} label: {
-					Label("SettingsView.Title", systemImage: SFSymbol.settings)
-				}
-				.keyboardShortcut(",", modifiers: .command)
-				.labelStyle(.titleAndIcon)
-			} label: {
-				Label("Generic.More", systemImage: SFSymbol.moreCircle)
-					.labelStyle(.iconOnly)
+	private var endpointPicker: some View {
+		let selectedEndpointBinding = Binding<Endpoint?>(
+			get: { portainerStore.selectedEndpoint },
+			set: {
+				Haptics.generateIfEnabled(.light)
+				portainerStore.setSelectedEndpoint($0)
 			}
-			.labelStyle(.titleAndIcon)
+		)
+		Picker(selection: selectedEndpointBinding) {
+			ForEach(portainerStore.endpoints) { endpoint in
+				Text(endpoint.name ?? endpoint.id.description)
+					.tag(endpoint as Endpoint?)
+			}
+		} label: {
+			let title = if let selectedEndpoint = portainerStore.selectedEndpoint {
+				selectedEndpoint.name ?? selectedEndpoint.id.description
+			} else if portainerStore.endpoints.isEmpty {
+				String(localized: "ContainersView.NoEndpointsAvailable")
+			} else {
+				String(localized: "ContainersView.NoEndpointSelected")
+			}
+			Text(title)
 		}
+		.disabled(!viewModel.canUseEndpointsMenu)
 	}
 
 	@ViewBuilder
@@ -130,8 +88,7 @@ struct ContainersView: View {
 		}
 	}
 
-	@ViewBuilder
-	private var content: some View {
+	var body: some View {
 		ScrollView {
 			Group {
 				if useGrid {
@@ -142,24 +99,31 @@ struct ContainersView: View {
 			}
 			.padding(.horizontal)
 			.padding(.bottom)
+			#if os(macOS)
+			.padding(.top)
+			#endif
 			.transition(.opacity)
 		}
-		.scrollDismissesKeyboard(.interactively)
 		.background {
 			if viewModel.isEmptyPlaceholderVisible {
 				backgroundPlaceholder
 			}
 		}
+		#if os(iOS)
 		.background(
 			viewState: viewModel.viewState,
 			isViewStateBackgroundVisible: viewModel.isEmptyPlaceholderVisible,
+			backgroundVisiblity: .hidden,
 			backgroundColor: .groupedBackground
 		)
-//		.background {
-//			if viewModel.isViewStateBackgroundVisible {
-//				viewModel.viewState.backgroundView
-//			}
-//		}
+		#elseif os(macOS)
+		.background(
+			viewState: viewModel.viewState,
+			isViewStateBackgroundVisible: viewModel.isEmptyPlaceholderVisible,
+			backgroundVisiblity: .hidden,
+			backgroundColor: .clear
+		)
+		#endif
 		.searchable(
 			text: $viewModel.searchText,
 			tokens: $viewModel.searchTokens,
@@ -181,21 +145,51 @@ struct ContainersView: View {
 		.navigationBarTitleDisplayMode(.inline)
 		#endif
 		.toolbar {
-			#if os(macOS)
-			ToolbarItem(placement: .principal) {
-				Menu {
-					toolbarTitleMenu
-				} label: {
-					Text(endpointsMenuTitle)
-				}
-				.disabled(!viewModel.canUseEndpointsMenu)
-				.labelStyle(.titleAndIcon)
+		#if os(macOS)
+			ToolbarItem(placement: .primaryAction) {
+				endpointPicker
+					.labelStyle(.titleAndIcon)
 			}
 			#endif
 
-			#if os(iOS)
-			toolbarMenu
-			#endif
+			ToolbarItem(placement: .automatic) {
+				Menu {
+					let useGridBinding = Binding<Bool>(
+						get: { preferences.cvUseGrid },
+						set: {
+							Haptics.generateIfEnabled(.selectionChanged)
+							preferences.cvUseGrid = $0
+						}
+					)
+					Picker(selection: useGridBinding) {
+						Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
+							.tag(true)
+
+						Label("ContainersView.Menu.ContainerLayout.List", systemImage: "rectangle.grid.1x2")
+							.tag(false)
+					} label: {
+						Label("ContainersView.Menu.ContainerLayout", systemImage: "rectangle.3.group")
+					}
+					.pickerStyle(.menu)
+
+					#if os(iOS)
+					Divider()
+
+					Button {
+						Haptics.generateIfEnabled(.sheetPresentation)
+						sceneDelegate.isSettingsSheetPresented = true
+					} label: {
+						Label("SettingsView.Title", systemImage: SFSymbol.settings)
+					}
+					.keyboardShortcut(",", modifiers: .command)
+					.labelStyle(.titleAndIcon)
+					#endif
+				} label: {
+					Label("Generic.More", systemImage: SFSymbol.moreCircle)
+						.labelStyle(.iconOnly)
+				}
+				.labelStyle(.titleAndIcon)
+			}
 
 //			ToolbarItem(placement: .status) {
 //				DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
@@ -205,28 +199,17 @@ struct ContainersView: View {
 //			}
 		}
 		.if(viewModel.canUseEndpointsMenu) {
-			$0.toolbarTitleMenu { toolbarTitleMenu }
+			$0.toolbarTitleMenu { endpointPicker }
 		}
-	}
-
-	// MARK: Body
-
-	var body: some View {
-		@Bindable var sceneDelegate = sceneDelegate
-		NavigationWrapped(navigationPath: $sceneDelegate.navigationPathContainers) {
-			content
-		} placeholderContent: {
-			Text("ContainersView.NoContainerSelectedPlaceholder")
-				.foregroundStyle(.tertiary)
-		}
-		.focusable()
-		.focusEffectDisabled()
 		.animation(.easeInOut, value: useGrid)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.containers)
 		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
 		.environment(viewModel)
-		.onKeyPress(keys: supportedKeyShortcuts, action: onKeyPress)
+		.focusable()
+		.focused($isFocused)
+		.focusEffectDisabled()
+		.onKeyPress(action: onKeyPress)
 		.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
 			viewModel.filterByStackName(stackName)
 		}
@@ -244,6 +227,9 @@ struct ContainersView: View {
 			if portainerStore.containersTask?.isCancelled ?? true {
 				await fetch().value
 			}
+		}
+		.onAppear {
+			isFocused = true
 		}
 	}
 }
@@ -267,16 +253,6 @@ private extension ContainersView {
 		// ⌘F
 		case "f" where keyPress.modifiers.contains(.command):
 			viewModel.isSearchActive = true
-			return .handled
-		// ⌘R
-		case "r" where keyPress.modifiers.contains(.command):
-			Task {
-				do {
-					try await viewModel.refresh()
-				} catch {
-					errorHandler(error)
-				}
-			}
 			return .handled
 		default:
 			return .ignored

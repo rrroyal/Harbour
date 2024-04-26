@@ -53,7 +53,7 @@ struct StackDetailsView: View {
 			}
 
 			NormalizedSection {
-				Text(stack.status.title)
+				Label(stack.status.title, systemImage: stack.status.icon)
 					.foregroundStyle(stack.status.color)
 			} header: {
 				Text("StackDetailsView.Section.Status")
@@ -76,13 +76,24 @@ struct StackDetailsView: View {
 					filterByStackName(stack.name)
 				} label: {
 					Label("StacksView.ShowContainers", systemImage: SFSymbol.container)
+						#if os(macOS)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.contentShape(Rectangle())
+						#endif
 				}
+				.foregroundStyle(.accent)
 			}
 
 			NormalizedSection {
 				Group {
 					if let stackFileContents = viewModel.stackFileContents {
-						ShareLink("StackDetailsView.StackFile.Share", item: stackFileContents)
+						ShareLink(item: stackFileContents) {
+							Label("StackDetailsView.StackFile.Share", systemImage: SFSymbol.share)
+								#if os(macOS)
+								.frame(maxWidth: .infinity, alignment: .leading)
+								.contentShape(Rectangle())
+								#endif
+						}
 					} else {
 						Button {
 							fetchStackFile()
@@ -94,19 +105,31 @@ struct StackDetailsView: View {
 
 								if viewModel.isFetchingStackFileContents {
 									ProgressView()
+										#if os(macOS)
+										.controlSize(.small)
+										#endif
 								}
 							}
+							#if os(macOS)
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.contentShape(Rectangle())
+							#endif
 						}
 						.disabled(viewModel.isFetchingStackFileContents)
 					}
 				}
 				.id(ViewID.stackFileButton)
+				.foregroundStyle(.accent)
 
 				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.warning)
 					viewModel.isStackRemovalAlertPresented = true
 				} label: {
 					Label("StackDetailsView.RemoveStack", systemImage: SFSymbol.remove)
+						#if os(macOS)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.contentShape(Rectangle())
+						#endif
 				}
 				.foregroundStyle(.red)
 			}
@@ -151,11 +174,17 @@ struct StackDetailsView: View {
 			stackDetailsContent
 		}
 		.formStyle(.grouped)
-		.scrollDismissesKeyboard(.interactively)
+		#if os(macOS)
+		.buttonStyle(.plain)
+		#endif
 		.toolbar {
 			toolbarContent
 		}
+		#if os(iOS)
 		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
+		#elseif os(macOS)
+		.background(viewState: viewModel.viewState, backgroundColor: .clear)
+		#endif
 		.overlay {
 			if viewModel.isRemovingStack {
 				VStack {
@@ -303,6 +332,6 @@ private extension StackDetailsView {
 // MARK: - Previews
 
 #Preview {
-	StackDetailsView(navigationItem: .init(stackID: Stack.preview.id.description, stackName: Stack.preview.name))
+	StackDetailsView(navigationItem: .init(stackID: Stack.preview().id.description, stackName: Stack.preview().name))
 		.withEnvironment(appState: .shared)
 }

@@ -120,10 +120,6 @@ extension ContainersView {
 			try await fetchTask?.value
 		}
 
-		func selectEndpoint(_ endpoint: Endpoint?) {
-			portainerStore.setSelectedEndpoint(endpoint)
-		}
-
 		func filterByStackName(_ stackName: String?) {
 			if let stackName {
 				searchTokens = [.stack(stackName)]

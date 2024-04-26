@@ -20,8 +20,7 @@ struct SetupView: View {
 	@FocusState private var focusedField: ViewModel.FocusedField?
 
 	private let urlPlaceholder: String = "https://172.17.0.2"
-	private let tokenPlaceholder: String = "token"
-	private let textFieldBackgroundColor = Color.secondaryBackground
+	private let tokenPlaceholder: String = "ptr_********************************************"
 	// swiftlint:disable:next force_unwrapping
 	private let howToLoginURL = URL(string: "https://harbour.shameful.xyz/docs/setup")!
 
@@ -32,31 +31,28 @@ struct SetupView: View {
 
 	@ViewBuilder
 	private var urlTextField: some View {
-		TextField(urlPlaceholder, text: $viewModel.url) { _ in
-			viewModel.cancelLogin()
-		}
-		.textFieldStyle(.rounded(backgroundColor: textFieldBackgroundColor))
-		.fontDesign(.monospaced)
-		.submitLabel(.next)
-		.autocorrectionDisabled()
-		#if os(iOS)
-		.keyboardType(.URL)
-		.autocapitalization(.none)
-		#endif
-		.focused($focusedField, equals: .url)
-		.onChange(of: viewModel.url) {
-			viewModel.cancelLogin()
-		}
-		.onSubmit {
-			viewModel.onURLTextFieldSubmit()
-			focusedField = .token
-		}
+		TextField(urlPlaceholder, text: $viewModel.url)
+			.fontDesign(.monospaced)
+			.submitLabel(.next)
+			.autocorrectionDisabled()
+			#if os(iOS)
+			.keyboardType(.URL)
+			.autocapitalization(.none)
+			#endif
+			.labelsHidden()
+			.focused($focusedField, equals: .url)
+			.onChange(of: viewModel.url) {
+				viewModel.cancelLogin()
+			}
+			.onSubmit {
+				viewModel.onURLTextFieldSubmit()
+				focusedField = .token
+			}
 	}
 
 	@ViewBuilder
 	private var tokenTextField: some View {
 		SecureField(tokenPlaceholder, text: $viewModel.token)
-			.textFieldStyle(.rounded(backgroundColor: textFieldBackgroundColor))
 			.fontDesign(.monospaced)
 			.submitLabel(.go)
 			.submitScope(viewModel.token.isReallyEmpty)
@@ -65,44 +61,30 @@ struct SetupView: View {
 			.keyboardType(.default)
 			.autocapitalization(.none)
 			#endif
+			.labelsHidden()
 			.focused($focusedField, equals: .token)
 			.onChange(of: viewModel.token) {
 				viewModel.cancelLogin()
 			}
 			.onSubmit {
-				Task {
-					do {
-						let success = try await viewModel.onTokenTextFieldSubmit()
-						if success {
-							dismiss()
-						}
-					} catch {
-						errorHandler(error)
-					}
-				}
+				guard viewModel.canSubmit else { return }
+				Haptics.generateIfEnabled(.light)
+				login()
 			}
 	}
 
 	@ViewBuilder
-	private var continueButton: some View {
+	private var loginButton: some View {
 		Button {
-			Task {
-				do {
-					let success = try await viewModel.onContinueButtonPress()
-					if success {
-						dismiss()
-					}
-				} catch {
-					errorHandler(error)
-				}
-			}
+			Haptics.generateIfEnabled(.light)
+			login()
 		} label: {
 			if viewModel.isLoading {
 				ProgressView()
 			} else {
 				Group {
 					if let buttonLabel = viewModel.buttonLabel {
-						Text(LocalizedStringKey(buttonLabel))
+						Text(buttonLabel)
 					} else {
 						Text("SetupView.LoginButton.Login")
 					}
@@ -111,62 +93,88 @@ struct SetupView: View {
 			}
 		}
 		.keyboardShortcut(.defaultAction)
-		.foregroundColor(.white)
-		.buttonStyle(.customPrimary(backgroundColor: viewModel.buttonColor ?? .accentColor))
 		.animation(.easeInOut, value: viewModel.buttonLabel)
 		.animation(.easeInOut, value: viewModel.buttonColor)
 		.animation(.easeInOut, value: viewModel.isLoading)
 		.disabled(!viewModel.canSubmit)
 	}
 
+	@ViewBuilder
+	private var howToLoginButton: some View {
+		Link(destination: howToLoginURL) {
+			Label("SetupView.HowToLogin", systemImage: "person.fill.questionmark")
+		}
+	}
+
 	var body: some View {
-		NavigationStack {
-			VStack {
-				Spacer()
-
-				Text("SetupView.Headline")
-					.font(.largeTitle)
-					.fontWeight(.bold)
-
-				Spacer()
-
-				VStack {
-					urlTextField
-					tokenTextField
-				}
-
-				Spacer()
-
-				VStack {
-					continueButton
-
-					Link(destination: howToLoginURL) {
-						Label("SetupView.HowToLoginButton", systemImage: "person.fill.questionmark")
-							.font(.callout.weight(.medium))
-							.padding(.horizontal, 6)
-					}
-					.buttonStyle(.customTransparent)
-				}
+		Form {
+			NormalizedSection {
+				urlTextField
+			} header: {
+				Text("SetupView.URL")
 			}
-			.multilineTextAlignment(.center)
-			.padding()
-			.toolbar {
-				#if targetEnvironment(macCatalyst)
-				ToolbarItem(placement: .destructiveAction) {
-					CloseButton(style: .circleButton)
-				}
-				#endif
+
+			NormalizedSection {
+				tokenTextField
+			} header: {
+				Text("SetupView.Token")
 			}
 		}
+		.formStyle(.grouped)
 		#if os(iOS)
-		.background(Color(uiColor: .systemBackground), ignoresSafeAreaEdges: .all)
-		#else
-		.background(Color(nsColor: .windowBackgroundColor), ignoresSafeAreaEdges: .all)
+		.safeAreaInset(edge: .bottom) {
+			VStack {
+				loginButton
+					.buttonStyle(.customPrimary(foregroundColor: .white, backgroundColor: viewModel.buttonColor ?? .accentColor))
+
+				howToLoginButton
+					.buttonStyle(.customTransparent)
+					.font(.callout)
+					.fontWeight(.medium)
+			}
+			.padding()
+		}
+		#endif
+		.toolbar {
+			#if os(macOS)
+			ToolbarItem(placement: .primaryAction) {
+				loginButton
+			}
+
+			ToolbarItem(placement: .destructiveAction) {
+				howToLoginButton
+					.font(.callout)
+					.fontWeight(.medium)
+					.foregroundStyle(.accent)
+			}
+			#endif
+		}
+		.navigationTitle("SetupView.Title")
+		#if os(iOS)
+		.navigationBarTitleDisplayMode(.large)
 		#endif
 		.animation(.easeInOut, value: viewModel.buttonLabel)
 		.animation(.easeInOut, value: viewModel.buttonColor)
 		.animation(.easeInOut, value: viewModel.isLoading)
 		.onDisappear(perform: viewModel.onViewDisappear)
+	}
+}
+
+// MARK: - SetupView+Actions
+
+private extension SetupView {
+	@discardableResult
+	func login() -> Task<Void, Never> {
+		Task {
+			do {
+				let success = try await viewModel.login()
+				if success {
+					dismiss()
+				}
+			} catch {
+				errorHandler(error)
+			}
+		}
 	}
 }
 

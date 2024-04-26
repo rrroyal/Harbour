@@ -13,7 +13,11 @@ import SwiftUI
 // MARK: - SettingsView
 
 struct SettingsView: View {
+	#if os(iOS)
 	@Environment(SceneDelegate.self) private var sceneDelegate
+	#elseif os(macOS)
+	@State private var sceneDelegate = SceneDelegate()
+	#endif
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
@@ -45,7 +49,15 @@ struct SettingsView: View {
 		.sheet(isPresented: $viewModel.isSetupSheetPresented) {
 			viewModel.refreshServers()
 		} content: {
-			SetupView()
+			NavigationStack {
+				SetupView()
+					#if os(macOS)
+					.addingCloseButton()
+					#endif
+			}
+			#if os(macOS)
+			.sheetMinimumFrame()
+			#endif
 		}
 		.environment(\.presentIndicator, viewModel.presentIndicator)
 		.indicatorOverlay(model: viewModel.indicators)

@@ -15,6 +15,7 @@ extension ContainersView.GridView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
+		@ScaledMetric(relativeTo: .body) private var circleSize = 10
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
 
@@ -23,7 +24,7 @@ extension ContainersView.GridView {
 		@ViewBuilder
 		private var stateHeader: some View {
 			HStack {
-				Text(container._isStored ? ContainerState?.none.description : container.state.description.localizedCapitalized)
+				Text(container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized)
 					.font(.footnote)
 					.fontWeight(.medium)
 					.foregroundStyle(.tint)
@@ -31,9 +32,11 @@ extension ContainersView.GridView {
 
 				Spacer()
 
-				Circle()
+				Image(systemName: "circle")
+					.symbolVariant(container._isStored ? .none : .fill)
+					.imageScale(.small)
+					.font(.system(size: circleSize))
 					.foregroundStyle(.tint)
-					.frame(width: Constants.ContainerCell.circleSize, height: Constants.ContainerCell.circleSize)
 					.transition(.opacity)
 			}
 			.animation(.easeInOut, value: container.state)
@@ -52,7 +55,7 @@ extension ContainersView.GridView {
 
 				Text(container.status ?? String(localized: "ContainerCell.UnknownStatus"))
 					.font(.footnote)
-					.fontWeight(.semibold)
+					.fontWeight(.medium)
 					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
 					.transition(.opacity)
 					.lineLimit(2)
@@ -73,7 +76,7 @@ extension ContainersView.GridView {
 			.padding(paddingSize)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.aspectRatio(1, contentMode: .fit)
-			.tint(container._isStored ? ContainerState?.none.color : container.state.color)
+			.tint(container._isStored ? Container.State?.none.color : container.state.color)
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
@@ -105,7 +108,7 @@ extension ContainersView.GridView.ContainerCell: Equatable {
 
 #Preview {
 	Button(action: {}) {
-		ContainersView.GridView.ContainerCell(container: .preview)
+		ContainersView.GridView.ContainerCell(container: .preview())
 	}
 	.padding()
 	.frame(width: 168, height: 168)

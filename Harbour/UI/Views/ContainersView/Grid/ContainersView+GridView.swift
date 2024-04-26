@@ -19,16 +19,20 @@ extension ContainersView {
 		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
 		private var cellMinimumSize: Double {
+			#if os(iOS)
 			switch horizontalSizeClass {
 			case .regular:
 				120
 			default:
 				100
 			}
+			#elseif os(macOS)
+			100
+			#endif
 		}
 
 		private var cellMaximumSize: Double {
-			cellMinimumSize + 40
+			(cellMinimumSize * 2) + cellSpacing
 		}
 
 		private let cellSpacing: Double = 8
@@ -56,7 +60,7 @@ extension ContainersView {
 
 #Preview {
 	ScrollView {
-		ContainersView.GridView(containers: [.preview])
+		ContainersView.GridView(containers: [.preview()])
 			.padding()
 	}
 	.background(Color.groupedBackground)

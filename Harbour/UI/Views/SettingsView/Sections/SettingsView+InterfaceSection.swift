@@ -16,6 +16,7 @@ extension SettingsView {
 		@Bindable var viewModel: SettingsView.ViewModel
 
 		var body: some View {
+			#if os(iOS) || targetEnvironment(macCatalyst)
 			Section("SettingsView.Interface.Title") {
 				if viewModel.displayiPadOptions {
 					// Use Two-Column Layout
@@ -31,7 +32,7 @@ extension SettingsView {
 				}
 
 				// Enable Haptics
-				#if os(iOS)
+				#if os(iOS) && !targetEnvironment(macCatalyst)
 				ToggleOption(
 					"SettingsView.Interface.EnableHaptics.Title",
 					description: "SettingsView.Interface.EnableHaptics.Description",
@@ -60,6 +61,7 @@ extension SettingsView {
 					.listRowAttentionFocus(isFocused: appIconIsFocused)
 				#endif
 			}
+			#endif
 		}
 	}
 }

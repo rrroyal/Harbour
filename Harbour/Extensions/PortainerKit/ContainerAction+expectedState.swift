@@ -10,7 +10,7 @@ import Foundation
 import PortainerKit
 
 extension ContainerAction {
-	var expectedState: ContainerState {
+	var expectedState: Container.State {
 		switch self {
 		case .start:	.running
 		case .stop:		.exited

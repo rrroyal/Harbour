@@ -18,7 +18,7 @@ extension SceneDelegate {
 			return
 		}
 
-		logger.error("Error: \(error, privacy: .public)")
+//		logger.error("Error: \(error, privacy: .public)")
 
 		Haptics.generateIfEnabled(.error)
 		presentIndicator(.error(error))

@@ -20,8 +20,9 @@ extension StacksView {
 		private var fetchError: Error?
 
 		var query = ""
+		var isSearchActive = false
 		var scrollPosition: StackItem.ID?
-		var selectedStackID: StackItem.ID?
+//		var selectedStackID: StackItem.ID?
 		var isCreateStackSheetPresented = false
 		var activeCreateStackSheetDetent: PresentationDetent = .medium
 		var scrollViewIsRefreshing = false

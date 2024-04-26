@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - ViewTab
 
-enum ViewTab: Hashable {
+enum ViewTab: CaseIterable, Hashable {
 	case containers
 	case stacks
 }

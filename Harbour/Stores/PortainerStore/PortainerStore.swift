@@ -219,11 +219,16 @@ public extension PortainerStore {
 
 		selectedEndpoint = nil
 
+		refreshTask?.cancel()
+
 		endpointsTask?.cancel()
 		setEndpoints(nil)
 
 		containersTask?.cancel()
 		setContainers(nil)
+
+		stacksTask?.cancel()
+		setStacks(nil)
 
 		attachedContainer = nil
 	}

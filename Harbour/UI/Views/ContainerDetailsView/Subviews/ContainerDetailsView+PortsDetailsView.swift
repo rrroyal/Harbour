@@ -14,24 +14,26 @@ extension ContainerDetailsView {
 		let ports: [PortainerKit.Port]?
 
 		private var data: [KeyValueEntry] {
-			ports?.map { entry in
-				let privatePort = entry.privatePort ?? 0
-				let publicPort = entry.publicPort ?? 0
+			ports?
+				.map { entry in
+					let privatePort = entry.privatePort ?? 0
+					let publicPort = entry.publicPort ?? 0
 
-				let key: String = if let type = entry.type {
-					"\(privatePort)/\(type.rawValue)"
-				} else {
-					"\(privatePort)"
+					let key: String = if let type = entry.type {
+						"\(privatePort)/\(type.rawValue)"
+					} else {
+						"\(privatePort)"
+					}
+
+					let value: String = if let ip = entry.ip {
+						"\(ip):\(publicPort)"
+					} else {
+						"\(publicPort)"
+					}
+
+					return .init(key, value)
 				}
-
-				let value: String = if let ip = entry.ip {
-					"\(ip):\(publicPort)"
-				} else {
-					"\(publicPort)"
-				}
-
-				return .init(key, value)
-			} ?? []
+				.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending } ?? []
 		}
 
 		var body: some View {

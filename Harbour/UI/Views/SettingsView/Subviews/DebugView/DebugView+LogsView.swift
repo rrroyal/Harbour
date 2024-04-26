@@ -75,12 +75,8 @@ extension DebugView {
 				}
 			}
 			.formStyle(.grouped)
-			.scrollDismissesKeyboard(.interactively)
 			.searchable(text: $filter)
 			.navigationTitle("DebugView.LogsView.Title")
-			#if os(iOS)
-			.navigationBarTitleDisplayMode(.inline)
-			#endif
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					toolbarMenu
@@ -92,9 +88,6 @@ extension DebugView {
 //					}
 //				}
 			}
-			#if os(macOS)
-			.frame(minWidth: Constants.Window.minWidth, minHeight: Constants.Window.minHeight)
-			#endif
 			.refreshable(binding: $scrollViewIsRefreshing) {
 				await getLogs(showIndicator: false).value
 			}

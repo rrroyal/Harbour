@@ -34,6 +34,7 @@ struct HarbourApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
+				.scrollDismissesKeyboard(.interactively)
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
@@ -45,19 +46,11 @@ struct HarbourApp: App {
 		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
 		.commands {
-			CommandGroup(before: .newItem) {
-				Button {
-					portainerStore.refresh()
-				} label: {
-					Label("Generic.Refresh", systemImage: SFSymbol.reload)
-				}
-				.keyboardShortcut("r", modifiers: .command)
-
-				Divider()
-			}
+			PortainerCommandMenu(portainerStore: portainerStore)
 		}
 		#if os(macOS)
-		.windowToolbarStyle(.unified)
+//		.windowStyle(.hiddenTitleBar)
+		.windowToolbarStyle(.unifiedCompact(showsTitle: false))
 		#endif
 		.modelContainer(for: ModelContainer.allModelTypes)
 
@@ -69,6 +62,10 @@ struct HarbourApp: App {
 					preferences: preferences,
 					portainerStore: portainerStore
 				)
+				#if os(macOS)
+				.sheetMinimumFrame()
+				#endif
+				.scrollDismissesKeyboard(.interactively)
 		}
 		.modelContainer(for: ModelContainer.allModelTypes)
 		#endif
@@ -89,5 +86,46 @@ private extension HarbourApp {
 			UIApplication.shared.shortcutItems = nil
 		}
 		#endif
+	}
+}
+
+// MARK: - HarbourApp+Commands
+
+private extension HarbourApp {
+	struct PortainerCommandMenu: Commands {
+		var portainerStore: PortainerStore
+
+		@MainActor
+		var body: some Commands {
+			CommandMenu("CommandMenu.Portainer") {
+				Button {
+					portainerStore.refresh()
+				} label: {
+					Label("Generic.Refresh", systemImage: SFSymbol.reload)
+				}
+				.keyboardShortcut("r", modifiers: .command)
+				.disabled(!portainerStore.isSetup)
+
+				Divider()
+
+				let selectedEndpointBinding = Binding<Endpoint?>(
+					get: { portainerStore.selectedEndpoint },
+					set: { portainerStore.setSelectedEndpoint($0) }
+				)
+				Picker(selection: selectedEndpointBinding) {
+					ForEach(portainerStore.endpoints) { endpoint in
+						Text(endpoint.name ?? endpoint.id.description)
+							.tag(endpoint as Endpoint?)
+					}
+				} label: {
+					Text("CommandMenu.Portainer.ActiveEndpoint")
+					if let selectedEndpoint = selectedEndpointBinding.wrappedValue {
+						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
+							.foregroundStyle(.secondary)
+					}
+				}
+				.disabled(portainerStore.endpoints.isEmpty)
+			}
+		}
 	}
 }

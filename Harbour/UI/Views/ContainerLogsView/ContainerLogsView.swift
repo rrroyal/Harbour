@@ -30,10 +30,21 @@ struct ContainerLogsView: View {
 	var body: some View {
 		ScrollViewReader { scrollProxy in
 			ScrollView {
-				LogsView(logs: viewModel.logs)
-					.animation(.easeInOut, value: viewModel.logs)
+				LazyVStack {
+					Text(viewModel.logs ?? "")
+						.font(.caption)
+						.fontDesign(.monospaced)
+						.textSelection(.enabled)
+						#if os(iOS)
+						.padding(.horizontal, 10)
+						#elseif os(macOS)
+						.padding(.horizontal)
+						#endif
+						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+						.id(ViewID.logsLabel)
+				}
+				.animation(.easeInOut, value: viewModel.logs)
 			}
-			.scrollDismissesKeyboard(.interactively)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
@@ -92,8 +103,16 @@ private extension ContainerLogsView {
 
 	func scrollLogs(anchor: UnitPoint, scrollProxy: ScrollViewProxy) {
 		withAnimation {
-			scrollProxy.scrollTo(LogsView.labelID, anchor: anchor)
+			scrollProxy.scrollTo(ViewID.logsLabel, anchor: anchor)
 		}
+	}
+}
+
+// MARK: - ContainerLogsView+ViewID
+
+private extension ContainerLogsView {
+	enum ViewID {
+		case logsLabel
 	}
 }
 

@@ -42,21 +42,25 @@ extension StacksView {
 		}
 
 		private var stackColor: Color {
-			guard let stack = stack.stack else { return .orange }
-			if isLoading { return Color.gray }
-			if !isOn { return stack.status.color.opacity(Constants.secondaryOpacity) }
+			if isLoading { return .gray }
 
-			if containers.count == runningContainersCount {
-				return stack.status.color
-			} else {
-				let hasFailedContainers = containers.contains {
-					if let exitCode = $0.exitCode {
-						return exitCode != 0
-					}
-					return false
-				}
-				return hasFailedContainers ? Color.purple : stack.status.color
+			let containersCount = containers.count
+			if containersCount == runningContainersCount, containersCount > 0 {
+				return Stack.Status.active.color
 			}
+
+			let hasFailedContainers = containers.contains {
+				(($0.exitCode ?? 0) != 0) || $0.state == .dead
+			}
+			if hasFailedContainers {
+				return .orange
+			}
+
+			if let stack = stack.stack {
+				return stack.status.color
+			}
+
+			return .gray
 		}
 
 		private var stackStatusLabel: String {
@@ -71,36 +75,36 @@ extension StacksView {
 		var body: some View {
 			VStack(alignment: .leading) {
 				Text(verbatim: stack.name)
-					.font(.body)
+					.font(.headline)
 					.fontWeight(.medium)
-					.foregroundStyle(isOn ? Color.primary : Color.secondary)
 
 				HStack(spacing: 4) {
 					Image(systemName: "circle")
 						.font(.system(size: iconSize))
 						.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stackStatusLabel)
+						.symbolVariant(isLoading ? .none : .fill)
+						.symbolVariant(stack.stack?._isStored ?? false ? .none : .fill)
 
 					Group {
 						if isLoading {
 							Text("Generic.Loading")
 						} else {
-							if isOn {
-								Text(verbatim: "\(stackStatusLabel) (\(runningContainersCount)/\(containers.count))")
-							} else {
-								Text(verbatim: stackStatusLabel)
-							}
+							Text(verbatim: isOn ? "\(stackStatusLabel) (\(runningContainersCount)/\(containers.count))" : stackStatusLabel)
 						}
 					}
 					.font(.footnote)
 					.fontWeight(.medium)
+					.transition(.opacity)
+					.id(ViewID.subheadlineLabel)
 				}
 				.foregroundStyle(stackColor)
-				.symbolVariant(isLoading ? .none : .fill)
 				.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
+				.transition(.opacity)
 			}
 			.padding(.vertical, 2)
 			.transition(.opacity)
 			.animation(.easeInOut, value: isLoading)
+			.animation(.easeInOut, value: isOn)
 			.animation(.easeInOut, value: stack.stack?.status)
 			.contextMenu {
 				if let stack = stack.stack {
@@ -125,7 +129,16 @@ extension StacksView {
 						.disabled(isLoading)
 				}
 			}
+			.id("StackCell.\(stack.id)")
 		}
+	}
+}
+
+// MARK: - StacksView.StackCell+ViewID
+
+private extension StacksView.StackCell {
+	enum ViewID {
+		case subheadlineLabel
 	}
 }
 
@@ -143,7 +156,7 @@ private extension StacksView.StackCell {
 					systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
 				)
 			}
-			.symbolVariant(.fill)
+//			.symbolVariant(.fill)
 			.labelStyle(.titleAndIcon)
 		}
 	}
@@ -166,5 +179,11 @@ private extension StacksView.StackCell {
 // MARK: - Previews
 
 #Preview {
-	StacksView.StackCell(.init(stack: .preview), containers: [.preview], isLoading: false, filterAction: { }, toggleAction: { })
+	List {
+		StacksView.StackCell(.init(stack: .preview()), containers: [.preview()], isLoading: false, filterAction: { }, toggleAction: { })
+		StacksView.StackCell(.init(stack: .preview()), containers: [.preview(), .preview(state: .dead)], isLoading: false, filterAction: { }, toggleAction: { })
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false, filterAction: { }, toggleAction: { })
+		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview()], isLoading: false, filterAction: { }, toggleAction: { })
+		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview(), .preview(state: .dead)], isLoading: false, filterAction: { }, toggleAction: { })
+	}
 }

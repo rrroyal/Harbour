@@ -25,8 +25,8 @@ extension SetupView {
 		private(set) var loginTask: Task<Bool, Error>?
 		private(set) var errorTimer: Timer?
 
-		var url: String = "https://compaq.local:9443"
-		var token: String = "ptr_RiKurhVRNdZDYh9oik/2V/2qNX9d6neTkt2f53pCbKM="
+		var url: String = ""
+		var token: String = ""
 		var buttonLabel: String?
 		var buttonColor: Color?
 
@@ -43,26 +43,12 @@ extension SetupView {
 			}
 		}
 
-		@discardableResult
-		func onTokenTextFieldSubmit() async throws -> Bool {
-			guard canSubmit else { return false }
-
-			Haptics.generateIfEnabled(.light)
-			return try await login()
-		}
-
-		@discardableResult
-		func onContinueButtonPress() async throws -> Bool {
-			Haptics.generateIfEnabled(.light)
-			return try await login()
-		}
-
 		func cancelLogin() {
 			loginTask?.cancel()
+			loginTask = nil
 			isLoading = false
 		}
 
-		@discardableResult
 		func login() async throws -> Bool {
 			logger.notice("Attempting to login with URL: \"\(self.url)\"...")
 
@@ -76,6 +62,7 @@ extension SetupView {
 					Task { @MainActor in
 						isLoading = false
 					}
+					self.loginTask = nil
 				}
 
 				do {
@@ -103,22 +90,24 @@ extension SetupView {
 						}
 					}
 
+					Haptics.generateIfEnabled(.success)
+
 					Task { @MainActor in
 						isLoading = false
 						buttonColor = .green
 						buttonLabel = String(localized: "SetupView.LoginButton.Success")
-						Haptics.generateIfEnabled(.success)
 					}
 
 					try? await Task.sleep(for: .seconds(2))
 
 					return true
 				} catch {
+					Haptics.generateIfEnabled(.error)
+
 					Task { @MainActor in
 						isLoading = false
 						buttonColor = .red
-						buttonLabel = error.localizedDescription
-						Haptics.generateIfEnabled(.error)
+						buttonLabel = error.localizedDescription.localizedCapitalized
 					}
 
 					errorTimer?.invalidate()

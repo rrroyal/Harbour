@@ -124,6 +124,26 @@
         }
       }
     },
+    "CommandMenu.Portainer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portainer"
+          }
+        }
+      }
+    },
+    "CommandMenu.Portainer.ActiveEndpoint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active Endpoint"
+          }
+        }
+      }
+    },
     "ContainerCell.UnknownName" : {
       "localizations" : {
         "en" : {
@@ -516,6 +536,26 @@
         }
       }
     },
+    "ContentView.ToggleSidebar" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toggle Sidebar"
+          }
+        }
+      }
+    },
+    "CreateStackView.AddEnvironmentValue" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Environment Value"
+          }
+        }
+      }
+    },
     "CreateStackView.Create" : {
       "localizations" : {
         "en" : {
@@ -812,26 +852,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Widgets"
-          }
-        }
-      }
-    },
-    "EnvironmentEntryView.Key" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Key"
-          }
-        }
-      }
-    },
-    "EnvironmentEntryView.Value" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Value"
           }
         }
       }
@@ -1266,6 +1286,26 @@
         }
       }
     },
+    "KeyValueEditView.Key" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Key"
+          }
+        }
+      }
+    },
+    "KeyValueEditView.Value" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Value"
+          }
+        }
+      }
+    },
     "Notification.ContainersChanged.MultipleReadable.Body Changes:%@" : {
       "localizations" : {
         "en" : {
@@ -1386,6 +1426,96 @@
         }
       }
     },
+    "PortainerKit.Container.State.Icon.Created" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🐣"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Icon.Dead" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "☠️"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Icon.Exited" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🚪"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Icon.Paused" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⏸️"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Icon.Removing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🗑️"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Icon.Restarting" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔄"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Icon.Running" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Icon.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😶‍🌫️"
+          }
+        }
+      }
+    },
+    "PortainerKit.Container.State.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
+          }
+        }
+      }
+    },
     "PortainerKit.ContainerAction.AppEnumTitle" : {
       "localizations" : {
         "en" : {
@@ -1452,96 +1582,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resume"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Created" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🐣"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Dead" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "☠️"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Exited" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🚪"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Paused" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "⏸️"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Removing" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🗑️"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Restarting" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔄"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Running" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🏃"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Icon.Unknown" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "😶‍🌫️"
-          }
-        }
-      }
-    },
-    "PortainerKit.ContainerState.Unknown" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unknown"
           }
         }
       }
@@ -1926,17 +1966,7 @@
         }
       }
     },
-    "SetupView.Headline" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Setup"
-          }
-        }
-      }
-    },
-    "SetupView.HowToLoginButton" : {
+    "SetupView.HowToLogin" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1962,6 +1992,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Success!"
+          }
+        }
+      }
+    },
+    "SetupView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup"
+          }
+        }
+      }
+    },
+    "SetupView.Token" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Token"
+          }
+        }
+      }
+    },
+    "SetupView.URL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
           }
         }
       }

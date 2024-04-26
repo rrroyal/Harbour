@@ -14,15 +14,15 @@ import UIKit
 
 extension SceneDelegate: UIWindowSceneDelegate {
 	func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+		#if targetEnvironment(macCatalyst)
 		if let windowScene = (scene as? UIWindowScene) {
-			#if targetEnvironment(macCatalyst)
 			windowScene.titlebar?.titleVisibility = .hidden
 			windowScene.titlebar?.toolbarStyle = .unifiedCompact
-			#endif
+		}
+		#endif
 
-			if let shortcutItem = connectionOptions.shortcutItem {
-				handleShortcutItem(shortcutItem)
-			}
+		if let shortcutItem = connectionOptions.shortcutItem {
+			handleShortcutItem(shortcutItem)
 		}
 	}
 

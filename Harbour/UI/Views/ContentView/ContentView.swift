@@ -13,29 +13,24 @@ import SwiftUI
 // MARK: - ContentView
 
 struct ContentView: View {
-	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(AppState.self) private var appState
+	#if os(iOS)
 	@Environment(SceneDelegate.self) private var sceneDelegate
+	#elseif os(macOS)
+	@State private var sceneDelegate = SceneDelegate()
+	#endif
+	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.scenePhase) private var scenePhase
 
 	var body: some View {
 		@Bindable var sceneDelegate = sceneDelegate
-		TabView(selection: $sceneDelegate.activeTab) {
-			ContainersView()
-				.tag(ViewTab.containers)
-				.tabItem {
-					Label(ViewTab.containers.label, systemImage: ViewTab.containers.icon)
-//						.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
-				}
-				.environment(\.navigationPath, sceneDelegate.navigationPathContainers)
 
-			StacksView()
-				.tag(ViewTab.stacks)
-				.tabItem {
-					Label(ViewTab.stacks.label, systemImage: ViewTab.stacks.icon)
-//						.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
-				}
-				.environment(\.navigationPath, sceneDelegate.navigationPathStacks)
+		Group {
+			#if os(iOS)
+			ViewForIOS()
+			#elseif os(macOS)
+			ViewForMacOS()
+			#endif
 		}
 		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 			SettingsView()
@@ -45,6 +40,9 @@ struct ContentView: View {
 			sceneDelegate.onLandingDismissed()
 		} content: {
 			LandingView()
+				#if os(macOS)
+				.sheetMinimumFrame()
+				#endif
 		}
 		.alert(
 			sceneDelegate.activeAlert?.title ?? "",

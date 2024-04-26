@@ -18,7 +18,7 @@ extension PortainerStore {
 		do {
 			let endpoints = try await portainer.fetchEndpoints()
 			logger.info("Got \(endpoints.count, privacy: .public) endpoint(s).")
-			return endpoints.sorted()
+			return endpoints
 		} catch {
 			logger.error("Failed to get endpoints: \(error, privacy: .public)")
 			throw error
@@ -39,7 +39,7 @@ extension PortainerStore {
 
 			let containers = try await portainer.fetchContainers(endpointID: selectedEndpoint.id, filters: filters)
 			logger.info("Got \(containers.count, privacy: .public) container(s).")
-			return containers.sorted()
+			return containers
 		} catch {
 			logger.error("Failed to get containers: \(error, privacy: .public)")
 			throw error
@@ -59,7 +59,7 @@ extension PortainerStore {
 
 			let containers = try await portainer.fetchContainers(endpointID: selectedEndpoint.id, stackName: stackName)
 			logger.info("Got \(containers.count, privacy: .public) container(s).")
-			return containers.sorted()
+			return containers
 		} catch {
 			logger.error("Failed to get containers: \(error, privacy: .public)")
 			throw error
@@ -193,7 +193,7 @@ public extension PortainerStore {
 		do {
 			let stacks = try await portainer.fetchStacks(endpointID: selectedEndpoint?.id)
 			logger.info("Got \(stacks.count, privacy: .public) stack(s).")
-			return stacks.sorted()
+			return stacks
 		} catch {
 			logger.error("Failed to fetch stacks: \(error, privacy: .public)")
 			throw error

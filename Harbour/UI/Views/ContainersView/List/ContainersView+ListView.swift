@@ -41,7 +41,7 @@ extension ContainersView {
 
 #Preview {
 	ScrollView {
-		ContainersView.ListView(containers: [.preview])
+		ContainersView.ListView(containers: [.preview()])
 			.padding()
 	}
 	.background(Color.groupedBackground)

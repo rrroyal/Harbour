@@ -13,8 +13,9 @@ extension ContainerDetailsView {
 		let labels: [String: String]?
 
 		private var data: [KeyValueEntry] {
-			(labels ?? [:])
+			labels?
 				.map { .init($0, $1) }
+				.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending } ?? []
 		}
 
 		var body: some View {

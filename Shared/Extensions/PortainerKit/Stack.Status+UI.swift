@@ -26,19 +26,43 @@ extension Stack.Status? {
 	}
 }
 
-// MARK: - Stack.Status+color
+// MARK: - Stack.Status+icon
 
 extension Stack.Status {
-	var color: Color {
+	var icon: String {
 		switch self {
-		case .active:	Color(uiColor: .systemGreen)
-		case .inactive:	Color(uiColor: .systemRed)
+		case .active:	SFSymbol.start
+		case .inactive: SFSymbol.stop
 		}
 	}
 }
 
 extension Stack.Status? {
+	var icon: String {
+		self?.icon ?? SFSymbol.questionMark
+	}
+}
+
+// MARK: - Stack.Status+color
+
+extension Stack.Status {
 	var color: Color {
-		self?.color ?? Color(uiColor: .gray)
+		#if canImport(UIKit)
+		switch self {
+		case .active:	Color(uiColor: .systemGreen)
+		case .inactive:	Color.secondary
+		}
+		#elseif canImport(AppKit)
+		switch self {
+		case .active:	Color(nsColor: .systemGreen)
+		case .inactive:	Color.secondary
+		}
+		#endif
+	}
+}
+
+extension Stack.Status? {
+	var color: Color {
+		self?.color ?? Color.secondaryGray
 	}
 }

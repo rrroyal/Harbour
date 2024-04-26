@@ -41,14 +41,24 @@ extension CreateStackView {
 								}
 							}
 					} else {
-						Button("CreateStackView.SelectStackFile") {
+						Button {
 							Haptics.generateIfEnabled(.sheetPresentation)
 							isFileImporterPresented = true
+						} label: {
+							Text("CreateStackView.SelectStackFile")
+								#if os(macOS)
+								.frame(maxWidth: .infinity)
+								.contentShape(Rectangle())
+								#endif
 						}
+						#if os(macOS)
+						.foregroundStyle(.accent)
+						.buttonStyle(.plain)
+						#endif
 					}
 				}
 				.frame(maxWidth: .infinity)
-				.background(isStackFileContentsTargeted ? Color.tertiaryBackground : nil)
+				.background(isStackFileContentsTargeted ? Color.accentColor.opacity(0.1) : nil)
 			} header: {
 				Text("CreateStackView.StackFileContents")
 			}

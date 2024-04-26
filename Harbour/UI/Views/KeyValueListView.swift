@@ -54,9 +54,11 @@ struct KeyValueListView: View {
 		}
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
-		.searchable(text: $query)
-		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.scrollContentBackground(.hidden)
+		#if os(iOS)
+		.searchable(text: $query)	// this breaks layout on macos :(
+		#endif
+		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background {
 			placeholderView
 		}

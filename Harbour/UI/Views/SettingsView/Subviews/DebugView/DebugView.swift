@@ -27,7 +27,6 @@ struct DebugView: View {
 			OtherSection()
 		}
 		.formStyle(.grouped)
-		.scrollDismissesKeyboard(.interactively)
 		.navigationTitle("DebugView.Title")
 		.environment(\.logger, logger)
 	}

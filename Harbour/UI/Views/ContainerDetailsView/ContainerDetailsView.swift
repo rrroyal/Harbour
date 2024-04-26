@@ -70,7 +70,6 @@ struct ContainerDetailsView: View {
 			}
 		}
 		.formStyle(.grouped)
-		.scrollDismissesKeyboard(.interactively)
 		.scrollContentBackground(.hidden)
 		#if os(iOS)
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
@@ -161,8 +160,8 @@ private extension ContainerDetailsView {
 				}
 
 				if let container {
-					Label(container.state.description.localizedCapitalized, systemImage: container.state.icon)
-					Divider()
+//					Label(container.state.description.localizedCapitalized, systemImage: container.state.icon)
+//					Divider()
 					ContainerContextMenu(container: container)
 				}
 			} label: {
