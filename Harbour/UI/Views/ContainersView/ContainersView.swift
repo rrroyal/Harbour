@@ -64,9 +64,9 @@ struct ContainersView: View {
 		Group {
 			if !portainerStore.isSetup {
 				ContentUnavailableView(
-					"Generic.NotSetup",
+					"Generic.NotSetup.Title",
 					systemImage: SFSymbol.network,
-					description: Text("ContainersView.NotSetupPlaceholder.Description")
+					description: Text("Generic.NotSetup.Description")
 				)
 				.symbolVariant(.slash)
 			} else if portainerStore.endpoints.isEmpty {
@@ -105,21 +105,19 @@ struct ContainersView: View {
 			.transition(.opacity)
 		}
 		.background {
-			if viewModel.isEmptyPlaceholderVisible {
+			if viewModel.isBackgroundPlaceholderVisible {
 				backgroundPlaceholder
 			}
 		}
 		#if os(iOS)
 		.background(
 			viewState: viewModel.viewState,
-			isViewStateBackgroundVisible: viewModel.isEmptyPlaceholderVisible,
 			backgroundVisiblity: .hidden,
 			backgroundColor: .groupedBackground
 		)
 		#elseif os(macOS)
 		.background(
 			viewState: viewModel.viewState,
-			isViewStateBackgroundVisible: viewModel.isEmptyPlaceholderVisible,
 			backgroundVisiblity: .hidden,
 			backgroundColor: .clear
 		)
@@ -240,6 +238,8 @@ private extension ContainersView {
 	@discardableResult
 	func fetch() -> Task<Void, Never> {
 		Task {
+			guard portainerStore.isSetup else { return }
+
 			do {
 				try await viewModel.refresh()
 			} catch {

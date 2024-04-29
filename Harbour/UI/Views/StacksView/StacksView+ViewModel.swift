@@ -46,50 +46,48 @@ extension StacksView {
 		}
 
 		var stacks: [StackItem] {
-			let realStacks = portainerStore.stacks.map(StackItem.init)
+			var stacks = portainerStore.stacks.map(StackItem.init)
 
 			if Preferences.shared.svIncludeLimitedStacks {
-				let realStackNames = Set(realStacks.map(\.name))
+				let realStackNames = Set(stacks.map(\.name))
 
 				let limitedStackNames = portainerStore.containers
 					.compactMap(\.stack)
 					.filter { !realStackNames.contains($0) }
 				let limitedStacks = Set(limitedStackNames)
 					.map { StackItem(label: $0) }
-				return realStacks + limitedStacks
-			} else {
-				return realStacks
-			}
-		}
-
-		var stacksFiltered: [StackItem] {
-			let stacks = if query.isReallyEmpty {
-				self.stacks
-			} else {
-				self.stacks
-					.filter {
-						$0.name.localizedCaseInsensitiveContains(query) ||
-						$0.id.description.localizedCaseInsensitiveContains(query)
-					}
+				stacks += limitedStacks
 			}
 
-			let selectedEndpointID = portainerStore.selectedEndpoint?.id
-
-			return stacks
-				.filter {
-					if Preferences.shared.svFilterByActiveEndpoint {
-						// if there's no `stack.endpointID`, that means that this stack was derived from containers, which are already filtered by the active endpoint
-						let stackEndpointID = $0.stack?.endpointID ?? selectedEndpointID
-						return stackEndpointID == selectedEndpointID
-					} else {
-						return true
-					}
+			if Preferences.shared.svFilterByActiveEndpoint, let selectedEndpointID = portainerStore.selectedEndpoint?.id {
+				stacks = stacks.filter {
+					// if there's no `stack.endpointID`, that means that this stack was derived from containers, which are already filtered by the active endpoint
+					let stackEndpointID = $0.stack?.endpointID ?? selectedEndpointID
+					return stackEndpointID == selectedEndpointID
 				}
-				.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+			}
+
+			if !query.isReallyEmpty {
+				stacks = stacks.filter {
+					$0.name.localizedCaseInsensitiveContains(query) ||
+					$0.id.description.localizedCaseInsensitiveContains(query)
+				}
+			}
+
+			return stacks.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
 		}
 
-		var isEmptyPlaceholderViewVisible: Bool {
-			!viewState.isLoading && stacksFiltered.isEmpty
+		var isBackgroundPlaceholderVisible: Bool {
+			switch viewState {
+			case .loading:
+				false
+			case .reloading:
+				false
+			case .success:
+				!viewState.isLoading && stacks.isEmpty
+			case .failure:
+				false
+			}
 		}
 
 		var isStatusProgressViewVisible: Bool {

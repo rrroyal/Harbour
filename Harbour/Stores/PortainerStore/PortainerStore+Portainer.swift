@@ -202,10 +202,10 @@ public extension PortainerStore {
 
 	@Sendable
 	func fetchStack(id stackID: Stack.ID) async throws -> Stack {
-		logger.info("Fetching stack for stackID: \"\(stackID)\"...")
+		logger.info("Fetching stack for stackID: \(stackID)...")
 		do {
 			let details = try await portainer.fetchStackDetails(stackID: stackID)
-			logger.info("Got stack for stackID: \"\(stackID)\"")
+			logger.info("Got stack for stackID: \(stackID)")
 			return details
 		} catch {
 			logger.error("Failed to fetch stack for stackID: \(stackID): \(error, privacy: .public)")

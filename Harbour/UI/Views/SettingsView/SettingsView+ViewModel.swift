@@ -62,13 +62,13 @@ extension SettingsView {
 
 		func removeServer(_ url: URL) throws {
 			Task { @MainActor in
+				try portainerStore.removeServer(url)
+				refreshServers()
+
 				if portainerStore.serverURL == url {
 					activeURL = nil
 					portainerStore.reset()
 				}
-
-				try portainerStore.removeServer(url)
-				refreshServers()
 			}
 		}
 	}

@@ -62,7 +62,7 @@ extension ContainersView {
 				.filter(searchText)
 		}
 
-		var isEmptyPlaceholderVisible: Bool {
+		var isBackgroundPlaceholderVisible: Bool {
 			switch viewState {
 			case .loading:
 				false

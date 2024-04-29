@@ -22,9 +22,16 @@ struct StacksView: View {
 	@FocusState private var isFocused: Bool
 
 	@ViewBuilder
-	private var placeholderView: some View {
-		if viewModel.isEmptyPlaceholderViewVisible {
-			if !viewModel.query.isEmpty {
+	private var backgroundPlaceholder: some View {
+		Group {
+			if !portainerStore.isSetup {
+				ContentUnavailableView(
+					"Generic.NotSetup.Title",
+					systemImage: SFSymbol.network,
+					description: Text("Generic.NotSetup.Description")
+				)
+				.symbolVariant(.slash)
+			} else if !viewModel.query.isEmpty {
 				ContentUnavailableView.search(text: viewModel.query)
 			} else {
 				ContentUnavailableView("StacksView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
@@ -34,7 +41,7 @@ struct StacksView: View {
 
 	var body: some View {
 		List {
-			ForEach(viewModel.stacksFiltered) { stackItem in
+			ForEach(viewModel.stacks) { stackItem in
 				let isLoading = portainerStore.loadingStacks.contains(Stack.ID(stackItem.id) ?? -1)
 				let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
 
@@ -70,9 +77,11 @@ struct StacksView: View {
 		#endif
 		.scrollPosition(id: $viewModel.scrollPosition)
 		.searchable(text: $viewModel.query, isPresented: $viewModel.isSearchActive)
-//		.background {
-//			placeholderView
-//		}
+		.background {
+			if viewModel.isBackgroundPlaceholderVisible {
+				backgroundPlaceholder
+			}
+		}
 		#if os(iOS)
 		.background(viewState: viewModel.viewState, backgroundVisiblity: .hidden, backgroundColor: .groupedBackground)
 		#elseif os(macOS)
@@ -96,13 +105,14 @@ struct StacksView: View {
 				} label: {
 					Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
 				}
+				.disabled(!portainerStore.isSetup)
 			}
 
 			ToolbarItem(placement: .automatic) {
 				Menu {
 					Toggle(isOn: $preferences.svFilterByActiveEndpoint) {
 						Label(
-							"StacksView.Menu.FilterByActiveEndpoint",
+							"StacksView.Menu.ActiveEndpointOnly",
 							systemImage: "tag"
 						)
 					}
@@ -171,7 +181,7 @@ struct StacksView: View {
 		}
 		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.viewState)
-		.animation(.easeInOut, value: viewModel.stacksFiltered)
+		.animation(.easeInOut, value: viewModel.stacks)
 		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
 //		.animation(.easeInOut, value: viewModel.selectedStackID)
 		.focusable()
@@ -195,6 +205,8 @@ private extension StacksView {
 	@discardableResult
 	func fetch(includingContainers: Bool? = nil) -> Task<Void, Never> {
 		Task {
+			guard portainerStore.isSetup else { return }
+
 			do {
 				try await viewModel.getStacks(includingContainers: includingContainers).value
 			} catch {

@@ -119,8 +119,10 @@ extension StacksView {
 				}
 			}
 			.swipeActions(edge: .leading) {
-				FilterButton(filterAction: filterAction)
-					.tint(Color.accentColor)
+				if isOn {
+					FilterButton(filterAction: filterAction)
+						.tint(.accent)
+				}
 			}
 			.swipeActions(edge: .trailing) {
 				if let stack = stack.stack {

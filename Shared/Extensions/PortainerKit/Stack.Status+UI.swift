@@ -63,6 +63,6 @@ extension Stack.Status {
 
 extension Stack.Status? {
 	var color: Color {
-		self?.color ?? Color.secondaryGray
+		self?.color ?? Color.primaryGray
 	}
 }

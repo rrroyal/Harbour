@@ -10,7 +10,7 @@ import PortainerKit
 import SwiftUI
 import WidgetKit
 
-// MARK: - SelectContainerView
+// MARK: - StatusFeedbackView
 
 struct StatusFeedbackView: View {
 	var entry: ContainerStatusProvider.Entry

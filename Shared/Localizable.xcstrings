@@ -506,16 +506,6 @@
         }
       }
     },
-    "ContainersView.NotSetupPlaceholder.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure the Portainer connection in settings."
-          }
-        }
-      }
-    },
     "ContainersView.SearchToken.Status.Off" : {
       "localizations" : {
         "en" : {
@@ -1076,7 +1066,17 @@
         }
       }
     },
-    "Generic.NotSetup" : {
+    "Generic.NotSetup.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure the Portainer connection in settings."
+          }
+        }
+      }
+    },
+    "Generic.NotSetup.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -2136,12 +2136,12 @@
         }
       }
     },
-    "StacksView.Menu.FilterByActiveEndpoint" : {
+    "StacksView.Menu.ActiveEndpointOnly" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Filter By Endpoint"
+            "value" : "Active Endpoint Only"
           }
         }
       }

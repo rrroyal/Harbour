@@ -108,14 +108,9 @@ private extension DebugView {
 				Button("DebugView.PersistenceSection.ResetSwiftData", role: .destructive) {
 					logger.warning("Resetting SwiftData...")
 					Haptics.generateIfEnabled(.heavy)
-					Task { @MainActor in
-						do {
-							try modelContext.delete(model: StoredContainer.self)
-							logger.notice("SwiftData has been reset!")
-						} catch {
-							errorHandler(error)
-						}
-					}
+
+					modelContext.container.deleteAllData()
+					logger.notice("SwiftData has been reset!")
 				}
 
 				Button("DebugView.PersistenceSection.ResetKeychain", role: .destructive) {

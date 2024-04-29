@@ -81,7 +81,8 @@ struct StackDetailsView: View {
 						.contentShape(Rectangle())
 						#endif
 				}
-				.foregroundStyle(.accent)
+				.foregroundStyle(stack.isOn ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
+				.disabled(!stack.isOn)
 			}
 
 			NormalizedSection {
