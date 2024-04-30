@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - SFSymbol
+
 enum SFSymbol {
 	/// 􀅀 arrow.down.to.line
 	static let arrowDownLine = "arrow.down.to.line"
@@ -23,9 +25,6 @@ enum SFSymbol {
 
 	/// 􀆅 checkmark
 	static let checkmark = "checkmark"
-
-	/// 􀐘 cube
-	static let container = "cube"
 
 	/// 􀉁 doc.on.doc
 	static let copy = "doc.on.doc"
@@ -101,4 +100,13 @@ enum SFSymbol {
 
 	/// 􀆄 xmark
 	static let xmark = "xmark"
+}
+
+// MARK: - SFSymbol+Custom
+
+extension SFSymbol {
+	enum Custom {
+		/// custom.container
+		static let container = "custom.container"
+	}
 }

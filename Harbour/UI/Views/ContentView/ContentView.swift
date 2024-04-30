@@ -61,17 +61,9 @@ struct ContentView: View {
 		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneDelegate.onContinueUserActivity)
 		.onChange(of: appState.notificationsToHandle, sceneDelegate.onNotificationsToHandleChange)
 		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
-		.environment(\.errorHandler, .init(handleError))
+		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.presentIndicator, sceneDelegate.presentIndicator)
 		.withNavigation(handler: sceneDelegate)
-	}
-}
-
-// MARK: - ContentView+Actions
-
-private extension ContentView {
-	func handleError(_ error: Error, _debugInfo: String = ._debugInfo()) {
-		sceneDelegate.handleError(error, _debugInfo: _debugInfo)
 	}
 }
 

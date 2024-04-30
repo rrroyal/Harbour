@@ -6,7 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
 // MARK: - ViewTab
 
@@ -31,12 +31,12 @@ extension ViewTab {
 // MARK: - ViewTab+icon
 
 extension ViewTab {
-	var icon: String {
+	var icon: Image {
 		switch self {
 		case .containers:
-			SFSymbol.container
+			Image(SFSymbol.Custom.container)
 		case .stacks:
-			SFSymbol.stack
+			Image(systemName: SFSymbol.stack)
 		}
 	}
 }

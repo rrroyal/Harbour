@@ -16,9 +16,9 @@ import SwiftUI
 
 extension EnvironmentValues {
 	private struct ErrorHandlerEnvironmentKey: EnvironmentKey {
-		static let defaultValue: ErrorHandler = .init { error, _debugInfo in
+		static let defaultValue: ErrorHandler = .init { error in
 //			assertionFailure("`errorHandler` has been called, but none is attached!")
-			os_log(.error, log: .default, "Error: \(error, privacy: .public) [\(_debugInfo, privacy: .public)]")
+			os_log(.error, log: .default, "Error: \(error, privacy: .public)")
 		}
 	}
 

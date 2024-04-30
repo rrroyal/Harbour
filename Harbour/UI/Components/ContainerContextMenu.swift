@@ -149,7 +149,7 @@ private extension ContainerContextMenu {
 					try await portainerStore.execute(action, on: container.id)
 					portainerStore.refreshContainers(errorHandler: errorHandler)
 				} catch {
-					errorHandler(error, ._debugInfo())
+					errorHandler(error)
 				}
 			}
 		}

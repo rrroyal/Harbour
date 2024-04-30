@@ -31,10 +31,15 @@ struct StacksView: View {
 					description: Text("Generic.NotSetup.Description")
 				)
 				.symbolVariant(.slash)
-			} else if !viewModel.query.isEmpty {
-				ContentUnavailableView.search(text: viewModel.query)
-			} else {
-				ContentUnavailableView("StacksView.NoContainersPlaceholder", systemImage: SFSymbol.xmark)
+			} else if viewModel.stacks.isEmpty {
+				if viewModel.viewState.isLoading {
+					ProgressView()
+				} else if !viewModel.query.isEmpty {
+					ContentUnavailableView.search(text: viewModel.query)
+				} else {
+					ContentUnavailableView("StacksView.NoStacksPlaceholder", systemImage: SFSymbol.stack)
+						.symbolVariant(.slash)
+				}
 			}
 		}
 	}

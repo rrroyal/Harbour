@@ -75,7 +75,7 @@ struct StackDetailsView: View {
 				Button {
 					filterByStackName(stack.name)
 				} label: {
-					Label("StacksView.ShowContainers", systemImage: SFSymbol.container)
+					Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
 						#if os(macOS)
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.contentShape(Rectangle())

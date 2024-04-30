@@ -22,7 +22,7 @@ extension AppState {
 				portainerStore.refresh(errorHandler: errorHandler)
 			} catch {
 				logger.error("Failed to switch Portainer server: \(error, privacy: .public)")
-				errorHandler?(error, String._debugInfo())
+				errorHandler?(error)
 				throw error
 			}
 		}

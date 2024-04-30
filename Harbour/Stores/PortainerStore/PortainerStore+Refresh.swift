@@ -18,7 +18,7 @@ extension PortainerStore {
 	@discardableResult
 	func refresh(
 		errorHandler: ErrorHandler? = nil
-	) -> Task<([Endpoint], [Container], [Stack]), Error> {
+	) -> Task<Void, Error> {
 		self.refreshTask?.cancel()
 
 		let task = Task { @MainActor in
@@ -29,15 +29,13 @@ extension PortainerStore {
 					async let _endpoints = refreshEndpoints(errorHandler: errorHandler).value
 					async let _containers = refreshContainers(errorHandler: errorHandler).value
 					async let _stacks = refreshStacks(errorHandler: errorHandler).value
-
-					return try await (_endpoints, _containers, _stacks)
+					_ = try await (_endpoints, _containers, _stacks)
 				} else {
-					let _endpoints = try await refreshEndpoints(errorHandler: errorHandler).value
+					_ = try await refreshEndpoints(errorHandler: errorHandler).value
 
 					async let _containers = refreshContainers(errorHandler: errorHandler).value
 					async let _stacks = refreshStacks(errorHandler: errorHandler).value
-
-					return try await (_endpoints, _containers, _stacks)
+					_ = try await (_containers, _stacks)
 				}
 			} catch {
 				errorHandler?(error)
@@ -56,11 +54,10 @@ extension PortainerStore {
 	/// - Returns: `Task<[Endpoint], Error>` of refresh.
 	@discardableResult
 	func refreshEndpoints(
-		errorHandler: ErrorHandler? = nil,
-		_debugInfo: String = ._debugInfo()
+		errorHandler: ErrorHandler? = nil
 	) -> Task<[Endpoint], Error> {
 		endpointsTask?.cancel()
-		let task = Task<[Endpoint], Error> { @MainActor in
+		let task = Task { @MainActor in
 			defer { self.endpointsTask = nil }
 
 			do {
@@ -68,8 +65,8 @@ extension PortainerStore {
 				self.setEndpoints(endpoints)
 				return endpoints
 			} catch {
-				if error.isCancellationError { return self.endpoints }
-				errorHandler?(error, _debugInfo)
+				guard !error.isCancellationError else { return self.endpoints }
+				errorHandler?(error)
 				throw error
 			}
 		}
@@ -84,20 +81,19 @@ extension PortainerStore {
 	/// - Returns: `Task<[Container], Error>` of refresh.
 	@discardableResult
 	func refreshContainers(
-		errorHandler: ErrorHandler? = nil,
-		_debugInfo: String = ._debugInfo()
+		errorHandler: ErrorHandler? = nil
 	) -> Task<[Container], Error> {
 		containersTask?.cancel()
-		let task = Task<[Container], Error> { @MainActor in
+		let task = Task { @MainActor in
 			defer { self.containersTask = nil }
 
 			do {
-				let containers = try await fetchContainers().sorted()
+				let containers = try await self.fetchContainers().sorted()
 				self.setContainers(containers)
-				return containers
+				return self.containers
 			} catch {
-				if error.isCancellationError { return self.containers }
-				errorHandler?(error, _debugInfo)
+				guard !error.isCancellationError else { return self.containers }
+				errorHandler?(error)
 				throw error
 			}
 		}
@@ -112,11 +108,10 @@ extension PortainerStore {
 	/// - Returns: `Task<[Stack], Error>` of refresh.
 	@discardableResult
 	func refreshStacks(
-		errorHandler: ErrorHandler? = nil,
-		_debugInfo: String = ._debugInfo()
+		errorHandler: ErrorHandler? = nil
 	) -> Task<[Stack], Error> {
 		stacksTask?.cancel()
-		let task = Task<[Stack], Error> { @MainActor in
+		let task = Task { @MainActor in
 			defer { self.stacksTask = nil }
 
 			do {
@@ -124,8 +119,8 @@ extension PortainerStore {
 				self.setStacks(stacks)
 				return stacks
 			} catch {
-				if error.isCancellationError { return self.stacks }
-				errorHandler?(error, _debugInfo)
+				guard !error.isCancellationError else { return self.stacks }
+				errorHandler?(error)
 				throw error
 			}
 		}

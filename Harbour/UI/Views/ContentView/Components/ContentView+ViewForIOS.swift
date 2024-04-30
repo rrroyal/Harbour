@@ -28,8 +28,12 @@ extension ContentView {
 				}
 				.tag(ViewTab.containers)
 				.tabItem {
-					Label(ViewTab.containers.label, systemImage: ViewTab.containers.icon)
-						.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
+					Label {
+						Text(ViewTab.containers.label)
+					} icon: {
+						ViewTab.containers.icon
+					}
+					.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
 				}
 				.environment(\.navigationPath, sceneDelegate.navigationPathContainers)
 
@@ -41,8 +45,12 @@ extension ContentView {
 				}
 				.tag(ViewTab.stacks)
 				.tabItem {
-					Label(ViewTab.stacks.label, systemImage: ViewTab.stacks.icon)
-						.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
+					Label {
+						Text(ViewTab.stacks.label)
+					} icon: {
+						ViewTab.stacks.icon
+					}
+					.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
 				}
 				.environment(\.navigationPath, sceneDelegate.navigationPathStacks)
 			}

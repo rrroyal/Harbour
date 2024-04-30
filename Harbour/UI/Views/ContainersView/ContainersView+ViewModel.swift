@@ -34,11 +34,7 @@ extension ContainersView {
 		var viewState: ViewState<[Container], Error> {
 			let containers = portainerStore.containers
 
-			if !(fetchTask?.isCancelled ?? true) {
-				return .reloading(containers)
-			}
-
-			if !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
+			if !(fetchTask?.isCancelled ?? true) || !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
 				return containers.isEmpty ? .loading : .reloading(containers)
 			}
 
@@ -96,10 +92,15 @@ extension ContainersView {
 				fetchError = nil
 
 				do {
-					async let endpointsTask = portainerStore.refreshEndpoints()
-					async let containersTask = portainerStore.refreshContainers()
+					if portainerStore.selectedEndpoint != nil {
+						async let endpointsTask = portainerStore.refreshEndpoints()
+						async let containersTask = portainerStore.refreshContainers()
 
-					_ = try await (endpointsTask.value, containersTask.value)
+						_ = try await (endpointsTask.value, containersTask.value)
+					} else {
+						_ = try await portainerStore.refreshEndpoints().value
+						_ = try await portainerStore.refreshContainers().value
+					}
 
 					let staticTokens: [SearchToken] = [
 						.status(isOn: true),

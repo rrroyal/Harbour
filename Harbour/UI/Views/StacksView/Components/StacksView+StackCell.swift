@@ -172,7 +172,7 @@ private extension StacksView.StackCell {
 
 		var body: some View {
 			Button(action: filterAction) {
-				Label("StacksView.ShowContainers", systemImage: SFSymbol.container)
+				Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
 			}
 		}
 	}

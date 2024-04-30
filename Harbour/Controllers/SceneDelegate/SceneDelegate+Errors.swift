@@ -12,7 +12,7 @@ import Foundation
 
 extension SceneDelegate {
 	@MainActor
-	func handleError(_ error: Error, _debugInfo: String = ._debugInfo()) {
+	func handleError(_ error: Error) {
 		guard !error.isCancellationError else {
 			logger.debug("Cancelled error: \(error, privacy: .public)")
 			return

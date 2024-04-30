@@ -2156,22 +2156,22 @@
         }
       }
     },
-    "StacksView.NoContainersPlaceholder" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Containers"
-          }
-        }
-      }
-    },
     "StacksView.NoStackSelectedPlaceholder" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Stack Selected"
+          }
+        }
+      }
+    },
+    "StacksView.NoStacksPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Stacks"
           }
         }
       }

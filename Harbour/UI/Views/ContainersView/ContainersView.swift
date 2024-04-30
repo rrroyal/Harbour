@@ -76,13 +76,16 @@ struct ContainersView: View {
 					description: Text("ContainersView.NoEndpointsPlaceholder.Description")
 				)
 			} else if viewModel.containers.isEmpty {
-				if !viewModel.searchText.isEmpty {
+				if viewModel.viewState.isLoading {
+					ProgressView()
+				} else if !viewModel.searchText.isEmpty {
 					ContentUnavailableView.search(text: viewModel.searchText)
 				} else {
 					ContentUnavailableView(
 						"ContainersView.NoContainersPlaceholder.Title",
-						systemImage: SFSymbol.xmark
+						image: SFSymbol.Custom.container
 					)
+					.symbolVariant(.slash)
 				}
 			}
 		}

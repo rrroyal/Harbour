@@ -45,7 +45,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	var modelContext: ModelContext?
 
 	/// Task for global refresh
-	var refreshTask: Task<([Endpoint], [Container], [Stack]), Error>?
+	var refreshTask: Task<Void, Error>?
 
 	/// Task for `endpoints` refresh
 	var endpointsTask: Task<[Endpoint], Error>?

@@ -59,7 +59,7 @@ private extension ContentView.ViewForMacOS {
 					Button {
 						sceneDelegate.activeTab = tab
 					} label: {
-						Image(systemName: tab.icon)
+						tab.icon
 							.accessibilityLabel(Text(tab.label))
 							.padding(.vertical)
 							.frame(maxWidth: .infinity)
