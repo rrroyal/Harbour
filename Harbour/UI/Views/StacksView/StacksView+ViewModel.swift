@@ -74,15 +74,17 @@ extension StacksView {
 		}
 
 		var isBackgroundPlaceholderVisible: Bool {
+			guard stacks.isEmpty else { return false }
+
 			switch viewState {
 			case .loading:
-				false
+				return false
 			case .reloading:
-				false
+				return false
 			case .success:
-				!viewState.isLoading && stacks.isEmpty
+				return !viewState.isLoading && stacks.isEmpty
 			case .failure:
-				false
+				return false
 			}
 		}
 

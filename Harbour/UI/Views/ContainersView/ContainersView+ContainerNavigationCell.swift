@@ -12,7 +12,7 @@ import SwiftUI
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View>: View {
 		@Environment(\.portainerServerURL) private var portainerServerURL: URL?
-		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
+		@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
 		@Environment(\.parentShape) private var parentShape
 		let container: Container
 		let content: () -> Content
@@ -20,12 +20,12 @@ extension ContainersView {
 		private var navigationItem: ContainerDetailsView.NavigationItem {
 			let containerID = container.id
 			let displayName = container.displayName
-			let endpointID = portainerSelectedEndpointID
+			let endpointID = portainerSelectedEndpoint?.id
 			return .init(id: containerID, displayName: displayName, endpointID: endpointID)
 		}
 
 		private var portainerDeeplink: URL? {
-			PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpointID)
+			PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id)
 		}
 
 		var body: some View {

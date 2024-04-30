@@ -16,7 +16,6 @@ extension ContainersView {
 		@Environment(ContainersView.ViewModel.self) private var containersViewViewModel
 		@Environment(SceneDelegate.self) private var sceneDelegate
 		@Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
-		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 
 		private var cellMinimumSize: Double {
 			#if os(iOS)

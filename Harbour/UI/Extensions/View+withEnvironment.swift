@@ -18,9 +18,6 @@ extension View {
 	) -> some View {
 		self
 			.environment(appState)
-			.environment(\.portainerServerURL, portainerStore.serverURL)
-			.environment(\.portainerSelectedEndpointID, portainerStore.selectedEndpoint?.id)
-			.environment(\.cvUseGrid, preferences.cvUseGrid)
 			.environment(\.ikEnableHaptics, preferences.enableHaptics)
 			.environmentObject(portainerStore)
 			.environmentObject(preferences)

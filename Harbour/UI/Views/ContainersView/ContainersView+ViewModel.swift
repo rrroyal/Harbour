@@ -59,15 +59,17 @@ extension ContainersView {
 		}
 
 		var isBackgroundPlaceholderVisible: Bool {
+			guard containers.isEmpty else { return false }
+
 			switch viewState {
 			case .loading:
-				false
+				return false
 			case .reloading:
-				false
+				return false
 			case .success:
-				!viewState.isLoading && containers.isEmpty
+				return !viewState.isLoading && containers.isEmpty
 			case .failure:
-				false
+				return false
 			}
 		}
 

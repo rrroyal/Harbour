@@ -18,6 +18,7 @@ enum PresentedIndicator {
 	case error(Error)
 	case stackCreated(String)
 	case stackRemoved(String)
+	case stackStartedOrStopped(String, started: Bool)
 }
 
 // MARK: - PresentedIndicator+Identifiable
@@ -35,6 +36,8 @@ extension PresentedIndicator: Identifiable {
 			"StackCreated.\(stackName)"
 		case .stackRemoved(let stackName):
 			"StackRemoved.\(stackName)"
+		case .stackStartedOrStopped(let stackName, _):
+			"StackStartedOrStopped.\(stackName)"
 		}
 	}
 }
@@ -56,8 +59,8 @@ extension PresentedIndicator {
 			.init(
 				id: self.id,
 				icon: action.icon,
-				title: containerName ?? containerID,
-				subtitle: action.title,
+				title: action.title,
+				subtitle: containerName ?? containerID,
 				style: .init(
 					iconStyle: .primary,
 					tintColor: action.color
@@ -66,14 +69,35 @@ extension PresentedIndicator {
 		case .stackCreated(let stackName):
 			.init(
 				id: self.id,
-				title: String(localized: "Indicators.StackCreated"),
-				subtitle: stackName
+				icon: "sparkles",
+				title: String(localized: "Indicators.Stack.Created"),
+				subtitle: stackName,
+				style: .init(
+					iconStyle: .primary,
+					tintColor: .blue
+				)
 			)
 		case .stackRemoved(let stackName):
 			.init(
 				id: self.id,
-				title: String(localized: "Indicators.StackRemoved"),
-				subtitle: stackName
+				icon: SFSymbol.remove,
+				title: String(localized: "Indicators.Stack.Removed"),
+				subtitle: stackName,
+				style: .init(
+					iconStyle: .primary,
+					tintColor: .red
+				)
+			)
+		case .stackStartedOrStopped(let stackName, let started):
+			.init(
+				id: self.id,
+				icon: started ? Stack.Status.active.icon : Stack.Status.inactive.icon,
+				title: started ? String(localized: "Indicators.Stack.Started") : String(localized: "Indicators.Stack.Stopped"),
+				subtitle: stackName,
+				style: .init(
+					iconStyle: .primary,
+					tintColor: started ? Stack.Status.active.color : Stack.Status.inactive.color
+				)
 			)
 		}
 	}

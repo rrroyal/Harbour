@@ -21,7 +21,7 @@ internal extension SettingsView {
 			_ label: LocalizedStringKey,
 			description: LocalizedStringKey? = nil,
 			iconSymbolName: String,
-			//			 symbolVariants: SymbolVariants = .fill,
+//			symbolVariants: SymbolVariants = .fill,
 			isOn: Binding<Bool>
 		) {
 			self.label = label

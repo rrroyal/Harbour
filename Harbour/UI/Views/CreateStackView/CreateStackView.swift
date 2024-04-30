@@ -38,15 +38,17 @@ struct CreateStackView: View {
 		} label: {
 			if viewModel.isLoading {
 				ProgressView()
-					.padding(.vertical, 2)
+					#if os(macOS)
+					.controlSize(.small)
+					#endif
 			} else {
 				Label("CreateStackView.Create", systemImage: SFSymbol.plus)
 			}
 		}
+		.keyboardShortcut(.defaultAction)
 		.transition(.opacity)
 		.disabled(!viewModel.canCreateStack)
 		.disabled(viewModel.isLoading)
-		.background(Color.groupedBackground)
 	}
 
 	var body: some View {
@@ -56,6 +58,8 @@ struct CreateStackView: View {
 					.fontDesign(.monospaced)
 					.autocorrectionDisabled()
 					.labelsHidden()
+					.submitLabel(viewModel.canCreateStack ? .send : .continue)
+					.onSubmit(createStack)
 			} header: {
 				Text("CreateStackView.Name")
 			}
@@ -72,7 +76,7 @@ struct CreateStackView: View {
 				environment: $viewModel.stackEnvironment,
 				isEnvironmentEntrySheetPresented: $viewModel.isEnvironmentEntrySheetPresented,
 				editedEnvironmentEntry: $viewModel.editedEnvironmentEntry,
-				removeEntryAction: viewModel.removeEnvironmentEntry
+				removeEntryAction: { viewModel.editEnvironmentEntry(old: $0, new: nil) }
 			)
 		}
 		.formStyle(.grouped)
@@ -83,6 +87,7 @@ struct CreateStackView: View {
 			createButton
 				.buttonStyle(.customPrimary)
 				.padding()
+				.background(Color.groupedBackground)
 		}
 		#endif
 		.fileImporter(isPresented: $viewModel.isFileImporterPresented, allowedContentTypes: allowedContentTypes) { result in
@@ -94,10 +99,10 @@ struct CreateStackView: View {
 			let oldEntry = viewModel.editedEnvironmentEntry
 			NavigationStack {
 				KeyValueEditView(entry: oldEntry) { newEntry in
-					viewModel.addOrEditEnvironmentEntry(old: oldEntry, new: newEntry)
+					viewModel.editEnvironmentEntry(old: oldEntry, new: newEntry)
 				} removeAction: {
 					if let oldEntry {
-						viewModel.removeEnvironmentEntry(oldEntry)
+						viewModel.editEnvironmentEntry(old: oldEntry, new: nil)
 					}
 				}
 				#if os(iOS)
@@ -133,12 +138,15 @@ private extension CreateStackView {
 	@MainActor
 	func createStack() {
 		Task {
+			guard viewModel.canCreateStack else { return }
+
 			do {
 				Haptics.generateIfEnabled(.medium)
 				let stack = try await viewModel.createStack().value
 
 				dismiss()
 				presentIndicator(.stackCreated(stack.name))
+				Haptics.generateIfEnabled(.success)
 
 				onStackCreation?(stack)
 			} catch {

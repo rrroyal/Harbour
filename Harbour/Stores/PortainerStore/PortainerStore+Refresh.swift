@@ -32,6 +32,7 @@ extension PortainerStore {
 					_ = try await (_endpoints, _containers, _stacks)
 				} else {
 					_ = try await refreshEndpoints(errorHandler: errorHandler).value
+					try? await Task.sleep(for: .milliseconds(100)) // I hate it but otherwise it will fail due to no selected endpoint
 
 					async let _containers = refreshContainers(errorHandler: errorHandler).value
 					async let _stacks = refreshStacks(errorHandler: errorHandler).value

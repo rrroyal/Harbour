@@ -18,6 +18,7 @@ struct StackDetailsView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
+	@Environment(\.portainerServerURL) private var portainerServerURL
 	@State private var viewModel: ViewModel
 
 	var navigationItem: NavigationItem
@@ -139,26 +140,34 @@ struct StackDetailsView: View {
 
 	@ToolbarContentBuilder
 	private var toolbarContent: some ToolbarContent {
-		if let stack = viewModel.stack {
-			ToolbarItem(placement: .destructiveAction) {
-				if !viewModel.isRemovingStack {
-					Group {
-						if portainerStore.loadingStacks.contains(stack.id) {
-							ProgressView()
-						} else {
-							Button {
-								setStackState(stack, started: !stack.isOn)
-							} label: {
-								Label(
-									stack.isOn ? "StacksView.Stack.Stop" : "StacksView.Stack.Start",
-									systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
-								)
-							}
-							.symbolVariant(.fill)
-						}
+		if !viewModel.isRemovingStack, let stack = viewModel.stack {
+			ToolbarItem(placement: .primaryAction) {
+				Menu {
+					if portainerStore.loadingStacks.contains(stack.id) {
+						Text("Generic.Loading")
+						Divider()
 					}
-					.transition(.opacity)
+
+					Button {
+						setStackState(stack, started: !stack.isOn)
+					} label: {
+						Label(
+							stack.isOn ? "StacksView.Stack.Stop" : "StacksView.Stack.Start",
+							systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
+						)
+					}
+//					.symbolVariant(.fill)
+
+					Divider()
+
+					if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
+						ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+					}
+				} label: {
+					Label("Generic.More", systemImage: SFSymbol.moreCircle)
+						.labelStyle(.automatic)
 				}
+				.labelStyle(.titleAndIcon)
 			}
 		}
 
@@ -274,6 +283,7 @@ private extension StackDetailsView {
 		Task {
 			do {
 				Haptics.generateIfEnabled(.light)
+				presentIndicator(.stackStartedOrStopped(stack.name, started: started))
 				try await viewModel.setStackState(stack.id, started: started)
 			} catch {
 				errorHandler(error)

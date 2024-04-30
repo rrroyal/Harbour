@@ -1196,22 +1196,42 @@
         }
       }
     },
-    "Indicators.StackCreated" : {
+    "Indicators.Stack.Created" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stack Created"
+            "value" : "Created"
           }
         }
       }
     },
-    "Indicators.StackRemoved" : {
+    "Indicators.Stack.Removed" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stack Removed"
+            "value" : "Removed"
+          }
+        }
+      }
+    },
+    "Indicators.Stack.Started" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Started"
+          }
+        }
+      }
+    },
+    "Indicators.Stack.Stopped" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stopped"
           }
         }
       }

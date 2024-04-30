@@ -18,7 +18,7 @@ extension StackDetailsView {
 		private var keyValueListData: [KeyValueEntry] {
 			entries?
 				.map { .init($0.name, $0.value ) }
-				.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending } ?? []
+				.sorted() ?? []
 		}
 
 		var body: some View {

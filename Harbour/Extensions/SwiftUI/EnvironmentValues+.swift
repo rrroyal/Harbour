@@ -62,42 +62,16 @@ extension EnvironmentValues {
 // MARK: - PortainerServerURL
 
 extension EnvironmentValues {
-	private struct PortainerServerURLParentShapeEnvironmentKey: EnvironmentKey {
-		static let defaultValue: URL? = nil
-	}
-
-	/// Active Portainer server URL.
 	var portainerServerURL: URL? {
-		get { self[PortainerServerURLParentShapeEnvironmentKey.self] }
-		set { self[PortainerServerURLParentShapeEnvironmentKey.self] = newValue }
+		PortainerStore.shared.serverURL
 	}
 }
 
-// MARK: - PortainerSelectedEndpointID
+// MARK: - PortainerSelectedEndpoint
 
 extension EnvironmentValues {
-	private struct PortainerSelectedEndpointParentShapeEnvironmentKey: EnvironmentKey {
-		static let defaultValue: Endpoint.ID? = nil
-	}
-
-	/// Active Portainer endpoint ID.
-	var portainerSelectedEndpointID: Endpoint.ID? {
-		get { self[PortainerSelectedEndpointParentShapeEnvironmentKey.self] }
-		set { self[PortainerSelectedEndpointParentShapeEnvironmentKey.self] = newValue }
-	}
-}
-
-// MARK: - CVUseGrid
-
-extension EnvironmentValues {
-	private struct CVUseGridParentShapeEnvironmentKey: EnvironmentKey {
-		static let defaultValue: Bool = Preferences.shared.cvUseGrid
-	}
-
-	/// `ContainersView` uses grid style view.
-	var cvUseGrid: Bool {
-		get { self[CVUseGridParentShapeEnvironmentKey.self] }
-		set { self[CVUseGridParentShapeEnvironmentKey.self] = newValue }
+	var portainerSelectedEndpoint: Endpoint? {
+		PortainerStore.shared.selectedEndpoint
 	}
 }
 

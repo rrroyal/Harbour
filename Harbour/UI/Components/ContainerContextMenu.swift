@@ -17,7 +17,7 @@ struct ContainerContextMenu: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
-	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
+	@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
 	var container: Container
 
 	private let killActionHaptic: Haptics.HapticStyle = .heavy
@@ -75,7 +75,7 @@ struct ContainerContextMenu: View {
 
 			Divider()
 
-			if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpointID) {
+			if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id) {
 				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
 			}
 

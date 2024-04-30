@@ -72,17 +72,19 @@ extension CreateStackView {
 			return try loadStackFile(at: url)
 		}
 
-		func addOrEditEnvironmentEntry(old oldEntry: KeyValueEntry?, new newEntry: KeyValueEntry) {
-			if let oldEntry, let index = stackEnvironment.firstIndex(of: oldEntry) {
-				stackEnvironment[index] = newEntry
-			} else {
+		func editEnvironmentEntry(old oldEntry: KeyValueEntry?, new newEntry: KeyValueEntry?) {
+			if let oldEntry, let newEntry {
+				if let oldIndex = stackEnvironment.firstIndex(of: oldEntry) {
+					stackEnvironment[oldIndex] = newEntry
+				} else {
+					stackEnvironment.append(newEntry)
+				}
+			} else if let oldEntry, newEntry == nil {
+				if let oldIndex = stackEnvironment.firstIndex(of: oldEntry) {
+					stackEnvironment.remove(at: oldIndex)
+				}
+			} else if oldEntry == nil, let newEntry {
 				stackEnvironment.append(newEntry)
-			}
-		}
-
-		func removeEnvironmentEntry(_ entry: KeyValueEntry) {
-			if let index = stackEnvironment.firstIndex(of: entry) {
-				stackEnvironment.remove(at: index)
 			}
 		}
 	}

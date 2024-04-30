@@ -20,7 +20,7 @@ extension CreateStackView {
 		var removeEntryAction: (KeyValueEntry) -> Void
 
 		var environmentSorted: [KeyValueEntry] {
-			environment.localizedSorted(by: \.key)
+			environment.sorted()
 		}
 
 		var body: some View {

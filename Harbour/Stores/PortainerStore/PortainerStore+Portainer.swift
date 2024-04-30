@@ -263,7 +263,7 @@ public extension PortainerStore {
 				throw PortainerError.noSelectedEndpoint
 			}
 			let stack = try await portainer.deployStack(endpointID: selectedEndpoint.id, settings: stackSettings)
-			logger.info("Created a new stack, stackID: \"\(stack.id)\"")
+			logger.info("Created a new stack, stackID: \(stack.id)")
 			return stack
 		} catch {
 			logger.error("Failed to create a new stack: \(error, privacy: .public)")
@@ -273,10 +273,10 @@ public extension PortainerStore {
 
 	@Sendable
 	func fetchStackFile(stackID: Stack.ID) async throws -> String {
-		logger.info("Fetching stack file for stackID: \"\(stackID)\"...")
+		logger.info("Fetching stack file for stackID: \(stackID)...")
 		do {
 			let stackFile = try await portainer.fetchStackFile(stackID: stackID)
-			logger.info("Got stack file for stackID: \"\(stackID)\"")
+			logger.info("Got stack file for stackID: \(stackID)")
 			return stackFile
 		} catch {
 			logger.error("Failed to fetch stack file for stackID: \(stackID): \(error, privacy: .public)")
@@ -286,13 +286,13 @@ public extension PortainerStore {
 
 	@Sendable
 	func removeStack(stackID: Stack.ID) async throws {
-		logger.info("Removing stack with ID: \"\(stackID)\"...")
+		logger.info("Removing stack with ID: \(stackID)...")
 		do {
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
 			try await portainer.removeStack(stackID: stackID, endpointID: selectedEndpoint.id)
-			logger.info("Removed stack with ID: \"\(stackID)\"")
+			logger.info("Removed stack with ID: \(stackID)")
 		} catch {
 			logger.error("Failed to remove stack with ID: \(stackID): \(error, privacy: .public)")
 			throw error

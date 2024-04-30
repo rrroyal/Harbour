@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - KeyValueEntry
+
 struct KeyValueEntry: Identifiable, Hashable {
 	var id: Int { hashValue }
 
@@ -17,5 +19,13 @@ struct KeyValueEntry: Identifiable, Hashable {
 	init(_ key: String, _ value: String) {
 		self.key = key
 		self.value = value
+	}
+}
+
+// MARK: - [KeyValueEntry]+sorted()
+
+extension [KeyValueEntry] {
+	func sorted() -> Self {
+		sorted { ($0.key + $0.value).localizedCaseInsensitiveCompare($1.key + $1.value) == .orderedAscending }
 	}
 }

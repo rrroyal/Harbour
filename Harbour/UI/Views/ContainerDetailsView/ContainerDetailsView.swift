@@ -17,8 +17,6 @@ struct ContainerDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
-	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
-	@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 	@State private var viewModel: ViewModel
 
 	var navigationItem: NavigationItem
@@ -146,8 +144,6 @@ extension ContainerDetailsView: Equatable {
 
 private extension ContainerDetailsView {
 	struct ToolbarMenu: View {
-		@Environment(\.portainerServerURL) private var portainerServerURL
-		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID
 		let isLoading: Bool
 		let containerID: Container.ID
 		let container: Container?

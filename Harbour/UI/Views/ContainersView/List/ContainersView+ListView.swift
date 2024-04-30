@@ -13,7 +13,6 @@ import SwiftUI
 
 extension ContainersView {
 	struct ListView: View {
-		@Environment(\.portainerSelectedEndpointID) private var portainerSelectedEndpointID: Endpoint.ID?
 		@Environment(SceneDelegate.self) private var sceneDelegate
 
 		private let cellSpacing: Double = 8

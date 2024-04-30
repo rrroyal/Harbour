@@ -81,6 +81,9 @@ struct SetupView: View {
 		} label: {
 			if viewModel.isLoading {
 				ProgressView()
+					#if os(macOS)
+					.controlSize(.small)
+					#endif
 			} else {
 				Group {
 					if let buttonLabel = viewModel.buttonLabel {

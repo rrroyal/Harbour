@@ -109,6 +109,7 @@ private extension SettingsView.PortainerSection {
 
 					Image(systemName: SFSymbol.chevronDown)
 						.fontWeight(.medium)
+						.foregroundStyle(.secondary)
 					#endif
 				}
 				.transition(.opacity)

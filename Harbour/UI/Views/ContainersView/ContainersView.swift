@@ -20,7 +20,6 @@ struct ContainersView: View {
 	@EnvironmentObject private var preferences: Preferences
 	@Environment(AppState.self) private var appState
 	@Environment(SceneDelegate.self) private var sceneDelegate
-	@Environment(\.cvUseGrid) private var useGrid
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel = ViewModel()
 	@FocusState private var isFocused: Bool
@@ -94,7 +93,7 @@ struct ContainersView: View {
 	var body: some View {
 		ScrollView {
 			Group {
-				if useGrid {
+				if Preferences.shared.cvUseGrid {
 					GridView(containers: viewModel.containers)
 				} else {
 					ListView(containers: viewModel.containers)
@@ -202,7 +201,7 @@ struct ContainersView: View {
 		.if(viewModel.canUseEndpointsMenu) {
 			$0.toolbarTitleMenu { endpointPicker }
 		}
-		.animation(.easeInOut, value: useGrid)
+		.animation(.easeInOut, value: Preferences.shared.cvUseGrid)
 		.animation(.easeInOut, value: viewModel.viewState)
 		.animation(.easeInOut, value: viewModel.containers)
 		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)

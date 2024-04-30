@@ -16,6 +16,8 @@ extension AppState {
 
 		portainerServerSwitchTask?.cancel()
 		portainerServerSwitchTask = Task {
+			defer { self.portainerServerSwitchTask = nil }
+
 			let portainerStore = PortainerStore.shared
 			do {
 				try portainerStore.switchServer(to: serverURL)

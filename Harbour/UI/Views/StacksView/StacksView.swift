@@ -18,6 +18,7 @@ struct StacksView: View {
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
+	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel = ViewModel()
 	@FocusState private var isFocused: Bool
 
@@ -230,6 +231,7 @@ private extension StacksView {
 		Task {
 			do {
 				Haptics.generateIfEnabled(.light)
+				presentIndicator(.stackStartedOrStopped(stack.name, started: started))
 				try await viewModel.setStackState(stack.id, started: started)
 			} catch {
 				errorHandler(error)
