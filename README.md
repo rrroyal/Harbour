@@ -1,7 +1,7 @@
 <img src="Harbour/Assets.xcassets/AppIcon.appiconset/AppIcon-macOS-1024x1024.png" width="196" alt="Harbour App Icon">
 
 # Harbour
-Docker/Portainer management app for iOS and macOS.
+Docker/Portainer management app for iOS/iPadOS and macOS.
 
 ## Features
 - Multiple servers & endpoints
@@ -10,7 +10,6 @@ Docker/Portainer management app for iOS and macOS.
 - Widgets
 - Handoff
 - Background notifications
-- iPadOS support
 - No telemetry :)
 
 ## Installation
