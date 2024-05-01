@@ -118,7 +118,7 @@ extension BackgroundHelper {
 	@Sendable
 	static func scheduleBackgroundRefreshIfNeeded() {
 		guard Preferences.shared.enableBackgroundRefresh else {
-			logger.debug("Background refresh is disabled!")
+			logger.debug("Background refresh is disabled.")
 			return
 		}
 

@@ -243,7 +243,7 @@ private extension ContainersView {
 			guard portainerStore.isSetup else { return }
 
 			do {
-				try await viewModel.refresh()
+				try await viewModel.fetch()
 			} catch {
 				errorHandler(error)
 			}

@@ -214,7 +214,7 @@ private extension StacksView {
 			guard portainerStore.isSetup else { return }
 
 			do {
-				try await viewModel.getStacks(includingContainers: includingContainers).value
+				try await viewModel.fetch(includingContainers: includingContainers).value
 			} catch {
 				errorHandler(error)
 			}

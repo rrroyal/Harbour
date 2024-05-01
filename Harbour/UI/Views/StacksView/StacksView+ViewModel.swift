@@ -93,9 +93,9 @@ extension StacksView {
 		}
 
 		@discardableResult
-		func getStacks(includingContainers: Bool? = nil) -> Task<Void, Error> {
+		func fetch(includingContainers: Bool? = nil) -> Task<Void, Error> {
 			fetchTask?.cancel()
-			let task = Task {
+			let task = Task { @MainActor in
 				defer { self.fetchTask = nil }
 				fetchError = nil
 

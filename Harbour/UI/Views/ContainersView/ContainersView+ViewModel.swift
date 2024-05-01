@@ -86,11 +86,10 @@ extension ContainersView {
 			self.portainerStore = portainerStore
 		}
 
-		func refresh() async throws {
+		func fetch() async throws {
 			fetchTask?.cancel()
-			self.fetchTask = Task {
+			self.fetchTask = Task { @MainActor in
 				defer { self.fetchTask = nil }
-
 				fetchError = nil
 
 				do {
