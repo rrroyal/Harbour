@@ -12,7 +12,7 @@ import WidgetKit
 // MARK: - ContainerStatusWidget
 
 struct ContainerStatusWidget: Widget {
-	let kind: String = "ContainerStatusWidget"
+	let kind: String = HarbourWidgetKind.containerStatus
 
 	var body: some WidgetConfiguration {
 		AppIntentConfiguration(

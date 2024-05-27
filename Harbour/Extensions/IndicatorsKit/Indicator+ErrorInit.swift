@@ -27,8 +27,8 @@ extension Indicator {
 
 		self.init(
 			id: "Error.\(title.hashValue).\(subtitle.hashValue)",
-			title: title.localizedCapitalized,
-			subtitle: subtitle.localizedCapitalized,
+			title: title,
+			subtitle: subtitle,
 			expandedText: expandedText,
 			style: .error
 		)

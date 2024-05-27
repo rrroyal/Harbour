@@ -38,7 +38,7 @@ extension PortainerStore {
 
 extension PortainerStore {
 	func storeEndpoints(_ endpoints: [Endpoint]?) {
-		//		logger.debug("Storing \(endpoints?.count ?? 0, privacy: .public) endpoints...")
+//		logger.debug("Storing \(endpoints?.count ?? 0, privacy: .public) endpoints...")
 
 		Task { @MainActor in
 			guard let modelContext else {

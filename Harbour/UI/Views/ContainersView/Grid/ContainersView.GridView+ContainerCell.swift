@@ -13,7 +13,7 @@ import SwiftUI
 
 extension ContainersView.GridView {
 	struct ContainerCell: View {
-		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
+		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: 18, style: .circular)
 
 		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 10
@@ -34,7 +34,6 @@ extension ContainersView.GridView {
 					.font(.footnote)
 					.fontWeight(.medium)
 					.foregroundStyle(.tint)
-					.transition(.opacity)
 					.lineLimit(1)
 
 				Spacer()
@@ -46,9 +45,7 @@ extension ContainersView.GridView {
 					.font(.system(size: circleSize))
 					.fontWeight(.black)
 					.foregroundStyle(.tint)
-					.transition(.opacity)
 			}
-			.animation(.easeInOut, value: container.state)
 			.minimumScaleFactor(minimumScaleFactor)
 		}
 
@@ -59,7 +56,6 @@ extension ContainersView.GridView {
 					.font(.callout)
 					.fontWeight(.semibold)
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
-					.transition(.opacity)
 					.lineLimit(2)
 
 				if !isBeingRemoved {
@@ -67,15 +63,12 @@ extension ContainersView.GridView {
 						.font(.footnote)
 						.fontWeight(.medium)
 						.foregroundStyle(container.status != nil ? .secondary : .tertiary)
-						.transition(.opacity)
 						.lineLimit(2)
 				}
 			}
 			.foregroundStyle(Color.primary)
 			.multilineTextAlignment(.leading)
 			.minimumScaleFactor(minimumScaleFactor)
-			.animation(.easeInOut, value: container.displayName)
-			.animation(.easeInOut, value: container.status)
 		}
 
 		var body: some View {
@@ -91,11 +84,10 @@ extension ContainersView.GridView {
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
-			.animation(.easeInOut, value: container._isStored)
-			.animation(.easeInOut, value: container.state)
-			.animation(.easeInOut, value: container.status)
-			.animation(.easeInOut, value: isBeingRemoved)
-			.contentTransition(.opacity)
+			.animation(.smooth, value: container)
+			.animation(.smooth, value: container.state)
+			.animation(.smooth, value: container.status)
+			.animation(.smooth, value: isBeingRemoved)
 		}
 	}
 }

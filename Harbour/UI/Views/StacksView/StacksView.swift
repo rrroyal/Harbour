@@ -7,6 +7,7 @@
 //
 
 import CommonHaptics
+import CoreSpotlight
 import PortainerKit
 import SwiftUI
 
@@ -34,8 +35,8 @@ struct StacksView: View {
 			} else if viewModel.stacks.isEmpty {
 				if viewModel.viewState.isLoading {
 					ProgressView()
-				} else if !viewModel.query.isEmpty {
-					ContentUnavailableView.search(text: viewModel.query)
+				} else if !viewModel.searchText.isEmpty {
+					ContentUnavailableView.search(text: viewModel.searchText)
 				} else {
 					ContentUnavailableView("StacksView.NoStacksPlaceholder", systemImage: SFSymbol.stack)
 						.symbolVariant(.slash)
@@ -56,7 +57,8 @@ struct StacksView: View {
 		ToolbarItem(placement: createStackToolbarItemPlacement) {
 			Button {
 				Haptics.generateIfEnabled(.sheetPresentation)
-				viewModel.isCreateStackSheetPresented = true
+				sceneDelegate.editedStack = nil
+				sceneDelegate.isCreateStackSheetPresented = true
 			} label: {
 				Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
 			}
@@ -110,27 +112,37 @@ struct StacksView: View {
 //			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
 //				ProgressView()
 //			}
-//			.transition(.opacity)
 //		}
 	}
 
 	var body: some View {
+		@Bindable var sceneDelegate = sceneDelegate
+
 		StacksList(
 			filterByStackNameAction: filterByStackName,
-			setStackStateAction: setStackState,
-			confirmRemoveStackAction: confirmRemoveStack
+			setStackStateAction: setStackState
 		)
 		.scrollPosition(id: $viewModel.scrollPosition)
-		.searchable(text: $viewModel.query, isPresented: $viewModel.isSearchActive)
+		.searchable(text: $viewModel.searchText, isPresented: $viewModel.isSearchActive)
 		.background {
 			if viewModel.isBackgroundPlaceholderVisible {
 				backgroundPlaceholder
 			}
 		}
 		#if os(iOS)
-		.background(viewState: viewModel.viewState, backgroundVisiblity: .hidden, backgroundColor: .groupedBackground)
+		.background(
+			viewState: viewModel.viewState,
+			isViewStateBackgroundVisible: viewModel.stacks.isEmpty,
+			backgroundVisiblity: .hidden,
+			backgroundColor: .groupedBackground
+		)
 		#elseif os(macOS)
-		.background(viewState: viewModel.viewState, backgroundVisiblity: .hidden, backgroundColor: .clear)
+		.background(
+			viewState: viewModel.viewState,
+			isViewStateBackgroundVisible: viewModel.stacks.isEmpty,
+			backgroundVisiblity: .hidden,
+			backgroundColor: .clear
+		)
 		#endif
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
@@ -143,9 +155,9 @@ struct StacksView: View {
 		.focusEffectDisabled()
 		.confirmationDialog(
 			"Generic.AreYouSure?",
-			isPresented: viewModel.isRemoveStackAlertPresented,
+			isPresented: sceneDelegate.isRemoveStackAlertPresented,
 			titleVisibility: .visible,
-			presenting: viewModel.stackToRemove
+			presenting: sceneDelegate.stackToRemove
 		) { stack in
 			Button("Generic.Remove", role: .destructive) {
 				Haptics.generateIfEnabled(.heavy)
@@ -159,38 +171,55 @@ struct StacksView: View {
 				.equatable()
 				.tag(navigationItem.id)
 		}
-		.navigationTitle("StacksView.Title")
-		.sheet(isPresented: $viewModel.isCreateStackSheetPresented) {
-			viewModel.activeCreateStackSheetDetent = .medium
+		.sheet(isPresented: $sceneDelegate.isCreateStackSheetPresented) {
+			sceneDelegate.editedStack = nil
+			sceneDelegate.activeCreateStackSheetDetent = .medium
+			sceneDelegate.handledCreateSheetDetentUpdate = false
 		} content: {
 			NavigationStack {
-				CreateStackView(onEnvironmentEdit: onEnvironmentEdit, onStackFileSelection: onStackFileSelection)
-					#if os(iOS)
-					.navigationBarTitleDisplayMode(.inline)
-					#endif
-					.addingCloseButton()
+				CreateStackView(existingStack: sceneDelegate.editedStack, onEnvironmentEdit: { _ in
+					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
+					sceneDelegate.activeCreateStackSheetDetent = .large
+					sceneDelegate.handledCreateSheetDetentUpdate = true
+				}, onStackFileSelection: { stackFileContent in
+					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
+
+					if stackFileContent != nil {
+						sceneDelegate.activeCreateStackSheetDetent = .large
+					}
+
+					sceneDelegate.handledCreateSheetDetentUpdate = true
+				}, onStackCreation: { _ in
+					portainerStore.refreshStacks()
+					portainerStore.refreshContainers()
+				})
+				#if os(iOS)
+				.navigationBarTitleDisplayMode(.inline)
+				#endif
+				.addingCloseButton()
 			}
-			.presentationDetents([.medium, .large], selection: $viewModel.activeCreateStackSheetDetent)
+			.presentationDetents([.medium, .large], selection: $sceneDelegate.activeCreateStackSheetDetent)
 			.presentationDragIndicator(.hidden)
 			.presentationContentInteraction(.resizes)
 			#if os(macOS)
 			.sheetMinimumFrame(width: 380, height: 400)
 			#endif
 		}
+		.navigationTitle("StacksView.Title")
 		.environment(viewModel)
-		.transition(.opacity)
-		.animation(.easeInOut, value: viewModel.viewState)
-		.animation(.easeInOut, value: viewModel.stacks)
-		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+		.animation(.smooth, value: viewModel.viewState)
+		.animation(.smooth, value: viewModel.stacks)
+		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
 		.onKeyPress(action: onKeyPress)
+		.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
+//			guard sceneDelegate.activeTab == .stacks else { return }
+			viewModel.handleSpotlightSearchContinuation(userActivity)
+		}
 		.task {
 			if portainerStore.stacksTask?.isCancelled ?? true {
 				await fetch().value
 			}
 		}
-//		.onAppear {
-//			isFocused = true
-//		}
 	}
 }
 
@@ -202,34 +231,31 @@ private extension StacksView {
 		@EnvironmentObject private var portainerStore: PortainerStore
 		var filterByStackNameAction: (String) -> Void
 		var setStackStateAction: (Stack, Bool) -> Void
-		var confirmRemoveStackAction: (Stack) -> Void
 
 		var body: some View {
 			List {
 				ForEach(viewModel.stacks) { stackItem in
-					let isLoading = portainerStore.loadingStackIDs.contains(Stack.ID(stackItem.id) ?? -1)
 					let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
 
 					Group {
 						if let stack = stackItem.stack {
 							NavigationLink(value: StackDetailsView.NavigationItem(stackID: stackItem.id, stackName: stackItem.name)) {
-								StackCell(stackItem, containers: containers, isLoading: isLoading) {
-									filterByStackNameAction(stackItem.name)
-								} setStackStateAction: { stackState in
-									setStackStateAction(stack, stackState)
-								} removeStackAction: {
-									confirmRemoveStackAction(stack)
-								}
+								StackCell(
+									stackItem,
+									containers: containers,
+									filterAction: { filterByStackNameAction(stackItem.name) },
+									setStackStateAction: { setStackStateAction(stack, $0) }
+								)
 							}
 						} else {
-							StackCell(stackItem, containers: containers, isLoading: isLoading) {
-								filterByStackNameAction(stackItem.name)
-							} setStackStateAction: { _ in
-							} removeStackAction: {
-							}
+							StackCell(
+								stackItem,
+								containers: containers,
+								filterAction: { filterByStackNameAction(stackItem.name) },
+								setStackStateAction: { _ in }
+							)
 						}
 					}
-					.transition(.opacity)
 					.tag(stackItem.id)
 					#if os(macOS)
 					.padding(.horizontal, 8)
@@ -280,10 +306,6 @@ private extension StacksView {
 		}
 	}
 
-	func confirmRemoveStack(_ stack: Stack) {
-		viewModel.stackToRemove = stack
-	}
-
 	func removeStack(_ stack: Stack) {
 		Task {
 			do {
@@ -291,34 +313,13 @@ private extension StacksView {
 
 				try await viewModel.removeStack(stackID: stack.id)
 				presentIndicator(.stackRemove(stack.name, stack.id, state: .success))
+
+				sceneDelegate.navigate(to: .stacks)
 			} catch {
 				presentIndicator(.stackRemove(stack.name, stack.id, state: .failure(error)))
 				errorHandler(error, showIndicator: false)
 			}
 		}
-	}
-
-	func onEnvironmentEdit(_ environment: [KeyValueEntry]) {
-		guard !viewModel.handledCreateSheetDetentUpdate else { return }
-		viewModel.activeCreateStackSheetDetent = .large
-		viewModel.handledCreateSheetDetentUpdate = true
-	}
-
-	func onStackFileSelection(_ stackFileContents: String?) {
-		guard !viewModel.handledCreateSheetDetentUpdate else { return }
-
-		if stackFileContents != nil {
-			viewModel.activeCreateStackSheetDetent = .large
-		}
-
-		viewModel.handledCreateSheetDetentUpdate = true
-	}
-
-	func onStackCreation(_ stack: Stack) {
-		fetch(includingContainers: true)
-		viewModel.scrollPosition = stack.id.description
-//		viewModel.navigationPath.removeLast(viewModel.navigationPath.count)
-//		viewModel.navigationPath.append(StackDetailsView.NavigationItem(stack: stack))
 	}
 
 	func onKeyPress(_ keyPress: KeyPress) -> KeyPress.Result {
@@ -328,7 +329,7 @@ private extension StacksView {
 			viewModel.isSearchActive = true
 			return .handled
 		case "n" where keyPress.modifiers.contains(.command):
-			viewModel.isCreateStackSheetPresented = true
+			sceneDelegate.isCreateStackSheetPresented = true
 			return .handled
 		default:
 			return .ignored

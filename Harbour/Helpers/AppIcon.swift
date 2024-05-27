@@ -12,25 +12,26 @@ import UIKit
 
 // MARK: - AppIcon
 
-struct AppIcon: Identifiable, Equatable {
+struct AppIcon: Equatable, Hashable, Identifiable {
 	let id: String?
 	let name: String
 
-	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.id == rhs.id
+	private init(id: String?, name: String) {
+		self.id = id
+		self.name = name
 	}
 }
 
 // MARK: - AppIcon+setIcon
 
+#if canImport(UIKit)
 extension AppIcon {
 	@MainActor
 	static func setIcon(_ icon: AppIcon) async throws {
-		#if canImport(UIKit)
 		try await UIApplication.shared.setAlternateIconName(icon.id)
-		#endif
 	}
 }
+#endif
 
 // MARK: - AppIcon+icons
 
@@ -54,8 +55,12 @@ extension AppIcon {
 
 extension AppIcon {
 	static var current: Self {
-		#if os(iOS)
-		allCases.first { $0.id == UIApplication.shared.alternateIconName } ?? .default
+		#if canImport(UIKit)
+		if let alternateIconName = UIApplication.shared.alternateIconName {
+			return allCases.first { $0.id == alternateIconName } ?? .default
+		} else {
+			return .default
+		}
 		#else
 		.default
 		#endif

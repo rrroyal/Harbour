@@ -6,7 +6,9 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CommonOSLog
 import Foundation
+import OSLog
 import PortainerKit
 import UniformTypeIdentifiers
 
@@ -16,18 +18,28 @@ extension CreateStackView {
 	@Observable
 	final class ViewModel {
 		private(set) var createStackTask: Task<Stack, Swift.Error>?
+		private(set) var fetchStackFileContentTask: Task<Void, Never>?
+
+		private(set) var createStackError: Swift.Error?
+
+		let logger = Logger(.view(CreateStackView.self))
 
 		var isFileImporterPresented = false
 
-		var isStackFileContentsTargeted = false
+		var isStackFileContentTargeted = false
 		var isEnvironmentEntrySheetPresented = false
 		var editedEnvironmentEntry: KeyValueEntry?
 
-		var showWholeStackFileContents = false
+		var isStackFileContentExpanded = false
 
+		var stackID: Stack.ID?
 		var stackName = ""
 		var stackFileContent: String?
 		var stackEnvironment: [KeyValueEntry] = []
+
+		var shouldCreateNewStack: Bool {
+			stackID == nil
+		}
 
 		var canCreateStack: Bool {
 			guard
@@ -41,38 +53,86 @@ extension CreateStackView {
 			!(createStackTask?.isCancelled ?? true)
 		}
 
-		func createStack() -> Task<Stack, Swift.Error> {
+		var isLoadingStackFileContent: Bool {
+			!(fetchStackFileContentTask?.isCancelled ?? true)
+		}
+
+		func createOrUpdateStack() -> Task<Stack, Swift.Error> {
 			createStackTask?.cancel()
 			let task = Task<Stack, Swift.Error> {
-				defer { createStackTask?.cancel() }
+				defer { self.createStackTask = nil }
 
-				let stackSettings = try stackDeploymentSettings()
-				let createdStack = try await PortainerStore.shared.createStack(stackSettings: stackSettings)
-				return createdStack
+				createStackError = nil
+
+				do {
+					guard let stackFileContent else {
+						throw Error.invalidDeploymentSettings
+					}
+
+					if let stackID {
+						let stackSettings = StackUpdateSettings(
+							env: stackEnvironment.map { .init(name: $0.key, value: $0.value) },
+							prune: true,
+							pullImage: true,
+							stackFileContent: stackFileContent
+						)
+						let updatedStack = try await PortainerStore.shared.updateStack(stackID: stackID, settings: stackSettings)
+						return updatedStack
+					} else {
+						let stackSettings = StackDeployment.DeploymentSettings.StandaloneString(
+							env: stackEnvironment.map { .init(name: $0.key, value: $0.value) },
+							fromAppTemplate: nil,
+							name: stackName,
+							stackFileContent: stackFileContent
+						)
+						let createdStack = try await PortainerStore.shared.createStack(stackSettings: stackSettings)
+						return createdStack
+					}
+				} catch {
+					Task {
+						createStackError = error
+						try? await Task.sleep(for: .seconds(Constants.errorDismissTimeout))
+						createStackError = nil
+					}
+
+					throw error
+				}
 			}
 			self.createStackTask = task
 			return task
 		}
 
-		func loadStackFile(at url: URL) throws -> String {
-			guard url.startAccessingSecurityScopedResource() else {
-				throw Error.unableToAccessFile
+		func fetchStackFileContent() -> Task<Void, Never> {
+			fetchStackFileContentTask?.cancel()
+			let task = Task<Void, Never> {
+				defer { self.fetchStackFileContentTask = nil }
+
+				if let stackID, let stackFileContent = try? await PortainerStore.shared.fetchStackFile(stackID: stackID) {
+					self.stackFileContent = stackFileContent
+				}
 			}
-
-			let data = try Data(contentsOf: url)
-			url.stopAccessingSecurityScopedResource()
-
-			guard let string = String(data: data, encoding: .utf8) else {
-				throw Error.unableToReadFile
-			}
-
-			self.stackFileContent = string
-			return string
+			self.fetchStackFileContentTask = task
+			return task
 		}
 
-		func handleStackFileDrop(item: NSItemProvider) async throws -> String? {
-			guard let url = try await item.loadItem(forTypeIdentifier: UTType.yaml.identifier) as? URL else { return nil }
-			return try loadStackFile(at: url)
+		func loadStackFile(at url: URL, securityScopedResource: Bool) throws -> String {
+			do {
+				if securityScopedResource {
+					guard url.startAccessingSecurityScopedResource() else {
+						throw Error.unableToAccessFile
+					}
+				}
+
+				let data = try Data(contentsOf: url)
+				url.stopAccessingSecurityScopedResource()
+
+				let string = String(decoding: data, as: UTF8.self)
+				self.stackFileContent = string
+				return string
+			} catch {
+				logger.error("Failed to load stack file: \(error)")
+				throw error
+			}
 		}
 
 		func editEnvironmentEntry(old oldEntry: KeyValueEntry?, new newEntry: KeyValueEntry?) {
@@ -90,23 +150,6 @@ extension CreateStackView {
 				stackEnvironment.append(newEntry)
 			}
 		}
-	}
-}
-
-// MARK: - CreateStackView.ViewModel+Private
-
-private extension CreateStackView.ViewModel {
-	func stackDeploymentSettings() throws -> some StackDeploymentSettings {
-		guard let stackFileContent else {
-			throw Error.invalidDeploymentSettings
-		}
-
-		return StackDeployment.DeploymentSettings.StandaloneString(
-			env: stackEnvironment.map { .init(name: $0.key, value: $0.value) },
-			fromAppTemplate: nil,
-			name: stackName,
-			stackFileContent: stackFileContent
-		)
 	}
 }
 

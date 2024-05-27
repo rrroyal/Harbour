@@ -17,10 +17,9 @@ struct ContainerContextMenu: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
+	@Environment(\.presentIndicator) private var presentIndicator
 	var container: Container
-	var removeContainerAction: () -> Void
-
-	private let killActionHaptic: Haptics.HapticStyle = .heavy
+	var onContainerAction: (() -> Void)?
 
 	@ViewBuilder
 	private var attachButton: some View {
@@ -29,63 +28,112 @@ struct ContainerContextMenu: View {
 		}
 	}
 
+	@ViewBuilder
+	private var unpauseButton: some View {
+		Button {
+			executeAction(.unpause)
+		} label: {
+			Label(ContainerAction.unpause.title, systemImage: ContainerAction.unpause.icon)
+		}
+	}
+
+	@ViewBuilder
+	private var pauseButton: some View {
+		Button {
+			executeAction(.pause)
+		} label: {
+			Label(ContainerAction.pause.title, systemImage: ContainerAction.pause.icon)
+		}
+	}
+
+	@ViewBuilder
+	private var startButton: some View {
+		Button {
+			executeAction(.start)
+		} label: {
+			Label(ContainerAction.start.title, systemImage: ContainerAction.start.icon)
+		}
+	}
+
+	@ViewBuilder
+	private var stopButton: some View {
+		Button {
+			executeAction(.stop)
+		} label: {
+			Label(ContainerAction.stop.title, systemImage: ContainerAction.stop.icon)
+		}
+	}
+
+	@ViewBuilder
+	private var restartButton: some View {
+		Button {
+			executeAction(.restart)
+		} label: {
+			Label(ContainerAction.restart.title, systemImage: ContainerAction.restart.icon)
+		}
+	}
+
+	@ViewBuilder
+	private var killButton: some View {
+		Button {
+			executeAction(.kill, haptic: .heavy)
+		} label: {
+			Label(ContainerAction.kill.title, systemImage: ContainerAction.kill.icon)
+		}
+	}
+
 	var body: some View {
 		Group {
 			if !container._isStored {
 				switch container.state {
 				case .created:
-					ActionButton(container: container, action: .pause)
-					ActionButton(container: container, action: .stop)
-					ActionButton(container: container, action: .restart)
-					Divider()
-					ActionButton(container: container, action: .kill, role: .destructive, haptic: killActionHaptic)
+					pauseButton
+					stopButton
+					restartButton
+					killButton
 				case .running:
-					ActionButton(container: container, action: .pause)
-					ActionButton(container: container, action: .stop)
-					ActionButton(container: container, action: .restart)
-					Divider()
-					ActionButton(container: container, action: .kill, role: .destructive, haptic: killActionHaptic)
+					pauseButton
+					stopButton
+					restartButton
+					killButton
 				case .paused:
-					ActionButton(container: container, action: .unpause)
-					ActionButton(container: container, action: .stop)
-					ActionButton(container: container, action: .restart)
-					Divider()
-					ActionButton(container: container, action: .kill, role: .destructive, haptic: killActionHaptic)
+					unpauseButton
+					stopButton
+					restartButton
+					killButton
 				case .restarting:
-					ActionButton(container: container, action: .pause)
-					ActionButton(container: container, action: .stop)
-					Divider()
-					ActionButton(container: container, action: .kill, role: .destructive, haptic: killActionHaptic)
+					pauseButton
+					stopButton
+					killButton
 				case .removing:
-					ActionButton(container: container, action: .kill, role: .destructive, haptic: killActionHaptic)
+					killButton
 				case .exited:
-					ActionButton(container: container, action: .start)
+					startButton
 				case .dead:
-					ActionButton(container: container, action: .start)
+					startButton
 				case .none:
-					ActionButton(container: container, action: .unpause)
-					ActionButton(container: container, action: .start)
-					ActionButton(container: container, action: .restart)
-					ActionButton(container: container, action: .pause)
-					ActionButton(container: container, action: .stop)
-					Divider()
-					ActionButton(container: container, action: .kill, role: .destructive, haptic: killActionHaptic)
+					unpauseButton
+					startButton
+					restartButton
+					pauseButton
+					stopButton
+					killButton
 				}
 
 				Divider()
 
 				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.warning)
-					removeContainerAction()
+					sceneDelegate.containerToRemove = container
 				} label: {
 					Label("Generic.Remove", systemImage: SFSymbol.remove)
 				}
+			}
 
-				if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id) {
-					Divider()
+			if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id) {
+				Divider()
 
-					ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
-				}
+				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
 			}
 
 //			#if ENABLE_PREVIEW_FEATURES
@@ -114,54 +162,20 @@ private extension ContainerContextMenu {
 //			sceneDelegate.handle(error)
 //		}
 	}
-}
 
-// MARK: -
+	func executeAction(_ action: ContainerAction, haptic: Haptics.HapticStyle = .medium) {
+		Haptics.generateIfEnabled(haptic)
 
-private extension ContainerContextMenu {
-	struct ActionButton: View {
-		@EnvironmentObject private var portainerStore: PortainerStore
-		@Environment(\.presentIndicator) private var presentIndicator
-		@Environment(\.errorHandler) private var errorHandler
-		var container: Container
-		var action: ContainerAction
-		var role: ButtonRole?
-		var haptic: Haptics.HapticStyle
+		presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .loading))
 
-		init(
-			container: Container,
-			action: ContainerAction,
-			role: ButtonRole? = nil,
-			haptic: Haptics.HapticStyle = .medium
-		) {
-			self.container = container
-			self.action = action
-			self.role = role
-			self.haptic = haptic
-		}
-
-		var body: some View {
-			Button(role: role) {
-				executeAction()
-			} label: {
-				Label(action.title, systemImage: action.icon)
-			}
-		}
-
-		func executeAction() {
-			Haptics.generateIfEnabled(haptic)
-
-			presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .loading))
-
-			Task {
-				do {
-					try await portainerStore.execute(action, on: container.id)
-					portainerStore.refreshContainers(ids: [container.id], errorHandler: errorHandler)
-					presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .success))
-				} catch {
-					presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .failure(error)))
-					errorHandler(error, showIndicator: false)
-				}
+		Task {
+			do {
+				try await portainerStore.execute(action, on: container.id)
+				presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .success))
+				onContainerAction?()
+			} catch {
+				presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .failure(error)))
+				errorHandler(error, showIndicator: false)
 			}
 		}
 	}

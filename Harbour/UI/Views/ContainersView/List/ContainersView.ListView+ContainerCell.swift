@@ -13,7 +13,7 @@ import SwiftUI
 
 extension ContainersView.ListView {
 	struct ContainerCell: View {
-		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
+		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: 18, style: .circular)
 
 		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 12
@@ -38,8 +38,6 @@ extension ContainersView.ListView {
 				.fontWeight(.semibold)
 				.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 				.tint(Color.primary)
-				.transition(.opacity)
-				.animation(.easeInOut, value: container.displayName)
 		}
 
 		@ViewBuilder @MainActor
@@ -66,10 +64,6 @@ extension ContainersView.ListView {
 			.font(.subheadline)
 			.fontWeight(.medium)
 			.tint(isBeingRemoved ? tintColor : .primary)
-			.transition(.opacity)
-			.animation(.easeInOut, value: container.status)
-			.animation(.easeInOut, value: container.state)
-			.animation(.easeInOut, value: container._isStored)
 		}
 
 		var body: some View {
@@ -89,8 +83,6 @@ extension ContainersView.ListView {
 					.font(.system(size: circleSize))
 					.fontWeight(.black)
 					.foregroundStyle(tintColor)
-					.transition(.opacity)
-					.animation(.easeInOut, value: container.state)
 			}
 			.padding()
 			.lineLimit(1)
@@ -99,11 +91,10 @@ extension ContainersView.ListView {
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
-			.animation(.easeInOut, value: container._isStored)
-			.animation(.easeInOut, value: container.state)
-			.animation(.easeInOut, value: container.status)
-			.animation(.easeInOut, value: isBeingRemoved)
-			.contentTransition(.opacity)
+			.animation(.smooth, value: container)
+			.animation(.smooth, value: container.state)
+			.animation(.smooth, value: container.status)
+			.animation(.smooth, value: isBeingRemoved)
 		}
 	}
 }

@@ -25,7 +25,6 @@ struct LandingView: View {
 				.tag(Screen.setup)
 		}
 		.tabViewStyle(.page(indexDisplayMode: .never))
-		.animation(.easeInOut, value: currentScreen)
 	}
 	 */
 
@@ -47,7 +46,7 @@ struct LandingView: View {
 				.transition(viewAnimation(edge: .trailing))
 			}
 		}
-		.animation(.easeInOut, value: currentScreen)
+		.animation(.smooth, value: currentScreen)
 	}
 }
 

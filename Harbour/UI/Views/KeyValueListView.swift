@@ -23,7 +23,6 @@ struct KeyValueListView: View {
 		if data.isEmpty {
 			ContentUnavailableView("Generic.Empty", systemImage: "ellipsis")
 				.allowsHitTesting(false)
-				.transition(.opacity)
 		}
 	}
 
@@ -40,8 +39,9 @@ struct KeyValueListView: View {
 		Form {
 			ForEach(dataFiltered) { entry in
 				NormalizedSection {
-					Text(entry.value)
+					Text(entry.value.isEmpty ? String(localized: "Generic.Empty") : entry.value)
 						.fontDesign(contentFontDesign)
+						.foregroundStyle(entry.value.isEmpty ? .secondary : .primary)
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.contentShape(Rectangle())
 						.textSelection(.enabled)
@@ -65,7 +65,7 @@ struct KeyValueListView: View {
 		#if os(iOS)
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
 		#endif
-		.animation(.easeInOut, value: data)
+		.animation(.smooth, value: data)
 	}
 }
 
@@ -88,5 +88,5 @@ extension KeyValueListView {
 // MARK: - Previews
 
 #Preview {
-	KeyValueListView(data: [.init("Key", "Value")])
+	KeyValueListView(data: [.init(key: "Key", value: "Value")])
 }

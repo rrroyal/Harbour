@@ -6,8 +6,10 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import CommonOSLog
 import Foundation
 import IndicatorsKit
+import OSLog
 #if canImport(UIKit)
 import UIKit.UIDevice
 #endif
@@ -19,6 +21,7 @@ extension SettingsView {
 	final class ViewModel: IndicatorPresentable {
 		private let portainerStore: PortainerStore = .shared
 
+		let logger = Logger(.settings)
 		let indicators = Indicators()
 
 		var scrollPosition: SettingsView.ViewID?
@@ -54,13 +57,10 @@ extension SettingsView {
 			}
 		}
 
-		func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
-			Task {
-				await AppState.shared.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
-			}
-			Task { @MainActor in
-				activeURL = serverURL
-			}
+		@MainActor
+		func switchPortainerServer(to serverURL: URL) async throws {
+			try await AppState.shared.switchPortainerServer(to: serverURL).value
+			activeURL = serverURL
 		}
 
 		func removeServer(_ url: URL) throws {

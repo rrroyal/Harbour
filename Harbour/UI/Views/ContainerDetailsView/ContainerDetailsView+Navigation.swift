@@ -38,13 +38,13 @@ extension ContainerDetailsView: Deeplinkable {
 		}
 	}
 
-	enum Subdestination: String {
+	enum Subdestination: String, Hashable {
 		/// Subdestination for ``ContainerDetailsView.LabelsDetailsView``.
 		case labels
 		/// Subdestination for ``ContainerDetailsView.EnvironmentDetailsView``.
 		case environment
-		/// Subdestination for ``ContainerDetailsView.PortsDetailsView``.
-		case ports
+		/// Subdestination for ``ContainerDetailsView.NetworkDetailsView``.
+		case network
 		/// Subdestination for ``ContainerDetailsView.MountsDetailsView``.
 		case mounts
 		/// Subdestination for ``ContainerLogsView``.
@@ -65,7 +65,7 @@ extension ContainerDetailsView: Deeplinkable {
 		let navigationItem = NavigationItem(from: deeplink)
 		navigationPath.append(navigationItem)
 
-		if let subdestination = deeplink.subdestination {
+		if let subdestination = deeplink.subdestination, !subdestination.isEmpty {
 			subdestination
 				.compactMap { Subdestination(rawValue: $0.lowercased()) }
 				.forEach { navigationPath.append($0) }

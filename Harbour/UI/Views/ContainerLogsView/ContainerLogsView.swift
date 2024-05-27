@@ -7,6 +7,7 @@
 //
 
 import CommonHaptics
+import PortainerKit
 import SwiftUI
 
 // MARK: - ContainerLogsView
@@ -14,17 +15,17 @@ import SwiftUI
 struct ContainerLogsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(\.errorHandler) private var errorHandler
-	@Environment(\.presentIndicator) private var presentIndicator
+//	@Environment(\.presentIndicator) private var presentIndicator
 
 	@State private var viewModel: ViewModel
 
-	let navigationItem: ContainerDetailsView.NavigationItem
+	var containerID: Container.ID
 
-	init(navigationItem: ContainerDetailsView.NavigationItem) {
-		self.navigationItem = navigationItem
+	init(containerID: Container.ID) {
+		self.containerID = containerID
 
-		let viewModel = ViewModel(navigationItem: navigationItem)
-		self._viewModel = .init(wrappedValue: viewModel)
+		let viewModel = ViewModel(containerID: containerID)
+		self.viewModel = viewModel
 	}
 
 	var body: some View {
@@ -43,7 +44,6 @@ struct ContainerLogsView: View {
 						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 						.id(ViewID.logsLabel)
 				}
-				.animation(.easeInOut, value: viewModel.logs)
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.toolbar {
@@ -62,14 +62,12 @@ struct ContainerLogsView: View {
 //					DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
 //						ProgressView()
 //					}
-//					.transition(.opacity)
 //				}
 			}
 		}
 		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
-		.transition(.opacity)
-		.animation(.easeInOut, value: viewModel.viewState)
-		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+		.animation(.smooth, value: viewModel.viewState)
+		.animation(.smooth, value: viewModel.logs)
 		.navigationTitle("ContainerLogsView.Title")
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
@@ -77,6 +75,9 @@ struct ContainerLogsView: View {
 //		.searchable(text: $searchQuery)
 		.task {
 			await fetch().value
+		}
+		.onChange(of: containerID) { _, newID in
+			viewModel.containerID = newID
 		}
 		.onChange(of: viewModel.lineCount) {
 			fetch()
@@ -230,7 +231,7 @@ private extension ContainerLogsView {
 
 #if DEBUG
 #Preview {
-	ContainerLogsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
+	ContainerLogsView(containerID: "")
 		.environmentObject(PortainerStore.preview)
 }
 #endif

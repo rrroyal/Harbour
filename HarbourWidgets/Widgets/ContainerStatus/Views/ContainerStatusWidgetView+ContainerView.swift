@@ -118,7 +118,7 @@ extension ContainerStatusWidgetView {
 			.tint(container?.state.color ?? Container.State?.none.color)
 			.modifier(LinkWrappedViewModifier(url: url))
 			.background(Color.widgetBackground)
-			.id("ContainerStatusWidgetView.ContainerView.\(container?.id ?? intentContainer._id)")
+			.id("ContainerStatusWidgetView.ContainerView:\(container?.id ?? intentContainer._id)")
 		}
 	}
 }

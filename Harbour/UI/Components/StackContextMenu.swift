@@ -14,46 +14,49 @@ import SwiftUI
 
 struct StackContextMenu: View {
 	@Environment(\.portainerServerURL) private var portainerServerURL
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
 	var stack: Stack
 	var setStackStateAction: (Bool) -> Void
-	var removeStackAction: () -> Void
 
 	var body: some View {
-		if portainerStore.loadingStackIDs.contains(stack.id) {
-			Text("Generic.Loading")
-			Divider()
+		Group {
+			if !stack._isStored {
+				Button {
+					Haptics.generateIfEnabled(.light)
+					setStackStateAction(!stack.isOn)
+				} label: {
+					Label(
+						stack.isOn ? "StackContextMenu.StopStack" : "StackContextMenu.StartStack",
+						systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
+					)
+				}
+
+				Divider()
+
+				Button {
+					Haptics.generateIfEnabled(.sheetPresentation)
+					sceneDelegate.editedStack = stack
+					sceneDelegate.activeCreateStackSheetDetent = .large
+					sceneDelegate.isCreateStackSheetPresented = true
+				} label: {
+					Label("StackContextMenu.EditStack", systemImage: SFSymbol.edit)
+				}
+
+				Button(role: .destructive) {
+					Haptics.generateIfEnabled(.warning)
+					sceneDelegate.stackToRemove = stack
+				} label: {
+					Label("StackContextMenu.RemoveStack", systemImage: SFSymbol.remove)
+				}
+			}
+
+			if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
+				Divider()
+
+				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+			}
 		}
-
-		Button {
-			Haptics.generateIfEnabled(.light)
-			setStackStateAction(!stack.isOn)
-		} label: {
-			Label(
-				stack.isOn ? "StackContextMenu.StopStack" : "StackContextMenu.StartStack",
-				systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
-			)
-		}
-
-		Divider()
-
-		Button {
-
-		} label: {
-			Label("StackContextMenu.EditStack", systemImage: SFSymbol.edit)
-		}
-
-		Button(role: .destructive) {
-			Haptics.generateIfEnabled(.warning)
-			removeStackAction()
-		} label: {
-			Label("StackContextMenu.RemoveStack", systemImage: SFSymbol.remove)
-		}
-
-		if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
-			Divider()
-
-			ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
-		}
+		.labelStyle(.titleAndIcon)
 	}
 }

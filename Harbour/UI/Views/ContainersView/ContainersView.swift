@@ -8,6 +8,7 @@
 
 import CommonFoundation
 import CommonHaptics
+import CoreSpotlight
 import IndicatorsKit
 import Navigation
 import PortainerKit
@@ -141,6 +142,8 @@ struct ContainersView: View {
 	}
 
 	var body: some View {
+		@Bindable var sceneDelegate = sceneDelegate
+
 		ContainersList()
 			.background {
 				if viewModel.isBackgroundPlaceholderVisible {
@@ -150,12 +153,14 @@ struct ContainersView: View {
 			#if os(iOS)
 			.background(
 				viewState: viewModel.viewState,
+				isViewStateBackgroundVisible: viewModel.containers.isEmpty,
 				backgroundVisiblity: .hidden,
 				backgroundColor: .groupedBackground
 			)
 			#elseif os(macOS)
 			.background(
 				viewState: viewModel.viewState,
+				isViewStateBackgroundVisible: viewModel.containers.isEmpty,
 				backgroundVisiblity: .hidden,
 				backgroundColor: .clear
 			)
@@ -169,7 +174,7 @@ struct ContainersView: View {
 				Label(token.title, systemImage: token.icon)
 			}
 			.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
-				await fetch().value
+				await fetch()
 			}
 			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 				ContainerDetailsView(navigationItem: navigationItem)
@@ -191,9 +196,9 @@ struct ContainersView: View {
 			.focusEffectDisabled()
 			.confirmationDialog(
 				"Generic.AreYouSure?",
-				isPresented: $viewModel.isRemoveContainerAlertPresented,
+				isPresented: sceneDelegate.isRemoveContainerAlertPresented,
 				titleVisibility: .visible,
-				presenting: viewModel.containerToRemove
+				presenting: sceneDelegate.containerToRemove
 			) { container in
 				Button("Generic.Remove", role: .destructive) {
 					Haptics.generateIfEnabled(.heavy)
@@ -202,9 +207,11 @@ struct ContainersView: View {
 			} message: { container in
 				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
 			}
-			.animation(.easeInOut, value: viewModel.viewState)
-			.animation(.easeInOut, value: viewModel.containers)
-			.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+			.animation(.smooth, value: viewModel.viewState)
+			.animation(.smooth, value: viewModel.containers)
+			.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
+//			.animation(.smooth, value: portainerStore.removedContainerIDs)
+			.animation(.easeInOut, value: preferences.cvUseGrid)
 			.environment(viewModel)
 			.onKeyPress(action: onKeyPress)
 			.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
@@ -220,14 +227,15 @@ struct ContainersView: View {
 					}
 					.last
 			}
+			.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
+//				guard sceneDelegate.activeTab == .containers else { return }
+				viewModel.handleSpotlightSearchContinuation(userActivity)
+			}
 			.task {
 				if portainerStore.containersTask?.isCancelled ?? true {
-					await fetch().value
+					await fetch()
 				}
 			}
-//			.onAppear {
-//				isFocused = true
-//			}
 	}
 }
 
@@ -253,10 +261,6 @@ private extension ContainersView {
 				#if os(macOS)
 				.padding(.top)
 				#endif
-				.transition(.opacity)
-				.animation(.easeInOut, value: portainerStore.containers)
-				.animation(.easeInOut, value: portainerStore.removedContainerIDs)
-				.animation(.easeInOut, value: preferences.cvUseGrid)
 			}
 		}
 	}
@@ -265,16 +269,13 @@ private extension ContainersView {
 // MARK: - ContainersView+Actions
 
 private extension ContainersView {
-	@discardableResult
-	func fetch() -> Task<Void, Never> {
-		Task {
-			guard portainerStore.isSetup else { return }
+	func fetch() async {
+		guard portainerStore.isSetup else { return }
 
-			do {
-				try await viewModel.fetch()
-			} catch {
-				errorHandler(error)
-			}
+		do {
+			try await viewModel.fetch()
+		} catch {
+			errorHandler(error)
 		}
 	}
 
@@ -282,8 +283,11 @@ private extension ContainersView {
 		Task {
 			do {
 				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .loading))
-				try await viewModel.removeContainer(container, force: force)
+
+				try await portainerStore.removeContainer(containerID: container.id, force: force)
 				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .success))
+
+				sceneDelegate.navigate(to: .containers)
 			} catch {
 				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .failure(error)))
 				errorHandler(error, showIndicator: false)

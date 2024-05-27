@@ -11,6 +11,7 @@ import SwiftUI
 
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View>: View {
+		@EnvironmentObject private var portainerStore: PortainerStore
 		@Environment(ContainersView.ViewModel.self) private var viewModel
 		@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 		@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
@@ -47,7 +48,7 @@ extension ContainersView {
 			}
 			.contextMenu {
 				ContainerContextMenu(container: container) {
-					viewModel.attemptContainerRemoval(container)
+					portainerStore.refreshContainers(ids: [container.id])
 				}
 			}
 //			.if(let: portainerDeeplink) {

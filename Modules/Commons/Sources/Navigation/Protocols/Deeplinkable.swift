@@ -57,7 +57,7 @@ import SwiftUI
 ///             let navigationItem = NavigationItem(id: id)
 ///             navigationPath.append(navigationItem)
 ///
-///             if let subdestination = deeplink.subdestination {
+///				if let subdestination = deeplink.subdestination, !subdestination.isEmpty {
 ///                 subdestination
 ///                     .compactMap { Subdestination(rawValue: $0) }
 ///                     .forEach { navigationPath.append($0) }

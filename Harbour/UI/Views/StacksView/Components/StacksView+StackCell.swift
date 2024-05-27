@@ -15,31 +15,28 @@ import SwiftUI
 extension StacksView {
 	struct StackCell: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(SceneDelegate.self) private var sceneDelegate
 		@Environment(\.portainerServerURL) private var portainerServerURL
 		var stack: StackItem
 		var containers: [Container]
-		var isLoading: Bool
 		var filterAction: () -> Void
 		var setStackStateAction: (Bool) -> Void
-		var removeStackAction: () -> Void
+
+		@ScaledMetric(relativeTo: .subheadline)
+		private var iconSize = 6
 
 		init(
 			_ stack: StackItem,
 			containers: [Container],
-			isLoading: Bool,
-			filterAction: @escaping () -> Void = { },
-			setStackStateAction: @escaping (Bool) -> Void = { _ in },
-			removeStackAction: @escaping () -> Void = { }
+			filterAction: @escaping () -> Void,
+			setStackStateAction: @escaping (Bool) -> Void
 		) {
 			self.stack = stack
 			self.containers = containers
-			self.isLoading = isLoading
 			self.filterAction = filterAction
 			self.setStackStateAction = setStackStateAction
-			self.removeStackAction = removeStackAction
 		}
 
-		@MainActor
 		private var isBeingRemoved: Bool {
 			if let stackID = Stack.ID(stack.id) {
 				portainerStore.removedStackIDs.contains(stackID)
@@ -48,8 +45,9 @@ extension StacksView {
 			}
 		}
 
-		@ScaledMetric(relativeTo: .subheadline)
-		private var iconSize = 6
+		private var isLoading: Bool {
+			portainerStore.loadingStackIDs.contains(Stack.ID(stack.id) ?? -1)
+		}
 
 		private var isOn: Bool {
 			stack.stack?.isOn ?? true
@@ -101,36 +99,35 @@ extension StacksView {
 						.symbolVariant(stack.stack?._isStored ?? false ? .none : .fill)
 
 					Group {
-						if isLoading {
-							Text("Generic.Loading")
-						} else if isBeingRemoved {
+						if isBeingRemoved {
 							Text("Generic.Removing")
+						} else if isLoading {
+							Text("Generic.Loading")
 						} else {
-							Text(verbatim: isOn ? "\(stackStatusLabel) (\(runningContainersCount)/\(containers.count))" : stackStatusLabel)
+							let runningContainersCount = self.runningContainersCount
+							let containersCount = self.containers.count
+							let showContainerCount = isOn && runningContainersCount > 0 && containersCount > 0
+							Text(verbatim: showContainerCount ? "\(stackStatusLabel) (\(runningContainersCount)/\(containersCount))" : stackStatusLabel)
 						}
 					}
 					.font(.footnote)
 					.fontWeight(.medium)
-					.transition(.opacity)
 					.id(ViewID.subheadlineLabel)
 				}
 				.foregroundStyle(stackColor)
 				.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading || isBeingRemoved)
-				.transition(.opacity)
 			}
 			.padding(.vertical, 2)
-			.transition(.opacity)
-			.animation(.easeInOut, value: stack.stack?.status)
-			.animation(.easeInOut, value: isLoading)
-			.animation(.easeInOut, value: isOn)
-			.animation(.easeInOut, value: isBeingRemoved)
+			.animation(.smooth, value: stack)
+			.animation(.smooth, value: isLoading)
+			.animation(.smooth, value: isOn)
+			.animation(.smooth, value: isBeingRemoved)
 			.contextMenu {
 				if let stack = stack.stack {
-					StackContextMenu(stack: stack) {
-						setStackStateAction($0)
-					} removeStackAction: {
-						removeStackAction()
-					}
+					StackContextMenu(
+						stack: stack,
+						setStackStateAction: { setStackStateAction($0) }
+					)
 				}
 			}
 			.swipeActions(edge: .leading) {
@@ -205,28 +202,35 @@ private extension StacksView.StackCell {
 
 #Preview {
 	List {
-		StacksView.StackCell(.init(stack: .preview()), containers: [.preview()], isLoading: false)
-		StacksView.StackCell(.init(stack: .preview()), containers: [.preview(), .preview(state: .dead)], isLoading: false)
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
-		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview()], isLoading: false)
-		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview(), .preview(state: .dead)], isLoading: false)
-	}
-}
-
-#Preview {
-	List {
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
-			.redacted(reason: .placeholder)
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
-			.redacted(reason: .placeholder)
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
-			.redacted(reason: .placeholder)
-		StacksView.StackCell(.init(stack: .preview(name: "Stacks", status: .active)), containers: [.preview()], isLoading: false)
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
-			.redacted(reason: .placeholder)
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
-			.redacted(reason: .placeholder)
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
-			.redacted(reason: .placeholder)
+		StacksView.StackCell(
+			.init(stack: .preview()),
+			containers: [.preview()],
+			filterAction: { },
+			setStackStateAction: { _ in }
+		)
+		StacksView.StackCell(
+			.init(stack: .preview()),
+			containers: [.preview(), .preview(state: .dead)],
+			filterAction: { },
+			setStackStateAction: { _ in }
+		)
+		StacksView.StackCell(
+			.init(stack: .preview(status: .inactive)),
+			containers: [],
+			filterAction: { },
+			setStackStateAction: { _ in }
+		)
+		StacksView.StackCell(
+			.init(label: "LimitedStack"),
+			containers: [.preview()],
+			filterAction: { },
+			setStackStateAction: { _ in }
+		)
+		StacksView.StackCell(
+			.init(label: "LimitedStack"),
+			containers: [.preview(), .preview(state: .dead)],
+			filterAction: { },
+			setStackStateAction: { _ in }
+		)
 	}
 }

@@ -6,6 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import CoreSpotlight
 import PortainerKit
 import SwiftUI
 #if canImport(UIKit)
@@ -30,9 +31,6 @@ extension ContainersView {
 		var isSearchActive = false
 
 		var scrollViewIsRefreshing = false
-
-		var isRemoveContainerAlertPresented = false
-		var containerToRemove: Container?
 
 		var viewState: ViewState<[Container], Error> {
 			let containers = portainerStore.containers
@@ -70,7 +68,7 @@ extension ContainersView {
 			case .reloading:
 				return false
 			case .success:
-				return !viewState.isLoading && containers.isEmpty
+				return true
 			case .failure:
 				return false
 			}
@@ -136,15 +134,16 @@ extension ContainersView {
 		func onLandingDismissed() {
 			preferences.landingDisplayed = true
 		}
+	}
+}
 
-		func attemptContainerRemoval(_ container: Container) {
-			containerToRemove = container
-			isRemoveContainerAlertPresented = true
-		}
+// MARK: - ContainersView.ViewModel+UserActivity
 
-		func removeContainer(_ container: Container, force: Bool) async throws {
-			try await portainerStore.removeContainer(containerID: container.id, force: force)
-		}
+extension ContainersView.ViewModel {
+	func handleSpotlightSearchContinuation(_ userActivity: NSUserActivity) {
+		guard let queryString = userActivity.userInfo?[CSSearchQueryString] as? String else { return }
+		searchText = queryString
+//		isSearchActive = true
 	}
 }
 
@@ -158,9 +157,9 @@ extension ContainersView.ViewModel {
 		var id: String {
 			switch self {
 			case .stack(let stackName):
-				"stack:\(stackName)"
+				"stack.\(stackName)"
 			case .status(let isOn):
-				"status:\(isOn)"
+				"status.\(isOn)"
 			}
 		}
 
@@ -187,8 +186,7 @@ extension ContainersView.ViewModel {
 			case .stack(let stackName):
 				return container.stack == stackName
 			case .status(let isOn):
-				let isContainerOn = container.state.isRunning
-				return isOn ? isContainerOn : !isContainerOn
+				return container.state.isRunning == isOn ? true : false
 			}
 		}
 	}

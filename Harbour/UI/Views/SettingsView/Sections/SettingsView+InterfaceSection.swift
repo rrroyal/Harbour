@@ -96,18 +96,19 @@ private extension SettingsView.InterfaceSection {
 						.fontWeight(.medium)
 						.frame(maxWidth: .infinity, alignment: .trailing)
 						.transition(.opacity)
-						.animation(.easeInOut, value: currentIcon.id)
 				}
 			}
+			.animation(.smooth, value: currentIcon)
 		}
 
 		private func setIcon(_ icon: AppIcon) {
 			Task {
 				Haptics.generateIfEnabled(.light)
 				do {
-					try await AppIcon.setIcon(icon)
 					currentIcon = icon
+					try await AppIcon.setIcon(icon)
 				} catch {
+					currentIcon = .current
 					errorHandler(error)
 				}
 			}

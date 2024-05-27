@@ -1,5 +1,5 @@
 //
-//  CreateStackView+StackFileContentsView.swift
+//  CreateStackView+StackFileContentView.swift
 //  Harbour
 //
 //  Created by royal on 15/04/2024.
@@ -10,10 +10,10 @@ import CommonHaptics
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - CreateStackView+StackFileContentsView
+// MARK: - CreateStackView+StackFileContentView
 
 extension CreateStackView {
-	struct StackFileContentsView: View {
+	struct StackFileContentView: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 		@Environment(\.errorHandler) private var errorHandler
 		var allowedContentTypes: [UTType]
@@ -24,32 +24,35 @@ extension CreateStackView {
 
 			NormalizedSection {
 				VStack {
-					if let stackFileContents = viewModel.stackFileContent {
+					if let stackFileContent = viewModel.stackFileContent {
 						ViewForFileContent(stackFileContent: stackFileContent)
-					} else if viewModel.isLoadingStackFileContents {
+					} else if viewModel.isLoadingStackFileContent {
 						ViewForLoadingContent()
 					} else {
 						ViewForSelectFile()
 					}
 				}
 				.frame(maxWidth: .infinity)
-				.id("StackFileContent")
 			} header: {
-				Text("CreateStackView.StackFileContents")
+				Text("CreateStackView.StackFileContent")
 			}
 			.listRowInsets(.zero)
-			.animation(.smooth, value: viewModel.isStackFileContentsTargeted)
-			.onDrop(of: allowedContentTypes, isTargeted: $viewModel.isStackFileContentsTargeted) { items in
+			.animation(.smooth, value: viewModel.stackFileContent)
+			.animation(.smooth, value: viewModel.isLoadingStackFileContent)
+			.animation(.smooth, value: viewModel.isStackFileContentExpanded)
+			.animation(.smooth, value: viewModel.isStackFileContentTargeted)
+			.onDrop(of: allowedContentTypes, isTargeted: $viewModel.isStackFileContentTargeted) { items in
 				Haptics.generateIfEnabled(.selectionChanged)
 				return onItemsDrop(items)
 			}
+			.id("\(Self.self).\(viewModel.stackFileContent?.hashValue ?? 0).\(viewModel.isLoadingStackFileContent)")
 		}
 	}
 }
 
-// MARK: - CreateStackView.StackFileContentsView+Actions
+// MARK: - CreateStackView.StackFileContentView+Actions
 
-private extension CreateStackView.StackFileContentsView {
+private extension CreateStackView.StackFileContentView {
 	func onItemsDrop(_ items: [NSItemProvider]) -> Bool {
 		let item = items.first { $0.hasItemConformingToTypeIdentifier(UTType.yaml.identifier) }
 		guard let item else { return false }
@@ -74,9 +77,9 @@ private extension CreateStackView.StackFileContentsView {
 	}
 }
 
-// MARK: - CreateStackView.StackFileContentsView+ViewForFileContent
+// MARK: - CreateStackView.StackFileContentView+Subviews
 
-private extension CreateStackView.StackFileContentsView {
+private extension CreateStackView.StackFileContentView {
 	struct ViewForFileContent: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 		var stackFileContent: String
@@ -86,7 +89,7 @@ private extension CreateStackView.StackFileContentsView {
 				.foregroundStyle(.primary)
 				.font(.caption)
 				.fontDesign(.monospaced)
-				.lineLimit(viewModel.showWholeStackFileContents ? nil : 12)
+				.lineLimit(viewModel.isStackFileContentExpanded ? nil : 12)
 				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 				#if os(iOS)
 				.padding(.horizontal)
@@ -98,11 +101,11 @@ private extension CreateStackView.StackFileContentsView {
 					Group {
 						Button {
 							Haptics.generateIfEnabled(.light)
-							viewModel.showWholeStackFileContents.toggle()
+							viewModel.isStackFileContentExpanded.toggle()
 						} label: {
 							Label(
-								viewModel.showWholeStackFileContents ? "Generic.Collapse" : "Generic.Expand",
-								systemImage: viewModel.showWholeStackFileContents ? SFSymbol.collapse : SFSymbol.expand
+								viewModel.isStackFileContentExpanded ? "Generic.Collapse" : "Generic.Expand",
+								systemImage: viewModel.isStackFileContentExpanded ? SFSymbol.collapse : SFSymbol.expand
 							)
 						}
 
@@ -123,11 +126,7 @@ private extension CreateStackView.StackFileContentsView {
 				}
 		}
 	}
-}
 
-// MARK: - CreateStackView.StackFileContentsView+ViewForLoadingContent
-
-private extension CreateStackView.StackFileContentsView {
 	struct ViewForLoadingContent: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 
@@ -139,7 +138,7 @@ private extension CreateStackView.StackFileContentsView {
 				.contextMenu {
 					Button {
 						Haptics.generateIfEnabled(.light)
-						viewModel.fetchStackFileContentsTask?.cancel()
+						viewModel.fetchStackFileContentTask?.cancel()
 					} label: {
 						Label("Generic.Cancel", systemImage: SFSymbol.cancel)
 					}
@@ -147,11 +146,7 @@ private extension CreateStackView.StackFileContentsView {
 				}
 		}
 	}
-}
 
-// MARK: - CreateStackView.StackFileContentsView+ViewForSelectFile
-
-private extension CreateStackView.StackFileContentsView {
 	struct ViewForSelectFile: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 
@@ -177,7 +172,7 @@ private extension CreateStackView.StackFileContentsView {
 // MARK: - Previews
 
 #Preview("Empty") {
-	CreateStackView.StackFileContentsView(
+	CreateStackView.StackFileContentView(
 		allowedContentTypes: []
 	)
 	.environment(CreateStackView.ViewModel())

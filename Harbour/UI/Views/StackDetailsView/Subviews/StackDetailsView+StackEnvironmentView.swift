@@ -17,7 +17,7 @@ extension StackDetailsView {
 
 		private var keyValueListData: [KeyValueEntry] {
 			entries?
-				.map { .init($0.name, $0.value ) }
+				.map { .init(key: $0.name, value: $0.value) }
 				.sorted() ?? []
 		}
 

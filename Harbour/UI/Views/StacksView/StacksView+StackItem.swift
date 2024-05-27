@@ -29,7 +29,7 @@ extension StacksView {
 		}
 
 		init(label: String) {
-			self.id = "limited:\(label)"
+			self.id = "limited.\(label)"
 			self.stackType = .limited
 			self.stack = nil
 			self.name = label

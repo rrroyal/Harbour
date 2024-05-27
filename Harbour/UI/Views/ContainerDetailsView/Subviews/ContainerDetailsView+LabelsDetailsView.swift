@@ -14,7 +14,7 @@ extension ContainerDetailsView {
 
 		private var data: [KeyValueEntry] {
 			labels?
-				.map { .init($0, $1) }
+				.map { .init(key: $0, value: $1) }
 				.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending } ?? []
 		}
 

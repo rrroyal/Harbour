@@ -14,13 +14,10 @@ import SwiftUI
 
 extension CreateStackView {
 	struct StackEnvironmentView: View {
-		@Binding var environment: [KeyValueEntry]
-		@Binding var isEnvironmentEntrySheetPresented: Bool
-		@Binding var editedEnvironmentEntry: KeyValueEntry?
-		var removeEntryAction: (KeyValueEntry) -> Void
+		@Environment(CreateStackView.ViewModel.self) private var viewModel
 
 		var environmentSorted: [KeyValueEntry] {
-			environment.sorted()
+			viewModel.stackEnvironment.sorted()
 		}
 
 		var body: some View {
@@ -29,8 +26,8 @@ extension CreateStackView {
 					ForEach(environmentSorted) { entry in
 						Button {
 							Haptics.generateIfEnabled(.sheetPresentation)
-							editedEnvironmentEntry = entry
-							isEnvironmentEntrySheetPresented = true
+							viewModel.editedEnvironmentEntry = entry
+							viewModel.isEnvironmentEntrySheetPresented = true
 						} label: {
 							LabeledContent(entry.key, value: entry.value)
 								#if os(macOS)
@@ -42,23 +39,22 @@ extension CreateStackView {
 						.contextMenu {
 							RemoveButton {
 								Haptics.generateIfEnabled(.light)
-								removeEntryAction(entry)
+								viewModel.editEnvironmentEntry(old: entry, new: nil)
 							}
 							.labelStyle(.titleAndIcon)
 						}
 						.swipeActions(edge: .trailing) {
 							RemoveButton {
 								Haptics.generateIfEnabled(.light)
-								removeEntryAction(entry)
+								viewModel.editEnvironmentEntry(old: entry, new: nil)
 							}
 						}
-						.transition(.opacity)
 					}
 
 					Button {
 						Haptics.generateIfEnabled(.sheetPresentation)
-						editedEnvironmentEntry = nil
-						isEnvironmentEntrySheetPresented = true
+						viewModel.editedEnvironmentEntry = nil
+						viewModel.isEnvironmentEntrySheetPresented = true
 					} label: {
 						Label("Generic.Add", systemImage: SFSymbol.plus)
 							#if os(macOS)
@@ -74,8 +70,7 @@ extension CreateStackView {
 			} header: {
 				Text("CreateStackView.Environment")
 			}
-			.transition(.opacity)
-			.animation(.easeInOut, value: environmentSorted)
+			.animation(.smooth, value: environmentSorted)
 		}
 	}
 }
@@ -100,10 +95,6 @@ private extension CreateStackView.StackEnvironmentView {
 // MARK: - Previews
 
 #Preview {
-	CreateStackView.StackEnvironmentView(
-		environment: .constant([.init("key", "value")]),
-		isEnvironmentEntrySheetPresented: .constant(false),
-		editedEnvironmentEntry: .constant(nil),
-		removeEntryAction: { _ in }
-	)
+	CreateStackView.StackEnvironmentView()
+		.environment(CreateStackView.ViewModel())
 }

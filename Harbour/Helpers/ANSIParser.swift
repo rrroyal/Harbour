@@ -24,16 +24,12 @@ enum ANSIParser {
 	typealias PlatformAttributes = AttributeScopes.AppKitAttributes
 	#endif
 
-	// swiftlint:disable opening_brace
-
 	static let escapeSequenceStart: [Character] = ["\u{001B}", "["]
 	static let escapeSequenceEnd: Character = "m"
 	static let escapeSequenceAllowedCharacters = "([0–9]|[:;<=>?!\"#$%&'()*+,-./ @A–Z[\\]^_`a–z{|}~])*"
 
 	/// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L131
 	static let escapeRegex = /[\u001b\u009b][\[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/
-
-	// swiftlint:enable opening_brace
 
 	@available(*, unavailable, message: "Not working :)")
 	static func parse(_ string: String) -> AttributedString {

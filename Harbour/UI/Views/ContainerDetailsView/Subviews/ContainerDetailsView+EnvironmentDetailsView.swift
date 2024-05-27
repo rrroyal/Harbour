@@ -14,12 +14,12 @@ extension ContainerDetailsView {
 
 		private var data: [KeyValueEntry] {
 			environment?
-				.map { key in
-					let split = key.split(separator: "=")
+				.compactMap { pair in
+					let split = pair.split(separator: "=")
 					if let one = split[safe: 0], let two = split[safe: 1] {
-						return .init(String(one), String(two))
+						return .init(key: String(one), value: String(two))
 					} else {
-						return .init("", key)
+						return .init(key: "", value: pair)
 					}
 				}
 				.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending } ?? []

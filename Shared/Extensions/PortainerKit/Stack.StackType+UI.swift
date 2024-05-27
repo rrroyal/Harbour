@@ -8,7 +8,7 @@
 
 import PortainerKit
 
-// MARK: - Stack.StackType+label
+// MARK: - Stack.StackType+title
 
 extension Stack.StackType {
 	var title: String {
@@ -17,5 +17,11 @@ extension Stack.StackType {
 		case .dockerCompose:	String(localized: "PortainerKit.Stack.StackType.DockerCompose")
 		case .kubernetes:		String(localized: "PortainerKit.Stack.StackType.Kubernetes")
 		}
+	}
+}
+
+extension Stack.StackType? {
+	var title: String {
+		self?.title ?? String(localized: "PortainerKit.Stack.StackType.Unknown")
 	}
 }

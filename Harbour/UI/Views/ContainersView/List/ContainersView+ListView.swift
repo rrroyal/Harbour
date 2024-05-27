@@ -26,13 +26,14 @@ extension ContainersView {
 					ContainersView.ContainerNavigationCell(container: container) {
 						ContainerCell(container: container)
 							.equatable()
+							.geometryGroup()
 							.id("ContainerCell.\(container._persistentID)")
 							.tag(container._persistentID)
 					}
-					.transition(.opacity)
 					.environment(\.parentShape, AnyShape(ContainerCell.roundedRectangleBackground))
 				}
 			}
+			.animation(.smooth, value: containers)
 		}
 	}
 }

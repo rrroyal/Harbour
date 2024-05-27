@@ -9,10 +9,9 @@
 import IndicatorsKit
 import KeychainKit
 import OSLog
-import PortainerKit
 import SwiftUI
 
-// MARK: - ErrorHandler
+// MARK: - errorHandler
 
 extension EnvironmentValues {
 	private struct ErrorHandlerEnvironmentKey: EnvironmentKey {
@@ -29,53 +28,7 @@ extension EnvironmentValues {
 	}
 }
 
-// MARK: - ShowIndicator
-
-extension EnvironmentValues {
-	private struct ShowIndicatorEnvironmentKey: EnvironmentKey {
-		static let defaultValue: IndicatorPresentable.PresentIndicatorAction = { indicator in
-			assertionFailure("`showIndicator` has been called, but none is attached! Indicator: \(indicator)")
-		}
-	}
-
-	/// An action that presents a provided indicator.
-	var presentIndicator: IndicatorPresentable.PresentIndicatorAction {
-		get { self[ShowIndicatorEnvironmentKey.self] }
-		set { self[ShowIndicatorEnvironmentKey.self] = newValue }
-	}
-}
-
-// MARK: - Logger
-
-extension EnvironmentValues {
-	private struct LoggerEnvironmentKey: EnvironmentKey {
-		static let defaultValue = Logger(.app)
-	}
-
-	/// Logging subsystem attached to this view.
-	var logger: Logger {
-		get { self[LoggerEnvironmentKey.self] }
-		set { self[LoggerEnvironmentKey.self] = newValue }
-	}
-}
-
-// MARK: - PortainerServerURL
-
-extension EnvironmentValues {
-	var portainerServerURL: URL? {
-		PortainerStore.shared.serverURL
-	}
-}
-
-// MARK: - PortainerSelectedEndpoint
-
-extension EnvironmentValues {
-	var portainerSelectedEndpoint: Endpoint? {
-		PortainerStore.shared.selectedEndpoint
-	}
-}
-
-// MARK: - ParentShape
+// MARK: - parentShape
 
 extension EnvironmentValues {
 	private struct ParentShapeEnvironmentKey: EnvironmentKey {
@@ -89,16 +42,18 @@ extension EnvironmentValues {
 	}
 }
 
-// MARK: - NavigationPath
+// MARK: - presentIndicator
 
 extension EnvironmentValues {
-	private struct NavigationPathEnvironmentKey: EnvironmentKey {
-		static let defaultValue = NavigationPath()
+	private struct PresentIndicatorEnvironmentKey: EnvironmentKey {
+		static let defaultValue: PresentIndicatorAction = .init { indicator, _ in
+			assertionFailure("`showIndicator` has been called, but none is attached! Indicator: \(indicator)")
+		}
 	}
 
-	/// `NavigationPath` for this view stack.
-	var navigationPath: NavigationPath {
-		get { self[NavigationPathEnvironmentKey.self] }
-		set { self[NavigationPathEnvironmentKey.self] = newValue }
+	/// An action that presents a provided indicator.
+	var presentIndicator: PresentIndicatorAction {
+		get { self[PresentIndicatorEnvironmentKey.self] }
+		set { self[PresentIndicatorEnvironmentKey.self] = newValue }
 	}
 }

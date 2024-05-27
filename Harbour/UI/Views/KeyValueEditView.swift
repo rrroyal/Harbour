@@ -40,7 +40,7 @@ struct KeyValueEditView: View {
 	@ViewBuilder @MainActor
 	private var saveButton: some View {
 		Button {
-			Haptics.generateIfEnabled(.light)
+			Haptics.generateIfEnabled(.buttonPress)
 			submitEntry()
 		} label: {
 			Label(
@@ -50,20 +50,18 @@ struct KeyValueEditView: View {
 		}
 		.keyboardShortcut(.defaultAction)
 		.disabled(!canSave)
-		.transition(.opacity)
-		.animation(.easeInOut, value: canSave)
+		.animation(.smooth, value: canSave)
 	}
 
 	@ViewBuilder @MainActor
 	private var removeButton: some View {
 		Button(role: .destructive) {
-			Haptics.generateIfEnabled(.light)
+			Haptics.generateIfEnabled(.buttonPress)
 			removeEntry()
 		} label: {
 			Label("Generic.Remove", systemImage: SFSymbol.remove)
 		}
 		.keyboardShortcut(.delete)
-		.transition(.opacity)
 	}
 
 	var body: some View {
@@ -143,7 +141,7 @@ struct KeyValueEditView: View {
 
 private extension KeyValueEditView {
 	func submitEntry() {
-		saveAction(.init(key, value))
+		saveAction(.init(key: key, value: value))
 		dismiss()
 	}
 
@@ -172,6 +170,6 @@ private extension KeyValueEditView {
 
 #Preview("Edit") {
 	NavigationStack {
-		KeyValueEditView(entry: .init("Key", "Value"), saveAction: { _ in }, removeAction: { })
+		KeyValueEditView(entry: .init(key: "Key", value: "Value"), saveAction: { _ in }, removeAction: { })
 	}
 }

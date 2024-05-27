@@ -10,7 +10,6 @@ import IndicatorsKit
 import PortainerKit
 import SwiftData
 import SwiftUI
-import WidgetKit
 
 // MARK: - HarbourApp
 
@@ -41,7 +40,8 @@ struct HarbourApp: App {
 					portainerStore: portainerStore
 				)
 		}
-		.onChange(of: portainerStore.containers, onContainersChange)
+		.onChange(of: portainerStore.containers, appState.onContainersChange)
+		.onChange(of: portainerStore.stacks, appState.onStacksChange)
 		#if os(iOS)
 		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
@@ -68,23 +68,6 @@ struct HarbourApp: App {
 				.scrollDismissesKeyboard(.interactively)
 		}
 		.modelContainer(for: ModelContainer.allModelTypes)
-		#endif
-	}
-}
-
-// MARK: - HarbourApp+Actions
-
-private extension HarbourApp {
-	func onContainersChange(from previousContainers: [Container], to newContainers: [Container]) {
-		Task.detached {
-			WidgetCenter.shared.reloadAllTimelines()
-			await NSUserActivity.deleteAllSavedUserActivities()
-		}
-
-		#if os(iOS)
-		Task.detached { @MainActor in
-			UIApplication.shared.shortcutItems = nil
-		}
 		#endif
 	}
 }

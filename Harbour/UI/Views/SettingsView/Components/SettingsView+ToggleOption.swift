@@ -35,7 +35,7 @@ internal extension SettingsView {
 			Toggle(isOn: $isOn) {
 				HStack(alignment: .top) {
 					OptionIcon(symbolName: iconSymbolName)
-//						.animation(.easeInOut, value: isOn)
+//						.animation(.smooth, value: isOn)
 
 					VStack(alignment: .listRowSeparatorLeading, spacing: vstackSpacing) {
 						Text(label)

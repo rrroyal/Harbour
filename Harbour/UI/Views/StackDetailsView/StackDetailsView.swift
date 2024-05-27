@@ -31,51 +31,113 @@ struct StackDetailsView: View {
 		self.navigationItem = navigationItem
 
 		let viewModel = ViewModel(navigationItem: navigationItem)
-		self._viewModel = .init(wrappedValue: viewModel)
+		self.viewModel = viewModel
 	}
 
 	@ViewBuilder
-	private var stackDetailsContent: some View {
-		if let stack = viewModel.stack {
-			NormalizedSection {
-				Text(stack.name)
-					.textSelection(.enabled)
-					.fontDesign(.monospaced)
-			} header: {
-				Text("StackDetailsView.Section.Name")
+	private var removingStackOverlay: some View {
+		if viewModel.isRemovingStack {
+			VStack {
+				ProgressView()
+					.controlSize(.large)
+
+				let stackName = viewModel.stack?.name ?? viewModel.navigationItem.stackName ?? viewModel.navigationItem.stackID
+				Text("StackDetailsView.RemovingStack StackName:\(stackName)")
+					.font(.title2)
+					.fontWeight(.medium)
+					.foregroundStyle(.secondary)
+					.padding(.top)
+			}
+			.padding()
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
+			.background(Material.regular, ignoresSafeAreaEdges: .all)
+		}
+	}
+
+	@ToolbarContentBuilder
+	private var toolbarContent: some ToolbarContent {
+		ToolbarItem(placement: .primaryAction) {
+			Menu {
+				if viewModel.viewState.isLoading {
+					Text("Generic.Loading")
+					Divider()
+				}
+
+				if !viewModel.isRemovingStack, let stack = viewModel.stack {
+					StackContextMenu(
+						stack: stack,
+						setStackStateAction: { setStackState(stack, started: $0) }
+					)
+				}
+			} label: {
+				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+					.labelStyle(.automatic)
+			}
+			.labelStyle(.titleAndIcon)
+		}
+
+//		ToolbarItem(placement: .status) {
+//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//				ProgressView()
+//			}
+//		}
+	}
+
+	var body: some View {
+		Form {
+			// Stack Name
+			if let stackName = viewModel.stack?.name ?? navigationItem.stackName {
+				NormalizedSection {
+					Text(stackName)
+						.textSelection(.enabled)
+						.fontDesign(.monospaced)
+				} header: {
+					Text("StackDetailsView.Section.Name")
+				}
 			}
 
+			// Stack ID
 			NormalizedSection {
-				Text(stack.id.description)
+				Text(viewModel.stack?.id.description ?? navigationItem.stackID)
 					.textSelection(.enabled)
 					.fontDesign(.monospaced)
 			} header: {
 				Text("StackDetailsView.Section.ID")
 			}
 
+			// Stack Status
 			NormalizedSection {
-				Label(stack.status.title, systemImage: stack.status.icon)
-					.foregroundStyle(stack.status.color)
+				Label(
+					(viewModel.stack?.status ?? Stack.Status?.none).title,
+					systemImage: (viewModel.stack?.status ?? Stack.Status?.none).icon
+				)
+				.foregroundStyle((viewModel.stack?.status ?? Stack.Status?.none).color)
 			} header: {
 				Text("StackDetailsView.Section.Status")
 			}
 
+			// Stack Type
 			NormalizedSection {
-				Text(stack.type.title)
+				Text((viewModel.stack?.type ?? Stack.StackType?.none).title)
 			} header: {
 				Text("StackDetailsView.Section.Type")
 			}
 
+			// Environment
 			NormalizedSection {
 				NavigationLink(value: Subdestination.environment(viewModel.stack?.env)) {
 					Label("StackDetailsView.Environment", systemImage: SFSymbol.environment)
 				}
+				.disabled(viewModel.stack?._isStored ?? true)
 			}
 
+			// Show Containers Button
 			NormalizedSection {
 				Button {
-					Haptics.generateIfEnabled(.light)
-					filterByStackName(stack.name)
+					if let stackName = viewModel.stack?.name ?? navigationItem.stackName {
+						Haptics.generateIfEnabled(.light)
+						filterByStackName(stackName)
+					}
 				} label: {
 					Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
 						#if os(macOS)
@@ -83,14 +145,15 @@ struct StackDetailsView: View {
 						.contentShape(Rectangle())
 						#endif
 				}
-				.foregroundStyle(stack.isOn ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
-				.disabled(!stack.isOn)
+				.foregroundStyle((viewModel.stack?.isOn ?? false) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
+				.disabled(!(viewModel.stack?.isOn ?? false))
 			}
 
+			// Stack File Contents Button
 			NormalizedSection {
 				Group {
-					if let stackFileContents = viewModel.stackFileContents {
-						ShareLink(item: stackFileContents) {
+					if let stackFileContent = viewModel.stackFileContent {
+						ShareLink(item: stackFileContent) {
 							Label("StackDetailsView.StackFile.Share", systemImage: SFSymbol.share)
 								#if os(macOS)
 								.frame(maxWidth: .infinity, alignment: .leading)
@@ -107,7 +170,7 @@ struct StackDetailsView: View {
 
 								Spacer()
 
-								if viewModel.isFetchingStackFileContents {
+								if viewModel.isFetchingStackFileContent {
 									ProgressView()
 										#if os(macOS)
 										.controlSize(.small)
@@ -119,44 +182,13 @@ struct StackDetailsView: View {
 							.contentShape(Rectangle())
 							#endif
 						}
-						.disabled(viewModel.isFetchingStackFileContents)
+						.disabled(viewModel.isFetchingStackFileContent)
 					}
 				}
+				.foregroundStyle(!(viewModel.stack?._isStored ?? true) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
+				.disabled(viewModel.stack?._isStored ?? true)
 				.id(ViewID.stackFileButton)
-				.foregroundStyle(.accent)
 			}
-		}
-	}
-
-	@ToolbarContentBuilder
-	private var toolbarContent: some ToolbarContent {
-		if !viewModel.isRemovingStack, let stack = viewModel.stack {
-			ToolbarItem(placement: .primaryAction) {
-				Menu {
-					StackContextMenu(stack: stack) {
-						setStackState(stack, started: $0)
-					} removeStackAction: {
-						confirmRemoveStack()
-					}
-				} label: {
-					Label("Generic.More", systemImage: SFSymbol.moreCircle)
-						.labelStyle(.automatic)
-				}
-				.labelStyle(.titleAndIcon)
-			}
-		}
-
-//		ToolbarItem(placement: .status) {
-//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
-//				ProgressView()
-//			}
-//			.transition(.opacity)
-//		}
-	}
-
-	var body: some View {
-		Form {
-			stackDetailsContent
 		}
 		.formStyle(.grouped)
 		#if os(macOS)
@@ -171,35 +203,7 @@ struct StackDetailsView: View {
 		.background(viewState: viewModel.viewState, backgroundColor: .clear)
 		#endif
 		.overlay {
-			if viewModel.isRemovingStack {
-				VStack {
-					ProgressView()
-						.controlSize(.large)
-
-					let stackName = viewModel.stack?.name ?? viewModel.navigationItem.stackName ?? "ID:\(viewModel.navigationItem.stackID)"
-					Text("StackDetailsView.RemovingStack StackName:\(stackName)")
-						.font(.title2)
-						.fontWeight(.medium)
-						.foregroundStyle(.secondary)
-						.padding(.top)
-				}
-				.padding()
-				.frame(maxWidth: .infinity, maxHeight: .infinity)
-				.background(Material.regular, ignoresSafeAreaEdges: .all)
-			}
-		}
-		.confirmationDialog(
-			"Generic.AreYouSure?",
-			isPresented: $viewModel.isRemoveStackAlertPresented,
-			titleVisibility: .visible,
-			presenting: viewModel.stack
-		) { stack in
-			Button("Generic.Remove", role: .destructive) {
-				Haptics.generateIfEnabled(.heavy)
-				removeStack(stack)
-			}
-		} message: { stack in
-			Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
+			removingStackOverlay
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
@@ -208,11 +212,11 @@ struct StackDetailsView: View {
 			}
 		}
 		.navigationTitle(navigationTitle)
-		.animation(.easeInOut, value: viewModel.viewState)
-		.animation(.easeInOut, value: viewModel.stackFileViewState)
-		.animation(.easeInOut, value: viewModel.stack)
-		.animation(.easeInOut, value: viewModel.isRemovingStack)
-		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+		.animation(.smooth, value: viewModel.viewState)
+		.animation(.smooth, value: viewModel.stackFileViewState)
+		.animation(.smooth, value: viewModel.stack)
+		.animation(.smooth, value: viewModel.isRemovingStack)
+		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
 		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneDelegate.activeTab == .stacks) { userActivity in
 			viewModel.createUserActivity(userActivity)
 		}
@@ -267,28 +271,6 @@ private extension StackDetailsView {
 				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .success))
 			} catch {
 				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .failure(error)))
-				errorHandler(error, showIndicator: false)
-			}
-		}
-	}
-
-	func confirmRemoveStack() {
-		viewModel.isRemoveStackAlertPresented = true
-	}
-
-	func removeStack(_ stack: Stack) {
-		Task {
-			do {
-				presentIndicator(.stackRemove(stack.name, stack.id, state: .loading))
-
-				viewModel.isRemovingStack = true
-				try await viewModel.removeStack(stack)
-
-				presentIndicator(.stackRemove(stack.name, stack.id, state: .success))
-				dismiss()
-			} catch {
-				presentIndicator(.stackRemove(stack.name, stack.id, state: .failure(error)))
-				viewModel.isRemovingStack = false
 				errorHandler(error, showIndicator: false)
 			}
 		}

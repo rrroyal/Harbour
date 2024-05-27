@@ -7,3 +7,7 @@
 //
 
 import Foundation
+
+enum HarbourWidgetKind {
+	static let containerStatus = "ContainerStatusWidget"
+}

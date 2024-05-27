@@ -22,12 +22,11 @@ extension ContainerDetailsView {
 		private nonisolated let portainerStore: PortainerStore = .shared
 		private nonisolated let logger = Logger(.view(ContainerDetailsView.self))
 
-		private(set) var viewState: ViewState<ContainerDetails, Error> = .loading
-		private(set) var fetchTask: Task<Void, Never>?
+		private(set) var fetchTask: Task<Void, Error>?
+
+		var viewState: ViewState<ContainerDetails, Error> = .loading
 
 		var navigationItem: ContainerDetailsView.NavigationItem
-
-		var isRemoveContainerAlertPresented = false
 
 		var scrollViewIsRefreshing = false
 
@@ -51,7 +50,7 @@ extension ContainerDetailsView {
 		@MainActor
 		func createUserActivity(_ userActivity: NSUserActivity) {
 			userActivity.isEligibleForHandoff = true
-			userActivity.isEligibleForSearch = true
+			userActivity.isEligibleForSearch = false
 			#if os(iOS)
 			userActivity.isEligibleForPrediction = false
 			#endif
@@ -98,14 +97,13 @@ extension ContainerDetailsView {
 		}
 
 		@MainActor @discardableResult
-		func getContainerDetails(navigationItem: ContainerDetailsView.NavigationItem, errorHandler: ErrorHandler) -> Task<Void, Never> {
+		func refresh() -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task {
-				self.viewState = (self.navigationItem == navigationItem && viewState.value != nil) ? viewState.reloading : .loading
-				self.navigationItem = navigationItem
+				self.viewState = viewState.reloading
 
 				do {
-					async let _container = portainerStore.refreshContainers(ids: [navigationItem.id], errorHandler: errorHandler).value.first
+					async let _container = portainerStore.refreshContainers(ids: [navigationItem.id]).value.first
 					async let _containerDetails = portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
 					let (_, containerDetails) = try await (_container, _containerDetails)
 
@@ -114,19 +112,11 @@ extension ContainerDetailsView {
 				} catch {
 					guard !error.isCancellationError else { return }
 					viewState = .failure(error)
-					errorHandler(error)
+					throw error
 				}
 			}
 			self.fetchTask = task
 			return task
-		}
-
-		func attemptContainerRemoval() {
-			isRemoveContainerAlertPresented = true
-		}
-
-		func removeContainer(force: Bool) async throws {
-			try await portainerStore.removeContainer(containerID: container?.id ?? containerDetails?.id ?? navigationItem.id, force: force)
 		}
 	}
 }

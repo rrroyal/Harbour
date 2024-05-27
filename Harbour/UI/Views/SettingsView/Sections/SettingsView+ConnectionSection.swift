@@ -75,8 +75,7 @@ private extension SettingsView.ConnectionSection {
 						.foregroundStyle(.secondary)
 					#endif
 				}
-				.transition(.opacity)
-				.animation(.easeInOut, value: _serverURLLabel)
+				.animation(.smooth, value: _serverURLLabel)
 			}
 			.labelStyle(.titleAndIcon)
 			.confirmationDialog(
@@ -126,8 +125,13 @@ private extension SettingsView.ConnectionSection {
 					Button {
 						Haptics.generateIfEnabled(.light)
 						presentIndicator(.serverSwitched(formattedURL(url)))
-						viewModel.switchPortainerServer(to: url, errorHandler: errorHandler)
-
+						Task {
+							do {
+								try await viewModel.switchPortainerServer(to: url)
+							} catch {
+								errorHandler(error)
+							}
+						}
 					} label: {
 						Label("SettingsView.Connection.ConnectionMenu.Server.Use", systemImage: SFSymbol.checkmark)
 							.symbolVariant(.circle)

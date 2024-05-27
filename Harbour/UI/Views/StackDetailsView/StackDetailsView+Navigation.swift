@@ -50,7 +50,7 @@ extension StackDetailsView: Deeplinkable {
 		let navigationItem = NavigationItem(from: deeplink)
 		navigationPath.append(navigationItem)
 
-//		if let subdestination = deeplink.subdestination {
+//		if let subdestination = deeplink.subdestination, !subdestination.isEmpty {
 //			subdestination
 //				.compactMap { Subdestination(rawValue: $0.lowercased()) }
 //				.forEach { navigationPath.append($0) }

@@ -26,7 +26,7 @@ struct SetupView: View {
 
 	init() {
 		let viewModel = ViewModel()
-		self._viewModel = .init(wrappedValue: viewModel)
+		self.viewModel = viewModel
 	}
 
 	@ViewBuilder
@@ -96,9 +96,9 @@ struct SetupView: View {
 			}
 		}
 		.keyboardShortcut(.defaultAction)
-		.animation(.easeInOut, value: viewModel.buttonLabel)
-		.animation(.easeInOut, value: viewModel.buttonColor)
-		.animation(.easeInOut, value: viewModel.isLoading)
+		.animation(.smooth, value: viewModel.buttonLabel)
+		.animation(.smooth, value: viewModel.buttonColor)
+		.animation(.smooth, value: viewModel.isLoading)
 		.disabled(!viewModel.canSubmit)
 	}
 
@@ -156,9 +156,6 @@ struct SetupView: View {
 		#if os(iOS)
 		.navigationBarTitleDisplayMode(.large)
 		#endif
-		.animation(.easeInOut, value: viewModel.buttonLabel)
-		.animation(.easeInOut, value: viewModel.buttonColor)
-		.animation(.easeInOut, value: viewModel.isLoading)
 		.onDisappear(perform: viewModel.onViewDisappear)
 	}
 }

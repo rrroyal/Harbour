@@ -17,6 +17,9 @@ enum SFSymbol {
 	/// 􀄿 arrow.up.to.line
 	static let arrowUpLine = "arrow.up.to.line"
 
+	/// 􀆄 xmark
+	static let cancel = "xmark"
+
 	/// 􀯶 chevron.backward
 	static let chevronBackward = "chevron.backward"
 
@@ -103,6 +106,9 @@ enum SFSymbol {
 
 	/// 􀩼 terminal
 	static let terminal = "terminal"
+
+	/// 􀈂 square.and.arrow.up
+	static let update = "square.and.arrow.up"
 
 	/// 􀤂 externaldrive
 	static let volume = "externaldrive"

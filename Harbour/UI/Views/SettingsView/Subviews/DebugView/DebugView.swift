@@ -8,6 +8,7 @@
 
 import CommonHaptics
 import CommonOSLog
+import CoreSpotlight
 import KeychainKit
 import OSLog
 import SwiftData
@@ -28,7 +29,6 @@ struct DebugView: View {
 		}
 		.formStyle(.grouped)
 		.navigationTitle("DebugView.Title")
-		.environment(\.logger, logger)
 	}
 }
 
@@ -36,7 +36,7 @@ struct DebugView: View {
 
 private extension DebugView {
 	struct WidgetsSection: View {
-		@Environment(\.logger) private var logger
+		private let logger = Logger(.debug)
 
 		var body: some View {
 			Section("DebugView.WidgetsSection.Title") {
@@ -55,7 +55,8 @@ private extension DebugView {
 private extension DebugView {
 	struct BackgroundSection: View {
 		@Environment(\.errorHandler) private var errorHandler
-		@Environment(\.logger) private var logger
+
+		private let logger = Logger(.debug)
 
 		private var lastBackgroundRefreshDateString: String? {
 			if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
@@ -88,9 +89,10 @@ private extension DebugView {
 
 private extension DebugView {
 	struct PersistenceSection: View {
-		@Environment(\.logger) private var logger
 		@Environment(\.errorHandler) private var errorHandler
 		@Environment(\.modelContext) private var modelContext
+
+		private let logger = Logger(.debug)
 
 		var body: some View {
 			Section("DebugView.PersistenceSection.Title") {
@@ -104,6 +106,18 @@ private extension DebugView {
 					}
 				}
 				#endif
+
+				Button("DebugView.PersistenceSection.ResetSpotlight", role: .destructive) {
+					logger.warning("Resetting Spotlight...")
+					Haptics.generateIfEnabled(.heavy)
+					CSSearchableIndex.default().deleteAllSearchableItems { error in
+						if let error {
+							logger.error("Failed to reset Spotlight: \(error, privacy: .public)")
+							return
+						}
+						logger.notice("Spotlight has been reset!")
+					}
+				}
 
 				Button("DebugView.PersistenceSection.ResetSwiftData", role: .destructive) {
 					logger.warning("Resetting SwiftData...")

@@ -41,7 +41,7 @@ extension ContentView {
 					.focusable(false)
 			}
 			.environment(sceneDelegate)
-			.animation(.easeInOut, value: columnVisibility)
+			.animation(.smooth, value: columnVisibility)
 		}
 	}
 }
@@ -82,8 +82,7 @@ private extension ContentView.ViewForMacOS {
 			.fontWeight(.medium)
 			.padding(.bottom, padding)
 			.padding(.horizontal, padding)
-			.transition(.opacity)
-			.animation(.easeInOut, value: sceneDelegate.activeTab)
+			.animation(.smooth, value: sceneDelegate.activeTab)
 		}
 	}
 }

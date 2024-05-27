@@ -27,3 +27,13 @@ extension Sequence {
 		}
 	}
 }
+
+extension Sequence where Element == String {
+	func localizedSorted(
+		using comparisionResult: ComparisonResult = .orderedAscending
+	) -> [Element] {
+		sorted {
+			$0.localizedStandardCompare($1) == comparisionResult
+		}
+	}
+}

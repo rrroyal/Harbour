@@ -194,6 +194,86 @@
         }
       }
     },
+    "ContainerDetailsView.NetworkDetailsView.Aliases" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aliases"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.NetworkDetailsView.Gateway" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gateway"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.NetworkDetailsView.IPAddress" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "IP Address"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.NetworkDetailsView.Links" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Links"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.NetworkDetailsView.MacAddress" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mac Address"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.NetworkDetailsView.NetworkID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network ID"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.NetworkDetailsView.Networks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Networks"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.NetworkDetailsView.Ports" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ports"
+          }
+        }
+      }
+    },
     "ContainerDetailsView.Section.Cmd" : {
       "localizations" : {
         "en" : {
@@ -240,6 +320,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Finished At"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Health" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Health"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Health.FailingStreak" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failure Count"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Section.Health.Status" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status"
           }
         }
       }
@@ -294,12 +404,12 @@
         }
       }
     },
-    "ContainerDetailsView.Section.Ports" : {
+    "ContainerDetailsView.Section.Network" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ports"
+            "value" : "Network"
           }
         }
       }
@@ -606,22 +716,42 @@
         }
       }
     },
-    "CreateStackView.StackFileContents" : {
+    "CreateStackView.StackFileContent" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stack File Contents"
+            "value" : "Stack File Content"
           }
         }
       }
     },
-    "CreateStackView.Title" : {
+    "CreateStackView.Title.Create" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "New Stack"
+          }
+        }
+      }
+    },
+    "CreateStackView.Title.Update" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Stack"
+          }
+        }
+      }
+    },
+    "CreateStackView.Update" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update"
           }
         }
       }
@@ -802,6 +932,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Reset Keychain"
+          }
+        }
+      }
+    },
+    "DebugView.PersistenceSection.ResetSpotlight" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset Spotlight"
           }
         }
       }
@@ -1002,6 +1142,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Are you sure?"
+          }
+        }
+      }
+    },
+    "Generic.Cancel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         }
       }
@@ -1292,6 +1442,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Stop Stack"
+          }
+        }
+      }
+    },
+    "Indicators.Stack.Update" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update Stack"
           }
         }
       }
@@ -1782,6 +1942,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Swarm"
+          }
+        }
+      }
+    },
+    "PortainerKit.Stack.StackType.Unknown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unknown"
           }
         }
       }

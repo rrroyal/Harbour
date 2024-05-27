@@ -25,32 +25,35 @@ extension Logger {
 extension Logger {
 	enum Category {
 		case app
-		case scene
 		case background
-		case debug
-		case view(any View.Type)
-		case widgets(Any.Type)
-		case intents(Any.Type)
 		case custom(Any.Type)
+		case debug
+		case intents(Any.Type)
+		case scene
+		case settings
+		case widgets(Any.Type)
+		case view(any View.Type)
 
 		var stringValue: String {
 			switch self {
 			case .app:
 				"App"
-			case .scene:
-				"Scene"
 			case .background:
 				"Background"
-			case .debug:
-				"Debug"
-			case .view(let view):
-				"View (\(view))"
-			case .widgets(let widget):
-				"Widgets (\(widget))"
-			case .intents(let appIntent):
-				"Intents (\(appIntent))"
 			case .custom(let any):
 				"\(any)"
+			case .debug:
+				"Debug"
+			case .intents(let appIntent):
+				"Intents (\(appIntent))"
+			case .scene:
+				"Scene"
+			case .settings:
+				"Settings"
+			case .widgets(let widget):
+				"Widgets (\(widget))"
+			case .view(let view):
+				"View (\(view))"
 			}
 		}
 	}

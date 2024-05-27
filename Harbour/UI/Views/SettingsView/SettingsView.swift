@@ -61,12 +61,26 @@ struct SettingsView: View {
 			#endif
 		}
 		.environment(viewModel)
-		.environment(\.presentIndicator, viewModel.presentIndicator)
-		#if os(iOS)
-		.indicatorOverlay(model: viewModel.indicators, alignment: .top, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
-		#elseif os(macOS)
-		.indicatorOverlay(model: viewModel.indicators, alignment: .top, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
+		#if os(macOS)
+		.environment(sceneDelegate)
 		#endif
+		.environment(\.errorHandler, .init(handleError))
+		.environment(\.presentIndicator, .init { indicator, _ in viewModel.presentIndicator(indicator) })
+		.indicatorOverlay(model: viewModel.indicators, alignment: .top, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
+	}
+}
+
+// MARK: - SettingsView+Actions
+
+private extension SettingsView {
+	@MainActor
+	func handleError(_ error: Error, showIndicator: Bool) {
+		sceneDelegate.handleError(error, showIndicator: false)
+		viewModel.logger.error("\(error, privacy: .public)")
+
+		if showIndicator {
+			viewModel.presentIndicator(.error(error))
+		}
 	}
 }
 

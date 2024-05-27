@@ -6,6 +6,7 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import CoreSpotlight
 import PortainerKit
 import SwiftUI
 
@@ -19,26 +20,10 @@ extension StacksView {
 		private var fetchTask: Task<Void, Error>?
 		private var fetchError: Error?
 
-		var query = ""
+		var searchText = ""
 		var isSearchActive = false
 
 		var scrollPosition: StackItem.ID?
-
-		var isCreateStackSheetPresented = false
-		var activeCreateStackSheetDetent: PresentationDetent = .medium
-		var handledCreateSheetDetentUpdate = false
-
-		var stackToRemove: Stack?
-		var isRemoveStackAlertPresented: Binding<Bool> {
-			.init {
-				self.stackToRemove != nil
-			} set: { isPresented in
-				if !isPresented {
-					self.stackToRemove = nil
-				}
-			}
-
-		}
 
 		var scrollViewIsRefreshing = false
 
@@ -78,10 +63,10 @@ extension StacksView {
 				}
 			}
 
-			if !query.isReallyEmpty {
+			if !searchText.isReallyEmpty {
 				stacks = stacks.filter {
-					$0.name.localizedCaseInsensitiveContains(query) ||
-					$0.id.description.localizedCaseInsensitiveContains(query)
+					$0.name.localizedCaseInsensitiveContains(searchText) ||
+					$0.id.description.localizedCaseInsensitiveContains(searchText)
 				}
 			}
 
@@ -97,7 +82,7 @@ extension StacksView {
 			case .reloading:
 				return false
 			case .success:
-				return !viewState.isLoading && stacks.isEmpty
+				return true
 			case .failure:
 				return false
 			}
@@ -141,5 +126,15 @@ extension StacksView {
 			try await portainerStore.removeStack(stackID: stackID)
 			portainerStore.refreshStacks()
 		}
+	}
+}
+
+// MARK: - StacksView.ViewModel+UserActivity
+
+extension StacksView.ViewModel {
+	func handleSpotlightSearchContinuation(_ userActivity: NSUserActivity) {
+		guard let queryString = userActivity.userInfo?[CSSearchQueryString] as? String else { return }
+		searchText = queryString
+//		isSearchActive = true
 	}
 }

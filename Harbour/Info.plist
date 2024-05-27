@@ -4,6 +4,8 @@
 <dict>
 	<key>AppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
+	<key>CoreSpotlightContinuation</key>
+	<true/>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>xyz.shameful.Harbour.BackgroundRefresh</string>
@@ -64,7 +66,7 @@
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconSymbolName</key>
-			<string>app</string>
+			<string>app.badge</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>HomeScreenShortcut.ChangeAppIcon</string>
 			<key>UIApplicationShortcutItemType</key>

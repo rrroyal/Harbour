@@ -22,7 +22,6 @@ extension Container {
 			labels: nil,
 			state: state,
 			status: "Running (5 days)",
-			networkSettings: nil,
 			mounts: nil
 		)
 	}

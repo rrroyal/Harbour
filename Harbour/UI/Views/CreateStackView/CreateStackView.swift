@@ -18,40 +18,60 @@ struct CreateStackView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
-	@State private var viewModel = ViewModel()
+	@State private var viewModel: ViewModel
 	@FocusState private var focusedField: FocusedField?
 
 	var onEnvironmentEdit: (([KeyValueEntry]) -> Void)?
 	var onStackFileSelection: ((String?) -> Void)?
 	var onStackCreation: ((Stack) -> Void)?
 
+	init(
+		existingStack: Stack? = nil,
+		onEnvironmentEdit: (([KeyValueEntry]) -> Void)? = nil,
+		onStackFileSelection: ((String?) -> Void)? = nil,
+		onStackCreation: ((Stack) -> Void)? = nil
+	) {
+		let viewModel = ViewModel()
+		if let existingStack {
+			viewModel.stackID = existingStack.id
+			viewModel.stackName = existingStack.name
+			viewModel.stackEnvironment = existingStack.env?.map { .init(key: $0.name, value: $0.value) } ?? []
+		}
+		self._viewModel = .init(initialValue: viewModel)
+
+		self.onEnvironmentEdit = onEnvironmentEdit
+		self.onStackFileSelection = onStackFileSelection
+		self.onStackCreation = onStackCreation
+	}
+
 	private let allowedContentTypes: [UTType] = [
 		.yaml,
 		.text
 	]
 
-	private var navigationTitle: String {
-		viewModel.stackName.isReallyEmpty ? String(localized: "CreateStackView.Title") : viewModel.stackName
-	}
-
 	@ViewBuilder @MainActor
 	private var createButton: some View {
 		Button {
-			createStack()
+			submitStack()
 		} label: {
 			if viewModel.isLoading {
 				ProgressView()
 					#if os(macOS)
 					.controlSize(.small)
 					#endif
+			} else if let error = viewModel.createStackError {
+				Text(error.localizedDescription)
 			} else {
-				Label("CreateStackView.Create", systemImage: SFSymbol.plus)
+				Label(
+					viewModel.shouldCreateNewStack ? "CreateStackView.Create" : "CreateStackView.Update",
+					systemImage: viewModel.shouldCreateNewStack ? SFSymbol.plus : SFSymbol.update
+				)
 			}
 		}
 		.keyboardShortcut(.defaultAction)
-		.transition(.opacity)
 		.disabled(!viewModel.canCreateStack)
 		.disabled(viewModel.isLoading)
+		.animation(.smooth, value: viewModel.canCreateStack)
 	}
 
 	var body: some View {
@@ -62,35 +82,26 @@ struct CreateStackView: View {
 					.autocorrectionDisabled()
 					.labelsHidden()
 					.submitLabel(viewModel.canCreateStack ? .send : .continue)
-					.onSubmit(createStack)
+					.onSubmit(submitStack)
 					.focused($focusedField, equals: .textfieldName)
 			} header: {
 				Text("CreateStackView.Name")
 			}
 
-			StackFileContentsView(
-				stackFileContent: $viewModel.stackFileContent,
-				showWholeStackFileContents: $viewModel.showWholeStackFileContents,
-				isFileImporterPresented: $viewModel.isFileImporterPresented,
-				isStackFileContentsTargeted: $viewModel.isStackFileContentsTargeted,
+			StackFileContentView(
 				allowedContentTypes: allowedContentTypes,
-				handleStackFileDrop: handleStackFileDrop
+				onStackFileSelection: onStackFileSelection
 			)
 			.transition(.opacity)
 			.onChange(of: viewModel.stackFileContent) {
 				focusedField = nil
 			}
 
-			StackEnvironmentView(
-				environment: $viewModel.stackEnvironment,
-				isEnvironmentEntrySheetPresented: $viewModel.isEnvironmentEntrySheetPresented,
-				editedEnvironmentEntry: $viewModel.editedEnvironmentEntry,
-				removeEntryAction: { viewModel.editEnvironmentEntry(old: $0, new: nil) }
-			)
-			.onChange(of: viewModel.stackEnvironment) { _, newEntries in
-				focusedField = nil
-				onEnvironmentEdit?(newEntries)
-			}
+			StackEnvironmentView()
+				.onChange(of: viewModel.stackEnvironment) { _, newEntries in
+					focusedField = nil
+					onEnvironmentEdit?(newEntries)
+				}
 		}
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
@@ -98,7 +109,7 @@ struct CreateStackView: View {
 		#if os(iOS)
 		.safeAreaInset(edge: .bottom) {
 			createButton
-				.buttonStyle(.customPrimary)
+				.buttonStyle(.customPrimary(backgroundColor: viewModel.createStackError != nil ? .red : .accentColor))
 				.padding()
 				.background(Color.groupedBackground)
 		}
@@ -138,12 +149,17 @@ struct CreateStackView: View {
 			}
 			#endif
 		}
-		.navigationTitle("CreateStackView.Title")
-		.transition(.opacity)
-		.animation(.easeInOut, value: viewModel.isLoading)
-		.animation(.easeInOut, value: viewModel.stackFileContent)
-		.animation(.easeInOut, value: viewModel.stackEnvironment)
-		.animation(.easeInOut, value: viewModel.showWholeStackFileContents)
+		.environment(viewModel)
+		.navigationTitle(viewModel.shouldCreateNewStack ? "CreateStackView.Title.Create" : "CreateStackView.Title.Update")
+		.animation(.smooth, value: viewModel.isLoading)
+		.animation(.smooth, value: viewModel.isLoadingStackFileContent)
+		.animation(.smooth, value: viewModel.isStackFileContentExpanded)
+		.animation(.smooth, value: viewModel.stackFileContent)
+		.animation(.smooth, value: viewModel.stackEnvironment)
+		.animation(.smooth, value: viewModel.createStackError != nil)
+		.task(id: viewModel.stackID) {
+			await viewModel.fetchStackFileContent().value
+		}
 	}
 }
 
@@ -159,30 +175,38 @@ private extension CreateStackView {
 
 private extension CreateStackView {
 	@MainActor
-	func createStack() {
+	func submitStack() {
 		Task {
 			guard viewModel.canCreateStack else { return }
 
 			let stackName = viewModel.stackName
 
 			do {
-//				presentIndicator(.stackCreate(stackName, nil, state: .loading))
+				Haptics.generateIfEnabled(.buttonPress)
 
-				Haptics.generateIfEnabled(.medium)
-				let stack = try await viewModel.createStack().value
+				let stack = try await viewModel.createOrUpdateStack().value
 
-				presentIndicator(.stackCreate(stackName, stack.id, state: .success) {
-					Haptics.generateIfEnabled(.light)
+				let indicatorAction = {
+					Haptics.generateIfEnabled(.soft)
 					let navigationItem = StackDetailsView.NavigationItem(stackID: stack.id.description, stackName: stack.name)
 					sceneDelegate.resetSheets()
 					sceneDelegate.navigate(to: .stacks, with: navigationItem)
-				})
+				}
+				if viewModel.shouldCreateNewStack {
+					presentIndicator(.stackCreate(stackName, stack.id, state: .success, action: indicatorAction))
+				} else {
+					presentIndicator(.stackUpdate(stackName, stack.id, state: .success, action: indicatorAction))
+				}
 				Haptics.generateIfEnabled(.success)
 				onStackCreation?(stack)
 
 				dismiss()
 			} catch {
-				presentIndicator(.stackCreate(stackName, nil, state: .failure(error)))
+				if viewModel.shouldCreateNewStack {
+					presentIndicator(.stackCreate(stackName, nil, state: .failure(error)))
+				} else {
+					presentIndicator(.stackUpdate(stackName, nil, state: .failure(error)))
+				}
 				errorHandler(error, showIndicator: false)
 			}
 		}
@@ -191,31 +215,12 @@ private extension CreateStackView {
 	func handleStackFileResult(_ result: Result<URL, Error>) {
 		do {
 			let url = try result.get()
-			let stackFileContents = try viewModel.loadStackFile(at: url)
+			let stackFileContent = try viewModel.loadStackFile(at: url, securityScopedResource: true)
 			Haptics.generateIfEnabled(.selectionChanged)
-			onStackFileSelection?(stackFileContents)
+			onStackFileSelection?(stackFileContent)
 		} catch {
 			errorHandler(error)
 		}
-	}
-
-	func handleStackFileDrop(_ items: [NSItemProvider]) -> Bool {
-		Haptics.generateIfEnabled(.selectionChanged)
-
-		let item = items.first { $0.hasItemConformingToTypeIdentifier(UTType.yaml.identifier) }
-		guard let item else { return false }
-
-		Task {
-			do {
-				let stackFileContents = try await viewModel.handleStackFileDrop(item: item)
-				Haptics.generateIfEnabled(.selectionChanged)
-				onStackFileSelection?(stackFileContents)
-			} catch {
-				errorHandler(error)
-			}
-		}
-
-		return true
 	}
 }
 

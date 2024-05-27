@@ -15,11 +15,6 @@ struct KeyValueEntry: Identifiable, Hashable {
 
 	var key: String
 	var value: String
-
-	init(_ key: String, _ value: String) {
-		self.key = key
-		self.value = value
-	}
 }
 
 // MARK: - [KeyValueEntry]+sorted()

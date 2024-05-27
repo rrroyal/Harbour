@@ -118,8 +118,7 @@ extension PortainerStore {
 				tail: logsTailAmount,
 				includeTimestamps: includeTimestamps
 			)
-			// swiftlint:disable:next opening_brace
-				.replacing(/^(.{8})/.anchorsMatchLineEndings(), with: "")
+			.replacing(/^(.{8})/.anchorsMatchLineEndings(), with: "")
 
 			logger.info("Got logs for containerID: \"\(containerID, privacy: .public)\".")
 
@@ -250,11 +249,33 @@ public extension PortainerStore {
 	func fetchStack(id stackID: Stack.ID) async throws -> Stack {
 		logger.info("Fetching stack for stackID: \(stackID)...")
 		do {
-			let details = try await portainer.fetchStackDetails(stackID: stackID)
+			let stack = try await portainer.fetchStack(id: stackID)
 			logger.info("Got stack for stackID: \(stackID)")
-			return details
+
+			Task {
+				if let stackIndex = stacks.firstIndex(where: { $0.id == stackID }) {
+					Task { @MainActor in
+						stacks[stackIndex] = stack
+					}
+				}
+			}
+
+			return stack
 		} catch {
 			logger.error("Failed to fetch stack for stackID: \(stackID): \(error, privacy: .public)")
+			throw error
+		}
+	}
+
+	@Sendable
+	func fetchStackFile(stackID: Stack.ID) async throws -> String {
+		logger.info("Fetching stack file for stackID: \(stackID)...")
+		do {
+			let stackFile = try await portainer.fetchStackFile(stackID: stackID)
+			logger.info("Got stack file for stackID: \(stackID)")
+			return stackFile
+		} catch {
+			logger.error("Failed to fetch stack file for stackID: \(stackID): \(error, privacy: .public)")
 			throw error
 		}
 	}
@@ -318,14 +339,17 @@ public extension PortainerStore {
 	}
 
 	@Sendable
-	func fetchStackFile(stackID: Stack.ID) async throws -> String {
-		logger.info("Fetching stack file for stackID: \(stackID)...")
+	func updateStack(stackID: Stack.ID, settings: StackUpdateSettings) async throws -> Stack {
+		logger.info("Updating stack with ID \(stackID)...")
 		do {
-			let stackFile = try await portainer.fetchStackFile(stackID: stackID)
-			logger.info("Got stack file for stackID: \(stackID)")
-			return stackFile
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+			let stack = try await portainer.updateStack(stackID: stackID, endpointID: selectedEndpoint.id, settings: settings)
+			logger.info("Updated stack with ID: \(stackID)!")
+			return stack
 		} catch {
-			logger.error("Failed to fetch stack file for stackID: \(stackID): \(error, privacy: .public)")
+			logger.error("Failed to update stack with ID: \(stackID): \(error, privacy: .public)")
 			throw error
 		}
 	}

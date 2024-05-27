@@ -19,7 +19,8 @@ extension ContainerDetailsView {
 		}
 
 		var body: some View {
-			Text(content)
+			Text(content.isEmpty ? String(localized: "Generic.Empty") : content)
+				.foregroundStyle(content.isEmpty ? .secondary : .primary)
 				.modifier(LabelModifier())
 		}
 	}
@@ -38,8 +39,12 @@ extension ContainerDetailsView {
 		}
 
 		var body: some View {
-			Label(title, systemImage: icon)
-				.modifier(LabelModifier())
+			Label(
+				title.isEmpty ? String(localized: "Generic.Empty") : title,
+				systemImage: icon
+			)
+			.foregroundStyle(title.isEmpty ? .secondary : .primary)
+			.modifier(LabelModifier())
 		}
 	}
 }

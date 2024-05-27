@@ -6,6 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CoreSpotlight
 import IndicatorsKit
 import Navigation
 import SwiftUI
@@ -60,13 +61,14 @@ struct ContentView: View {
 		#elseif os(macOS)
 		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .topTrailing, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
 		#endif
-		.animation(.easeInOut, value: portainerStore.isSetup)
+		.animation(.smooth, value: portainerStore.isSetup)
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneDelegate.onContinueUserActivity)
 		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneDelegate.onContinueUserActivity)
+		.onContinueUserActivity(CSSearchableItemActionType, perform: sceneDelegate.onSpotlightUserActivity)
 		.onChange(of: appState.notificationsToHandle, sceneDelegate.onNotificationsToHandleChange)
 		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))
-		.environment(\.presentIndicator, sceneDelegate.presentIndicator)
+		.environment(\.presentIndicator, .init(sceneDelegate.presentIndicator))
 		.withNavigation(handler: sceneDelegate)
 	}
 }

@@ -35,11 +35,11 @@ extension StackDetailsView {
 			viewState.value
 		}
 
-		var stackFileContents: String? {
+		var stackFileContent: String? {
 			stackFileViewState?.value
 		}
 
-		var isFetchingStackFileContents: Bool {
+		var isFetchingStackFileContent: Bool {
 			!(fetchStackFileTask?.isCancelled ?? true) || (stackFileViewState?.isLoading ?? false)
 		}
 
@@ -64,7 +64,7 @@ extension StackDetailsView {
 				do {
 					viewState = viewState.reloading
 
-					if stackFileContents != nil {
+					if stackFileContent != nil {
 						fetchStackFile()
 					}
 
@@ -119,7 +119,7 @@ extension StackDetailsView {
 			guard let stack else { return }
 
 			userActivity.isEligibleForHandoff = true
-			userActivity.isEligibleForSearch = true
+			userActivity.isEligibleForSearch = false
 			#if os(iOS)
 			userActivity.isEligibleForPrediction = false
 			#endif

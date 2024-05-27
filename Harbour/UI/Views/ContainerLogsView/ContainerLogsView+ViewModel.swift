@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Observation
+import PortainerKit
 #if canImport(UIKit)
 import UIKit.UIPasteboard
 #elseif canImport(AppKit)
@@ -28,7 +28,7 @@ extension ContainerLogsView {
 
 		private(set) var viewState: _ViewState = .loading
 
-		var navigationItem: ContainerDetailsView.NavigationItem
+		var containerID: Container.ID
 
 		var scrollViewIsRefreshing = false
 
@@ -55,8 +55,8 @@ extension ContainerLogsView {
 			logs?.isEmpty ?? true
 		}
 
-		init(navigationItem: ContainerDetailsView.NavigationItem) {
-			self.navigationItem = navigationItem
+		init(containerID: Container.ID) {
+			self.containerID = containerID
 		}
 
 		@discardableResult
@@ -70,7 +70,7 @@ extension ContainerLogsView {
 
 				do {
 					let logs = try await portainerStore.fetchContainerLogs(
-						for: navigationItem.id,
+						for: containerID,
 						tail: .limit(lineCount),
 						timestamps: includeTimestamps
 					)

@@ -19,7 +19,6 @@ extension SetupView {
 	final class ViewModel: @unchecked Sendable {
 		private let portainer = PortainerClient()
 		private let logger = Logger(.custom(SetupView.self))
-		private let errorTimeoutInterval: TimeInterval = 3
 
 		private(set) var isLoading = false
 		private(set) var loginTask: Task<Bool, Error>?
@@ -113,7 +112,7 @@ extension SetupView {
 					errorTimer?.invalidate()
 
 					Task {
-						try? await Task.sleep(for: .seconds(errorTimeoutInterval))
+						try? await Task.sleep(for: .seconds(Constants.errorDismissTimeout))
 						guard !Task.isCancelled else { return }
 						await MainActor.run {
 							self.buttonLabel = nil

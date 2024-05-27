@@ -19,6 +19,12 @@ extension Container {
 		return firstName.starts(with: "/") ? String(firstName.dropFirst()) : firstName
 	}
 
+	var namesNormalized: [String]? {
+		names?.map {
+			$0.starts(with: "/") ? String($0.dropFirst()) : $0
+		}
+	}
+
 	/// Name of the stack associated with this container.
 	var stack: String? {
 		labels?.first { $0.key.lowercased() == ContainerLabel.stack.lowercased() }?.value

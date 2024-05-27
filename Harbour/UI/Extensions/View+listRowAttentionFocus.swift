@@ -35,7 +35,7 @@ private struct ListRowAttentionFocusViewModifier: ViewModifier {
 					.overlay {
 						Color.accentColor
 							.opacity(isFocusedInternally ? 0.2 : 0)
-							.animation(.easeInOut(duration: blinkInterval))
+							.animation(.smooth(duration: blinkInterval))
 					}
 			)
 			.task(id: isFocused) {

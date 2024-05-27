@@ -10,12 +10,15 @@ import SwiftUI
 
 /// ViewModifier for buttons; scales down on press.
 struct ButtonScalesDownOnPressModifier: ViewModifier {
+	static let pressedOpacity: Double = 0.8
+	static let pressedScale: Double = 0.98
+
 	let configuration: ButtonStyle.Configuration
 
 	func body(content: Content) -> some View {
 		content
-			.opacity(configuration.isPressed ? Constants.Buttons.pressedOpacity : 1)
-			.scaleEffect(configuration.isPressed ? Constants.Buttons.pressedScale : 1)
-			.animation(Constants.Buttons.pressAnimation, value: configuration.isPressed)
+			.opacity(configuration.isPressed ? Self.pressedOpacity : 1)
+			.scaleEffect(configuration.isPressed ? Self.pressedScale : 1)
+			.animation(.spring, value: configuration.isPressed)
 	}
 }

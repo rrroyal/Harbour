@@ -17,7 +17,6 @@ import SwiftUI
 struct ContainerDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
-	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel: ViewModel
@@ -33,37 +32,188 @@ struct ContainerDetailsView: View {
 		navigationItem.id
 	}
 
+	private var container: Container? {
+		viewModel.container
+	}
+
+	private var containerDetails: ContainerDetails? {
+		viewModel.containerDetails
+	}
+
 	init(navigationItem: NavigationItem) {
 		self.navigationItem = navigationItem
 
 		let viewModel = ViewModel(navigationItem: navigationItem)
-		self._viewModel = .init(wrappedValue: viewModel)
+		self.viewModel = viewModel
 	}
+
+	@ViewBuilder
+	private var statusSection: some View {
+		let state = (container?._isStored ?? true) ? Container.State?.none : (container?.state ?? containerDetails?.state.state ?? Container.State?.none)
+		let title = container?.status ?? state.description.localizedCapitalized
+
+		NormalizedSection {
+			LabeledWithIcon(title, icon: state.icon)
+				.foregroundColor(state.color)
+		} header: {
+			Text("ContainerDetailsView.Section.State")
+		}
+		.animation(.smooth, value: state)
+	}
+
+	@ViewBuilder
+	private var healthSection: some View {
+		if let health = containerDetails?.state.health {
+			let lastHealthCheck = health.log?.max { $0.start.compare($1.start) == .orderedAscending }
+
+			NormalizedSection {
+				if let healthStatus = health.status {
+					LabeledContent {
+						Text(healthStatus)
+							.fontDesign(.monospaced)
+							.textSelection(.enabled)
+					} label: {
+						Text("ContainerDetailsView.Section.Health.Status")
+					}
+				}
+
+				if health.failingStreak > 0 {
+					LabeledContent("ContainerDetailsView.Section.Health.FailingStreak", value: health.failingStreak.description)
+						.textSelection(.enabled)
+				}
+
+				if let lastHealthCheck, !lastHealthCheck.output.isReallyEmpty {
+					Text(lastHealthCheck.output.trimmingCharacters(in: .whitespacesAndNewlines))
+						.fontDesign(.monospaced)
+						.textSelection(.enabled)
+				}
+			} header: {
+				Text("ContainerDetailsView.Section.Health")
+			} footer: {
+				if let lastHealthCheckDate = lastHealthCheck?.end {
+					Text(lastHealthCheckDate, format: .dateTime)
+						.font(.footnote)
+						.foregroundStyle(.secondary)
+				}
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var idSection: some View {
+		if let id = container?.id ?? containerDetails?.id {
+			NormalizedSection {
+				Labeled(id)
+					.fontDesign(.monospaced)
+			} header: {
+				Text("ContainerDetailsView.Section.ID")
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var createdAtSection: some View {
+		if let createdAt = containerDetails?.created ?? container?.created {
+			NormalizedSection {
+				Labeled(createdAt.formatted(.dateTime))
+			} header: {
+				Text("ContainerDetailsView.Section.CreatedAt")
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var finishedAtSection: some View {
+		if let finishedAt = containerDetails?.state.finishedAt, !(containerDetails?.state.running ?? false) {
+			NormalizedSection {
+				Labeled(finishedAt.formatted(.dateTime))
+			} header: {
+				Text("ContainerDetailsView.Section.FinishedAt")
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var imageSection: some View {
+		if container?.image != nil || container?.imageID != nil {
+			NormalizedSection {
+				Group {
+					if let image = container?.image {
+						Labeled(image)
+					}
+
+					if let imageID = container?.imageID {
+						Labeled(imageID)
+					}
+				}
+				.fontDesign(.monospaced)
+			} header: {
+				Text("ContainerDetailsView.Section.Image")
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var commandSection: some View {
+		if let command = containerDetails?.config?.cmd?.joined(separator: " ") {
+			NormalizedSection {
+				Labeled(command)
+					.fontDesign(.monospaced)
+			} header: {
+				Text("ContainerDetailsView.Section.Cmd")
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var entryPointSection: some View {
+		if let entrypoint = containerDetails?.config?.entrypoint?.joined(separator: " ") {
+			NormalizedSection {
+				Labeled(entrypoint)
+					.fontDesign(.monospaced)
+			} header: {
+				Text("ContainerDetailsView.Section.Entrypoint")
+			}
+		}
+	}
+
+	// MARK: body
 
 	var body: some View {
 		Form {
-			DetailsSection(container: viewModel.container, details: viewModel.containerDetails)
+			Group {
+				statusSection
+				healthSection
+				idSection
+				createdAtSection
+				finishedAtSection
+				imageSection
+				commandSection
+				entryPointSection
+			}
 
 			NormalizedSection {
-				NavigationLink(value: Subdestination.labels) {
-					Label("ContainerDetailsView.Section.Labels", systemImage: "tag")
-				}
-				.disabled(viewModel.containerDetails?.config?.labels == nil)
-
 				NavigationLink(value: Subdestination.environment) {
 					Label("ContainerDetailsView.Section.Environment", systemImage: SFSymbol.environment)
 				}
-				.disabled(viewModel.containerDetails?.config?.env == nil)
+				.disabled(containerDetails?.config?.env == nil)
 
-				NavigationLink(value: Subdestination.ports) {
-					Label("ContainerDetailsView.Section.Ports", systemImage: "externaldrive.connected.to.line.below")
+				NavigationLink(value: Subdestination.labels) {
+					Label("ContainerDetailsView.Section.Labels", systemImage: "tag")
 				}
-				.disabled(viewModel.container?.ports == nil)
+				.disabled(containerDetails?.config?.labels == nil)
 
 				NavigationLink(value: Subdestination.mounts) {
 					Label("ContainerDetailsView.Section.Mounts", systemImage: "externaldrive")
 				}
-				.disabled(viewModel.containerDetails?.mounts == nil)
+				.disabled(containerDetails?.mounts == nil)
+
+				NavigationLink(value: Subdestination.network) {
+					Label("ContainerDetailsView.Section.Network", systemImage: SFSymbol.network)
+				}
+				.disabled(
+					(container?.ports?.isEmpty ?? true) && (containerDetails == nil)
+				)
 
 				NavigationLink(value: Subdestination.logs) {
 					Label("ContainerDetailsView.Section.Logs", systemImage: SFSymbol.logs)
@@ -83,9 +233,9 @@ struct ContainerDetailsView: View {
 						Divider()
 					}
 
-					if let container = viewModel.container {
+					if let container {
 						ContainerContextMenu(container: container) {
-							viewModel.attemptContainerRemoval()
+							viewModel.refresh()
 						}
 					}
 				} label: {
@@ -99,56 +249,53 @@ struct ContainerDetailsView: View {
 //				DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
 //					ProgressView()
 //				}
-//				.transition(.opacity)
 //			}
 		}
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
-			await viewModel.getContainerDetails(navigationItem: viewModel.navigationItem, errorHandler: errorHandler).value
+			do {
+				try await viewModel.refresh().value
+			} catch {
+				errorHandler(error)
+			}
 		}
 		.task {
-			await viewModel.getContainerDetails(navigationItem: viewModel.navigationItem, errorHandler: errorHandler).value
+			do {
+				try await viewModel.refresh().value
+			} catch {
+				errorHandler(error)
+			}
 		}
-		.transition(.opacity)
-		.animation(nil, value: viewModel.navigationItem)
-		.animation(.easeInOut, value: viewModel.container)
-		.animation(.easeInOut, value: viewModel.containerDetails)
-		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+		.animation(.smooth, value: container)
+		.animation(.smooth, value: container?.state)
+		.animation(.smooth, value: containerDetails)
+		.animation(.smooth, value: containerDetails?.state.state)
+		.animation(.smooth, value: viewModel.navigationItem)
+		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
+		.animation(nil, value: navigationItem)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
 			viewModel.createUserActivity(userActivity)
-		}
-		.confirmationDialog(
-			"Generic.AreYouSure?",
-			isPresented: $viewModel.isRemoveContainerAlertPresented,
-			titleVisibility: .visible
-		) {
-			Button("Generic.Remove", role: .destructive) {
-				Haptics.generateIfEnabled(.heavy)
-				removeContainer(force: true)
-			}
-
-//			Button("ContainersView.RemoveContainerAlert.RemoveForce", role: .destructive) {
-//				Haptics.generateIfEnabled(.heavy)
-//				removeContainer(force: true)
-//			}
-		} message: {
-			let containerName = viewModel.container?.displayName ?? navigationItem.displayName ?? viewModel.container?.id ?? navigationItem.id
-			Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(containerName)")
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
 			case .labels:
-				LabelsDetailsView(labels: viewModel.containerDetails?.config?.labels)
+				LabelsDetailsView(labels: containerDetails?.config?.labels)
 			case .environment:
-				EnvironmentDetailsView(environment: viewModel.containerDetails?.config?.env)
-			case .ports:
-				PortsDetailsView(ports: viewModel.container?.ports)
+				EnvironmentDetailsView(environment: containerDetails?.config?.env)
+			case .network:
+				NetworkDetailsView(
+					ports: container?.ports,
+					detailNetworkSettings: containerDetails?.networkSettings,
+					exposedPorts: containerDetails?.config?.exposedPorts,
+					portBindings: containerDetails?.hostConfig.portBindings
+				)
 			case .mounts:
-				MountsDetailsView(mounts: viewModel.containerDetails?.mounts)
+				MountsDetailsView(mounts: containerDetails?.mounts)
 			case .logs:
-				ContainerLogsView(navigationItem: viewModel.navigationItem)
+				ContainerLogsView(containerID: navigationItem.id)
 			}
 		}
 		.onChange(of: navigationItem) { _, newNavigationItem in
+			viewModel.viewState = .loading
 			viewModel.navigationItem = newNavigationItem
 		}
 		.navigationTitle(navigationTitle)
@@ -168,26 +315,7 @@ extension ContainerDetailsView: Identifiable {
 
 extension ContainerDetailsView: Equatable {
 	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.navigationItem == rhs.navigationItem && lhs.viewModel.container == rhs.viewModel.container
-	}
-}
-
-// MARK: - ContainerDetailsView+Actions
-
-private extension ContainerDetailsView {
-	func removeContainer(force: Bool) {
-		Task {
-			let containerName = viewModel.container?.displayName ?? navigationItem.displayName ?? viewModel.container?.id ?? navigationItem.id
-			do {
-				presentIndicator(.containerRemove(containerName, state: .loading))
-				try await viewModel.removeContainer(force: force)
-				dismiss()
-				presentIndicator(.containerRemove(containerName, state: .success))
-			} catch {
-				presentIndicator(.containerRemove(containerName, state: .failure(error)))
-				errorHandler(error, showIndicator: false)
-			}
-		}
+		lhs.navigationItem == rhs.navigationItem
 	}
 }
 

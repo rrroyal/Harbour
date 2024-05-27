@@ -27,8 +27,8 @@ struct TransparentButtonStyle: ButtonStyle {
 			.clipShape(roundedRectangle)
 			.contentShape(roundedRectangle)
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
-			.animation(Constants.Buttons.pressAnimation, value: isEnabled)
-			.animation(Constants.Buttons.pressAnimation, value: configuration.isPressed)
+			.animation(.smooth, value: isEnabled)
+			.animation(.spring, value: configuration.isPressed)
 //			.padding(.horizontal, -paddingHorizontal)
 //			.padding(.vertical, -paddingVertical)
 	}

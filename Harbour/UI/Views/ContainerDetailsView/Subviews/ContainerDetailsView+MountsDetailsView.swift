@@ -15,7 +15,7 @@ extension ContainerDetailsView {
 
 		private var data: [KeyValueEntry] {
 			mounts?
-				.map { .init($0.source, $0.destination) }
+				.map { .init(key: $0.source, value: $0.destination) }
 				.sorted { $0.key.localizedCaseInsensitiveCompare($1.key) == .orderedAscending } ?? []
 		}
 

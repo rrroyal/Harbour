@@ -68,20 +68,26 @@ disabled_rules:
   - redundant_string_enum_value
   - type_name
 
-line_length:
-  warning: 180
-  error: 220
+# Custom rules
+
+custom_rules:
+  indentation_style:
+    name: "Indentation Style"
+    regex: "^ {2,4}"
+    message: "Use tabs, not spaces"
+
+# Rule config
+
+closure_body_length:
+  warning: 90
+  error: 120
+
+cyclomatic_complexity:
+  ignores_case_statements: true
 
 file_length:
   warning: 500
   error: 700
-
-closure_body_length:
-  warning: 60
-  error: 80
-
-cyclomatic_complexity:
-  ignores_case_statements: true
 
 function_body_length:
   warning: 80
@@ -91,6 +97,10 @@ large_tuple:
   warning: 3
   error: 5
 
+line_length:
+  warning: 180
+  error: 220
+
 nesting:
   type_level: 3
   function_level: 2
@@ -98,12 +108,6 @@ nesting:
 switch_case_alignment:
   indented_cases: false
 
-force_cast: error
-
-force_try: error
-
-custom_rules:
-  indentation_style:
-    name: "Indentation Style"
-    regex: "^ {2,4}"
-    message: "Use tabs, not spaces"
+type_body_length:
+  warning: 300
+  error: 500

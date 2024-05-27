@@ -22,6 +22,7 @@ enum PresentedIndicator {
 	case containerRemove(String, state: State, action: (() -> Void)? = nil)
 	case stackStartOrStop(String, started: Bool, state: State, action: (() -> Void)? = nil)
 	case stackCreate(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
+	case stackUpdate(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
 	case stackRemove(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
 }
 
@@ -63,6 +64,8 @@ extension PresentedIndicator: Identifiable {
 			"StackStartOrStop.\(stackName)"
 		case .stackCreate(let stackName, _, _, _):
 			"StackCreate.\(stackName)"
+		case .stackUpdate(let stackName, _, _, _):
+			"StackUpdate.\(stackName)"
 		case .stackRemove(let stackName, _, _, _):
 			"StackRemove.\(stackName)"
 		}
@@ -95,7 +98,7 @@ extension PresentedIndicator {
 			case .success:
 				(Indicator.Icon.systemImage(containerAction.icon), containerAction.title, containerName ?? containerID, containerAction.color)
 			case .failure(let error):
-				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized, Color.red)
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription, Color.red)
 			}
 
 			// let expandedText: String? = if case let .failure(error) = state {
@@ -128,7 +131,7 @@ extension PresentedIndicator {
 			case .success:
 				(Indicator.Icon.systemImage(SFSymbol.remove), String(localized: "Indicators.Container.Remove"), containerName)
 			case .failure(let error):
-				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized)
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription)
 			}
 
 			// let expandedText: String? = if case let .failure(error) = state {
@@ -171,7 +174,7 @@ extension PresentedIndicator {
 					(started ? Stack.Status.active.color : Stack.Status.inactive.color)
 				)
 			case .failure(let error):
-				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized, Color.red)
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription, Color.red)
 			}
 
 			// let expandedText: String? = if case let .failure(error) = state {
@@ -204,7 +207,40 @@ extension PresentedIndicator {
 			case .success:
 				(Indicator.Icon.systemImage("sparkles"), String(localized: "Indicators.Stack.Create"), stackName, Color.blue)
 			case .failure(let error):
-				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized, Color.red)
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription, Color.red)
+			}
+
+			// let expandedText: String? = if case let .failure(error) = state {
+			// 	error.localizedDescription.localizedCapitalized
+			// } else { nil }
+
+			let indicatorAction: Indicator.ActionType? = if let action {
+				.execute(action)
+			} else {
+				.none
+			}
+
+			return .init(
+				id: self.id,
+				icon: icon,
+				title: title,
+				subtitle: subtitle,
+				expandedText: nil,
+				dismissType: state != .loading ? .automatic : .manual,
+				style: .init(
+					iconStyle: state != .loading ? .primary : .secondary,
+					tintColor: state != .loading ? tintColor : .gray
+				),
+				action: indicatorAction
+			)
+		case .stackUpdate(let stackName, _, let state, let action):
+			let (icon, title, subtitle, tintColor) = switch state {
+			case .loading:
+				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Stack.Update"), stackName, Color.blue)
+			case .success:
+				(Indicator.Icon.systemImage("sparkles"), String(localized: "Indicators.Stack.Update"), stackName, Color.blue)
+			case .failure(let error):
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription, Color.red)
 			}
 
 			// let expandedText: String? = if case let .failure(error) = state {
@@ -237,7 +273,7 @@ extension PresentedIndicator {
 			case .success:
 				(Indicator.Icon.systemImage(SFSymbol.remove), String(localized: "Indicators.Stack.Remove"), stackName)
 			case .failure(let error):
-				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized)
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription)
 			}
 
 			// let expandedText: String? = if case let .failure(error) = state {

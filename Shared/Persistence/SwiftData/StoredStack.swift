@@ -6,6 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import Foundation
 import PortainerKit
 import SwiftData
 

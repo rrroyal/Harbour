@@ -94,8 +94,8 @@ extension DebugView {
 			.task {
 				await getLogs().value
 			}
-			.animation(.easeInOut, value: isLoading)
-			.animation(.easeInOut, value: logs)
+			.animation(.smooth, value: isLoading)
+			.animation(.smooth, value: logs)
 		}
 
 		@discardableResult
