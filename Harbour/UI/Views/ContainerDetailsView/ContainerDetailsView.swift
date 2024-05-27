@@ -7,6 +7,7 @@
 //
 
 import CommonFoundation
+import CommonHaptics
 import PortainerKit
 import SwiftUI
 
@@ -16,7 +17,9 @@ import SwiftUI
 struct ContainerDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
+	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
+	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel: ViewModel
 
 	var navigationItem: NavigationItem
@@ -74,11 +77,22 @@ struct ContainerDetailsView: View {
 		#endif
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
-				ToolbarMenu(
-					isLoading: viewModel.viewState.isLoading,
-					containerID: viewModel.navigationItem.id,
-					container: viewModel.container(for: viewModel.navigationItem)
-				)
+				Menu {
+					if viewModel.viewState.isLoading {
+						Text("Generic.Loading")
+						Divider()
+					}
+
+					if let container = viewModel.container {
+						ContainerContextMenu(container: container) {
+							viewModel.attemptContainerRemoval()
+						}
+					}
+				} label: {
+					Label("Generic.More", systemImage: SFSymbol.moreCircle)
+						.labelStyle(.automatic)
+				}
+				.labelStyle(.titleAndIcon)
 			}
 
 //			ToolbarItem(placement: .status) {
@@ -95,12 +109,30 @@ struct ContainerDetailsView: View {
 			await viewModel.getContainerDetails(navigationItem: viewModel.navigationItem, errorHandler: errorHandler).value
 		}
 		.transition(.opacity)
-		.animation(.easeInOut, value: viewModel.navigationItem)
+		.animation(nil, value: viewModel.navigationItem)
 		.animation(.easeInOut, value: viewModel.container)
 		.animation(.easeInOut, value: viewModel.containerDetails)
 		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
 			viewModel.createUserActivity(userActivity)
+		}
+		.confirmationDialog(
+			"Generic.AreYouSure?",
+			isPresented: $viewModel.isRemoveContainerAlertPresented,
+			titleVisibility: .visible
+		) {
+			Button("Generic.Remove", role: .destructive) {
+				Haptics.generateIfEnabled(.heavy)
+				removeContainer(force: true)
+			}
+
+//			Button("ContainersView.RemoveContainerAlert.RemoveForce", role: .destructive) {
+//				Haptics.generateIfEnabled(.heavy)
+//				removeContainer(force: true)
+//			}
+		} message: {
+			let containerName = viewModel.container?.displayName ?? navigationItem.displayName ?? viewModel.container?.id ?? navigationItem.id
+			Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(containerName)")
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
@@ -140,31 +172,21 @@ extension ContainerDetailsView: Equatable {
 	}
 }
 
-// MARK: - ContainerDetailsView+ToolbarMenu
+// MARK: - ContainerDetailsView+Actions
 
 private extension ContainerDetailsView {
-	struct ToolbarMenu: View {
-		let isLoading: Bool
-		let containerID: Container.ID
-		let container: Container?
-
-		var body: some View {
-			Menu {
-				if isLoading {
-					Text("Generic.Loading")
-					Divider()
-				}
-
-				if let container {
-//					Label(container.state.description.localizedCapitalized, systemImage: container.state.icon)
-//					Divider()
-					ContainerContextMenu(container: container)
-				}
-			} label: {
-				Label("Generic.More", systemImage: SFSymbol.moreCircle)
-					.labelStyle(.automatic)
+	func removeContainer(force: Bool) {
+		Task {
+			let containerName = viewModel.container?.displayName ?? navigationItem.displayName ?? viewModel.container?.id ?? navigationItem.id
+			do {
+				presentIndicator(.containerRemove(containerName, state: .loading))
+				try await viewModel.removeContainer(force: force)
+				dismiss()
+				presentIndicator(.containerRemove(containerName, state: .success))
+			} catch {
+				presentIndicator(.containerRemove(containerName, state: .failure(error)))
+				errorHandler(error, showIndicator: false)
 			}
-			.labelStyle(.titleAndIcon)
 		}
 	}
 }

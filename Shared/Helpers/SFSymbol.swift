@@ -26,6 +26,9 @@ enum SFSymbol {
 	/// 􀆅 checkmark
 	static let checkmark = "checkmark"
 
+	/// 􀐷 rectangle.compress.vertical
+	static let collapse = "rectangle.compress.vertical"
+
 	/// 􀉁 doc.on.doc
 	static let copy = "doc.on.doc"
 
@@ -40,6 +43,9 @@ enum SFSymbol {
 
 	/// 􀇿 exclamationmark.triangle.fill
 	static let error = "exclamationmark.triangle.fill"
+
+	/// 􀐸 rectangle.expand.vertical
+	static let expand = "rectangle.expand.vertical"
 
 	/// 􀌈 line.3.horizontal.decrease.circle
 	static let filter = "line.3.horizontal.decrease.circle"
@@ -97,6 +103,9 @@ enum SFSymbol {
 
 	/// 􀩼 terminal
 	static let terminal = "terminal"
+
+	/// 􀤂 externaldrive
+	static let volume = "externaldrive"
 
 	/// 􀆄 xmark
 	static let xmark = "xmark"

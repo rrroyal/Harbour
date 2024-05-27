@@ -13,8 +13,8 @@ extension PortainerStore {
 	/// Refreshes endpoints and containers, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
-	///   - errorHandler: `ErrorHandler` used to notify the user of errors.
-	/// - Returns: `Task<Void, Error>` of refresh.
+	///   - errorHandler: `ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<Void, Error>` of refresh
 	@discardableResult
 	func refresh(
 		errorHandler: ErrorHandler? = nil
@@ -32,7 +32,7 @@ extension PortainerStore {
 					_ = try await (_endpoints, _containers, _stacks)
 				} else {
 					_ = try await refreshEndpoints(errorHandler: errorHandler).value
-					try? await Task.sleep(for: .milliseconds(100)) // I hate it but otherwise it will fail due to no selected endpoint
+					try? await Task.sleep(for: .milliseconds(200)) // I hate it but otherwise it will fail due to no selected endpoint
 
 					async let _containers = refreshContainers(errorHandler: errorHandler).value
 					async let _stacks = refreshStacks(errorHandler: errorHandler).value
@@ -51,8 +51,8 @@ extension PortainerStore {
 	/// Refreshes endpoints, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
-	///   - errorHandler: `ErrorHandler` used to notify the user of errors.
-	/// - Returns: `Task<[Endpoint], Error>` of refresh.
+	///   - errorHandler: `ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<[Endpoint], Error>` of refresh
 	@discardableResult
 	func refreshEndpoints(
 		errorHandler: ErrorHandler? = nil
@@ -78,8 +78,8 @@ extension PortainerStore {
 	/// Refreshes containers, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
-	///   - errorHandler: `ErrorHandler` used to notify the user of errors.
-	/// - Returns: `Task<[Container], Error>` of refresh.
+	///   - errorHandler: `ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<[Container], Error>` of refresh
 	@discardableResult
 	func refreshContainers(
 		errorHandler: ErrorHandler? = nil
@@ -91,9 +91,40 @@ extension PortainerStore {
 			do {
 				let containers = try await self.fetchContainers().sorted()
 				self.setContainers(containers)
-				return self.containers
+				return containers
 			} catch {
 				guard !error.isCancellationError else { return self.containers }
+				errorHandler?(error)
+				throw error
+			}
+		}
+		self.containersTask = task
+		return task
+	}
+
+	/// Refreshes containers with specified IDs, handling errors.
+	/// Used as user-accessible method of refreshing central data.
+	/// - Parameters:
+	///   - ids: Container IDs to refresh
+	///   - errorHandler: `ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<[Container], Error>` of refresh.
+	@discardableResult
+	func refreshContainers(
+		ids: [Container.ID],
+		errorHandler: ErrorHandler? = nil
+	) -> Task<[Container], Error> {
+		let task = Task { @MainActor in
+			do {
+				let containers = try await self.fetchContainers(filters: .init(id: ids))
+				Task { @MainActor in
+					for container in containers {
+						if let index = self.containers.firstIndex(where: { $0.id == container.id }) {
+							self.containers[index] = container
+						}
+					}
+				}
+				return containers
+			} catch {
 				errorHandler?(error)
 				throw error
 			}
@@ -105,8 +136,8 @@ extension PortainerStore {
 	/// Refreshes stacks, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Parameters:
-	///   - errorHandler: `ErrorHandler` used to notify the user of errors.
-	/// - Returns: `Task<[Stack], Error>` of refresh.
+	///   - errorHandler: `ErrorHandler` used to notify the user of errors
+	/// - Returns: `Task<[Stack], Error>` of refresh
 	@discardableResult
 	func refreshStacks(
 		errorHandler: ErrorHandler? = nil

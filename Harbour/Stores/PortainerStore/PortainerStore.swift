@@ -81,7 +81,13 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	var attachedContainer: AttachedContainer?
 
 	@Published
-	var loadingStacks: Set<Stack.ID> = []
+	var removedContainerIDs: Set<Container.ID> = []
+
+	@Published
+	var loadingStackIDs: Set<Stack.ID> = []
+
+	@Published
+	var removedStackIDs: Set<Stack.ID> = []
 
 	var isRefreshing: Bool {
 		!(refreshTask?.isCancelled ?? true) || !(endpointsTask?.isCancelled ?? true) || !(containersTask?.isCancelled ?? true) || !(stacksTask?.isCancelled ?? true)

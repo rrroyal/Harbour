@@ -13,7 +13,7 @@ extension SettingsView {
 	struct InterfaceSection: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
 		@EnvironmentObject private var preferences: Preferences
-		@Bindable var viewModel: SettingsView.ViewModel
+		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		var body: some View {
 			#if os(iOS) || targetEnvironment(macCatalyst)

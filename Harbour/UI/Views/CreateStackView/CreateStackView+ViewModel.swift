@@ -18,9 +18,12 @@ extension CreateStackView {
 		private(set) var createStackTask: Task<Stack, Swift.Error>?
 
 		var isFileImporterPresented = false
+
 		var isStackFileContentsTargeted = false
 		var isEnvironmentEntrySheetPresented = false
 		var editedEnvironmentEntry: KeyValueEntry?
+
+		var showWholeStackFileContents = false
 
 		var stackName = ""
 		var stackFileContent: String?

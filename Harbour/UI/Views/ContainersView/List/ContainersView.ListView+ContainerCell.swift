@@ -15,16 +15,23 @@ extension ContainersView.ListView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
+		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 12
 		private let minimumScaleFactor: Double = 0.8
 
 		var container: Container
 
+		@MainActor
 		private var tintColor: Color {
-			container._isStored ? Container.State?.none.color : container.state.color
+			isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color)
 		}
 
-		@ViewBuilder
+		@MainActor
+		private var isBeingRemoved: Bool {
+			portainerStore.removedContainerIDs.contains(container.id)
+		}
+
+		@ViewBuilder @MainActor
 		private var headlineLabel: some View {
 			Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
 				.font(.headline)
@@ -35,26 +42,30 @@ extension ContainersView.ListView {
 				.animation(.easeInOut, value: container.displayName)
 		}
 
-		@ViewBuilder
+		@ViewBuilder @MainActor
 		private var subheadlineLabel: some View {
 			HStack(spacing: 4) {
-				let stateLabel = container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized
-
-				if let containerStatus = container.status {
-					(
-						Text(stateLabel).foregroundStyle(tintColor) +
-						Text(verbatim: " • ").foregroundStyle(.secondary)
-					) +
-					Text(containerStatus)
-						.foregroundStyle(.secondary)
+				if isBeingRemoved {
+					Text("Generic.Removing")
 				} else {
-					Text(stateLabel)
-						.foregroundStyle(.secondary)
+					let stateLabel = container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized
+
+					if let containerStatus = container.status {
+						(
+							Text(stateLabel).foregroundStyle(tintColor) +
+							Text(verbatim: " • ").foregroundStyle(.secondary)
+						) +
+						Text(containerStatus)
+							.foregroundStyle(.secondary)
+					} else {
+						Text(stateLabel)
+							.foregroundStyle(.secondary)
+					}
 				}
 			}
 			.font(.subheadline)
 			.fontWeight(.medium)
-			.tint(.primary)
+			.tint(isBeingRemoved ? tintColor : .primary)
 			.transition(.opacity)
 			.animation(.easeInOut, value: container.status)
 			.animation(.easeInOut, value: container.state)
@@ -72,22 +83,27 @@ extension ContainersView.ListView {
 				Spacer(minLength: 20)
 
 				Image(systemName: "circle")
-					.symbolVariant(container._isStored ? .none : .fill)
+					.symbolVariant(isBeingRemoved ? .none : (container._isStored ? .none : .fill))
+					.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isBeingRemoved)
 					.imageScale(.small)
 					.font(.system(size: circleSize))
+					.fontWeight(.black)
 					.foregroundStyle(tintColor)
 					.transition(.opacity)
 					.animation(.easeInOut, value: container.state)
 			}
 			.padding()
 			.lineLimit(1)
+			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
 			.frame(maxWidth: .infinity)
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
 			.animation(.easeInOut, value: container._isStored)
+			.animation(.easeInOut, value: container.state)
+			.animation(.easeInOut, value: container.status)
+			.animation(.easeInOut, value: isBeingRemoved)
 			.contentTransition(.opacity)
-			.geometryGroup()
 		}
 	}
 }
@@ -112,7 +128,16 @@ extension ContainersView.ListView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-#Preview {
+#Preview("Cell") {
+	Button(action: {}) {
+		ContainersView.ListView.ContainerCell(container: .preview())
+	}
+	.padding()
+	.background(Color.groupedBackground)
+	.previewLayout(.sizeThatFits)
+}
+
+#Preview("Cell (Removed)") {
 	Button(action: {}) {
 		ContainersView.ListView.ContainerCell(container: .preview())
 	}

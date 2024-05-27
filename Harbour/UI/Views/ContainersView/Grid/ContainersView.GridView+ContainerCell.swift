@@ -15,27 +15,36 @@ extension ContainersView.GridView {
 	struct ContainerCell: View {
 		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: Constants.ContainerCell.cornerRadius, style: .circular)
 
+		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 10
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
 
 		var container: Container
 
-		@ViewBuilder
+		@MainActor
+		private var isBeingRemoved: Bool {
+			portainerStore.removedContainerIDs.contains(container.id)
+		}
+
+		@ViewBuilder @MainActor
 		private var stateHeader: some View {
 			HStack {
-				Text(container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized)
+				Text(isBeingRemoved ? String(localized: "Generic.Removing") : (container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized))
 					.font(.footnote)
 					.fontWeight(.medium)
 					.foregroundStyle(.tint)
 					.transition(.opacity)
+					.lineLimit(1)
 
 				Spacer()
 
 				Image(systemName: "circle")
-					.symbolVariant(container._isStored ? .none : .fill)
+					.symbolVariant(isBeingRemoved ? .none : (container._isStored ? .none : .fill))
+					.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isBeingRemoved)
 					.imageScale(.small)
 					.font(.system(size: circleSize))
+					.fontWeight(.black)
 					.foregroundStyle(.tint)
 					.transition(.opacity)
 			}
@@ -43,7 +52,7 @@ extension ContainersView.GridView {
 			.minimumScaleFactor(minimumScaleFactor)
 		}
 
-		@ViewBuilder
+		@ViewBuilder @MainActor
 		private var nameAndStatusLabels: some View {
 			VStack(alignment: .leading, spacing: 2) {
 				Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
@@ -53,12 +62,14 @@ extension ContainersView.GridView {
 					.transition(.opacity)
 					.lineLimit(2)
 
-				Text(container.status ?? String(localized: "ContainerCell.UnknownStatus"))
-					.font(.footnote)
-					.fontWeight(.medium)
-					.foregroundStyle(container.status != nil ? .secondary : .tertiary)
-					.transition(.opacity)
-					.lineLimit(2)
+				if !isBeingRemoved {
+					Text(container.status ?? String(localized: "ContainerCell.UnknownStatus"))
+						.font(.footnote)
+						.fontWeight(.medium)
+						.foregroundStyle(container.status != nil ? .secondary : .tertiary)
+						.transition(.opacity)
+						.lineLimit(2)
+				}
 			}
 			.foregroundStyle(Color.primary)
 			.multilineTextAlignment(.leading)
@@ -76,11 +87,14 @@ extension ContainersView.GridView {
 			.padding(paddingSize)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.aspectRatio(1, contentMode: .fit)
-			.tint(container._isStored ? Container.State?.none.color : container.state.color)
+			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
 			.background(Color.secondaryGroupedBackground)
 			.contentShape(Self.roundedRectangleBackground)
 			.clipShape(Self.roundedRectangleBackground)
 			.animation(.easeInOut, value: container._isStored)
+			.animation(.easeInOut, value: container.state)
+			.animation(.easeInOut, value: container.status)
+			.animation(.easeInOut, value: isBeingRemoved)
 			.contentTransition(.opacity)
 		}
 	}
@@ -106,7 +120,17 @@ extension ContainersView.GridView.ContainerCell: Equatable {
 
 // MARK: - Previews
 
-#Preview {
+#Preview("Cell") {
+	Button(action: {}) {
+		ContainersView.GridView.ContainerCell(container: .preview())
+	}
+	.padding()
+	.frame(width: 168, height: 168)
+	.background(Color.groupedBackground)
+	.previewLayout(.sizeThatFits)
+}
+
+#Preview("Cell (Removed)") {
 	Button(action: {}) {
 		ContainersView.GridView.ContainerCell(container: .preview())
 	}

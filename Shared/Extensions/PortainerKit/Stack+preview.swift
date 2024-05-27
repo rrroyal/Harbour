@@ -10,10 +10,10 @@ import Foundation
 import PortainerKit
 
 extension Stack {
-	static func preview(status: Stack.Status = .active) -> Self {
+	static func preview(name: String = "PreviewStack", status: Stack.Status = .active) -> Self {
 		.init(
 			id: 0,
-			name: "PreviewStack",
+			name: name,
 			type: .dockerCompose,
 			endpointID: 0,
 			env: [],

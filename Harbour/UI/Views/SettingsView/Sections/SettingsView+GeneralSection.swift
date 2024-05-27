@@ -13,7 +13,7 @@ import SwiftUI
 extension SettingsView {
 	struct GeneralSection: View {
 		@EnvironmentObject private var preferences: Preferences
-		@Bindable var viewModel: SettingsView.ViewModel
+		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		var body: some View {
 			#if os(iOS)

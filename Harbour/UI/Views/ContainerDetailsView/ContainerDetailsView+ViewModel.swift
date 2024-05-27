@@ -22,19 +22,21 @@ extension ContainerDetailsView {
 		private nonisolated let portainerStore: PortainerStore = .shared
 		private nonisolated let logger = Logger(.view(ContainerDetailsView.self))
 
-		private(set) var viewState: ViewState<(Container?, ContainerDetails?), Error> = .loading
+		private(set) var viewState: ViewState<ContainerDetails, Error> = .loading
 		private(set) var fetchTask: Task<Void, Never>?
 
 		var navigationItem: ContainerDetailsView.NavigationItem
 
+		var isRemoveContainerAlertPresented = false
+
 		var scrollViewIsRefreshing = false
 
 		var container: Container? {
-			viewState.value?.0
+			portainerStore.containers.first { $0.id == navigationItem.id }
 		}
 
 		var containerDetails: ContainerDetails? {
-			viewState.value?.1
+			viewState.value
 		}
 
 		var isStatusProgressViewVisible: Bool {
@@ -43,13 +45,11 @@ extension ContainerDetailsView {
 
 		init(navigationItem: ContainerDetailsView.NavigationItem) {
 			self.navigationItem = navigationItem
-			self.viewState = .reloading((self.container(for: navigationItem), nil))
+			self.viewState = self.viewState.reloading
 		}
 
 		@MainActor
 		func createUserActivity(_ userActivity: NSUserActivity) {
-			let container = self.container(for: navigationItem)
-
 			userActivity.isEligibleForHandoff = true
 			userActivity.isEligibleForSearch = true
 			#if os(iOS)
@@ -105,12 +105,12 @@ extension ContainerDetailsView {
 				self.navigationItem = navigationItem
 
 				do {
-					async let _containers = portainerStore.fetchContainers(filters: .init(id: [navigationItem.id]))
+					async let _container = portainerStore.refreshContainers(ids: [navigationItem.id], errorHandler: errorHandler).value.first
 					async let _containerDetails = portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
-					let (container, containerDetails) = try await (_containers.first, _containerDetails)
+					let (_, containerDetails) = try await (_container, _containerDetails)
 
 					guard !Task.isCancelled else { return }
-					self.viewState = .success((container, containerDetails))
+					self.viewState = .success(containerDetails)
 				} catch {
 					guard !error.isCancellationError else { return }
 					viewState = .failure(error)
@@ -121,9 +121,12 @@ extension ContainerDetailsView {
 			return task
 		}
 
-		func container(for navigationItem: ContainerDetailsView.NavigationItem) -> Container? {
-			if self.container?.id == navigationItem.id { return self.container }
-			return portainerStore.containers.first { $0.id == navigationItem.id }
+		func attemptContainerRemoval() {
+			isRemoveContainerAlertPresented = true
+		}
+
+		func removeContainer(force: Bool) async throws {
+			try await portainerStore.removeContainer(containerID: container?.id ?? containerDetails?.id ?? navigationItem.id, force: force)
 		}
 	}
 }

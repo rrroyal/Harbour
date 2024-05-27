@@ -11,11 +11,12 @@ import SwiftUI
 
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View>: View {
+		@Environment(ContainersView.ViewModel.self) private var viewModel
 		@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 		@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
 		@Environment(\.parentShape) private var parentShape
-		let container: Container
-		let content: () -> Content
+		var container: Container
+		var content: () -> Content
 
 		private var navigationItem: ContainerDetailsView.NavigationItem {
 			let containerID = container.id
@@ -38,15 +39,16 @@ extension ContainersView {
 			#endif
 			.if(let: parentShape) {
 				$0
+					.clipShape($1)
 					.contentShape($1)
 					#if os(iOS)
 					.contentShape(.contextMenuPreview, $1)
 					#endif
-					.contentShape(.dragPreview, $1)
-					.contentShape(.interaction, $1)
 			}
 			.contextMenu {
-				ContainerContextMenu(container: container)
+				ContainerContextMenu(container: container) {
+					viewModel.attemptContainerRemoval(container)
+				}
 			}
 //			.if(let: portainerDeeplink) {
 //				$0.draggable($1)

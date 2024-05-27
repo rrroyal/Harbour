@@ -14,11 +14,14 @@ import UniformTypeIdentifiers
 // MARK: - CreateStackView
 
 struct CreateStackView: View {
+	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel = ViewModel()
+	@FocusState private var focusedField: FocusedField?
 
+	var onEnvironmentEdit: (([KeyValueEntry]) -> Void)?
 	var onStackFileSelection: ((String?) -> Void)?
 	var onStackCreation: ((Stack) -> Void)?
 
@@ -60,17 +63,23 @@ struct CreateStackView: View {
 					.labelsHidden()
 					.submitLabel(viewModel.canCreateStack ? .send : .continue)
 					.onSubmit(createStack)
+					.focused($focusedField, equals: .textfieldName)
 			} header: {
 				Text("CreateStackView.Name")
 			}
 
 			StackFileContentsView(
 				stackFileContent: $viewModel.stackFileContent,
+				showWholeStackFileContents: $viewModel.showWholeStackFileContents,
 				isFileImporterPresented: $viewModel.isFileImporterPresented,
 				isStackFileContentsTargeted: $viewModel.isStackFileContentsTargeted,
 				allowedContentTypes: allowedContentTypes,
 				handleStackFileDrop: handleStackFileDrop
 			)
+			.transition(.opacity)
+			.onChange(of: viewModel.stackFileContent) {
+				focusedField = nil
+			}
 
 			StackEnvironmentView(
 				environment: $viewModel.stackEnvironment,
@@ -78,6 +87,10 @@ struct CreateStackView: View {
 				editedEnvironmentEntry: $viewModel.editedEnvironmentEntry,
 				removeEntryAction: { viewModel.editEnvironmentEntry(old: $0, new: nil) }
 			)
+			.onChange(of: viewModel.stackEnvironment) { _, newEntries in
+				focusedField = nil
+				onEnvironmentEdit?(newEntries)
+			}
 		}
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
@@ -91,7 +104,7 @@ struct CreateStackView: View {
 		}
 		#endif
 		.fileImporter(isPresented: $viewModel.isFileImporterPresented, allowedContentTypes: allowedContentTypes) { result in
-			handleFileResult(result)
+			handleStackFileResult(result)
 		}
 		.sheet(isPresented: $viewModel.isEnvironmentEntrySheetPresented) {
 			viewModel.editedEnvironmentEntry = nil
@@ -126,9 +139,19 @@ struct CreateStackView: View {
 			#endif
 		}
 		.navigationTitle("CreateStackView.Title")
+		.transition(.opacity)
 		.animation(.easeInOut, value: viewModel.isLoading)
 		.animation(.easeInOut, value: viewModel.stackFileContent)
 		.animation(.easeInOut, value: viewModel.stackEnvironment)
+		.animation(.easeInOut, value: viewModel.showWholeStackFileContents)
+	}
+}
+
+// MARK: - CreateStackView+FocusedField
+
+private extension CreateStackView {
+	enum FocusedField {
+		case textfieldName
 	}
 }
 
@@ -140,25 +163,36 @@ private extension CreateStackView {
 		Task {
 			guard viewModel.canCreateStack else { return }
 
+			let stackName = viewModel.stackName
+
 			do {
+//				presentIndicator(.stackCreate(stackName, nil, state: .loading))
+
 				Haptics.generateIfEnabled(.medium)
 				let stack = try await viewModel.createStack().value
 
-				dismiss()
-				presentIndicator(.stackCreated(stack.name))
+				presentIndicator(.stackCreate(stackName, stack.id, state: .success) {
+					Haptics.generateIfEnabled(.light)
+					let navigationItem = StackDetailsView.NavigationItem(stackID: stack.id.description, stackName: stack.name)
+					sceneDelegate.resetSheets()
+					sceneDelegate.navigate(to: .stacks, with: navigationItem)
+				})
 				Haptics.generateIfEnabled(.success)
-
 				onStackCreation?(stack)
+
+				dismiss()
 			} catch {
-				errorHandler(error)
+				presentIndicator(.stackCreate(stackName, nil, state: .failure(error)))
+				errorHandler(error, showIndicator: false)
 			}
 		}
 	}
 
-	func handleFileResult(_ result: Result<URL, Error>) {
+	func handleStackFileResult(_ result: Result<URL, Error>) {
 		do {
 			let url = try result.get()
 			let stackFileContents = try viewModel.loadStackFile(at: url)
+			Haptics.generateIfEnabled(.selectionChanged)
 			onStackFileSelection?(stackFileContents)
 		} catch {
 			errorHandler(error)
@@ -174,6 +208,7 @@ private extension CreateStackView {
 		Task {
 			do {
 				let stackFileContents = try await viewModel.handleStackFileDrop(item: item)
+				Haptics.generateIfEnabled(.selectionChanged)
 				onStackFileSelection?(stackFileContents)
 			} catch {
 				errorHandler(error)

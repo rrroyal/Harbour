@@ -25,10 +25,11 @@ struct SettingsView: View {
 	var body: some View {
 		NavigationStack {
 			Form {
-				PortainerSection(viewModel: viewModel)
-				GeneralSection(viewModel: viewModel)
-				InterfaceSection(viewModel: viewModel)
-				OtherSection(viewModel: viewModel)
+				ConnectionSection()
+				PortainerSection()
+				GeneralSection()
+				InterfaceSection()
+				OtherSection()
 			}
 			.formStyle(.grouped)
 			.scrollPosition(id: $viewModel.scrollPosition)
@@ -59,8 +60,13 @@ struct SettingsView: View {
 			.sheetMinimumFrame()
 			#endif
 		}
+		.environment(viewModel)
 		.environment(\.presentIndicator, viewModel.presentIndicator)
-		.indicatorOverlay(model: viewModel.indicators)
+		#if os(iOS)
+		.indicatorOverlay(model: viewModel.indicators, alignment: .top, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
+		#elseif os(macOS)
+		.indicatorOverlay(model: viewModel.indicators, alignment: .top, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
+		#endif
 	}
 }
 

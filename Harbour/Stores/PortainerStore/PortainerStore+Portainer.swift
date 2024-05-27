@@ -156,6 +156,52 @@ extension PortainerStore {
 		}
 	}
 
+	/// Remove container with specified ID.
+	/// - Parameters:
+	///   - containerID: Container ID to remove
+	///   - removeVolumes: Remove volumes associated with specified container ID
+	///   - force: Force container removal
+	@Sendable
+	func removeContainer(
+		containerID: Container.ID,
+		removeVolumes: Bool = Preferences.shared.containerRemoveVolumes,
+		force: Bool = Preferences.shared.containerRemoveForce
+	) async throws {
+		logger.notice("Removing container with ID: \"\(containerID, privacy: .public)\"...")
+
+		do {
+			guard let selectedEndpoint else {
+				throw PortainerError.noSelectedEndpoint
+			}
+
+			Task { @MainActor in
+				removedContainerIDs.insert(containerID)
+			}
+
+			try await portainer.removeContainer(
+				containerID: containerID,
+				endpointID: selectedEndpoint.id,
+				removeVolumes: removeVolumes,
+				force: force
+			)
+
+			Task { @MainActor in
+				removedContainerIDs.remove(containerID)
+				if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
+					containers.remove(at: storedContainerIndex)
+				}
+			}
+
+			logger.notice("Removed container with ID: \"\(containerID, privacy: .public)\".")
+		} catch {
+			Task { @MainActor in
+				removedContainerIDs.remove(containerID)
+			}
+			logger.error("Failed to remove container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
+			throw error
+		}
+	}
+
 	@Sendable @discardableResult
 	func attachToContainer(containerID: Container.ID) throws -> AttachedContainer {
 		logger.notice("Attaching to container with ID: \"\(containerID, privacy: .public)\"...")
@@ -222,7 +268,7 @@ public extension PortainerStore {
 	func setStackState(stackID: Stack.ID, started: Bool) async throws -> Stack? {
 		defer {
 			Task { @MainActor in
-				loadingStacks.remove(stackID)
+				loadingStackIDs.remove(stackID)
 			}
 		}
 
@@ -234,7 +280,7 @@ public extension PortainerStore {
 			}
 
 			Task { @MainActor in
-				loadingStacks.insert(stackID)
+				loadingStackIDs.insert(stackID)
 			}
 
 			let newStack = try await portainer.setStackState(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
@@ -286,11 +332,23 @@ public extension PortainerStore {
 
 	@Sendable
 	func removeStack(stackID: Stack.ID) async throws {
+		defer {
+			Task { @MainActor in
+				removedStackIDs.remove(stackID)
+			}
+		}
+
 		logger.info("Removing stack with ID: \(stackID)...")
+
 		do {
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
+
+			Task { @MainActor in
+				removedStackIDs.insert(stackID)
+			}
+
 			try await portainer.removeStack(stackID: stackID, endpointID: selectedEndpoint.id)
 			logger.info("Removed stack with ID: \(stackID)")
 		} catch {

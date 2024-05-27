@@ -13,7 +13,7 @@ import SwiftUI
 
 extension SettingsView {
 	struct OtherSection: View {
-		@Bindable var viewModel: SettingsView.ViewModel
+		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		var body: some View {
 			Section(header: Text("SettingsView.Other.Title"), footer: FooterView(viewModel: viewModel)) {

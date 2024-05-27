@@ -12,7 +12,7 @@ import Foundation
 
 extension SceneDelegate {
 	@MainActor
-	func handleError(_ error: Error) {
+	func handleError(_ error: Error, showIndicator: Bool = true) {
 		guard !error.isCancellationError else {
 			logger.debug("Cancelled error: \(error, privacy: .public)")
 			return
@@ -21,6 +21,8 @@ extension SceneDelegate {
 //		logger.error("Error: \(error, privacy: .public)")
 
 		Haptics.generateIfEnabled(.error)
-		presentIndicator(.error(error))
+		if showIndicator {
+			presentIndicator(.error(error))
+		}
 	}
 }

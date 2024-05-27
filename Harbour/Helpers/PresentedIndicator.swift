@@ -9,16 +9,39 @@
 import Foundation
 import IndicatorsKit
 import PortainerKit
+import SwiftUI
 
 // MARK: - PresentedIndicator
 
 enum PresentedIndicator {
-	case containerActionExecuted(Container.ID, String?, ContainerAction)
-	case copied
 	case error(Error)
-	case stackCreated(String)
-	case stackRemoved(String)
-	case stackStartedOrStopped(String, started: Bool)
+	case copied
+	case serverSwitched(String)
+	// swiftlint:disable:next enum_case_associated_values_count
+	case containerActionExecute(Container.ID, String?, ContainerAction, state: State, action: (() -> Void)? = nil)
+	case containerRemove(String, state: State, action: (() -> Void)? = nil)
+	case stackStartOrStop(String, started: Bool, state: State, action: (() -> Void)? = nil)
+	case stackCreate(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
+	case stackRemove(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
+}
+
+// MARK: - PresentedIndicator+State
+
+extension PresentedIndicator {
+	enum State: Equatable {
+		static func == (lhs: PresentedIndicator.State, rhs: PresentedIndicator.State) -> Bool {
+			switch (lhs, rhs) {
+			case (.loading, .loading): true
+			case (.success, .success): true
+			case (.failure(let error1), .failure(let error2)): error1 == error2
+			default: false
+			}
+		}
+
+		case loading
+		case success
+		case failure(Error)
+	}
 }
 
 // MARK: - PresentedIndicator+Identifiable
@@ -26,18 +49,22 @@ enum PresentedIndicator {
 extension PresentedIndicator: Identifiable {
 	var id: String {
 		switch self {
-		case .containerActionExecuted(let containerID, _, _):
-			"ContainerActionExecutedIndicator.\(containerID)"
-		case .copied:
-			"CopiedIndicator.\(UUID().uuidString)"
 		case .error(let error):
-			"ErrorIndicator.\(String(describing: error).hashValue)"
-		case .stackCreated(let stackName):
-			"StackCreated.\(stackName)"
-		case .stackRemoved(let stackName):
-			"StackRemoved.\(stackName)"
-		case .stackStartedOrStopped(let stackName, _):
-			"StackStartedOrStopped.\(stackName)"
+			"Error.\(String(describing: error).hashValue)"
+		case .copied:
+			"Copied.\(UUID().uuidString)"
+		case .serverSwitched:
+			"ServerSwitched"
+		case .containerActionExecute(let containerID, _, _, _, _):
+			"ContainerActionExecute.\(containerID)"
+		case .containerRemove(let containerName, _, _):
+			"ContainerRemove.\(containerName)"
+		case .stackStartOrStop(let stackName, _, _, _):
+			"StackStartOrStop.\(stackName)"
+		case .stackCreate(let stackName, _, _, _):
+			"StackCreate.\(stackName)"
+		case .stackRemove(let stackName, _, _, _):
+			"StackRemove.\(stackName)"
 		}
 	}
 }
@@ -48,56 +75,193 @@ extension PresentedIndicator {
 	var indicator: Indicator {
 		switch self {
 		case .error(let error):
-			.init(error: error)
+			return .init(error: error)
 		case .copied:
-			.init(
+			return .init(
 				id: self.id,
-				icon: SFSymbol.copy,
+				icon: .systemImage(SFSymbol.copy),
 				title: String(localized: "Indicators.Copied")
 			)
-		case .containerActionExecuted(let containerID, let containerName, let action):
-			.init(
+		case .serverSwitched(let serverURL):
+			return .init(
 				id: self.id,
-				icon: action.icon,
-				title: action.title,
-				subtitle: containerName ?? containerID,
-				style: .init(
-					iconStyle: .primary,
-					tintColor: action.color
-				)
+				title: String(localized: "Indicators.ServerSwitched"),
+				subtitle: serverURL
 			)
-		case .stackCreated(let stackName):
-			.init(
+		case .containerActionExecute(let containerID, let containerName, let containerAction, let state, let action):
+			let (icon, title, subtitle, tintColor) = switch state {
+			case .loading:
+				(Indicator.Icon.progressIndicator, containerAction.title, containerName ?? containerID, containerAction.color)
+			case .success:
+				(Indicator.Icon.systemImage(containerAction.icon), containerAction.title, containerName ?? containerID, containerAction.color)
+			case .failure(let error):
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized, Color.red)
+			}
+
+			// let expandedText: String? = if case let .failure(error) = state {
+			// 	error.localizedDescription.localizedCapitalized
+			// } else { nil }
+
+			let indicatorAction: Indicator.ActionType? = if let action {
+				.execute(action)
+			} else {
+				.none
+			}
+
+			return .init(
 				id: self.id,
-				icon: "sparkles",
-				title: String(localized: "Indicators.Stack.Created"),
-				subtitle: stackName,
+				icon: icon,
+				title: title,
+				subtitle: subtitle,
+				expandedText: nil,
+				dismissType: state != .loading ? .automatic : .manual,
 				style: .init(
-					iconStyle: .primary,
-					tintColor: .blue
-				)
+					iconStyle: state != .loading ? .primary : .secondary,
+					tintColor: state != .loading ? tintColor : .gray
+				),
+				action: indicatorAction
 			)
-		case .stackRemoved(let stackName):
-			.init(
+		case .containerRemove(let containerName, let state, let action):
+			let (icon, title, subtitle) = switch state {
+			case .loading:
+				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Container.Remove"), containerName)
+			case .success:
+				(Indicator.Icon.systemImage(SFSymbol.remove), String(localized: "Indicators.Container.Remove"), containerName)
+			case .failure(let error):
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized)
+			}
+
+			// let expandedText: String? = if case let .failure(error) = state {
+			// 	error.localizedDescription.localizedCapitalized
+			// } else { nil }
+
+			let indicatorAction: Indicator.ActionType? = if let action {
+				.execute(action)
+			} else {
+				.none
+			}
+
+			return .init(
 				id: self.id,
-				icon: SFSymbol.remove,
-				title: String(localized: "Indicators.Stack.Removed"),
-				subtitle: stackName,
+				icon: icon,
+				title: title,
+				subtitle: subtitle,
+				expandedText: nil,
+				dismissType: state != .loading ? .automatic : .manual,
 				style: .init(
-					iconStyle: .primary,
-					tintColor: .red
-				)
+					iconStyle: state != .loading ? .primary : .secondary,
+					tintColor: state != .loading ? .red : .gray
+				),
+				action: indicatorAction
 			)
-		case .stackStartedOrStopped(let stackName, let started):
-			.init(
-				id: self.id,
-				icon: started ? Stack.Status.active.icon : Stack.Status.inactive.icon,
-				title: started ? String(localized: "Indicators.Stack.Started") : String(localized: "Indicators.Stack.Stopped"),
-				subtitle: stackName,
-				style: .init(
-					iconStyle: .primary,
-					tintColor: started ? Stack.Status.active.color : Stack.Status.inactive.color
+		case .stackStartOrStop(let stackName, let started, let state, let action):
+			let (icon, title, subtitle, tintColor) = switch state {
+			case .loading:
+				(
+					Indicator.Icon.progressIndicator,
+					started ? String(localized: "Indicators.Stack.Start") : String(localized: "Indicators.Stack.Stop"),
+					stackName,
+					(started ? Stack.Status.active.color : Stack.Status.inactive.color)
 				)
+			case .success:
+				(
+					Indicator.Icon.systemImage(started ? Stack.Status.active.icon : Stack.Status.inactive.icon),
+					started ? String(localized: "Indicators.Stack.Start") : String(localized: "Indicators.Stack.Stop"),
+					stackName,
+					(started ? Stack.Status.active.color : Stack.Status.inactive.color)
+				)
+			case .failure(let error):
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized, Color.red)
+			}
+
+			// let expandedText: String? = if case let .failure(error) = state {
+			// 	error.localizedDescription.localizedCapitalized
+			// } else { nil }
+
+			let indicatorAction: Indicator.ActionType? = if let action {
+				.execute(action)
+			} else {
+				.none
+			}
+
+			return .init(
+				id: self.id,
+				icon: icon,
+				title: title,
+				subtitle: subtitle,
+				expandedText: nil,
+				dismissType: state != .loading ? .automatic : .manual,
+				style: .init(
+					iconStyle: state != .loading ? .primary : .secondary,
+					tintColor: state != .loading ? tintColor : .gray
+				),
+				action: indicatorAction
+			)
+		case .stackCreate(let stackName, _, let state, let action):
+			let (icon, title, subtitle, tintColor) = switch state {
+			case .loading:
+				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Stack.Create"), stackName, Color.blue)
+			case .success:
+				(Indicator.Icon.systemImage("sparkles"), String(localized: "Indicators.Stack.Create"), stackName, Color.blue)
+			case .failure(let error):
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized, Color.red)
+			}
+
+			// let expandedText: String? = if case let .failure(error) = state {
+			// 	error.localizedDescription.localizedCapitalized
+			// } else { nil }
+
+			let indicatorAction: Indicator.ActionType? = if let action {
+				.execute(action)
+			} else {
+				.none
+			}
+
+			return .init(
+				id: self.id,
+				icon: icon,
+				title: title,
+				subtitle: subtitle,
+				expandedText: nil,
+				dismissType: state != .loading ? .automatic : .manual,
+				style: .init(
+					iconStyle: state != .loading ? .primary : .secondary,
+					tintColor: state != .loading ? tintColor : .gray
+				),
+				action: indicatorAction
+			)
+		case .stackRemove(let stackName, _, let state, let action):
+			let (icon, title, subtitle) = switch state {
+			case .loading:
+				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Stack.Remove"), stackName)
+			case .success:
+				(Indicator.Icon.systemImage(SFSymbol.remove), String(localized: "Indicators.Stack.Remove"), stackName)
+			case .failure(let error):
+				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription.localizedCapitalized)
+			}
+
+			// let expandedText: String? = if case let .failure(error) = state {
+			// 	error.localizedDescription.localizedCapitalized
+			// } else { nil }
+
+			let indicatorAction: Indicator.ActionType? = if let action {
+				.execute(action)
+			} else {
+				.none
+			}
+
+			return .init(
+				id: self.id,
+				icon: icon,
+				title: title,
+				subtitle: subtitle,
+				expandedText: nil,
+				dismissType: state != .loading ? .automatic : .manual,
+				style: .init(
+					iconStyle: state != .loading ? .primary : .secondary,
+					tintColor: state != .loading ? .red : .gray
+				),
+				action: indicatorAction
 			)
 		}
 	}

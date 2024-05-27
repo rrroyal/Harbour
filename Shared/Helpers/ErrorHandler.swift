@@ -9,13 +9,15 @@
 import Foundation
 
 struct ErrorHandler: @unchecked Sendable {
-	let wrappedValue: (Error) -> Void
+	typealias WrappedValue = (Error, _ showIndicator: Bool) -> Void
 
-	init(_ wrappedValue: @escaping (Error) -> Void) {
+	let wrappedValue: WrappedValue
+
+	init(_ wrappedValue: @escaping WrappedValue) {
 		self.wrappedValue = wrappedValue
 	}
 
-	func callAsFunction(_ error: Error) {
-		wrappedValue(error)
+	func callAsFunction(_ error: Error, showIndicator: Bool = true) {
+		wrappedValue(error, showIndicator)
 	}
 }

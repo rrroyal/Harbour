@@ -15,10 +15,10 @@ struct ContainerContextMenu: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
-	@Environment(\.presentIndicator) private var presentIndicator
 	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 	@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
 	var container: Container
+	var removeContainerAction: () -> Void
 
 	private let killActionHaptic: Haptics.HapticStyle = .heavy
 
@@ -71,12 +71,21 @@ struct ContainerContextMenu: View {
 					Divider()
 					ActionButton(container: container, action: .kill, role: .destructive, haptic: killActionHaptic)
 				}
-			}
 
-			Divider()
+				Divider()
 
-			if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id) {
-				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+				Button(role: .destructive) {
+					Haptics.generateIfEnabled(.warning)
+					removeContainerAction()
+				} label: {
+					Label("Generic.Remove", systemImage: SFSymbol.remove)
+				}
+
+				if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id) {
+					Divider()
+
+					ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+				}
 			}
 
 //			#if ENABLE_PREVIEW_FEATURES
@@ -142,14 +151,16 @@ private extension ContainerContextMenu {
 		func executeAction() {
 			Haptics.generateIfEnabled(haptic)
 
-			presentIndicator(.containerActionExecuted(container.id, container.displayName, action))
+			presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .loading))
 
 			Task {
 				do {
 					try await portainerStore.execute(action, on: container.id)
-					portainerStore.refreshContainers(errorHandler: errorHandler)
+					portainerStore.refreshContainers(ids: [container.id], errorHandler: errorHandler)
+					presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .success))
 				} catch {
-					errorHandler(error)
+					presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .failure(error)))
+					errorHandler(error, showIndicator: false)
 				}
 			}
 		}

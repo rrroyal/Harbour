@@ -10,7 +10,10 @@ import Foundation
 
 extension SettingsView {
 	enum ViewID: Hashable {
-		case portainerEndpointMenu
+		case connectionMenu
+
+		case portainerContainerRemoveForce
+		case portainerContainerRemoveVolumes
 
 		case generalBackgroundRefresh
 

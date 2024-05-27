@@ -23,20 +23,16 @@ extension SceneDelegate {
 				return
 			}
 
-			Task { @MainActor in
-				resetSheets()
-				navigate(to: .containers, with: navigationItem)
-			}
+			resetSheets()
+			navigate(to: .containers, with: navigationItem)
 		case HarbourUserActivityIdentifier.stackDetails:
 			guard let navigationItem = try? userActivity.typedPayload(StackDetailsView.NavigationItem.self) else {
 				logger.warning("Invalid payload in userActivity!")
 				return
 			}
 
-			Task { @MainActor in
-				resetSheets()
-				navigate(to: .stacks, with: navigationItem)
-			}
+			resetSheets()
+			navigate(to: .stacks, with: navigationItem)
 		default:
 			break
 		}
@@ -44,8 +40,6 @@ extension SceneDelegate {
 
 	@MainActor
 	func onScenePhaseChange(from previousScenePhase: ScenePhase, to newScenePhase: ScenePhase) {
-		scenePhase = newScenePhase
-
 		switch newScenePhase {
 		case .background:
 			#if os(iOS)
@@ -54,6 +48,8 @@ extension SceneDelegate {
 		case .inactive:
 			break
 		case .active:
+			guard scenePhase == nil else { break } // ignore first launch
+
 			switch activeTab {
 			case .containers:
 				if PortainerStore.shared.containersTask?.isCancelled ?? true {
@@ -67,6 +63,8 @@ extension SceneDelegate {
 		@unknown default:
 			break
 		}
+
+		scenePhase = newScenePhase
 	}
 
 	@MainActor
@@ -88,10 +86,8 @@ extension SceneDelegate {
 
 					let navigationItem = ContainerDetailsView.NavigationItem(id: changedID, displayName: existingContainer.displayName, endpointID: endpointID)
 
-					Task { @MainActor in
-						resetSheets()
-						navigate(to: .containers, with: navigationItem)
-					}
+					resetSheets()
+					navigate(to: .containers, with: navigationItem)
 				}
 			default:
 				continue

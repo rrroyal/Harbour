@@ -74,6 +74,7 @@ struct StackDetailsView: View {
 
 			NormalizedSection {
 				Button {
+					Haptics.generateIfEnabled(.light)
 					filterByStackName(stack.name)
 				} label: {
 					Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
@@ -98,6 +99,7 @@ struct StackDetailsView: View {
 						}
 					} else {
 						Button {
+							Haptics.generateIfEnabled(.light)
 							fetchStackFile()
 						} label: {
 							HStack {
@@ -122,18 +124,6 @@ struct StackDetailsView: View {
 				}
 				.id(ViewID.stackFileButton)
 				.foregroundStyle(.accent)
-
-				Button(role: .destructive) {
-					Haptics.generateIfEnabled(.warning)
-					viewModel.isStackRemovalAlertPresented = true
-				} label: {
-					Label("StackDetailsView.RemoveStack", systemImage: SFSymbol.remove)
-						#if os(macOS)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
-						#endif
-				}
-				.foregroundStyle(.red)
 			}
 		}
 	}
@@ -143,25 +133,10 @@ struct StackDetailsView: View {
 		if !viewModel.isRemovingStack, let stack = viewModel.stack {
 			ToolbarItem(placement: .primaryAction) {
 				Menu {
-					if portainerStore.loadingStacks.contains(stack.id) {
-						Text("Generic.Loading")
-						Divider()
-					}
-
-					Button {
-						setStackState(stack, started: !stack.isOn)
-					} label: {
-						Label(
-							stack.isOn ? "StacksView.Stack.Stop" : "StacksView.Stack.Start",
-							systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
-						)
-					}
-//					.symbolVariant(.fill)
-
-					Divider()
-
-					if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
-						ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+					StackContextMenu(stack: stack) {
+						setStackState(stack, started: $0)
+					} removeStackAction: {
+						confirmRemoveStack()
 					}
 				} label: {
 					Label("Generic.More", systemImage: SFSymbol.moreCircle)
@@ -215,15 +190,16 @@ struct StackDetailsView: View {
 		}
 		.confirmationDialog(
 			"Generic.AreYouSure?",
-			isPresented: $viewModel.isStackRemovalAlertPresented,
+			isPresented: $viewModel.isRemoveStackAlertPresented,
 			titleVisibility: .visible,
 			presenting: viewModel.stack
-		) { _ in
+		) { stack in
 			Button("Generic.Remove", role: .destructive) {
-				removeStack()
+				Haptics.generateIfEnabled(.heavy)
+				removeStack(stack)
 			}
 		} message: { stack in
-			Text("StackDetailsView.StackRemovalAlert.Message StackName:\(stack.name)")
+			Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
@@ -271,7 +247,6 @@ private extension StackDetailsView {
 	func fetchStackFile() -> Task<Void, Never> {
 		Task {
 			do {
-				Haptics.generateIfEnabled(.light)
 				try await viewModel.fetchStackFile().value
 			} catch {
 				errorHandler(error)
@@ -279,38 +254,42 @@ private extension StackDetailsView {
 		}
 	}
 
-	func setStackState(_ stack: Stack, started: Bool) {
-		Task {
-			do {
-				Haptics.generateIfEnabled(.light)
-				presentIndicator(.stackStartedOrStopped(stack.name, started: started))
-				try await viewModel.setStackState(stack.id, started: started)
-			} catch {
-				errorHandler(error)
-			}
-		}
-	}
-
 	func filterByStackName(_ stackName: String?) {
-		Haptics.generateIfEnabled(.light)
 		sceneDelegate.navigate(to: .containers)
 		sceneDelegate.selectedStackName = stackName
 	}
 
-	func removeStack() {
-		Haptics.generateIfEnabled(.heavy)
+	func setStackState(_ stack: Stack, started: Bool) {
 		Task {
 			do {
-				viewModel.isRemovingStack = true
-				try await viewModel.removeStack().value
-				portainerStore.refreshStacks()
-				dismiss()
-
-				let stackName = viewModel.stack?.name ?? viewModel.navigationItem.stackName ?? "ID:\(viewModel.navigationItem.stackID)"
-				presentIndicator(.stackRemoved(stackName))
+				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .loading))
+				try await viewModel.setStackState(stack, started: started)
+				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .success))
 			} catch {
+				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .failure(error)))
+				errorHandler(error, showIndicator: false)
+			}
+		}
+	}
+
+	func confirmRemoveStack() {
+		viewModel.isRemoveStackAlertPresented = true
+	}
+
+	func removeStack(_ stack: Stack) {
+		Task {
+			do {
+				presentIndicator(.stackRemove(stack.name, stack.id, state: .loading))
+
+				viewModel.isRemovingStack = true
+				try await viewModel.removeStack(stack)
+
+				presentIndicator(.stackRemove(stack.name, stack.id, state: .success))
+				dismiss()
+			} catch {
+				presentIndicator(.stackRemove(stack.name, stack.id, state: .failure(error)))
 				viewModel.isRemovingStack = false
-				errorHandler(error)
+				errorHandler(error, showIndicator: false)
 			}
 		}
 	}

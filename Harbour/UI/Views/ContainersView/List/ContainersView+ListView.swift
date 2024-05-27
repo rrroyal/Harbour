@@ -14,6 +14,7 @@ import SwiftUI
 extension ContainersView {
 	struct ListView: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
+		@Environment(ContainersView.ViewModel.self) private var viewModel
 
 		private let cellSpacing: Double = 8
 

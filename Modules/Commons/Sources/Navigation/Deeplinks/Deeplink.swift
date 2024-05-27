@@ -37,8 +37,12 @@ public struct Deeplink {
 		}
 
 		switch Deeplink.Host(rawValue: host) {
+		case .containers:
+			return ContainersDestination(from: components)
 		case .containerDetails:
 			return ContainerDetailsDestination(from: components)
+		case .stacks:
+			return StacksDestination(from: components)
 		case .stackDetails:
 			return StackDetailsDestination(from: components)
 		case .settings:

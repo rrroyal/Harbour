@@ -506,6 +506,16 @@
         }
       }
     },
+    "ContainersView.RemoveContainerAlert.Message ContainerName:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" will be removed."
+          }
+        }
+      }
+    },
     "ContainersView.SearchToken.Status.Off" : {
       "localizations" : {
         "en" : {
@@ -1016,6 +1026,16 @@
         }
       }
     },
+    "Generic.Collapse" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Collapse"
+          }
+        }
+      }
+    },
     "Generic.Copy" : {
       "localizations" : {
         "en" : {
@@ -1032,6 +1052,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Empty"
+          }
+        }
+      }
+    },
+    "Generic.Expand" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expand"
           }
         }
       }
@@ -1136,6 +1166,16 @@
         }
       }
     },
+    "Generic.Removing" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Removing..."
+          }
+        }
+      }
+    },
     "Generic.Save" : {
       "localizations" : {
         "en" : {
@@ -1176,6 +1216,16 @@
         }
       }
     },
+    "Indicators.Container.Remove" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
     "Indicators.Copied" : {
       "localizations" : {
         "en" : {
@@ -1196,42 +1246,52 @@
         }
       }
     },
-    "Indicators.Stack.Created" : {
+    "Indicators.ServerSwitched" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Created"
+            "value" : "Server Switched"
           }
         }
       }
     },
-    "Indicators.Stack.Removed" : {
+    "Indicators.Stack.Create" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Removed"
+            "value" : "Create Stack"
           }
         }
       }
     },
-    "Indicators.Stack.Started" : {
+    "Indicators.Stack.Remove" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Started"
+            "value" : "Remove Stack"
           }
         }
       }
     },
-    "Indicators.Stack.Stopped" : {
+    "Indicators.Stack.Start" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stopped"
+            "value" : "Start Stack"
+          }
+        }
+      }
+    },
+    "Indicators.Stack.Stop" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Stack"
           }
         }
       }
@@ -1756,6 +1816,86 @@
         }
       }
     },
+    "SettingsView.Connection.ConnectionMenu.Add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        }
+      }
+    },
+    "SettingsView.Connection.ConnectionMenu.NoServerSelectedPlaceholder" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Server Selected"
+          }
+        }
+      }
+    },
+    "SettingsView.Connection.ConnectionMenu.Server.CopyToken" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Token"
+          }
+        }
+      }
+    },
+    "SettingsView.Connection.ConnectionMenu.Server.InUse" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In Use"
+          }
+        }
+      }
+    },
+    "SettingsView.Connection.ConnectionMenu.Server.Remove" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove"
+          }
+        }
+      }
+    },
+    "SettingsView.Connection.ConnectionMenu.Server.Use" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use"
+          }
+        }
+      }
+    },
+    "SettingsView.Connection.RemoveEndpointAlert.Message URL:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" will be removed, but you will always be able to add it back in."
+          }
+        }
+      }
+    },
+    "SettingsView.Connection.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connection"
+          }
+        }
+      }
+    },
     "SettingsView.General.EnableBackgroundRefresh.Description" : {
       "localizations" : {
         "en" : {
@@ -1896,72 +2036,22 @@
         }
       }
     },
-    "SettingsView.Portainer.EndpointRemovalAlert.Message URL:%@" : {
+    "SettingsView.Portainer.ContainerRemoveVolumes.Description" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\"%@\" will be removed, but you will always be able to add it back in."
+            "value" : "When removing containers, should their associated volumes also be removed?"
           }
         }
       }
     },
-    "SettingsView.Portainer.EndpointsMenu.Add" : {
+    "SettingsView.Portainer.ContainerRemoveVolumes.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add"
-          }
-        }
-      }
-    },
-    "SettingsView.Portainer.EndpointsMenu.NoServerSelectedPlaceholder" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No Server Selected"
-          }
-        }
-      }
-    },
-    "SettingsView.Portainer.EndpointsMenu.Server.CopyToken" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy Token"
-          }
-        }
-      }
-    },
-    "SettingsView.Portainer.EndpointsMenu.Server.InUse" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "In Use"
-          }
-        }
-      }
-    },
-    "SettingsView.Portainer.EndpointsMenu.Server.Remove" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove"
-          }
-        }
-      }
-    },
-    "SettingsView.Portainer.EndpointsMenu.Server.Use" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use"
+            "value" : "Remove Container Volumes"
           }
         }
       }
@@ -2046,22 +2136,52 @@
         }
       }
     },
+    "StackContextMenu.EditStack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Stack"
+          }
+        }
+      }
+    },
+    "StackContextMenu.RemoveStack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remove Stack"
+          }
+        }
+      }
+    },
+    "StackContextMenu.StartStack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        }
+      }
+    },
+    "StackContextMenu.StopStack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop"
+          }
+        }
+      }
+    },
     "StackDetailsView.Environment" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Environment"
-          }
-        }
-      }
-    },
-    "StackDetailsView.RemoveStack" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove Stack"
           }
         }
       }
@@ -2136,16 +2256,6 @@
         }
       }
     },
-    "StackDetailsView.StackRemovalAlert.Message StackName:%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "\"%@\" and all of the associated services will be removed."
-          }
-        }
-      }
-    },
     "StacksView.CreateStack" : {
       "localizations" : {
         "en" : {
@@ -2192,6 +2302,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Stacks"
+          }
+        }
+      }
+    },
+    "StacksView.RemoveStackAlert.Message StackName:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "\"%@\" and all of the associated services will be removed."
           }
         }
       }

@@ -104,9 +104,11 @@ struct KeyValueEditView: View {
 		.formStyle(.grouped)
 		.scrollDisabled(true)
 		.scrollDismissesKeyboard(.interactively)
-//		.onAppear {
-//			focusedField = .textfieldKey
-//		}
+		.onAppear {
+			if key.isEmpty && value.isEmpty {
+				focusedField = .textfieldKey
+			}
+		}
 		#if os(iOS)
 		.safeAreaInset(edge: .bottom) {
 			HStack {

@@ -16,18 +16,30 @@ extension SceneDelegate: DeeplinkHandlable {
 	}
 
 	@MainActor
-	func navigate(to tab: ViewTab, with navigationPath: AnyHashable...) {
+	func navigate(to tab: ViewTab) {
 		activeTab = tab
 
 		switch tab {
 		case .containers:
 			navigationPathContainers.removeLast(navigationPathContainers.count)
-			if !navigationPath.isEmpty {
+		case .stacks:
+			navigationPathStacks.removeLast(navigationPathStacks.count)
+		}
+	}
+
+	@MainActor
+	func navigate<Destination: Hashable>(to tab: ViewTab, with navigationPath: Destination? = nil) {
+		activeTab = tab
+
+		switch tab {
+		case .containers:
+			navigationPathContainers.removeLast(navigationPathContainers.count)
+			if let navigationPath {
 				navigationPathContainers.append(navigationPath)
 			}
 		case .stacks:
 			navigationPathStacks.removeLast(navigationPathStacks.count)
-			if !navigationPath.isEmpty {
+			if let navigationPath {
 				navigationPathStacks.append(navigationPath)
 			}
 		}
@@ -43,14 +55,16 @@ extension SceneDelegate: DeeplinkHandlable {
 
 		// swiftlint:disable force_cast
 		switch destination.host {
+		case .containers:
+			navigate(to: .containers)
 		case .containerDetails:
 			typealias DestinationView = ContainerDetailsView
-
 			navigate(to: .containers)
 			DestinationView.handleNavigation(&navigationPathContainers, with: destination as! DestinationView.DeeplinkDestination)
+		case .stacks:
+			navigate(to: .stacks)
 		case .stackDetails:
 			typealias DestinationView = StackDetailsView
-
 			navigate(to: .stacks)
 			DestinationView.handleNavigation(&navigationPathStacks, with: destination as! DestinationView.DeeplinkDestination)
 		case .settings:

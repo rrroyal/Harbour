@@ -21,6 +21,7 @@ struct ContainersView: View {
 	@Environment(AppState.self) private var appState
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
+	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel = ViewModel()
 	@FocusState private var isFocused: Bool
 
@@ -58,6 +59,55 @@ struct ContainersView: View {
 		.disabled(!viewModel.canUseEndpointsMenu)
 	}
 
+	@ToolbarContentBuilder
+	private var toolbarContent: some ToolbarContent {
+		#if os(macOS)
+		ToolbarItem(placement: .primaryAction) {
+			endpointPicker
+				.labelStyle(.titleAndIcon)
+		}
+		#endif
+
+		ToolbarItem(placement: .automatic) {
+			Menu {
+				let useGridBinding = Binding<Bool>(
+					get: { preferences.cvUseGrid },
+					set: {
+						Haptics.generateIfEnabled(.selectionChanged)
+						preferences.cvUseGrid = $0
+					}
+				)
+				Picker(selection: useGridBinding) {
+					Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
+						.tag(true)
+
+					Label("ContainersView.Menu.ContainerLayout.List", systemImage: "rectangle.grid.1x2")
+						.tag(false)
+				} label: {
+					Label("ContainersView.Menu.ContainerLayout", systemImage: "rectangle.3.group")
+				}
+				.pickerStyle(.menu)
+
+				#if os(iOS)
+				Divider()
+
+				Button {
+					Haptics.generateIfEnabled(.sheetPresentation)
+					sceneDelegate.isSettingsSheetPresented = true
+				} label: {
+					Label("SettingsView.Title", systemImage: SFSymbol.settings)
+				}
+				.keyboardShortcut(",", modifiers: .command)
+				.labelStyle(.titleAndIcon)
+				#endif
+			} label: {
+				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+					.labelStyle(.iconOnly)
+			}
+			.labelStyle(.titleAndIcon)
+		}
+	}
+
 	@ViewBuilder
 	private var backgroundPlaceholder: some View {
 		Group {
@@ -91,145 +141,123 @@ struct ContainersView: View {
 	}
 
 	var body: some View {
-		ScrollView {
-			Group {
-				if Preferences.shared.cvUseGrid {
-					GridView(containers: viewModel.containers)
-				} else {
-					ListView(containers: viewModel.containers)
+		ContainersList()
+			.background {
+				if viewModel.isBackgroundPlaceholderVisible {
+					backgroundPlaceholder
 				}
 			}
-			.padding(.horizontal)
-			.padding(.bottom)
-			#if os(macOS)
-			.padding(.top)
+			#if os(iOS)
+			.background(
+				viewState: viewModel.viewState,
+				backgroundVisiblity: .hidden,
+				backgroundColor: .groupedBackground
+			)
+			#elseif os(macOS)
+			.background(
+				viewState: viewModel.viewState,
+				backgroundVisiblity: .hidden,
+				backgroundColor: .clear
+			)
 			#endif
-			.transition(.opacity)
-		}
-		.background {
-			if viewModel.isBackgroundPlaceholderVisible {
-				backgroundPlaceholder
+			.searchable(
+				text: $viewModel.searchText,
+				tokens: $viewModel.searchTokens,
+				suggestedTokens: .constant(viewModel.suggestedSearchTokens),
+				isPresented: $viewModel.isSearchActive
+			) { token in
+				Label(token.title, systemImage: token.icon)
 			}
-		}
-		#if os(iOS)
-		.background(
-			viewState: viewModel.viewState,
-			backgroundVisiblity: .hidden,
-			backgroundColor: .groupedBackground
-		)
-		#elseif os(macOS)
-		.background(
-			viewState: viewModel.viewState,
-			backgroundVisiblity: .hidden,
-			backgroundColor: .clear
-		)
-		#endif
-		.searchable(
-			text: $viewModel.searchText,
-			tokens: $viewModel.searchTokens,
-			suggestedTokens: .constant(viewModel.suggestedSearchTokens),
-			isPresented: $viewModel.isSearchActive
-		) { token in
-			Label(token.title, systemImage: token.icon)
-		}
-		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
-			await fetch().value
-		}
-		.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-			ContainerDetailsView(navigationItem: navigationItem)
-				.equatable()
-				.tag(navigationItem.id)
-		}
-		.navigationTitle(navigationTitle)
-		#if os(iOS)
-		.navigationBarTitleDisplayMode(.inline)
-		#endif
-		.toolbar {
-		#if os(macOS)
-			ToolbarItem(placement: .primaryAction) {
-				endpointPicker
-					.labelStyle(.titleAndIcon)
-			}
-			#endif
-
-			ToolbarItem(placement: .automatic) {
-				Menu {
-					let useGridBinding = Binding<Bool>(
-						get: { preferences.cvUseGrid },
-						set: {
-							Haptics.generateIfEnabled(.selectionChanged)
-							preferences.cvUseGrid = $0
-						}
-					)
-					Picker(selection: useGridBinding) {
-						Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
-							.tag(true)
-
-						Label("ContainersView.Menu.ContainerLayout.List", systemImage: "rectangle.grid.1x2")
-							.tag(false)
-					} label: {
-						Label("ContainersView.Menu.ContainerLayout", systemImage: "rectangle.3.group")
-					}
-					.pickerStyle(.menu)
-
-					#if os(iOS)
-					Divider()
-
-					Button {
-						Haptics.generateIfEnabled(.sheetPresentation)
-						sceneDelegate.isSettingsSheetPresented = true
-					} label: {
-						Label("SettingsView.Title", systemImage: SFSymbol.settings)
-					}
-					.keyboardShortcut(",", modifiers: .command)
-					.labelStyle(.titleAndIcon)
-					#endif
-				} label: {
-					Label("Generic.More", systemImage: SFSymbol.moreCircle)
-						.labelStyle(.iconOnly)
-				}
-				.labelStyle(.titleAndIcon)
-			}
-
-//			ToolbarItem(placement: .status) {
-//				DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
-//					ProgressView()
-//				}
-//				.transition(.opacity)
-//			}
-		}
-		.if(viewModel.canUseEndpointsMenu) {
-			$0.toolbarTitleMenu { endpointPicker }
-		}
-		.animation(.easeInOut, value: Preferences.shared.cvUseGrid)
-		.animation(.easeInOut, value: viewModel.viewState)
-		.animation(.easeInOut, value: viewModel.containers)
-		.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
-		.environment(viewModel)
-		.focusable()
-		.focused($isFocused)
-		.focusEffectDisabled()
-		.onKeyPress(action: onKeyPress)
-		.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
-			viewModel.filterByStackName(stackName)
-		}
-		.onChange(of: viewModel.searchTokens) { _, tokens in
-			sceneDelegate.selectedStackName = tokens
-				.compactMap {
-					if case .stack(let stackName) = $0 {
-						return stackName
-					}
-					return nil
-				}
-				.last
-		}
-		.task {
-			if portainerStore.containersTask?.isCancelled ?? true {
+			.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 				await fetch().value
 			}
-		}
-		.onAppear {
-			isFocused = true
+			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
+				ContainerDetailsView(navigationItem: navigationItem)
+//					.equatable()
+//					.tag(navigationItem.id)
+			}
+			.navigationTitle(navigationTitle)
+			#if os(iOS)
+			.navigationBarTitleDisplayMode(.inline)
+			#endif
+			.toolbar {
+				toolbarContent
+			}
+			.if(viewModel.canUseEndpointsMenu) {
+				$0.toolbarTitleMenu { endpointPicker }
+			}
+			.focusable()
+			.focused($isFocused)
+			.focusEffectDisabled()
+			.confirmationDialog(
+				"Generic.AreYouSure?",
+				isPresented: $viewModel.isRemoveContainerAlertPresented,
+				titleVisibility: .visible,
+				presenting: viewModel.containerToRemove
+			) { container in
+				Button("Generic.Remove", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					removeContainer(container, force: true)
+				}
+			} message: { container in
+				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
+			}
+			.animation(.easeInOut, value: viewModel.viewState)
+			.animation(.easeInOut, value: viewModel.containers)
+			.animation(.easeInOut, value: viewModel.isStatusProgressViewVisible)
+			.environment(viewModel)
+			.onKeyPress(action: onKeyPress)
+			.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
+				viewModel.filterByStackName(stackName)
+			}
+			.onChange(of: viewModel.searchTokens) { _, tokens in
+				sceneDelegate.selectedStackName = tokens
+					.compactMap {
+						if case .stack(let stackName) = $0 {
+							return stackName
+						}
+						return nil
+					}
+					.last
+			}
+			.task {
+				if portainerStore.containersTask?.isCancelled ?? true {
+					await fetch().value
+				}
+			}
+//			.onAppear {
+//				isFocused = true
+//			}
+	}
+}
+
+// MARK: - ContainersView+ContainersList
+
+private extension ContainersView {
+	struct ContainersList: View {
+		@Environment(ContainersView.ViewModel.self) private var viewModel
+		@EnvironmentObject private var portainerStore: PortainerStore
+		@EnvironmentObject private var preferences: Preferences
+
+		var body: some View {
+			ScrollView {
+				Group {
+					if preferences.cvUseGrid {
+						GridView(containers: viewModel.containers)
+					} else {
+						ListView(containers: viewModel.containers)
+					}
+				}
+				.padding(.horizontal)
+				.padding(.bottom)
+				#if os(macOS)
+				.padding(.top)
+				#endif
+				.transition(.opacity)
+				.animation(.easeInOut, value: portainerStore.containers)
+				.animation(.easeInOut, value: portainerStore.removedContainerIDs)
+				.animation(.easeInOut, value: preferences.cvUseGrid)
+			}
 		}
 	}
 }
@@ -246,6 +274,19 @@ private extension ContainersView {
 				try await viewModel.fetch()
 			} catch {
 				errorHandler(error)
+			}
+		}
+	}
+
+	func removeContainer(_ container: Container, force: Bool) {
+		Task {
+			do {
+				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .loading))
+				try await viewModel.removeContainer(container, force: force)
+				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .success))
+			} catch {
+				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .failure(error)))
+				errorHandler(error, showIndicator: false)
 			}
 		}
 	}

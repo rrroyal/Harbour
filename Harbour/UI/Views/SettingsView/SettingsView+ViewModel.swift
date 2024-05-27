@@ -29,8 +29,8 @@ extension SettingsView {
 
 		var activeURL: URL?
 
-		var isEndpointRemovalAlertPresented = false
-		var endpointToDelete: URL?
+		var isRemoveEndpointAlertVisible = false
+		var endpointToRemove: URL?
 
 		var isNegraButtonVisible = Int.random(in: 0...19) == 11
 
@@ -47,27 +47,32 @@ extension SettingsView {
 			activeURL = portainerStore.serverURL
 		}
 
-		@MainActor
 		func refreshServers() {
-			activeURL = portainerStore.serverURL
-			serverURLs = portainerStore.savedURLs
+			Task { @MainActor in
+				activeURL = portainerStore.serverURL
+				serverURLs = portainerStore.savedURLs
+			}
 		}
 
 		func switchPortainerServer(to serverURL: URL, errorHandler: ErrorHandler?) {
+			Task {
+				await AppState.shared.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
+			}
 			Task { @MainActor in
 				activeURL = serverURL
-				AppState.shared.switchPortainerServer(to: serverURL, errorHandler: errorHandler)
 			}
 		}
 
 		func removeServer(_ url: URL) throws {
-			Task { @MainActor in
-				try portainerStore.removeServer(url)
-				refreshServers()
+			try portainerStore.removeServer(url)
+			refreshServers()
 
-				if portainerStore.serverURL == url {
+			if portainerStore.serverURL == url {
+				Task {
+					await portainerStore.reset()
+				}
+				Task { @MainActor in
 					activeURL = nil
-					portainerStore.reset()
 				}
 			}
 		}

@@ -73,6 +73,14 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 	@AppStorage("StacksView.FilterByActiveEndpoint", store: Preferences.userDefaults)
 	public var svFilterByActiveEndpoint = false
 
+	/// When removing containers, should they be force-removed?
+	@AppStorage("ContainerRemove.Force", store: Preferences.userDefaults)
+	public var containerRemoveForce = false
+
+	/// When removing containers, should associated volumes be also removed?
+	@AppStorage("ContainerRemove.Volumes", store: Preferences.userDefaults)
+	public var containerRemoveVolumes = false
+
 	private init() { }
 }
 

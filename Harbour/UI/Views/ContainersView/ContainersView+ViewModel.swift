@@ -28,8 +28,11 @@ extension ContainersView {
 		var searchText = ""
 		var searchTokens: [SearchToken] = []
 		var isSearchActive = false
-		var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+
 		var scrollViewIsRefreshing = false
+
+		var isRemoveContainerAlertPresented = false
+		var containerToRemove: Container?
 
 		var viewState: ViewState<[Container], Error> {
 			let containers = portainerStore.containers
@@ -134,10 +137,14 @@ extension ContainersView {
 			preferences.landingDisplayed = true
 		}
 
-//		@MainActor
-//		func onContainersChange(_ before: [Container], after: [Container]) {
-//			viewState = .success(())
-//		}
+		func attemptContainerRemoval(_ container: Container) {
+			containerToRemove = container
+			isRemoveContainerAlertPresented = true
+		}
+
+		func removeContainer(_ container: Container, force: Bool) async throws {
+			try await portainerStore.removeContainer(containerID: container.id, force: force)
+		}
 	}
 }
 

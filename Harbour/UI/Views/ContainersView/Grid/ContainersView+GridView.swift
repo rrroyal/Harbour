@@ -13,8 +13,8 @@ import SwiftUI
 
 extension ContainersView {
 	struct GridView: View {
-		@Environment(ContainersView.ViewModel.self) private var containersViewViewModel
 		@Environment(SceneDelegate.self) private var sceneDelegate
+		@Environment(ContainersView.ViewModel.self) private var viewModel
 		@Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
 
 		private var cellMinimumSize: Double {

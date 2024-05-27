@@ -55,7 +55,11 @@ struct ContentView: View {
 				Text(message)
 			}
 		}
-		.indicatorOverlay(model: sceneDelegate.indicators)
+		#if os(iOS)
+		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .top, insets: .init(top: 4, leading: 0, bottom: 0, trailing: 0))
+		#elseif os(macOS)
+		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .topTrailing, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
+		#endif
 		.animation(.easeInOut, value: portainerStore.isSetup)
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneDelegate.onContinueUserActivity)
 		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneDelegate.onContinueUserActivity)

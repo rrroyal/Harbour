@@ -21,10 +21,25 @@ extension StacksView {
 
 		var query = ""
 		var isSearchActive = false
+
 		var scrollPosition: StackItem.ID?
-//		var selectedStackID: StackItem.ID?
+
 		var isCreateStackSheetPresented = false
 		var activeCreateStackSheetDetent: PresentationDetent = .medium
+		var handledCreateSheetDetentUpdate = false
+
+		var stackToRemove: Stack?
+		var isRemoveStackAlertPresented: Binding<Bool> {
+			.init {
+				self.stackToRemove != nil
+			} set: { isPresented in
+				if !isPresented {
+					self.stackToRemove = nil
+				}
+			}
+
+		}
+
 		var scrollViewIsRefreshing = false
 
 		var viewState: ViewState<[Stack], Error> {
@@ -117,9 +132,14 @@ extension StacksView {
 			return task
 		}
 
-		func setStackState(_ stackID: Stack.ID, started: Bool) async throws {
+		func setStackState(stackID: Stack.ID, started: Bool) async throws {
 			try await portainerStore.setStackState(stackID: stackID, started: started)
 			portainerStore.refreshContainers()
+		}
+
+		func removeStack(stackID: Stack.ID) async throws {
+			try await portainerStore.removeStack(stackID: stackID)
+			portainerStore.refreshStacks()
 		}
 	}
 }

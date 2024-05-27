@@ -6,6 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CommonHaptics
 import PortainerKit
 import SwiftUI
 
@@ -13,25 +14,38 @@ import SwiftUI
 
 extension StacksView {
 	struct StackCell: View {
+		@EnvironmentObject private var portainerStore: PortainerStore
 		@Environment(\.portainerServerURL) private var portainerServerURL
 		var stack: StackItem
 		var containers: [Container]
 		var isLoading: Bool
 		var filterAction: () -> Void
-		var toggleAction: () -> Void
+		var setStackStateAction: (Bool) -> Void
+		var removeStackAction: () -> Void
 
 		init(
 			_ stack: StackItem,
 			containers: [Container],
 			isLoading: Bool,
-			filterAction: @escaping () -> Void,
-			toggleAction: @escaping () -> Void
+			filterAction: @escaping () -> Void = { },
+			setStackStateAction: @escaping (Bool) -> Void = { _ in },
+			removeStackAction: @escaping () -> Void = { }
 		) {
 			self.stack = stack
 			self.containers = containers
 			self.isLoading = isLoading
 			self.filterAction = filterAction
-			self.toggleAction = toggleAction
+			self.setStackStateAction = setStackStateAction
+			self.removeStackAction = removeStackAction
+		}
+
+		@MainActor
+		private var isBeingRemoved: Bool {
+			if let stackID = Stack.ID(stack.id) {
+				portainerStore.removedStackIDs.contains(stackID)
+			} else {
+				false
+			}
 		}
 
 		@ScaledMetric(relativeTo: .subheadline)
@@ -42,7 +56,7 @@ extension StacksView {
 		}
 
 		private var stackColor: Color {
-			if isLoading { return .gray }
+			if isLoading || isBeingRemoved { return .gray }
 
 			let containersCount = containers.count
 			if containersCount == runningContainersCount, containersCount > 0 {
@@ -81,13 +95,16 @@ extension StacksView {
 				HStack(spacing: 4) {
 					Image(systemName: "circle")
 						.font(.system(size: iconSize))
-						.accessibilityLabel(isLoading ? String(localized: "Generic.Loading") : stackStatusLabel)
+						.fontWeight(.black)
 						.symbolVariant(isLoading ? .none : .fill)
+						.symbolVariant(isBeingRemoved ? .none : .fill)
 						.symbolVariant(stack.stack?._isStored ?? false ? .none : .fill)
 
 					Group {
 						if isLoading {
 							Text("Generic.Loading")
+						} else if isBeingRemoved {
+							Text("Generic.Removing")
 						} else {
 							Text(verbatim: isOn ? "\(stackStatusLabel) (\(runningContainersCount)/\(containers.count))" : stackStatusLabel)
 						}
@@ -98,23 +115,21 @@ extension StacksView {
 					.id(ViewID.subheadlineLabel)
 				}
 				.foregroundStyle(stackColor)
-				.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading)
+				.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading || isBeingRemoved)
 				.transition(.opacity)
 			}
 			.padding(.vertical, 2)
 			.transition(.opacity)
+			.animation(.easeInOut, value: stack.stack?.status)
 			.animation(.easeInOut, value: isLoading)
 			.animation(.easeInOut, value: isOn)
-			.animation(.easeInOut, value: stack.stack?.status)
+			.animation(.easeInOut, value: isBeingRemoved)
 			.contextMenu {
 				if let stack = stack.stack {
-					StackToggleButton(stack: stack, toggleAction: toggleAction)
-						.disabled(isLoading)
-
-					Divider()
-
-					if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
-						ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+					StackContextMenu(stack: stack) {
+						setStackStateAction($0)
+					} removeStackAction: {
+						removeStackAction()
 					}
 				}
 			}
@@ -126,9 +141,11 @@ extension StacksView {
 			}
 			.swipeActions(edge: .trailing) {
 				if let stack = stack.stack {
-					StackToggleButton(stack: stack, toggleAction: toggleAction)
-						.tint(isOn ? .red : .green)
-						.disabled(isLoading)
+					StackToggleButton(stack: stack) {
+						setStackStateAction(!stack.isOn)
+					}
+					.tint(isLoading ? .gray : (isOn ? .red : .green))
+					.disabled(isLoading)
 				}
 			}
 			.id("StackCell.\(stack.id)")
@@ -152,14 +169,17 @@ private extension StacksView.StackCell {
 		let toggleAction: () -> Void
 
 		var body: some View {
-			Button(action: toggleAction) {
+			Button {
+				Haptics.generateIfEnabled(.light)
+				toggleAction()
+			} label: {
 				Label(
 					stack.isOn ? "StacksView.Stack.Stop" : "StacksView.Stack.Start",
 					systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
 				)
 			}
 //			.symbolVariant(.fill)
-			.labelStyle(.titleAndIcon)
+//			.labelStyle(.titleAndIcon)
 		}
 	}
 }
@@ -171,7 +191,10 @@ private extension StacksView.StackCell {
 		let filterAction: () -> Void
 
 		var body: some View {
-			Button(action: filterAction) {
+			Button {
+				Haptics.generateIfEnabled(.light)
+				filterAction()
+			} label: {
 				Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
 			}
 		}
@@ -182,10 +205,28 @@ private extension StacksView.StackCell {
 
 #Preview {
 	List {
-		StacksView.StackCell(.init(stack: .preview()), containers: [.preview()], isLoading: false, filterAction: { }, toggleAction: { })
-		StacksView.StackCell(.init(stack: .preview()), containers: [.preview(), .preview(state: .dead)], isLoading: false, filterAction: { }, toggleAction: { })
-		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false, filterAction: { }, toggleAction: { })
-		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview()], isLoading: false, filterAction: { }, toggleAction: { })
-		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview(), .preview(state: .dead)], isLoading: false, filterAction: { }, toggleAction: { })
+		StacksView.StackCell(.init(stack: .preview()), containers: [.preview()], isLoading: false)
+		StacksView.StackCell(.init(stack: .preview()), containers: [.preview(), .preview(state: .dead)], isLoading: false)
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
+		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview()], isLoading: false)
+		StacksView.StackCell(.init(label: "LimitedStack"), containers: [.preview(), .preview(state: .dead)], isLoading: false)
+	}
+}
+
+#Preview {
+	List {
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
+			.redacted(reason: .placeholder)
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
+			.redacted(reason: .placeholder)
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
+			.redacted(reason: .placeholder)
+		StacksView.StackCell(.init(stack: .preview(name: "Stacks", status: .active)), containers: [.preview()], isLoading: false)
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
+			.redacted(reason: .placeholder)
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
+			.redacted(reason: .placeholder)
+		StacksView.StackCell(.init(stack: .preview(status: .inactive)), containers: [], isLoading: false)
+			.redacted(reason: .placeholder)
 	}
 }

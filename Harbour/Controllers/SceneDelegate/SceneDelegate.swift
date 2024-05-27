@@ -14,7 +14,7 @@ import SwiftUI
 // MARK: - SceneDelegate
 
 @Observable
-final class SceneDelegate: NSObject, IndicatorPresentable {
+final class SceneDelegate: NSObject {
 	let logger = Logger(.scene)
 	let indicators = Indicators()
 

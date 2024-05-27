@@ -28,7 +28,7 @@ extension StackDetailsView {
 		var navigationItem: StackDetailsView.NavigationItem
 
 		var isRemovingStack = false
-		var isStackRemovalAlertPresented = false
+		var isRemoveStackAlertPresented = false
 		var scrollViewIsRefreshing = false
 
 		var stack: Stack? {
@@ -102,19 +102,17 @@ extension StackDetailsView {
 			return task
 		}
 
-		func setStackState(_ stackID: Stack.ID, started: Bool) async throws {
-			let newStack = try await portainerStore.setStackState(stackID: stackID, started: started)
+		func setStackState(_ stack: Stack, started: Bool) async throws {
+			let newStack = try await portainerStore.setStackState(stackID: stack.id, started: started)
 			if let newStack {
 				self.viewState = .success(newStack)
 			}
 			portainerStore.refreshContainers()
 		}
 
-		func removeStack() -> Task<Void, Error> {
-			Task {
-				let stackID = Int(navigationItem.stackID) ?? -1
-				try await portainerStore.removeStack(stackID: stackID)
-			}
+		func removeStack(_ stack: Stack) async throws {
+			try await portainerStore.removeStack(stackID: stack.id)
+			portainerStore.refreshStacks()
 		}
 
 		func createUserActivity(_ userActivity: NSUserActivity) {
