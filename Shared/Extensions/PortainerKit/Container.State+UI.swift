@@ -64,10 +64,10 @@ extension Container.State {
 		switch self {
 		case .created:		"wake"
 		case .running:		"power"
-		case .paused:		"pause"
-		case .restarting:	"restart"
+		case .paused:		ContainerAction.pause.icon
+		case .restarting:	ContainerAction.restart.icon
 		case .removing:		"trash"
-		case .exited:		"poweroff"
+		case .exited:		"stop"
 		case .dead:			"xmark"
 		}
 	}

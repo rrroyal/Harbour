@@ -82,7 +82,9 @@ private extension HarbourApp {
 		var body: some Commands {
 			CommandMenu("CommandMenu.Portainer") {
 				Button {
-					portainerStore.refresh()
+					portainerStore.refreshEndpoints()
+					portainerStore.refreshContainers()
+					portainerStore.refreshStacks()
 				} label: {
 					Label("Generic.Refresh", systemImage: SFSymbol.reload)
 				}

@@ -31,6 +31,11 @@ final class AppState: Sendable {
 	@MainActor
 	internal var notificationsToHandle: Set<UNNotificationResponse> = []
 
+	// MARK: Public Properties
+
+	@MainActor
+	var lastContainerChanges: [ContainerChange]?
+
 	// MARK: init
 
 	private init() { }

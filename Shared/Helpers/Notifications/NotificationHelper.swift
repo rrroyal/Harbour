@@ -11,7 +11,18 @@ import UserNotifications
 
 // MARK: - NotificationHelper
 
-enum NotificationHelper { }
+enum NotificationHelper {
+	private static let jsonEncoder = JSONEncoder()
+	private static let jsonDecoder = JSONDecoder()
+
+	static func encodeNotificationPayload<P: Encodable>(_ payload: P) throws -> Data {
+		try jsonEncoder.encode(payload)
+	}
+
+	static func decodeNotificationPayload<D: Decodable>(from data: Data) throws -> D {
+		try jsonDecoder.decode(D.self, from: data)
+	}
+}
 
 // MARK: - NotificationHelper+NotificationIdentifier
 
@@ -27,8 +38,7 @@ extension NotificationHelper {
 
 extension NotificationHelper {
 	enum UserInfoKey {
-		static let changedIDs = "\(Bundle.main.mainBundleIdentifier!).ChangedIDs"
-		static let endpointID = "\(Bundle.main.mainBundleIdentifier!).EndpointID"
+		static let containerChanges = "ContainerChanges"
 	}
 }
 

@@ -106,7 +106,7 @@ extension StacksView {
 						} else {
 							let runningContainersCount = self.runningContainersCount
 							let containersCount = self.containers.count
-							let showContainerCount = isOn && runningContainersCount > 0 && containersCount > 0
+							let showContainerCount = isOn && containersCount > 0
 							Text(verbatim: showContainerCount ? "\(stackStatusLabel) (\(runningContainersCount)/\(containersCount))" : stackStatusLabel)
 						}
 					}
@@ -172,7 +172,7 @@ private extension StacksView.StackCell {
 			} label: {
 				Label(
 					stack.isOn ? "StacksView.Stack.Stop" : "StacksView.Stack.Start",
-					systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
+					systemImage: stack.isOn ? Stack.Status.inactive.icon : Stack.Status.active.icon
 				)
 			}
 //			.symbolVariant(.fill)

@@ -27,8 +27,8 @@ struct StackContextMenu: View {
 					setStackStateAction(!stack.isOn)
 				} label: {
 					Label(
-						stack.isOn ? "StackContextMenu.StopStack" : "StackContextMenu.StartStack",
-						systemImage: stack.isOn ? SFSymbol.stop : SFSymbol.start
+						stack.isOn ? "StackContextMenu.Stop" : "StackContextMenu.Start",
+						systemImage: stack.isOn ? Stack.Status.inactive.icon : Stack.Status.active.icon
 					)
 				}
 
@@ -40,14 +40,14 @@ struct StackContextMenu: View {
 					sceneDelegate.activeCreateStackSheetDetent = .large
 					sceneDelegate.isCreateStackSheetPresented = true
 				} label: {
-					Label("StackContextMenu.EditStack", systemImage: SFSymbol.edit)
+					Label("StackContextMenu.Edit", systemImage: SFSymbol.edit)
 				}
 
 				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.warning)
 					sceneDelegate.stackToRemove = stack
 				} label: {
-					Label("StackContextMenu.RemoveStack", systemImage: SFSymbol.remove)
+					Label("StackContextMenu.Remove", systemImage: SFSymbol.remove)
 				}
 			}
 

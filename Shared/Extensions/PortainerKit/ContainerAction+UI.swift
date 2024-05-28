@@ -30,12 +30,12 @@ extension ContainerAction {
 extension ContainerAction {
 	var icon: String {
 		switch self {
-		case .start:	SFSymbol.start
-		case .stop:		SFSymbol.stop
-		case .restart:	SFSymbol.restart
+		case .start:	"play"
+		case .stop:		"stop"
+		case .restart:	"arrow.triangle.2.circlepath"
 		case .kill:		"bolt"
-		case .pause:	SFSymbol.pause
-		case .unpause:	"wake"
+		case .pause:	"pause"
+		case .unpause:	"play"
 		}
 	}
 }

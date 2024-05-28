@@ -10,33 +10,6 @@ import Foundation
 import PortainerKit
 
 extension PortainerStore {
-	/// Refreshes endpoints and containers, storing the task and handling errors.
-	/// Used as user-accessible method of refreshing central data.
-	/// - Returns: `Task<Void, Error>` of refresh
-	@discardableResult
-	func refresh() -> Task<Void, Error> {
-		self.refreshTask?.cancel()
-		let task = Task { @MainActor in
-			defer { self.refreshTask = nil }
-
-			if selectedEndpoint != nil {
-				async let _endpoints = refreshEndpoints().value
-				async let _containers = refreshContainers().value
-				async let _stacks = refreshStacks().value
-				_ = try await (_endpoints, _containers, _stacks)
-			} else {
-				_ = try await refreshEndpoints().value
-				try? await Task.sleep(for: .milliseconds(200)) // I hate it but otherwise it will fail due to no selected endpoint
-
-				async let _containers = refreshContainers().value
-				async let _stacks = refreshStacks().value
-				_ = try await (_containers, _stacks)
-			}
-		}
-		self.refreshTask = task
-		return task
-	}
-
 	/// Refreshes endpoints, storing the task and handling errors.
 	/// Used as user-accessible method of refreshing central data.
 	/// - Returns: `Task<[Endpoint], Error>` of refresh

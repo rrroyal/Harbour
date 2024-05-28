@@ -41,9 +41,12 @@ extension Deeplink.ContainerDetailsDestination: Deeplink.Destination {
 		components.path = "/" + containerID
 
 		components.queryItems = [
-			.init(name: Deeplink.QueryKey.name.rawValue, value: containerName),
-			.init(name: Deeplink.QueryKey.endpointID.rawValue, value: endpointID?.description ?? "")
+			.init(name: Deeplink.QueryKey.name.rawValue, value: containerName)
 		]
+
+		if let endpointID {
+			components.queryItems?.append(.init(name: Deeplink.QueryKey.endpointID.rawValue, value: endpointID.description))
+		}
 
 		return components.url
 	}

@@ -70,7 +70,7 @@ extension StacksView {
 				}
 			}
 
-			return stacks.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+			return stacks.localizedSorted(by: \.name)
 		}
 
 		var isBackgroundPlaceholderVisible: Bool {

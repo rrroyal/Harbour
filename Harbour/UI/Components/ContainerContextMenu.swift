@@ -126,7 +126,7 @@ struct ContainerContextMenu: View {
 					Haptics.generateIfEnabled(.warning)
 					sceneDelegate.containerToRemove = container
 				} label: {
-					Label("Generic.Remove", systemImage: SFSymbol.remove)
+					Label("ContainerContextMenu.Remove", systemImage: SFSymbol.remove)
 				}
 			}
 

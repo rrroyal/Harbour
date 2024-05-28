@@ -119,6 +119,7 @@ struct StacksView: View {
 		@Bindable var sceneDelegate = sceneDelegate
 
 		StacksList(
+			stacks: viewModel.stacks,
 			filterByStackNameAction: filterByStackName,
 			setStackStateAction: setStackState
 		)
@@ -171,44 +172,10 @@ struct StacksView: View {
 				.equatable()
 				.tag(navigationItem.id)
 		}
-		.sheet(isPresented: $sceneDelegate.isCreateStackSheetPresented) {
-			sceneDelegate.editedStack = nil
-			sceneDelegate.activeCreateStackSheetDetent = .medium
-			sceneDelegate.handledCreateSheetDetentUpdate = false
-		} content: {
-			NavigationStack {
-				CreateStackView(existingStack: sceneDelegate.editedStack, onEnvironmentEdit: { _ in
-					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
-					sceneDelegate.activeCreateStackSheetDetent = .large
-					sceneDelegate.handledCreateSheetDetentUpdate = true
-				}, onStackFileSelection: { stackFileContent in
-					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
-
-					if stackFileContent != nil {
-						sceneDelegate.activeCreateStackSheetDetent = .large
-					}
-
-					sceneDelegate.handledCreateSheetDetentUpdate = true
-				}, onStackCreation: { _ in
-					portainerStore.refreshStacks()
-					portainerStore.refreshContainers()
-				})
-				#if os(iOS)
-				.navigationBarTitleDisplayMode(.inline)
-				#endif
-				.addingCloseButton()
-			}
-			.presentationDetents([.medium, .large], selection: $sceneDelegate.activeCreateStackSheetDetent)
-			.presentationDragIndicator(.hidden)
-			.presentationContentInteraction(.resizes)
-			#if os(macOS)
-			.sheetMinimumFrame(width: 380, height: 400)
-			#endif
-		}
 		.navigationTitle("StacksView.Title")
 		.environment(viewModel)
 		.animation(.smooth, value: viewModel.viewState)
-		.animation(.smooth, value: viewModel.stacks)
+//		.animation(.smooth, value: viewModel.stacks)
 		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
 		.onKeyPress(action: onKeyPress)
 		.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
@@ -229,12 +196,13 @@ private extension StacksView {
 	struct StacksList: View {
 		@Environment(StacksView.ViewModel.self) private var viewModel
 		@EnvironmentObject private var portainerStore: PortainerStore
+		var stacks: [StacksView.StackItem]
 		var filterByStackNameAction: (String) -> Void
 		var setStackStateAction: (Stack, Bool) -> Void
 
 		var body: some View {
 			List {
-				ForEach(viewModel.stacks) { stackItem in
+				ForEach(stacks) { stackItem in
 					let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
 
 					Group {
@@ -268,6 +236,7 @@ private extension StacksView {
 			#elseif os(macOS)
 			.listStyle(.sidebar)
 			#endif
+			.animation(.smooth, value: stacks)
 		}
 	}
 }

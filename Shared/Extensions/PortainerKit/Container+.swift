@@ -53,9 +53,12 @@ extension Container {
 	/// Internal ID for this container, basing on `names`, `image` and `associationID`.
 	var _persistentID: Int {
 		var hasher = Hasher()
-		hasher.combine(names?.first)
-		hasher.combine(image)
-		hasher.combine(associationID)
+		if let associationID {
+			hasher.combine(associationID)
+		} else {
+			hasher.combine(names)
+			hasher.combine(image)
+		}
 		return hasher.finalize()
 	}
 }

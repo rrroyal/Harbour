@@ -14,7 +14,7 @@ import SwiftUI
 
 extension ContentView {
 	struct ViewForMacOS: View {
-		@State private var sceneDelegate = SceneDelegate()
+		@Environment(SceneDelegate.self) private var sceneDelegate
 		@State private var columnVisibility: NavigationSplitViewVisibility = .all
 		@ScaledMetric(relativeTo: .title2) private var sidebarWidth = 76
 
@@ -25,7 +25,7 @@ extension ContentView {
 					.navigationSplitViewColumnWidth(sidebarWidth)
 					.focusable(false)
 			} content: {
-				ContentContent()
+				MainContent()
 					.navigationSplitViewColumnWidth(min: 260, ideal: 260)
 					.toolbar {
 						ToolbarItem(placement: .primaryAction) {
@@ -87,10 +87,10 @@ private extension ContentView.ViewForMacOS {
 	}
 }
 
-// MARK: - ContentView.ViewForMacOS+ContentContent
+// MARK: - ContentView.ViewForMacOS+MainContent
 
 private extension ContentView.ViewForMacOS {
-	struct ContentContent: View {
+	struct MainContent: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
 
 		var body: some View {

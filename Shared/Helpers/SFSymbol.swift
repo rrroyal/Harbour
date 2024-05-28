@@ -50,6 +50,9 @@ enum SFSymbol {
 	/// 􀐸 rectangle.expand.vertical
 	static let expand = "rectangle.expand.vertical"
 
+	/// 􀮵 arrow.up.forward.app
+	static let external = "arrow.up.forward.app"
+
 	/// 􀌈 line.3.horizontal.decrease.circle
 	static let filter = "line.3.horizontal.decrease.circle"
 
@@ -71,6 +74,9 @@ enum SFSymbol {
 	/// 􀊅 pause
 	static let pause = "pause"
 
+	/// 􀆨 power
+	static let power = "power"
+
 	/// 􀅼 plus
 	static let plus = "plus"
 
@@ -79,9 +85,6 @@ enum SFSymbol {
 
 	/// 􀅈 reload
 	static let reload = "arrow.clockwise"
-
-	/// 􀯆 restart
-	static let restart = "restart"
 
 	/// 􀈑 trash
 	static let remove = "trash"
@@ -95,11 +98,11 @@ enum SFSymbol {
 	/// 􀈂 square.and.arrow.up
 	static let share = "square.and.arrow.up"
 
-	/// 􀆨 power
-	static let start = "power"
-
 	/// 􀐞 square.stack.3d.up
 	static let stack = "square.stack.3d.up"
+
+	/// 􀊃 play
+	static let start = "play"
 
 	/// 􀛶 stop
 	static let stop = "stop"
@@ -109,6 +112,9 @@ enum SFSymbol {
 
 	/// 􀈂 square.and.arrow.up
 	static let update = "square.and.arrow.up"
+
+	/// 􀎬 safari
+	static let web = "safari"
 
 	/// 􀤂 externaldrive
 	static let volume = "externaldrive"

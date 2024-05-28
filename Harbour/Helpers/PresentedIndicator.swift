@@ -15,7 +15,7 @@ import SwiftUI
 
 enum PresentedIndicator {
 	case error(Error)
-	case copied
+	case copied(String?)
 	case serverSwitched(String)
 	// swiftlint:disable:next enum_case_associated_values_count
 	case containerActionExecute(Container.ID, String?, ContainerAction, state: State, action: (() -> Void)? = nil)
@@ -52,8 +52,8 @@ extension PresentedIndicator: Identifiable {
 		switch self {
 		case .error(let error):
 			"Error.\(String(describing: error).hashValue)"
-		case .copied:
-			"Copied.\(UUID().uuidString)"
+		case .copied(let content):
+			"Copied.\(content?.hashValue ?? UUID().hashValue)"
 		case .serverSwitched:
 			"ServerSwitched"
 		case .containerActionExecute(let containerID, _, _, _, _):
@@ -79,11 +79,12 @@ extension PresentedIndicator {
 		switch self {
 		case .error(let error):
 			return .init(error: error)
-		case .copied:
+		case .copied(let content):
 			return .init(
 				id: self.id,
 				icon: .systemImage(SFSymbol.copy),
-				title: String(localized: "Indicators.Copied")
+				title: String(localized: "Indicators.Copied"),
+				subtitle: content
 			)
 		case .serverSwitched(let serverURL):
 			return .init(

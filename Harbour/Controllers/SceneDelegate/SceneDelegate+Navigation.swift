@@ -12,7 +12,10 @@ import Navigation
 extension SceneDelegate: DeeplinkHandlable {
 	@MainActor
 	func resetSheets() {
+		isLandingSheetPresented = false
 		isSettingsSheetPresented = false
+		isCreateStackSheetPresented = false
+		isContainerChangesSheetPresented = false
 	}
 
 	@MainActor
@@ -49,7 +52,10 @@ extension SceneDelegate: DeeplinkHandlable {
 	func handleURL(_ url: URL) {
 		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
 
-		guard let destination = Deeplink.destination(from: url) else { return }
+		guard let destination = Deeplink.destination(from: url) else {
+			logger.warning("Failed to create Deeplink.Destination from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
+			return
+		}
 
 		resetSheets()
 

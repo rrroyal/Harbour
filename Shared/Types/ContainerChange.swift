@@ -9,7 +9,7 @@
 import Foundation
 import PortainerKit
 
-struct ContainerChange: Identifiable, Hashable, Sendable {
+struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
 	let id: Int
 	let changeType: ChangeType
 	let containerName: String
@@ -78,12 +78,12 @@ struct ContainerChange: Identifiable, Hashable, Sendable {
 		self.newStatus = newContainer?.status
 	}
 
-	var emoji: String {
+	var changeEmoji: String {
 		switch changeType {
 		case .created:		newState.emoji
-		case .recreated:	String(localized: "ContainerChange.Emoji.Recreated")
+		case .recreated:	"♻️"
 		case .changed:		newState.emoji
-		case .removed:		String(localized: "ContainerChange.Emoji.Removed")
+		case .removed:		"❌"
 		}
 	}
 }
@@ -91,10 +91,28 @@ struct ContainerChange: Identifiable, Hashable, Sendable {
 // MARK: - ContainerChange+ChangeType
 
 extension ContainerChange {
-	enum ChangeType {
-		case changed
-		case recreated
+	enum ChangeType: Codable, Hashable {
 		case created
+		case recreated
+		case changed
 		case removed
+
+		var title: String {
+			switch self {
+			case .created:		String(localized: "ContainerChange.Created")
+			case .recreated:	String(localized: "ContainerChange.Recreated")
+			case .changed:		String(localized: "ContainerChange.Changed")
+			case .removed:		String(localized: "ContainerChange.Removed")
+			}
+		}
+
+		var icon: String {
+			switch self {
+			case .created:		"plus"
+			case .recreated:	"arrow.triangle.2.circlepath"
+			case .changed:		"arrow.left.arrow.right"
+			case .removed:		"xmark"
+			}
+		}
 	}
 }

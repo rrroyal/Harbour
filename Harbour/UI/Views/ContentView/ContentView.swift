@@ -33,10 +33,28 @@ struct ContentView: View {
 			ViewForMacOS()
 			#endif
 		}
+		.animation(.smooth, value: portainerStore.isSetup)
+		#if os(iOS)
+		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .top, insets: .init(top: 4, leading: 0, bottom: 0, trailing: 0))
+		#elseif os(macOS)
+		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .topTrailing, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
+		#endif
+//		.alert(
+//			sceneDelegate.activeAlert?.title ?? "",
+//			isPresented: .constant(sceneDelegate.activeAlert != nil),
+//			presenting: sceneDelegate.activeAlert
+//		) { _ in
+//			Button("Generic.OK") { }
+//		} message: { details in
+//			if let message = details.message {
+//				Text(message)
+//			}
+//		}
+		#if os(iOS)
 		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 			SettingsView()
-				.environment(sceneDelegate)
 		}
+		#endif
 		.sheet(isPresented: $sceneDelegate.isLandingSheetPresented) {
 			sceneDelegate.onLandingDismissed()
 		} content: {
@@ -45,28 +63,57 @@ struct ContentView: View {
 				.sheetMinimumFrame()
 				#endif
 		}
-		.alert(
-			sceneDelegate.activeAlert?.title ?? "",
-			isPresented: .constant(sceneDelegate.activeAlert != nil),
-			presenting: sceneDelegate.activeAlert
-		) { _ in
-			Button("Generic.OK") { }
-		} message: { details in
-			if let message = details.message {
-				Text(message)
+		.sheet(isPresented: $sceneDelegate.isContainerChangesSheetPresented) {
+			NavigationStack {
+				ContainerChangeView(changes: appState.lastContainerChanges ?? [])
+					.addingCloseButton()
 			}
+			#if os(macOS)
+			.sheetMinimumFrame()
+			#endif
 		}
-		#if os(iOS)
-		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .top, insets: .init(top: 4, leading: 0, bottom: 0, trailing: 0))
-		#elseif os(macOS)
-		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .topTrailing, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
-		#endif
-		.animation(.smooth, value: portainerStore.isSetup)
+		.sheet(isPresented: $sceneDelegate.isCreateStackSheetPresented) {
+			sceneDelegate.editedStack = nil
+			sceneDelegate.activeCreateStackSheetDetent = .medium
+			sceneDelegate.handledCreateSheetDetentUpdate = false
+		} content: {
+			NavigationStack {
+				CreateStackView(existingStack: sceneDelegate.editedStack, onEnvironmentEdit: { _ in
+					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
+					sceneDelegate.activeCreateStackSheetDetent = .large
+					sceneDelegate.handledCreateSheetDetentUpdate = true
+				}, onStackFileSelection: { stackFileContent in
+					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
+
+					if stackFileContent != nil {
+						sceneDelegate.activeCreateStackSheetDetent = .large
+					}
+
+					sceneDelegate.handledCreateSheetDetentUpdate = true
+				}, onStackCreation: { _ in
+					portainerStore.refreshStacks()
+					portainerStore.refreshContainers()
+				})
+				#if os(iOS)
+				.navigationBarTitleDisplayMode(.inline)
+				#endif
+				.addingCloseButton()
+			}
+			.presentationDetents([.medium, .large], selection: $sceneDelegate.activeCreateStackSheetDetent)
+			.presentationDragIndicator(.hidden)
+			.presentationContentInteraction(.resizes)
+			#if os(macOS)
+			.sheetMinimumFrame(width: 380, height: 400)
+			#endif
+		}
 		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneDelegate.onContinueUserActivity)
 		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneDelegate.onContinueUserActivity)
 		.onContinueUserActivity(CSSearchableItemActionType, perform: sceneDelegate.onSpotlightUserActivity)
 		.onChange(of: appState.notificationsToHandle, sceneDelegate.onNotificationsToHandleChange)
 		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
+		#if os(macOS)
+		.environment(sceneDelegate)
+		#endif
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.presentIndicator, .init(sceneDelegate.presentIndicator))
 		.withNavigation(handler: sceneDelegate)
@@ -78,4 +125,5 @@ struct ContentView: View {
 #Preview {
 	ContentView()
 		.withEnvironment(appState: .shared)
+		.environment(SceneDelegate())
 }

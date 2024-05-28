@@ -29,11 +29,16 @@ extension CreateStackView {
 							viewModel.editedEnvironmentEntry = entry
 							viewModel.isEnvironmentEntrySheetPresented = true
 						} label: {
-							LabeledContent(entry.key, value: entry.value)
-								#if os(macOS)
-								.frame(maxWidth: .infinity, alignment: .leading)
-								.contentShape(Rectangle())
-								#endif
+							LabeledContent {
+								Text(entry.value)
+									.multilineTextAlignment(.trailing)
+							} label: {
+								Text(entry.key)
+							}
+							#if os(macOS)
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.contentShape(Rectangle())
+							#endif
 						}
 						.fontDesign(.monospaced)
 						.contextMenu {

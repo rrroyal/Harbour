@@ -71,6 +71,17 @@ struct ContainersView: View {
 
 		ToolbarItem(placement: .automatic) {
 			Menu {
+				if !(appState.lastContainerChanges?.isEmpty ?? true) {
+					Button {
+						Haptics.generateIfEnabled(.sheetPresentation)
+						sceneDelegate.isContainerChangesSheetPresented = true
+					} label: {
+						Label("ContainersView.Menu.ShowLastContainerChanges", systemImage: "arrow.left.arrow.right")
+					}
+
+					Divider()
+				}
+
 				let useGridBinding = Binding<Bool>(
 					get: { preferences.cvUseGrid },
 					set: {

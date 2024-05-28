@@ -10,9 +10,13 @@ import Foundation
 import PortainerKit
 
 extension Container {
-	static func preview(name: String = "PreviewContainer", state: Container.State = .running) -> Self {
+	static func preview(
+		id: String = "Container",
+		name: String = "PreviewContainer",
+		state: Container.State = .running
+	) -> Self {
 		self.init(
-			id: "preview",
+			id: id,
 			names: [name],
 			image: "preview@latest",
 			imageID: "1234",

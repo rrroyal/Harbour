@@ -67,6 +67,7 @@
 		0065E99A2BB2EFCB007CFF3E /* SceneDelegate+Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0065E9992BB2EFCB007CFF3E /* SceneDelegate+Navigation.swift */; };
 		00687F862A6E9D340099BFE5 /* Haptics.HapticStyle+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00687F852A6E9D340099BFE5 /* Haptics.HapticStyle+.swift */; };
 		006CD9B12BFE5F1B0074798B /* EnvironmentValues+Portainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006CD9B02BFE5F1B0074798B /* EnvironmentValues+Portainer.swift */; };
+		0072E6C02C04E746007087F6 /* ContainerChangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0072E6BF2C04E746007087F6 /* ContainerChangeView.swift */; };
 		007621062B5776ED0083EC34 /* View+withEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007621052B5776ED0083EC34 /* View+withEnvironment.swift */; };
 		007644782BBF18870015BD8A /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 007644772BBF18870015BD8A /* PortainerKit */; };
 		0076447A2BBF18A30015BD8A /* PortainerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 007644792BBF18A30015BD8A /* PortainerKit */; };
@@ -332,6 +333,7 @@
 		0065E9992BB2EFCB007CFF3E /* SceneDelegate+Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+Navigation.swift"; sourceTree = "<group>"; };
 		00687F852A6E9D340099BFE5 /* Haptics.HapticStyle+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Haptics.HapticStyle+.swift"; sourceTree = "<group>"; };
 		006CD9B02BFE5F1B0074798B /* EnvironmentValues+Portainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EnvironmentValues+Portainer.swift"; sourceTree = "<group>"; };
+		0072E6BF2C04E746007087F6 /* ContainerChangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContainerChangeView.swift; sourceTree = "<group>"; };
 		007621052B5776ED0083EC34 /* View+withEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+withEnvironment.swift"; sourceTree = "<group>"; };
 		0078D0312A870814009C4374 /* ButtonScalesDownOnPressModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonScalesDownOnPressModifier.swift; sourceTree = "<group>"; };
 		0078D0562A8812DD009C4374 /* Sequence+sorted.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+sorted.swift"; sourceTree = "<group>"; };
@@ -616,6 +618,14 @@
 				005667D02BDB1E2E00C4A5D2 /* ContentView+ViewForMacOS.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		0072E6BE2C04E733007087F6 /* ContainerChangeView */ = {
+			isa = PBXGroup;
+			children = (
+				0072E6BF2C04E746007087F6 /* ContainerChangeView.swift */,
+			);
+			path = ContainerChangeView;
 			sourceTree = "<group>";
 		};
 		0078D02C2A870802009C4374 /* Modifiers */ = {
@@ -1340,6 +1350,7 @@
 		E7E240F828847FD600CC4F4C /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0072E6BE2C04E733007087F6 /* ContainerChangeView */,
 				E713178628E5A66000DB82AF /* ContainerDetailsView */,
 				E72E834C297C12D800F6F1BD /* ContainerLogsView */,
 				E7207DC729887C5400F7504C /* ContainersView */,
@@ -1627,6 +1638,7 @@
 				00F33E462BC6AC4B00E5F386 /* NormalizedSection.swift in Sources */,
 				0099E6D22B6E9275004F86D9 /* BackgroundHelper+TaskIdentifier.swift in Sources */,
 				0096388C2BC877AA0049ABF8 /* PortainerStore+AttachedContainer.swift in Sources */,
+				0072E6C02C04E746007087F6 /* ContainerChangeView.swift in Sources */,
 				002D0EEB2A81B53900A914E5 /* CopyButton.swift in Sources */,
 				E7ACE73A288C41B9000E6FF6 /* SettingsView+GeneralSection.swift in Sources */,
 				E7779B2E28E75F8F00AD8569 /* HarbourUserActivityIdentifier.swift in Sources */,

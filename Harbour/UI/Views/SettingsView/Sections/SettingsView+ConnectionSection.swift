@@ -139,9 +139,10 @@ private extension SettingsView.ConnectionSection {
 				}
 
 				#if DEBUG
-				CopyButton("SettingsView.Connection.ConnectionMenu.Server.CopyToken") {
+				var token: String? {
 					try? Keychain.shared.getString(for: url)
 				}
+				CopyButton("SettingsView.Connection.ConnectionMenu.Server.CopyToken", content: token)
 				#endif
 
 				Divider()

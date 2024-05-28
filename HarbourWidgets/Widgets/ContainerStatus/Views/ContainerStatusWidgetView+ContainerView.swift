@@ -56,8 +56,13 @@ extension ContainerStatusWidgetView {
 		private var stateHeadline: some View {
 			HStack {
 				Text(verbatim: (container?.state.description ?? Container.State?.none.description).localizedCapitalized)
+					#if os(macOS)
+					.font(.body)
+					.fontWeight(.medium)
+					#else
 					.font(.subheadline)
 					.fontWeight(.medium)
+					#endif
 					.foregroundStyle(.tint)
 					.minimumScaleFactor(minimumScaleFactor)
 
@@ -72,8 +77,13 @@ extension ContainerStatusWidgetView {
 		@ViewBuilder
 		private var dateLabel: some View {
 			Text(entry.date, style: .relative)
-				.font(.caption)
+				#if os(macOS)
+				.font(.subheadline)
+				.fontWeight(.regular)
+				#else
+				.font(.caption2)
 				.fontWeight(.medium)
+				#endif
 				.foregroundStyle(.tertiary)
 				.frame(maxWidth: .infinity, alignment: .leading)
 		}
@@ -82,7 +92,13 @@ extension ContainerStatusWidgetView {
 		private var nameLabel: some View {
 			let displayName = container?.displayName ?? intentContainer.name
 			Text(verbatim: displayName ?? namePlaceholder)
-				.font(.headline)
+				#if os(macOS)
+				.font(.title2)
+				.fontWeight(.medium)
+				#else
+				.font(.body)
+				.fontWeight(.semibold)
+				#endif
 				.foregroundStyle(displayName != nil ? .primary : .secondary)
 				.lineLimit(2)
 		}
@@ -90,8 +106,13 @@ extension ContainerStatusWidgetView {
 		@ViewBuilder
 		private var statusLabel: some View {
 			Text(verbatim: container?.status ?? statusPlaceholder)
+				#if os(macOS)
+				.font(.body)
+				.fontWeight(.regular)
+				#else
 				.font(.subheadline)
 				.fontWeight(.medium)
+				#endif
 				.foregroundStyle(container?.status != nil ? .secondary : .tertiary)
 				.lineLimit(2)
 		}

@@ -100,6 +100,13 @@ struct BackgroundHelper: Sendable {
 			return
 		}
 
+		#if TARGET_APP
+		let _changes = changes
+		Task { @MainActor in
+			AppState.shared.lastContainerChanges = _changes
+		}
+		#endif
+
 		if let notificationContent = NotificationHelper.notificationContent(for: changes) {
 			let notificationIdentifier = "\(NotificationHelper.NotificationIdentifier.containersChanged).\(changes.description.hashValue)"
 			let notificationRequest = UNNotificationRequest(identifier: notificationIdentifier, content: notificationContent, trigger: nil)

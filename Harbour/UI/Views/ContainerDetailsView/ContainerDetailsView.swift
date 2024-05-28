@@ -70,7 +70,6 @@ struct ContainerDetailsView: View {
 				if let healthStatus = health.status {
 					LabeledContent {
 						Text(healthStatus)
-							.fontDesign(.monospaced)
 							.textSelection(.enabled)
 					} label: {
 						Text("ContainerDetailsView.Section.Health.Status")
@@ -92,9 +91,19 @@ struct ContainerDetailsView: View {
 			} footer: {
 				if let lastHealthCheckDate = lastHealthCheck?.end {
 					Text(lastHealthCheckDate, format: .dateTime)
-						.font(.footnote)
-						.foregroundStyle(.secondary)
 				}
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var nameSection: some View {
+		if let name = container?.displayName ?? containerDetails?.displayName ?? navigationItem.displayName {
+			NormalizedSection {
+				Labeled(name)
+					.fontDesign(.monospaced)
+			} header: {
+				Text("ContainerDetailsView.Section.Name")
 			}
 		}
 	}
@@ -184,6 +193,7 @@ struct ContainerDetailsView: View {
 			Group {
 				statusSection
 				healthSection
+				nameSection
 				idSection
 				createdAtSection
 				finishedAtSection
@@ -269,7 +279,6 @@ struct ContainerDetailsView: View {
 		.animation(.smooth, value: container?.state)
 		.animation(.smooth, value: containerDetails)
 		.animation(.smooth, value: containerDetails?.state.state)
-		.animation(.smooth, value: viewModel.navigationItem)
 		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
 		.animation(nil, value: navigationItem)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
@@ -307,7 +316,7 @@ struct ContainerDetailsView: View {
 
 extension ContainerDetailsView: Identifiable {
 	var id: String {
-		"\(Self.self).\(viewModel.navigationItem.id)"
+		"\(Self.self).\(navigationItem.id)"
 	}
 }
 

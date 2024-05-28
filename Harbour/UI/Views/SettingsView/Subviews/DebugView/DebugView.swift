@@ -23,30 +23,12 @@ struct DebugView: View {
 	var body: some View {
 		Form {
 			BackgroundSection()
-			WidgetsSection()
 			PersistenceSection()
+			WidgetsSection()
 			OtherSection()
 		}
 		.formStyle(.grouped)
 		.navigationTitle("DebugView.Title")
-	}
-}
-
-// MARK: - DebugView+WidgetsSection
-
-private extension DebugView {
-	struct WidgetsSection: View {
-		private let logger = Logger(.debug)
-
-		var body: some View {
-			Section("DebugView.WidgetsSection.Title") {
-				Button("DebugView.WidgetsSection.RefreshTimelines") {
-					logger.notice("Refreshing timelines...")
-					Haptics.generateIfEnabled(.buttonPress)
-					WidgetCenter.shared.reloadAllTimelines()
-				}
-			}
-		}
 	}
 }
 
@@ -139,6 +121,24 @@ private extension DebugView {
 					} catch {
 						errorHandler(error)
 					}
+				}
+			}
+		}
+	}
+}
+
+// MARK: - DebugView+WidgetsSection
+
+private extension DebugView {
+	struct WidgetsSection: View {
+		private let logger = Logger(.debug)
+
+		var body: some View {
+			Section("DebugView.WidgetsSection.Title") {
+				Button("DebugView.WidgetsSection.RefreshTimelines") {
+					logger.notice("Refreshing timelines...")
+					Haptics.generateIfEnabled(.buttonPress)
+					WidgetCenter.shared.reloadAllTimelines()
 				}
 			}
 		}

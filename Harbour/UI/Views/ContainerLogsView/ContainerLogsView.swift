@@ -72,7 +72,7 @@ struct ContainerLogsView: View {
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
 		}
-//		.searchable(text: $searchQuery)
+//		.searchable(text: $searchText)
 		.task {
 			await fetch().value
 		}

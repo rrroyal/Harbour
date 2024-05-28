@@ -87,7 +87,7 @@ extension ContainerStatusProvider {
 			let intentContainer4 = IntentContainer.preview(id: "4")
 			let intentContainers = [intentContainer1, intentContainer2, intentContainer3, intentContainer4]
 
-			let date = Date(timeIntervalSince1970: 1584296700)
+			let date = Date.now
 
 			let intent = ContainerStatusProvider.Intent()
 			intent.endpoint = intentEndpoint

@@ -36,13 +36,7 @@ struct SettingsView: View {
 			.scrollDismissesKeyboard(.interactively)
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			.navigationTitle("SettingsView.Title")
-			.toolbar {
-				#if targetEnvironment(macCatalyst)
-				ToolbarItem(placement: .destructiveAction) {
-					CloseButton(style: .circleButton)
-				}
-				#endif
-			}
+			.addingCloseButton()
 		}
 		.sheet(isPresented: $viewModel.isNegraSheetPresented) {
 			NegraView()

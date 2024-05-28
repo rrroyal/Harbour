@@ -35,6 +35,8 @@ struct NormalizedSection<Content: View, Header: View, Footer: View>: View {
 				.textCase(.uppercase)
 		} footer: {
 			footer()
+				.font(.footnote)
+				.foregroundStyle(.secondary)
 		}
 	}
 }

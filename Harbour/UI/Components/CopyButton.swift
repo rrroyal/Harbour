@@ -9,35 +9,22 @@
 import CommonHaptics
 import SwiftUI
 
-struct CopyButton: View {
+struct CopyButton<LabelContent: View>: View {
 	@Environment(\.presentIndicator) private var presentIndicator
-	let title: LocalizedStringKey
-	let content: String?
-	let showIndicator: Bool
-	let action: (() -> String?)?
-
-	init(_ title: LocalizedStringKey = "Generic.Copy", content: String?, showIndicator: Bool = true) {
-		self.title = title
+	var content: String?
+	var labelContent: () -> LabelContent
+	init(
+		content: String?,
+		@ViewBuilder label labelContent: @escaping () -> LabelContent
+	) {
 		self.content = content
-		self.showIndicator = showIndicator
-		self.action = nil
-	}
-
-	init(_ title: LocalizedStringKey = "Generic.Copy", showIndicator: Bool = true, action: @escaping () -> String?) {
-		self.title = title
-		self.content = nil
-		self.showIndicator = showIndicator
-		self.action = action
+		self.labelContent = labelContent
 	}
 
 	var body: some View {
 		Button {
-			Haptics.generateIfEnabled(.buttonPress)
-			if showIndicator {
-				presentIndicator(.copied)
-			}
-
-			let content = self.content ?? self.action?()
+			Haptics.generateIfEnabled(.selectionChanged)
+			presentIndicator(.copied(content))
 
 			#if os(macOS)
 			if let content {
@@ -47,11 +34,21 @@ struct CopyButton: View {
 			UIPasteboard.general.string = content
 			#endif
 		} label: {
-			Label(title, systemImage: SFSymbol.copy)
+			labelContent()
+				.disabled(content == nil)
 		}
 	}
 }
 
-#Preview {
-	CopyButton(content: "Content")
+extension CopyButton where LabelContent == Label<Text, Image> {
+	init(
+		_ title: LocalizedStringKey = "Generic.Copy",
+		icon: String = SFSymbol.copy,
+		content: String?
+	) {
+		self.content = content
+		self.labelContent = {
+			Label(title, systemImage: icon)
+		}
+	}
 }

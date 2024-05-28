@@ -85,6 +85,17 @@ struct StackDetailsView: View {
 
 	var body: some View {
 		Form {
+			// Stack Status
+			NormalizedSection {
+				Label(
+					(viewModel.stack?.status ?? Stack.Status?.none).title,
+					systemImage: (viewModel.stack?.status ?? Stack.Status?.none).icon
+				)
+				.foregroundStyle((viewModel.stack?.status ?? Stack.Status?.none).color)
+			} header: {
+				Text("StackDetailsView.Section.Status")
+			}
+
 			// Stack Name
 			if let stackName = viewModel.stack?.name ?? navigationItem.stackName {
 				NormalizedSection {
@@ -103,17 +114,6 @@ struct StackDetailsView: View {
 					.fontDesign(.monospaced)
 			} header: {
 				Text("StackDetailsView.Section.ID")
-			}
-
-			// Stack Status
-			NormalizedSection {
-				Label(
-					(viewModel.stack?.status ?? Stack.Status?.none).title,
-					systemImage: (viewModel.stack?.status ?? Stack.Status?.none).icon
-				)
-				.foregroundStyle((viewModel.stack?.status ?? Stack.Status?.none).color)
-			} header: {
-				Text("StackDetailsView.Section.Status")
 			}
 
 			// Stack Type
@@ -135,7 +135,6 @@ struct StackDetailsView: View {
 			NormalizedSection {
 				Button {
 					if let stackName = viewModel.stack?.name ?? navigationItem.stackName {
-						Haptics.generateIfEnabled(.light)
 						filterByStackName(stackName)
 					}
 				} label: {
@@ -216,7 +215,8 @@ struct StackDetailsView: View {
 		.animation(.smooth, value: viewModel.stackFileViewState)
 		.animation(.smooth, value: viewModel.stack)
 		.animation(.smooth, value: viewModel.isRemovingStack)
-		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
+//		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
+		.animation(nil, value: navigationItem)
 		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneDelegate.activeTab == .stacks) { userActivity in
 			viewModel.createUserActivity(userActivity)
 		}
@@ -227,6 +227,7 @@ struct StackDetailsView: View {
 			await fetch().value
 		}
 		.onChange(of: navigationItem) { _, newNavigationItem in
+			viewModel.viewState = .loading
 			viewModel.navigationItem = newNavigationItem
 		}
 		.id(self.id)

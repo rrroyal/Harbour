@@ -44,9 +44,6 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	/// Persistence model context
 	var modelContext: ModelContext?
 
-	/// Task for global refresh
-	var refreshTask: Task<Void, Error>?
-
 	/// Task for `endpoints` refresh
 	var endpointsTask: Task<[Endpoint], Error>?
 
@@ -90,7 +87,7 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 	var removedStackIDs: Set<Stack.ID> = []
 
 	var isRefreshing: Bool {
-		!(refreshTask?.isCancelled ?? true) || !(endpointsTask?.isCancelled ?? true) || !(containersTask?.isCancelled ?? true) || !(stacksTask?.isCancelled ?? true)
+		!(endpointsTask?.isCancelled ?? true) || !(containersTask?.isCancelled ?? true) || !(stacksTask?.isCancelled ?? true)
 	}
 
 	// MARK: init
@@ -224,8 +221,6 @@ public extension PortainerStore {
 		preferences.selectedServer = nil
 
 		selectedEndpoint = nil
-
-		refreshTask?.cancel()
 
 		endpointsTask?.cancel()
 		setEndpoints(nil)

@@ -11,28 +11,34 @@ import SwiftUI
 // MARK: - KeyValueListView
 
 struct KeyValueListView: View {
-	@State private var query: String = ""
+	@State private var searchText: String = ""
 
 	var data: [KeyValueEntry]
 
 	var headerFontDesign: Font.Design?
 	var contentFontDesign: Font.Design?
 
-	@ViewBuilder
-	private var placeholderView: some View {
-		if data.isEmpty {
-			ContentUnavailableView("Generic.Empty", systemImage: "ellipsis")
-				.allowsHitTesting(false)
-		}
-	}
-
 	private var dataFiltered: [KeyValueEntry] {
-		guard !query.isReallyEmpty else { return data }
+		guard !searchText.isReallyEmpty else {
+			return data.localizedSorted(by: \.key)
+		}
+
 		return data
 			.filter {
-				$0.key.localizedCaseInsensitiveContains(query) || $0.value.localizedCaseInsensitiveContains(query)
+				$0.key.localizedCaseInsensitiveContains(searchText) || $0.value.localizedCaseInsensitiveContains(searchText)
 			}
 			.localizedSorted(by: \.key)
+	}
+
+	@ViewBuilder
+	private var placeholderView: some View {
+		if dataFiltered.isEmpty {
+			if !searchText.isReallyEmpty {
+				ContentUnavailableView.search(text: searchText)
+			} else {
+				ContentUnavailableView("Generic.Empty", systemImage: "ellipsis")
+			}
+		}
 	}
 
 	var body: some View {
@@ -56,7 +62,7 @@ struct KeyValueListView: View {
 		.scrollDismissesKeyboard(.interactively)
 		.scrollContentBackground(.hidden)
 		#if os(iOS)
-		.searchable(text: $query)	// this breaks layout on macos :(
+		.searchable(text: $searchText)	// this breaks layout on macos :(
 		#endif
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.background {
@@ -65,7 +71,7 @@ struct KeyValueListView: View {
 		#if os(iOS)
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
 		#endif
-		.animation(.smooth, value: data)
+		.animation(.smooth, value: dataFiltered)
 	}
 }
 

@@ -48,9 +48,5 @@ private extension SceneDelegate {
 
 		return true
 	}
-
-	func handleSpotlightUserActivity(_ userActivity: NSUserActivity) {
-
-	}
 }
 #endif

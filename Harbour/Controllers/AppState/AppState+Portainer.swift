@@ -26,7 +26,9 @@ extension AppState {
 			do {
 				guard !Task.isCancelled else { return }
 				try portainerStore.switchServer(to: serverURL)
-				portainerStore.refresh()
+				portainerStore.refreshEndpoints()
+				portainerStore.refreshContainers()
+				portainerStore.refreshStacks()
 			} catch {
 				logger.error("Failed to switch Portainer server: \(error, privacy: .public)")
 				throw error
@@ -43,11 +45,11 @@ extension AppState {
 	func onContainersChange(from previousContainers: [Container], to newContainers: [Container]) {
 //		WidgetCenter.shared.reloadTimelines(ofKind: HarbourWidgetKind.containerStatus)
 
-//		Task.detached {
+//		Task {
 //			await NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [HarbourUserActivityIdentifier.containerDetails])
 //		}
 
-		Task.detached {
+		Task {
 			let portainerDeeplink = PortainerDeeplink(baseURL: PortainerStore.shared.serverURL)
 			let selectedEndpoint = PortainerStore.shared.selectedEndpoint
 
@@ -92,12 +94,12 @@ extension AppState {
 	}
 
 	func onStacksChange(from previousStacks: [Stack], to newStacks: [Stack]) {
-//		Task.detached {
+//		Task {
 //			WidgetCenter.shared.reloadTimelines(ofKind: HarbourWidgetKind.stackStatus)
 //			await NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [HarbourUserActivityIdentifier.stackDetails])
 //		}
 
-		Task.detached {
+		Task {
 			let portainerDeeplink = PortainerDeeplink(baseURL: PortainerStore.shared.serverURL)
 
 			do {

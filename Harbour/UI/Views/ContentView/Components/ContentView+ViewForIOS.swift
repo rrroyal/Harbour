@@ -35,7 +35,6 @@ extension ContentView {
 					}
 					.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
 				}
-				.environment(\.navigationPath, sceneDelegate.navigationPathContainers)
 
 				NavigationWrapped(navigationPath: $sceneDelegate.navigationPathStacks) {
 					StacksView()
@@ -52,7 +51,6 @@ extension ContentView {
 					}
 					.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
 				}
-				.environment(\.navigationPath, sceneDelegate.navigationPathStacks)
 			}
 		}
 	}

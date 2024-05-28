@@ -96,6 +96,8 @@ extension ContainerStatusWidgetView {
 	struct MediumWidgetView: View {
 		var entry: ContainerStatusProvider.Entry
 
+		private let padding: Double = 8
+
 		private var containers: [Container?]? {
 			if case .containers(let containers) = entry.result {
 				return containers
@@ -104,7 +106,7 @@ extension ContainerStatusWidgetView {
 		}
 
 		var body: some View {
-			HStack {
+			HStack(spacing: -padding) {
 				ForEach(0...1, id: \.self) { index in
 					let intentContainer = entry.configuration.containers?[safe: index]
 					let container = containers?[safe: index] as? Container
@@ -115,7 +117,7 @@ extension ContainerStatusWidgetView {
 						container: container
 					)
 					.modifier(InsetViewModifier())
-					.containerRelativeFrame(.horizontal, count: 2, spacing: 0)
+					.padding(padding)
 				}
 			}
 			.containerBackground(for: .widget) {
@@ -131,6 +133,8 @@ extension ContainerStatusWidgetView {
 	struct LargeWidgetView: View {
 		var entry: ContainerStatusProvider.Entry
 
+		private let padding: Double = 10
+
 		private var containers: [Container?]? {
 			if case .containers(let containers) = entry.result {
 				return containers
@@ -138,10 +142,18 @@ extension ContainerStatusWidgetView {
 			return nil
 		}
 
+		private var useCompactSpacing: Bool {
+			#if canImport(UIKit)
+			UIDevice.current.userInterfaceIdiom == .phone
+			#else
+			false
+			#endif
+		}
+
 		var body: some View {
-			VStack {
+			VStack(spacing: -padding) {
 				ForEach(0...1, id: \.self) { yIndex in
-					HStack(spacing: 0) {
+					HStack(spacing: -padding) {
 						ForEach(0...1, id: \.self) { xIndex in
 							let index = (yIndex * 2) + xIndex
 							let intentContainer = entry.configuration.containers?[safe: index]
@@ -153,8 +165,7 @@ extension ContainerStatusWidgetView {
 								container: container
 							)
 							.modifier(InsetViewModifier())
-							.containerRelativeFrame(.horizontal, count: 2, spacing: 0)
-							.containerRelativeFrame(.vertical, count: 2, spacing: 0)
+							.padding(padding)
 						}
 					}
 				}

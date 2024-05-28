@@ -77,7 +77,7 @@ extension SetupView {
 					let endpoints = try await portainer.fetchEndpoints()
 					logger.info("Got \(endpoints.count, privacy: .public) endpoint(s) from the new server, switching...")
 
-					Task.detached { @MainActor in
+					Task { @MainActor in
 						guard !Task.isCancelled else { return }
 
 						PortainerStore.shared.reset()

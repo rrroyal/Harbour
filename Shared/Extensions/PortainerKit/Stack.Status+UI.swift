@@ -31,8 +31,8 @@ extension Stack.Status? {
 extension Stack.Status {
 	var icon: String {
 		switch self {
-		case .active:	SFSymbol.start
-		case .inactive: SFSymbol.stop
+		case .active:	"power"
+		case .inactive: "stop"
 		}
 	}
 }

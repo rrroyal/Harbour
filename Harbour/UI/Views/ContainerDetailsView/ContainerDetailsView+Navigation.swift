@@ -25,7 +25,7 @@ extension ContainerDetailsView: Deeplinkable {
 		let displayName: String?
 		let endpointID: Endpoint.ID?
 
-		init(id: Container.ID, displayName: String?, endpointID: Endpoint.ID?) {
+		init(id: Container.ID, displayName: String?, endpointID: Endpoint.ID? = nil) {
 			self.id = id
 			self.displayName = displayName
 			self.endpointID = endpointID

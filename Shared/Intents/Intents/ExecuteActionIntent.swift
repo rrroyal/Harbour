@@ -38,11 +38,11 @@ struct ExecuteActionIntent: AppIntent {
 	var container: IntentContainer
 
 	@Parameter(title: "AppIntents.Parameter.ExecuteAction.Title")
-	var action: ExecuteAction
+	var action: ContainerAction	// this breaks because `ContainerAction` is defined in a framework :(
 
 	init() { }
 
-	init(endpoint: IntentEndpoint, container: IntentContainer, action: ExecuteAction) {
+	init(endpoint: IntentEndpoint, container: IntentContainer, action: ContainerAction) {
 		self.endpoint = endpoint
 		self.container = container
 		self.action = action

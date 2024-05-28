@@ -6,6 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CommonHaptics
 import Navigation
 import PortainerKit
 import SwiftUI
@@ -92,6 +93,7 @@ extension ContainerDetailsView {
 
 private extension ContainerDetailsView.NetworkDetailsView {
 	struct NetworkDetailView: View {
+		@Environment(SceneDelegate.self) private var sceneDelegate
 		@EnvironmentObject private var portainerStore: PortainerStore
 		var name: String
 		var network: Network
@@ -177,15 +179,18 @@ private extension ContainerDetailsView.NetworkDetailsView {
 						LabeledContent {
 							Text(link.value)
 						} label: {
-							if let foundContainer = portainerStore.containers.first(where: { $0.namesNormalized?.contains(link.key) ?? false }),
-							   let deeplinkURL = Deeplink.ContainerDetailsDestination(
-								containerID: foundContainer.id,
-								containerName: foundContainer.displayName,
-								endpointID: portainerStore.selectedEndpoint?.id
-							   ).url {
-								Link(destination: deeplinkURL) {
-									Text(link.key)
+							if let foundContainer = portainerStore.containers.first(where: { $0.namesNormalized?.contains(link.key) ?? false }) {
+								Button(link.key) {
+									let navigationItem = ContainerDetailsView.NavigationItem(
+										id: foundContainer.id,
+										displayName: foundContainer.displayName ?? link.key
+									)
+									sceneDelegate.navigate(to: .containers, with: navigationItem)
 								}
+								#if os(macOS)
+								.buttonStyle(.plain)
+								.foregroundStyle(.accent)
+								#endif
 							} else {
 								Text(link.key)
 							}
@@ -262,17 +267,64 @@ private extension ContainerDetailsView.NetworkDetailsView {
 			if !entries.isEmpty {
 				NormalizedSection {
 					ForEach(entries, id: \.hashValue) { entry in
+						// haha it works
+						let shareMenu = {
+							Group {
+								if let publicPort = entry.publicPort {
+									CopyButton("ContainerDetailsView.NetworkDetailsView.CopyIP", content: entry.hostLabel)
+
+									if let endpointPublicURL = portainerSelectedEndpoint?.publicURL {
+										Divider()
+
+//										CopyButton("ContainerDetailsView.NetworkDetailsView.CopyPublicURL", content: "\(endpointPublicURL):\(publicPort)")
+//
+//										if let portURL = URL(string: "http://\(endpointPublicURL):\(publicPort)") {
+//											Link(destination: portURL) {
+//												Label("ContainerDetailsView.NetworkDetailsView.OpenPublicURL", systemImage: SFSymbol.web)
+//											}
+//										}
+
+										let portURLString = "http://\(endpointPublicURL):\(publicPort)"
+										if let portURL = URL(string: portURLString) {
+											ShareLink("ContainerDetailsView.NetworkDetailsView.SharePublicURL", item: portURL)
+										} else {
+											ShareLink("ContainerDetailsView.NetworkDetailsView.SharePublicURL", item: portURLString)
+										}
+									}
+								}
+							}
+							.labelStyle(.titleAndIcon)
+						}
+
 						LabeledContent(entry.containerLabel) {
-							if let publicPort = entry.publicPort,
-							   let endpointPublicURL = portainerSelectedEndpoint?.publicURL,
-							   let portURL = URL(string: "http://\(endpointPublicURL):\(publicPort)") {
-								Link(entry.hostLabel, destination: portURL)
-							} else {
-								Text(entry.hostLabel)
+							HStack {
+								if let hostLabel = entry.hostLabel {
+									Text(hostLabel)
+
+									#if os(macOS)
+									if entry.publicPort != nil {
+										Menu {
+											shareMenu()
+										} label: {
+											Label("Generic.More", systemImage: SFSymbol.more)
+												.hidden()
+										}
+										.menuStyle(.button)
+										.buttonStyle(.borderless)
+										.fixedSize(horizontal: true, vertical: false)
+									}
+									#endif
+								}
 							}
 						}
 						.fontDesign(.monospaced)
+						#if os(iOS)
+						.contextMenu {
+							shareMenu()
+						}
+						#elseif os(macOS)
 						.textSelection(.enabled)
+						#endif
 					}
 				} header: {
 					Text("ContainerDetailsView.NetworkDetailsView.Ports")
@@ -301,8 +353,8 @@ private extension ContainerDetailsView.NetworkDetailsView.PortsSection {
 			}
 		}
 
-		var hostLabel: String {
-			guard let hostPort else { return "" }
+		var hostLabel: String? {
+			guard let hostPort else { return nil }
 			return "\(hostIP ?? "0.0.0.0"):\(hostPort)"
 		}
 

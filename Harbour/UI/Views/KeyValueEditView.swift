@@ -130,6 +130,8 @@ struct KeyValueEditView: View {
 			ToolbarItem(placement: .destructiveAction) {
 				if entry != nil {
 					removeButton
+						.buttonStyle(.borderedProminent)
+						.tint(.red)
 				}
 			}
 			#endif

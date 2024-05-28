@@ -81,6 +81,9 @@ extension SceneDelegate {
 extension SceneDelegate {
 	@MainActor
 	func onScenePhaseChange(from previousScenePhase: ScenePhase, to newScenePhase: ScenePhase) {
+		let isFirstRun = self.scenePhase == nil
+		scenePhase = newScenePhase
+
 		switch newScenePhase {
 		case .background:
 			#if os(iOS)
@@ -89,24 +92,27 @@ extension SceneDelegate {
 		case .inactive:
 			break
 		case .active:
-			guard scenePhase != nil else { break } // ignore first launch
-			guard PortainerStore.shared.refreshTask?.isCancelled ?? true else { break }
+			guard !isFirstRun else { break }
+
+			let portainerStore = PortainerStore.shared
+			guard portainerStore.isSetup else { break }
 
 			switch activeTab {
 			case .containers:
-				if PortainerStore.shared.containersTask?.isCancelled ?? true {
-					PortainerStore.shared.refreshContainers()
+				if portainerStore.endpointsTask?.isCancelled ?? true {
+					portainerStore.refreshEndpoints()
+				}
+				if portainerStore.containersTask?.isCancelled ?? true {
+					portainerStore.refreshContainers()
 				}
 			case .stacks:
-				if PortainerStore.shared.stacksTask?.isCancelled ?? true {
-					PortainerStore.shared.refreshStacks()
+				if portainerStore.stacksTask?.isCancelled ?? true {
+					portainerStore.refreshStacks()
 				}
 			}
 		@unknown default:
 			break
 		}
-
-		scenePhase = newScenePhase
 	}
 }
 
@@ -115,26 +121,23 @@ extension SceneDelegate {
 extension SceneDelegate {
 	@MainActor
 	func onNotificationsToHandleChange(before previousNotifications: Set<UNNotificationResponse>, after newNotifications: Set<UNNotificationResponse>) {
-		guard scenePhase == .active || scenePhase == .background else { return }
+		guard !newNotifications.isEmpty else { return }
+
+		logger.notice("Handling new notifications (\(newNotifications.count)): \(newNotifications, privacy: .sensitive(mask: .hash))")
+
+//		guard scenePhase == .active || scenePhase == .background else { return }
 
 		for response in newNotifications {
 			switch response.notification.request.content.categoryIdentifier {
 			case NotificationHelper.NotificationIdentifier.containersChanged:
 				let userInfo = response.notification.request.content.userInfo
-				guard let changedIDs = userInfo[NotificationHelper.UserInfoKey.changedIDs] as? [Container.ID] else { continue }
-				let endpointID = userInfo[NotificationHelper.UserInfoKey.endpointID] as? Endpoint.ID
-
-				if let changedID = changedIDs.first, changedIDs.count == 1 {
-					guard let existingContainer = PortainerStore.shared.containers.first(where: { $0.id == changedID }) else {
-						activeAlert = .init(title: "Alert.ContainerNotFound.Title", message: "Alert.ContainerNotFound.Message ContainerID:\(changedID)")
-						continue
-					}
-
-					let navigationItem = ContainerDetailsView.NavigationItem(id: changedID, displayName: existingContainer.displayName, endpointID: endpointID)
-
-					resetSheets()
-					navigate(to: .containers, with: navigationItem)
+				guard let data = userInfo[NotificationHelper.UserInfoKey.containerChanges] as? Data,
+					  let changes: [ContainerChange] = try? NotificationHelper.decodeNotificationPayload(from: data), !changes.isEmpty else {
+					continue
 				}
+
+				AppState.shared.lastContainerChanges = changes
+				isContainerChangesSheetPresented = true
 			default:
 				continue
 			}

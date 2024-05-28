@@ -24,11 +24,15 @@ final class SceneDelegate: NSObject {
 
 	// MARK: Navigation
 
+	@MainActor
 	var scenePhase: ScenePhase?
 
+	@MainActor
 	var activeTab: ViewTab = .containers
 
+	@MainActor
 	var navigationPathContainers = NavigationPath()
+	@MainActor
 	var navigationPathStacks = NavigationPath()
 
 	// MARK: Sheets
@@ -36,6 +40,7 @@ final class SceneDelegate: NSObject {
 	var isLandingSheetPresented = !Preferences.shared.landingDisplayed
 	var isSettingsSheetPresented = false
 	var isCreateStackSheetPresented = false
+	var isContainerChangesSheetPresented = false
 
 	var activeCreateStackSheetDetent: PresentationDetent = .medium
 	var handledCreateSheetDetentUpdate = false

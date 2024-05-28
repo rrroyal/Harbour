@@ -13,14 +13,12 @@ import SwiftUI
 struct InsetViewModifier: ViewModifier {
 	func body(content: Content) -> some View {
 		content
-			.aspectRatio(1, contentMode: .fit)
 			.clipShape(ContainerRelativeShape(), style: .init(antialiased: false)) // Antialiasing has some weird artifacts :(
 			.background(
 				ContainerRelativeShape()
 					.fill(Color.widgetBackground)
 					.shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 0)
 			)
-			.padding(10)
 	}
 }
 

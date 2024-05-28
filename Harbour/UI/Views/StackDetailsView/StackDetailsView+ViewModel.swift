@@ -22,10 +22,11 @@ extension StackDetailsView {
 		private(set) var fetchTask: Task<Void, Error>?
 		private(set) var fetchStackFileTask: Task<Void, Error>?
 
-		private(set) var viewState: ViewState<Stack, Error> = .loading
 		private(set) var stackFileViewState: ViewState<String, Error>?
 
 		var navigationItem: StackDetailsView.NavigationItem
+
+		var viewState: ViewState<Stack, Error> = .loading
 
 		var isRemovingStack = false
 		var isRemoveStackAlertPresented = false
