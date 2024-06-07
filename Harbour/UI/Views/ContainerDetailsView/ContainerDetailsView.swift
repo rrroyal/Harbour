@@ -23,28 +23,28 @@ struct ContainerDetailsView: View {
 
 	var navigationItem: NavigationItem
 
-	private var navigationTitle: String {
-		viewModel.container?.displayName ??
-		viewModel.containerDetails?.displayName ??
-		viewModel.container?.id ??
-		viewModel.containerDetails?.id ??
-		navigationItem.displayName ??
-		navigationItem.id
-	}
-
-	private var container: Container? {
-		viewModel.container
-	}
-
-	private var containerDetails: ContainerDetails? {
-		viewModel.containerDetails
-	}
-
 	init(navigationItem: NavigationItem) {
 		self.navigationItem = navigationItem
 
 		let viewModel = ViewModel(navigationItem: navigationItem)
 		self.viewModel = viewModel
+	}
+
+	private var navigationTitle: String {
+		container?.displayName ??
+		containerDetails?.displayName ??
+		container?.id ??
+		containerDetails?.id ??
+		navigationItem.displayName ??
+		navigationItem.id
+	}
+
+	private var container: Container? {
+		portainerStore.containers.first { $0.id == navigationItem.id }
+	}
+
+	private var containerDetails: ContainerDetails? {
+		viewModel.containerDetails
 	}
 
 	@ViewBuilder
@@ -268,7 +268,12 @@ struct ContainerDetailsView: View {
 				errorHandler(error)
 			}
 		}
-		.task {
+		.task(id: navigationItem.id) {
+			if viewModel.navigationItem != navigationItem {
+				viewModel.viewState = .loading
+				viewModel.navigationItem = navigationItem
+			}
+
 			do {
 				try await viewModel.refresh().value
 			} catch {
@@ -282,7 +287,7 @@ struct ContainerDetailsView: View {
 		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
 		.animation(nil, value: navigationItem)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
-			viewModel.createUserActivity(userActivity)
+			viewModel.createUserActivity(userActivity, for: container)
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
@@ -302,10 +307,6 @@ struct ContainerDetailsView: View {
 			case .logs:
 				ContainerLogsView(containerID: navigationItem.id)
 			}
-		}
-		.onChange(of: navigationItem) { _, newNavigationItem in
-			viewModel.viewState = .loading
-			viewModel.navigationItem = newNavigationItem
 		}
 		.navigationTitle(navigationTitle)
 		.id(self.id)

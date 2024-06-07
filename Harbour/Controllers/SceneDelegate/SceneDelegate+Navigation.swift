@@ -31,19 +31,19 @@ extension SceneDelegate: DeeplinkHandlable {
 	}
 
 	@MainActor
-	func navigate<Destination: Hashable>(to tab: ViewTab, with navigationPath: Destination? = nil) {
+	func navigate(to tab: ViewTab, with navigationPathItems: any Hashable...) {
 		activeTab = tab
 
 		switch tab {
 		case .containers:
 			navigationPathContainers.removeLast(navigationPathContainers.count)
-			if let navigationPath {
-				navigationPathContainers.append(navigationPath)
+			for navigationItem in navigationPathItems {
+				navigationPathContainers.append(navigationItem)
 			}
 		case .stacks:
 			navigationPathStacks.removeLast(navigationPathStacks.count)
-			if let navigationPath {
-				navigationPathStacks.append(navigationPath)
+			for navigationItem in navigationPathItems {
+				navigationPathStacks.append(navigationItem)
 			}
 		}
 	}

@@ -13,6 +13,16 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 	let content: () -> Content
 	let placeholderContent: () -> PlaceholderContent
 
+	init(
+		navigationPath: Binding<NavigationPath>,
+		@ViewBuilder content: @escaping () -> Content,
+		@ViewBuilder placeholderContent: @escaping () -> PlaceholderContent
+	) {
+		self._navigationPath = navigationPath
+		self.content = content
+		self.placeholderContent = placeholderContent
+	}
+
 	private var useColumns: Bool {
 		#if os(iOS)
 		guard UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac else {

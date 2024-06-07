@@ -189,8 +189,8 @@ struct ContainersView: View {
 			}
 			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 				ContainerDetailsView(navigationItem: navigationItem)
-//					.equatable()
-//					.tag(navigationItem.id)
+					.equatable()
+					.tag(navigationItem.id)
 			}
 			.navigationTitle(navigationTitle)
 			#if os(iOS)

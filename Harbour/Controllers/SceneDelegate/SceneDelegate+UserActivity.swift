@@ -137,6 +137,7 @@ extension SceneDelegate {
 				}
 
 				AppState.shared.lastContainerChanges = changes
+				resetSheets()
 				isContainerChangesSheetPresented = true
 			default:
 				continue

@@ -30,10 +30,6 @@ extension ContainerDetailsView {
 
 		var scrollViewIsRefreshing = false
 
-		var container: Container? {
-			portainerStore.containers.first { $0.id == navigationItem.id }
-		}
-
 		var containerDetails: ContainerDetails? {
 			viewState.value
 		}
@@ -48,7 +44,7 @@ extension ContainerDetailsView {
 		}
 
 		@MainActor
-		func createUserActivity(_ userActivity: NSUserActivity) {
+		func createUserActivity(_ userActivity: NSUserActivity, for container: Container?) {
 			userActivity.isEligibleForHandoff = true
 			userActivity.isEligibleForSearch = false
 			#if os(iOS)
@@ -77,7 +73,7 @@ extension ContainerDetailsView {
 //				userActivity.referrerURL = portainerURL
 			}
 
-			if let containerNames = container?.names {
+			if let containerNames = container?.names, !containerNames.isEmpty {
 				userActivity.keywords = Set(containerNames)
 			}
 
