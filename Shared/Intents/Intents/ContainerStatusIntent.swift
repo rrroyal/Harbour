@@ -20,12 +20,11 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 	static var parameterSummary: some ParameterSummary {
 		When(\.$endpoint, .hasAnyValue) {
-			Summary("Get container status on \(\.$endpoint)") {
-				\.$containers
+			Summary("ContainerStatusIntent.ParameterSummary \(\.$endpoint) \(\.$containers)") {
 				\.$resolveByName
 			}
 		} otherwise: {
-			Summary("Get container status on \(\.$endpoint)")
+			Summary("ContainerStatusIntent.ParameterSummary \(\.$endpoint)")
 		}
 	}
 
@@ -115,23 +114,3 @@ extension ContainerStatusIntent {
 		}
 	}
 }
-
-// MARK: - ContainerStatusIntent+AppShortcutsProvider
-
-/*
-extension ContainerStatusIntent: AppShortcutsProvider {
-	static var appShortcuts: [AppShortcut] {
-		let containerStatusShortcut = AppShortcut(
-			intent: Self(),
-			phrases: [
-				"Get container status in \(.applicationName)",
-				"Check container in \(.applicationName)"
-			],
-			shortTitle: "ContainerStatusIntent-ShortTitle",
-			systemImageName: "xmark"
-		)
-
-		return [containerStatusShortcut]
-	}
-}
-*/

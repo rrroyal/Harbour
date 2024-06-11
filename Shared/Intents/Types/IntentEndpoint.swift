@@ -14,16 +14,19 @@ private let logger = Logger(.intents(IntentEndpoint.self))
 
 // MARK: - IntentEndpoint
 
-struct IntentEndpoint: AppEntity, Identifiable, Hashable {
-	static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentEndpoint.TypeDisplayRepresentation"
-	static let defaultQuery = IntentEndpointQuery()
+struct IntentEndpoint: AppEntity, Identifiable {
+	public static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentEndpoint.TypeDisplayRepresentation"
+	public static let defaultQuery = Query()
 
-	let id: Endpoint.ID
-	let name: String?
-
-	var displayRepresentation: DisplayRepresentation {
+	public var displayRepresentation: DisplayRepresentation {
 		DisplayRepresentation(title: .init(stringLiteral: name ?? ""), subtitle: .init(stringLiteral: "\(id)"))
 	}
+
+	@Property(title: "IntentEndpoint.ID")
+	public var id: Endpoint.ID
+
+	@Property(title: "IntentEndpoint.Name")
+	public var name: String?
 
 	init(id: Endpoint.ID, name: String?) {
 		self.id = id
@@ -33,6 +36,15 @@ struct IntentEndpoint: AppEntity, Identifiable, Hashable {
 	init(endpoint: Endpoint) {
 		self.id = endpoint.id
 		self.name = endpoint.name
+	}
+}
+
+// MARK: - IntentEndpoint+Equatable
+
+extension IntentEndpoint: Equatable {
+	static func == (lhs: Self, rhs: Self) -> Bool {
+		lhs.id == rhs.id &&
+		lhs.name == rhs.name
 	}
 }
 
@@ -47,51 +59,53 @@ extension IntentEndpoint {
 	}
 }
 
-// MARK: - IntentEndpointQuery
+// MARK: - IntentEndpoint+Query
 
-struct IntentEndpointQuery: EntityQuery {
-	typealias Entity = IntentEndpoint
+extension IntentEndpoint {
+	struct Query: EntityQuery {
+		typealias Entity = IntentEndpoint
 
-	//	@IntentParameterDependency<ContainerStatusIntent>()
-	//	var statusIntent
+		//	@IntentParameterDependency<ContainerStatusIntent>()
+		//	var statusIntent
 
-	private var requiresOnline: Bool {
-		// Check if in Shortcut
-		false
-	}
+		private var requiresOnline: Bool {
+			// Check if in Shortcut
+			false
+		}
 
-	func suggestedEntities() async throws -> [Entity] {
-		let portainerStore = IntentPortainerStore.shared
-		try portainerStore.setupIfNeeded()
-		let endpoints = try await portainerStore.getEndpoints()
-		return endpoints
-			.map { Entity(endpoint: $0) }
-			.sorted { $0.id < $1.id }
-	}
-
-	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-		logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
-
-		do {
+		func suggestedEntities() async throws -> [Entity] {
 			let portainerStore = IntentPortainerStore.shared
 			try portainerStore.setupIfNeeded()
-
 			let endpoints = try await portainerStore.getEndpoints()
-				.filter { identifiers.contains($0.id) }
-				.map { Entity(endpoint: $0) }
-
-			logger.info("Returning \(String(describing: endpoints), privacy: .sensitive) (live)")
 			return endpoints
-		} catch {
-			logger.error("Error getting entities: \(error, privacy: .public)")
+				.map { Entity(endpoint: $0) }
+				.sorted { $0.id < $1.id }
+		}
 
-			if !requiresOnline && error is URLError {
-				let parsed = identifiers.map { Entity(id: $0, name: nil) }
-				logger.notice("Returning \(String(describing: parsed), privacy: .sensitive) (offline)")
-				return parsed
+		func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+			logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
+
+			do {
+				let portainerStore = IntentPortainerStore.shared
+				try portainerStore.setupIfNeeded()
+
+				let endpoints = try await portainerStore.getEndpoints()
+					.filter { identifiers.contains($0.id) }
+					.map { Entity(endpoint: $0) }
+
+				logger.info("Returning \(String(describing: endpoints), privacy: .sensitive) (live)")
+				return endpoints
+			} catch {
+				logger.error("Error getting entities: \(error, privacy: .public)")
+
+				if !requiresOnline && error is URLError {
+					let parsed = identifiers.map { Entity(id: $0, name: nil) }
+					logger.notice("Returning \(String(describing: parsed), privacy: .sensitive) (offline)")
+					return parsed
+				}
+
+				throw error
 			}
-
-			throw error
 		}
 	}
 }

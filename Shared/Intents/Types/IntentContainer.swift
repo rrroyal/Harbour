@@ -14,24 +14,45 @@ private let logger = Logger(.intents(IntentContainer.self))
 
 // MARK: - IntentContainer
 
-struct IntentContainer: AppEntity, Hashable {
-	static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentContainer.TypeDisplayRepresentation"
-	static let defaultQuery = IntentContainerQuery()
+struct IntentContainer: AppEntity {
+	public static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentContainer.TypeDisplayRepresentation"
+	public static let defaultQuery = Query()
 
-	var displayRepresentation: DisplayRepresentation {
+	public var displayRepresentation: DisplayRepresentation {
 		DisplayRepresentation(title: .init(stringLiteral: name ?? ""), subtitle: .init(stringLiteral: _id))
 	}
 
-	/// Actual container ID
-	var _id: Container.ID
-	var name: String?
-	var image: String?
-	var associationID: String?
+	@Property(title: "IntentContainer.ID")
+	public var _id: Container.ID
 
-	init(id: Container.ID, name: String?, image: String?, associationID: String?) {
+	@Property(title: "IntentContainer.Name")
+	public var name: String?
+
+	@Property(title: "IntentContainer.Image")
+	public var image: String?
+
+	@Property(title: "IntentContainer.ContainerState")
+	public var containerState: Container.State?
+
+	@Property(title: "IntentContainer.Status")
+	public var status: String?
+
+	@Property(title: "IntentContainer.AssociationID")
+	public var associationID: String?
+
+	init(
+		id: Container.ID,
+		name: String?,
+		image: String?,
+		containerState: Container.State? = nil,
+		status: String? = nil,
+		associationID: String?
+	) {
 		self._id = id
 		self.name = name
 		self.image = image
+		self.containerState = containerState
+		self.status = status
 		self.associationID = associationID
 	}
 
@@ -39,6 +60,8 @@ struct IntentContainer: AppEntity, Hashable {
 		self._id = container.id
 		self.name = container.displayName
 		self.image = container.image
+		self.containerState = container.state
+		self.status = container.status
 		self.associationID = container.associationID
 	}
 }
@@ -48,7 +71,6 @@ struct IntentContainer: AppEntity, Hashable {
 extension IntentContainer: Identifiable {
 	private static let partJoiner = ";"
 
-	/// Container ID + display name
 	var id: String {
 		[_id, name ?? "", image ?? "", associationID ?? ""].joined(separator: Self.partJoiner)
 	}
@@ -74,6 +96,19 @@ extension IntentContainer: Identifiable {
 	}
 }
 
+// MARK: - IntentContainer+Equatable
+
+extension IntentContainer: Equatable {
+	static func == (lhs: IntentContainer, rhs: IntentContainer) -> Bool {
+		lhs._id == rhs._id &&
+		lhs.name == rhs.name &&
+		lhs.image == rhs.image &&
+		lhs.containerState == rhs.containerState &&
+		lhs.status == rhs.status &&
+		lhs.associationID == rhs.associationID
+	}
+}
+
 // MARK: - IntentContainer+Static
 
 extension IntentContainer {
@@ -89,117 +124,124 @@ extension IntentContainer {
 
 extension IntentContainer {
 	func matchesContainer(_ container: Container) -> Bool {
-		self._id == container.id || (self.associationID != nil && self.associationID == container.associationID) || self.image == container.image || self.name == container.displayName
+		self._id == container.id ||
+		(self.associationID != nil && self.associationID == container.associationID) ||
+		self.image == container.image ||
+		self.name == container.displayName
 	}
 }
 
-// MARK: - IntentContainerQuery
+// MARK: - IntentContainer+Query
 
-struct IntentContainerQuery: EntityStringQuery {
-	typealias Entity = IntentContainer
+extension IntentContainer {
+	struct Query: EntityStringQuery {
+		typealias Entity = IntentContainer
 
-	@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveByName)
-	var statusIntent
+		@IntentParameterDependency<ContainerActionIntent>(\.$endpoint)
+		var containerActionIntent
 
-	private var endpoint: IntentEndpoint? {
-		statusIntent?.endpoint
-	}
+		@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveByName)
+		var containerStatusIntent
 
-	private var resolveByName: Bool {
-		statusIntent?.resolveByName ?? true
-	}
-
-	private var requiresOnline: Bool {
-		// Check if in Shortcut
-		false
-	}
-
-	func suggestedEntities() async throws -> [Entity] {
-		do {
-			guard let endpoint else { return [] }
-
-			let containers = try await getContainers(for: endpoint.id)
-			return containers.map { Entity(container: $0) }
-		} catch {
-			logger.error("Error getting suggested entities: \(error, privacy: .public)")
-			throw error
+		private var endpoint: IntentEndpoint? {
+			containerActionIntent?.endpoint ?? containerStatusIntent?.endpoint
 		}
-	}
 
-	func entities(matching string: String) async throws -> [Entity] {
-		logger.info("Getting entities matching \"\(string, privacy: .sensitive)\"...")
+		private var resolveByName: Bool {
+			containerStatusIntent?.resolveByName ?? true
+		}
 
-		do {
+		private var requiresOnline: Bool {
+			containerActionIntent != nil
+		}
+
+		func suggestedEntities() async throws -> [Entity] {
+			do {
+				guard let endpoint else { return [] }
+
+				let containers = try await getContainers(for: endpoint.id)
+				return containers.map { Entity(container: $0) }
+			} catch {
+				logger.error("Error getting suggested entities: \(error, privacy: .public)")
+				throw error
+			}
+		}
+
+		func entities(matching string: String) async throws -> [Entity] {
+			logger.info("Getting entities matching \"\(string, privacy: .sensitive)\"...")
+
+			do {
+				guard let endpoint else {
+					logger.notice("Returning empty (no endpoint)")
+					return []
+				}
+
+				let containers = try await getContainers(for: endpoint.id)
+					.filter(string)
+					.sorted()
+					.map { Entity(container: $0) }
+
+				logger.notice("Returning \(String(describing: containers), privacy: .sensitive) (live)")
+				return containers
+			} catch {
+				logger.error("Error getting matching entities: \(error, privacy: .public)")
+				throw error
+			}
+		}
+
+		func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
+			logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
+
 			guard let endpoint else {
 				logger.notice("Returning empty (no endpoint)")
 				return []
 			}
 
-			let containers = try await getContainers(for: endpoint.id)
-				.filter(string)
-				.sorted()
-				.map { Entity(container: $0) }
+			let parsedContainers = identifiers.compactMap { Entity.fromID($0) }
 
-			logger.notice("Returning \(String(describing: containers), privacy: .sensitive) (live)")
-			return containers
-		} catch {
-			logger.error("Error getting matching entities: \(error, privacy: .public)")
-			throw error
-		}
-	}
-
-	func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-		logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
-
-		guard let endpoint else {
-			logger.notice("Returning empty (no endpoint)")
-			return []
-		}
-
-		let parsedContainers = identifiers.compactMap { Entity.fromID($0) }
-
-		do {
-			let entities: [Entity] = try await {
-				if requiresOnline {
-					let filters = FetchFilters(
-						id: resolveByName ? nil : parsedContainers.map(\._id)
-					)
-					return try await getContainers(for: endpoint.id, filters: filters)
-						.filter { container in
-							if resolveByName {
-								return parsedContainers.contains { $0.matchesContainer(container) }
-							} else {
-								return parsedContainers.contains { $0._id == container.id }
+			do {
+				let entities: [Entity] = try await {
+					if requiresOnline {
+						let filters = FetchFilters(
+							id: resolveByName ? nil : parsedContainers.map(\._id)
+						)
+						return try await getContainers(for: endpoint.id, filters: filters)
+							.filter { container in
+								if resolveByName {
+									return parsedContainers.contains { $0.matchesContainer(container) }
+								} else {
+									return parsedContainers.contains { $0._id == container.id }
+								}
 							}
-						}
-						.compactMap { container in
-							let entity = Entity(container: container)
-							return entity
-						}
-				} else {
+							.compactMap { container in
+								let entity = Entity(container: container)
+								return entity
+							}
+					} else {
+						return parsedContainers
+					}
+				}()
+
+				logger.notice("Returning \(String(describing: entities), privacy: .sensitive) (\(requiresOnline ? "live" : "parsed"))")
+
+				return entities
+			} catch {
+				logger.error("Error getting entities: \(error, privacy: .public)")
+
+				if !requiresOnline && error is URLError {
+					logger.notice("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline)")
 					return parsedContainers
 				}
-			}()
 
-			logger.notice("Returning \(String(describing: entities), privacy: .sensitive) (\(requiresOnline ? "live" : "parsed"))")
-
-			return entities
-		} catch {
-			logger.error("Error getting entities: \(error, privacy: .public)")
-
-			if !requiresOnline && error is URLError {
-				logger.notice("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline)")
-				return parsedContainers
+				throw error
 			}
-
-			throw error
 		}
 	}
 }
 
-// MARK: - IntentContainerQuery+Static
+// MARK: - IntentContainer.Query+Static
 
-extension IntentContainerQuery {
+extension IntentContainer.Query {
 	func getContainers(
 		for endpointID: Endpoint.ID,
 		filters: FetchFilters? = nil

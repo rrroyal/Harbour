@@ -1,5 +1,5 @@
 //
-//  WidgetsBundle.swift
+//  HarbourWidgetsBundle.swift
 //  HarbourWidgets
 //
 //  Created by royal on 10/06/2023.
@@ -10,7 +10,7 @@ import SwiftUI
 import WidgetKit
 
 @main
-struct WidgetsBundle: WidgetBundle {
+struct HarbourWidgetsBundle: WidgetBundle {
 	var body: some Widget {
 		ContainerStatusWidget()
 	}
