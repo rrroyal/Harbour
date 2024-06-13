@@ -116,33 +116,27 @@ public extension PortainerStore {
 	///   - url: Server URL
 	///   - token: Authorization token (if `nil`, it's searched in the keychain)
 	///   - saveToken: Should the token be saved to the keychain?
-	///   - checkAuth: Should we check authorization state?
 	@MainActor
-	func setup(url: URL, token: String? = nil, saveToken: Bool = true) throws {
+	func setup(url: URL, token: String? = nil, saveToken: Bool = true) {
 		logger.notice("Setting up, URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"...")
 
-		do {
-			let _token = try (token ?? keychain.getString(for: url))
-			portainer.serverURL = url
-			portainer.token = _token
+		let token = try? (token ?? keychain.getString(for: url))
+		portainer.serverURL = url
+		portainer.token = token
 
-			preferences.selectedServer = url.absoluteString
+		preferences.selectedServer = url.absoluteString
 
-			if saveToken {
-				do {
-					try keychain.setString(_token, for: url, itemDescription: Keychain.tokenItemDescription)
-				} catch {
-					logger.error("Unable to save token to Keychain: \(error, privacy: .public)")
-				}
+		if let token, saveToken {
+			do {
+				try keychain.setString(token, for: url, itemDescription: Keychain.tokenItemDescription)
+			} catch {
+				logger.error("Unable to save token to Keychain: \(error, privacy: .public)")
 			}
-
-			isSetup = true
-
-//			logger.info("Setup with URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\" sucessfully!")
-		} catch {
-			logger.error("Failed to setup: \(error, privacy: .public)")
-			throw error
 		}
+
+		isSetup = true
+
+//		logger.info("Setup with URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\" sucessfully!")
 	}
 
 	@MainActor
@@ -165,7 +159,7 @@ public extension PortainerStore {
 		}
 
 		if let (url, token) = getStoredCredentials() {
-			try? setup(url: url, token: token, saveToken: false)
+			setup(url: url, token: token, saveToken: false)
 		} else {
 			Task { @MainActor in
 				endpoints = []
@@ -177,21 +171,15 @@ public extension PortainerStore {
 	/// Switches server to provided `serverURL`.
 	/// - Parameter serverURL: Server URL to switch to
 	@MainActor
-	func switchServer(to serverURL: URL) throws {
+	func switchServer(to serverURL: URL) {
 		logger.notice("Switching to \"\(serverURL.absoluteString, privacy: .public)\"")
 
-		do {
-			reset()
-			try setup(url: serverURL, saveToken: false)
+		reset()
+		setup(url: serverURL, saveToken: false)
 
-			preferences.selectedServer = serverURL.absoluteString
-			isSetup = true
+		preferences.selectedServer = serverURL.absoluteString
 
-			logger.notice("Switched successfully!")
-		} catch {
-			logger.error("Failed to switch: \(error, privacy: .public)")
-			throw error
-		}
+		logger.notice("Switched successfully!")
 	}
 
 	/// Removes authorization data from Keychain for the provided server URL.

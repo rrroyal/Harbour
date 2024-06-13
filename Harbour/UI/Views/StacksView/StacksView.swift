@@ -16,34 +16,12 @@ import SwiftUI
 struct StacksView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@EnvironmentObject private var preferences: Preferences
+	@Environment(AppState.self) private var appState
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel = ViewModel()
 	@FocusState private var isFocused: Bool
-
-	@ViewBuilder
-	private var backgroundPlaceholder: some View {
-		Group {
-			if !portainerStore.isSetup {
-				ContentUnavailableView(
-					"Generic.NotSetup.Title",
-					systemImage: SFSymbol.network,
-					description: Text("Generic.NotSetup.Description")
-				)
-				.symbolVariant(.slash)
-			} else if viewModel.stacks.isEmpty {
-				if viewModel.viewState.isLoading {
-					ProgressView()
-				} else if !viewModel.searchText.isEmpty {
-					ContentUnavailableView.search(text: viewModel.searchText)
-				} else {
-					ContentUnavailableView("StacksView.NoStacksPlaceholder", systemImage: SFSymbol.stack)
-						.symbolVariant(.slash)
-				}
-			}
-		}
-	}
 
 	@ToolbarContentBuilder
 	private var toolbarContent: some ToolbarContent {
@@ -56,7 +34,7 @@ struct StacksView: View {
 		}
 		ToolbarItem(placement: createStackToolbarItemPlacement) {
 			Button {
-				Haptics.generateIfEnabled(.sheetPresentation)
+//				Haptics.generateIfEnabled(.sheetPresentation)
 				sceneDelegate.editedStack = nil
 				sceneDelegate.isCreateStackSheetPresented = true
 			} label: {
@@ -99,7 +77,7 @@ struct StacksView: View {
 				Divider()
 
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					sceneDelegate.isSettingsSheetPresented = true
 				} label: {
 					Label("SettingsView.Title", systemImage: SFSymbol.settings)
@@ -120,36 +98,53 @@ struct StacksView: View {
 //		}
 	}
 
+	@ViewBuilder @MainActor
+	private var backgroundPlaceholder: some View {
+		let isLoading = viewModel.viewState.isLoading ||
+			!(portainerStore.stacksTask?.isCancelled ?? true) ||
+			!(appState.portainerServerSwitchTask?.isCancelled ?? true)
+
+		if isLoading {
+			ProgressView()
+		} else if case .failure = viewModel.viewState {
+			viewModel.viewState.backgroundView
+		} else if !portainerStore.isSetup {
+			ContentUnavailableView(
+				"Generic.NotSetup.Title",
+				systemImage: SFSymbol.network,
+				description: Text("Generic.NotSetup.Description")
+			)
+			.symbolVariant(.slash)
+		} else if !viewModel.searchText.isEmpty {
+			ContentUnavailableView.search(text: viewModel.searchText)
+		} else {
+			ContentUnavailableView("StacksView.NoStacksPlaceholder", systemImage: SFSymbol.stack)
+				.symbolVariant(.slash)
+		}
+	}
+
 	var body: some View {
 		@Bindable var sceneDelegate = sceneDelegate
+		let stacks = viewModel.stacks
 
 		StacksList(
 			stacks: viewModel.stacks,
 			filterByStackNameAction: filterByStackName,
 			setStackStateAction: setStackState
 		)
+		.scrollContentBackground(.hidden)
 		.scrollPosition(id: $viewModel.scrollPosition)
-		.searchable(text: $viewModel.searchText, isPresented: $viewModel.isSearchActive)
 		.background {
-			if viewModel.isBackgroundPlaceholderVisible {
+			if stacks.isEmpty {
 				backgroundPlaceholder
 			}
 		}
 		#if os(iOS)
-		.background(
-			viewState: viewModel.viewState,
-			isViewStateBackgroundVisible: viewModel.stacks.isEmpty,
-			backgroundVisiblity: .hidden,
-			backgroundColor: .groupedBackground
-		)
+		.background(.groupedBackground, ignoresSafeAreaEdges: .all)
 		#elseif os(macOS)
-		.background(
-			viewState: viewModel.viewState,
-			isViewStateBackgroundVisible: viewModel.stacks.isEmpty,
-			backgroundVisiblity: .hidden,
-			backgroundColor: .clear
-		)
+		.background(.clear, ignoresSafeAreaEdges: .all)
 		#endif
+		.searchable(text: $viewModel.searchText, isPresented: $viewModel.isSearchActive)
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
 		}

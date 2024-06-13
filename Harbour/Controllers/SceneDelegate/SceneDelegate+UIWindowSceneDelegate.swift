@@ -39,7 +39,7 @@ private extension SceneDelegate {
 	func handleShortcutItem(_ shortcutItem: UIApplicationShortcutItem) -> Bool {
 		switch shortcutItem.type {
 		case HarbourShortcutItem.changeAppIcon:
-			Haptics.generateIfEnabled(.sheetPresentation)
+//			Haptics.generateIfEnabled(.sheetPresentation)
 			isSettingsSheetPresented = true
 			viewsToFocus.insert(SettingsView.ViewID.interfaceAppIcon)
 		default:

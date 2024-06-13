@@ -153,7 +153,7 @@ private extension ContainerContextMenu {
 	func attachAction() {
 		print(#function)
 
-		Haptics.generateIfEnabled(.sheetPresentation)
+//		Haptics.generateIfEnabled(.sheetPresentation)
 //		do {
 //			try Portainer.shared.attach(to: container)
 //			sceneDelegate.isContainerConsoleSheetPresented = true

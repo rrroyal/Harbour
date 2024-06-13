@@ -25,7 +25,7 @@ extension CreateStackView {
 				Group {
 					ForEach(environmentSorted) { entry in
 						Button {
-							Haptics.generateIfEnabled(.sheetPresentation)
+//							Haptics.generateIfEnabled(.sheetPresentation)
 							viewModel.editedEnvironmentEntry = entry
 							viewModel.isEnvironmentEntrySheetPresented = true
 						} label: {
@@ -57,7 +57,7 @@ extension CreateStackView {
 					}
 
 					Button {
-						Haptics.generateIfEnabled(.sheetPresentation)
+//						Haptics.generateIfEnabled(.sheetPresentation)
 						viewModel.editedEnvironmentEntry = nil
 						viewModel.isEnvironmentEntrySheetPresented = true
 					} label: {

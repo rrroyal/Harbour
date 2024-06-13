@@ -159,7 +159,7 @@ private extension CreateStackView.StackFileContentView {
 
 		var body: some View {
 			Button {
-				Haptics.generateIfEnabled(.sheetPresentation)
+//				Haptics.generateIfEnabled(.sheetPresentation)
 				viewModel.isFileImporterPresented = true
 			} label: {
 				Text("CreateStackView.SelectStackFile")

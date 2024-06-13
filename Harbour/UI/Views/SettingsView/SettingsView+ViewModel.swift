@@ -18,7 +18,7 @@ import UIKit.UIDevice
 
 extension SettingsView {
 	@Observable
-	final class ViewModel: IndicatorPresentable {
+	final class ViewModel: @unchecked Sendable, IndicatorPresentable {
 		private let portainerStore: PortainerStore = .shared
 
 		let logger = Logger(.settings)
@@ -59,8 +59,8 @@ extension SettingsView {
 
 		@MainActor
 		func switchPortainerServer(to serverURL: URL) async throws {
-			try await AppState.shared.switchPortainerServer(to: serverURL).value
 			activeURL = serverURL
+			AppState.shared.switchPortainerServer(to: serverURL)
 		}
 
 		@MainActor

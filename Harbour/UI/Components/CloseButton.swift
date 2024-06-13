@@ -21,7 +21,7 @@ struct CloseButton: View {
 
 	var body: some View {
 		Button {
-			Haptics.generateIfEnabled(.sheetPresentation)
+//			Haptics.generateIfEnabled(.sheetPresentation)
 			dismissAction?() ?? _dismiss()
 		} label: {
 			switch style {

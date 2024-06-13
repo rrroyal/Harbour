@@ -81,6 +81,7 @@ private extension SettingsView.InterfaceSection {
 						let isCurrent = AppIcon.current == icon
 
 						Button {
+							Haptics.generateIfEnabled(.light)
 							setIcon(icon)
 						} label: {
 							if isCurrent {
@@ -95,15 +96,13 @@ private extension SettingsView.InterfaceSection {
 						.font(.callout)
 						.fontWeight(.medium)
 						.frame(maxWidth: .infinity, alignment: .trailing)
-						.transition(.opacity)
+						.animation(.smooth, value: currentIcon)
 				}
 			}
-			.animation(.smooth, value: currentIcon)
 		}
 
 		private func setIcon(_ icon: AppIcon) {
 			Task {
-				Haptics.generateIfEnabled(.light)
 				do {
 					currentIcon = icon
 					try await AppIcon.setIcon(icon)

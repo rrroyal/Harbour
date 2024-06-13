@@ -15,6 +15,7 @@ import WidgetKit
 // MARK: - AppState+PortainerActions
 
 extension AppState {
+	@discardableResult
 	func switchPortainerServer(to serverURL: URL) -> Task<Void, Error> {
 //		logger.notice("Switching Portainer server to \"\(serverURL.absoluteString, privacy: .sensitive(mask: .hash))\"")
 
@@ -25,9 +26,15 @@ extension AppState {
 			let portainerStore = PortainerStore.shared
 			do {
 				guard !Task.isCancelled else { return }
-				try portainerStore.switchServer(to: serverURL)
-				portainerStore.refreshEndpoints()
-				portainerStore.refreshContainers()
+				portainerStore.switchServer(to: serverURL)
+
+				_ = try await portainerStore.refreshEndpoints().value
+				try? await Task.sleep(for: .seconds(0.1))
+
+				if portainerStore.selectedEndpoint != nil {
+					portainerStore.refreshContainers()
+				}
+
 				portainerStore.refreshStacks()
 			} catch {
 				logger.error("Failed to switch Portainer server: \(error, privacy: .public)")

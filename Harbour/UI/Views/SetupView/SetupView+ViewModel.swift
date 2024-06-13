@@ -81,7 +81,7 @@ extension SetupView {
 						guard !Task.isCancelled else { return }
 
 						PortainerStore.shared.reset()
-						try? PortainerStore.shared.setup(url: url, token: token, saveToken: true)
+						PortainerStore.shared.setup(url: url, token: token, saveToken: true)
 
 						PortainerStore.shared.setEndpoints(endpoints)
 						if PortainerStore.shared.selectedEndpoint != nil {

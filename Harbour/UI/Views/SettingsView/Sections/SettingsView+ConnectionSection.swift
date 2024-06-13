@@ -52,22 +52,22 @@ private extension SettingsView.ConnectionSection {
 				Divider()
 
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isSetupSheetPresented = true
 				} label: {
 					Label("SettingsView.Connection.ConnectionMenu.Add", systemImage: SFSymbol.plus)
 				}
 			} label: {
-				let _serverURLLabel = serverURLLabel ?? String(localized: "SettingsView.Connection.ConnectionMenu.NoServerSelectedPlaceholder")
 				HStack {
 //					SettingsView.OptionIcon(symbolName: "tag", color: .accentColor)
-					Text(_serverURLLabel)
+					Text(serverURLLabel ?? String(localized: "SettingsView.Connection.ConnectionMenu.NoServerSelectedPlaceholder"))
 						.font(SettingsView.labelFontHeadline)
 						#if os(macOS)
 						.fontWeight(.regular)
 						#endif
-						.foregroundStyle(serverURLLabel != nil ? .primary : .secondary)
+						.foregroundStyle(viewModel.activeURL != nil ? .primary : .secondary)
 						.lineLimit(1)
+						.animation(.smooth, value: viewModel.activeURL)
 
 					#if os(iOS)
 					Spacer()
@@ -77,7 +77,6 @@ private extension SettingsView.ConnectionSection {
 						.foregroundStyle(.secondary)
 					#endif
 				}
-				.animation(.smooth, value: _serverURLLabel)
 			}
 			.labelStyle(.titleAndIcon)
 			.confirmationDialog(
@@ -108,26 +107,29 @@ private extension SettingsView.ConnectionSection {
 		@Environment(\.presentIndicator) private var presentIndicator
 		var url: URL
 
+		private var isActive: Bool {
+			viewModel.activeURL == url
+		}
+
 		var body: some View {
 			Menu {
-				if viewModel.activeURL == url {
-					Label("SettingsView.Connection.ConnectionMenu.Server.InUse", systemImage: SFSymbol.checkmark)
-						.symbolVariant(.circle.fill)
-				} else {
-					Button {
-						Haptics.generateIfEnabled(.light)
-						Task {
-							do {
-								try await viewModel.switchPortainerServer(to: url)
-							} catch {
-								errorHandler(error)
-							}
+				Button {
+					Haptics.generateIfEnabled(.light)
+					Task {
+						do {
+							try await viewModel.switchPortainerServer(to: url)
+						} catch {
+							errorHandler(error)
 						}
-					} label: {
-						Label("SettingsView.Connection.ConnectionMenu.Server.Use", systemImage: SFSymbol.checkmark)
-							.symbolVariant(.circle)
 					}
+				} label: {
+					Label(
+						isActive ? "SettingsView.Connection.ConnectionMenu.Server.InUse" : "SettingsView.Connection.ConnectionMenu.Server.Use",
+						systemImage: SFSymbol.checkmark
+					)
+					.symbolVariant(isActive ? .circle.fill : .circle)
 				}
+				.disabled(isActive)
 
 				#if DEBUG
 				var token: String? {

@@ -60,21 +60,6 @@ extension ContainersView {
 				.filter(searchText)
 		}
 
-		var isBackgroundPlaceholderVisible: Bool {
-			guard containers.isEmpty else { return false }
-
-			switch viewState {
-			case .loading:
-				return false
-			case .reloading:
-				return false
-			case .success:
-				return true
-			case .failure:
-				return false
-			}
-		}
-
 		var isStatusProgressViewVisible: Bool {
 			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
 		}

@@ -73,7 +73,7 @@ struct ContainersView: View {
 			Menu {
 				if !(appState.lastContainerChanges?.isEmpty ?? true) {
 					Button {
-						Haptics.generateIfEnabled(.sheetPresentation)
+//						Haptics.generateIfEnabled(.sheetPresentation)
 						sceneDelegate.isContainerChangesSheetPresented = true
 					} label: {
 						Label("ContainersView.Menu.ShowLastContainerChanges", systemImage: "arrow.left.arrow.right")
@@ -104,7 +104,7 @@ struct ContainersView: View {
 				Divider()
 
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					sceneDelegate.isSettingsSheetPresented = true
 				} label: {
 					Label("SettingsView.Title", systemImage: SFSymbol.settings)
@@ -120,6 +120,7 @@ struct ContainersView: View {
 		}
 	}
 
+	/*
 	@ViewBuilder @MainActor
 	private var backgroundPlaceholder: some View {
 		Group {
@@ -151,30 +152,58 @@ struct ContainersView: View {
 			}
 		}
 	}
+	 */
+
+	@ViewBuilder @MainActor
+	private var backgroundPlaceholder: some View {
+		let isLoading = viewModel.viewState.isLoading ||
+			!(portainerStore.endpointsTask?.isCancelled ?? true) ||
+			!(portainerStore.containersTask?.isCancelled ?? true) ||
+			!(appState.portainerServerSwitchTask?.isCancelled ?? true)
+
+		if isLoading {
+			ProgressView()
+		} else if case .failure = viewModel.viewState {
+			viewModel.viewState.backgroundView
+		} else if !portainerStore.isSetup {
+			ContentUnavailableView(
+				"Generic.NotSetup.Title",
+				systemImage: SFSymbol.network,
+				description: Text("Generic.NotSetup.Description")
+			)
+			.symbolVariant(.slash)
+		} else if portainerStore.endpoints.isEmpty {
+			ContentUnavailableView(
+				"ContainersView.NoEndpointsPlaceholder.Title",
+				systemImage: SFSymbol.xmark,
+				description: Text("ContainersView.NoEndpointsPlaceholder.Description")
+			)
+		} else if !viewModel.searchText.isEmpty {
+			ContentUnavailableView.search(text: viewModel.searchText)
+		} else {
+			ContentUnavailableView(
+				"ContainersView.NoContainersPlaceholder.Title",
+				image: SFSymbol.Custom.container
+			)
+			.symbolVariant(.slash)
+		}
+	}
 
 	var body: some View {
 		@Bindable var sceneDelegate = sceneDelegate
+		let containers = viewModel.containers
 
-		ContainersList(containers: viewModel.containers)
+		ContainersList(containers: containers)
+			.scrollContentBackground(.hidden)
 			.background {
-				if viewModel.isBackgroundPlaceholderVisible {
+				if containers.isEmpty {
 					backgroundPlaceholder
 				}
 			}
 			#if os(iOS)
-			.background(
-				viewState: viewModel.viewState,
-				isViewStateBackgroundVisible: viewModel.containers.isEmpty,
-				backgroundVisiblity: .hidden,
-				backgroundColor: .groupedBackground
-			)
+			.background(.groupedBackground, ignoresSafeAreaEdges: .all)
 			#elseif os(macOS)
-			.background(
-				viewState: viewModel.viewState,
-				isViewStateBackgroundVisible: viewModel.containers.isEmpty,
-				backgroundVisiblity: .hidden,
-				backgroundColor: .clear
-			)
+			.background(.clear, ignoresSafeAreaEdges: .all)
 			#endif
 			.searchable(
 				text: $viewModel.searchText,
