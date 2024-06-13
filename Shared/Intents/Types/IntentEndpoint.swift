@@ -15,8 +15,8 @@ private let logger = Logger(.intents(IntentEndpoint.self))
 // MARK: - IntentEndpoint
 
 struct IntentEndpoint: AppEntity, Identifiable, Hashable {
-	static var typeDisplayRepresentation: TypeDisplayRepresentation = "IntentEndpoint.TypeDisplayRepresentation"
-	static var defaultQuery = IntentEndpointQuery()
+	static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentEndpoint.TypeDisplayRepresentation"
+	static let defaultQuery = IntentEndpointQuery()
 
 	let id: Endpoint.ID
 	let name: String?

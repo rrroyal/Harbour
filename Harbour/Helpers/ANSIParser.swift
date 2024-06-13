@@ -28,9 +28,6 @@ enum ANSIParser {
 	static let escapeSequenceEnd: Character = "m"
 	static let escapeSequenceAllowedCharacters = "([0–9]|[:;<=>?!\"#$%&'()*+,-./ @A–Z[\\]^_`a–z{|}~])*"
 
-	/// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L131
-	static let escapeRegex = /[\u001b\u009b][\[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/
-
 	@available(*, unavailable, message: "Not working :)")
 	static func parse(_ string: String) -> AttributedString {
 		var finalAttributedString = AttributedString()
@@ -99,8 +96,11 @@ enum ANSIParser {
 		logger.debug("Started trimming text with length: \(string.count)...")
 		#endif
 
+		/// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L131
+		let escapeRegex = /[\u001b\u009b][\[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/
+
 		let final = string
-			.replacing(Self.escapeRegex, with: "")
+			.replacing(escapeRegex, with: "")
 
 		#if DEBUG
 		logger.debug("Finished trimming text after \(Date.now.timeIntervalSince(startDate))s.")

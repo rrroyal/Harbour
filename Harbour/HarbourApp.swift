@@ -45,9 +45,9 @@ struct HarbourApp: App {
 		#if os(iOS)
 		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
-		.commands {
-			PortainerCommandMenu(portainerStore: portainerStore)
-		}
+//		.commands {
+//			PortainerCommandMenu(portainerStore: portainerStore)
+//		}
 		#if os(macOS)
 //		.windowStyle(.hiddenTitleBar)
 		.windowToolbarStyle(.unifiedCompact(showsTitle: false))
@@ -74,11 +74,12 @@ struct HarbourApp: App {
 
 // MARK: - HarbourApp+Commands
 
+/*
+// TODO: Main actor-isolated static method '_makeCommands(content:inputs:)' cannot be used to satisfy nonisolated protocol requirement
 private extension HarbourApp {
 	struct PortainerCommandMenu: Commands {
 		var portainerStore: PortainerStore
 
-		@MainActor
 		var body: some Commands {
 			CommandMenu("CommandMenu.Portainer") {
 				Button {
@@ -114,3 +115,4 @@ private extension HarbourApp {
 		}
 	}
 }
+*/

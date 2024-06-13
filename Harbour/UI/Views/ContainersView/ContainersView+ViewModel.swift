@@ -21,6 +21,7 @@ extension ContainersView {
 		private let portainerStore: PortainerStore
 		private let preferences = Preferences.shared
 
+		@ObservationIgnored
 		private var fetchTask: Task<Void, Error>?
 		private var fetchError: Error?
 

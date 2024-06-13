@@ -12,18 +12,18 @@ import SwiftUI
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View>: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
-		@Environment(ContainersView.ViewModel.self) private var viewModel
 		@Environment(\.portainerServerURL) private var portainerServerURL: URL?
 		@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
 		@Environment(\.parentShape) private var parentShape
 		var container: Container
-		var content: () -> Content
+		@ViewBuilder var content: () -> Content
 
 		private var navigationItem: ContainerDetailsView.NavigationItem {
-			let containerID = container.id
-			let displayName = container.displayName
-			let endpointID = portainerSelectedEndpoint?.id
-			return .init(id: containerID, displayName: displayName, endpointID: endpointID)
+			.init(
+				id: container.id,
+				displayName: container.displayName,
+				endpointID: portainerSelectedEndpoint?.id
+			)
 		}
 
 		private var portainerDeeplink: URL? {
@@ -38,14 +38,11 @@ extension ContainersView {
 			#if os(macOS)
 			.buttonStyle(.plain)
 			#endif
-			.if(let: parentShape) {
-				$0
-					.clipShape($1)
-					.contentShape($1)
-					#if os(iOS)
-					.contentShape(.contextMenuPreview, $1)
-					#endif
-			}
+			.clipShape(parentShape ?? AnyShape(Rectangle()))
+			.contentShape(parentShape ?? AnyShape(Rectangle()))
+			#if os(iOS)
+			.contentShape(.contextMenuPreview, parentShape ?? AnyShape(Rectangle()))
+			#endif
 			.contextMenu {
 				ContainerContextMenu(container: container) {
 					portainerStore.refreshContainers(ids: [container.id])

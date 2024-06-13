@@ -35,6 +35,7 @@ struct BackgroundHelper: Sendable {
 		// Find any changes from `oldMapping` to `newMapping`
 		var changes: [ContainerChange] = newMapping
 			.compactMap { key, newContainer in
+				let change: ContainerChange?
 				if let oldContainer = oldMapping[key] {
 					// Had old container, check if it was changed or re-created
 					let changeType: ContainerChange.ChangeType? = if oldContainer.id != newContainer.id {
@@ -47,29 +48,27 @@ struct BackgroundHelper: Sendable {
 					}
 					guard let changeType else { return nil }
 
-					guard let change = ContainerChange(
+					change = ContainerChange(
 						oldContainer: oldContainer,
 						newContainer: newContainer,
 						endpointID: endpoint.id,
 						changeType: changeType
-					) else {
-						loggerBackground.warning("Unable to create ContainerChange!")
-						return nil
-					}
-					return change
+					)
 				} else {
 					// No old container, so it must be a new one
-					guard let change = ContainerChange(
+					change = ContainerChange(
 						oldContainer: nil,
 						newContainer: newContainer,
 						endpointID: endpoint.id,
 						changeType: .created
-					) else {
-						loggerBackground.warning("Unable to create ContainerChange!")
-						return nil
-					}
-					return change
+					)
 				}
+
+				guard let change else {
+					loggerBackground.warning("Unable to create ContainerChange for id: \(key, privacy: .sensitive(mask: .hash))!")
+					return nil
+				}
+				return change
 			}
 
 		// Check if there are any identifiers not present in `newMapping`
@@ -84,7 +83,7 @@ struct BackgroundHelper: Sendable {
 				endpointID: endpoint.id,
 				changeType: .removed
 			) else {
-				loggerBackground.warning("Unable to create ContainerChange!")
+				loggerBackground.warning("Unable to create ContainerChange for id: \(oldIdentifier, privacy: .sensitive(mask: .hash))!")
 				return nil
 			}
 			return change
@@ -94,7 +93,7 @@ struct BackgroundHelper: Sendable {
 			.filter { $0.changeType == .recreated ? $0.oldState != $0.newState : true }
 			.localizedSorted(by: \.containerName)
 
-		loggerBackground.notice("Changes: \(changes)")
+		loggerBackground.notice("Changes (\(changes.count, privacy: .public)): \(changes, privacy: .sensitive)")
 
 		if changes.isEmpty {
 			return

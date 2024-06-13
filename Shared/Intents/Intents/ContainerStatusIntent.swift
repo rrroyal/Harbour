@@ -15,8 +15,8 @@ private let logger = Logger(.intents(ContainerStatusIntent.self))
 // MARK: - ContainerStatusIntent
 
 struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
-	static var title: LocalizedStringResource = "ContainerStatusIntent.Title"
-	static var description = IntentDescription("ContainerStatusIntent.Description")
+	static let title: LocalizedStringResource = "ContainerStatusIntent.Title"
+	static let description = IntentDescription("ContainerStatusIntent.Description")
 
 	static var parameterSummary: some ParameterSummary {
 		When(\.$endpoint, .hasAnyValue) {
@@ -29,9 +29,9 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		}
 	}
 
-	static var authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
+	static let authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-	static var isDiscoverable = false
+	static let isDiscoverable = false
 
 	@Parameter(title: "AppIntents.Parameter.Endpoint.Title")
 	var endpoint: IntentEndpoint?

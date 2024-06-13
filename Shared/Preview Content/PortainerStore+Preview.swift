@@ -9,7 +9,7 @@
 import Foundation
 
 extension PortainerStore {
-	static var preview: PortainerStore = {
+	static let preview: PortainerStore = {
 		let portainerStore = PortainerStore()
 		portainerStore.containers = [.preview()]
 		portainerStore.endpoints = [.init(id: 0, name: "Endpoint")]

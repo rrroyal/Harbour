@@ -9,7 +9,7 @@
 import Foundation
 import PortainerKit
 
-extension PortainerClient.Error: LocalizedError {
+extension PortainerClient.Error: @retroactive LocalizedError {
 	public var errorDescription: String? {
 		switch self {
 		case .other(let reason):

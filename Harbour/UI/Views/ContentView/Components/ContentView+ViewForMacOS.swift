@@ -60,12 +60,11 @@ private extension ContentView.ViewForMacOS {
 						sceneDelegate.activeTab = tab
 					} label: {
 						tab.icon
-							.accessibilityLabel(Text(tab.label))
+							.accessibilityLabel(Text(tab.title))
 							.padding(.vertical)
 							.frame(maxWidth: .infinity)
 					}
 					.foregroundStyle(sceneDelegate.activeTab == tab ? .primary : .tertiary)
-					.symbolVariant(sceneDelegate.activeTab == tab ? .fill : .none)
 				}
 
 				Spacer()

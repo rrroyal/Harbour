@@ -111,9 +111,7 @@ struct ContentView: View {
 		.onContinueUserActivity(CSSearchableItemActionType, perform: sceneDelegate.onSpotlightUserActivity)
 		.onChange(of: appState.notificationsToHandle, sceneDelegate.onNotificationsToHandleChange)
 		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
-		#if os(macOS)
 		.environment(sceneDelegate)
-		#endif
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.presentIndicator, .init(sceneDelegate.presentIndicator))
 		.withNavigation(handler: sceneDelegate)

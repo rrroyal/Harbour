@@ -37,6 +37,7 @@ extension SettingsView {
 
 		var isNegraButtonVisible = Int.random(in: 0...19) == 11
 
+		@MainActor
 		var displayiPadOptions: Bool {
 			#if os(macOS)
 			true
@@ -50,11 +51,10 @@ extension SettingsView {
 			activeURL = portainerStore.serverURL
 		}
 
+		@MainActor
 		func refreshServers() {
-			Task { @MainActor in
-				activeURL = portainerStore.serverURL
-				serverURLs = portainerStore.savedURLs
-			}
+			activeURL = portainerStore.serverURL
+			serverURLs = portainerStore.savedURLs
 		}
 
 		@MainActor
@@ -63,17 +63,14 @@ extension SettingsView {
 			activeURL = serverURL
 		}
 
+		@MainActor
 		func removeServer(_ url: URL) throws {
 			try portainerStore.removeServer(url)
 			refreshServers()
 
 			if portainerStore.serverURL == url {
-				Task {
-					await portainerStore.reset()
-				}
-				Task { @MainActor in
-					activeURL = nil
-				}
+				portainerStore.reset()
+				activeURL = nil
 			}
 		}
 	}

@@ -9,7 +9,7 @@
 import Foundation
 import KeychainKit
 
-extension Keychain.KeychainError: LocalizedError {
+extension Keychain.KeychainError: @retroactive LocalizedError {
 	public var errorDescription: String? {
 		switch self {
 		case .encodingFailed: String(localized: "Keychain.KeychainError.EncodingFailed")

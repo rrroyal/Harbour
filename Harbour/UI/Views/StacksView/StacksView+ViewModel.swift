@@ -14,7 +14,7 @@ import SwiftUI
 
 extension StacksView {
 	@Observable
-	final class ViewModel {
+	final class ViewModel: @unchecked Sendable {
 		private let portainerStore = PortainerStore.shared
 
 		private var fetchTask: Task<Void, Error>?

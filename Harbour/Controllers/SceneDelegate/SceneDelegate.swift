@@ -15,7 +15,7 @@ import SwiftUI
 // MARK: - SceneDelegate
 
 @Observable
-final class SceneDelegate: NSObject {
+final class SceneDelegate: NSObject, @unchecked Sendable {
 
 	// MARK: Properties
 

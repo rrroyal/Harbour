@@ -57,19 +57,27 @@ private extension CreateStackView.StackFileContentView {
 		let item = items.first { $0.hasItemConformingToTypeIdentifier(UTType.yaml.identifier) }
 		guard let item else { return false }
 
-		Task {
-			do {
-				guard let url = try await item.loadItem(forTypeIdentifier: UTType.yaml.identifier) as? URL else { return }
+		_ = item.loadInPlaceFileRepresentation(forTypeIdentifier: UTType.yaml.identifier) { url, bool, error in
+			Task { @MainActor in
+				do {
+					if let error {
+						throw error
+					}
 
-				#if os(iOS)
-				let securityScopedResource = true
-				#elseif os(macOS)
-				let securityScopedResource = false
-				#endif
-				let stackFileContent = try viewModel.loadStackFile(at: url, securityScopedResource: securityScopedResource)
-				onStackFileSelection?(stackFileContent)
-			} catch {
-				errorHandler(error)
+					guard let url else {
+						throw CreateStackView.ViewModel.Error.unableToAccessFile
+					}
+
+					#if os(iOS)
+					let securityScopedResource = true
+					#elseif os(macOS)
+					let securityScopedResource = false
+					#endif
+					let stackFileContent = try viewModel.loadStackFile(at: url, securityScopedResource: securityScopedResource)
+					onStackFileSelection?(stackFileContent)
+				} catch {
+					errorHandler(error)
+				}
 			}
 		}
 

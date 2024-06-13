@@ -19,7 +19,7 @@ extension ContainersView.ListView {
 		@ScaledMetric(relativeTo: .body) private var circleSize = 12
 		private let minimumScaleFactor: Double = 0.8
 
-		var container: Container
+		let container: Container
 
 		@MainActor
 		private var tintColor: Color {
@@ -95,6 +95,7 @@ extension ContainersView.ListView {
 			.animation(.smooth, value: container.state)
 			.animation(.smooth, value: container.status)
 			.animation(.smooth, value: isBeingRemoved)
+			.id(self.id)
 		}
 	}
 }
@@ -102,13 +103,15 @@ extension ContainersView.ListView {
 // MARK: - ContainersView.ListView.ContainerCell+Identifiable
 
 extension ContainersView.ListView.ContainerCell: Identifiable {
-	var id: String { container.id }
+	nonisolated var id: String {
+		"\(Self.self).\(container.id)"
+	}
 }
 
 // MARK: - ContainersListView.ContainerCell+Equatable
 
 extension ContainersView.ListView.ContainerCell: Equatable {
-	static func == (lhs: Self, rhs: Self) -> Bool {
+	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&

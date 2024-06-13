@@ -37,23 +37,20 @@ extension AppIcon {
 
 extension AppIcon {
 	static let `default`: Self = .init(id: nil, name: String(localized: "AppIcon.Default"))
-	static let boxLight: Self = .init(id: "AppIcon-Box-Light", name: String(localized: "AppIcon.BoxLight"))
-	static let boxDark: Self = .init(id: "AppIcon-Box-Dark", name: String(localized: "AppIcon.BoxDark"))
-	static let ogLight: Self = .init(id: "AppIcon-OG-Light", name: String(localized: "AppIcon.OGLight"))
-	static let ogDark: Self = .init(id: "AppIcon-OG-Dark", name: String(localized: "AppIcon.OGDark"))
+	static let box: Self = .init(id: "AppIcon-Box", name: String(localized: "AppIcon.Box"))
+	static let og: Self = .init(id: "AppIcon-OG", name: String(localized: "AppIcon.OG"))
 
 	static let allCases: [Self] = [
 		.default,
-		.boxLight,
-		.boxDark,
-		.ogLight,
-		.ogDark
+		.box,
+		.og,
 	]
 }
 
 // MARK: - AppIcon+current
 
 extension AppIcon {
+	@MainActor
 	static var current: Self {
 		#if canImport(UIKit)
 		if let alternateIconName = UIApplication.shared.alternateIconName {

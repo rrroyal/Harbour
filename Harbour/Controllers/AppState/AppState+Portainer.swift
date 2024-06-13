@@ -42,7 +42,10 @@ extension AppState {
 // MARK: - AppState+PortainerData
 
 extension AppState {
+	// TODO: https://developer.apple.com/wwdc24/10131
+
 	func onContainersChange(from previousContainers: [Container], to newContainers: [Container]) {
+		/*
 //		WidgetCenter.shared.reloadTimelines(ofKind: HarbourWidgetKind.containerStatus)
 
 //		Task {
@@ -91,9 +94,11 @@ extension AppState {
 				self.logger.error("Failed to index containers: \(error, privacy: .public)")
 			}
 		}
+		 */
 	}
 
 	func onStacksChange(from previousStacks: [Stack], to newStacks: [Stack]) {
+		/*
 //		Task {
 //			WidgetCenter.shared.reloadTimelines(ofKind: HarbourWidgetKind.stackStatus)
 //			await NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [HarbourUserActivityIdentifier.stackDetails])
@@ -138,5 +143,6 @@ extension AppState {
 				self.logger.error("Failed to index stacks: \(error, privacy: .public)")
 			}
 		}
+		 */
 	}
 }

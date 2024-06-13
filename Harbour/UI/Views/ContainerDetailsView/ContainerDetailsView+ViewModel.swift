@@ -19,8 +19,8 @@ import PortainerKit
 extension ContainerDetailsView {
 	@Observable
 	final class ViewModel: @unchecked Sendable {
-		private nonisolated let portainerStore: PortainerStore = .shared
-		private nonisolated let logger = Logger(.view(ContainerDetailsView.self))
+		private let portainerStore: PortainerStore = .shared
+		private let logger = Logger(.view(ContainerDetailsView.self))
 
 		private(set) var fetchTask: Task<Void, Error>?
 
@@ -29,6 +29,10 @@ extension ContainerDetailsView {
 		var navigationItem: ContainerDetailsView.NavigationItem
 
 		var scrollViewIsRefreshing = false
+
+		var container: Container? {
+			portainerStore.containers.first { $0.id == navigationItem.id }
+		}
 
 		var containerDetails: ContainerDetails? {
 			viewState.value

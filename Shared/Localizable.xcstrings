@@ -1,22 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "AppIcon.BoxDark" : {
+    "AppIcon.Box" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Box (Dark)"
-          }
-        }
-      }
-    },
-    "AppIcon.BoxLight" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Box (Light)"
+            "value" : "Box"
           }
         }
       }
@@ -31,22 +21,22 @@
         }
       }
     },
-    "AppIcon.OGDark" : {
+    "AppIcon.OG" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Original (Dark)"
+            "value" : "Original"
           }
         }
       }
     },
-    "AppIcon.OGLight" : {
+    "AppIntents.Parameter.Container.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Original (Light)"
+            "value" : "Container"
           }
         }
       }
@@ -67,6 +57,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Endpoint"
+          }
+        }
+      }
+    },
+    "AppIntents.Parameter.ExecuteAction.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Action"
           }
         }
       }
@@ -97,26 +97,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Harbour"
-          }
-        }
-      }
-    },
-    "CommandMenu.Portainer" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Portainer"
-          }
-        }
-      }
-    },
-    "CommandMenu.Portainer.ActiveEndpoint" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Active Endpoint"
           }
         }
       }
@@ -291,17 +271,6 @@
         }
       }
     },
-    "ContainerDetailsView.NetworkDetailsView.CopyPublicURL" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy Public URL"
-          }
-        }
-      }
-    },
     "ContainerDetailsView.NetworkDetailsView.Gateway" : {
       "localizations" : {
         "en" : {
@@ -358,17 +327,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Networks"
-          }
-        }
-      }
-    },
-    "ContainerDetailsView.NetworkDetailsView.OpenPublicURL" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Public URL"
           }
         }
       }
@@ -1184,6 +1142,18 @@
           }
         }
       }
+    },
+    "Execute ${action} on ${container}" : {
+
+    },
+    "Execute ${action} on a container" : {
+
+    },
+    "ExecuteActionIntent.Description" : {
+
+    },
+    "ExecuteActionIntent.Title" : {
+
     },
     "FeaturesView.ContinueButton" : {
       "localizations" : {

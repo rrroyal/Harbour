@@ -9,19 +9,21 @@
 import AppIntents
 import PortainerKit
 
-extension ContainerAction: AppEnum {
-	public static var typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ContainerAction.AppEnumTitle")
+extension ContainerAction: @retroactive AppEnum {
+	public static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ContainerAction.AppEnumTitle")
 
-	public static var caseDisplayRepresentations: [Self: DisplayRepresentation] = [
-		.start: .init(title: .init(stringLiteral: Self.start.title), image: .init(systemName: Self.start.icon)),
-		.stop: .init(title: .init(stringLiteral: Self.stop.title), image: .init(systemName: Self.stop.icon)),
-		.restart: .init(title: .init(stringLiteral: Self.restart.title), image: .init(systemName: Self.restart.icon)),
-		.kill: .init(title: .init(stringLiteral: Self.kill.title), image: .init(systemName: Self.kill.icon)),
-		.pause: .init(title: .init(stringLiteral: Self.pause.title), image: .init(systemName: Self.pause.icon)),
-		.unpause: .init(title: .init(stringLiteral: Self.unpause.title), image: .init(systemName: Self.unpause.icon))
-	]
+	public static var caseDisplayRepresentations: [Self: DisplayRepresentation] {
+		[
+			.start:		.init(title: "PortainerKit.ContainerAction.Start", image: .init(systemName: "play")),
+			.stop:		.init(title: "PortainerKit.ContainerAction.Stop", image: .init(systemName: "stop")),
+			.restart:	.init(title: "PortainerKit.ContainerAction.Restart", image: .init(systemName: "arrow.triangle.2.circlepath")),
+			.kill:		.init(title: "PortainerKit.ContainerAction.Kill", image: .init(systemName: "bolt")),
+			.pause:		.init(title: "PortainerKit.ContainerAction.Pause", image: .init(systemName: "pause")),
+			.unpause:	.init(title: "PortainerKit.ContainerAction.Unpause", image: .init(systemName: "play"))
+		]
+	}
 
-	public static var allCases: [Self] = [
+	public static let allCases: [Self] = [
 		.start,
 		.stop,
 		.restart,

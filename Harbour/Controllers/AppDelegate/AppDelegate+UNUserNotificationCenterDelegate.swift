@@ -7,10 +7,10 @@
 //
 
 import PortainerKit
-import UserNotifications
+@preconcurrency import UserNotifications
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-	func userNotificationCenter(
+	nonisolated func userNotificationCenter(
 		_ center: UNUserNotificationCenter,
 		willPresent notification: UNNotification,
 		withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
@@ -18,15 +18,15 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 		completionHandler([.banner, .list, .sound])
 	}
 
-	func userNotificationCenter(
+	nonisolated func userNotificationCenter(
 		_ center: UNUserNotificationCenter,
 		didReceive response: UNNotificationResponse,
 		withCompletionHandler completionHandler: @escaping () -> Void
 	) {
-		AppState.shared.handleNotification(response)
-
 		Task { @MainActor in
-			completionHandler()
+			AppState.shared.handleNotification(response)
 		}
+
+		completionHandler()
 	}
 }

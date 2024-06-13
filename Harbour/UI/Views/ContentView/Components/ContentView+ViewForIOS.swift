@@ -20,36 +20,34 @@ extension ContentView {
 			@Bindable var sceneDelegate = sceneDelegate
 
 			TabView(selection: $sceneDelegate.activeTab) {
-				NavigationWrapped(navigationPath: $sceneDelegate.navigationPathContainers) {
-					ContainersView()
-				} placeholderContent: {
-					Text("ContainersView.NoContainerSelectedPlaceholder")
-						.foregroundStyle(.tertiary)
-				}
-				.tag(ViewTab.containers)
-				.tabItem {
+				Tab(value: .containers) {
+					NavigationWrapped(navigationPath: $sceneDelegate.navigationPathContainers) {
+						ContainersView()
+					} placeholderContent: {
+						Text("ContainersView.NoContainerSelectedPlaceholder")
+							.foregroundStyle(.tertiary)
+					}
+				} label: {
 					Label {
-						Text(ViewTab.containers.label)
+						Text(ViewTab.containers.title)
 					} icon: {
 						ViewTab.containers.icon
 					}
-					.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
 				}
 
-				NavigationWrapped(navigationPath: $sceneDelegate.navigationPathStacks) {
-					StacksView()
-				} placeholderContent: {
-					Text("StacksView.NoStackSelectedPlaceholder")
-						.foregroundStyle(.tertiary)
-				}
-				.tag(ViewTab.stacks)
-				.tabItem {
+				Tab(value: .stacks) {
+					NavigationWrapped(navigationPath: $sceneDelegate.navigationPathStacks) {
+						StacksView()
+					} placeholderContent: {
+						Text("StacksView.NoStackSelectedPlaceholder")
+							.foregroundStyle(.tertiary)
+					}
+				} label: {
 					Label {
-						Text(ViewTab.stacks.label)
+						Text(ViewTab.stacks.title)
 					} icon: {
 						ViewTab.stacks.icon
 					}
-					.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
 				}
 			}
 		}

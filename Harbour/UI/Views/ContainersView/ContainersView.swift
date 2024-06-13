@@ -33,7 +33,7 @@ struct ContainersView: View {
 		return String(localized: "AppName")
 	}
 
-	@ViewBuilder
+	@ViewBuilder @MainActor
 	private var endpointPicker: some View {
 		let selectedEndpointBinding = Binding<Endpoint?>(
 			get: { portainerStore.selectedEndpoint },
@@ -60,7 +60,7 @@ struct ContainersView: View {
 		.disabled(!viewModel.canUseEndpointsMenu)
 	}
 
-	@ToolbarContentBuilder
+	@ToolbarContentBuilder @MainActor
 	private var toolbarContent: some ToolbarContent {
 		#if os(macOS)
 		ToolbarItem(placement: .primaryAction) {
@@ -120,7 +120,7 @@ struct ContainersView: View {
 		}
 	}
 
-	@ViewBuilder
+	@ViewBuilder @MainActor
 	private var backgroundPlaceholder: some View {
 		Group {
 			if !portainerStore.isSetup {
@@ -155,7 +155,7 @@ struct ContainersView: View {
 	var body: some View {
 		@Bindable var sceneDelegate = sceneDelegate
 
-		ContainersList()
+		ContainersList(containers: viewModel.containers)
 			.background {
 				if viewModel.isBackgroundPlaceholderVisible {
 					backgroundPlaceholder
@@ -189,7 +189,7 @@ struct ContainersView: View {
 			}
 			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 				ContainerDetailsView(navigationItem: navigationItem)
-					.equatable()
+//					.equatable()
 					.tag(navigationItem.id)
 			}
 			.navigationTitle(navigationTitle)
@@ -250,33 +250,6 @@ struct ContainersView: View {
 	}
 }
 
-// MARK: - ContainersView+ContainersList
-
-private extension ContainersView {
-	struct ContainersList: View {
-		@Environment(ContainersView.ViewModel.self) private var viewModel
-		@EnvironmentObject private var portainerStore: PortainerStore
-		@EnvironmentObject private var preferences: Preferences
-
-		var body: some View {
-			ScrollView {
-				Group {
-					if preferences.cvUseGrid {
-						GridView(containers: viewModel.containers)
-					} else {
-						ListView(containers: viewModel.containers)
-					}
-				}
-				.padding(.horizontal)
-				.padding(.bottom)
-				#if os(macOS)
-				.padding(.top)
-				#endif
-			}
-		}
-	}
-}
-
 // MARK: - ContainersView+Actions
 
 private extension ContainersView {
@@ -314,6 +287,33 @@ private extension ContainersView {
 			return .handled
 		default:
 			return .ignored
+		}
+	}
+}
+
+// MARK: - ContainersView+ContainersList
+
+private extension ContainersView {
+	struct ContainersList: View {
+		@EnvironmentObject private var portainerStore: PortainerStore
+		@EnvironmentObject private var preferences: Preferences
+		let containers: [Container]
+
+		var body: some View {
+			ScrollView {
+				Group {
+					if preferences.cvUseGrid {
+						GridView(containers: containers)
+					} else {
+						ListView(containers: containers)
+					}
+				}
+				.padding(.horizontal)
+				.padding(.bottom)
+				#if os(macOS)
+				.padding(.top)
+				#endif
+			}
 		}
 	}
 }

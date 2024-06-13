@@ -27,7 +27,6 @@ extension ContainersView {
 						ContainerCell(container: container)
 							.equatable()
 							.geometryGroup()
-							.id("ContainerCell.\(container._persistentID)")
 							.tag(container._persistentID)
 					}
 					.environment(\.parentShape, AnyShape(ContainerCell.roundedRectangleBackground))

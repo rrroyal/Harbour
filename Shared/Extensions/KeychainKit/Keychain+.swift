@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import KeychainKit
+@preconcurrency import KeychainKit
 
 // MARK: - Keychain+shared
 

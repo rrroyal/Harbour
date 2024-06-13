@@ -64,8 +64,8 @@ extension Container.State {
 		switch self {
 		case .created:		"wake"
 		case .running:		"power"
-		case .paused:		ContainerAction.pause.icon
-		case .restarting:	ContainerAction.restart.icon
+		case .paused:		"pause"
+		case .restarting:	"arrow.triangle.2.circlepath"
 		case .removing:		"trash"
 		case .exited:		"stop"
 		case .dead:			"xmark"
@@ -84,13 +84,13 @@ extension Container.State? {
 extension Container.State {
 	var emoji: String {
 		switch self {
-		case .dead:			String(localized: "PortainerKit.Container.State.Icon.Dead")
 		case .created:		String(localized: "PortainerKit.Container.State.Icon.Created")
-		case .exited:		String(localized: "PortainerKit.Container.State.Icon.Exited")
-		case .paused:		String(localized: "PortainerKit.Container.State.Icon.Paused")
-		case .removing:		String(localized: "PortainerKit.Container.State.Icon.Removing")
-		case .restarting:	String(localized: "PortainerKit.Container.State.Icon.Restarting")
 		case .running:		String(localized: "PortainerKit.Container.State.Icon.Running")
+		case .paused:		String(localized: "PortainerKit.Container.State.Icon.Paused")
+		case .restarting:	String(localized: "PortainerKit.Container.State.Icon.Restarting")
+		case .removing:		String(localized: "PortainerKit.Container.State.Icon.Removing")
+		case .exited:		String(localized: "PortainerKit.Container.State.Icon.Exited")
+		case .dead:			String(localized: "PortainerKit.Container.State.Icon.Dead")
 		}
 	}
 }

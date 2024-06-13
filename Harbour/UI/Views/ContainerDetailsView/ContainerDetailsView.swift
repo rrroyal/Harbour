@@ -40,7 +40,7 @@ struct ContainerDetailsView: View {
 	}
 
 	private var container: Container? {
-		portainerStore.containers.first { $0.id == navigationItem.id }
+		viewModel.container
 	}
 
 	private var containerDetails: ContainerDetails? {
@@ -315,7 +315,7 @@ struct ContainerDetailsView: View {
 
 // MARK: - ContainerDetailsView+Identifiable
 
-extension ContainerDetailsView: Identifiable {
+extension ContainerDetailsView {
 	var id: String {
 		"\(Self.self).\(navigationItem.id)"
 	}
@@ -323,11 +323,11 @@ extension ContainerDetailsView: Identifiable {
 
 // MARK: - ContainerDetailsView+Equatable
 
-extension ContainerDetailsView: Equatable {
-	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.navigationItem == rhs.navigationItem
-	}
-}
+//extension ContainerDetailsView: Equatable {
+//	static func == (lhs: Self, rhs: Self) -> Bool {
+//		lhs.navigationItem == rhs.navigationItem
+//	}
+//}
 
 // MARK: - Previews
 

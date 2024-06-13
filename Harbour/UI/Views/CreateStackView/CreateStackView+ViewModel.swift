@@ -16,8 +16,10 @@ import UniformTypeIdentifiers
 
 extension CreateStackView {
 	@Observable
-	final class ViewModel {
+	final class ViewModel: @unchecked Sendable {
+		@ObservationIgnored
 		private(set) var createStackTask: Task<Stack, Swift.Error>?
+		@ObservationIgnored
 		private(set) var fetchStackFileContentTask: Task<Void, Never>?
 
 		private(set) var createStackError: Swift.Error?

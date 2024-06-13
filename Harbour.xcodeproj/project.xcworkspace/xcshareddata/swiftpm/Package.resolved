@@ -7,7 +7,7 @@
       "location" : "https://github.com/rrroyal/CommonsKit",
       "state" : {
         "branch" : "main",
-        "revision" : "c2378a006798dcbc32593548527956df41166eba"
+        "revision" : "90ed0aae5f1843a7e7c4a94fe78f41cdf22db244"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/rrroyal/IndicatorsKit",
       "state" : {
         "branch" : "main",
-        "revision" : "2d9d3c27db8b8f4f28157877e498b81d85c3916b"
+        "revision" : "6f64ec75f22cef8906608958ba5dbafe9ba8dcc4"
       }
     },
     {

@@ -13,4 +13,6 @@ extension DismissAction: @unchecked Sendable { }
 
 extension Logger: @unchecked Sendable { }
 
-extension NSItemProvider: @unchecked Sendable { }
+extension NSItemProvider: @unchecked @retroactive Sendable { }
+
+extension UserDefaults: @unchecked @retroactive Sendable { }

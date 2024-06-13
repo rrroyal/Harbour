@@ -288,8 +288,11 @@ public extension PortainerStore {
 	@Sendable @discardableResult
 	func setStackState(stackID: Stack.ID, started: Bool) async throws -> Stack? {
 		defer {
-			Task { @MainActor in
-				loadingStackIDs.remove(stackID)
+			Task {
+				try? await Task.sleep(for: .seconds(0.1))
+				await MainActor.run {
+					_ = loadingStackIDs.remove(stackID)
+				}
 			}
 		}
 
@@ -309,7 +312,7 @@ public extension PortainerStore {
 
 			Task {
 				if let newStack, let stackIndex = stacks.firstIndex(where: { $0.id == stackID }) {
-					Task { @MainActor in
+					await MainActor.run {
 						stacks[stackIndex] = newStack
 					}
 				}

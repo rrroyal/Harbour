@@ -16,14 +16,14 @@ struct FeaturesView: View {
 
 	var body: some View {
 		VStack {
-			Spacer()
+			Spacer(minLength: 20)
 
 			Text("FeaturesView.Headline AppName:\(Text("AppName").foregroundColor(.accentColor))")
 				.font(.largeTitle.bold())
 				.multilineTextAlignment(.center)
 				.padding(.horizontal)
 
-			Spacer()
+			Spacer(minLength: 20)
 
 			VStack(spacing: 20) {
 				FeatureCell(
@@ -43,7 +43,7 @@ struct FeaturesView: View {
 				)
 			}
 
-			Spacer()
+			Spacer(minLength: 40)
 
 			Button("FeaturesView.ContinueButton") {
 				Haptics.generateIfEnabled(.buttonPress)

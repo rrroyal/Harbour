@@ -127,7 +127,7 @@ extension ViewState: Equatable where Success: Equatable {
 
 extension ViewState {
 	/// Background (or overlay) view for this state.
-	@ViewBuilder
+	@ViewBuilder @MainActor
 	var backgroundView: some View {
 		Group {
 			switch self {

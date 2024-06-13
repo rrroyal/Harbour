@@ -20,7 +20,7 @@ extension ContainersView.GridView {
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
 
-		var container: Container
+		let container: Container
 
 		@MainActor
 		private var isBeingRemoved: Bool {
@@ -88,6 +88,7 @@ extension ContainersView.GridView {
 			.animation(.smooth, value: container.state)
 			.animation(.smooth, value: container.status)
 			.animation(.smooth, value: isBeingRemoved)
+			.id(self.id)
 		}
 	}
 }
@@ -95,13 +96,15 @@ extension ContainersView.GridView {
 // MARK: - ContainersView.GridView.ContainerCell+Identifiable
 
 extension ContainersView.GridView.ContainerCell: Identifiable {
-	var id: String { container.id }
+	nonisolated var id: String {
+		"\(Self.self).\(container.id)"
+	}
 }
 
 // MARK: - ContainersView.GridView.ContainerCell+Equatable
 
 extension ContainersView.GridView.ContainerCell: Equatable {
-	static func == (lhs: Self, rhs: Self) -> Bool {
+	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&

@@ -21,7 +21,7 @@ struct StackDetailsView: View {
 	@Environment(\.portainerServerURL) private var portainerServerURL
 	@State private var viewModel: ViewModel
 
-	var navigationItem: NavigationItem
+	let navigationItem: NavigationItem
 
 	private var navigationTitle: String {
 		viewModel.stack?.name ?? navigationItem.stackName ?? navigationItem.stackID.description
@@ -227,10 +227,9 @@ struct StackDetailsView: View {
 			await fetch().value
 		}
 		.onChange(of: navigationItem) { _, newNavigationItem in
-			viewModel.viewState = .loading
 			viewModel.navigationItem = newNavigationItem
 		}
-		.id(self.id)
+//		.id(self.id)
 	}
 }
 
@@ -280,19 +279,19 @@ private extension StackDetailsView {
 
 // MARK: - StackDetailsView+Identifiable
 
-extension StackDetailsView: Identifiable {
-	var id: String {
-		"\(Self.self).\(navigationItem.id)"
-	}
-}
+//extension StackDetailsView: Identifiable {
+//	nonisolated var id: String {
+//		"\(Self.self).\(navigationItem.id)"
+//	}
+//}
 
 // MARK: - StackDetailsView+Equatable
 
-extension StackDetailsView: Equatable {
-	static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.navigationItem == rhs.navigationItem
-	}
-}
+//extension StackDetailsView: Equatable {
+//	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+//		lhs.navigationItem == rhs.navigationItem
+//	}
+//}
 
 // MARK: - StackDetailsView+ViewID
 

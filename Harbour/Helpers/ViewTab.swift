@@ -15,10 +15,10 @@ enum ViewTab: CaseIterable, Hashable {
 	case stacks
 }
 
-// MARK: - ViewTab+label
+// MARK: - ViewTab+UI
 
 extension ViewTab {
-	var label: String {
+	var title: String {
 		switch self {
 		case .containers:
 			String(localized: "ViewTab.Containers")
@@ -26,11 +26,7 @@ extension ViewTab {
 			String(localized: "ViewTab.Stacks")
 		}
 	}
-}
 
-// MARK: - ViewTab+icon
-
-extension ViewTab {
 	var icon: Image {
 		switch self {
 		case .containers:

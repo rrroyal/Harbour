@@ -17,6 +17,8 @@ extension ContainersView {
 		@Environment(ContainersView.ViewModel.self) private var viewModel
 		@Environment(\.horizontalSizeClass) private var horizontalSizeClass: UserInterfaceSizeClass?
 
+		let containers: [Container]
+
 		private var cellMinimumSize: Double {
 			#if os(iOS)
 			switch horizontalSizeClass {
@@ -36,8 +38,6 @@ extension ContainersView {
 
 		private let cellSpacing: Double = 8
 
-		let containers: [Container]
-
 		var body: some View {
 			LazyVGrid(columns: [.init(.adaptive(minimum: cellMinimumSize, maximum: cellMaximumSize))], spacing: cellSpacing) {
 				ForEach(containers) { container in
@@ -45,7 +45,6 @@ extension ContainersView {
 						ContainerCell(container: container)
 							.equatable()
 							.geometryGroup()
-							.id("ContainerCell.\(container._persistentID)")
 							.tag(container._persistentID)
 					}
 					.environment(\.parentShape, AnyShape(ContainerCell.roundedRectangleBackground))

@@ -169,7 +169,7 @@ struct StacksView: View {
 		}
 		.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
 			StackDetailsView(navigationItem: navigationItem)
-				.equatable()
+//				.equatable()
 				.tag(navigationItem.id)
 		}
 		.navigationTitle("StacksView.Title")

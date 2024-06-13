@@ -158,7 +158,9 @@ struct CreateStackView: View {
 		.animation(.smooth, value: viewModel.stackEnvironment)
 		.animation(.smooth, value: viewModel.createStackError != nil)
 		.task(id: viewModel.stackID) {
-			await viewModel.fetchStackFileContent().value
+			if viewModel.stackID != nil {
+				await viewModel.fetchStackFileContent().value
+			}
 		}
 	}
 }

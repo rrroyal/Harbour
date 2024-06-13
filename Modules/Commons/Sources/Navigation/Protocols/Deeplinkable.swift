@@ -68,6 +68,7 @@ public protocol Deeplinkable: Navigable {
 	associatedtype DeeplinkDestination = Deeplink.Destination
 
 	/// Deeplink destination for this object.
+	@MainActor
 	var deeplinkDestination: DeeplinkDestination { get }
 
 	/// Handles the navigation for this object.

@@ -15,8 +15,8 @@ private let logger = Logger(.intents(IntentContainer.self))
 // MARK: - IntentContainer
 
 struct IntentContainer: AppEntity, Hashable {
-	static var typeDisplayRepresentation: TypeDisplayRepresentation = "IntentContainer.TypeDisplayRepresentation"
-	static var defaultQuery = IntentContainerQuery()
+	static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentContainer.TypeDisplayRepresentation"
+	static let defaultQuery = IntentContainerQuery()
 
 	var displayRepresentation: DisplayRepresentation {
 		DisplayRepresentation(title: .init(stringLiteral: name ?? ""), subtitle: .init(stringLiteral: _id))

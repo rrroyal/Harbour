@@ -18,8 +18,8 @@ enum HarbourSpotlight { }
 // swiftlint:disable force_unwrapping
 extension HarbourSpotlight {
 	enum DomainIdentifier {
-		static var container = "\(Bundle.main.mainBundleIdentifier!).Container"
-		static var stack = "\(Bundle.main.mainBundleIdentifier!).Stack"
+		static let container = "\(Bundle.main.mainBundleIdentifier!).Container"
+		static let stack = "\(Bundle.main.mainBundleIdentifier!).Stack"
 	}
 }
 // swiftlint:enable force_unwrapping

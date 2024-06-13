@@ -12,8 +12,8 @@ import PortainerKit
 // MARK: - ExecuteActionIntent
 
 struct ExecuteActionIntent: AppIntent {
-	static var title: LocalizedStringResource = "ExecuteActionIntent.Title"
-	static var description = IntentDescription("ExecuteActionIntent.Description")
+	static let title: LocalizedStringResource = "ExecuteActionIntent.Title"
+	static let description = IntentDescription("ExecuteActionIntent.Description")
 
 	static var parameterSummary: some ParameterSummary {
 		When(\.$endpoint, .hasAnyValue) {
@@ -27,9 +27,9 @@ struct ExecuteActionIntent: AppIntent {
 		}
 	}
 
-	static var authenticationPolicy = IntentAuthenticationPolicy.requiresAuthentication
+	static let authenticationPolicy = IntentAuthenticationPolicy.requiresAuthentication
 
-	static var isDiscoverable = true
+	static let isDiscoverable = true
 
 	@Parameter(title: "AppIntents.Parameter.Endpoint.Title")
 	var endpoint: IntentEndpoint
@@ -52,6 +52,8 @@ struct ExecuteActionIntent: AppIntent {
 	func perform() async throws -> some IntentResult {
 		let portainerStore = IntentPortainerStore.shared
 		try await portainerStore.execute(action, containerID: container.id, endpointID: endpoint.id)
+//		let container = try await portainerStore.getContainers(for: endpoint.id, filters: .init(id: [container.id])).first
+//		return .result(value: container)
 		return .result()
 	}
 }
@@ -59,14 +61,16 @@ struct ExecuteActionIntent: AppIntent {
 // MARK: - ExecuteActionIntent+AppShortcutsProvider
 
 extension ExecuteActionIntent: AppShortcutsProvider {
-	static var appShortcuts: [AppShortcut] = [
-		.init(
-			intent: Self(),
-			phrases: [
-				"ExecuteActionIntent.Phrases.ExecuteAction"
-			],
-			shortTitle: "ExecuteActionIntent.Title",
-			systemImageName: "questionmark"
-		)
-	]
+	static var appShortcuts: [AppShortcut] {
+		return [
+			.init(
+				intent: Self(),
+				phrases: [
+					"ExecuteActionIntent.Phrases.ExecuteAction"
+				],
+				shortTitle: "ExecuteActionIntent.Title",
+				systemImageName: "questionmark"
+			)
+		]
+	}
 }

@@ -14,19 +14,38 @@ import PortainerKit
 
 extension StackDetailsView {
 	@Observable
-	final class ViewModel {
-		private nonisolated let logger = Logger(.view(StackDetailsView.self))
+	final class ViewModel: @unchecked Sendable {
+		private let logger = Logger(.view(StackDetailsView.self))
 
 		private let portainerStore = PortainerStore.shared
 
+		@ObservationIgnored
 		private(set) var fetchTask: Task<Void, Error>?
+		@ObservationIgnored
 		private(set) var fetchStackFileTask: Task<Void, Error>?
+
+		private(set) var fetchError: Error?
 
 		private(set) var stackFileViewState: ViewState<String, Error>?
 
 		var navigationItem: StackDetailsView.NavigationItem
 
-		var viewState: ViewState<Stack, Error> = .loading
+		var viewState: ViewState<Stack, Error> {
+			let stack = portainerStore.stacks.first(where: { $0.id == Int(navigationItem.stackID) })
+			if let stack {
+				if !(fetchTask?.isCancelled ?? true) {
+					return .reloading(stack)
+				} else {
+					return .success(stack)
+				}
+			}
+
+			if let fetchError {
+				return .failure(fetchError)
+			}
+
+			return .loading
+		}
 
 		var isRemovingStack = false
 		var isRemoveStackAlertPresented = false
@@ -50,10 +69,6 @@ extension StackDetailsView {
 
 		init(navigationItem: StackDetailsView.NavigationItem) {
 			self.navigationItem = navigationItem
-
-			if let stack = portainerStore.stacks.first(where: { $0.id == Int(navigationItem.stackID) }) {
-				self.viewState = .reloading(stack)
-			}
 		}
 
 		@discardableResult
@@ -63,17 +78,13 @@ extension StackDetailsView {
 				defer { self.fetchTask = nil }
 
 				do {
-					viewState = viewState.reloading
-
 					if stackFileContent != nil {
 						fetchStackFile()
 					}
 
-					let stack = try await portainerStore.fetchStack(id: stackID)
-					viewState = .success(stack)
+					_ = try await portainerStore.fetchStack(id: stackID)
 				} catch {
 					guard !error.isCancellationError else { return }
-					viewState = .failure(error)
 					throw error
 				}
 			}
@@ -104,10 +115,7 @@ extension StackDetailsView {
 		}
 
 		func setStackState(_ stack: Stack, started: Bool) async throws {
-			let newStack = try await portainerStore.setStackState(stackID: stack.id, started: started)
-			if let newStack {
-				self.viewState = .success(newStack)
-			}
+			_ = try await portainerStore.setStackState(stackID: stack.id, started: started)
 			portainerStore.refreshContainers()
 		}
 
