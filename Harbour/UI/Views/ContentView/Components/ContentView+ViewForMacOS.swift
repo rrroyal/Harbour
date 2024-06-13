@@ -28,7 +28,7 @@ extension ContentView {
 				MainContent()
 					.navigationSplitViewColumnWidth(min: 260, ideal: 260)
 					.toolbar {
-						ToolbarItem(placement: .primaryAction) {
+						ToolbarItem(placement: .navigation) {
 							Button {
 								columnVisibility = columnVisibility == .all ? .doubleColumn : .all
 							} label: {
@@ -65,6 +65,7 @@ private extension ContentView.ViewForMacOS {
 							.frame(maxWidth: .infinity)
 					}
 					.foregroundStyle(sceneDelegate.activeTab == tab ? .primary : .tertiary)
+					.symbolVariant(sceneDelegate.activeTab == tab ? .fill : .none)
 				}
 
 				Spacer()
@@ -114,18 +115,16 @@ private extension ContentView.ViewForMacOS {
 		var body: some View {
 			@Bindable var sceneDelegate = sceneDelegate
 
-			Group {
-				switch sceneDelegate.activeTab {
-				case .containers:
-					NavigationStack(path: $sceneDelegate.navigationPathContainers) {
-						Text("ContainersView.NoContainerSelectedPlaceholder")
-							.foregroundStyle(.tertiary)
-					}
-				case .stacks:
-					NavigationStack(path: $sceneDelegate.navigationPathStacks) {
-						Text("StacksView.NoStackSelectedPlaceholder")
-							.foregroundStyle(.tertiary)
-					}
+			switch sceneDelegate.activeTab {
+			case .containers:
+				NavigationStack(path: $sceneDelegate.navigationPathContainers) {
+					Text("ContainersView.NoContainerSelectedPlaceholder")
+						.foregroundStyle(.tertiary)
+				}
+			case .stacks:
+				NavigationStack(path: $sceneDelegate.navigationPathStacks) {
+					Text("StacksView.NoStackSelectedPlaceholder")
+						.foregroundStyle(.tertiary)
 				}
 			}
 		}

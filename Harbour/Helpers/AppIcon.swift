@@ -43,7 +43,7 @@ extension AppIcon {
 	static let allCases: [Self] = [
 		.default,
 		.box,
-		.og,
+		.og
 	]
 }
 

@@ -20,7 +20,7 @@ extension SettingsView {
 
 		var body: some View {
 			Section("SettingsView.Connection.Title") {
-				ConnectionMenu(viewModel: viewModel)
+				ConnectionMenu()
 					.id(SettingsView.ViewID.connectionMenu)
 			}
 		}
@@ -32,7 +32,7 @@ extension SettingsView {
 private extension SettingsView.ConnectionSection {
 	struct ConnectionMenu: View {
 		@Environment(\.errorHandler) private var errorHandler
-		@Bindable var viewModel: SettingsView.ViewModel
+		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		private var serverURLLabel: String? {
 			guard let url = viewModel.activeURL else { return nil }
@@ -40,7 +40,9 @@ private extension SettingsView.ConnectionSection {
 		}
 
 		var body: some View {
+			@Bindable var viewModel = viewModel
 			let urls = viewModel.serverURLs.localizedSorted(by: \.absoluteString)
+
 			Menu {
 				ForEach(urls, id: \.absoluteString) { url in
 					URLMenu(url: url)
@@ -96,18 +98,8 @@ private extension SettingsView.ConnectionSection {
 			} message: { url in
 				Text("SettingsView.Connection.RemoveEndpointAlert.Message URL:\(url.absoluteString)")
 			}
+			.animation(.smooth, value: viewModel.activeURL)
 		}
-	}
-}
-
-// MARK: - SettingsView.ConnectionSection+Components
-
-private extension SettingsView.ConnectionSection {
-	private static func formattedURL(_ url: URL) -> String {
-		if let scheme = url.scheme {
-			return url.absoluteString.replacing("\(scheme)://", with: "")
-		}
-		return url.absoluteString
 	}
 
 	struct URLMenu: View {
@@ -124,7 +116,6 @@ private extension SettingsView.ConnectionSection {
 				} else {
 					Button {
 						Haptics.generateIfEnabled(.light)
-						presentIndicator(.serverSwitched(formattedURL(url)))
 						Task {
 							do {
 								try await viewModel.switchPortainerServer(to: url)
@@ -159,6 +150,17 @@ private extension SettingsView.ConnectionSection {
 					.labelStyle(.iconOptional(showIcon: viewModel.activeURL == url))
 			}
 		}
+	}
+}
+
+// MARK: - SettingsView.ConnectionSection+Actions
+
+private extension SettingsView.ConnectionSection {
+	static func formattedURL(_ url: URL) -> String {
+		if let scheme = url.scheme {
+			return url.absoluteString.replacing("\(scheme)://", with: "")
+		}
+		return url.absoluteString
 	}
 }
 

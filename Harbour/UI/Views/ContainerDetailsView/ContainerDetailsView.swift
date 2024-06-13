@@ -323,11 +323,13 @@ extension ContainerDetailsView {
 
 // MARK: - ContainerDetailsView+Equatable
 
-//extension ContainerDetailsView: Equatable {
-//	static func == (lhs: Self, rhs: Self) -> Bool {
-//		lhs.navigationItem == rhs.navigationItem
-//	}
-//}
+/*
+extension ContainerDetailsView: Equatable {
+	static func == (lhs: Self, rhs: Self) -> Bool {
+		lhs.navigationItem == rhs.navigationItem
+	}
+}
+ */
 
 // MARK: - Previews
 

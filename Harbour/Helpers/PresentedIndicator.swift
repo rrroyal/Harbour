@@ -16,14 +16,13 @@ import SwiftUI
 enum PresentedIndicator {
 	case error(Error)
 	case copied(String?)
-	case serverSwitched(String)
-	// swiftlint:disable:next enum_case_associated_values_count
-	case containerActionExecute(Container.ID, String?, ContainerAction, state: State, action: (() -> Void)? = nil)
-	case containerRemove(String, state: State, action: (() -> Void)? = nil)
-	case stackStartOrStop(String, started: Bool, state: State, action: (() -> Void)? = nil)
-	case stackCreate(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
-	case stackUpdate(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
-	case stackRemove(String, Stack.ID?, state: State, action: (() -> Void)? = nil)
+	case serverSwitched(URL)
+	case containerActionExecute(containerName: String, containerAction: ContainerAction, state: State, action: (() -> Void)? = nil)
+	case containerRemove(containerName: String, state: State, action: (() -> Void)? = nil)
+	case stackStartOrStop(stackName: String, started: Bool, state: State, action: (() -> Void)? = nil)
+	case stackCreate(stackName: String, state: State, action: (() -> Void)? = nil)
+	case stackUpdate(stackName: String, state: State, action: (() -> Void)? = nil)
+	case stackRemove(stackName: String, state: State, action: (() -> Void)? = nil)
 }
 
 // MARK: - PresentedIndicator+State
@@ -56,17 +55,17 @@ extension PresentedIndicator: Identifiable {
 			"Copied.\(content?.hashValue ?? UUID().hashValue)"
 		case .serverSwitched:
 			"ServerSwitched"
-		case .containerActionExecute(let containerID, _, _, _, _):
-			"ContainerActionExecute.\(containerID)"
+		case .containerActionExecute(let containerName, _, _, _):
+			"ContainerActionExecute.\(containerName)"
 		case .containerRemove(let containerName, _, _):
 			"ContainerRemove.\(containerName)"
 		case .stackStartOrStop(let stackName, _, _, _):
 			"StackStartOrStop.\(stackName)"
-		case .stackCreate(let stackName, _, _, _):
+		case .stackCreate(let stackName, _, _):
 			"StackCreate.\(stackName)"
-		case .stackUpdate(let stackName, _, _, _):
+		case .stackUpdate(let stackName, _, _):
 			"StackUpdate.\(stackName)"
-		case .stackRemove(let stackName, _, _, _):
+		case .stackRemove(let stackName, _, _):
 			"StackRemove.\(stackName)"
 		}
 	}
@@ -87,17 +86,22 @@ extension PresentedIndicator {
 				subtitle: content
 			)
 		case .serverSwitched(let serverURL):
+			let serverURLString = if let scheme = serverURL.scheme {
+				serverURL.absoluteString.replacing("\(scheme)://", with: "")
+			} else {
+				serverURL.absoluteString
+			}
 			return .init(
 				id: self.id,
 				title: String(localized: "Indicators.ServerSwitched"),
-				subtitle: serverURL
+				subtitle: serverURLString
 			)
-		case .containerActionExecute(let containerID, let containerName, let containerAction, let state, let action):
+		case .containerActionExecute(let containerName, let containerAction, let state, let action):
 			let (icon, title, subtitle, tintColor) = switch state {
 			case .loading:
-				(Indicator.Icon.progressIndicator, containerAction.title, containerName ?? containerID, containerAction.color)
+				(Indicator.Icon.progressIndicator, containerAction.title, containerName, containerAction.color)
 			case .success:
-				(Indicator.Icon.systemImage(containerAction.icon), containerAction.title, containerName ?? containerID, containerAction.color)
+				(Indicator.Icon.systemImage(containerAction.icon), containerAction.title, containerName, containerAction.color)
 			case .failure(let error):
 				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription, Color.red)
 			}
@@ -201,7 +205,7 @@ extension PresentedIndicator {
 				),
 				action: indicatorAction
 			)
-		case .stackCreate(let stackName, _, let state, let action):
+		case .stackCreate(let stackName, let state, let action):
 			let (icon, title, subtitle, tintColor) = switch state {
 			case .loading:
 				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Stack.Create"), stackName, Color.blue)
@@ -234,7 +238,7 @@ extension PresentedIndicator {
 				),
 				action: indicatorAction
 			)
-		case .stackUpdate(let stackName, _, let state, let action):
+		case .stackUpdate(let stackName, let state, let action):
 			let (icon, title, subtitle, tintColor) = switch state {
 			case .loading:
 				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Stack.Update"), stackName, Color.blue)
@@ -267,7 +271,7 @@ extension PresentedIndicator {
 				),
 				action: indicatorAction
 			)
-		case .stackRemove(let stackName, _, let state, let action):
+		case .stackRemove(let stackName, let state, let action):
 			let (icon, title, subtitle) = switch state {
 			case .loading:
 				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Stack.Remove"), stackName)

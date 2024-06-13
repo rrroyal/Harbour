@@ -40,9 +40,14 @@ struct SettingsView: View {
 		}
 		.sheet(isPresented: $viewModel.isNegraSheetPresented) {
 			NegraView()
+				#if os(macOS)
+				.sheetMinimumFrame()
+				#endif
 		}
 		.sheet(isPresented: $viewModel.isSetupSheetPresented) {
-			viewModel.refreshServers()
+			withAnimation {
+				viewModel.refreshServers()
+			}
 		} content: {
 			NavigationStack {
 				SetupView()
@@ -61,6 +66,11 @@ struct SettingsView: View {
 		.environment(\.errorHandler, .init(handleError))
 		.environment(\.presentIndicator, .init { indicator, _ in viewModel.presentIndicator(indicator) })
 		.indicatorOverlay(model: viewModel.indicators, alignment: .top, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
+		.onChange(of: viewModel.activeURL) { _, newURL in
+			if let newURL {
+				viewModel.presentIndicator(.serverSwitched(newURL))
+			}
+		}
 	}
 }
 

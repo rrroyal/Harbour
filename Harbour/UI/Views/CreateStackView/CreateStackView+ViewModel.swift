@@ -117,6 +117,7 @@ extension CreateStackView {
 			return task
 		}
 
+		@discardableResult
 		func loadStackFile(at url: URL, securityScopedResource: Bool) throws -> String {
 			do {
 				if securityScopedResource {

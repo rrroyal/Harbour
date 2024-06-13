@@ -12,7 +12,8 @@ import SwiftUI
 struct CopyButton<LabelContent: View>: View {
 	@Environment(\.presentIndicator) private var presentIndicator
 	var content: String?
-	var labelContent: () -> LabelContent
+	@ViewBuilder var labelContent: () -> LabelContent
+
 	init(
 		content: String?,
 		@ViewBuilder label labelContent: @escaping () -> LabelContent

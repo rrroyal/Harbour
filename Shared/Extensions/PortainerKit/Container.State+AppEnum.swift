@@ -12,6 +12,7 @@ import PortainerKit
 extension Container.State: @retroactive AppEnum {
 	public static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.Container.State.AppEnumTitle")
 
+	// swiftlint:disable colon
 	public static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
 		.created:		.init(title: "PortainerKit.Container.State.Created", image: .init(systemName: "wake")),
 		.running:		.init(title: "PortainerKit.Container.State.Running", image: .init(systemName: "power")),
@@ -21,6 +22,7 @@ extension Container.State: @retroactive AppEnum {
 		.exited:		.init(title: "PortainerKit.Container.State.Exited", image: .init(systemName: "stop")),
 		.dead:			.init(title: "PortainerKit.Container.State.Dead", image: .init(systemName: "xmark"))
 	]
+	// swiftlint:enable colon
 
 	public static let allCases: [Container.State] = [
 		.created,

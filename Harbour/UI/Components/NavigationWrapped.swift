@@ -8,20 +8,13 @@
 
 import SwiftUI
 
-struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
-	@Binding var navigationPath: NavigationPath
-	let content: () -> Content
-	let placeholderContent: () -> PlaceholderContent
+// MARK: - NavigationWrapped
 
-	init(
-		navigationPath: Binding<NavigationPath>,
-		@ViewBuilder content: @escaping () -> Content,
-		@ViewBuilder placeholderContent: @escaping () -> PlaceholderContent
-	) {
-		self._navigationPath = navigationPath
-		self.content = content
-		self.placeholderContent = placeholderContent
-	}
+struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
+	@EnvironmentObject private var preferences: Preferences
+	@Binding var navigationPath: NavigationPath
+	@ViewBuilder var content: () -> Content
+	@ViewBuilder var placeholderContent: () -> PlaceholderContent
 
 	private var useColumns: Bool {
 		#if os(iOS)
@@ -29,32 +22,56 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 			return false
 		}
 		#endif
-		return Preferences.shared.useColumns
-	}
-
-	@ViewBuilder
-	private var viewSplit: some View {
-		NavigationSplitView {
-			content()
-		} detail: {
-			NavigationStack(path: $navigationPath) {
-				placeholderContent()
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var viewStack: some View {
-		NavigationStack(path: $navigationPath) {
-			content()
-		}
+		return preferences.useColumns
 	}
 
 	var body: some View {
 		if useColumns {
-			viewSplit
+			NavigationSplit(
+				path: $navigationPath,
+				content: content,
+				placeholderContent: placeholderContent
+			)
 		} else {
-			viewStack
+			NavigationStacked(
+				path: $navigationPath,
+				content: content
+			)
+		}
+	}
+}
+
+// MARK: - NavigationWrapped+NavigationSplit
+
+private extension NavigationWrapped {
+	struct NavigationSplit: View {
+		@Binding var path: NavigationPath
+		@ViewBuilder var content: () -> Content
+		@ViewBuilder var placeholderContent: () -> PlaceholderContent
+
+		var body: some View {
+			NavigationSplitView {
+				content()
+			} detail: {
+				NavigationStack(path: $path) {
+					placeholderContent()
+				}
+			}
+		}
+	}
+}
+
+// MARK: - NavigationWrapped+NavigationStack
+
+private extension NavigationWrapped {
+	struct NavigationStacked: View {
+		@Binding var path: NavigationPath
+		@ViewBuilder var content: () -> Content
+
+		var body: some View {
+			NavigationStack(path: $path) {
+				content()
+			}
 		}
 	}
 }

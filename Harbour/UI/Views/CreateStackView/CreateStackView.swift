@@ -46,7 +46,8 @@ struct CreateStackView: View {
 
 	private let allowedContentTypes: [UTType] = [
 		.yaml,
-		.text
+		.text,
+		.plainText
 	]
 
 	@ViewBuilder @MainActor
@@ -93,8 +94,9 @@ struct CreateStackView: View {
 				onStackFileSelection: onStackFileSelection
 			)
 			.transition(.opacity)
-			.onChange(of: viewModel.stackFileContent) {
+			.onChange(of: viewModel.stackFileContent) { _, newStackFileContent in
 				focusedField = nil
+				onStackFileSelection?(newStackFileContent)
 			}
 
 			StackEnvironmentView()
@@ -195,9 +197,9 @@ private extension CreateStackView {
 					sceneDelegate.navigate(to: .stacks, with: navigationItem)
 				}
 				if viewModel.shouldCreateNewStack {
-					presentIndicator(.stackCreate(stackName, stack.id, state: .success, action: indicatorAction))
+					presentIndicator(.stackCreate(stackName: stackName, state: .success, action: indicatorAction))
 				} else {
-					presentIndicator(.stackUpdate(stackName, stack.id, state: .success, action: indicatorAction))
+					presentIndicator(.stackUpdate(stackName: stackName, state: .success, action: indicatorAction))
 				}
 				Haptics.generateIfEnabled(.success)
 				onStackCreation?(stack)
@@ -205,9 +207,9 @@ private extension CreateStackView {
 				dismiss()
 			} catch {
 				if viewModel.shouldCreateNewStack {
-					presentIndicator(.stackCreate(stackName, nil, state: .failure(error)))
+					presentIndicator(.stackCreate(stackName: stackName, state: .failure(error)))
 				} else {
-					presentIndicator(.stackUpdate(stackName, nil, state: .failure(error)))
+					presentIndicator(.stackUpdate(stackName: stackName, state: .failure(error)))
 				}
 				errorHandler(error, showIndicator: false)
 			}

@@ -57,7 +57,7 @@ private extension CreateStackView.StackFileContentView {
 		let item = items.first { $0.hasItemConformingToTypeIdentifier(UTType.yaml.identifier) }
 		guard let item else { return false }
 
-		_ = item.loadInPlaceFileRepresentation(forTypeIdentifier: UTType.yaml.identifier) { url, bool, error in
+		_ = item.loadInPlaceFileRepresentation(forTypeIdentifier: UTType.yaml.identifier) { url, _, error in
 			Task { @MainActor in
 				do {
 					if let error {
@@ -73,8 +73,7 @@ private extension CreateStackView.StackFileContentView {
 					#elseif os(macOS)
 					let securityScopedResource = false
 					#endif
-					let stackFileContent = try viewModel.loadStackFile(at: url, securityScopedResource: securityScopedResource)
-					onStackFileSelection?(stackFileContent)
+					try viewModel.loadStackFile(at: url, securityScopedResource: securityScopedResource)
 				} catch {
 					errorHandler(error)
 				}
@@ -173,6 +172,16 @@ private extension CreateStackView.StackFileContentView {
 			.foregroundStyle(.accent)
 			.buttonStyle(.plain)
 			#endif
+			.contextMenu {
+				// TODO: Check if it still crashes on later betas
+				PasteButton(payloadType: String.self) { strings in
+					Haptics.generateIfEnabled(.selectionChanged)
+					if let string = strings.first {
+						viewModel.stackFileContent = string
+					}
+				}
+				.labelStyle(.titleAndIcon)
+			}
 		}
 	}
 }

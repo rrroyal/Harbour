@@ -18,7 +18,6 @@ struct StackDetailsView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
-	@Environment(\.portainerServerURL) private var portainerServerURL
 	@State private var viewModel: ViewModel
 
 	let navigationItem: NavigationItem
@@ -266,11 +265,11 @@ private extension StackDetailsView {
 	func setStackState(_ stack: Stack, started: Bool) {
 		Task {
 			do {
-				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .loading))
+				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .loading))
 				try await viewModel.setStackState(stack, started: started)
-				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .success))
+				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .success))
 			} catch {
-				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .failure(error)))
+				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .failure(error)))
 				errorHandler(error, showIndicator: false)
 			}
 		}
@@ -279,19 +278,23 @@ private extension StackDetailsView {
 
 // MARK: - StackDetailsView+Identifiable
 
-//extension StackDetailsView: Identifiable {
-//	nonisolated var id: String {
-//		"\(Self.self).\(navigationItem.id)"
-//	}
-//}
+/*
+extension StackDetailsView: Identifiable {
+	nonisolated var id: String {
+		"\(Self.self).\(navigationItem.id)"
+	}
+}
+ */
 
 // MARK: - StackDetailsView+Equatable
 
-//extension StackDetailsView: Equatable {
-//	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
-//		lhs.navigationItem == rhs.navigationItem
-//	}
-//}
+/*
+extension StackDetailsView: Equatable {
+	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+		lhs.navigationItem == rhs.navigationItem
+	}
+}
+*/
 
 // MARK: - StackDetailsView+ViewID
 

@@ -13,7 +13,6 @@ import SwiftUI
 // MARK: - StackContextMenu
 
 struct StackContextMenu: View {
-	@Environment(\.portainerServerURL) private var portainerServerURL
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@EnvironmentObject private var portainerStore: PortainerStore
 	var stack: Stack
@@ -51,7 +50,8 @@ struct StackContextMenu: View {
 				}
 			}
 
-			if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
+			if let portainerServerURL = portainerStore.serverURL,
+			   let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
 				Divider()
 
 				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)

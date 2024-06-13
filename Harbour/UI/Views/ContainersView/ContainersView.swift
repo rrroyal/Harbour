@@ -62,12 +62,12 @@ struct ContainersView: View {
 
 	@ToolbarContentBuilder @MainActor
 	private var toolbarContent: some ToolbarContent {
-		#if os(macOS)
-		ToolbarItem(placement: .primaryAction) {
-			endpointPicker
-				.labelStyle(.titleAndIcon)
-		}
-		#endif
+//		#if os(macOS)
+//		ToolbarItem(placement: .primaryAction) {
+//			endpointPicker
+//				.labelStyle(.titleAndIcon)
+//		}
+//		#endif
 
 		ToolbarItem(placement: .automatic) {
 			Menu {
@@ -266,14 +266,14 @@ private extension ContainersView {
 	func removeContainer(_ container: Container, force: Bool) {
 		Task {
 			do {
-				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .loading))
+				presentIndicator(.containerRemove(containerName: container.displayName ?? container.id, state: .loading))
 
 				try await portainerStore.removeContainer(containerID: container.id, force: force)
-				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .success))
+				presentIndicator(.containerRemove(containerName: container.displayName ?? container.id, state: .success))
 
 				sceneDelegate.navigate(to: .containers)
 			} catch {
-				presentIndicator(.containerRemove(container.displayName ?? container.id, state: .failure(error)))
+				presentIndicator(.containerRemove(containerName: container.displayName ?? container.id, state: .failure(error)))
 				errorHandler(error, showIndicator: false)
 			}
 		}

@@ -12,8 +12,6 @@ import SwiftUI
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View>: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
-		@Environment(\.portainerServerURL) private var portainerServerURL: URL?
-		@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
 		@Environment(\.parentShape) private var parentShape
 		var container: Container
 		@ViewBuilder var content: () -> Content
@@ -22,12 +20,12 @@ extension ContainersView {
 			.init(
 				id: container.id,
 				displayName: container.displayName,
-				endpointID: portainerSelectedEndpoint?.id
+				endpointID: portainerStore.selectedEndpoint?.id
 			)
 		}
 
 		private var portainerDeeplink: URL? {
-			PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id)
+			PortainerDeeplink(baseURL: portainerStore.serverURL)?.containerURL(containerID: container.id, endpointID: portainerStore.selectedEndpoint?.id)
 		}
 
 		var body: some View {

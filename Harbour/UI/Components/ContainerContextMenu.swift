@@ -15,8 +15,6 @@ struct ContainerContextMenu: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
-	@Environment(\.portainerServerURL) private var portainerServerURL: URL?
-	@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint: Endpoint?
 	@Environment(\.presentIndicator) private var presentIndicator
 	var container: Container
 	var onContainerAction: (() -> Void)?
@@ -130,7 +128,8 @@ struct ContainerContextMenu: View {
 				}
 			}
 
-			if let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerSelectedEndpoint?.id) {
+			if let portainerServerURL = portainerStore.serverURL,
+			   let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerStore.selectedEndpoint?.id) {
 				Divider()
 
 				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
@@ -166,15 +165,15 @@ private extension ContainerContextMenu {
 	func executeAction(_ action: ContainerAction, haptic: Haptics.HapticStyle = .medium) {
 		Haptics.generateIfEnabled(haptic)
 
-		presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .loading))
+		presentIndicator(.containerActionExecute(containerName: container.displayName ?? container.id, containerAction: action, state: .loading))
 
 		Task {
 			do {
 				try await portainerStore.execute(action, on: container.id)
-				presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .success))
+				presentIndicator(.containerActionExecute(containerName: container.displayName ?? container.id, containerAction: action, state: .success))
 				onContainerAction?()
 			} catch {
-				presentIndicator(.containerActionExecute(container.id, container.displayName, action, state: .failure(error)))
+				presentIndicator(.containerActionExecute(containerName: container.displayName ?? container.id, containerAction: action, state: .failure(error)))
 				errorHandler(error, showIndicator: false)
 			}
 		}

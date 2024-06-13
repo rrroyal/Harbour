@@ -66,7 +66,7 @@ struct ContainerActionIntent: AppIntent {
 		try await portainerStore.execute(containerAction.portainerAction, containerID: container._id, endpointID: endpoint.id)
 
 		let newContainer = try await portainerStore.getContainers(for: endpoint.id, filters: .init(id: [container._id])).first
-		guard let newContainer else  {
+		guard let newContainer else {
 			throw Error.containerNotFound(container._id)
 		}
 

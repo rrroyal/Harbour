@@ -68,10 +68,15 @@ struct StacksView: View {
 		ToolbarItem(placement: .automatic) {
 			Menu {
 				Toggle(isOn: $preferences.svFilterByActiveEndpoint) {
-					Label(
-						"StacksView.Menu.ActiveEndpointOnly",
-						systemImage: "tag"
-					)
+					Label {
+						Text("StacksView.Menu.ActiveEndpointOnly")
+					} icon: {
+						Image(systemName: "tag")
+					}
+					if let selectedEndpoint = portainerStore.selectedEndpoint {
+						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
+							.foregroundStyle(.secondary)
+					}
 				}
 				.onChange(of: preferences.svFilterByActiveEndpoint) {
 					Haptics.generateIfEnabled(.selectionChanged)
@@ -265,11 +270,11 @@ private extension StacksView {
 	func setStackState(_ stack: Stack, started: Bool) {
 		Task {
 			do {
-				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .loading))
+				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .loading))
 				try await viewModel.setStackState(stackID: stack.id, started: started)
-				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .success))
+				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .success))
 			} catch {
-				presentIndicator(.stackStartOrStop(stack.name, started: started, state: .failure(error)))
+				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .failure(error)))
 				errorHandler(error, showIndicator: false)
 			}
 		}
@@ -278,14 +283,14 @@ private extension StacksView {
 	func removeStack(_ stack: Stack) {
 		Task {
 			do {
-				presentIndicator(.stackRemove(stack.name, stack.id, state: .loading))
+				presentIndicator(.stackRemove(stackName: stack.name, state: .loading))
 
 				try await viewModel.removeStack(stackID: stack.id)
-				presentIndicator(.stackRemove(stack.name, stack.id, state: .success))
+				presentIndicator(.stackRemove(stackName: stack.name, state: .success))
 
 				sceneDelegate.navigate(to: .stacks)
 			} catch {
-				presentIndicator(.stackRemove(stack.name, stack.id, state: .failure(error)))
+				presentIndicator(.stackRemove(stackName: stack.name, state: .failure(error)))
 				errorHandler(error, showIndicator: false)
 			}
 		}

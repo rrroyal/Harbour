@@ -180,6 +180,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				00A9F1F32C1B4F760039700C /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				00B084072C17A3930034DBDC /* HarbourWidgets */,
@@ -210,6 +211,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				00A9F1F52C1B4F830039700C /* PBXTargetDependency */,
 				00A4AB962A34ECB70074E940 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -313,6 +315,14 @@
 			isa = PBXTargetDependency;
 			target = 00A4AB862A34ECB60074E940 /* HarbourWidgets */;
 			targetProxy = 00A4AB952A34ECB70074E940 /* PBXContainerItemProxy */;
+		};
+		00A9F1F32C1B4F760039700C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 00A9F1F22C1B4F760039700C /* SwiftLint */;
+		};
+		00A9F1F52C1B4F830039700C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 00A9F1F42C1B4F830039700C /* SwiftLint */;
 		};
 /* End PBXTargetDependency section */
 
@@ -726,6 +736,16 @@
 		007644792BBF18A30015BD8A /* PortainerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PortainerKit;
+		};
+		00A9F1F22C1B4F760039700C /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 000E16E62B6A74C1007F611A /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
+		};
+		00A9F1F42C1B4F830039700C /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 000E16E62B6A74C1007F611A /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

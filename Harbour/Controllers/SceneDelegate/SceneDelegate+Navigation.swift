@@ -18,17 +18,17 @@ extension SceneDelegate: DeeplinkHandlable {
 		isContainerChangesSheetPresented = false
 	}
 
-	@MainActor
-	func navigate(to tab: ViewTab) {
-		activeTab = tab
-
-		switch tab {
-		case .containers:
-			navigationPathContainers.removeLast(navigationPathContainers.count)
-		case .stacks:
-			navigationPathStacks.removeLast(navigationPathStacks.count)
-		}
-	}
+//	@MainActor
+//	func navigate(to tab: ViewTab) {
+//		activeTab = tab
+//
+//		switch tab {
+//		case .containers:
+//			navigationPathContainers.removeLast(navigationPathContainers.count)
+//		case .stacks:
+//			navigationPathStacks.removeLast(navigationPathStacks.count)
+//		}
+//	}
 
 	@MainActor
 	func navigate(to tab: ViewTab, with navigationPathItems: any Hashable...) {

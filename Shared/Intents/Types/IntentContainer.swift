@@ -14,6 +14,8 @@ private let logger = Logger(.intents(IntentContainer.self))
 
 // MARK: - IntentContainer
 
+// swiftlint:disable lower_acl_than_parent
+
 struct IntentContainer: AppEntity {
 	public static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentContainer.TypeDisplayRepresentation"
 	public static let defaultQuery = Query()
@@ -65,6 +67,8 @@ struct IntentContainer: AppEntity {
 		self.associationID = container.associationID
 	}
 }
+
+// swiftlint:enable lower_acl_than_parent
 
 // MARK: - IntentContainer+Identifiable
 

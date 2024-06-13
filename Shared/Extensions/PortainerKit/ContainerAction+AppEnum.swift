@@ -14,6 +14,7 @@ import PortainerKit
 extension ContainerAction: @retroactive AppEnum {
 	public static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ContainerAction.AppEnumTitle")
 
+	// swiftlint:disable colon
 	public static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
 		.start:		.init(title: "PortainerKit.ContainerAction.Start", image: .init(systemName: "play")),
 		.stop:		.init(title: "PortainerKit.ContainerAction.Stop", image: .init(systemName: "stop")),
@@ -22,6 +23,7 @@ extension ContainerAction: @retroactive AppEnum {
 		.pause:		.init(title: "PortainerKit.ContainerAction.Pause", image: .init(systemName: "pause")),
 		.unpause:	.init(title: "PortainerKit.ContainerAction.Unpause", image: .init(systemName: "play"))
 	]
+	// swiftlint:enable colon
 
 	public static let allCases: [Self] = [
 		.start,
@@ -75,6 +77,7 @@ extension ContainerActionAppEnum {
 extension ContainerActionAppEnum: AppEnum {
 	public static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ContainerAction.AppEnumTitle")
 
+	// swiftlint:disable colon
 	public static let caseDisplayRepresentations: [Self: DisplayRepresentation] = [
 		.start:		.init(title: "PortainerKit.ContainerAction.Start", image: .init(systemName: "play")),
 		.stop:		.init(title: "PortainerKit.ContainerAction.Stop", image: .init(systemName: "stop")),
@@ -83,4 +86,5 @@ extension ContainerActionAppEnum: AppEnum {
 		.pause:		.init(title: "PortainerKit.ContainerAction.Pause", image: .init(systemName: "pause")),
 		.unpause:	.init(title: "PortainerKit.ContainerAction.Unpause", image: .init(systemName: "play"))
 	]
+	// swiftlint:enable colon
 }

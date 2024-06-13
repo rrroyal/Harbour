@@ -33,6 +33,7 @@ extension ContentView {
 					} icon: {
 						ViewTab.containers.icon
 					}
+//					.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
 				}
 
 				Tab(value: .stacks) {
@@ -48,6 +49,7 @@ extension ContentView {
 					} icon: {
 						ViewTab.stacks.icon
 					}
+//					.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
 				}
 			}
 		}

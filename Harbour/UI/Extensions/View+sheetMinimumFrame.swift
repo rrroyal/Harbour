@@ -14,5 +14,6 @@ extension View {
 	func sheetMinimumFrame(width: Double = 360, height: Double = 420) -> some View {
 		self
 			.frame(minWidth: width, minHeight: height)
+			.presentationSizing(.automatic)
 	}
 }

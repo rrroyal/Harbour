@@ -20,7 +20,7 @@ extension EnvironmentValues {
 
 	/// Shape of the parent view.
 	@Entry
-	var parentShape: AnyShape? = nil
+	var parentShape: AnyShape?
 
 	/// An action that presents a provided indicator.
 	@Entry

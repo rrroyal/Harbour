@@ -8,6 +8,8 @@
 
 import AppIntents
 
+// swiftlint:disable lower_acl_than_parent
+
 struct HarbourAppShortcuts: AppShortcutsProvider {
 	@AppShortcutsBuilder
 	public static var appShortcuts: [AppShortcut] {
@@ -33,3 +35,5 @@ struct HarbourAppShortcuts: AppShortcutsProvider {
 
 	public static var shortcutTileColor: ShortcutTileColor { .purple }
 }
+
+// swiftlint:enable lower_acl_than_parent

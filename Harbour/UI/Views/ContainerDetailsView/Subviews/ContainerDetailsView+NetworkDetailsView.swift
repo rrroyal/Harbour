@@ -223,7 +223,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 
 private extension ContainerDetailsView.NetworkDetailsView {
 	struct PortsSection: View {
-		@Environment(\.portainerSelectedEndpoint) private var portainerSelectedEndpoint
+		@EnvironmentObject private var portainerStore: PortainerStore
 		var ports: [PortainerKit.Port]?
 		var exposedPorts: [String: [String: String]]?
 		var portBindings: [String: [ContainerDetails.HostConfig.PortBinding]]?
@@ -273,7 +273,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 								if let publicPort = entry.publicPort {
 									CopyButton("ContainerDetailsView.NetworkDetailsView.CopyIP", content: entry.hostLabel)
 
-									if let endpointPublicURL = portainerSelectedEndpoint?.publicURL {
+									if let endpointPublicURL = portainerStore.selectedEndpoint?.publicURL {
 										Divider()
 
 //										CopyButton("ContainerDetailsView.NetworkDetailsView.CopyPublicURL", content: "\(endpointPublicURL):\(publicPort)")

@@ -101,6 +101,26 @@
         }
       }
     },
+    "CommandMenu.Portainer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portainer"
+          }
+        }
+      }
+    },
+    "CommandMenu.Portainer.ActiveEndpoint" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Active Endpoint"
+          }
+        }
+      }
+    },
     "ContainerActionIntent.Description" : {
       "localizations" : {
         "en" : {
@@ -1714,10 +1734,24 @@
       }
     },
     "IntentEndpoint.ID" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endpoint ID"
+          }
+        }
+      }
     },
     "IntentEndpoint.Name" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endpoint Name"
+          }
+        }
+      }
     },
     "IntentEndpoint.Preview.Name" : {
       "localizations" : {

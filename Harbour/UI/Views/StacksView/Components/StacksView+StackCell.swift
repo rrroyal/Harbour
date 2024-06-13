@@ -16,7 +16,6 @@ extension StacksView {
 	struct StackCell: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
 		@Environment(SceneDelegate.self) private var sceneDelegate
-		@Environment(\.portainerServerURL) private var portainerServerURL
 		var stack: StackItem
 		var containers: [Container]
 		var filterAction: () -> Void
@@ -54,7 +53,7 @@ extension StacksView {
 		}
 
 		private var stackColor: Color {
-			if isLoading || isBeingRemoved { return .gray }
+			if stack.stack?._isStored ?? false || isLoading || isBeingRemoved { return .gray }
 
 			let containersCount = containers.count
 			if containersCount == runningContainersCount, containersCount > 0 {
@@ -119,6 +118,8 @@ extension StacksView {
 			}
 			.padding(.vertical, 2)
 			.animation(.smooth, value: stack)
+			.animation(.smooth, value: stack.stack?.status)
+			.animation(.smooth, value: stack.stack?._isStored)
 			.animation(.smooth, value: isLoading)
 			.animation(.smooth, value: isOn)
 			.animation(.smooth, value: isBeingRemoved)

@@ -11,9 +11,9 @@ import SwiftUI
 // MARK: - NormalizedSection
 
 struct NormalizedSection<Content: View, Header: View, Footer: View>: View {
-	var content: () -> Content
-	var header: () -> Header
-	var footer: () -> Footer
+	@ViewBuilder var content: () -> Content
+	@ViewBuilder var header: () -> Header
+	@ViewBuilder var footer: () -> Footer
 
 	init(
 		@ViewBuilder content: @escaping () -> Content,

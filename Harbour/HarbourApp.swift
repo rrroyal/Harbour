@@ -30,6 +30,41 @@ struct HarbourApp: App {
 		self._portainerStore = .init(wrappedValue: portainerStore)
 	}
 
+	@CommandsBuilder
+	private var portainerCommands: some Commands {
+		CommandMenu("CommandMenu.Portainer") {
+			Button {
+				portainerStore.refreshEndpoints()
+				portainerStore.refreshContainers()
+				portainerStore.refreshStacks()
+			} label: {
+				Label("Generic.Refresh", systemImage: SFSymbol.reload)
+			}
+			.keyboardShortcut("r", modifiers: .command)
+			.disabled(!portainerStore.isSetup)
+
+			Divider()
+
+			let selectedEndpointBinding = Binding<Endpoint?>(
+				get: { portainerStore.selectedEndpoint },
+				set: { portainerStore.setSelectedEndpoint($0) }
+			)
+			Picker(selection: selectedEndpointBinding) {
+				ForEach(portainerStore.endpoints) { endpoint in
+					Text(endpoint.name ?? endpoint.id.description)
+						.tag(endpoint as Endpoint?)
+				}
+			} label: {
+				Text("CommandMenu.Portainer.ActiveEndpoint")
+				if let selectedEndpoint = selectedEndpointBinding.wrappedValue {
+					Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
+						.foregroundStyle(.secondary)
+				}
+			}
+			.disabled(portainerStore.endpoints.isEmpty)
+		}
+	}
+
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
@@ -45,9 +80,9 @@ struct HarbourApp: App {
 		#if os(iOS)
 		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
-//		.commands {
-//			PortainerCommandMenu(portainerStore: portainerStore)
-//		}
+		.commands {
+			portainerCommands
+		}
 		#if os(macOS)
 //		.windowStyle(.hiddenTitleBar)
 		.windowToolbarStyle(.unifiedCompact(showsTitle: false))
@@ -71,48 +106,3 @@ struct HarbourApp: App {
 		#endif
 	}
 }
-
-// MARK: - HarbourApp+Commands
-
-/*
-// TODO: Main actor-isolated static method '_makeCommands(content:inputs:)' cannot be used to satisfy nonisolated protocol requirement
-private extension HarbourApp {
-	struct PortainerCommandMenu: Commands {
-		var portainerStore: PortainerStore
-
-		var body: some Commands {
-			CommandMenu("CommandMenu.Portainer") {
-				Button {
-					portainerStore.refreshEndpoints()
-					portainerStore.refreshContainers()
-					portainerStore.refreshStacks()
-				} label: {
-					Label("Generic.Refresh", systemImage: SFSymbol.reload)
-				}
-				.keyboardShortcut("r", modifiers: .command)
-				.disabled(!portainerStore.isSetup)
-
-				Divider()
-
-				let selectedEndpointBinding = Binding<Endpoint?>(
-					get: { portainerStore.selectedEndpoint },
-					set: { portainerStore.setSelectedEndpoint($0) }
-				)
-				Picker(selection: selectedEndpointBinding) {
-					ForEach(portainerStore.endpoints) { endpoint in
-						Text(endpoint.name ?? endpoint.id.description)
-							.tag(endpoint as Endpoint?)
-					}
-				} label: {
-					Text("CommandMenu.Portainer.ActiveEndpoint")
-					if let selectedEndpoint = selectedEndpointBinding.wrappedValue {
-						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
-							.foregroundStyle(.secondary)
-					}
-				}
-				.disabled(portainerStore.endpoints.isEmpty)
-			}
-		}
-	}
-}
-*/

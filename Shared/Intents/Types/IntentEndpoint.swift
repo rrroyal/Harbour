@@ -14,6 +14,8 @@ private let logger = Logger(.intents(IntentEndpoint.self))
 
 // MARK: - IntentEndpoint
 
+// swiftlint:disable lower_acl_than_parent
+
 struct IntentEndpoint: AppEntity, Identifiable {
 	public static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentEndpoint.TypeDisplayRepresentation"
 	public static let defaultQuery = Query()
@@ -38,6 +40,8 @@ struct IntentEndpoint: AppEntity, Identifiable {
 		self.name = endpoint.name
 	}
 }
+
+// swiftlint:enable lower_acl_than_parent
 
 // MARK: - IntentEndpoint+Equatable
 
