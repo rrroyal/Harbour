@@ -6,12 +6,17 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CommonOSLog
+import CoreSpotlight
 import Foundation
+import OSLog
 import PortainerKit
 
 // MARK: - HarbourSpotlight
 
-enum HarbourSpotlight { }
+enum HarbourSpotlight {
+	static let logger = Logger(.custom(HarbourSpotlight.self))
+}
 
 // MARK: - HarbourSpotlight+DomainIdentifier
 
@@ -28,7 +33,7 @@ extension HarbourSpotlight {
 
 extension HarbourSpotlight {
 	enum ItemIdentifier {
-		static func container(id containerID: Container.ID) -> String { "\(HarbourSpotlight.DomainIdentifier.container).\(containerID)" }
-		static func stack(id stackID: Stack.ID) -> String { "\(HarbourSpotlight.DomainIdentifier.stack).\(stackID)" }
+		static func container(id containerID: Container.ID) -> String { "\(DomainIdentifier.container).\(containerID)" }
+		static func stack(id stackID: Stack.ID) -> String { "\(DomainIdentifier.stack).\(stackID)" }
 	}
 }

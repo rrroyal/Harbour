@@ -170,11 +170,11 @@ extension BackgroundHelper {
 			}
 
 			let oldContainers = portainerStore.containers
-//				.map { Container(id: $0.id, names: $0.names, image: $0.image, labels: $0.labels, state: $0.state, status: $0.status) }
+			let newContainers = try await portainerStore.refreshContainers().value
 
-			let newContainersTask = portainerStore.refreshContainers()
-			let newContainers = try await newContainersTask.value
-//				.map { Container(id: $0.id, names: $0.names, image: $0.image, labels: $0.labels, state: $0.state, status: $0.status) }
+			Task.detached {
+				try? await HarbourSpotlight.indexContainers(newContainers)
+			}
 
 			try await handleContainersUpdate(from: oldContainers, to: newContainers, endpoint: endpoint)
 		} catch {
