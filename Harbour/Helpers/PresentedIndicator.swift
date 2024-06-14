@@ -17,12 +17,12 @@ enum PresentedIndicator {
 	case error(Error)
 	case copied(String?)
 	case serverSwitched(URL)
-	case containerActionExecute(containerName: String, containerAction: ContainerAction, state: State, action: (() -> Void)? = nil)
-	case containerRemove(containerName: String, state: State, action: (() -> Void)? = nil)
-	case stackStartOrStop(stackName: String, started: Bool, state: State, action: (() -> Void)? = nil)
-	case stackCreate(stackName: String, state: State, action: (() -> Void)? = nil)
-	case stackUpdate(stackName: String, state: State, action: (() -> Void)? = nil)
-	case stackRemove(stackName: String, state: State, action: (() -> Void)? = nil)
+	case containerActionExecute(containerName: String, containerAction: ContainerAction, state: State, action: (@Sendable () -> Void)? = nil)
+	case containerRemove(containerName: String, state: State, action: (@Sendable () -> Void)? = nil)
+	case stackStartOrStop(stackName: String, started: Bool, state: State, action: (@Sendable () -> Void)? = nil)
+	case stackCreate(stackName: String, state: State, action: (@Sendable () -> Void)? = nil)
+	case stackUpdate(stackName: String, state: State, action: (@Sendable () -> Void)? = nil)
+	case stackRemove(stackName: String, state: State, action: (@Sendable () -> Void)? = nil)
 }
 
 // MARK: - PresentedIndicator+State

@@ -16,7 +16,7 @@ extension SceneDelegate: IndicatorPresentable {
 	}
 
 	@MainActor
-	func presentIndicator(_ presentedIndicator: PresentedIndicator, action: (() -> Void)? = nil) {
+	func presentIndicator(_ presentedIndicator: PresentedIndicator, action: (@Sendable () -> Void)? = nil) {
 		var indicator = presentedIndicator.indicator
 		if let action {
 			indicator.action = .execute(action)

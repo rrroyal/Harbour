@@ -190,11 +190,13 @@ private extension CreateStackView {
 
 				let stack = try await viewModel.createOrUpdateStack().value
 
-				let indicatorAction = {
+				let indicatorAction: @Sendable () -> Void = {
 					Haptics.generateIfEnabled(.soft)
 					let navigationItem = StackDetailsView.NavigationItem(stackID: stack.id.description, stackName: stack.name)
-					sceneDelegate.resetSheets()
-					sceneDelegate.navigate(to: .stacks, with: navigationItem)
+					Task { @MainActor in
+						sceneDelegate.resetSheets()
+						sceneDelegate.navigate(to: .stacks, with: navigationItem)
+					}
 				}
 				if viewModel.shouldCreateNewStack {
 					presentIndicator(.stackCreate(stackName: stackName, state: .success, action: indicatorAction))

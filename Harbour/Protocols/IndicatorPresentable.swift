@@ -33,7 +33,7 @@ extension IndicatorPresentable {
 // MARK: - PresentIndicatorAction
 
 struct PresentIndicatorAction: @unchecked Sendable {
-	typealias WrappedValue = (PresentedIndicator, _ action: (() -> Void)?) -> Void
+	typealias WrappedValue = (PresentedIndicator, _ action: (@Sendable () -> Void)?) -> Void
 
 	let wrappedValue: WrappedValue
 
@@ -41,7 +41,7 @@ struct PresentIndicatorAction: @unchecked Sendable {
 		self.wrappedValue = wrappedValue
 	}
 
-	func callAsFunction(_ indicator: PresentedIndicator, action: (() -> Void)? = nil) {
+	func callAsFunction(_ indicator: PresentedIndicator, action: (@Sendable () -> Void)? = nil) {
 		wrappedValue(indicator, action)
 	}
 }
