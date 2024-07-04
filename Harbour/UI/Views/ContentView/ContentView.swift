@@ -33,23 +33,12 @@ struct ContentView: View {
 			ViewForMacOS()
 			#endif
 		}
-		.animation(.smooth, value: portainerStore.isSetup)
+		.animation(.default, value: portainerStore.isSetup)
 		#if os(iOS)
 		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .top, insets: .init(top: 4, leading: 0, bottom: 0, trailing: 0))
 		#elseif os(macOS)
 		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .topTrailing, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
 		#endif
-//		.alert(
-//			sceneDelegate.activeAlert?.title ?? "",
-//			isPresented: .constant(sceneDelegate.activeAlert != nil),
-//			presenting: sceneDelegate.activeAlert
-//		) { _ in
-//			Button("Generic.OK") { }
-//		} message: { details in
-//			if let message = details.message {
-//				Text(message)
-//			}
-//		}
 		#if os(iOS)
 		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 			SettingsView()

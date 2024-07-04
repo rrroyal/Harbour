@@ -82,28 +82,36 @@ extension DebugView {
 					toolbarMenu
 				}
 
-//				ToolbarItem(placement: .status) {
-//					DelayedView(isVisible: isLoading && !scrollViewIsRefreshing) {
-//						ProgressView()
-//					}
-//				}
+				ToolbarItem(placement: .status) {
+					if isLoading && !scrollViewIsRefreshing {
+						ProgressView()
+					}
+				}
 			}
+//			.toolbarVisibility(isLoading && !scrollViewIsRefreshing ? .visible : .hidden, for: .status)
 			.refreshable(binding: $scrollViewIsRefreshing) {
 				await getLogs(showIndicator: false).value
 			}
 			.task {
 				await getLogs().value
 			}
-			.animation(.smooth, value: isLoading)
-			.animation(.smooth, value: logs)
+			.animation(.default, value: isLoading)
+			.animation(.default, value: logs)
 		}
 
 		@discardableResult
 		func getLogs(showIndicator: Bool = true) -> Task<Void, Never> {
 			self.logsTask?.cancel()
-			let task = Task {
+			let task = Task.detached {
 				if showIndicator {
-					isLoading = true
+					await MainActor.run {
+						isLoading = true
+					}
+				}
+				defer {
+					Task { @MainActor in
+						isLoading = false
+					}
 				}
 
 			fetchLogs:
@@ -118,21 +126,19 @@ extension DebugView {
 						matching: predicate
 					)
 
-					if showIndicator {
-						isLoading = false
-					}
-
 					guard !Task.isCancelled else { break fetchLogs }
 
-					logs = entries
+					let logs = entries
 						.compactMap { $0 as? OSLogEntryLog }
 						.map { LogEntry(message: $0.composedMessage, level: $0.level, date: $0.date, category: $0.category) }
+					await MainActor.run {
+						self.logs = logs
+					}
 				} catch {
-					logs = [LogEntry(message: error.localizedDescription, level: nil, date: nil, category: nil)]
-				}
-
-				if showIndicator {
-					isLoading = false
+					let logs = [LogEntry(message: error.localizedDescription, level: nil, date: nil, category: nil)]
+					await MainActor.run {
+						self.logs = logs
+					}
 				}
 			}
 			self.logsTask = task

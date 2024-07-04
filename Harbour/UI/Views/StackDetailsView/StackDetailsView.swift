@@ -210,11 +210,11 @@ struct StackDetailsView: View {
 			}
 		}
 		.navigationTitle(navigationTitle)
-		.animation(.smooth, value: viewModel.viewState)
-		.animation(.smooth, value: viewModel.stackFileViewState)
-		.animation(.smooth, value: viewModel.stack)
-		.animation(.smooth, value: viewModel.isRemovingStack)
-//		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
+		.animation(.default, value: viewModel.viewState)
+		.animation(.default, value: viewModel.stackFileViewState)
+		.animation(.default, value: viewModel.stack)
+		.animation(.default, value: viewModel.isRemovingStack)
+//		.animation(.default, value: viewModel.isStatusProgressViewVisible)
 		.animation(nil, value: navigationItem)
 		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneDelegate.activeTab == .stacks) { userActivity in
 			viewModel.createUserActivity(userActivity)

@@ -16,11 +16,14 @@ private let logger = Logger(.intents(ContainerStatusIntent.self))
 
 struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	static let title: LocalizedStringResource = "ContainerStatusIntent.Title"
-	static let description = IntentDescription("ContainerStatusIntent.Description")
+	static let description = IntentDescription(
+		"ContainerStatusIntent.Description",
+		categoryName: "IntentCategory.Containers"
+	)
 
 	static var parameterSummary: some ParameterSummary {
 		When(\.$endpoint, .hasAnyValue) {
-			Summary("ContainerStatusIntent.ParameterSummary \(\.$endpoint) \(\.$containers)") {
+			Summary("ContainerStatusIntent.ParameterSummary \(\.$endpoint) \(\.$container)") {
 				\.$resolveByName
 			}
 		} otherwise: {
@@ -30,20 +33,13 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 	static let authenticationPolicy: IntentAuthenticationPolicy = .requiresAuthentication
 
-	static let isDiscoverable = false
+	static let isDiscoverable = true
 
 	@Parameter(title: "AppIntents.Parameter.Endpoint.Title")
 	var endpoint: IntentEndpoint?
 
-	@Parameter(
-		title: "AppIntents.Parameter.Containers.Title",
-		size: [
-			.systemSmall: 1,
-			.systemMedium: 2,
-			.systemLarge: 4
-		]
-	)
-	var containers: [IntentContainer]?
+	@Parameter(title: "AppIntents.Parameter.Container.Title")
+	var container: IntentContainer?
 
 	@Parameter(
 		title: "AppIntents.Parameter.ResolveByName.Title",
@@ -52,49 +48,53 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	)
 	var resolveByName: Bool
 
-	init() {
-		self.endpoint = nil
-		self.containers = nil
-	}
+	init() { }
 
-	init(endpoint: IntentEndpoint? = nil, containers: [IntentContainer]?) {
+	init(endpoint: IntentEndpoint, container: IntentContainer) {
 		self.endpoint = endpoint
-		self.containers = containers
+		self.container = container
 	}
 
-	@MainActor
 	func perform() async throws -> some ReturnsValue<IntentContainer> {
-		do {
-			guard let endpoint else {
-				throw $endpoint.needsValueError()
-			}
-			guard let containers, !containers.isEmpty else {
-				throw $containers.needsValueError()
-			}
+		logger.info("Performing \(Self.self)...")
 
+		do {
 			let portainerStore = IntentPortainerStore.shared
 			try portainerStore.setupIfNeeded()
 
-			let filters = FetchFilters(
-				id: resolveByName ? nil : containers.map(\._id),
-				name: resolveByName ? containers.compactMap(\.name) : nil
-			)
-			let newContainers = try await portainerStore.getContainers(for: endpoint.id, filters: filters)
-				.map { IntentContainer(container: $0) }
+			let endpoint: IntentEndpoint
+			if let _endpoint = self.endpoint {
+				endpoint = _endpoint
+			} else {
+				endpoint = try await self.$endpoint.requestValue()
+			}
 
-			let newContainer: IntentContainer = switch newContainers.count {
+			var filters = FetchFilters()
+			if let _container = self.container {
+				if resolveByName, let name = _container.name {
+					filters.name = [name]
+				} else {
+					filters.id = [_container._id]
+				}
+			}
+			let fetchedContainers = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id, filters: filters)
+				.map { IntentContainer(container: $0) }
+				.localizedSorted(by: \.name)
+
+			let fetchedContainer: IntentContainer = switch fetchedContainers.count {
 			case 0:
 				throw Error.noContainers
 			case 1:
 				// swiftlint:disable:next force_unwrapping
-				containers.first!
+				fetchedContainers.first!
 			default:
-				try await $containers.requestDisambiguation(among: containers)
+				try await $container.requestDisambiguation(among: fetchedContainers, dialog: .init(IntentContainer.typeDisplayRepresentation.name))
 			}
 
-			return .result(value: newContainer)
+			logger.info("Returning \(String(describing: fetchedContainer)).")
+			return .result(value: fetchedContainer)
 		} catch {
-			logger.error("Error performing: \(error, privacy: .public)")
+			logger.error("Failed to perform \(Self.self, privacy: .public): \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}

@@ -66,9 +66,12 @@ struct ContainerLogsView: View {
 			}
 		}
 		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
-		.animation(.smooth, value: viewModel.viewState)
-		.animation(.smooth, value: viewModel.logs)
+		.animation(.default, value: viewModel.viewState)
+		.animation(.default, value: viewModel.logs)
 		.navigationTitle("ContainerLogsView.Title")
+		#if os(iOS)
+		.navigationBarTitleDisplayMode(.inline)
+		#endif
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
 		}

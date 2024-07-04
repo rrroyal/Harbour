@@ -31,11 +31,10 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.foregroundStyle(isEnabled ? foregroundColor : .secondary)
 			.padding()
 			.frame(maxWidth: .infinity, alignment: .center)
-			.background(isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2))
-			.clipShape(roundedRectangle)
+			.background(isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2), in: roundedRectangle)
 			.contentShape(roundedRectangle)
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
-			.animation(.smooth, value: isEnabled)
+			.animation(.default, value: isEnabled)
 			.animation(.spring, value: configuration.isPressed)
 	}
 }

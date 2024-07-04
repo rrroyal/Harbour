@@ -21,7 +21,7 @@ struct CloseButton: View {
 
 	var body: some View {
 		Button {
-//			Haptics.generateIfEnabled(.sheetPresentation)
+			Haptics.generateIfEnabled(.sheetPresentation)
 			dismissAction?() ?? _dismiss()
 		} label: {
 			switch style {
@@ -34,8 +34,7 @@ struct CloseButton: View {
 					.foregroundStyle(.secondary)
 					.imageScale(.medium)
 					.padding(6)
-					.background(.quinary)
-					.clipShape(Circle())
+					.background(.quinary, in: Circle())
 					.accessibilityRemoveTraits(.isImage)
 					.tint(.primary)
 			}

@@ -6,8 +6,10 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
-import Foundation
 import Navigation
+import SwiftUI
+
+// MARK: - SceneDelegate+DeeplinkHandlable
 
 extension SceneDelegate: DeeplinkHandlable {
 	@MainActor
@@ -36,14 +38,14 @@ extension SceneDelegate: DeeplinkHandlable {
 
 		switch tab {
 		case .containers:
-			navigationPathContainers.removeLast(navigationPathContainers.count)
+			navigationState.containers.removeLast(navigationState.containers.count)
 			for navigationItem in navigationPathItems {
-				navigationPathContainers.append(navigationItem)
+				navigationState.containers.append(navigationItem)
 			}
 		case .stacks:
-			navigationPathStacks.removeLast(navigationPathStacks.count)
+			navigationState.stacks.removeLast(navigationState.stacks.count)
 			for navigationItem in navigationPathItems {
-				navigationPathStacks.append(navigationItem)
+				navigationState.stacks.append(navigationItem)
 			}
 		}
 	}
@@ -66,16 +68,25 @@ extension SceneDelegate: DeeplinkHandlable {
 		case .containerDetails:
 			typealias DestinationView = ContainerDetailsView
 			navigate(to: .containers)
-			DestinationView.handleNavigation(&navigationPathContainers, with: destination as! DestinationView.DeeplinkDestination)
+			DestinationView.handleNavigation(&navigationState.containers, with: destination as! DestinationView.DeeplinkDestination)
 		case .stacks:
 			navigate(to: .stacks)
 		case .stackDetails:
 			typealias DestinationView = StackDetailsView
 			navigate(to: .stacks)
-			DestinationView.handleNavigation(&navigationPathStacks, with: destination as! DestinationView.DeeplinkDestination)
+			DestinationView.handleNavigation(&navigationState.stacks, with: destination as! DestinationView.DeeplinkDestination)
 		case .settings:
 			isSettingsSheetPresented = true
 		}
 		// swiftlint:enable force_cast
+	}
+}
+
+// MARK: - SceneDelegate+NavigationState
+
+extension SceneDelegate {
+	struct NavigationState {
+		var containers = NavigationPath()
+		var stacks = NavigationPath()
 	}
 }

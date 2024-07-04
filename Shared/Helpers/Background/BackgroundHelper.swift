@@ -90,7 +90,7 @@ struct BackgroundHelper: Sendable {
 		}
 
 		changes = changes
-			.filter { $0.changeType == .recreated ? $0.oldState != $0.newState : true }
+//			.filter { $0.changeType == .recreated ? $0.oldState != $0.newState : true }
 			.localizedSorted(by: \.containerName)
 
 		loggerBackground.notice("Changes (\(changes.count, privacy: .public)): \(changes, privacy: .sensitive)")
@@ -160,7 +160,7 @@ extension BackgroundHelper {
 			scheduleBackgroundRefreshIfNeeded()
 			#endif
 
-			let portainerStore = PortainerStore(urlSessionConfiguration: .backgroundTasks)
+			let portainerStore = PortainerStore(urlSessionConfiguration: .intents)
 			if !portainerStore.isSetup {
 				await portainerStore.setupInitially()
 			}
@@ -173,7 +173,7 @@ extension BackgroundHelper {
 			let newContainers = try await portainerStore.refreshContainers().value
 
 			Task.detached {
-				try? await HarbourSpotlight.indexContainers(newContainers)
+				try? await SpotlightHelper.indexContainers(newContainers)
 			}
 
 			try await handleContainersUpdate(from: oldContainers, to: newContainers, endpoint: endpoint)

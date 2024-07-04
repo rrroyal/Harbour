@@ -52,7 +52,7 @@ private extension SettingsView.ConnectionSection {
 				Divider()
 
 				Button {
-//					Haptics.generateIfEnabled(.sheetPresentation)
+					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isSetupSheetPresented = true
 				} label: {
 					Label("SettingsView.Connection.ConnectionMenu.Add", systemImage: SFSymbol.plus)
@@ -67,7 +67,7 @@ private extension SettingsView.ConnectionSection {
 						#endif
 						.foregroundStyle(viewModel.activeURL != nil ? .primary : .secondary)
 						.lineLimit(1)
-						.animation(.smooth, value: viewModel.activeURL)
+						.animation(.default, value: viewModel.activeURL)
 
 					#if os(iOS)
 					Spacer()
@@ -97,7 +97,7 @@ private extension SettingsView.ConnectionSection {
 			} message: { url in
 				Text("SettingsView.Connection.RemoveEndpointAlert.Message URL:\(url.absoluteString)")
 			}
-			.animation(.smooth, value: viewModel.activeURL)
+			.animation(.default, value: viewModel.activeURL)
 		}
 	}
 

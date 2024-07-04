@@ -18,7 +18,7 @@ private let logger = Logger(.intents(IntentEndpoint.self))
 
 struct IntentEndpoint: AppEntity, Identifiable {
 	public static let typeDisplayRepresentation: TypeDisplayRepresentation = "IntentEndpoint.TypeDisplayRepresentation"
-	public static let defaultQuery = Query()
+	public static let defaultQuery = IntentEndpointQuery()
 
 	public var displayRepresentation: DisplayRepresentation {
 		DisplayRepresentation(title: .init(stringLiteral: name ?? ""), subtitle: .init(stringLiteral: "\(id)"))
@@ -63,14 +63,14 @@ extension IntentEndpoint {
 	}
 }
 
-// MARK: - IntentEndpoint+Query
+// MARK: - IntentEndpoint+IntentEndpointQuery
 
 extension IntentEndpoint {
-	struct Query: EntityQuery {
+	struct IntentEndpointQuery: EntityQuery {
 		typealias Entity = IntentEndpoint
 
-		//	@IntentParameterDependency<ContainerStatusIntent>()
-		//	var statusIntent
+//		@IntentParameterDependency<ContainerStatusIntent>()
+//		var statusIntent
 
 		private var requiresOnline: Bool {
 			// Check if in Shortcut
@@ -78,12 +78,21 @@ extension IntentEndpoint {
 		}
 
 		func suggestedEntities() async throws -> [Entity] {
-			let portainerStore = IntentPortainerStore.shared
-			try portainerStore.setupIfNeeded()
-			let endpoints = try await portainerStore.getEndpoints()
-			return endpoints
-				.map { Entity(endpoint: $0) }
-				.sorted { $0.id < $1.id }
+			logger.info("Getting suggested entities...")
+
+			do {
+				let portainerStore = IntentPortainerStore.shared
+				try portainerStore.setupIfNeeded()
+				let entities = try await portainerStore.portainer.fetchEndpoints()
+					.map { Entity(endpoint: $0) }
+					.localizedSorted(by: \.name)
+
+				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
+				return entities
+			} catch {
+				logger.error("Error getting suggested entities: \(error, privacy: .public)")
+				throw error
+			}
 		}
 
 		func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
@@ -93,18 +102,19 @@ extension IntentEndpoint {
 				let portainerStore = IntentPortainerStore.shared
 				try portainerStore.setupIfNeeded()
 
-				let endpoints = try await portainerStore.getEndpoints()
+				let entities = try await portainerStore.portainer.fetchEndpoints()
 					.filter { identifiers.contains($0.id) }
 					.map { Entity(endpoint: $0) }
+					.localizedSorted(by: \.name)
 
-				logger.info("Returning \(String(describing: endpoints), privacy: .sensitive) (live)")
-				return endpoints
+				logger.notice("Returning \(entities.count) entities (live)")
+				return entities
 			} catch {
 				logger.error("Error getting entities: \(error, privacy: .public)")
 
 				if !requiresOnline && error is URLError {
 					let parsed = identifiers.map { Entity(id: $0, name: nil) }
-					logger.notice("Returning \(String(describing: parsed), privacy: .sensitive) (offline)")
+					logger.notice("Returning \(parsed.count) entities (parsed)")
 					return parsed
 				}
 

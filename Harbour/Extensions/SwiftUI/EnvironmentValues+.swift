@@ -18,10 +18,6 @@ extension EnvironmentValues {
 		os_log(.error, log: .default, "Error: \(error, privacy: .public)")
 	}
 
-	/// Shape of the parent view.
-	@Entry
-	var parentShape: AnyShape?
-
 	/// An action that presents a provided indicator.
 	@Entry
 	var presentIndicator: PresentIndicatorAction = .init { indicator, _ in

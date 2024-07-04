@@ -156,7 +156,7 @@ extension ViewState {
 		#endif
 		.frame(maxWidth: .infinity, maxHeight: .infinity)
 		.transition(.opacity)
-		.animation(.smooth, value: self.id)
+		.animation(.default, value: self.id)
 		.allowsHitTesting(false)
 	}
 }

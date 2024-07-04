@@ -18,7 +18,6 @@ struct ContainerDetailsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
-	@Environment(\.presentIndicator) private var presentIndicator
 	@State private var viewModel: ViewModel
 
 	var navigationItem: NavigationItem
@@ -50,15 +49,25 @@ struct ContainerDetailsView: View {
 	@ViewBuilder
 	private var statusSection: some View {
 		let state = (container?._isStored ?? true) ? Container.State?.none : (container?.state ?? containerDetails?.state.state ?? Container.State?.none)
-		let title = container?.status ?? state.description.localizedCapitalized
+		let title = container?.status ?? state.title
 
 		NormalizedSection {
-			LabeledWithIcon(title, icon: state.icon)
-				.foregroundColor(state.color)
+			if state == .none && !(viewModel.fetchTask?.isCancelled ?? true) {
+				Label {
+					Text("Generic.Loading")
+				} icon: {
+					ProgressView()
+				}
+				.foregroundStyle(.secondary)
+			} else {
+				LabeledWithIcon(title, icon: state.icon)
+					.foregroundStyle(state.color)
+			}
 		} header: {
 			Text("ContainerDetailsView.Section.State")
 		}
-		.animation(.smooth, value: state)
+		.animation(.default, value: state)
+		.animation(.default, value: viewModel.fetchTask?.isCancelled)
 	}
 
 	@ViewBuilder
@@ -244,9 +253,12 @@ struct ContainerDetailsView: View {
 					}
 
 					if let container {
-						ContainerContextMenu(container: container) {
-							viewModel.refresh()
-						}
+						ContainerContextMenu(
+							container: container,
+							onContainerAction: {
+								viewModel.refresh()
+							}
+						)
 					}
 				} label: {
 					Label("Generic.More", systemImage: SFSymbol.moreCircle)
@@ -280,11 +292,11 @@ struct ContainerDetailsView: View {
 				errorHandler(error)
 			}
 		}
-		.animation(.smooth, value: container)
-		.animation(.smooth, value: container?.state)
-		.animation(.smooth, value: containerDetails)
-		.animation(.smooth, value: containerDetails?.state.state)
-		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
+		.animation(.default, value: container)
+		.animation(.default, value: containerDetails)
+		.animation(.default, value: container?.state ?? containerDetails?.state.state)
+		.animation(.default, value: viewModel.isStatusProgressViewVisible)
+		.animation(.default, value: viewModel.fetchTask?.isCancelled)
 		.animation(nil, value: navigationItem)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
 			viewModel.createUserActivity(userActivity, for: container)
@@ -323,13 +335,11 @@ extension ContainerDetailsView {
 
 // MARK: - ContainerDetailsView+Equatable
 
-/*
 extension ContainerDetailsView: Equatable {
 	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.navigationItem == rhs.navigationItem
 	}
 }
- */
 
 // MARK: - Previews
 

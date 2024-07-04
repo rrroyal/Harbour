@@ -6,8 +6,6 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
-#if os(iOS)
-
 import SwiftUI
 
 // MARK: - ContentView+ViewForIOS
@@ -61,5 +59,3 @@ extension ContentView {
 #Preview {
 	ContentView.ViewForIOS()
 }
-
-#endif

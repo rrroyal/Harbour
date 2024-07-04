@@ -7,17 +7,13 @@
 //
 
 import Foundation
-@preconcurrency import KeychainKit
+import KeychainKit
 
 // MARK: - Keychain+shared
 
 extension Keychain {
-	static let shared: Keychain = {
-		// swiftlint:disable:next force_unwrapping
-		let keychain = Keychain(accessGroup: Bundle.main.groupIdentifier!)
-//		keychain.applicationTagPrefix = Bundle.main.mainBundleIdentifier
-		return keychain
-	}()
+	// swiftlint:disable:next force_unwrapping
+	static let shared = Keychain(accessGroup: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
 }
 
 // MARK: - Keychain+itemDescription

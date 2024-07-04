@@ -16,8 +16,8 @@ import UIKit
 // MARK: - ContainersView+ViewModel
 
 extension ContainersView {
-	@Observable @MainActor
-	final class ViewModel: @unchecked Sendable {
+	@Observable
+	final class ViewModel {
 		private let portainerStore: PortainerStore
 		private let preferences = Preferences.shared
 

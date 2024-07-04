@@ -13,11 +13,11 @@ import SwiftData
 @Model
 final class StoredContainer: Identifiable {
 	@Attribute(.unique)
-	let id: Container.ID
-	let name: String?
-	let lastState: Container.State?
-	let image: String?
-	let associationID: String?
+	var id: Container.ID
+	var name: String?
+	var lastState: Container.State?
+	var image: String?
+	var associationID: String?
 
 	init(id: ID, name: String?, lastState: Container.State?, image: String, associationID: String?) {
 		self.id = id

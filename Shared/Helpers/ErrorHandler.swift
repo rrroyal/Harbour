@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct ErrorHandler: @unchecked Sendable {
+struct ErrorHandler {
 	typealias WrappedValue = (Error, _ showIndicator: Bool) -> Void
 
 	let wrappedValue: WrappedValue

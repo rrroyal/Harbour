@@ -14,8 +14,8 @@ import SwiftUI
 
 // MARK: - SceneDelegate
 
-@Observable
-final class SceneDelegate: NSObject, @unchecked Sendable {
+@Observable @MainActor
+final class SceneDelegate: NSObject {
 
 	// MARK: Properties
 
@@ -24,16 +24,11 @@ final class SceneDelegate: NSObject, @unchecked Sendable {
 
 	// MARK: Navigation
 
-	@MainActor
 	var scenePhase: ScenePhase?
 
-	@MainActor
 	var activeTab: ViewTab = .containers
 
-	@MainActor
-	var navigationPathContainers = NavigationPath()
-	@MainActor
-	var navigationPathStacks = NavigationPath()
+	var navigationState = NavigationState()
 
 	// MARK: Sheets
 
@@ -46,8 +41,6 @@ final class SceneDelegate: NSObject, @unchecked Sendable {
 	var handledCreateSheetDetentUpdate = false
 
 	// MARK: Alerts
-
-	var activeAlert: Alert?
 
 	var containerToRemove: Container?
 	var isRemoveContainerAlertPresented: Binding<Bool> {

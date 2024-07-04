@@ -96,9 +96,9 @@ struct SetupView: View {
 			}
 		}
 		.keyboardShortcut(.defaultAction)
-		.animation(.smooth, value: viewModel.buttonLabel)
-		.animation(.smooth, value: viewModel.buttonColor)
-		.animation(.smooth, value: viewModel.isLoading)
+		.animation(.default, value: viewModel.buttonLabel)
+		.animation(.default, value: viewModel.buttonColor)
+		.animation(.default, value: viewModel.isLoading)
 		.disabled(!viewModel.canSubmit)
 	}
 
@@ -167,7 +167,7 @@ private extension SetupView {
 	func login() -> Task<Void, Never> {
 		Task {
 			do {
-				let success = try await viewModel.login()
+				let success = try await viewModel.login().value
 				if success {
 					dismiss()
 				}

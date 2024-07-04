@@ -18,7 +18,7 @@ import PortainerKit
 
 extension ContainerDetailsView {
 	@Observable
-	final class ViewModel: @unchecked Sendable {
+	final class ViewModel {
 		private let portainerStore: PortainerStore = .shared
 		private let logger = Logger(.view(ContainerDetailsView.self))
 

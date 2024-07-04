@@ -18,7 +18,7 @@ import AppKit.NSPasteboard
 
 extension ContainerLogsView {
 	@Observable
-	final class ViewModel: @unchecked Sendable {
+	final class ViewModel {
 		typealias _ViewState = ViewState<String, Error>
 
 		private let portainerStore = PortainerStore.shared

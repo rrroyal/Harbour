@@ -16,13 +16,13 @@ private let logger = Logger(.custom(IntentPortainerStore.self))
 
 // MARK: - IntentPortainerStore
 
-public final class IntentPortainerStore: @unchecked Sendable {
+public final class IntentPortainerStore {
 	static let shared = IntentPortainerStore()
 
-	// swiftlint:disable:next force_unwrapping
-	private let keychain = Keychain(accessGroup: Bundle.main.groupIdentifier!)
-	private let portainer = PortainerClient(urlSessionConfiguration: .backgroundTasks)
+	private let keychain = Keychain.shared
 	private let preferences = Preferences.shared
+
+	public let portainer = PortainerClient(urlSessionConfiguration: .intents)
 
 	public private(set) var isSetup = false
 
@@ -31,7 +31,7 @@ public final class IntentPortainerStore: @unchecked Sendable {
 	}
 
 	public func setupIfNeeded() throws {
-		isSetup = false
+		guard !isSetup else { return }
 
 		guard let urlStr = preferences.selectedServer else {
 			throw PortainerError.noServer
@@ -39,48 +39,12 @@ public final class IntentPortainerStore: @unchecked Sendable {
 		guard let url = URL(string: urlStr) else {
 			throw GenericError.invalidURL
 		}
-		if isSetup && portainer.serverURL == url { return }
+		if portainer.serverURL == url { return }
 
 		let token = try keychain.getString(for: url)
 		portainer.serverURL = url
 		portainer.token = token
 
 		isSetup = true
-	}
-
-	public func getEndpoints() async throws -> [Endpoint] {
-//		logger.info("Getting endpoints...")
-		do {
-			let endpoints = try await portainer.fetchEndpoints()
-//			logger.debug("Got \(endpoints.count, privacy: .public) endpoints")
-			return endpoints.sorted()
-		} catch {
-			logger.error("Failed to get endpoints: \(error, privacy: .public)")
-			throw error
-		}
-	}
-
-	public func getContainers(for endpointID: Endpoint.ID, filters: FetchFilters? = nil) async throws -> [Container] {
-//		logger.info("Getting containers...")
-		do {
-			let containers = try await portainer.fetchContainers(endpointID: endpointID, filters: filters)
-//			logger.debug("Got \(containers.count, privacy: .public) containers")
-			return containers.sorted()
-		} catch {
-			logger.error("Failed to get containers: \(error, privacy: .public)")
-			throw error
-		}
-	}
-
-	public func execute(_ action: ContainerAction, containerID: Container.ID, endpointID: Endpoint.ID) async throws {
-		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
-		do {
-			try await portainer.executeContainerAction(action, containerID: containerID, endpointID: endpointID)
-
-			logger.notice("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"")
-		} catch {
-			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
-			throw error
-		}
 	}
 }

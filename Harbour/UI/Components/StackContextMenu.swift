@@ -34,7 +34,7 @@ struct StackContextMenu: View {
 				Divider()
 
 				Button {
-//					Haptics.generateIfEnabled(.sheetPresentation)
+					Haptics.generateIfEnabled(.sheetPresentation)
 					sceneDelegate.editedStack = stack
 					sceneDelegate.activeCreateStackSheetDetent = .large
 					sceneDelegate.isCreateStackSheetPresented = true

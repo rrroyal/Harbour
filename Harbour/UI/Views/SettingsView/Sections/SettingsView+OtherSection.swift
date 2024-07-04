@@ -46,7 +46,7 @@ private extension SettingsView.OtherSection {
 
 				if viewModel.isNegraButtonVisible {
 					Button("SettingsView.Other.Footer.NegraButton") {
-//						Haptics.generateIfEnabled(.sheetPresentation)
+						Haptics.generateIfEnabled(.sheetPresentation)
 						viewModel.isNegraSheetPresented = true
 					}
 					.buttonStyle(.plain)

@@ -96,7 +96,7 @@ private extension SettingsView.InterfaceSection {
 						.font(.callout)
 						.fontWeight(.medium)
 						.frame(maxWidth: .infinity, alignment: .trailing)
-						.animation(.smooth, value: currentIcon)
+						.animation(.default, value: currentIcon)
 				}
 			}
 		}

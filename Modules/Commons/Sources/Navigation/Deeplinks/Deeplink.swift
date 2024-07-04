@@ -26,7 +26,7 @@ public struct Deeplink {
 			// URL is malformed
 			return nil
 		}
-		guard components.scheme?.lowercased() == Self.scheme.lowercased() else {
+		guard components.scheme?.localizedCaseInsensitiveCompare(Self.scheme) == .orderedSame else {
 			// Scheme isn't ours; bail
 			return nil
 		}
@@ -67,6 +67,6 @@ internal extension Deeplink {
 
 internal extension [URLQueryItem] {
 	func value(for key: Deeplink.QueryKey) -> String? {
-		first { $0.name.lowercased() == key.rawValue.lowercased() }?.value
+		first { $0.name.localizedCaseInsensitiveCompare(key.rawValue) == .orderedSame }?.value
 	}
 }

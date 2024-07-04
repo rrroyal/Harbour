@@ -46,7 +46,7 @@ struct LandingView: View {
 				.transition(viewAnimation(edge: .trailing))
 			}
 		}
-		.animation(.smooth, value: currentScreen)
+		.animation(.default, value: currentScreen)
 	}
 }
 

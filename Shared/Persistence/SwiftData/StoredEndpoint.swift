@@ -12,8 +12,8 @@ import SwiftData
 @Model
 final class StoredEndpoint: Identifiable {
 	@Attribute(.unique)
-	let id: Endpoint.ID
-	let name: String?
+	var id: Endpoint.ID
+	var name: String?
 
 	init(id: ID, name: String?) {
 		self.id = id

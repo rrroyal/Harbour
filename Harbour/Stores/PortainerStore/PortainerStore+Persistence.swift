@@ -28,7 +28,7 @@ extension PortainerStore {
 //			logger.info("Got token for URL: \"\(selectedServerURL.absoluteString, privacy: .sensitive(mask: .hash))\"")
 			return (selectedServerURL, token)
 		} catch {
-			logger.warning("Failed to load token: \(error, privacy: .public)")
+			logger.warning("Failed to load token: \(error.localizedDescription, privacy: .public)")
 			return nil
 		}
 	}

@@ -16,12 +16,14 @@ import SwiftUI
 
 extension SetupView {
 	@Observable
-	final class ViewModel: @unchecked Sendable {
+	final class ViewModel {
 		private let portainer = PortainerClient()
 		private let logger = Logger(.custom(SetupView.self))
 
-		private(set) var isLoading = false
-		private(set) var loginTask: Task<Bool, Error>?
+		@ObservationIgnored
+		private var loginTask: Task<Bool, Error>?
+
+		private(set) var viewState: ViewState<Bool, Error>?
 		private(set) var errorTimer: Timer?
 
 		var url: String = ""
@@ -29,11 +31,13 @@ extension SetupView {
 		var buttonLabel: String?
 		var buttonColor: Color?
 
+		var isLoading: Bool {
+			viewState?.isLoading ?? false
+		}
+
 		var canSubmit: Bool {
 			!isLoading && !url.isReallyEmpty && !token.isReallyEmpty
 		}
-
-		init() { }
 
 		func onURLTextFieldSubmit() {
 			if !url.isReallyEmpty && !url.starts(with: "http") {
@@ -43,26 +47,21 @@ extension SetupView {
 		}
 
 		func cancelLogin() {
+			viewState = nil
 			loginTask?.cancel()
 			loginTask = nil
-			isLoading = false
 		}
 
-		func login() async throws -> Bool {
+		func login() -> Task<Bool, Error> {
 			logger.notice("Attempting to login with URL: \"\(self.url)\"...")
 
 			cancelLogin()
-			loginTask = Task {
-				Task { @MainActor in
-					isLoading = true
-				}
-
+			let task = Task {
 				defer {
-					Task { @MainActor in
-						isLoading = false
-					}
 					self.loginTask = nil
 				}
+
+				viewState = .loading
 
 				do {
 					guard let url = URL(string: url) else {
@@ -92,21 +91,21 @@ extension SetupView {
 					Haptics.generateIfEnabled(.success)
 
 					Task { @MainActor in
-						isLoading = false
 						buttonColor = .green
 						buttonLabel = String(localized: "SetupView.LoginButton.Success")
+						viewState = .success(true)
 					}
 
-					try? await Task.sleep(for: .seconds(2))
+					try? await Task.sleep(for: .seconds(1))
 
 					return true
 				} catch {
 					Haptics.generateIfEnabled(.error)
 
 					Task { @MainActor in
-						isLoading = false
 						buttonColor = .red
 						buttonLabel = error.localizedDescription.localizedCapitalized
+						viewState = .failure(error)
 					}
 
 					errorTimer?.invalidate()
@@ -117,13 +116,15 @@ extension SetupView {
 						await MainActor.run {
 							self.buttonLabel = nil
 							self.buttonColor = nil
+							self.viewState = nil
 						}
 					}
 
 					throw error
 				}
 			}
-			return try await loginTask?.value ?? false
+			self.loginTask = task
+			return task
 		}
 
 		func onViewDisappear() {

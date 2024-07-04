@@ -19,6 +19,6 @@ struct ButtonScalesDownOnPressModifier: ViewModifier {
 		content
 			.opacity(configuration.isPressed ? Self.pressedOpacity : 1)
 			.scaleEffect(configuration.isPressed ? Self.pressedScale : 1)
-			.animation(.spring, value: configuration.isPressed)
+			.animation(.default, value: configuration.isPressed)
 	}
 }

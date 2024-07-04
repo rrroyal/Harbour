@@ -13,7 +13,7 @@ import SwiftUI
 struct InsetViewModifier: ViewModifier {
 	func body(content: Content) -> some View {
 		content
-			.clipShape(ContainerRelativeShape(), style: .init(antialiased: false)) // Antialiasing has some weird artifacts :(
+			.clipShape(ContainerRelativeShape())
 			.background(
 				ContainerRelativeShape()
 					.fill(Color.widgetBackground)
@@ -25,6 +25,6 @@ struct InsetViewModifier: ViewModifier {
 // MARK: - Previews
 
 #Preview {
-	StatusFeedbackView(entry: .placeholder, mode: .containerNotFound)
+	StatusFeedbackView(mode: .containerNotFound)
 		.modifier(InsetViewModifier())
 }

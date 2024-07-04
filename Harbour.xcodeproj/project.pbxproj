@@ -79,6 +79,8 @@
 			membershipExceptions = (
 				"Extensions/Foundation/Error+Equatable.swift",
 				"Extensions/PortainerKit/Stack.StackType+UI.swift",
+				"Helpers/Spotlight/SpotlightHelper+Containers.swift",
+				"Helpers/Spotlight/SpotlightHelper+Stacks.swift",
 				"Preview Content/PortainerStore+Preview.swift",
 				"Preview Content/Preview Assets.xcassets",
 				Types/KeyValueEntry.swift,
@@ -91,6 +93,14 @@
 			membershipExceptions = (
 				Info.plist,
 			);
+			platformFiltersByRelativePath = {
+				"UI/Views/ContentView/Components/ContentView+ViewForIOS.swift" = (
+					ios,
+				);
+				"UI/Views/ContentView/Components/ContentView+ViewForMacOS.swift" = (
+					macos,
+				);
+			};
 			target = E7D6E6232884771200C79732 /* Harbour */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -339,7 +349,6 @@
 				DEVELOPMENT_ASSET_PATHS = "Shared/Preview\\ Content";
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				ENABLE_HARDENED_RUNTIME = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HarbourWidgets;
@@ -358,7 +367,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 4.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -366,6 +375,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TARGET_WIDGETS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -382,7 +392,6 @@
 				DEVELOPMENT_ASSET_PATHS = "Shared/Preview\\ Content";
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				ENABLE_HARDENED_RUNTIME = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = HarbourWidgets/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = HarbourWidgets;
@@ -401,7 +410,7 @@
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 4.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour.Widgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -409,6 +418,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TARGET_WIDGETS";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -561,7 +571,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 4.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -570,6 +580,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TARGET_APP ENABLE_PREVIEW_FEATURES";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -600,7 +611,7 @@
 					"@executable_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 5.0.0;
+				MARKETING_VERSION = 4.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.shameful.Harbour;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
@@ -609,6 +620,7 @@
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) TARGET_APP";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

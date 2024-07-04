@@ -22,8 +22,8 @@ extension URLSessionConfiguration {
 		return configuration
 	}
 
-	/// `URLSessionConfiguration` for background tasks.
-	static var backgroundTasks: URLSessionConfiguration {
+	/// `URLSessionConfiguration` for intents.
+	static var intents: URLSessionConfiguration {
 		let configuration = URLSessionConfiguration.app
 		configuration.timeoutIntervalForRequest = 10
 		configuration.timeoutIntervalForResource = 10

@@ -12,19 +12,26 @@ import WidgetKit
 // MARK: - ContainerStatusWidget
 
 struct ContainerStatusWidget: Widget {
-	let kind: String = HarbourWidgetKind.containerStatus
+	private let kind: String = HarbourWidgetKind.containerStatus
+	private var families: [WidgetFamily] {
+		#if os(iOS)
+		[.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge, .accessoryInline, .accessoryRectangular]
+		#elseif os(macOS)
+		[.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge]
+		#endif
+	}
 
 	var body: some WidgetConfiguration {
 		AppIntentConfiguration(
 			kind: kind,
-			intent: ContainerStatusProvider.Intent.self,
-			provider: ContainerStatusProvider()
+			intent: ContainerStatusWidget.Intent.self,
+			provider: ContainerStatusWidget.Provider()
 		) { entry in
-			ContainerStatusWidgetView(entry: entry)
+			ContainerStatusWidget.ContentView(entry: entry)
 		}
 		.configurationDisplayName("ContainerStatusWidget.DisplayName")
 		.description("ContainerStatusWidget.Description")
-		.supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
+		.supportedFamilies(families)
 		.contentMarginsDisabled()
 		.containerBackgroundRemovable()
 	}
@@ -32,20 +39,34 @@ struct ContainerStatusWidget: Widget {
 
 // MARK: - Previews
 
-#Preview("ContainerStatusWidget - Small", as: .systemSmall) {
+#if os(iOS)
+#Preview("Accessory Rectangular", as: .accessoryRectangular) {
 	ContainerStatusWidget()
 } timeline: {
-	ContainerStatusProvider.Entry.placeholder
+	ContainerStatusWidget.Entry.placeholder
+}
+#endif
+
+#Preview("Small", as: .systemSmall) {
+	ContainerStatusWidget()
+} timeline: {
+	ContainerStatusWidget.Entry.placeholder
 }
 
-#Preview("ContainerStatusWidget - Medium", as: .systemMedium) {
+#Preview("Medium", as: .systemMedium) {
 	ContainerStatusWidget()
 } timeline: {
-	ContainerStatusProvider.Entry.placeholder
+	ContainerStatusWidget.Entry.placeholder
 }
 
-#Preview("ContainerStatusWidget - Large", as: .systemLarge) {
+#Preview("Large", as: .systemLarge) {
 	ContainerStatusWidget()
 } timeline: {
-	ContainerStatusProvider.Entry.placeholder
+	ContainerStatusWidget.Entry.placeholder
+}
+
+#Preview("Extra Large", as: .systemExtraLarge) {
+	ContainerStatusWidget()
+} timeline: {
+	ContainerStatusWidget.Entry.placeholder
 }

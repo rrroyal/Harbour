@@ -34,7 +34,7 @@ struct StacksView: View {
 		}
 		ToolbarItem(placement: createStackToolbarItemPlacement) {
 			Button {
-//				Haptics.generateIfEnabled(.sheetPresentation)
+				Haptics.generateIfEnabled(.sheetPresentation)
 				sceneDelegate.editedStack = nil
 				sceneDelegate.isCreateStackSheetPresented = true
 			} label: {
@@ -49,11 +49,11 @@ struct StacksView: View {
 					Label {
 						Text("StacksView.Menu.ActiveEndpointOnly")
 					} icon: {
-						Image(systemName: "tag")
+						Image(systemName: SFSymbol.endpoint)
 					}
+
 					if let selectedEndpoint = portainerStore.selectedEndpoint {
 						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
-							.foregroundStyle(.secondary)
 					}
 				}
 				.onChange(of: preferences.svFilterByActiveEndpoint) {
@@ -77,7 +77,7 @@ struct StacksView: View {
 				Divider()
 
 				Button {
-//					Haptics.generateIfEnabled(.sheetPresentation)
+					Haptics.generateIfEnabled(.sheetPresentation)
 					sceneDelegate.isSettingsSheetPresented = true
 				} label: {
 					Label("SettingsView.Title", systemImage: SFSymbol.settings)
@@ -169,14 +169,12 @@ struct StacksView: View {
 		}
 		.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
 			StackDetailsView(navigationItem: navigationItem)
-//				.equatable()
-				.tag(navigationItem.id)
 		}
 		.navigationTitle("StacksView.Title")
 		.environment(viewModel)
-		.animation(.smooth, value: viewModel.viewState)
-//		.animation(.smooth, value: viewModel.stacks)
-		.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
+		.animation(.default, value: viewModel.viewState)
+//		.animation(.default, value: viewModel.stacks)
+		.animation(.default, value: viewModel.isStatusProgressViewVisible)
 		.onKeyPress(action: onKeyPress)
 		.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
 //			guard sceneDelegate.activeTab == .stacks else { return }
@@ -224,7 +222,6 @@ private extension StacksView {
 							)
 						}
 					}
-					.tag(stackItem.id)
 					#if os(macOS)
 					.padding(.horizontal, 8)
 					.padding(.vertical, 4)
@@ -236,7 +233,7 @@ private extension StacksView {
 			#elseif os(macOS)
 			.listStyle(.sidebar)
 			#endif
-			.animation(.smooth, value: stacks)
+			.animation(.default, value: stacks)
 		}
 	}
 }

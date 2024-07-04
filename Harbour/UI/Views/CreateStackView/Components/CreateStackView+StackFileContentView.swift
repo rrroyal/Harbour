@@ -37,10 +37,10 @@ extension CreateStackView {
 				Text("CreateStackView.StackFileContent")
 			}
 			.listRowInsets(.zero)
-			.animation(.smooth, value: viewModel.stackFileContent)
-			.animation(.smooth, value: viewModel.isLoadingStackFileContent)
-			.animation(.smooth, value: viewModel.isStackFileContentExpanded)
-			.animation(.smooth, value: viewModel.isStackFileContentTargeted)
+			.animation(.default, value: viewModel.stackFileContent)
+			.animation(.default, value: viewModel.isLoadingStackFileContent)
+			.animation(.default, value: viewModel.isStackFileContentExpanded)
+			.animation(.default, value: viewModel.isStackFileContentTargeted)
 			.onDrop(of: allowedContentTypes, isTargeted: $viewModel.isStackFileContentTargeted) { items in
 				Haptics.generateIfEnabled(.selectionChanged)
 				return onItemsDrop(items)
@@ -159,7 +159,7 @@ private extension CreateStackView.StackFileContentView {
 
 		var body: some View {
 			Button {
-//				Haptics.generateIfEnabled(.sheetPresentation)
+				Haptics.generateIfEnabled(.sheetPresentation)
 				viewModel.isFileImporterPresented = true
 			} label: {
 				Text("CreateStackView.SelectStackFile")
@@ -173,7 +173,6 @@ private extension CreateStackView.StackFileContentView {
 			.buttonStyle(.plain)
 			#endif
 			.contextMenu {
-				// TODO: Check if it still crashes on later betas
 				PasteButton(payloadType: String.self) { strings in
 					Haptics.generateIfEnabled(.selectionChanged)
 					if let string = strings.first {

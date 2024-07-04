@@ -13,11 +13,10 @@ import SwiftUI
 
 extension ContainersView.ListView {
 	struct ContainerCell: View {
-		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: 18, style: .circular)
-
 		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 12
 		private let minimumScaleFactor: Double = 0.8
+		private let background = RoundedRectangle(cornerRadius: 18, style: .circular)
 
 		let container: Container
 
@@ -46,7 +45,7 @@ extension ContainersView.ListView {
 				if isBeingRemoved {
 					Text("Generic.Removing")
 				} else {
-					let stateLabel = container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized
+					let stateLabel = (container._isStored ? Container.State?.none : container.state).title
 
 					if let containerStatus = container.status {
 						(
@@ -88,13 +87,15 @@ extension ContainersView.ListView {
 			.lineLimit(1)
 			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
 			.frame(maxWidth: .infinity)
-			.background(Color.secondaryGroupedBackground)
-			.contentShape(Self.roundedRectangleBackground)
-			.clipShape(Self.roundedRectangleBackground)
-			.animation(.smooth, value: container)
-			.animation(.smooth, value: container.state)
-			.animation(.smooth, value: container.status)
-			.animation(.smooth, value: isBeingRemoved)
+			.background(Color.secondaryGroupedBackground, in: background)
+			.contentShape(background)
+			#if os(iOS)
+			.contentShape(.contextMenuPreview, background)
+			#endif
+			.animation(.default, value: container)
+			.animation(.default, value: container.state)
+			.animation(.default, value: container.status)
+			.animation(.default, value: isBeingRemoved)
 			.id(self.id)
 		}
 	}

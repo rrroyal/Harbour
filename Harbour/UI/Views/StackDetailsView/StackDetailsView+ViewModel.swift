@@ -14,7 +14,7 @@ import PortainerKit
 
 extension StackDetailsView {
 	@Observable
-	final class ViewModel: @unchecked Sendable {
+	final class ViewModel {
 		private let logger = Logger(.view(StackDetailsView.self))
 
 		private let portainerStore = PortainerStore.shared
@@ -48,7 +48,6 @@ extension StackDetailsView {
 		}
 
 		var isRemovingStack = false
-		var isRemoveStackAlertPresented = false
 		var scrollViewIsRefreshing = false
 
 		var stack: Stack? {

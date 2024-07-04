@@ -72,7 +72,7 @@ struct CreateStackView: View {
 		.keyboardShortcut(.defaultAction)
 		.disabled(!viewModel.canCreateStack)
 		.disabled(viewModel.isLoading)
-		.animation(.smooth, value: viewModel.canCreateStack)
+		.animation(.default, value: viewModel.canCreateStack)
 	}
 
 	var body: some View {
@@ -153,12 +153,12 @@ struct CreateStackView: View {
 		}
 		.environment(viewModel)
 		.navigationTitle(viewModel.shouldCreateNewStack ? "CreateStackView.Title.Create" : "CreateStackView.Title.Update")
-		.animation(.smooth, value: viewModel.isLoading)
-		.animation(.smooth, value: viewModel.isLoadingStackFileContent)
-		.animation(.smooth, value: viewModel.isStackFileContentExpanded)
-		.animation(.smooth, value: viewModel.stackFileContent)
-		.animation(.smooth, value: viewModel.stackEnvironment)
-		.animation(.smooth, value: viewModel.createStackError != nil)
+		.animation(.default, value: viewModel.isLoading)
+		.animation(.default, value: viewModel.isLoadingStackFileContent)
+		.animation(.default, value: viewModel.isStackFileContentExpanded)
+		.animation(.default, value: viewModel.stackFileContent)
+		.animation(.default, value: viewModel.stackEnvironment)
+		.animation(.default, value: viewModel.createStackError != nil)
 		.task(id: viewModel.stackID) {
 			if viewModel.stackID != nil {
 				await viewModel.fetchStackFileContent().value

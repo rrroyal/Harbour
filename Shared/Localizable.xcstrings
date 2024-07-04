@@ -131,17 +131,27 @@
         }
       }
     },
-    "ContainerActionIntent.Error.ContainerNotFound ID:%@" : {
+    "ContainerActionIntent.Summary.Simple ${containerAction}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Container with ID \"%@\" not found."
+            "value" : "${containerAction} a container"
           }
         }
       }
     },
-    "ContainerActionIntent.ParameterSummary ${containerAction}" : {
+    "ContainerActionIntent.Summary.Simple ${containerAction} ${container}" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "${containerAction} ${container}"
+          }
+        }
+      }
+    },
+    "ContainerActionIntent.Summary.Verbose ${containerAction}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -151,22 +161,12 @@
         }
       }
     },
-    "ContainerActionIntent.ParameterSummary.Complex ${containerAction} ${container}" : {
+    "ContainerActionIntent.Summary.Verbose ${containerAction} ${container}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Execute ${containerAction} on ${container}"
-          }
-        }
-      }
-    },
-    "ContainerActionIntent.ParameterSummary.Simple ${containerAction} ${container}" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "${containerAction} ${container}"
           }
         }
       }
@@ -307,16 +307,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Changes"
-          }
-        }
-      }
-    },
-    "ContainerContextMenu.Attach" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attach"
           }
         }
       }
@@ -666,17 +656,17 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get status of containers on ${endpoint}"
+            "value" : "Get a container on ${endpoint}"
           }
         }
       }
     },
-    "ContainerStatusIntent.ParameterSummary ${endpoint} ${containers}" : {
+    "ContainerStatusIntent.ParameterSummary ${endpoint} ${container}" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Get status of ${containers}  on ${endpoint}"
+            "value" : "Get ${container} on ${endpoint}"
           }
         }
       }
@@ -704,6 +694,16 @@
     },
     "ContainerStatusWidget.DisplayName" : {
       "comment" : "ContainerStatus widget title",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container Status"
+          }
+        }
+      }
+    },
+    "ContainerStatusWidget.Intent.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1193,6 +1193,16 @@
         }
       }
     },
+    "Endpoint.TypeDisplayRepresentation" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endpoint"
+          }
+        }
+      }
+    },
     "Error.Generic.InvalidURL" : {
       "localizations" : {
         "en" : {
@@ -1298,7 +1308,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stay informed about container status with widgets on your Home screen."
+            "value" : "Stay informed with widgets and background notifications."
           }
         }
       }
@@ -1308,7 +1318,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Home Screen Widgets"
+            "value" : "Always Up-To-Date"
           }
         }
       }
@@ -1639,6 +1649,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Update Stack"
+          }
+        }
+      }
+    },
+    "IntentCategory.Containers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Containers"
           }
         }
       }

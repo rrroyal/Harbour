@@ -18,10 +18,18 @@ import SwiftUI
 // MARK: - Preferences
 
 /// UserDefaults wrapper; user preferences store.
-public final class Preferences: ObservableObject, @unchecked Sendable {
+public final class Preferences: ObservableObject {
 
-	// swiftlint:disable:next force_unwrapping
-	private static let userDefaults = UserDefaults.group!
+	private static var userDefaults: UserDefaults? {
+		// swiftlint:disable force_unwrapping
+		let suiteName = "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)"
+		#if TARGET_APP
+		return UserDefaults(suiteName: "\(Bundle.main.appIdentifierPrefix ?? "")\(suiteName)")
+		#elseif TARGET_WIDGETS
+		return UserDefaults(suiteName: suiteName)
+		#endif
+		// swiftlint:enable force_unwrapping
+	}
 
 	public static let shared = Preferences()
 

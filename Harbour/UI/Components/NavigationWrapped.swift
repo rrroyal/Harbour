@@ -28,13 +28,13 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 	var body: some View {
 		if useColumns {
 			NavigationSplit(
-				path: $navigationPath,
+				navigationPath: $navigationPath,
 				content: content,
 				placeholderContent: placeholderContent
 			)
 		} else {
 			NavigationStacked(
-				path: $navigationPath,
+				navigationPath: $navigationPath,
 				content: content
 			)
 		}
@@ -45,7 +45,7 @@ struct NavigationWrapped<Content: View, PlaceholderContent: View>: View {
 
 private extension NavigationWrapped {
 	struct NavigationSplit: View {
-		@Binding var path: NavigationPath
+		@Binding var navigationPath: NavigationPath
 		@ViewBuilder var content: () -> Content
 		@ViewBuilder var placeholderContent: () -> PlaceholderContent
 
@@ -53,7 +53,7 @@ private extension NavigationWrapped {
 			NavigationSplitView {
 				content()
 			} detail: {
-				NavigationStack(path: $path) {
+				NavigationStack(path: $navigationPath) {
 					placeholderContent()
 				}
 			}
@@ -65,11 +65,11 @@ private extension NavigationWrapped {
 
 private extension NavigationWrapped {
 	struct NavigationStacked: View {
-		@Binding var path: NavigationPath
+		@Binding var navigationPath: NavigationPath
 		@ViewBuilder var content: () -> Content
 
 		var body: some View {
-			NavigationStack(path: $path) {
+			NavigationStack(path: $navigationPath) {
 				content()
 			}
 		}

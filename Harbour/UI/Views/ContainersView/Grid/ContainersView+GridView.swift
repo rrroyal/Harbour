@@ -45,12 +45,10 @@ extension ContainersView {
 						ContainerCell(container: container)
 							.equatable()
 							.geometryGroup()
-							.tag(container._persistentID)
 					}
-					.environment(\.parentShape, AnyShape(ContainerCell.roundedRectangleBackground))
 				}
 			}
-			.animation(.smooth, value: containers)
+			.animation(.default, value: containers)
 		}
 	}
 }

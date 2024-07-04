@@ -64,12 +64,14 @@ extension SceneDelegate {
 		let typeIdentifier = activityIdentifierSplit.dropLast()
 
 		switch typeIdentifier.joined(separator: ".") {
-		case HarbourSpotlight.DomainIdentifier.container:
+		case SpotlightHelper.DomainIdentifier.container:
 			let container = PortainerStore.shared.containers.first { $0.id == itemIdentifier }
-			navigate(to: .containers, with: ContainerDetailsView.NavigationItem(id: itemIdentifier, displayName: container?.displayName, endpointID: nil))
-		case HarbourSpotlight.DomainIdentifier.stack:
+			let navigationItem = ContainerDetailsView.NavigationItem(id: itemIdentifier, displayName: container?.displayName, endpointID: nil)
+			navigate(to: .containers, with: navigationItem)
+		case SpotlightHelper.DomainIdentifier.stack:
 			let stack = PortainerStore.shared.stacks.first { $0.id.description == itemIdentifier }
-			navigate(to: .stacks, with: StackDetailsView.NavigationItem(stackID: itemIdentifier, stackName: stack?.name))
+			let navigationItem = StackDetailsView.NavigationItem(stackID: itemIdentifier, stackName: stack?.name)
+			navigate(to: .stacks, with: navigationItem)
 		default:
 			logger.warning("Invalid type identifier: \(typeIdentifier, privacy: .public)")
 		}

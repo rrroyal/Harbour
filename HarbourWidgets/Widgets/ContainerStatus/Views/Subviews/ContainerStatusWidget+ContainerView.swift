@@ -1,5 +1,5 @@
 //
-//  ContainerStatusWidgetView+ContainerView.swift
+//  ContainerStatusWidget+ContainerView.swift
 //  HarbourWidgets
 //
 //  Created by royal on 11/06/2023.
@@ -11,13 +11,17 @@ import PortainerKit
 import SwiftUI
 import WidgetKit
 
-// MARK: - ContainerStatusWidgetView+ContainerView
+// MARK: - ContainerStatusWidget+ContainerView
 
-extension ContainerStatusWidgetView {
+extension ContainerStatusWidget {
 	struct ContainerView: View {
-		var entry: ContainerStatusProvider.Entry
+		@Environment(\.redactionReasons) private var redactionReasons
+		var entry: ContainerStatusWidget.Provider.Entry
 		var intentContainer: IntentContainer
 		var container: Container?
+
+		@ScaledMetric(relativeTo: .body)
+		private var fontSize = 8
 
 		private let circleSize: Double = 8
 		private let minimumScaleFactor: Double = 0.8
@@ -31,10 +35,6 @@ extension ContainerStatusWidgetView {
 				endpointID: entry.configuration.endpoint?.id
 			)
 			return deeplink.url ?? Deeplink.appURL
-		}
-
-		private var namePlaceholder: String {
-			String(localized: "Generic.Unknown")
 		}
 
 		private var statusPlaceholder: String {
@@ -52,46 +52,50 @@ extension ContainerStatusWidgetView {
 			}
 		}
 
-		@ViewBuilder
+		@ViewBuilder @MainActor
 		private var stateHeadline: some View {
-			HStack {
-				Text(verbatim: (container?.state.description ?? Container.State?.none.description).localizedCapitalized)
-					#if os(macOS)
-					.font(.body)
-					.fontWeight(.medium)
-					#else
-					.font(.subheadline)
-					.fontWeight(.medium)
-					#endif
-					.foregroundStyle(.tint)
-					.minimumScaleFactor(minimumScaleFactor)
-
-				Spacer()
-
-				Circle()
-					.fill(.tint)
-					.frame(width: circleSize, height: circleSize)
-			}
-		}
-
-		@ViewBuilder
-		private var dateLabel: some View {
-			Text(entry.date, style: .relative)
+			Text(verbatim: (container?.state ?? Container.State?.none).title)
 				#if os(macOS)
-				.font(.subheadline)
-				.fontWeight(.regular)
+				.font(.body)
+				.fontWeight(.medium)
 				#else
-				.font(.caption2)
+				.font(.subheadline)
 				.fontWeight(.medium)
 				#endif
-				.foregroundStyle(.tertiary)
-				.frame(maxWidth: .infinity, alignment: .leading)
+				.foregroundStyle(.tint)
+				.minimumScaleFactor(minimumScaleFactor)
 		}
 
-		@ViewBuilder
+		@ViewBuilder @MainActor
+		private var stateIcon: some View {
+			Circle()
+				.fill(redactionReasons.isEmpty ? AnyShapeStyle(.tint) : AnyShapeStyle(.tint.secondary))
+				.frame(width: circleSize, height: circleSize)
+		}
+
+		@ViewBuilder @MainActor
+		private var dateLabel: some View {
+			Group {
+				if redactionReasons.isEmpty {
+					Text(entry.date, style: .relative)
+				} else {
+					Text(entry.date.formatted(.relative(presentation: .numeric, unitsStyle: .narrow)))
+				}
+			}
+			#if os(macOS)
+			.font(.subheadline)
+			.fontWeight(.regular)
+			#else
+			.font(.caption2)
+			.fontWeight(.medium)
+			#endif
+			.foregroundStyle(.tertiary)
+		}
+
+		@ViewBuilder @MainActor
 		private var nameLabel: some View {
 			let displayName = container?.displayName ?? intentContainer.name
-			Text(verbatim: displayName ?? namePlaceholder)
+			Text(verbatim: displayName ?? String(localized: "Generic.Unknown"))
 				#if os(macOS)
 				.font(.title2)
 				.fontWeight(.medium)
@@ -103,7 +107,7 @@ extension ContainerStatusWidgetView {
 				.lineLimit(2)
 		}
 
-		@ViewBuilder
+		@ViewBuilder @MainActor
 		private var statusLabel: some View {
 			Text(verbatim: container?.status ?? statusPlaceholder)
 				#if os(macOS)
@@ -119,10 +123,16 @@ extension ContainerStatusWidgetView {
 
 		var body: some View {
 			VStack(spacing: 0) {
-				stateHeadline
-					.padding(.bottom, 2)
+				HStack {
+					stateHeadline
+
+					Spacer()
+
+					stateIcon
+				}
 
 				dateLabel
+					.frame(maxWidth: .infinity, alignment: .leading)
 
 				Spacer()
 
@@ -147,6 +157,6 @@ extension ContainerStatusWidgetView {
 // MARK: - Previews
 
 #Preview {
-	ContainerStatusWidgetView.ContainerView(entry: .placeholder, intentContainer: .preview())
+	ContainerStatusWidget.ContainerView(entry: .placeholder, intentContainer: .preview())
 		.previewContext(WidgetPreviewContext(family: .systemSmall))
 }

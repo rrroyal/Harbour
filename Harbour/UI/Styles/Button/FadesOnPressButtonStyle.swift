@@ -16,7 +16,7 @@ struct FadesOnPressButtonStyle: ButtonStyle {
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
 			.opacity(configuration.isPressed ? ButtonScalesDownOnPressModifier.pressedOpacity : 1)
-			.animation(.smooth, value: isEnabled)
+			.animation(.default, value: isEnabled)
 			.animation(.spring, value: configuration.isPressed)
 	}
 }

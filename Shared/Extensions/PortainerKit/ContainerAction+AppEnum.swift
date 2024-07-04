@@ -9,8 +9,6 @@
 import AppIntents
 import PortainerKit
 
-// TODO: Remove `ContainerActionAppEnum` when it starts working properly
-
 extension ContainerAction: @retroactive AppEnum {
 	public static let typeDisplayRepresentation = TypeDisplayRepresentation(name: "PortainerKit.ContainerAction.AppEnumTitle")
 
@@ -36,6 +34,7 @@ extension ContainerAction: @retroactive AppEnum {
 }
 
 // MARK: - ContainerActionAppEnum
+// TODO: Remove `ContainerActionAppEnum` when it starts working properly
 
 enum ContainerActionAppEnum: String {
 	case start

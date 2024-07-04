@@ -41,6 +41,9 @@ enum SFSymbol {
 	/// 􀈊 pencil
 	static let edit = "pencil"
 
+	/// 􀋡 tag
+	static let endpoint = "tag"
+
 	/// 􀩳 list.bullet.rectangle
 	static let environment = "list.bullet.rectangle"
 

@@ -50,7 +50,7 @@ struct KeyValueEditView: View {
 		}
 		.keyboardShortcut(.defaultAction)
 		.disabled(!canSave)
-		.animation(.smooth, value: canSave)
+		.animation(.default, value: canSave)
 	}
 
 	@ViewBuilder @MainActor

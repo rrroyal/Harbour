@@ -36,7 +36,9 @@ struct SettingsView: View {
 			.scrollDismissesKeyboard(.interactively)
 			.toggleStyle(SwitchToggleStyle(tint: .accentColor))
 			.navigationTitle("SettingsView.Title")
+			#if os(iOS)
 			.addingCloseButton()
+			#endif
 		}
 		.sheet(isPresented: $viewModel.isNegraSheetPresented) {
 			NegraView()
@@ -51,9 +53,7 @@ struct SettingsView: View {
 		} content: {
 			NavigationStack {
 				SetupView()
-					#if os(macOS)
 					.addingCloseButton()
-					#endif
 			}
 			#if os(macOS)
 			.sheetMinimumFrame()

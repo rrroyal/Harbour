@@ -52,7 +52,7 @@ struct HarbourApp: App {
 			Picker(selection: selectedEndpointBinding) {
 				ForEach(portainerStore.endpoints) { endpoint in
 					Text(endpoint.name ?? endpoint.id.description)
-						.tag(endpoint as Endpoint?)
+						.tag(endpoint)
 				}
 			} label: {
 				Text("CommandMenu.Portainer.ActiveEndpoint")
@@ -97,12 +97,53 @@ struct HarbourApp: App {
 					preferences: preferences,
 					portainerStore: portainerStore
 				)
-				#if os(macOS)
-				.sheetMinimumFrame()
-				#endif
 				.scrollDismissesKeyboard(.interactively)
 		}
 		.modelContainer(for: ModelContainer.allModelTypes)
 		#endif
 	}
 }
+
+// MARK: - HarbourApp+PortainerCommands
+
+/*
+extension HarbourApp {
+	struct PortainerCommands: Commands {
+		let portainerStore: PortainerStore
+
+		var body: some Commands {
+			CommandMenu("CommandMenu.Portainer") {
+				Button {
+					portainerStore.refreshEndpoints()
+					portainerStore.refreshContainers()
+					portainerStore.refreshStacks()
+				} label: {
+					Label("Generic.Refresh", systemImage: SFSymbol.reload)
+				}
+				.keyboardShortcut("r", modifiers: .command)
+				.disabled(!portainerStore.isSetup)
+
+				Divider()
+
+				let selectedEndpointBinding = Binding<Endpoint?>(
+					get: { portainerStore.selectedEndpoint },
+					set: { portainerStore.setSelectedEndpoint($0) }
+				)
+				Picker(selection: selectedEndpointBinding) {
+					ForEach(portainerStore.endpoints) { endpoint in
+						Text(endpoint.name ?? endpoint.id.description)
+							.tag(endpoint)
+					}
+				} label: {
+					Text("CommandMenu.Portainer.ActiveEndpoint")
+					if let selectedEndpoint = selectedEndpointBinding.wrappedValue {
+						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
+							.foregroundStyle(.secondary)
+					}
+				}
+				.disabled(portainerStore.endpoints.isEmpty)
+			}
+		}
+	}
+}
+*/

@@ -55,7 +55,7 @@ struct ContainerChangeView: View {
 			.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
 			#endif
 			.navigationTitle("ContainerChangeView.Title")
-			.animation(.smooth, value: changesFiltered)
+			.animation(.default, value: changesFiltered)
 		}
 	}
 }
@@ -96,7 +96,7 @@ private extension ContainerChangeView {
 			}
 
 			LabeledContent("ContainerChangeView.State") {
-				Text(change.newState.description.localizedCapitalized)
+				Text(change.newState.title)
 					.foregroundStyle(change.newState.color)
 					.textSelection(.enabled)
 					.multilineTextAlignment(.trailing)
@@ -126,7 +126,7 @@ private extension ContainerChangeView {
 				}
 
 				LabeledContent("ContainerChangeView.State") {
-					Text(change.oldState.description.localizedCapitalized)
+					Text(change.oldState.title)
 						.foregroundStyle(change.oldState.color)
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
@@ -152,7 +152,7 @@ private extension ContainerChangeView {
 				}
 
 				LabeledContent("ContainerChangeView.State") {
-					Text(change.newState.description.localizedCapitalized)
+					Text(change.newState.title)
 						.foregroundStyle(change.newState.color)
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
@@ -183,7 +183,7 @@ private extension ContainerChangeView {
 
 			DisclosureGroup("ContainerChangeView.Previously") {
 				LabeledContent("ContainerChangeView.State") {
-					Text(change.oldState.description.localizedCapitalized)
+					Text(change.oldState.title)
 						.foregroundStyle(change.oldState.color)
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
@@ -200,7 +200,7 @@ private extension ContainerChangeView {
 
 			DisclosureGroup("ContainerChangeView.Currently") {
 				LabeledContent("ContainerChangeView.State") {
-					Text(change.newState.description.localizedCapitalized)
+					Text(change.newState.title)
 						.foregroundStyle(change.newState.color)
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
@@ -230,7 +230,7 @@ private extension ContainerChangeView {
 			}
 
 			LabeledContent("ContainerChangeView.State") {
-				Text(change.oldState.description.localizedCapitalized)
+				Text(change.oldState.title)
 //					.foregroundStyle(.secondary)
 					.textSelection(.enabled)
 					.multilineTextAlignment(.trailing)

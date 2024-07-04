@@ -6,8 +6,6 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
-#if os(macOS)
-
 import SwiftUI
 
 // MARK: - ContentView+ViewForMacOS
@@ -41,7 +39,7 @@ extension ContentView {
 					.focusable(false)
 			}
 			.environment(sceneDelegate)
-			.animation(.smooth, value: columnVisibility)
+			.animation(.default, value: columnVisibility)
 		}
 	}
 }
@@ -82,7 +80,7 @@ private extension ContentView.ViewForMacOS {
 			.fontWeight(.medium)
 			.padding(.bottom, padding)
 			.padding(.horizontal, padding)
-			.animation(.smooth, value: sceneDelegate.activeTab)
+			.animation(.default, value: sceneDelegate.activeTab)
 		}
 	}
 }
@@ -136,5 +134,3 @@ private extension ContentView.ViewForMacOS {
 #Preview {
 	ContentView.ViewForMacOS()
 }
-
-#endif

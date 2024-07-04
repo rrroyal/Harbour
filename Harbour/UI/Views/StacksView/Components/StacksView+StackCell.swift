@@ -80,7 +80,7 @@ extension StacksView {
 		}
 
 		private var runningContainersCount: Int {
-			containers.filter { $0.state.isRunning }.count
+			containers.count { $0.state.isRunning }
 		}
 
 		var body: some View {
@@ -117,12 +117,12 @@ extension StacksView {
 				.symbolEffect(.pulse, options: .repeating.speed(1.5), isActive: isLoading || isBeingRemoved)
 			}
 			.padding(.vertical, 2)
-			.animation(.smooth, value: stack)
-			.animation(.smooth, value: stack.stack?.status)
-			.animation(.smooth, value: stack.stack?._isStored)
-			.animation(.smooth, value: isLoading)
-			.animation(.smooth, value: isOn)
-			.animation(.smooth, value: isBeingRemoved)
+			.animation(.default, value: stack)
+			.animation(.default, value: stack.stack?.status)
+			.animation(.default, value: stack.stack?._isStored)
+			.animation(.default, value: isLoading)
+			.animation(.default, value: isOn)
+			.animation(.default, value: isBeingRemoved)
 			.contextMenu {
 				if let stack = stack.stack {
 					StackContextMenu(

@@ -17,105 +17,24 @@ struct ContainerContextMenu: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	var container: Container
-	var onContainerAction: (() -> Void)?
+	var onContainerAction: () -> Void
 
-	@ViewBuilder
-	private var attachButton: some View {
-		Button(action: attachAction) {
-			Label("ContainerContextMenu.Attach", systemImage: SFSymbol.terminal)
-		}
-	}
-
-	@ViewBuilder
-	private var unpauseButton: some View {
-		Button {
-			executeAction(.unpause)
-		} label: {
-			Label(ContainerAction.unpause.title, systemImage: ContainerAction.unpause.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var pauseButton: some View {
-		Button {
-			executeAction(.pause)
-		} label: {
-			Label(ContainerAction.pause.title, systemImage: ContainerAction.pause.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var startButton: some View {
-		Button {
-			executeAction(.start)
-		} label: {
-			Label(ContainerAction.start.title, systemImage: ContainerAction.start.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var stopButton: some View {
-		Button {
-			executeAction(.stop)
-		} label: {
-			Label(ContainerAction.stop.title, systemImage: ContainerAction.stop.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var restartButton: some View {
-		Button {
-			executeAction(.restart)
-		} label: {
-			Label(ContainerAction.restart.title, systemImage: ContainerAction.restart.icon)
-		}
-	}
-
-	@ViewBuilder
-	private var killButton: some View {
-		Button {
-			executeAction(.kill, haptic: .heavy)
-		} label: {
-			Label(ContainerAction.kill.title, systemImage: ContainerAction.kill.icon)
-		}
-	}
+//	@ViewBuilder
+//	private var attachButton: some View {
+//		Button(action: attachAction) {
+//			Label("ContainerContextMenu.Attach", systemImage: SFSymbol.terminal)
+//		}
+//	}
 
 	var body: some View {
 		Group {
 			if !container._isStored {
-				switch container.state {
-				case .created:
-					pauseButton
-					stopButton
-					restartButton
-					killButton
-				case .running:
-					pauseButton
-					stopButton
-					restartButton
-					killButton
-				case .paused:
-					unpauseButton
-					stopButton
-					restartButton
-					killButton
-				case .restarting:
-					pauseButton
-					stopButton
-					killButton
-				case .removing:
-					killButton
-				case .exited:
-					startButton
-				case .dead:
-					startButton
-				case .none:
-					unpauseButton
-					startButton
-					restartButton
-					pauseButton
-					stopButton
-					killButton
+				ForEach(ContainerAction.actionsForState(container.state), id: \.rawValue) { action in
+					Button {
+						executeAction(action)
+					} label: {
+						Label(action.title, systemImage: action.icon)
+					}
 				}
 
 				Divider()
@@ -150,18 +69,6 @@ struct ContainerContextMenu: View {
 // MARK: - ContainerContextMenu+Actions
 
 private extension ContainerContextMenu {
-	func attachAction() {
-		print(#function)
-
-//		Haptics.generateIfEnabled(.sheetPresentation)
-//		do {
-//			try Portainer.shared.attach(to: container)
-//			sceneDelegate.isContainerConsoleSheetPresented = true
-//		} catch {
-//			sceneDelegate.handle(error)
-//		}
-	}
-
 	func executeAction(_ action: ContainerAction, haptic: Haptics.HapticStyle = .medium) {
 		Haptics.generateIfEnabled(haptic)
 
@@ -171,7 +78,7 @@ private extension ContainerContextMenu {
 			do {
 				try await portainerStore.execute(action, on: container.id)
 				presentIndicator(.containerActionExecute(containerName: container.displayName ?? container.id, containerAction: action, state: .success))
-				onContainerAction?()
+				onContainerAction()
 			} catch {
 				presentIndicator(.containerActionExecute(containerName: container.displayName ?? container.id, containerAction: action, state: .failure(error)))
 				errorHandler(error, showIndicator: false)

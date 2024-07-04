@@ -17,7 +17,7 @@ import SwiftData
 // MARK: - PortainerStore
 
 /// Main store for Portainer-related data.
-public final class PortainerStore: ObservableObject, @unchecked Sendable {
+public final class PortainerStore: ObservableObject {
 
 	/// Singleton for `PortainerStore`
 	static let shared = PortainerStore()
@@ -63,11 +63,9 @@ public final class PortainerStore: ObservableObject, @unchecked Sendable {
 		didSet { onSelectedEndpointChange(selectedEndpoint) }
 	}
 
-	/// Endpoints
 	@Published
 	var endpoints: [Endpoint] = []
 
-	/// Containers
 	@Published
 	var containers: [Container] = []
 

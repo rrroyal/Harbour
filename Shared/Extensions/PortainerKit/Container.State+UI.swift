@@ -43,17 +43,17 @@ extension Container.State? {
 	}
 }
 
-// MARK: - Container.State+description
+// MARK: - Container.State+title
 
 extension Container.State {
-	var description: String {
-		self.rawValue
+	var title: String {
+		self.rawValue.localizedCapitalized
 	}
 }
 
 extension Container.State? {
-	var description: String {
-		self?.rawValue ?? String(localized: "PortainerKit.Container.State.Unknown")
+	var title: String {
+		self?.title ?? String(localized: "PortainerKit.Container.State.Unknown")
 	}
 }
 

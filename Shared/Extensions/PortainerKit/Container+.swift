@@ -27,12 +27,12 @@ extension Container {
 
 	/// Name of the stack associated with this container.
 	var stack: String? {
-		labels?.first { $0.key.lowercased() == ContainerLabel.stack.lowercased() }?.value
+		labels?.first { $0.key.localizedCaseInsensitiveCompare(ContainerLabel.stack) == .orderedSame }?.value
 	}
 
 	/// ID of Harbour container association.
 	var associationID: String? {
-		labels?.first { $0.key.lowercased() == ContainerLabel.associationID.lowercased() }?.value
+		labels?.first { $0.key.localizedCaseInsensitiveCompare(ContainerLabel.associationID) == .orderedSame }?.value
 	}
 
 	/// Exit code of this container.

@@ -18,7 +18,7 @@ import UIKit.UIDevice
 
 extension SettingsView {
 	@Observable
-	final class ViewModel: @unchecked Sendable, IndicatorPresentable {
+	final class ViewModel: IndicatorPresentable {
 		private let portainerStore: PortainerStore = .shared
 
 		let logger = Logger(.settings)

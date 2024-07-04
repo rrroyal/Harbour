@@ -45,8 +45,6 @@ extension StackDetailsView: Deeplinkable {
 	}
 
 	static func handleNavigation(_ navigationPath: inout NavigationPath, with deeplink: DeeplinkDestination) {
-		navigationPath.removeLast(navigationPath.count)
-
 		let navigationItem = NavigationItem(from: deeplink)
 		navigationPath.append(navigationItem)
 

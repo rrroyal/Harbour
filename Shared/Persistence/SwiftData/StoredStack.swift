@@ -13,10 +13,10 @@ import SwiftData
 @Model
 final class StoredStack: Identifiable {
 	@Attribute(.unique)
-	let id: Stack.ID
-	let type: Stack.StackType
-	let name: String
-	let endpointID: Endpoint.ID
+	var id: Stack.ID
+	var type: Stack.StackType
+	var name: String
+	var endpointID: Endpoint.ID
 
 	init(
 		id: Stack.ID,

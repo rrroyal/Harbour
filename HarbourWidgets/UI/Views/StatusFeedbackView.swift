@@ -13,22 +13,33 @@ import WidgetKit
 // MARK: - StatusFeedbackView
 
 struct StatusFeedbackView: View {
-	var entry: ContainerStatusProvider.Entry
+	@Environment(\.widgetFamily) private var widgetFamily
 	var mode: Mode
 
+	private var includePadding: Bool {
+		switch widgetFamily {
+		case .accessoryCircular, .accessoryInline:
+			false
+		case .accessoryRectangular:
+			false
+		case .systemExtraLarge, .systemLarge, .systemMedium, .systemSmall:
+			true
+		@unknown default:
+			true
+		}
+	}
+
 	var body: some View {
-		VStack(spacing: 4) {
-			Text(mode.title)
-				.font(.body)
-				.fontWeight(.medium)
-				.foregroundStyle(.secondary)
-		}
-		.multilineTextAlignment(.center)
-		.frame(maxWidth: .infinity, maxHeight: .infinity)
-		.padding()
-		.containerBackground(for: .widget) {
-			Color.widgetBackground
-		}
+		Text(mode.title)
+			.font(.body)
+			.fontWeight(.medium)
+			.foregroundStyle(.secondary)
+			.multilineTextAlignment(.center)
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
+			.padding(.all, includePadding ? nil : 0)
+			.containerBackground(for: .widget) {
+				Color.widgetBackground
+			}
 	}
 }
 
@@ -36,13 +47,13 @@ struct StatusFeedbackView: View {
 
 extension StatusFeedbackView {
 	enum Mode {
-		case selectContainer
+		case selectContainer(long: Bool = true)
 		case containerNotFound
 
 		var title: LocalizedStringKey {
 			switch self {
-			case .selectContainer:
-				"StatusFeedbackView.Headline.SelectContainer"
+			case .selectContainer(let long):
+				long ? "StatusFeedbackView.Headline.SelectContainer.Long" : "StatusFeedbackView.Headline.SelectContainer.Short"
 			case .containerNotFound:
 				"StatusFeedbackView.Headline.ContainerNotFound"
 			}
@@ -53,9 +64,9 @@ extension StatusFeedbackView {
 // MARK: - Previews
 
 #Preview("Select Container") {
-	StatusFeedbackView(entry: .placeholder, mode: .selectContainer)
+	StatusFeedbackView(mode: .selectContainer())
 }
 
 #Preview("Container Not Found") {
-	StatusFeedbackView(entry: .placeholder, mode: .containerNotFound)
+	StatusFeedbackView(mode: .containerNotFound)
 }

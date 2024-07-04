@@ -45,7 +45,7 @@ struct ContainersView: View {
 		Picker(selection: selectedEndpointBinding) {
 			ForEach(portainerStore.endpoints) { endpoint in
 				Text(endpoint.name ?? endpoint.id.description)
-					.tag(endpoint as Endpoint?)
+					.tag(endpoint)
 			}
 		} label: {
 			let title = if let selectedEndpoint = portainerStore.selectedEndpoint {
@@ -73,7 +73,7 @@ struct ContainersView: View {
 			Menu {
 				if !(appState.lastContainerChanges?.isEmpty ?? true) {
 					Button {
-//						Haptics.generateIfEnabled(.sheetPresentation)
+						Haptics.generateIfEnabled(.sheetPresentation)
 						sceneDelegate.isContainerChangesSheetPresented = true
 					} label: {
 						Label("ContainersView.Menu.ShowLastContainerChanges", systemImage: "arrow.left.arrow.right")
@@ -104,7 +104,7 @@ struct ContainersView: View {
 				Divider()
 
 				Button {
-//					Haptics.generateIfEnabled(.sheetPresentation)
+					Haptics.generateIfEnabled(.sheetPresentation)
 					sceneDelegate.isSettingsSheetPresented = true
 				} label: {
 					Label("SettingsView.Title", systemImage: SFSymbol.settings)
@@ -216,12 +216,6 @@ struct ContainersView: View {
 			.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 				await fetch()
 			}
-			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-				ContainerDetailsView(navigationItem: navigationItem)
-//					.equatable()
-					.tag(navigationItem.id)
-			}
-			.navigationTitle(navigationTitle)
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
@@ -247,13 +241,17 @@ struct ContainersView: View {
 			} message: { container in
 				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
 			}
-			.animation(.smooth, value: viewModel.viewState)
-			.animation(.smooth, value: viewModel.containers)
-			.animation(.smooth, value: viewModel.isStatusProgressViewVisible)
-//			.animation(.smooth, value: portainerStore.removedContainerIDs)
-			.animation(.easeInOut, value: preferences.cvUseGrid)
-			.environment(viewModel)
+			.animation(.default, value: viewModel.viewState)
+			.animation(.default, value: viewModel.containers)
+			.animation(.default, value: viewModel.isStatusProgressViewVisible)
+//			.animation(.default, value: portainerStore.removedContainerIDs)
+			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
+				ContainerDetailsView(navigationItem: navigationItem)
+//					.equatable()
+			}
+			.navigationTitle(navigationTitle)
 			.onKeyPress(action: onKeyPress)
+			.environment(viewModel)
 			.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
 				viewModel.filterByStackName(stackName)
 			}
@@ -343,6 +341,8 @@ private extension ContainersView {
 				.padding(.top)
 				#endif
 			}
+			.animation(.default, value: preferences.cvUseGrid)
+			.transition(.opacity)
 		}
 	}
 }

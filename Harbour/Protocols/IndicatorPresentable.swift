@@ -32,7 +32,7 @@ extension IndicatorPresentable {
 
 // MARK: - PresentIndicatorAction
 
-struct PresentIndicatorAction: @unchecked Sendable {
+struct PresentIndicatorAction {
 	typealias WrappedValue = (PresentedIndicator, _ action: (@Sendable () -> Void)?) -> Void
 
 	let wrappedValue: WrappedValue

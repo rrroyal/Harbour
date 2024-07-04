@@ -16,7 +16,7 @@ struct ErrorView: View {
 
 	var body: some View {
 		Text(verbatim: error.localizedDescription)
-			.font(.footnote)
+			.font(.body)
 			.fontDesign(.monospaced)
 			.foregroundStyle(.secondary)
 			.multilineTextAlignment(.center)

@@ -12,7 +12,6 @@ import SwiftUI
 extension ContainersView {
 	struct ContainerNavigationCell<Content: View>: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
-		@Environment(\.parentShape) private var parentShape
 		var container: Container
 		@ViewBuilder var content: () -> Content
 
@@ -31,24 +30,19 @@ extension ContainersView {
 		var body: some View {
 			NavigationLink(value: navigationItem) {
 				content()
+					.contextMenu {
+						ContainerContextMenu(
+							container: container,
+							onContainerAction: {
+								portainerStore.refreshContainers(ids: [container.id])
+							}
+						)
+					}
 			}
 			.tint(Color.primary)
 			#if os(macOS)
 			.buttonStyle(.plain)
 			#endif
-			.clipShape(parentShape ?? AnyShape(Rectangle()))
-			.contentShape(parentShape ?? AnyShape(Rectangle()))
-			#if os(iOS)
-			.contentShape(.contextMenuPreview, parentShape ?? AnyShape(Rectangle()))
-			#endif
-			.contextMenu {
-				ContainerContextMenu(container: container) {
-					portainerStore.refreshContainers(ids: [container.id])
-				}
-			}
-//			.if(let: portainerDeeplink) {
-//				$0.draggable($1)
-//			}
 		}
 	}
 }

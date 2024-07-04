@@ -13,12 +13,12 @@ import SwiftUI
 
 extension ContainersView.GridView {
 	struct ContainerCell: View {
-		static let roundedRectangleBackground = RoundedRectangle(cornerRadius: 18, style: .circular)
 
 		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 10
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
+		private let background = RoundedRectangle(cornerRadius: 18, style: .circular)
 
 		let container: Container
 
@@ -30,7 +30,7 @@ extension ContainersView.GridView {
 		@ViewBuilder @MainActor
 		private var stateHeader: some View {
 			HStack {
-				Text(isBeingRemoved ? String(localized: "Generic.Removing") : (container._isStored ? Container.State?.none.description : container.state.description.localizedCapitalized))
+				Text(isBeingRemoved ? String(localized: "Generic.Removing") : (container._isStored ? Container.State?.none : container.state).title)
 					.font(.footnote)
 					.fontWeight(.medium)
 					.foregroundStyle(.tint)
@@ -81,13 +81,15 @@ extension ContainersView.GridView {
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.aspectRatio(1, contentMode: .fit)
 			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
-			.background(Color.secondaryGroupedBackground)
-			.contentShape(Self.roundedRectangleBackground)
-			.clipShape(Self.roundedRectangleBackground)
-			.animation(.smooth, value: container)
-			.animation(.smooth, value: container.state)
-			.animation(.smooth, value: container.status)
-			.animation(.smooth, value: isBeingRemoved)
+			.background(Color.secondaryGroupedBackground, in: background)
+			.contentShape(background)
+			#if os(iOS)
+			.contentShape(.contextMenuPreview, background)
+			#endif
+			.animation(.default, value: container)
+			.animation(.default, value: container.state)
+			.animation(.default, value: container.status)
+			.animation(.default, value: isBeingRemoved)
 			.id(self.id)
 		}
 	}

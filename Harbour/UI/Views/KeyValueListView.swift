@@ -71,7 +71,7 @@ struct KeyValueListView: View {
 		#if os(iOS)
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
 		#endif
-		.animation(.smooth, value: dataFiltered)
+		.animation(.default, value: dataFiltered)
 	}
 }
 

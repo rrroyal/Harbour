@@ -36,39 +36,40 @@ extension NotificationHelper {
 			emoji = change.changeEmoji
 
 			let status: String = if let newStatus = change.newStatus {
-				"\(newStatus) (\(change.newState.description))"
+				"\(newStatus) (\(change.newState.title))"
 			} else {
-				change.newState.description.localizedCapitalized
+				change.newState.title
 			}
+			let containerName = "\"\(change.containerName)\""
 
 			switch change.changeType {
 			case .created:
-				title = String(localized: "Notification.ContainersChanged.Single.Created.Title Name:\(change.containerName)")
+				title = String(localized: "Notification.ContainersChanged.Single.Created.Title Name:\(containerName)")
 				body = String(localized: "Notification.ContainersChanged.Single.Created.Body Status:\(status)")
 			case .changed:
-				title = String(localized: "Notification.ContainersChanged.Single.Changed.Title Name:\(change.containerName)")
-				body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\(change.oldState.description.localizedCapitalized) New:\(status)")
+				title = String(localized: "Notification.ContainersChanged.Single.Changed.Title Name:\(containerName)")
+				body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\(change.oldState.title) New:\(status)")
 			case .recreated:
-				title = String(localized: "Notification.ContainersChanged.Single.Recreated.Title Name:\(change.containerName)")
+				title = String(localized: "Notification.ContainersChanged.Single.Recreated.Title Name:\(containerName)")
 				body = String(localized: "Notification.ContainersChanged.Single.Recreated.Body New:\(status)")
 			case .removed:
-				title = String(localized: "Notification.ContainersChanged.Single.Removed.Title Name:\(change.containerName)")
-				body = String(localized: "Notification.ContainersChanged.Single.Removed.Body Old:\(change.oldState.description.localizedCapitalized)")
+				title = String(localized: "Notification.ContainersChanged.Single.Removed.Title Name:\(containerName)")
+				body = String(localized: "Notification.ContainersChanged.Single.Removed.Body Old:\(change.oldState.title)")
 			}
 		case 2...:
 			emoji = "📫"
 
 			let namesJoined = containerChanges
-				.map(\.containerName)
+				.map { "\"\($0.containerName)\"" }
 				.formatted(.list(type: .and))
 			title = String(localized: "Notification.ContainersChanged.MultipleReadable.Title Names:\(namesJoined)")
 
 			let changesJoined = containerChanges
 				.map {
 					let status: String = if let newStatus = $0.newStatus {
-						"\(newStatus) (\($0.newState.description))"
+						"\(newStatus) (\($0.newState.title))"
 					} else {
-						$0.newState.description.localizedCapitalized
+						$0.newState.title
 					}
 
 					let parts = [
@@ -87,7 +88,7 @@ extension NotificationHelper {
 			title = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Title ChangeCount:\(containerChanges.count)")
 
 			let changesJoined = containerChanges
-				.map(\.containerName)
+				.map { "\"\($0.containerName)\"" }
 				.formatted(.list(type: .and))
 			body = String(localized: "Notification.ContainersChanged.MultipleUnreadable.Body Changes:\(changesJoined)")
 		default:

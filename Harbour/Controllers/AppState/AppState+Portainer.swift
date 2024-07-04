@@ -57,7 +57,7 @@ extension AppState {
 //		}
 
 		Task.detached {
-			try? await HarbourSpotlight.indexContainers(newContainers)
+			try? await SpotlightHelper.indexContainers(newContainers)
 		}
 	}
 
@@ -67,7 +67,7 @@ extension AppState {
 //			await NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [HarbourUserActivityIdentifier.stackDetails])
 //		}
 		Task.detached {
-			try? await HarbourSpotlight.indexStacks(newStacks)
+			try? await SpotlightHelper.indexStacks(newStacks)
 		}
 	}
 }
