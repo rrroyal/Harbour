@@ -2503,26 +2503,6 @@
         }
       }
     },
-    "SettingsView.Interface.UseColumns.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If enabled, list views will use two-column layout."
-          }
-        }
-      }
-    },
-    "SettingsView.Interface.UseColumns.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use Two-Column Layout"
-          }
-        }
-      }
-    },
     "SettingsView.Other.Debug" : {
       "localizations" : {
         "en" : {
@@ -2913,12 +2893,22 @@
         }
       }
     },
-    "StatusFeedbackView.Headline.SelectContainer" : {
+    "StatusFeedbackView.Headline.SelectContainer.Long" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Please select a container 🙈"
+          }
+        }
+      }
+    },
+    "StatusFeedbackView.Headline.SelectContainer.Short" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select a container"
           }
         }
       }

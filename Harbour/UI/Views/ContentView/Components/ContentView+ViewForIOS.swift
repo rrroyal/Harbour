@@ -19,11 +19,13 @@ extension ContentView {
 
 			TabView(selection: $sceneDelegate.activeTab) {
 				Tab(value: .containers) {
-					NavigationWrapped(navigationPath: $sceneDelegate.navigationPathContainers) {
+					NavigationSplitView {
 						ContainersView()
-					} placeholderContent: {
-						Text("ContainersView.NoContainerSelectedPlaceholder")
-							.foregroundStyle(.tertiary)
+					} detail: {
+						NavigationStack(path: $sceneDelegate.navigationState.containers) {
+							Text("ContainersView.NoContainerSelectedPlaceholder")
+								.foregroundStyle(.tertiary)
+						}
 					}
 				} label: {
 					Label {
@@ -35,11 +37,13 @@ extension ContentView {
 				}
 
 				Tab(value: .stacks) {
-					NavigationWrapped(navigationPath: $sceneDelegate.navigationPathStacks) {
+					NavigationSplitView {
 						StacksView()
-					} placeholderContent: {
-						Text("StacksView.NoStackSelectedPlaceholder")
-							.foregroundStyle(.tertiary)
+					} detail: {
+						NavigationStack(path: $sceneDelegate.navigationState.stacks) {
+							Text("StacksView.NoStackSelectedPlaceholder")
+								.foregroundStyle(.tertiary)
+						}
 					}
 				} label: {
 					Label {

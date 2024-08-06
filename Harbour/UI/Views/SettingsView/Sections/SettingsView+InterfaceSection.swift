@@ -18,19 +18,6 @@ extension SettingsView {
 		var body: some View {
 			#if os(iOS) || targetEnvironment(macCatalyst)
 			Section("SettingsView.Interface.Title") {
-				if viewModel.displayiPadOptions {
-					// Use Two-Column Layout
-					ToggleOption(
-						"SettingsView.Interface.UseColumns.Title",
-						description: "SettingsView.Interface.UseColumns.Description",
-//						iconSymbolName: preferences.cvUseColumns ? "sidebar.squares.left" : "rectangle.stack",
-						iconSymbolName: "sidebar.squares.left",
-//						symbolVariants: .none,
-						isOn: $preferences.useColumns
-					)
-					.id(SettingsView.ViewID.interfaceTwoColumnLayout)
-				}
-
 				// Enable Haptics
 				#if os(iOS) && !targetEnvironment(macCatalyst)
 				ToggleOption(

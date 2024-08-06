@@ -37,15 +37,6 @@ extension SettingsView {
 
 		var isNegraButtonVisible = Int.random(in: 0...19) == 11
 
-		@MainActor
-		var displayiPadOptions: Bool {
-			#if os(macOS)
-			true
-			#else
-			UIDevice.current.userInterfaceIdiom == .mac || UIDevice.current.userInterfaceIdiom == .pad
-			#endif
-		}
-
 		init() {
 			serverURLs = portainerStore.savedURLs
 			activeURL = portainerStore.serverURL
