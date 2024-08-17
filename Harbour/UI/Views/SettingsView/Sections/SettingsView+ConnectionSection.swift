@@ -80,8 +80,8 @@ private extension SettingsView.ConnectionSection {
 			}
 			.labelStyle(.titleAndIcon)
 			.confirmationDialog(
-				"Generic.AreYouSure?",
-				isPresented: $viewModel.isRemoveEndpointAlertVisible,
+				"Generic.AreYouSure",
+				isPresented: $viewModel.isRemoveEndpointAlertPresented,
 				titleVisibility: .visible,
 				presenting: viewModel.endpointToRemove
 			) { url in
@@ -143,7 +143,7 @@ private extension SettingsView.ConnectionSection {
 				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.warning)
 					viewModel.endpointToRemove = url
-					viewModel.isRemoveEndpointAlertVisible = true
+					viewModel.isRemoveEndpointAlertPresented = true
 				} label: {
 					Label("SettingsView.Connection.ConnectionMenu.Server.Remove", systemImage: SFSymbol.remove)
 				}

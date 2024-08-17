@@ -229,7 +229,7 @@ struct ContainersView: View {
 			.focused($isFocused)
 			.focusEffectDisabled()
 			.confirmationDialog(
-				"Generic.AreYouSure?",
+				"Generic.AreYouSure",
 				isPresented: sceneDelegate.isRemoveContainerAlertPresented,
 				titleVisibility: .visible,
 				presenting: sceneDelegate.containerToRemove

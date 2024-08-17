@@ -16,6 +16,7 @@ struct TextEditorView: View {
 	@Binding private var backingText: String
 	@State private var text: String
 	@State private var selection: TextSelection?
+	@State private var isConfirmDismissDialogPresented = false
 	@ScaledMetric(relativeTo: .body) private var fontSize: Double = 12
 	@FocusState private var textFieldFocused: Bool
 	private let navigationTitle: String
@@ -27,8 +28,6 @@ struct TextEditorView: View {
 	}
 
 	var body: some View {
-		let textIsSame = text == backingText
-
 		NavigationStack {
 			TextEditor(text: $text, selection: $selection)
 				.font(.system(size: fontSize))
@@ -40,8 +39,16 @@ struct TextEditorView: View {
 				.autocorrectionDisabled()
 //				.textSelectionAffinity(.downstream)
 				.focused($textFieldFocused)
-				.addingCloseButton()
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+				.addingCloseButton {
+					if text == backingText {
+						dismiss()
+					} else {
+						isConfirmDismissDialogPresented = true
+					}
+				}
 				.toolbar {
+					let textIsSame = text == backingText
 					ToolbarItem(placement: .primaryAction) {
 						Button {
 							Haptics.generateIfEnabled(.selectionChanged)
@@ -81,6 +88,15 @@ struct TextEditorView: View {
 				#if os(iOS)
 				.navigationBarTitleDisplayMode(.inline)
 				#endif
+		}
+		.interactiveDismissDisabled(text != backingText)
+		.confirmationDialog("Generic.AreYouSure", isPresented: $isConfirmDismissDialogPresented, titleVisibility: .visible) {
+			Button("Generic.Discard", role: .destructive) {
+				Haptics.generateIfEnabled(.heavy)
+				dismiss()
+			}
+		} message: {
+			Text("TextEditorView.ConfirmDismissDialog.Message")
 		}
 		#if os(iOS)
 		.onAppear {

@@ -913,6 +913,16 @@
         }
       }
     },
+    "CreateStackView.Edit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
     "CreateStackView.EditEnvironmentValue" : {
       "localizations" : {
         "en" : {
@@ -943,12 +953,12 @@
         }
       }
     },
-    "CreateStackView.SelectStackFile" : {
+    "CreateStackView.SelectFile" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Select Stack File"
+            "value" : "Select File"
           }
         }
       }
@@ -1383,7 +1393,7 @@
         }
       }
     },
-    "Generic.AreYouSure?" : {
+    "Generic.AreYouSure" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1429,6 +1439,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Copy"
+          }
+        }
+      }
+    },
+    "Generic.Discard" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discard"
           }
         }
       }
@@ -2959,6 +2979,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select a container"
+          }
+        }
+      }
+    },
+    "TextEditorView.ConfirmDismissDialog.Message" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All of the changes will be discarded."
           }
         }
       }

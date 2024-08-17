@@ -32,7 +32,7 @@ extension SettingsView {
 
 		var activeURL: URL?
 
-		var isRemoveEndpointAlertVisible = false
+		var isRemoveEndpointAlertPresented = false
 		var endpointToRemove: URL?
 
 		var isNegraButtonVisible = Int.random(in: 0...19) == 11

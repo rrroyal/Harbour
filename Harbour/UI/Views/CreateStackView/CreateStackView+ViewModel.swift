@@ -27,6 +27,7 @@ extension CreateStackView {
 		let logger = Logger(.view(CreateStackView.self))
 
 		var isFileImportSheetPresented = false
+		var isTextEditorSheetPresented = false
 
 		var isStackFileContentTargeted = false
 		var isEnvironmentEntrySheetPresented = false

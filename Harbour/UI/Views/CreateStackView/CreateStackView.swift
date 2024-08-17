@@ -144,6 +144,15 @@ struct CreateStackView: View {
 			.sheetMinimumFrame(width: 320, height: 240)
 			#endif
 		}
+		.sheet(isPresented: $viewModel.isTextEditorSheetPresented) {
+			TextEditorView(
+				text: Binding(
+					get: { viewModel.stackFileContent ?? "" },
+					set: { viewModel.stackFileContent = !$0.isEmpty ? $0 : nil }
+				),
+				navigationTitle: !viewModel.stackName.isEmpty ? viewModel.stackName : String(localized: "Generic.Stack")
+			)
+		}
 		.toolbar {
 			#if os(macOS)
 			ToolbarItem(placement: .primaryAction) {
@@ -155,7 +164,6 @@ struct CreateStackView: View {
 		.navigationTitle(viewModel.shouldCreateNewStack ? "CreateStackView.Title.Create" : "CreateStackView.Title.Update")
 		.animation(.default, value: viewModel.isLoading)
 		.animation(.default, value: viewModel.isLoadingStackFileContent)
-		.animation(.default, value: viewModel.isStackFileContentExpanded)
 		.animation(.default, value: viewModel.stackFileContent)
 		.animation(.default, value: viewModel.stackEnvironment)
 		.animation(.default, value: viewModel.createStackError != nil)

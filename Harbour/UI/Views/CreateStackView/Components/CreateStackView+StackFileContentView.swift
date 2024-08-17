@@ -23,23 +23,23 @@ extension CreateStackView {
 			@Bindable var viewModel = viewModel
 
 			NormalizedSection {
-				VStack {
+				Group {
 					if let stackFileContent = viewModel.stackFileContent {
 						ViewForFileContent(stackFileContent: stackFileContent)
+							.listRowInsets(.zero)
 					} else if viewModel.isLoadingStackFileContent {
 						ViewForLoadingContent()
 					} else {
-						ViewForSelectFile()
+						ViewForEmpty()
 					}
 				}
+				.transition(.opacity)
 				.frame(maxWidth: .infinity)
 			} header: {
 				Text("CreateStackView.StackFileContent")
 			}
-			.listRowInsets(.zero)
 			.animation(.default, value: viewModel.stackFileContent)
 			.animation(.default, value: viewModel.isLoadingStackFileContent)
-			.animation(.default, value: viewModel.isStackFileContentExpanded)
 			.animation(.default, value: viewModel.isStackFileContentTargeted)
 			.onDrop(of: allowedContentTypes, isTargeted: $viewModel.isStackFileContentTargeted) { items in
 				Haptics.generateIfEnabled(.selectionChanged)
@@ -92,45 +92,56 @@ private extension CreateStackView.StackFileContentView {
 		var stackFileContent: String
 
 		var body: some View {
-			Text(stackFileContent.trimmingCharacters(in: .whitespacesAndNewlines))
-				.foregroundStyle(.primary)
-				.font(.caption)
-				.fontDesign(.monospaced)
-				.lineLimit(viewModel.isStackFileContentExpanded ? nil : 12)
-				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-				#if os(iOS)
-				.padding(.horizontal)
-				.padding(.vertical, 10)
-				#elseif os(macOS)
-				.padding(.horizontal, 4)
-				#endif
-				.contextMenu {
-					Group {
-						Button {
-							Haptics.generateIfEnabled(.light)
-							viewModel.isStackFileContentExpanded.toggle()
-						} label: {
-							Label(
-								viewModel.isStackFileContentExpanded ? "Generic.Collapse" : "Generic.Expand",
-								systemImage: viewModel.isStackFileContentExpanded ? SFSymbol.collapse : SFSymbol.expand
-							)
-						}
+			Button {
+				Haptics.generateIfEnabled(.sheetPresentation)
+				viewModel.isTextEditorSheetPresented = true
+			} label: {
+				Text(stackFileContent.trimmingCharacters(in: .whitespacesAndNewlines))
+					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+					.contentShape(Rectangle())
+			}
+			.foregroundStyle(.primary)
+			.font(.caption)
+			.fontDesign(.monospaced)
+			.lineLimit(12)
+			#if os(iOS)
+			.padding(.horizontal)
+			.padding(.vertical, 10)
+			#elseif os(macOS)
+			.padding(.horizontal, 4)
+			.buttonStyle(.plain)
+			#endif
+			.contextMenu {
+				Group {
+					Button {
+						Haptics.generateIfEnabled(.sheetPresentation)
+						viewModel.isTextEditorSheetPresented = true
+					} label: {
+						Label("Generic.Edit", systemImage: SFSymbol.edit)
+					}
 
-						Divider()
-
-						ShareLink(item: stackFileContent)
-
-						Divider()
-
-						Button(role: .destructive) {
-							Haptics.generateIfEnabled(.light)
-							viewModel.stackFileContent = nil
-						} label: {
-							Label("Generic.Clear", systemImage: SFSymbol.remove)
+					PasteButton(payloadType: String.self) { strings in
+						if let string = strings.first {
+							Haptics.generateIfEnabled(.selectionChanged)
+							viewModel.stackFileContent = string
 						}
 					}
-					.labelStyle(.titleAndIcon)
+
+					Divider()
+
+					ShareLink(item: stackFileContent)
+
+					Divider()
+
+					Button(role: .destructive) {
+						Haptics.generateIfEnabled(.light)
+						viewModel.stackFileContent = nil
+					} label: {
+						Label("Generic.Clear", systemImage: SFSymbol.remove)
+					}
 				}
+				.labelStyle(.titleAndIcon)
+			}
 		}
 	}
 
@@ -154,42 +165,55 @@ private extension CreateStackView.StackFileContentView {
 		}
 	}
 
-	struct ViewForSelectFile: View {
+	struct ViewForEmpty: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 
 		var body: some View {
-			Button {
-				Haptics.generateIfEnabled(.sheetPresentation)
-				viewModel.isFileImporterPresented = true
-			} label: {
-				Text("CreateStackView.SelectStackFile")
-					#if os(macOS)
-					.frame(maxWidth: .infinity)
-					.contentShape(Rectangle())
-					#endif
+			Group {
+				Button {
+					Haptics.generateIfEnabled(.sheetPresentation)
+					viewModel.isTextEditorSheetPresented = true
+				} label: {
+					Label("CreateStackView.Edit", systemImage: SFSymbol.edit)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.contentShape(Rectangle())
+				}
+				.contextMenu {
+					Group {
+						PasteButton(payloadType: String.self) { strings in
+							if let string = strings.first {
+								Haptics.generateIfEnabled(.selectionChanged)
+								viewModel.stackFileContent = string
+							}
+						}
+					}
+					.labelStyle(.titleAndIcon)
+				}
+
+				Button {
+					Haptics.generateIfEnabled(.sheetPresentation)
+					viewModel.isFileImportSheetPresented = true
+				} label: {
+					Label("CreateStackView.SelectFile", systemImage: "folder")
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.contentShape(Rectangle())
+				}
 			}
 			#if os(macOS)
 			.foregroundStyle(.accent)
 			.buttonStyle(.plain)
 			#endif
-			.contextMenu {
-				PasteButton(payloadType: String.self) { strings in
-					Haptics.generateIfEnabled(.selectionChanged)
-					if let string = strings.first {
-						viewModel.stackFileContent = string
-					}
-				}
-				.labelStyle(.titleAndIcon)
-			}
 		}
 	}
 }
 
 // MARK: - Previews
 
-#Preview("Empty") {
-	CreateStackView.StackFileContentView(
-		allowedContentTypes: []
-	)
+#Preview {
+	Form {
+		CreateStackView.StackFileContentView(
+			allowedContentTypes: []
+		)
+	}
 	.environment(CreateStackView.ViewModel())
 }

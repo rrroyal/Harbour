@@ -155,7 +155,7 @@ struct StacksView: View {
 		.focused($isFocused)
 		.focusEffectDisabled()
 		.confirmationDialog(
-			"Generic.AreYouSure?",
+			"Generic.AreYouSure",
 			isPresented: sceneDelegate.isRemoveStackAlertPresented,
 			titleVisibility: .visible,
 			presenting: sceneDelegate.stackToRemove
