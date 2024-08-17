@@ -35,6 +35,7 @@ struct ContainerContextMenu: View {
 					} label: {
 						Label(action.title, systemImage: action.icon)
 					}
+					.keyboardShortcut(keyboardShortcut(for: action))
 				}
 
 				Divider()
@@ -45,6 +46,7 @@ struct ContainerContextMenu: View {
 				} label: {
 					Label("ContainerContextMenu.Remove", systemImage: SFSymbol.remove)
 				}
+				.keyboardShortcut(.delete, modifiers: .command)
 			}
 
 			if let portainerServerURL = portainerStore.serverURL,
@@ -52,6 +54,7 @@ struct ContainerContextMenu: View {
 				Divider()
 
 				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+					.keyboardShortcut("u", modifiers: .command)
 			}
 
 //			#if ENABLE_PREVIEW_FEATURES
@@ -83,6 +86,17 @@ private extension ContainerContextMenu {
 				presentIndicator(.containerActionExecute(containerName: container.displayName ?? container.id, containerAction: action, state: .failure(error)))
 				errorHandler(error, showIndicator: false)
 			}
+		}
+	}
+
+	func keyboardShortcut(for action: ContainerAction) -> KeyboardShortcut {
+		switch action {
+		case .start:	KeyboardShortcut("s", modifiers: .command)
+		case .stop:		KeyboardShortcut("s", modifiers: [.command, .shift])
+		case .restart:	KeyboardShortcut("r", modifiers: .command)
+		case .kill:		KeyboardShortcut("k", modifiers: .command)
+		case .pause:	KeyboardShortcut("p", modifiers: .command)
+		case .unpause:	KeyboardShortcut("r", modifiers: .command)
 		}
 	}
 }

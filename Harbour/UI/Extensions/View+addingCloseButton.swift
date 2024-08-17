@@ -27,14 +27,7 @@ private struct AddingCloseButtonViewModifier: ViewModifier {
 	func body(content: Content) -> some View {
 		content
 			.toolbar {
-				var closeButtonPlacement: ToolbarItemPlacement {
-					#if os(iOS)
-					.topBarTrailing
-					#elseif os(macOS)
-					.cancellationAction
-					#endif
-				}
-				ToolbarItem(placement: closeButtonPlacement) {
+				ToolbarItem(placement: .cancellationAction) {
 					#if os(iOS)
 					CloseButton(style: .circleButton) {
 						dismissAction?() ?? _dismiss()

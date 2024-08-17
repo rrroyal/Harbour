@@ -36,6 +36,7 @@ struct ContainerLogsView: View {
 						.font(.caption)
 						.fontDesign(.monospaced)
 						.textSelection(.enabled)
+						// .textRenderer(HighlightedTextRenderer(highlightedText: ""))
 						#if os(iOS)
 						.padding(.horizontal, 10)
 						#elseif os(macOS)

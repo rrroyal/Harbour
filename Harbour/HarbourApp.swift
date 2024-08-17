@@ -69,6 +69,9 @@ struct HarbourApp: App {
 		WindowGroup {
 			ContentView()
 				.scrollDismissesKeyboard(.interactively)
+				#if os(macOS)
+				.containerBackground(.thickMaterial, for: .window)
+				#endif
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
@@ -84,8 +87,7 @@ struct HarbourApp: App {
 			portainerCommands
 		}
 		#if os(macOS)
-//		.windowStyle(.hiddenTitleBar)
-		.windowToolbarStyle(.unifiedCompact(showsTitle: false))
+		.windowStyle(.hiddenTitleBar)
 		#endif
 		.modelContainer(for: ModelContainer.allModelTypes)
 

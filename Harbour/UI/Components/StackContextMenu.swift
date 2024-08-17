@@ -30,6 +30,7 @@ struct StackContextMenu: View {
 						systemImage: stack.isOn ? Stack.Status.inactive.icon : Stack.Status.active.icon
 					)
 				}
+				.keyboardShortcut("s", modifiers: stack.isOn ? [.command, .shift] : .command)
 
 				Divider()
 
@@ -41,6 +42,7 @@ struct StackContextMenu: View {
 				} label: {
 					Label("StackContextMenu.Edit", systemImage: SFSymbol.edit)
 				}
+				.keyboardShortcut("e", modifiers: .command)
 
 				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.warning)
@@ -48,6 +50,7 @@ struct StackContextMenu: View {
 				} label: {
 					Label("StackContextMenu.Remove", systemImage: SFSymbol.remove)
 				}
+				.keyboardShortcut(.delete, modifiers: .command)
 			}
 
 			if let portainerServerURL = portainerStore.serverURL,
@@ -55,6 +58,7 @@ struct StackContextMenu: View {
 				Divider()
 
 				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+					.keyboardShortcut("u", modifiers: .command)
 			}
 		}
 		.labelStyle(.titleAndIcon)
