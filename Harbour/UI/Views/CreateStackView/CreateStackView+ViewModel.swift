@@ -26,13 +26,11 @@ extension CreateStackView {
 
 		let logger = Logger(.view(CreateStackView.self))
 
-		var isFileImporterPresented = false
+		var isFileImportSheetPresented = false
 
 		var isStackFileContentTargeted = false
 		var isEnvironmentEntrySheetPresented = false
 		var editedEnvironmentEntry: KeyValueEntry?
-
-		var isStackFileContentExpanded = false
 
 		var stackID: Stack.ID?
 		var stackName = ""

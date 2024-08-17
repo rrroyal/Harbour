@@ -13,7 +13,7 @@ import KeychainKit
 
 extension Keychain {
 	// swiftlint:disable:next force_unwrapping
-	static let shared = Keychain(accessGroup: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
+	static let shared = Keychain(accessGroup: "\(Bundle.main.appIdentifierPrefix ?? "")group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
 }
 
 // MARK: - Keychain+itemDescription

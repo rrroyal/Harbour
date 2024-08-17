@@ -30,26 +30,18 @@ struct ContainerDetailsView: View {
 	}
 
 	private var navigationTitle: String {
-		container?.displayName ??
-		containerDetails?.displayName ??
-		container?.id ??
-		containerDetails?.id ??
+		viewModel.container?.displayName ??
+		viewModel.containerDetails?.displayName ??
+		viewModel.container?.id ??
+		viewModel.containerDetails?.id ??
 		navigationItem.displayName ??
 		navigationItem.id
 	}
 
-	private var container: Container? {
-		viewModel.container
-	}
-
-	private var containerDetails: ContainerDetails? {
-		viewModel.containerDetails
-	}
-
 	@ViewBuilder
 	private var statusSection: some View {
-		let state = (container?._isStored ?? true) ? Container.State?.none : (container?.state ?? containerDetails?.state.state ?? Container.State?.none)
-		let title = container?.status ?? state.title
+		let state = (viewModel.container?._isStored ?? true) ? Container.State?.none : (viewModel.container?.state ?? viewModel.containerDetails?.state.state ?? Container.State?.none)
+		let title = viewModel.container?.status ?? state.title
 
 		NormalizedSection {
 			if state == .none && !(viewModel.fetchTask?.isCancelled ?? true) {
@@ -72,7 +64,7 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var healthSection: some View {
-		if let health = containerDetails?.state.health {
+		if let health = viewModel.containerDetails?.state.health {
 			let lastHealthCheck = health.log?.max { $0.start.compare($1.start) == .orderedAscending }
 
 			NormalizedSection {
@@ -80,14 +72,18 @@ struct ContainerDetailsView: View {
 					LabeledContent {
 						Text(healthStatus)
 							.textSelection(.enabled)
+							.multilineTextAlignment(.trailing)
 					} label: {
 						Text("ContainerDetailsView.Section.Health.Status")
 					}
 				}
 
 				if health.failingStreak > 0 {
-					LabeledContent("ContainerDetailsView.Section.Health.FailingStreak", value: health.failingStreak.description)
-						.textSelection(.enabled)
+					LabeledContent("ContainerDetailsView.Section.Health.FailingStreak") {
+						Text(health.failingStreak.description)
+							.textSelection(.enabled)
+							.multilineTextAlignment(.trailing)
+					}
 				}
 
 				if let lastHealthCheck, !lastHealthCheck.output.isReallyEmpty {
@@ -107,7 +103,7 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var nameSection: some View {
-		if let name = container?.displayName ?? containerDetails?.displayName ?? navigationItem.displayName {
+		if let name = viewModel.container?.displayName ?? viewModel.containerDetails?.displayName ?? navigationItem.displayName {
 			NormalizedSection {
 				Labeled(name)
 					.fontDesign(.monospaced)
@@ -119,7 +115,7 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var idSection: some View {
-		if let id = container?.id ?? containerDetails?.id {
+		if let id = viewModel.container?.id ?? viewModel.containerDetails?.id {
 			NormalizedSection {
 				Labeled(id)
 					.fontDesign(.monospaced)
@@ -131,7 +127,7 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var createdAtSection: some View {
-		if let createdAt = containerDetails?.created ?? container?.created {
+		if let createdAt = viewModel.containerDetails?.created ?? viewModel.container?.created {
 			NormalizedSection {
 				Labeled(createdAt.formatted(.dateTime))
 			} header: {
@@ -142,7 +138,7 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var finishedAtSection: some View {
-		if let finishedAt = containerDetails?.state.finishedAt, !(containerDetails?.state.running ?? false) {
+		if let finishedAt = viewModel.containerDetails?.state.finishedAt, !(viewModel.containerDetails?.state.running ?? false) {
 			NormalizedSection {
 				Labeled(finishedAt.formatted(.dateTime))
 			} header: {
@@ -153,14 +149,14 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var imageSection: some View {
-		if container?.image != nil || container?.imageID != nil {
+		if viewModel.container?.image != nil || viewModel.container?.imageID != nil {
 			NormalizedSection {
 				Group {
-					if let image = container?.image {
+					if let image = viewModel.container?.image {
 						Labeled(image)
 					}
 
-					if let imageID = container?.imageID {
+					if let imageID = viewModel.container?.imageID {
 						Labeled(imageID)
 					}
 				}
@@ -173,7 +169,7 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var commandSection: some View {
-		if let command = containerDetails?.config?.cmd?.joined(separator: " ") {
+		if let command = viewModel.containerDetails?.config?.cmd?.joined(separator: " ") {
 			NormalizedSection {
 				Labeled(command)
 					.fontDesign(.monospaced)
@@ -185,12 +181,57 @@ struct ContainerDetailsView: View {
 
 	@ViewBuilder
 	private var entryPointSection: some View {
-		if let entrypoint = containerDetails?.config?.entrypoint?.joined(separator: " ") {
+		if let entrypoint = viewModel.containerDetails?.config?.entrypoint?.joined(separator: " ") {
 			NormalizedSection {
 				Labeled(entrypoint)
 					.fontDesign(.monospaced)
 			} header: {
 				Text("ContainerDetailsView.Section.Entrypoint")
+			}
+		}
+	}
+
+	@ViewBuilder
+	private var stackSection: some View {
+		if let stackName = viewModel.container?.stack {
+			let storedStack = portainerStore.stacks.first { $0.name == stackName }
+
+			NormalizedSection {
+				LabeledContent("ContainerDetailsView.Stack.Name") {
+					Text(stackName)
+						.textSelection(.enabled)
+						.multilineTextAlignment(.trailing)
+				}
+
+				if let storedStackID = storedStack?.id {
+					LabeledContent("ContainerDetailsView.Stack.ID") {
+						Text(storedStackID.description)
+							.textSelection(.enabled)
+							.multilineTextAlignment(.trailing)
+					}
+				}
+
+				Button {
+					if let storedStackID = storedStack?.id {
+						let navigationItem = StackDetailsView.NavigationItem(stackID: storedStackID.description, stackName: stackName)
+						sceneDelegate.navigate(to: .stacks, with: navigationItem)
+					} else {
+						sceneDelegate.navigate(to: .stacks)
+						sceneDelegate.selectedStackNameForStacksView = stackName
+					}
+				} label: {
+					Label("ContainerDetailsView.Stack.ShowStack", systemImage: SFSymbol.stack)
+						#if os(macOS)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.contentShape(Rectangle())
+						#endif
+				}
+				#if os(macOS)
+				.buttonStyle(.plain)
+				.foregroundStyle(.accent)
+				#endif
+			} header: {
+				Text("ContainerDetailsView.Stack")
 			}
 		}
 	}
@@ -211,27 +252,29 @@ struct ContainerDetailsView: View {
 				entryPointSection
 			}
 
+			stackSection
+
 			NormalizedSection {
 				NavigationLink(value: Subdestination.environment) {
 					Label("ContainerDetailsView.Section.Environment", systemImage: SFSymbol.environment)
 				}
-				.disabled(containerDetails?.config?.env == nil)
+				.disabled(viewModel.containerDetails?.config?.env == nil)
 
 				NavigationLink(value: Subdestination.labels) {
 					Label("ContainerDetailsView.Section.Labels", systemImage: "tag")
 				}
-				.disabled(containerDetails?.config?.labels == nil)
+				.disabled(viewModel.containerDetails?.config?.labels == nil)
 
 				NavigationLink(value: Subdestination.mounts) {
 					Label("ContainerDetailsView.Section.Mounts", systemImage: "externaldrive")
 				}
-				.disabled(containerDetails?.mounts == nil)
+				.disabled(viewModel.containerDetails?.mounts == nil)
 
 				NavigationLink(value: Subdestination.network) {
 					Label("ContainerDetailsView.Section.Network", systemImage: SFSymbol.network)
 				}
 				.disabled(
-					(container?.ports?.isEmpty ?? true) && (containerDetails == nil)
+					(viewModel.container?.ports?.isEmpty ?? true) && (viewModel.containerDetails == nil)
 				)
 
 				NavigationLink(value: Subdestination.logs) {
@@ -252,7 +295,7 @@ struct ContainerDetailsView: View {
 						Divider()
 					}
 
-					if let container {
+					if let container = viewModel.container {
 						ContainerContextMenu(
 							container: container,
 							onContainerAction: {
@@ -292,30 +335,30 @@ struct ContainerDetailsView: View {
 				errorHandler(error)
 			}
 		}
-		.animation(.default, value: container)
-		.animation(.default, value: containerDetails)
-		.animation(.default, value: container?.state ?? containerDetails?.state.state)
+		.animation(.default, value: viewModel.container)
+		.animation(.default, value: viewModel.containerDetails)
+		.animation(.default, value: viewModel.container?.state ?? viewModel.containerDetails?.state.state)
 		.animation(.default, value: viewModel.isStatusProgressViewVisible)
 		.animation(.default, value: viewModel.fetchTask?.isCancelled)
 		.animation(nil, value: navigationItem)
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
-			viewModel.createUserActivity(userActivity, for: container)
+			viewModel.createUserActivity(userActivity, for: viewModel.container)
 		}
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
 			case .labels:
-				LabelsDetailsView(labels: containerDetails?.config?.labels)
+				LabelsDetailsView(labels: viewModel.containerDetails?.config?.labels)
 			case .environment:
-				EnvironmentDetailsView(environment: containerDetails?.config?.env)
+				EnvironmentDetailsView(environment: viewModel.containerDetails?.config?.env)
 			case .network:
 				NetworkDetailsView(
-					ports: container?.ports,
-					detailNetworkSettings: containerDetails?.networkSettings,
-					exposedPorts: containerDetails?.config?.exposedPorts,
-					portBindings: containerDetails?.hostConfig.portBindings
+					ports: viewModel.container?.ports,
+					detailNetworkSettings: viewModel.containerDetails?.networkSettings,
+					exposedPorts: viewModel.containerDetails?.config?.exposedPorts,
+					portBindings: viewModel.containerDetails?.hostConfig.portBindings
 				)
 			case .mounts:
-				MountsDetailsView(mounts: containerDetails?.mounts)
+				MountsDetailsView(mounts: viewModel.containerDetails?.mounts)
 			case .logs:
 				ContainerLogsView(containerID: navigationItem.id)
 			}

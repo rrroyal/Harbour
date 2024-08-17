@@ -581,6 +581,46 @@
         }
       }
     },
+    "ContainerDetailsView.Stack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stack"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Stack.ID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ID"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Stack.Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "ContainerDetailsView.Stack.ShowStack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Stack"
+          }
+        }
+      }
+    },
     "ContainerLogsView.Menu.IncludeTimestamps" : {
       "localizations" : {
         "en" : {
@@ -1383,16 +1423,6 @@
         }
       }
     },
-    "Generic.Collapse" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Collapse"
-          }
-        }
-      }
-    },
     "Generic.Copy" : {
       "localizations" : {
         "en" : {
@@ -1403,22 +1433,32 @@
         }
       }
     },
+    "Generic.DismissKeyboard" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dismiss Keyboard"
+          }
+        }
+      }
+    },
+    "Generic.Edit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
     "Generic.Empty" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Empty"
-          }
-        }
-      }
-    },
-    "Generic.Expand" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expand"
           }
         }
       }
@@ -1449,26 +1489,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "None"
-          }
-        }
-      }
-    },
-    "Generic.NotSetup.Description" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Configure the Portainer connection in settings."
-          }
-        }
-      }
-    },
-    "Generic.NotSetup.Title" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not Setup"
           }
         }
       }
@@ -1539,6 +1559,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share Portainer URL..."
+          }
+        }
+      }
+    },
+    "Generic.Stack" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stack"
           }
         }
       }
@@ -1949,6 +1979,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ disappeared"
+          }
+        }
+      }
+    },
+    "Portainer.NotSetup.Description" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Configure the Portainer connection in settings."
+          }
+        }
+      }
+    },
+    "Portainer.NotSetup.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Setup"
           }
         }
       }

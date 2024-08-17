@@ -178,6 +178,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 					ForEach(linksSplit, id: \.self) { link in
 						LabeledContent {
 							Text(link.value)
+								.multilineTextAlignment(.trailing)
 						} label: {
 							if let foundContainer = portainerStore.containers.first(where: { $0.namesNormalized?.contains(link.key) ?? false }) {
 								Button(link.key) {
@@ -316,6 +317,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 									#endif
 								}
 							}
+							.multilineTextAlignment(.trailing)
 						}
 						.fontDesign(.monospaced)
 						#if os(iOS)

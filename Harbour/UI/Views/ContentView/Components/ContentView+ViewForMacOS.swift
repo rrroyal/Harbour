@@ -115,12 +115,12 @@ private extension ContentView.ViewForMacOS {
 
 			switch sceneDelegate.activeTab {
 			case .containers:
-				NavigationStack(path: $sceneDelegate.navigationPathContainers) {
+				NavigationStack(path: $sceneDelegate.navigationState.containers) {
 					Text("ContainersView.NoContainerSelectedPlaceholder")
 						.foregroundStyle(.tertiary)
 				}
 			case .stacks:
-				NavigationStack(path: $sceneDelegate.navigationPathStacks) {
+				NavigationStack(path: $sceneDelegate.navigationState.stacks) {
 					Text("StacksView.NoStackSelectedPlaceholder")
 						.foregroundStyle(.tertiary)
 				}

@@ -109,5 +109,5 @@ switch_case_alignment:
   indented_cases: false
 
 type_body_length:
-  warning: 300
+  warning: 400
   error: 500

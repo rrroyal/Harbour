@@ -88,6 +88,7 @@ struct ContainerActionIntent: AppIntent {
 			} else {
 //				container = try await self.$container.requestValue() // this doesn't work :)
 				let containers = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id)
+					.sorted()
 					.map { IntentContainer(container: $0) }
 				container = try await $container.requestDisambiguation(
 					among: containers,

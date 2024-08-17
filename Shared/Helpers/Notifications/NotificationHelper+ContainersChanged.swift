@@ -35,23 +35,18 @@ extension NotificationHelper {
 
 			emoji = change.changeEmoji
 
-			let status: String = if let newStatus = change.newStatus {
-				"\(newStatus) (\(change.newState.title))"
-			} else {
-				change.newState.title
-			}
 			let containerName = "\"\(change.containerName)\""
 
 			switch change.changeType {
 			case .created:
 				title = String(localized: "Notification.ContainersChanged.Single.Created.Title Name:\(containerName)")
-				body = String(localized: "Notification.ContainersChanged.Single.Created.Body Status:\(status)")
+				body = String(localized: "Notification.ContainersChanged.Single.Created.Body Status:\(change.changeDescription)")
 			case .changed:
 				title = String(localized: "Notification.ContainersChanged.Single.Changed.Title Name:\(containerName)")
-				body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\(change.oldState.title) New:\(status)")
+				body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\(change.oldState.title) New:\(change.changeDescription)")
 			case .recreated:
 				title = String(localized: "Notification.ContainersChanged.Single.Recreated.Title Name:\(containerName)")
-				body = String(localized: "Notification.ContainersChanged.Single.Recreated.Body New:\(status)")
+				body = String(localized: "Notification.ContainersChanged.Single.Recreated.Body New:\(change.changeDescription)")
 			case .removed:
 				title = String(localized: "Notification.ContainersChanged.Single.Removed.Title Name:\(containerName)")
 				body = String(localized: "Notification.ContainersChanged.Single.Removed.Body Old:\(change.oldState.title)")
@@ -65,18 +60,12 @@ extension NotificationHelper {
 			title = String(localized: "Notification.ContainersChanged.MultipleReadable.Title Names:\(namesJoined)")
 
 			let changesJoined = containerChanges
-				.map {
-					let status: String = if let newStatus = $0.newStatus {
-						"\(newStatus) (\($0.newState.title))"
-					} else {
-						$0.newState.title
-					}
-
+				.map { change in
 					let parts = [
-						$0.containerName,
+						change.containerName,
 						": ",
-						$0.changeType == .recreated ? "\(String(localized: "Generic.Recreated")), " : "",
-						$0.changeType != .removed ? status : String(localized: "Generic.Removed")
+						change.changeType == .recreated ? "\(String(localized: "Generic.Recreated")), " : "",
+						change.changeType != .removed ? change.changeDescription : String(localized: "Generic.Removed")
 					]
 					return parts.joined()
 				}

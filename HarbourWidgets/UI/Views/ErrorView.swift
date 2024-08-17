@@ -34,5 +34,4 @@ struct ErrorView: View {
 
 #Preview {
 	ErrorView(error: GenericError.invalidURL)
-		.previewContext(WidgetPreviewContext(family: .systemSmall))
 }

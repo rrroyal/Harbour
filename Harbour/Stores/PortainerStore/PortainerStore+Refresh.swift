@@ -42,7 +42,7 @@ extension PortainerStore {
 			defer { self.containersTask = nil }
 
 			do {
-				let containers = try await self.fetchContainers().sorted()
+				let containers = try await self.fetchContainers()
 				self.setContainers(containers)
 				return containers
 			} catch {
@@ -89,7 +89,7 @@ extension PortainerStore {
 			defer { self.stacksTask = nil }
 
 			do {
-				let stacks = try await fetchStacks().sorted()
+				let stacks = try await fetchStacks()
 				self.setStacks(stacks)
 				return stacks
 			} catch {

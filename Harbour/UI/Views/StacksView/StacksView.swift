@@ -110,9 +110,9 @@ struct StacksView: View {
 			viewModel.viewState.backgroundView
 		} else if !portainerStore.isSetup {
 			ContentUnavailableView(
-				"Generic.NotSetup.Title",
+				"Portainer.NotSetup.Title",
 				systemImage: SFSymbol.network,
-				description: Text("Generic.NotSetup.Description")
+				description: Text("Portainer.NotSetup.Description")
 			)
 			.symbolVariant(.slash)
 		} else if !viewModel.searchText.isEmpty {
@@ -175,6 +175,9 @@ struct StacksView: View {
 		.animation(.default, value: viewModel.viewState)
 //		.animation(.default, value: viewModel.stacks)
 		.animation(.default, value: viewModel.isStatusProgressViewVisible)
+		.onChange(of: sceneDelegate.selectedStackNameForStacksView) { _, stackName in
+			viewModel.searchText = stackName ?? ""
+		}
 		.onKeyPress(action: onKeyPress)
 		.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
 //			guard sceneDelegate.activeTab == .stacks else { return }
@@ -218,20 +221,21 @@ private extension StacksView {
 								stackItem,
 								containers: containers,
 								filterAction: { filterByStackNameAction(stackItem.name) },
-								setStackStateAction: { _ in }
+								setStackStateAction: nil
 							)
 						}
 					}
 					#if os(macOS)
 					.padding(.horizontal, 8)
 					.padding(.vertical, 4)
+					.listRowSeparator(.hidden)
 					#endif
 				}
 			}
 			#if os(iOS)
 			.listStyle(.insetGrouped)
 			#elseif os(macOS)
-			.listStyle(.sidebar)
+			.listStyle(.inset)
 			#endif
 			.animation(.default, value: stacks)
 		}
@@ -256,7 +260,7 @@ private extension StacksView {
 
 	func filterByStackName(_ stackName: String?) {
 		sceneDelegate.navigate(to: .containers)
-		sceneDelegate.selectedStackName = stackName
+		sceneDelegate.selectedStackNameForContainersView = stackName
 	}
 
 	func setStackState(_ stack: Stack, started: Bool) {

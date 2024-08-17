@@ -93,7 +93,6 @@ extension FeaturesView {
 
 #Preview("FeaturesView") {
 		FeaturesView(continueAction: { })
-			.previewDisplayName("FeaturesView")
 }
 
 #Preview("FeatureCell") {
@@ -102,6 +101,5 @@ extension FeaturesView {
 		subheadline: "FeaturesView.Feature1.Description",
 		icon: "globe"
 	)
-	.previewLayout(.sizeThatFits)
 	.padding()
 }

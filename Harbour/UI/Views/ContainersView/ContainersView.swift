@@ -126,9 +126,9 @@ struct ContainersView: View {
 		Group {
 			if !portainerStore.isSetup {
 				ContentUnavailableView(
-					"Generic.NotSetup.Title",
+					"Portainer.NotSetup.Title",
 					systemImage: SFSymbol.network,
-					description: Text("Generic.NotSetup.Description")
+					description: Text("Portainer.NotSetup.Description")
 				)
 				.symbolVariant(.slash)
 			} else if portainerStore.endpoints.isEmpty {
@@ -167,9 +167,9 @@ struct ContainersView: View {
 			viewModel.viewState.backgroundView
 		} else if !portainerStore.isSetup {
 			ContentUnavailableView(
-				"Generic.NotSetup.Title",
+				"Portainer.NotSetup.Title",
 				systemImage: SFSymbol.network,
-				description: Text("Generic.NotSetup.Description")
+				description: Text("Portainer.NotSetup.Description")
 			)
 			.symbolVariant(.slash)
 		} else if portainerStore.endpoints.isEmpty {
@@ -252,19 +252,19 @@ struct ContainersView: View {
 			.navigationTitle(navigationTitle)
 			.onKeyPress(action: onKeyPress)
 			.environment(viewModel)
-			.onChange(of: sceneDelegate.selectedStackName) { _, stackName in
+			.onChange(of: sceneDelegate.selectedStackNameForContainersView) { _, stackName in
 				viewModel.filterByStackName(stackName)
 			}
-			.onChange(of: viewModel.searchTokens) { _, tokens in
-				sceneDelegate.selectedStackName = tokens
-					.compactMap {
-						if case .stack(let stackName) = $0 {
-							return stackName
-						}
-						return nil
-					}
-					.last
-			}
+//			.onChange(of: viewModel.searchTokens) { _, tokens in
+//				sceneDelegate.selectedStackNameForContainersView = tokens
+//					.compactMap {
+//						if case .stack(let stackName) = $0 {
+//							return stackName
+//						}
+//						return nil
+//					}
+//					.last
+//			}
 			.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
 //				guard sceneDelegate.activeTab == .containers else { return }
 				viewModel.handleSpotlightSearchContinuation(userActivity)

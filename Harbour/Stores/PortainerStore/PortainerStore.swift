@@ -128,7 +128,7 @@ public extension PortainerStore {
 			do {
 				try keychain.setString(token, for: url, itemDescription: Keychain.tokenItemDescription)
 			} catch {
-				logger.error("Unable to save token to Keychain: \(error, privacy: .public)")
+				logger.error("Unable to save token to Keychain: \(error.localizedDescription, privacy: .public)")
 			}
 		}
 
@@ -260,13 +260,15 @@ extension PortainerStore {
 
 	@MainActor
 	func setContainers(_ containers: [Container]?) {
-		self.containers = containers ?? []
+		let containers = (containers ?? []).sorted()
+		self.containers = containers
 		storeContainers(containers)
 	}
 
 	@MainActor
 	func setStacks(_ stacks: [Stack]?) {
-		self.stacks = stacks ?? []
+		let stacks = (stacks ?? []).sorted()
+		self.stacks = stacks
 		storeStacks(stacks)
 	}
 }

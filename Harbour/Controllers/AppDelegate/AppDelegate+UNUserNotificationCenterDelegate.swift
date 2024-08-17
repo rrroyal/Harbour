@@ -7,7 +7,7 @@
 //
 
 import PortainerKit
-@preconcurrency import UserNotifications
+import UserNotifications
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
 	nonisolated func userNotificationCenter(

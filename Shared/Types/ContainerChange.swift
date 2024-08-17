@@ -86,6 +86,14 @@ struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
 		case .removed:		"❌"
 		}
 	}
+
+	var changeDescription: String {
+		if let newStatus = self.newStatus {
+			"\(self.newState.title), \(newStatus)"
+		} else {
+			self.newState.title
+		}
+	}
 }
 
 // MARK: - ContainerChange+ChangeType

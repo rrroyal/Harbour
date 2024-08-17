@@ -143,8 +143,9 @@ extension PortainerStore {
 			try await portainer.executeContainerAction(action, containerID: containerID, endpointID: selectedEndpoint.id)
 
 			Task { @MainActor in
-				if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
-					containers[storedContainerIndex].state = action.expectedState
+				if let index = containers.firstIndex(where: { $0.id == containerID }) {
+					containers[index].state = action.expectedState
+					storeContainers(containers)
 				}
 			}
 
@@ -166,6 +167,15 @@ extension PortainerStore {
 		removeVolumes: Bool = Preferences.shared.containerRemoveVolumes,
 		force: Bool = Preferences.shared.containerRemoveForce
 	) async throws {
+		defer {
+			Task {
+				try? await Task.sleep(for: .seconds(0.1))
+				await MainActor.run {
+					_ = removedContainerIDs.remove(containerID)
+				}
+			}
+		}
+
 		logger.notice("Removing container with ID: \"\(containerID, privacy: .public)\"...")
 
 		do {
@@ -185,17 +195,14 @@ extension PortainerStore {
 			)
 
 			Task { @MainActor in
-				removedContainerIDs.remove(containerID)
-				if let storedContainerIndex = containers.firstIndex(where: { $0.id == containerID }) {
-					containers.remove(at: storedContainerIndex)
+				if let index = containers.firstIndex(where: { $0.id == containerID }) {
+					containers.remove(at: index)
+					storeContainers(containers)
 				}
 			}
 
 			logger.notice("Removed container with ID: \"\(containerID, privacy: .public)\".")
 		} catch {
-			Task { @MainActor in
-				removedContainerIDs.remove(containerID)
-			}
 			logger.error("Failed to remove container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
 			throw error
 		}
@@ -310,11 +317,10 @@ public extension PortainerStore {
 			let newStack = try await portainer.setStackState(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
 			logger.notice("\(started ? "Started" : "Stopped", privacy: .public) stack with stackID: \(stackID)")
 
-			Task {
-				if let newStack, let stackIndex = stacks.firstIndex(where: { $0.id == stackID }) {
-					await MainActor.run {
-						stacks[stackIndex] = newStack
-					}
+			Task { @MainActor in
+				if let newStack, let index = stacks.firstIndex(where: { $0.id == stackID }) {
+					stacks[index] = newStack
+					storeStacks(stacks)
 				}
 			}
 
@@ -334,6 +340,12 @@ public extension PortainerStore {
 			}
 			let stack = try await portainer.deployStack(endpointID: selectedEndpoint.id, settings: stackSettings)
 			logger.info("Created a new stack, stackID: \(stack.id)")
+
+			Task { @MainActor in
+				stacks.append(stack)
+				setStacks(stacks)
+			}
+
 			return stack
 		} catch {
 			logger.error("Failed to create a new stack: \(error, privacy: .public)")
@@ -350,6 +362,14 @@ public extension PortainerStore {
 			}
 			let stack = try await portainer.updateStack(stackID: stackID, endpointID: selectedEndpoint.id, settings: settings)
 			logger.info("Updated stack with ID: \(stackID)!")
+
+			Task { @MainActor in
+				if let index = stacks.firstIndex(where: { $0.id == stack.id }) {
+					stacks[index] = stack
+					storeStacks(stacks)
+				}
+			}
+
 			return stack
 		} catch {
 			logger.error("Failed to update stack with ID: \(stackID): \(error, privacy: .public)")
@@ -360,8 +380,11 @@ public extension PortainerStore {
 	@Sendable
 	func removeStack(stackID: Stack.ID) async throws {
 		defer {
-			Task { @MainActor in
-				removedStackIDs.remove(stackID)
+			Task {
+				try? await Task.sleep(for: .seconds(0.1))
+				await MainActor.run {
+					_ = removedStackIDs.remove(stackID)
+				}
 			}
 		}
 
@@ -378,6 +401,13 @@ public extension PortainerStore {
 
 			try await portainer.removeStack(stackID: stackID, endpointID: selectedEndpoint.id)
 			logger.info("Removed stack with ID: \(stackID)")
+
+			Task { @MainActor in
+				if let index = stacks.firstIndex(where: { $0.id == stackID }) {
+					stacks.remove(at: index)
+					storeStacks(stacks)
+				}
+			}
 		} catch {
 			logger.error("Failed to remove stack with ID: \(stackID): \(error, privacy: .public)")
 			throw error

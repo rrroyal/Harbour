@@ -259,7 +259,7 @@ private extension StackDetailsView {
 
 	func filterByStackName(_ stackName: String?) {
 		sceneDelegate.navigate(to: .containers)
-		sceneDelegate.selectedStackName = stackName
+		sceneDelegate.selectedStackNameForContainersView = stackName
 	}
 
 	func setStackState(_ stack: Stack, started: Bool) {

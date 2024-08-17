@@ -129,7 +129,6 @@ extension ContainersView.ListView.ContainerCell: Equatable {
 	}
 	.padding()
 	.background(Color.groupedBackground)
-	.previewLayout(.sizeThatFits)
 }
 
 #Preview("Cell (Removed)") {
@@ -138,5 +137,4 @@ extension ContainersView.ListView.ContainerCell: Equatable {
 	}
 	.padding()
 	.background(Color.groupedBackground)
-	.previewLayout(.sizeThatFits)
 }

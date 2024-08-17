@@ -60,12 +60,10 @@ extension CloseButton {
 	CloseButton(style: .circleButton)
 		.padding(4)
 		.background(Color.groupedBackground)
-		.previewLayout(.sizeThatFits)
 }
 
 #Preview {
 	CloseButton(style: .text)
 		.padding(4)
 		.background(Color.groupedBackground)
-		.previewLayout(.sizeThatFits)
 }

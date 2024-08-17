@@ -19,7 +19,7 @@ extension StacksView {
 		var stack: StackItem
 		var containers: [Container]
 		var filterAction: () -> Void
-		var setStackStateAction: (Bool) -> Void
+		var setStackStateAction: ((Bool) -> Void)?
 
 		@ScaledMetric(relativeTo: .subheadline)
 		private var iconSize = 6
@@ -28,7 +28,7 @@ extension StacksView {
 			_ stack: StackItem,
 			containers: [Container],
 			filterAction: @escaping () -> Void,
-			setStackStateAction: @escaping (Bool) -> Void
+			setStackStateAction: ((Bool) -> Void)?
 		) {
 			self.stack = stack
 			self.containers = containers
@@ -125,10 +125,9 @@ extension StacksView {
 			.animation(.default, value: isBeingRemoved)
 			.contextMenu {
 				if let stack = stack.stack {
-					StackContextMenu(
-						stack: stack,
-						setStackStateAction: { setStackStateAction($0) }
-					)
+					StackContextMenu(stack: stack) {
+						setStackStateAction?($0)
+					}
 				}
 			}
 			.swipeActions(edge: .leading) {
@@ -140,7 +139,7 @@ extension StacksView {
 			.swipeActions(edge: .trailing) {
 				if let stack = stack.stack {
 					StackToggleButton(stack: stack) {
-						setStackStateAction(!stack.isOn)
+						setStackStateAction?(!stack.isOn)
 					}
 					.tint(isLoading ? .gray : (isOn ? .red : .green))
 					.disabled(isLoading)

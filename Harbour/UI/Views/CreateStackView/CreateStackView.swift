@@ -116,7 +116,7 @@ struct CreateStackView: View {
 				.background(Color.groupedBackground)
 		}
 		#endif
-		.fileImporter(isPresented: $viewModel.isFileImporterPresented, allowedContentTypes: allowedContentTypes) { result in
+		.fileImporter(isPresented: $viewModel.isFileImportSheetPresented, allowedContentTypes: allowedContentTypes) { result in
 			handleStackFileResult(result)
 		}
 		.sheet(isPresented: $viewModel.isEnvironmentEntrySheetPresented) {

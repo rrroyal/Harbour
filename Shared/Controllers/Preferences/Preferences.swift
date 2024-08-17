@@ -19,17 +19,8 @@ import SwiftUI
 
 /// UserDefaults wrapper; user preferences store.
 public final class Preferences: ObservableObject {
-
-	private static var userDefaults: UserDefaults? {
-		// swiftlint:disable force_unwrapping
-		let suiteName = "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)"
-		#if TARGET_APP
-		return UserDefaults(suiteName: "\(Bundle.main.appIdentifierPrefix ?? "")\(suiteName)")
-		#elseif TARGET_WIDGETS
-		return UserDefaults(suiteName: suiteName)
-		#endif
-		// swiftlint:enable force_unwrapping
-	}
+	// swiftlint:disable:next force_unwrapping
+	private static let userDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
 
 	public static let shared = Preferences()
 
@@ -94,6 +85,7 @@ public final class Preferences: ObservableObject {
 private extension Preferences {
 	#if os(iOS)
 	func onEnableBackgroundRefreshChange(_ isEnabled: Bool) {
+		logger.debug("Background refresh enabled: \(isEnabled, privacy: .public)")
 
 		if isEnabled {
 			// Ask for permission

@@ -30,6 +30,10 @@ final class SceneDelegate: NSObject {
 
 	var navigationState = NavigationState()
 
+	// MARK: Cross-view
+
+	var viewsToFocus: Set<AnyHashable> = []
+
 	// MARK: Sheets
 
 	var isLandingSheetPresented = !Preferences.shared.landingDisplayed
@@ -40,7 +44,7 @@ final class SceneDelegate: NSObject {
 	var activeCreateStackSheetDetent: PresentationDetent = .medium
 	var handledCreateSheetDetentUpdate = false
 
-	// MARK: Alerts
+	// MARK: Containers
 
 	var containerToRemove: Container?
 	var isRemoveContainerAlertPresented: Binding<Bool> {
@@ -53,6 +57,8 @@ final class SceneDelegate: NSObject {
 			}
 		)
 	}
+
+	// MARK: Stacks
 
 	var stackToRemove: Stack?
 	var isRemoveStackAlertPresented: Binding<Bool> {
@@ -68,9 +74,8 @@ final class SceneDelegate: NSObject {
 
 	var editedStack: Stack?
 
-	var selectedStackName: String?
-
-	var viewsToFocus: Set<AnyHashable> = []
+	var selectedStackNameForContainersView: String?
+	var selectedStackNameForStacksView: String?
 }
 
 // MARK: - SceneDelegate+Actions

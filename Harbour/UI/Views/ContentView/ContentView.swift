@@ -57,6 +57,7 @@ struct ContentView: View {
 				ContainerChangeView(changes: appState.lastContainerChanges ?? [])
 					.addingCloseButton()
 			}
+//			.presentationDetents([.medium, .large])
 			#if os(macOS)
 			.sheetMinimumFrame()
 			#endif

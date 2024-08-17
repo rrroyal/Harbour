@@ -13,7 +13,6 @@ import SwiftUI
 
 extension ContainersView.GridView {
 	struct ContainerCell: View {
-
 		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 10
 		private let minimumScaleFactor: Double = 0.7
@@ -124,7 +123,6 @@ extension ContainersView.GridView.ContainerCell: Equatable {
 	.padding()
 	.frame(width: 168, height: 168)
 	.background(Color.groupedBackground)
-	.previewLayout(.sizeThatFits)
 }
 
 #Preview("Cell (Removed)") {
@@ -134,5 +132,4 @@ extension ContainersView.GridView.ContainerCell: Equatable {
 	.padding()
 	.frame(width: 168, height: 168)
 	.background(Color.groupedBackground)
-	.previewLayout(.sizeThatFits)
 }

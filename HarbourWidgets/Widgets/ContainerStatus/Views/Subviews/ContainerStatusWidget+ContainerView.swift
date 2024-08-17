@@ -144,9 +144,9 @@ extension ContainerStatusWidget {
 				.minimumScaleFactor(minimumScaleFactor)
 				.frame(maxWidth: .infinity, alignment: .leading)
 			}
-			.contentTransition(.numericText())
 			.padding()
 			.tint(container?.state.color ?? Container.State?.none.color)
+			.contentTransition(.opacity)
 			.modifier(LinkWrappedViewModifier(url: url))
 			.background(Color.widgetBackground)
 			.id("ContainerStatusWidgetView.ContainerView:\(container?.id ?? intentContainer._id)")
@@ -158,5 +158,4 @@ extension ContainerStatusWidget {
 
 #Preview {
 	ContainerStatusWidget.ContainerView(entry: .placeholder, intentContainer: .preview())
-		.previewContext(WidgetPreviewContext(family: .systemSmall))
 }
