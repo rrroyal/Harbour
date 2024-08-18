@@ -241,12 +241,32 @@
         }
       }
     },
-    "ContainerChangeView.Currently" : {
+    "ContainerChangeView.BeforeAfterPicker.After" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Currently"
+            "value" : "After"
+          }
+        }
+      }
+    },
+    "ContainerChangeView.BeforeAfterPicker.Before" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        }
+      }
+    },
+    "ContainerChangeView.BeforeAfterPicker.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Changes"
           }
         }
       }
@@ -257,16 +277,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ID"
-          }
-        }
-      }
-    },
-    "ContainerChangeView.Previously" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Previously"
           }
         }
       }

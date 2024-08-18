@@ -16,36 +16,23 @@ struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
 
 	let endpointID: Endpoint.ID
 
-	let oldID: Container.ID?
-	let oldState: Container.State?
-	let oldStatus: String?
-
-	let newID: Container.ID?
-	let newState: Container.State?
-	let newStatus: String?
+	let old: ChangeDetails?
+	let new: ChangeDetails?
 
 	init(
 		id: Int,
 		changeType: ChangeType,
 		containerName: String,
 		endpointID: Endpoint.ID,
-		oldID: Container.ID?,
-		oldState: Container.State?,
-		oldStatus: String?,
-		newID: Container.ID?,
-		newState: Container.State?,
-		newStatus: String?
+		old: ChangeDetails?,
+		new: ChangeDetails?
 	) {
 		self.id = id
 		self.changeType = changeType
 		self.containerName = containerName
 		self.endpointID = endpointID
-		self.oldID = oldID
-		self.oldState = oldState
-		self.oldStatus = oldStatus
-		self.newID = newID
-		self.newState = newState
-		self.newStatus = newStatus
+		self.old = old
+		self.new = new
 	}
 
 	init?(oldContainer: Container?, newContainer: Container?, endpointID: Endpoint.ID, changeType: ChangeType) {
@@ -56,10 +43,10 @@ struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
 		if let oldContainer, let newContainer, oldContainer._persistentID != newContainer._persistentID {
 			return nil
 		}
-		guard let oldPersistentID = oldContainer?._persistentID ?? newContainer?._persistentID else {
+		guard let persistentID = oldContainer?._persistentID ?? newContainer?._persistentID else {
 			return nil
 		}
-		self.id = oldPersistentID
+		self.id = persistentID
 
 		self.endpointID = endpointID
 		self.changeType = changeType
@@ -69,29 +56,24 @@ struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
 		}
 		self.containerName = containerName
 
-		self.oldID = oldContainer?.id
-		self.oldState = oldContainer?.state
-		self.oldStatus = oldContainer?.status
-
-		self.newID = newContainer?.id
-		self.newState = newContainer?.state
-		self.newStatus = newContainer?.status
+		self.old = .init(id: oldContainer?.id, state: oldContainer?.state, status: oldContainer?.status)
+		self.new = .init(id: newContainer?.id, state: newContainer?.state, status: newContainer?.status)
 	}
 
 	var changeEmoji: String {
 		switch changeType {
-		case .created:		newState.emoji
+		case .created:		(new?.state ?? Container.State?.none).emoji
 		case .recreated:	"♻️"
-		case .changed:		newState.emoji
+		case .changed:		(new?.state ?? Container.State?.none).emoji
 		case .removed:		"❌"
 		}
 	}
 
 	var changeDescription: String {
-		if let newStatus = self.newStatus {
-			"\(self.newState.title), \(newStatus)"
+		if let newStatus = self.new?.status {
+			"\((self.new?.state ?? Container.State?.none).title), \(newStatus)"
 		} else {
-			self.newState.title
+			(self.new?.state ?? Container.State?.none).title
 		}
 	}
 }
@@ -122,5 +104,15 @@ extension ContainerChange {
 			case .removed:		"xmark"
 			}
 		}
+	}
+}
+
+// MARK: - ContainerChange+ChangeDetails
+
+extension ContainerChange {
+	struct ChangeDetails: Codable, Hashable {
+		let id: Container.ID?
+		let state: Container.State?
+		let status: String?
 	}
 }

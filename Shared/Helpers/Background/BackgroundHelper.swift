@@ -100,9 +100,8 @@ struct BackgroundHelper: Sendable {
 		}
 
 		#if TARGET_APP
-		let _changes = changes
-		Task { @MainActor in
-			AppState.shared.lastContainerChanges = _changes
+		Task { @MainActor [changes] in
+			AppState.shared.lastContainerChanges = changes
 		}
 		#endif
 

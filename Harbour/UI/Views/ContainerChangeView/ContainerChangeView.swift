@@ -6,12 +6,14 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import PortainerKit
 import SwiftUI
 
 // MARK: - ContainerChangeView
 
 struct ContainerChangeView: View {
 	@State private var searchText = ""
+	@State private var showChangesAfter = false
 	var changes: [ContainerChange]
 
 	private var changesFiltered: [ContainerChange] {
@@ -41,7 +43,8 @@ struct ContainerChangeView: View {
 		NavigationStack {
 			Form {
 				ForEach(changesFiltered, id: \.hashValue) { change in
-					ViewForChange(change: change)
+					ViewForChange(change: change, showAfter: showChangesAfter)
+						.listSectionSpacing(.zero)
 				}
 			}
 			.formStyle(.grouped)
@@ -56,6 +59,20 @@ struct ContainerChangeView: View {
 			#endif
 			.navigationTitle("ContainerChangeView.Title")
 			.animation(.default, value: changesFiltered)
+			.animation(.default, value: showChangesAfter)
+			.toolbar {
+				ToolbarItem(placement: .status) {
+					Picker("ContainerChangeView.BeforeAfterPicker.Title", selection: $showChangesAfter) {
+						Text("ContainerChangeView.BeforeAfterPicker.Before")
+							.tag(false)
+
+						Text("ContainerChangeView.BeforeAfterPicker.After")
+							.tag(true)
+					}
+					.pickerStyle(.segmented)
+					.labelsHidden()
+				}
+			}
 		}
 	}
 }
@@ -66,10 +83,15 @@ private extension ContainerChangeView {
 	struct ViewForChange: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
 		var change: ContainerChange
+		var showAfter: Bool
+
+		private var changeDetails: ContainerChange.ChangeDetails? {
+			showAfter ? change.new : change.old
+		}
 
 		@ViewBuilder @MainActor
 		private var showContainerButton: some View {
-			if let containerID = change.newID {
+			if let containerID = change.new?.id {
 				Button {
 					let navigationItem = ContainerDetailsView.NavigationItem(
 						id: containerID,
@@ -80,183 +102,46 @@ private extension ContainerChangeView {
 					sceneDelegate.navigate(to: .containers, with: navigationItem)
 				} label: {
 					Label("ContainerChangeView.ShowContainer", image: SFSymbol.Custom.container)
+						#if os(macOS)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.contentShape(Rectangle())
+						#endif
 				}
-			}
-		}
-
-		@ViewBuilder @MainActor
-		private var viewForCreated: some View {
-			if let id = change.newID ?? change.oldID {
-				LabeledContent("ContainerChangeView.ID") {
-					Text(id)
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-			}
-
-			LabeledContent("ContainerChangeView.State") {
-				Text(change.newState.title)
-					.foregroundStyle(change.newState.color)
-					.textSelection(.enabled)
-					.multilineTextAlignment(.trailing)
-			}
-
-			if let status = change.newStatus {
-				LabeledContent("ContainerChangeView.Status") {
-					Text(status)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-			}
-
-			showContainerButton
-		}
-
-		@ViewBuilder @MainActor
-		private var viewForRecreated: some View {
-			DisclosureGroup("ContainerChangeView.Previously") {
-				if let oldID = change.oldID {
-					LabeledContent("ContainerChangeView.ID") {
-						Text(oldID)
-							.fontDesign(.monospaced)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-
-				LabeledContent("ContainerChangeView.State") {
-					Text(change.oldState.title)
-						.foregroundStyle(change.oldState.color)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-
-				if let status = change.oldStatus {
-					LabeledContent("ContainerChangeView.Status") {
-						Text(status)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-			}
-
-			DisclosureGroup("ContainerChangeView.Currently") {
-				if let newID = change.newID {
-					LabeledContent("ContainerChangeView.ID") {
-						Text(newID)
-							.fontDesign(.monospaced)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-
-				LabeledContent("ContainerChangeView.State") {
-					Text(change.newState.title)
-						.foregroundStyle(change.newState.color)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-
-				if let status = change.newStatus {
-					LabeledContent("ContainerChangeView.Status") {
-						Text(status)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-			}
-
-			showContainerButton
-		}
-
-		@ViewBuilder @MainActor
-		private var viewForChanged: some View {
-			if let id = change.newID ?? change.oldID {
-				LabeledContent("ContainerChangeView.ID") {
-					Text(id)
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-			}
-
-			DisclosureGroup("ContainerChangeView.Previously") {
-				LabeledContent("ContainerChangeView.State") {
-					Text(change.oldState.title)
-						.foregroundStyle(change.oldState.color)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-
-				if let status = change.oldStatus {
-					LabeledContent("ContainerChangeView.Status") {
-						Text(status)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-			}
-
-			DisclosureGroup("ContainerChangeView.Currently") {
-				LabeledContent("ContainerChangeView.State") {
-					Text(change.newState.title)
-						.foregroundStyle(change.newState.color)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-
-				if let status = change.newStatus {
-					LabeledContent("ContainerChangeView.Status") {
-						Text(status)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-			}
-
-			showContainerButton
-		}
-
-		@ViewBuilder @MainActor
-		private var viewForRemoved: some View {
-			if let id = change.oldID ?? change.newID {
-				LabeledContent("ContainerChangeView.ID") {
-					Text(id)
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-			}
-
-			LabeledContent("ContainerChangeView.State") {
-				Text(change.oldState.title)
-//					.foregroundStyle(.secondary)
-					.textSelection(.enabled)
-					.multilineTextAlignment(.trailing)
-			}
-
-			if let status = change.oldStatus {
-				LabeledContent("ContainerChangeView.Status") {
-					Text(status)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
+				#if os(macOS)
+				.buttonStyle(.plain)
+				#endif
 			}
 		}
 
 		var body: some View {
 			NormalizedSection {
-				switch change.changeType {
-				case .created:
-					viewForCreated
-				case .recreated:
-					viewForRecreated
-				case .changed:
-					viewForChanged
-				case .removed:
-					viewForRemoved
+				LabeledContent("ContainerChangeView.ID") {
+					let hasValue = changeDetails?.id != nil
+					Text(changeDetails?.id ?? "-")
+						.foregroundStyle(hasValue ? .primary : .secondary)
+						.fontDesign(hasValue ? .monospaced : .default)
+						.textSelection(.enabled)
+						.multilineTextAlignment(.trailing)
 				}
+
+				LabeledContent("ContainerChangeView.State") {
+					let hasValue = changeDetails?.state != nil
+					let state = (changeDetails?.state ?? Container.State?.none)
+					Text(hasValue ? state.title : "-")
+						.foregroundStyle(state.color)
+						.textSelection(.enabled)
+						.multilineTextAlignment(.trailing)
+				}
+
+				LabeledContent("ContainerChangeView.Status") {
+					let hasValue = changeDetails?.status != nil
+					Text(changeDetails?.status ?? "-")
+						.foregroundStyle(hasValue ? .primary : .secondary)
+						.textSelection(.enabled)
+						.multilineTextAlignment(.trailing)
+				}
+
+				showContainerButton
 			} header: {
 				Text(change.containerName)
 					.fontDesign(.monospaced)

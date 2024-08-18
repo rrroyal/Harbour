@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PortainerKit
 import UserNotifications
 
 extension NotificationHelper {
@@ -20,10 +21,9 @@ extension NotificationHelper {
 		notificationContent.interruptionLevel = .active
 		notificationContent.relevanceScore = Double(containerChanges.count) / 10
 		notificationContent.sound = .default
-//		notificationContent.userInfo = [
-//			UserInfoKey.endpointID: containerChanges.first?.endpointID as Any,
-//			UserInfoKey.changedIDs: containerChanges.map { $0.newID ?? $0.oldID }
-//		]
+		notificationContent.userInfo = [
+			UserInfoKey.containerChanges: (try? encodeNotificationPayload(containerChanges)) as Any
+		]
 
 		let emoji: String
 		let title: String
@@ -43,13 +43,13 @@ extension NotificationHelper {
 				body = String(localized: "Notification.ContainersChanged.Single.Created.Body Status:\(change.changeDescription)")
 			case .changed:
 				title = String(localized: "Notification.ContainersChanged.Single.Changed.Title Name:\(containerName)")
-				body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\(change.oldState.title) New:\(change.changeDescription)")
+				body = String(localized: "Notification.ContainersChanged.Single.Changed.Body Old:\((change.old?.state ?? Container.State?.none).title) New:\(change.changeDescription)")
 			case .recreated:
 				title = String(localized: "Notification.ContainersChanged.Single.Recreated.Title Name:\(containerName)")
 				body = String(localized: "Notification.ContainersChanged.Single.Recreated.Body New:\(change.changeDescription)")
 			case .removed:
 				title = String(localized: "Notification.ContainersChanged.Single.Removed.Title Name:\(containerName)")
-				body = String(localized: "Notification.ContainersChanged.Single.Removed.Body Old:\(change.oldState.title)")
+				body = String(localized: "Notification.ContainersChanged.Single.Removed.Body Old:\((change.old?.state ?? Container.State?.none).title)")
 			}
 		case 2...:
 			emoji = "📫"
@@ -86,7 +86,6 @@ extension NotificationHelper {
 
 		notificationContent.title = "\(emoji) \(title)"
 		notificationContent.body = body
-		notificationContent.userInfo[UserInfoKey.containerChanges] = try? NotificationHelper.encodeNotificationPayload(containerChanges)
 
 		return notificationContent
 	}
