@@ -51,7 +51,7 @@ enum SpotlightHelper {
 			// end batch
 			try await index.endBatch(withClientState: newClientState)
 		} catch {
-			self.logger.error("Failed to index items: \(error, privacy: .public)")
+			self.logger.error("Failed to index items: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}

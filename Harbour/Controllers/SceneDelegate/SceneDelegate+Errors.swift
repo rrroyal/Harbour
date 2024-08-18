@@ -11,14 +11,11 @@ import CommonHaptics
 import Foundation
 
 extension SceneDelegate {
-	@MainActor
 	func handleError(_ error: Error, showIndicator: Bool = true) {
 		guard !error.isCancellationError else {
-			logger.debug("Cancelled error: \(error, privacy: .public)")
+			logger.debug("Cancelled error: \(error.localizedDescription, privacy: .public)")
 			return
 		}
-
-//		logger.error("Error: \(error, privacy: .public)")
 
 		Haptics.generateIfEnabled(.error)
 		if showIndicator {

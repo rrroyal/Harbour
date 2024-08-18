@@ -114,7 +114,7 @@ extension SpotlightHelper {
 			// end batch
 			try await index.endBatch(withClientState: newClientState)
 		} catch {
-			self.logger.error("Failed to index containers: \(error, privacy: .public)")
+			self.logger.error("Failed to index containers: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -131,7 +131,7 @@ extension SpotlightHelper {
 		do {
 			try await index.deleteSearchableItems(withDomainIdentifiers: [DomainIdentifier.container])
 		} catch {
-			logger.error("Failed to de-index stacks: \(error, privacy: .public)")
+			logger.error("Failed to de-index stacks: \(error.localizedDescription, privacy: .public)")
 		}
 
 		let items = containers.map { container in
@@ -162,7 +162,7 @@ extension SpotlightHelper {
 				try await index.indexSearchableItems(items)
 			}
 		} catch {
-			logger.error("Failed to index containers: \(error, privacy: .public)")
+			logger.error("Failed to index containers: \(error.localizedDescription, privacy: .public)")
 		}
 	}
 }

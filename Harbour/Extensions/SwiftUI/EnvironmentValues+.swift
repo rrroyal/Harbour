@@ -15,7 +15,7 @@ extension EnvironmentValues {
 	/// An action that can handle provided error.
 	@Entry
 	var errorHandler: ErrorHandler = .init { error, _ in
-		os_log(.error, log: .default, "Error: \(error, privacy: .public)")
+		os_log(.error, log: .default, "Error: \(error.localizedDescription, privacy: .public)")
 	}
 
 	/// An action that presents a provided indicator.

@@ -37,7 +37,7 @@ extension AppState {
 
 				portainerStore.refreshStacks()
 			} catch {
-				logger.error("Failed to switch Portainer server: \(error, privacy: .public)")
+				logger.error("Failed to switch Portainer server: \(error.localizedDescription, privacy: .public)")
 				throw error
 			}
 		}

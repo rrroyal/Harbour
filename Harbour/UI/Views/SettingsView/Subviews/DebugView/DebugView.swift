@@ -94,7 +94,7 @@ private extension DebugView {
 					Haptics.generateIfEnabled(.heavy)
 					CSSearchableIndex.default().deleteAllSearchableItems { error in
 						if let error {
-							logger.error("Failed to reset Spotlight: \(error, privacy: .public)")
+							logger.error("Failed to reset Spotlight: \(error.localizedDescription, privacy: .public)")
 							return
 						}
 						logger.notice("Spotlight has been reset!")

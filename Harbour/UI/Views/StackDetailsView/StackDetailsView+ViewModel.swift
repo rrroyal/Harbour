@@ -159,7 +159,7 @@ extension StackDetailsView {
 					ContainerDetailsView.NavigationItem.CodingKeys.id.stringValue
 				]
 			} catch {
-				logger.error("Failed to set payload: \(error, privacy: .public)")
+				logger.error("Failed to set payload: \(error.localizedDescription, privacy: .public)")
 			}
 
 //			userActivity.becomeCurrent()

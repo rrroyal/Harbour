@@ -104,7 +104,7 @@ private extension ContainerStatusWidget.Provider {
 
 			entry = Entry(date: now, configuration: configuration, result: .containers(entities))
 		} catch {
-			logger.error("Error getting entry: \(error, privacy: .public)")
+			logger.error("Error getting entry: \(error.localizedDescription, privacy: .public)")
 
 			if error is URLError {
 				entry = Entry(date: now, configuration: configuration, result: .unreachable)

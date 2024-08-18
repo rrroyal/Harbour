@@ -80,7 +80,7 @@ private extension SettingsView {
 	@MainActor
 	func handleError(_ error: Error, showIndicator: Bool) {
 		sceneDelegate.handleError(error, showIndicator: false)
-		viewModel.logger.error("\(error, privacy: .public)")
+		viewModel.logger.error("\(error.localizedDescription, privacy: .public)")
 
 		if showIndicator {
 			viewModel.presentIndicator(.error(error))

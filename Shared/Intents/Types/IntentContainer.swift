@@ -201,7 +201,7 @@ extension IntentContainer {
 				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
 				return entities
 			} catch {
-				logger.error("Error getting suggested entities: \(error, privacy: .public)")
+				logger.error("Error getting suggested entities: \(error.localizedDescription, privacy: .public)")
 				throw error
 			}
 		}
@@ -225,7 +225,7 @@ extension IntentContainer {
 				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
 				return entities
 			} catch {
-				logger.error("Error getting matching entities: \(error, privacy: .public)")
+				logger.error("Error getting matching entities: \(error.localizedDescription, privacy: .public)")
 				throw error
 			}
 		}
@@ -270,7 +270,7 @@ extension IntentContainer {
 				return entities
 					.localizedSorted(by: \.name)
 			} catch {
-				logger.error("Error getting entities: \(error, privacy: .public)")
+				logger.error("Error getting entities: \(error.localizedDescription, privacy: .public)")
 
 				if !requiresOnline && error is URLError {
 					logger.notice("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline)")

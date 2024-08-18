@@ -100,7 +100,7 @@ private extension Preferences {
 						}
 					}
 				} catch {
-					self.logger.error("Error requesting notifications authorization: \(error, privacy: .public)")
+					self.logger.error("Error requesting notifications authorization: \(error.localizedDescription, privacy: .public)")
 					await MainActor.run {
 						self.enableBackgroundRefresh = false
 					}

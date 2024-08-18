@@ -188,7 +188,7 @@ public extension PortainerStore {
 			try keychain.removeContent(for: serverURL)
 //			logger.info("Removed token successfully!")
 		} catch {
-			logger.error("Failed to remove token: \(error, privacy: .public)")
+			logger.error("Failed to remove token: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}

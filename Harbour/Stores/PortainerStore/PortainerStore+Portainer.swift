@@ -20,7 +20,7 @@ extension PortainerStore {
 			logger.info("Got \(endpoints.count, privacy: .public) endpoint(s).")
 			return endpoints
 		} catch {
-			logger.error("Failed to get endpoints: \(error, privacy: .public)")
+			logger.error("Failed to get endpoints: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -41,7 +41,7 @@ extension PortainerStore {
 			logger.info("Got \(containers.count, privacy: .public) container(s).")
 			return containers
 		} catch {
-			logger.error("Failed to get containers: \(error, privacy: .public)")
+			logger.error("Failed to get containers: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -61,7 +61,7 @@ extension PortainerStore {
 			logger.info("Got \(containers.count, privacy: .public) container(s).")
 			return containers
 		} catch {
-			logger.error("Failed to get containers: \(error, privacy: .public)")
+			logger.error("Failed to get containers: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -82,7 +82,7 @@ extension PortainerStore {
 			logger.info("Got details for containerID: \"\(containerID, privacy: .private(mask: .hash))\".")
 			return details
 		} catch {
-			logger.error("Failed to get container details: \(error, privacy: .public)")
+			logger.error("Failed to get container details: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -124,7 +124,7 @@ extension PortainerStore {
 
 			return logs
 		} catch {
-			logger.error("Failed to get logs for containerID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
+			logger.error("Failed to get logs for containerID: \"\(containerID, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -151,7 +151,8 @@ extension PortainerStore {
 
 			logger.notice("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\".")
 		} catch {
-			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
+			// swiftlint:disable:next line_length
+			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -203,7 +204,7 @@ extension PortainerStore {
 
 			logger.notice("Removed container with ID: \"\(containerID, privacy: .public)\".")
 		} catch {
-			logger.error("Failed to remove container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
+			logger.error("Failed to remove container with ID: \"\(containerID, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -228,7 +229,7 @@ extension PortainerStore {
 			self.attachedContainer = attachedContainer
 			return attachedContainer
 		} catch {
-			logger.error("Failed to attach to container with ID: \"\(containerID, privacy: .public)\": \(error, privacy: .public)")
+			logger.error("Failed to attach to container with ID: \"\(containerID, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -247,7 +248,7 @@ public extension PortainerStore {
 			logger.info("Got \(stacks.count, privacy: .public) stack(s).")
 			return stacks
 		} catch {
-			logger.error("Failed to fetch stacks: \(error, privacy: .public)")
+			logger.error("Failed to fetch stacks: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -269,7 +270,7 @@ public extension PortainerStore {
 
 			return stack
 		} catch {
-			logger.error("Failed to fetch stack for stackID: \(stackID): \(error, privacy: .public)")
+			logger.error("Failed to fetch stack for stackID: \(stackID): \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -282,7 +283,7 @@ public extension PortainerStore {
 			logger.info("Got stack file for stackID: \(stackID)")
 			return stackFile
 		} catch {
-			logger.error("Failed to fetch stack file for stackID: \(stackID): \(error, privacy: .public)")
+			logger.error("Failed to fetch stack file for stackID: \(stackID): \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -326,7 +327,7 @@ public extension PortainerStore {
 
 			return newStack
 		} catch {
-			logger.error("Failed to \(started ? "start" : "stop", privacy: .public) stack with stackID: \(stackID): \(error, privacy: .public)")
+			logger.error("Failed to \(started ? "start" : "stop", privacy: .public) stack with stackID: \(stackID): \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -348,7 +349,7 @@ public extension PortainerStore {
 
 			return stack
 		} catch {
-			logger.error("Failed to create a new stack: \(error, privacy: .public)")
+			logger.error("Failed to create a new stack: \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -372,7 +373,7 @@ public extension PortainerStore {
 
 			return stack
 		} catch {
-			logger.error("Failed to update stack with ID: \(stackID): \(error, privacy: .public)")
+			logger.error("Failed to update stack with ID: \(stackID): \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}
@@ -409,7 +410,7 @@ public extension PortainerStore {
 				}
 			}
 		} catch {
-			logger.error("Failed to remove stack with ID: \(stackID): \(error, privacy: .public)")
+			logger.error("Failed to remove stack with ID: \(stackID): \(error.localizedDescription, privacy: .public)")
 			throw error
 		}
 	}

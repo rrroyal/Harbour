@@ -23,7 +23,7 @@ extension SpotlightHelper {
 		do {
 			try await index.deleteSearchableItems(withDomainIdentifiers: [DomainIdentifier.stack])
 		} catch {
-			logger.error("Failed to de-index stacks: \(error, privacy: .public)")
+			logger.error("Failed to de-index stacks: \(error.localizedDescription, privacy: .public)")
 		}
 
 		let items = stacks
@@ -53,7 +53,7 @@ extension SpotlightHelper {
 				try await index.indexSearchableItems(items)
 			}
 		} catch {
-			logger.error("Failed to index stacks: \(error, privacy: .public)")
+			logger.error("Failed to index stacks: \(error.localizedDescription, privacy: .public)")
 		}
 	}
 }

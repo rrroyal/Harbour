@@ -67,7 +67,7 @@ extension PortainerStore {
 
 //				logger.debug("Stored \(endpoints.count, privacy: .public) endpoints.")
 			} catch {
-				logger.error("Failed to store endpoints: \(error, privacy: .public)")
+				logger.error("Failed to store endpoints: \(error.localizedDescription, privacy: .public)")
 			}
 		}
 	}
@@ -88,7 +88,7 @@ extension PortainerStore {
 
 			return items.map { .init(storedEndpoint: $0) }
 		} catch {
-			logger.error("Failed to load stored endpoints: \(error, privacy: .public)")
+			logger.error("Failed to load stored endpoints: \(error.localizedDescription, privacy: .public)")
 			return nil
 		}
 	}
@@ -129,7 +129,7 @@ extension PortainerStore {
 
 //				logger.debug("Stored \(containers.count, privacy: .public) containers.")
 			} catch {
-				logger.error("Failed to store containers: \(error, privacy: .public)")
+				logger.error("Failed to store containers: \(error.localizedDescription, privacy: .public)")
 			}
 		}
 	}
@@ -152,7 +152,7 @@ extension PortainerStore {
 
 			return items.map { .init(storedContainer: $0) }
 		} catch {
-			logger.error("Failed to load stored containers: \(error, privacy: .public)")
+			logger.error("Failed to load stored containers: \(error.localizedDescription, privacy: .public)")
 			return nil
 		}
 	}
@@ -187,7 +187,7 @@ extension PortainerStore {
 
 				try modelContext.save()
 			} catch {
-				logger.error("Failed to store stacks: \(error, privacy: .public)")
+				logger.error("Failed to store stacks: \(error.localizedDescription, privacy: .public)")
 			}
 		}
 	}
@@ -204,7 +204,7 @@ extension PortainerStore {
 
 			return items.map { .init(storedStack: $0) }
 		} catch {
-			logger.error("Failed to load stored stacks: \(error, privacy: .public)")
+			logger.error("Failed to load stored stacks: \(error.localizedDescription, privacy: .public)")
 			return nil
 		}
 	}

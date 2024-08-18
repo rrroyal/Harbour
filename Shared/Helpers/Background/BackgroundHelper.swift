@@ -137,7 +137,7 @@ extension BackgroundHelper {
 		do {
 			try BGTaskScheduler.shared.submit(request)
 		} catch {
-			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error, privacy: .public)")
+			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
 		}
 	}
 	#endif
@@ -177,7 +177,7 @@ extension BackgroundHelper {
 
 			try await handleContainersUpdate(from: oldContainers, to: newContainers, endpoint: endpoint)
 		} catch {
-			loggerBackground.error("Error handling background refresh: \(error, privacy: .public)")
+			loggerBackground.error("Error handling background refresh: \(error.localizedDescription, privacy: .public)")
 		}
 	}
 	#endif

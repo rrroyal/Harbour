@@ -90,7 +90,7 @@ extension IntentEndpoint {
 				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
 				return entities
 			} catch {
-				logger.error("Error getting suggested entities: \(error, privacy: .public)")
+				logger.error("Error getting suggested entities: \(error.localizedDescription, privacy: .public)")
 				throw error
 			}
 		}
@@ -110,7 +110,7 @@ extension IntentEndpoint {
 				logger.notice("Returning \(entities.count) entities (live)")
 				return entities
 			} catch {
-				logger.error("Error getting entities: \(error, privacy: .public)")
+				logger.error("Error getting entities: \(error.localizedDescription, privacy: .public)")
 
 				if !requiresOnline && error is URLError {
 					let parsed = identifiers.map { Entity(id: $0, name: nil) }
