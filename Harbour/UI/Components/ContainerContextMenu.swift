@@ -44,7 +44,7 @@ struct ContainerContextMenu: View {
 					Haptics.generateIfEnabled(.warning)
 					sceneDelegate.containerToRemove = container
 				} label: {
-					Label("ContainerContextMenu.Remove", systemImage: SFSymbol.remove)
+					Label("Generic.Remove", systemImage: SFSymbol.remove)
 				}
 				.keyboardShortcut(.delete, modifiers: .command)
 			}

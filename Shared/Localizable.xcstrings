@@ -321,16 +321,6 @@
         }
       }
     },
-    "ContainerContextMenu.Remove" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove"
-          }
-        }
-      }
-    },
     "ContainerDetailsView.NetworkDetailsView.Aliases" : {
       "localizations" : {
         "en" : {
@@ -1503,6 +1493,16 @@
         }
       }
     },
+    "Generic.Edit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit"
+          }
+        }
+      }
+    },
     "Generic.Empty" : {
       "localizations" : {
         "en" : {
@@ -2493,16 +2493,6 @@
         }
       }
     },
-    "SettingsView.Connection.ConnectionMenu.Server.Remove" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove"
-          }
-        }
-      }
-    },
     "SettingsView.Connection.ConnectionMenu.Server.Use" : {
       "localizations" : {
         "en" : {
@@ -2749,26 +2739,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "URL"
-          }
-        }
-      }
-    },
-    "StackContextMenu.Edit" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit"
-          }
-        }
-      }
-    },
-    "StackContextMenu.Remove" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Remove"
           }
         }
       }

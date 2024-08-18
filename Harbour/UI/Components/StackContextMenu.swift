@@ -40,7 +40,7 @@ struct StackContextMenu: View {
 					sceneDelegate.activeCreateStackSheetDetent = .large
 					sceneDelegate.isCreateStackSheetPresented = true
 				} label: {
-					Label("StackContextMenu.Edit", systemImage: SFSymbol.edit)
+					Label("Generic.Edit", systemImage: SFSymbol.edit)
 				}
 				.keyboardShortcut("e", modifiers: .command)
 
@@ -48,7 +48,7 @@ struct StackContextMenu: View {
 					Haptics.generateIfEnabled(.warning)
 					sceneDelegate.stackToRemove = stack
 				} label: {
-					Label("StackContextMenu.Remove", systemImage: SFSymbol.remove)
+					Label("Generic.Remove", systemImage: SFSymbol.remove)
 				}
 				.keyboardShortcut(.delete, modifiers: .command)
 			}

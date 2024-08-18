@@ -145,7 +145,7 @@ private extension SettingsView.ConnectionSection {
 					viewModel.endpointToRemove = url
 					viewModel.isRemoveEndpointAlertPresented = true
 				} label: {
-					Label("SettingsView.Connection.ConnectionMenu.Server.Remove", systemImage: SFSymbol.remove)
+					Label("Generic.Remove", systemImage: SFSymbol.remove)
 				}
 			} label: {
 				Label(formattedURL(url), systemImage: SFSymbol.checkmark)
