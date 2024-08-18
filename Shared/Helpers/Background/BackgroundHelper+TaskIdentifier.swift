@@ -13,7 +13,7 @@ import Foundation
 
 extension BackgroundHelper {
 	enum TaskIdentifier {
-		static let backgroundRefresh = "\(Bundle.main.mainBundleIdentifier!).BackgroundRefresh"
+		static let backgroundRefresh = "\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!).BackgroundRefresh"
 	}
 }
 

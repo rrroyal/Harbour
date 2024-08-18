@@ -96,7 +96,7 @@ extension SetupView {
 						viewState = .success(true)
 					}
 
-					try? await Task.sleep(for: .seconds(1))
+					try? await Task.sleep(for: .seconds(2))
 
 					return true
 				} catch {

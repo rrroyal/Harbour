@@ -11,8 +11,8 @@ import Foundation
 // swiftlint:disable force_unwrapping
 
 enum HarbourItemType {
-	static let container = "\(Bundle.main.mainBundleIdentifier!).Container"
-	static let stack = "\(Bundle.main.mainBundleIdentifier!).Stack"
+	static let container = "\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!).Container"
+	static let stack = "\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!).Stack"
 }
 
 // swiftlint:enable force_unwrapping

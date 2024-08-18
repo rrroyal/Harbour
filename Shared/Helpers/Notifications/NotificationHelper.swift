@@ -30,7 +30,7 @@ enum NotificationHelper {
 
 extension NotificationHelper {
 	enum NotificationIdentifier {
-		static let containersChanged = "\(Bundle.main.mainBundleIdentifier!).ContainersChanged"
+		static let containersChanged = "\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!).ContainersChanged"
 	}
 }
 
