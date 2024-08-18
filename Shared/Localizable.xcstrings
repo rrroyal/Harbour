@@ -923,16 +923,6 @@
         }
       }
     },
-    "CreateStackView.Edit" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit"
-          }
-        }
-      }
-    },
     "CreateStackView.EditEnvironmentValue" : {
       "localizations" : {
         "en" : {
@@ -953,6 +943,26 @@
         }
       }
     },
+    "CreateStackView.FetchingStackFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fetching stack file…"
+          }
+        }
+      }
+    },
+    "CreateStackView.FetchingStackFile Error:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Failed to fetch stack file: %@. Tap to retry."
+          }
+        }
+      }
+    },
     "CreateStackView.Name" : {
       "localizations" : {
         "en" : {
@@ -963,22 +973,42 @@
         }
       }
     },
-    "CreateStackView.SelectFile" : {
+    "CreateStackView.StackFile" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stack File"
+          }
+        }
+      }
+    },
+    "CreateStackView.StackFile.Create" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create"
+          }
+        }
+      }
+    },
+    "CreateStackView.StackFile.Fetch" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fetch Current"
+          }
+        }
+      }
+    },
+    "CreateStackView.StackFile.Select" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Select File"
-          }
-        }
-      }
-    },
-    "CreateStackView.StackFileContent" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stack File Content"
           }
         }
       }
@@ -1469,16 +1499,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dismiss Keyboard"
-          }
-        }
-      }
-    },
-    "Generic.Edit" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit"
           }
         }
       }

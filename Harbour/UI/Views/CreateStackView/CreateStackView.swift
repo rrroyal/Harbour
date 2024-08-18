@@ -89,7 +89,7 @@ struct CreateStackView: View {
 				Text("CreateStackView.Name")
 			}
 
-			StackFileContentView(
+			StackFileView(
 				allowedContentTypes: allowedContentTypes,
 				onStackFileSelection: onStackFileSelection
 			)
@@ -163,13 +163,18 @@ struct CreateStackView: View {
 		.environment(viewModel)
 		.navigationTitle(viewModel.shouldCreateNewStack ? "CreateStackView.Title.Create" : "CreateStackView.Title.Update")
 		.animation(.default, value: viewModel.isLoading)
-		.animation(.default, value: viewModel.isLoadingStackFileContent)
+		.animation(.default, value: viewModel.isFetchingStackFile)
+		.animation(.default, value: viewModel.fetchStackFileError?.localizedDescription)
 		.animation(.default, value: viewModel.stackFileContent)
 		.animation(.default, value: viewModel.stackEnvironment)
 		.animation(.default, value: viewModel.createStackError != nil)
 		.task(id: viewModel.stackID) {
-			if viewModel.stackID != nil {
-				await viewModel.fetchStackFileContent().value
+			if let stackID = viewModel.stackID {
+				do {
+					try await viewModel.fetchStackFile(for: stackID).value
+				} catch {
+					errorHandler(error)
+				}
 			}
 		}
 	}

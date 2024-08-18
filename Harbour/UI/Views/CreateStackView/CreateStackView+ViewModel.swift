@@ -17,12 +17,11 @@ import UniformTypeIdentifiers
 extension CreateStackView {
 	@Observable
 	final class ViewModel {
-		@ObservationIgnored
 		private(set) var createStackTask: Task<Stack, Swift.Error>?
-		@ObservationIgnored
-		private(set) var fetchStackFileContentTask: Task<Void, Never>?
-
 		private(set) var createStackError: Swift.Error?
+
+		private(set) var fetchStackFileTask: Task<Void, Swift.Error>?
+		private(set) var fetchStackFileError: Swift.Error?
 
 		let logger = Logger(.view(CreateStackView.self))
 
@@ -54,8 +53,8 @@ extension CreateStackView {
 			!(createStackTask?.isCancelled ?? true)
 		}
 
-		var isLoadingStackFileContent: Bool {
-			!(fetchStackFileContentTask?.isCancelled ?? true)
+		var isFetchingStackFile: Bool {
+			!(fetchStackFileTask?.isCancelled ?? true)
 		}
 
 		func createOrUpdateStack() -> Task<Stack, Swift.Error> {
@@ -103,16 +102,21 @@ extension CreateStackView {
 			return task
 		}
 
-		func fetchStackFileContent() -> Task<Void, Never> {
-			fetchStackFileContentTask?.cancel()
-			let task = Task<Void, Never> {
-				defer { self.fetchStackFileContentTask = nil }
+		@discardableResult
+		func fetchStackFile(for stackID: Stack.ID) -> Task<Void, Swift.Error> {
+			fetchStackFileTask?.cancel()
+			let task = Task<Void, Swift.Error> {
+				defer { self.fetchStackFileTask = nil }
+				self.fetchStackFileError = nil
 
-				if let stackID, let stackFileContent = try? await PortainerStore.shared.fetchStackFile(stackID: stackID) {
+				do {
+					let stackFileContent = try await PortainerStore.shared.fetchStackFile(stackID: stackID)
 					self.stackFileContent = stackFileContent
+				} catch {
+					self.fetchStackFileError = error
 				}
 			}
-			self.fetchStackFileContentTask = task
+			self.fetchStackFileTask = task
 			return task
 		}
 

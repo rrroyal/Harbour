@@ -1,5 +1,5 @@
 //
-//  CreateStackView+StackFileContentView.swift
+//  CreateStackView+StackFileView.swift
 //  Harbour
 //
 //  Created by royal on 15/04/2024.
@@ -10,10 +10,10 @@ import CommonHaptics
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - CreateStackView+StackFileContentView
+// MARK: - CreateStackView+StackFileView
 
 extension CreateStackView {
-	struct StackFileContentView: View {
+	struct StackFileView: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 		@Environment(\.errorHandler) private var errorHandler
 		var allowedContentTypes: [UTType]
@@ -24,35 +24,41 @@ extension CreateStackView {
 
 			NormalizedSection {
 				Group {
-					if let stackFileContent = viewModel.stackFileContent {
+					if viewModel.isFetchingStackFile {
+						ViewForLoading()
+					} else if let stackFileContent = viewModel.stackFileContent {
 						ViewForFileContent(stackFileContent: stackFileContent)
-							.listRowInsets(.zero)
-					} else if viewModel.isLoadingStackFileContent {
-						ViewForLoadingContent()
 					} else {
 						ViewForEmpty()
 					}
 				}
-				.transition(.opacity)
 				.frame(maxWidth: .infinity)
 			} header: {
-				Text("CreateStackView.StackFileContent")
+				Text("CreateStackView.StackFile")
+			} footer: {
+				if viewModel.isFetchingStackFile {
+					Text("CreateStackView.FetchingStackFile")
+				} else if let fetchStackFileError = viewModel.fetchStackFileError {
+					Text("CreateStackView.FetchingStackFile Error:\(fetchStackFileError.localizedDescription)")
+				}
 			}
+			.transition(.opacity)
 			.animation(.default, value: viewModel.stackFileContent)
-			.animation(.default, value: viewModel.isLoadingStackFileContent)
+			.animation(.default, value: viewModel.isFetchingStackFile)
+			.animation(.default, value: viewModel.fetchStackFileError?.localizedDescription)
 			.animation(.default, value: viewModel.isStackFileContentTargeted)
 			.onDrop(of: allowedContentTypes, isTargeted: $viewModel.isStackFileContentTargeted) { items in
 				Haptics.generateIfEnabled(.selectionChanged)
 				return onItemsDrop(items)
 			}
-			.id("\(Self.self).\(viewModel.stackFileContent?.hashValue ?? 0).\(viewModel.isLoadingStackFileContent)")
+//			.id("\(Self.self).\(viewModel.stackFileContent?.hashValue ?? 0).\(viewModel.isFetchingStackFile)")
 		}
 	}
 }
 
-// MARK: - CreateStackView.StackFileContentView+Actions
+// MARK: - CreateStackView.StackFileView+Actions
 
-private extension CreateStackView.StackFileContentView {
+private extension CreateStackView.StackFileView {
 	func onItemsDrop(_ items: [NSItemProvider]) -> Bool {
 		let item = items.first { $0.hasItemConformingToTypeIdentifier(UTType.yaml.identifier) }
 		guard let item else { return false }
@@ -84,9 +90,9 @@ private extension CreateStackView.StackFileContentView {
 	}
 }
 
-// MARK: - CreateStackView.StackFileContentView+Subviews
+// MARK: - CreateStackView.StackFileView+Subviews
 
-private extension CreateStackView.StackFileContentView {
+private extension CreateStackView.StackFileView {
 	struct ViewForFileContent: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 		var stackFileContent: String
@@ -104,6 +110,7 @@ private extension CreateStackView.StackFileContentView {
 			.font(.caption)
 			.fontDesign(.monospaced)
 			.lineLimit(12)
+			.listRowInsets(.zero)
 			#if os(iOS)
 			.padding(.horizontal)
 			.padding(.vertical, 10)
@@ -113,13 +120,6 @@ private extension CreateStackView.StackFileContentView {
 			#endif
 			.contextMenu {
 				Group {
-					Button {
-						Haptics.generateIfEnabled(.sheetPresentation)
-						viewModel.isTextEditorSheetPresented = true
-					} label: {
-						Label("Generic.Edit", systemImage: SFSymbol.edit)
-					}
-
 					PasteButton(payloadType: String.self) { strings in
 						if let string = strings.first {
 							Haptics.generateIfEnabled(.selectionChanged)
@@ -145,7 +145,7 @@ private extension CreateStackView.StackFileContentView {
 		}
 	}
 
-	struct ViewForLoadingContent: View {
+	struct ViewForLoading: View {
 		@Environment(CreateStackView.ViewModel.self) private var viewModel
 
 		var body: some View {
@@ -154,11 +154,13 @@ private extension CreateStackView.StackFileContentView {
 				.controlSize(.small)
 				#endif
 				.contextMenu {
-					Button {
-						Haptics.generateIfEnabled(.light)
-						viewModel.fetchStackFileContentTask?.cancel()
-					} label: {
-						Label("Generic.Cancel", systemImage: SFSymbol.cancel)
+					Group {
+						Button {
+							Haptics.generateIfEnabled(.light)
+							viewModel.fetchStackFileTask?.cancel()
+						} label: {
+							Label("Generic.Cancel", systemImage: SFSymbol.cancel)
+						}
 					}
 					.labelStyle(.titleAndIcon)
 				}
@@ -174,7 +176,7 @@ private extension CreateStackView.StackFileContentView {
 					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isTextEditorSheetPresented = true
 				} label: {
-					Label("CreateStackView.Edit", systemImage: SFSymbol.edit)
+					Label("CreateStackView.StackFile.Create", systemImage: "character.cursor.ibeam")
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.contentShape(Rectangle())
 				}
@@ -194,9 +196,20 @@ private extension CreateStackView.StackFileContentView {
 					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isFileImportSheetPresented = true
 				} label: {
-					Label("CreateStackView.SelectFile", systemImage: "folder")
+					Label("CreateStackView.StackFile.Select", systemImage: "document")
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.contentShape(Rectangle())
+				}
+
+				if let stackID = viewModel.stackID {
+					Button {
+						Haptics.generateIfEnabled(.light)
+						viewModel.fetchStackFile(for: stackID)
+					} label: {
+						Label("CreateStackView.StackFile.Fetch", systemImage: "arrow.down.document")
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.contentShape(Rectangle())
+					}
 				}
 			}
 			#if os(macOS)
@@ -211,7 +224,7 @@ private extension CreateStackView.StackFileContentView {
 
 #Preview {
 	Form {
-		CreateStackView.StackFileContentView(
+		CreateStackView.StackFileView(
 			allowedContentTypes: []
 		)
 	}
