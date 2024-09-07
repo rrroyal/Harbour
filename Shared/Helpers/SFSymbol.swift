@@ -11,6 +11,9 @@ import Foundation
 // MARK: - SFSymbol
 
 enum SFSymbol {
+	/// 􀆅 checkmark
+	static let apply = "checkmark"
+
 	/// 􀅀 arrow.down.to.line
 	static let arrowDownLine = "arrow.down.to.line"
 
@@ -65,9 +68,6 @@ enum SFSymbol {
 	/// 􀤆 network
 	static let network = "network"
 
-	/// 􁣡 network.slash
-	static let networkSlash = "network.slask"
-
 	/// 􀍠 ellipsis
 	static let more = "ellipsis"
 
@@ -91,9 +91,6 @@ enum SFSymbol {
 
 	/// 􀈑 trash
 	static let remove = "trash"
-
-	/// 􀈄 square.and.arrow.down
-	static let save = "square.and.arrow.down"
 
 	/// 􀍟 gear
 	static let settings = "gear"

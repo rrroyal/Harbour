@@ -57,7 +57,7 @@ extension CreateStackView {
 			!(fetchStackFileTask?.isCancelled ?? true)
 		}
 
-		func createOrUpdateStack() -> Task<Stack, Swift.Error> {
+		func createOrUpdateStack(pullImage: Bool) -> Task<Stack, Swift.Error> {
 			createStackTask?.cancel()
 			let task = Task<Stack, Swift.Error> {
 				defer { self.createStackTask = nil }
@@ -73,7 +73,7 @@ extension CreateStackView {
 						let stackSettings = StackUpdateSettings(
 							env: stackEnvironment.map { .init(name: $0.key, value: $0.value) },
 							prune: true,
-							pullImage: true,
+							pullImage: pullImage,
 							stackFileContent: stackFileContent
 						)
 						let updatedStack = try await PortainerStore.shared.updateStack(stackID: stackID, settings: stackSettings)

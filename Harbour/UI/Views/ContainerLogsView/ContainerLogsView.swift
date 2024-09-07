@@ -46,6 +46,7 @@ struct ContainerLogsView: View {
 						.id(ViewID.logsLabel)
 				}
 			}
+			.defaultScrollAnchor(.bottom, for: .initialOffset)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {

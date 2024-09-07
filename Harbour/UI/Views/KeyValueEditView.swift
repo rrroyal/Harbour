@@ -45,7 +45,7 @@ struct KeyValueEditView: View {
 		} label: {
 			Label(
 				entry != nil ? "Generic.Save" : "Generic.Add",
-				systemImage: entry != nil ? SFSymbol.save : SFSymbol.plus
+				systemImage: entry != nil ? SFSymbol.apply : SFSymbol.plus
 			)
 		}
 		.keyboardShortcut(.defaultAction)

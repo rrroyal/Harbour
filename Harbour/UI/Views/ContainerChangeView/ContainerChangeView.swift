@@ -13,7 +13,7 @@ import SwiftUI
 
 struct ContainerChangeView: View {
 	@State private var searchText = ""
-	@State private var showChangesAfter = false
+	@State private var showChangesAfter = true
 	var changes: [ContainerChange]
 
 	private var changesFiltered: [ContainerChange] {
@@ -42,9 +42,8 @@ struct ContainerChangeView: View {
 	var body: some View {
 		NavigationStack {
 			Form {
-				ForEach(changesFiltered, id: \.hashValue) { change in
+				ForEach(changesFiltered) { change in
 					ViewForChange(change: change, showAfter: showChangesAfter)
-						.listSectionSpacing(.zero)
 				}
 			}
 			.formStyle(.grouped)
@@ -89,36 +88,12 @@ private extension ContainerChangeView {
 			showAfter ? change.new : change.old
 		}
 
-		@ViewBuilder @MainActor
-		private var showContainerButton: some View {
-			if let containerID = change.new?.id {
-				Button {
-					let navigationItem = ContainerDetailsView.NavigationItem(
-						id: containerID,
-						displayName: change.containerName,
-						endpointID: change.endpointID
-					)
-					sceneDelegate.resetSheets()
-					sceneDelegate.navigate(to: .containers, with: navigationItem)
-				} label: {
-					Label("ContainerChangeView.ShowContainer", image: SFSymbol.Custom.container)
-						#if os(macOS)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
-						#endif
-				}
-				#if os(macOS)
-				.buttonStyle(.plain)
-				#endif
-			}
-		}
-
 		var body: some View {
 			NormalizedSection {
 				LabeledContent("ContainerChangeView.ID") {
 					let hasValue = changeDetails?.id != nil
 					Text(changeDetails?.id ?? "-")
-						.foregroundStyle(hasValue ? .primary : .secondary)
+						.foregroundStyle(hasValue ? .secondary : .tertiary)
 						.fontDesign(hasValue ? .monospaced : .default)
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
@@ -128,7 +103,7 @@ private extension ContainerChangeView {
 					let hasValue = changeDetails?.state != nil
 					let state = (changeDetails?.state ?? Container.State?.none)
 					Text(hasValue ? state.title : "-")
-						.foregroundStyle(state.color)
+						.foregroundStyle(hasValue ? AnyShapeStyle(state.color) : AnyShapeStyle(.tertiary))
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
 				}
@@ -136,16 +111,29 @@ private extension ContainerChangeView {
 				LabeledContent("ContainerChangeView.Status") {
 					let hasValue = changeDetails?.status != nil
 					Text(changeDetails?.status ?? "-")
-						.foregroundStyle(hasValue ? .primary : .secondary)
+						.foregroundStyle(hasValue ? .secondary : .tertiary)
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
 				}
-
-				showContainerButton
 			} header: {
-				Text(change.containerName)
-					.fontDesign(.monospaced)
-					.textCase(.none)
+				let containerID = change.new?.id
+				Button {
+					guard let containerID else { return }
+					let navigationItem = ContainerDetailsView.NavigationItem(
+						id: containerID,
+						displayName: change.containerName,
+						endpointID: change.endpointID
+					)
+					sceneDelegate.resetSheets()
+					sceneDelegate.navigate(to: .containers, with: navigationItem)
+				} label: {
+					Text(change.containerName)
+						.fontDesign(.monospaced)
+						.textCase(.none)
+				}
+				.buttonStyle(.plain)
+				.foregroundStyle(containerID != nil ? .accent : .primary)
+				.disabled(containerID == nil)
 			} footer: {
 				Label(change.changeType.title, systemImage: change.changeType.icon)
 					.textCase(.none)

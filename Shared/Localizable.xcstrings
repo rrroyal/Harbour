@@ -281,16 +281,6 @@
         }
       }
     },
-    "ContainerChangeView.ShowContainer" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show Container"
-          }
-        }
-      }
-    },
     "ContainerChangeView.State" : {
       "localizations" : {
         "en" : {
@@ -1029,6 +1019,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Update"
+          }
+        }
+      }
+    },
+    "CreateStackView.Update.PullingImage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update And Pull New Image"
           }
         }
       }

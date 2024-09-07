@@ -71,7 +71,7 @@ struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
 
 	var changeDescription: String {
 		if let newStatus = self.new?.status {
-			"\((self.new?.state ?? Container.State?.none).title), \(newStatus)"
+			"\((self.new?.state ?? Container.State?.none).title) • \(newStatus)"
 		} else {
 			(self.new?.state ?? Container.State?.none).title
 		}

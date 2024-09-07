@@ -229,7 +229,7 @@ extension PortainerStore {
 	/// - Parameter endpoint: Endpoint to switch to
 	@MainActor
 	func setSelectedEndpoint(_ endpoint: Endpoint?) {
-		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive(mask: .hash))\" (\(endpoint?.id.description ?? "<none>"))")
+		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive(mask: .hash))\" (\(endpoint?.id.description ?? "<none>", privacy: .public))")
 		self.selectedEndpoint = endpoint
 
 		if endpoint != nil {

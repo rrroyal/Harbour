@@ -65,11 +65,23 @@ struct CreateStackView: View {
 			} else {
 				Label(
 					viewModel.shouldCreateNewStack ? "CreateStackView.Create" : "CreateStackView.Update",
-					systemImage: viewModel.shouldCreateNewStack ? SFSymbol.plus : SFSymbol.update
+					systemImage: viewModel.shouldCreateNewStack ? "plus" : "square.and.arrow.up"
 				)
 			}
 		}
 		.keyboardShortcut(.defaultAction)
+		.contextMenu {
+			if !viewModel.shouldCreateNewStack {
+				Button {
+					submitStack(pullImage: true)
+				} label: {
+					Label(
+						"CreateStackView.Update.PullingImage",
+						systemImage: "square.and.arrow.up.on.square"
+					)
+				}
+			}
+		}
 		.disabled(!viewModel.canCreateStack)
 		.disabled(viewModel.isLoading)
 		.animation(.default, value: viewModel.canCreateStack)
@@ -83,7 +95,7 @@ struct CreateStackView: View {
 					.autocorrectionDisabled()
 					.labelsHidden()
 					.submitLabel(viewModel.canCreateStack ? .send : .continue)
-					.onSubmit(submitStack)
+					.onSubmit { submitStack() }
 					.focused($focusedField, equals: .textfieldName)
 			} header: {
 				Text("CreateStackView.Name")
@@ -192,7 +204,7 @@ private extension CreateStackView {
 
 private extension CreateStackView {
 	@MainActor
-	func submitStack() {
+	func submitStack(pullImage: Bool = false) {
 		Task {
 			guard viewModel.canCreateStack else { return }
 
@@ -201,7 +213,7 @@ private extension CreateStackView {
 			do {
 				Haptics.generateIfEnabled(.buttonPress)
 
-				let stack = try await viewModel.createOrUpdateStack().value
+				let stack = try await viewModel.createOrUpdateStack(pullImage: pullImage).value
 
 				let indicatorAction: @Sendable () -> Void = {
 					Haptics.generateIfEnabled(.soft)
