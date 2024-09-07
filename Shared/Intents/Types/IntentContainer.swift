@@ -193,7 +193,7 @@ extension IntentContainer {
 				}
 
 				let portainerStore = IntentPortainerStore.shared
-				try portainerStore.setupIfNeeded()
+				try await portainerStore.setupIfNeeded()
 				let entities = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id)
 					.map { Entity(container: $0) }
 					.localizedSorted(by: \.name)
@@ -216,7 +216,7 @@ extension IntentContainer {
 				}
 
 				let portainerStore = IntentPortainerStore.shared
-				try portainerStore.setupIfNeeded()
+				try await portainerStore.setupIfNeeded()
 				let entities = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id)
 					.filter(string)
 					.map { Entity(container: $0) }
@@ -244,7 +244,7 @@ extension IntentContainer {
 				let entities: [Entity] = try await {
 					if requiresOnline {
 						let portainerStore = IntentPortainerStore.shared
-						try portainerStore.setupIfNeeded()
+						try await portainerStore.setupIfNeeded()
 
 						let filters = FetchFilters(
 							id: resolveByName ? nil : parsedContainers.map(\._id)

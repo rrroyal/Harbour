@@ -17,27 +17,22 @@ private let logger = Logger(.custom(IntentPortainerStore.self))
 // MARK: - IntentPortainerStore
 
 public final class IntentPortainerStore {
-	static let shared = IntentPortainerStore()
+	nonisolated(unsafe) static let shared = IntentPortainerStore()
 
 	private let keychain = Keychain.shared
-	private let preferences = Preferences.shared
 
 	public let portainer = PortainerClient(urlSessionConfiguration: .intents)
 
 	public private(set) var isSetup = false
 
-	private init() {
-		try? setupIfNeeded()
-	}
-
-	public func setupIfNeeded() throws {
+	public func setupIfNeeded() async throws {
 		guard !isSetup else { return }
 
-		guard let urlStr = preferences.selectedServer else {
+		guard let urlStr = await Preferences.shared.selectedServer else {
 			throw PortainerError.noServer
 		}
 		guard let url = URL(string: urlStr) else {
-			throw GenericError.invalidURL
+			throw URLError(.badURL)
 		}
 		if portainer.serverURL == url { return }
 

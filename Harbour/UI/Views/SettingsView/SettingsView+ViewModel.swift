@@ -17,7 +17,7 @@ import UIKit.UIDevice
 // MARK: - SettingsView+ViewModel
 
 extension SettingsView {
-	@Observable
+	@Observable @MainActor
 	final class ViewModel: IndicatorPresentable {
 		private let portainerStore: PortainerStore = .shared
 

@@ -9,7 +9,7 @@
 import SwiftUI
 
 extension Binding {
-	static func ?? <Wrapped>(optional: Self, defaultValue: Wrapped) -> Binding<Wrapped> where Value == Wrapped? {
+	static func ?? <Wrapped: Sendable>(optional: Self, defaultValue: Wrapped) -> Binding<Wrapped> where Value == Wrapped? {
 		.init(
 			get: { optional.wrappedValue ?? defaultValue },
 			set: { optional.wrappedValue = $0 }

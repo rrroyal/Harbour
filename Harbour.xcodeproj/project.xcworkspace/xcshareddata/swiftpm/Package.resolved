@@ -1,5 +1,5 @@
 {
-  "originHash" : "33c832d0cf6417546886e926c6db495d67979cb0983b2efdb9540a03787bbb65",
+  "originHash" : "ff3db79ae5ce614da55e8bf0e8c49b5ab1ff753cf079da09e1c497cd5f51a756",
   "pins" : [
     {
       "identity" : "commonskit",
@@ -25,7 +25,7 @@
       "location" : "https://github.com/rrroyal/KeychainKit",
       "state" : {
         "branch" : "main",
-        "revision" : "79b079730cef0ee5b5a22031ad932962aca51bd1"
+        "revision" : "b09e16a265b5be29a5b3c7dc8dbb03c920d46853"
       }
     },
     {
@@ -34,7 +34,7 @@
       "location" : "https://github.com/rrroyal/NetworkKit",
       "state" : {
         "branch" : "main",
-        "revision" : "64ec41fff3f1841c89074fcbb1452da5ffe16c4d"
+        "revision" : "9a7cbf968f3fcc21445f31a63dac22020d17a74b"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
       "state" : {
-        "revision" : "a0f7b12c7be228592d924f29f654ebbd924ac9c5",
-        "version" : "0.55.1"
+        "revision" : "5a65f4074975f811da666dfe31a19850950b1ea4",
+        "version" : "0.56.2"
       }
     }
   ],

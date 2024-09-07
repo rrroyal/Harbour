@@ -33,5 +33,5 @@ struct ErrorView: View {
 // MARK: - Previews
 
 #Preview {
-	ErrorView(error: GenericError.invalidURL)
+	ErrorView(error: URLError(.badURL))
 }

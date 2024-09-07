@@ -379,7 +379,7 @@ extension ContainerDetailsView {
 // MARK: - ContainerDetailsView+Equatable
 
 extension ContainerDetailsView: Equatable {
-	static func == (lhs: Self, rhs: Self) -> Bool {
+	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.navigationItem == rhs.navigationItem
 	}
 }

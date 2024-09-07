@@ -6,16 +6,18 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
-import UserNotifications
+@preconcurrency import UserNotifications
 
 extension AppState {
-	@MainActor
-	func handleNotification(_ notification: UNNotificationResponse) {
-		notificationsToHandle.insert(notification)
+	nonisolated func handleNotification(_ notification: UNNotificationResponse) {
+		Task { @MainActor in
+			notificationsToHandle.insert(notification)
+		}
 	}
 
-	@MainActor
-	func notificationHandled(_ notification: UNNotificationResponse) {
-		notificationsToHandle.remove(notification)
+	nonisolated func notificationHandled(_ notification: UNNotificationResponse) {
+		Task { @MainActor in
+			notificationsToHandle.remove(notification)
+		}
 	}
 }

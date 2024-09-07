@@ -15,9 +15,8 @@ import SwiftUI
 // MARK: - SetupView+ViewModel
 
 extension SetupView {
-	@Observable
+	@Observable @MainActor
 	final class ViewModel {
-		private let portainer = PortainerClient()
 		private let logger = Logger(.custom(SetupView.self))
 
 		@ObservationIgnored
@@ -65,14 +64,10 @@ extension SetupView {
 
 				do {
 					guard let url = URL(string: url) else {
-						throw GenericError.invalidURL
+						throw URLError(.badURL)
 					}
 
-					let token = self.token
-
-					portainer.serverURL = url
-					portainer.token = token
-
+					let portainer = PortainerClient(serverURL: url, token: self.token)
 					let endpoints = try await portainer.fetchEndpoints()
 					logger.info("Got \(endpoints.count, privacy: .public) endpoint(s) from the new server, switching...")
 

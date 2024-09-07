@@ -1283,16 +1283,6 @@
         }
       }
     },
-    "Error.Generic.InvalidURL" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid URL"
-          }
-        }
-      }
-    },
     "Error.Portainer.ContainerNotFound ID:%@" : {
       "localizations" : {
         "en" : {
@@ -2293,56 +2283,6 @@
         }
       }
     },
-    "PortainerKit.PortainerError.DecodingFailed" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Decoding Failed"
-          }
-        }
-      }
-    },
-    "PortainerKit.PortainerError.EncodingFailed" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Encoding Failed"
-          }
-        }
-      }
-    },
-    "PortainerKit.PortainerError.InvalidRequest" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid Request"
-          }
-        }
-      }
-    },
-    "PortainerKit.PortainerError.InvalidResponse" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid Response"
-          }
-        }
-      }
-    },
-    "PortainerKit.PortainerError.InvalidURL" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invalid URL"
-          }
-        }
-      }
-    },
     "PortainerKit.PortainerError.NotSetup" : {
       "localizations" : {
         "en" : {
@@ -2353,32 +2293,12 @@
         }
       }
     },
-    "PortainerKit.PortainerError.Other Reason:%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@"
-          }
-        }
-      }
-    },
     "PortainerKit.PortainerError.ResponseCodeUnacceptable Code:%lld" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Response Code Unacceptable (%lld)"
-          }
-        }
-      }
-    },
-    "PortainerKit.PortainerError.Unknown" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unknown Error"
           }
         }
       }

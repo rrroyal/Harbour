@@ -15,7 +15,7 @@ import UniformTypeIdentifiers
 // MARK: - CreateStackView+ViewModel
 
 extension CreateStackView {
-	@Observable
+	@Observable @MainActor
 	final class ViewModel {
 		private(set) var createStackTask: Task<Stack, Swift.Error>?
 		private(set) var createStackError: Swift.Error?

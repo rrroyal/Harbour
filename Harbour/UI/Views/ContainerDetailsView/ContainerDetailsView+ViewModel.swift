@@ -17,7 +17,7 @@ import PortainerKit
 // MARK: - ContainerDetailsView+ViewModel
 
 extension ContainerDetailsView {
-	@Observable
+	@Observable @MainActor
 	final class ViewModel {
 		private let portainerStore: PortainerStore = .shared
 		private let logger = Logger(.view(ContainerDetailsView.self))

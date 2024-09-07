@@ -18,6 +18,7 @@ import SwiftUI
 // MARK: - Preferences
 
 /// UserDefaults wrapper; user preferences store.
+@MainActor
 public final class Preferences: ObservableObject {
 	// swiftlint:disable:next force_unwrapping
 	private static let userDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")

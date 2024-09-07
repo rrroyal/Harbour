@@ -13,7 +13,7 @@ import OSLog
 import PortainerKit
 
 extension StackDetailsView {
-	@Observable
+	@Observable @MainActor
 	final class ViewModel {
 		private let logger = Logger(.view(StackDetailsView.self))
 

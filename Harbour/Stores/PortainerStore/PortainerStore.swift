@@ -17,6 +17,7 @@ import SwiftData
 // MARK: - PortainerStore
 
 /// Main store for Portainer-related data.
+@MainActor
 public final class PortainerStore: ObservableObject {
 
 	/// Singleton for `PortainerStore`
@@ -27,7 +28,7 @@ public final class PortainerStore: ObservableObject {
 	internal let logger = Logger(.custom(PortainerStore.self))
 	internal let keychain = Keychain.shared
 	internal let preferences = Preferences.shared
-	internal let portainer: PortainerClient
+	internal nonisolated(unsafe) let portainer: PortainerClient
 
 	// MARK: Public properties
 

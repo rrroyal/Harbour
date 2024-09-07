@@ -13,7 +13,7 @@ import SwiftUI
 // MARK: - StacksView+ViewModel
 
 extension StacksView {
-	@Observable
+	@Observable @MainActor
 	final class ViewModel {
 		private let portainerStore = PortainerStore.shared
 

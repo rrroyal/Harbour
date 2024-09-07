@@ -74,7 +74,7 @@ private extension ContainerStatusWidget.Provider {
 		let entry: Entry
 
 		do {
-			try portainerStore.setupIfNeeded()
+			try await portainerStore.setupIfNeeded()
 
 			let filters = FetchFilters(
 				id: configuration.resolveByName ? nil : configurationContainers.map(\._id)

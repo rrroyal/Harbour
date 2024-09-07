@@ -122,29 +122,30 @@ extension BackgroundHelper {
 	/// Schedules a new background refresh task.
 	@Sendable
 	static func scheduleBackgroundRefreshIfNeeded() {
-		guard Preferences.shared.enableBackgroundRefresh else {
-			logger.debug("Background refresh is disabled.")
-			return
-		}
+		Task {
+			guard await Preferences.shared.enableBackgroundRefresh else {
+				logger.debug("Background refresh is disabled.")
+				return
+			}
 
-		let identifier = TaskIdentifier.backgroundRefresh
+			let identifier = TaskIdentifier.backgroundRefresh
 
-		logger.notice("Scheduling background refresh with identifier: \"\(identifier, privacy: .public)\"")
+			logger.notice("Scheduling background refresh with identifier: \"\(identifier, privacy: .public)\"")
 
-		let request = BGAppRefreshTaskRequest(identifier: identifier)
-		request.earliestBeginDate = .now
+			let request = BGAppRefreshTaskRequest(identifier: identifier)
+			request.earliestBeginDate = .now
 
-		do {
-			try BGTaskScheduler.shared.submit(request)
-		} catch {
-			logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
+			do {
+				try BGTaskScheduler.shared.submit(request)
+			} catch {
+				logger.error("Error scheduling background task with identifier: \"\(request.identifier, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
+			}
 		}
 	}
 	#endif
 
 	#if TARGET_APP
 	/// Handles the background refresh task.
-	@Sendable
 	static func handleBackgroundRefresh() async {
 		do {
 			loggerBackground.notice("Handling background refresh...")
@@ -159,16 +160,16 @@ extension BackgroundHelper {
 			scheduleBackgroundRefreshIfNeeded()
 			#endif
 
-			let portainerStore = PortainerStore(urlSessionConfiguration: .intents)
-			if !portainerStore.isSetup {
+			let portainerStore = await PortainerStore(urlSessionConfiguration: .intents)
+			if await !portainerStore.isSetup {
 				await portainerStore.setupInitially()
 			}
 
-			guard let endpoint = portainerStore.selectedEndpoint else {
+			guard let endpoint = await portainerStore.selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
 			}
 
-			let oldContainers = portainerStore.containers
+			let oldContainers = await portainerStore.containers
 			let newContainers = try await portainerStore.refreshContainers().value
 
 			Task.detached {

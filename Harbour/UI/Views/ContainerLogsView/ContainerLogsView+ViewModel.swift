@@ -17,7 +17,7 @@ import AppKit.NSPasteboard
 // MARK: - ContainerLogsView+ViewModel
 
 extension ContainerLogsView {
-	@Observable
+	@Observable @MainActor
 	final class ViewModel {
 		typealias _ViewState = ViewState<String, Error>
 

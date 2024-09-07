@@ -73,7 +73,7 @@ struct ContainerActionIntent: AppIntent {
 
 		do {
 			let portainerStore = IntentPortainerStore.shared
-			try portainerStore.setupIfNeeded()
+			try await portainerStore.setupIfNeeded()
 
 			let endpoint: IntentEndpoint
 			if let _endpoint = self.endpoint {

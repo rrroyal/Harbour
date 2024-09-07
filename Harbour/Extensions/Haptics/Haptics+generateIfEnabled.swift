@@ -11,8 +11,8 @@ import CommonHaptics
 extension Haptics {
 	@inlinable
 	static func generateIfEnabled(_ style: HapticStyle) {
-		guard Preferences.shared.enableHaptics else { return }
 		Task { @MainActor in
+			guard Preferences.shared.enableHaptics else { return }
 			generate(style)
 		}
 	}

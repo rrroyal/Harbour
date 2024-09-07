@@ -125,8 +125,8 @@ extension SpotlightHelper {
 
 		let index = CSSearchableIndex.default()
 
-		let portainerEndpoint: Endpoint? = PortainerStore.shared.selectedEndpoint
-		let portainerDeeplink: PortainerDeeplink? = PortainerDeeplink(baseURL: PortainerStore.shared.serverURL)
+		let portainerEndpoint: Endpoint? = await PortainerStore.shared.selectedEndpoint
+		let portainerDeeplink: PortainerDeeplink? = PortainerDeeplink(baseURL: await PortainerStore.shared.serverURL)
 
 		do {
 			try await index.deleteSearchableItems(withDomainIdentifiers: [DomainIdentifier.container])

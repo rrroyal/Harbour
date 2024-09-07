@@ -82,7 +82,7 @@ extension IntentEndpoint {
 
 			do {
 				let portainerStore = IntentPortainerStore.shared
-				try portainerStore.setupIfNeeded()
+				try await portainerStore.setupIfNeeded()
 				let entities = try await portainerStore.portainer.fetchEndpoints()
 					.map { Entity(endpoint: $0) }
 					.localizedSorted(by: \.name)
@@ -100,7 +100,7 @@ extension IntentEndpoint {
 
 			do {
 				let portainerStore = IntentPortainerStore.shared
-				try portainerStore.setupIfNeeded()
+				try await portainerStore.setupIfNeeded()
 
 				let entities = try await portainerStore.portainer.fetchEndpoints()
 					.filter { identifiers.contains($0.id) }

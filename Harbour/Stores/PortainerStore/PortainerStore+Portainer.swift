@@ -12,7 +12,6 @@ import PortainerKit
 // MARK: - PortainerStore+Endpoints
 
 extension PortainerStore {
-	@Sendable
 	func fetchEndpoints() async throws -> [Endpoint] {
 		logger.info("Getting endpoints...")
 		do {
@@ -29,7 +28,6 @@ extension PortainerStore {
 // MARK: - PortainerStore+Containers
 
 extension PortainerStore {
-	@Sendable
 	func fetchContainers(filters: FetchFilters? = nil) async throws -> [Container] {
 		logger.info("Getting containers, filters: \(String(describing: filters), privacy: .sensitive(mask: .hash))...")
 		do {
@@ -49,7 +47,6 @@ extension PortainerStore {
 	/// Fetches all of the containers belonging to specified stack name.
 	/// - Parameter stackName: Stack name
 	/// - Returns: Array of containers
-	@Sendable
 	func fetchContainers(for stackName: String) async throws -> [Container] {
 		logger.info("Getting containers for stack \"\(stackName, privacy: .sensitive(mask: .hash))\"...")
 		do {
@@ -71,7 +68,6 @@ extension PortainerStore {
 	///   - containerID: ID of the inspected container
 	///   - endpointID: ID of the endpoint
 	/// - Returns: `ContainerDetails`
-	@Sendable
 	func fetchContainerDetails(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
 		logger.info("Getting details for containerID: \"\(containerID, privacy: .private(mask: .hash))\"...")
 		do {
@@ -94,7 +90,6 @@ extension PortainerStore {
 	///   - lastEntriesAmount: Amount of last log lines
 	///   - includeTimestamps: Include timestamps?
 	/// - Returns: Logs of the container
-	@Sendable
 	func fetchContainerLogs(
 		for containerID: Container.ID,
 		since logsSince: TimeInterval = 0,
@@ -133,7 +128,6 @@ extension PortainerStore {
 	/// - Parameters:
 	///   - action: Action to execute
 	///   - containerID: ID of the container we want to execute the action on.
-	@Sendable
 	func execute(_ action: ContainerAction, on containerID: Container.ID) async throws {
 		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
@@ -162,7 +156,6 @@ extension PortainerStore {
 	///   - containerID: Container ID to remove
 	///   - removeVolumes: Remove volumes associated with specified container ID
 	///   - force: Force container removal
-	@Sendable
 	func removeContainer(
 		containerID: Container.ID,
 		removeVolumes: Bool = Preferences.shared.containerRemoveVolumes,
@@ -209,7 +202,8 @@ extension PortainerStore {
 		}
 	}
 
-	@Sendable @discardableResult
+	/*
+	@discardableResult
 	func attachToContainer(containerID: Container.ID) throws -> AttachedContainer {
 		logger.notice("Attaching to container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
@@ -233,6 +227,7 @@ extension PortainerStore {
 			throw error
 		}
 	}
+	 */
 }
 
 // MARK: - PortainerStore+Stacks
@@ -240,7 +235,6 @@ extension PortainerStore {
 public extension PortainerStore {
 	/// Fetches all of the stacks.
 	/// - Returns: `[Stack]`
-	@Sendable
 	func fetchStacks() async throws -> [Stack] {
 		logger.info("Fetching stacks...")
 		do {
@@ -253,7 +247,6 @@ public extension PortainerStore {
 		}
 	}
 
-	@Sendable
 	func fetchStack(id stackID: Stack.ID) async throws -> Stack {
 		logger.info("Fetching stack for stackID: \(stackID)...")
 		do {
@@ -275,7 +268,6 @@ public extension PortainerStore {
 		}
 	}
 
-	@Sendable
 	func fetchStackFile(stackID: Stack.ID) async throws -> String {
 		logger.info("Fetching stack file for stackID: \(stackID)...")
 		do {
@@ -293,7 +285,7 @@ public extension PortainerStore {
 	///   - stackID: Stack ID to start/stop
 	///   - started: Should stack be started?
 	/// - Returns: `Stack`
-	@Sendable @discardableResult
+	@discardableResult
 	func setStackState(stackID: Stack.ID, started: Bool) async throws -> Stack? {
 		defer {
 			Task {
@@ -332,7 +324,6 @@ public extension PortainerStore {
 		}
 	}
 
-	@Sendable
 	func createStack(stackSettings: some StackDeploymentSettings) async throws -> Stack {
 		logger.info("Creating a new stack...")
 		do {
@@ -354,7 +345,6 @@ public extension PortainerStore {
 		}
 	}
 
-	@Sendable
 	func updateStack(stackID: Stack.ID, settings: StackUpdateSettings) async throws -> Stack {
 		logger.info("Updating stack with ID \(stackID)...")
 		do {
@@ -378,7 +368,6 @@ public extension PortainerStore {
 		}
 	}
 
-	@Sendable
 	func removeStack(stackID: Stack.ID) async throws {
 		defer {
 			Task {
