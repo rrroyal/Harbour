@@ -167,9 +167,6 @@ struct StacksView: View {
 		} message: { stack in
 			Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
 		}
-		.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-			StackDetailsView(navigationItem: navigationItem)
-		}
 		.navigationTitle("StacksView.Title")
 		.environment(viewModel)
 		.animation(.default, value: viewModel.viewState)

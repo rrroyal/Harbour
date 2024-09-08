@@ -245,10 +245,6 @@ struct ContainersView: View {
 			.animation(.default, value: viewModel.containers)
 			.animation(.default, value: viewModel.isStatusProgressViewVisible)
 //			.animation(.default, value: portainerStore.removedContainerIDs)
-			.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-				ContainerDetailsView(navigationItem: navigationItem)
-//					.equatable()
-			}
 			.navigationTitle(navigationTitle)
 			.onKeyPress(action: onKeyPress)
 			.environment(viewModel)

@@ -344,6 +344,7 @@ struct ContainerDetailsView: View {
 		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
 			viewModel.createUserActivity(userActivity, for: viewModel.container)
 		}
+		.navigationTitle(navigationTitle)
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
 			case .labels:
@@ -363,7 +364,6 @@ struct ContainerDetailsView: View {
 				ContainerLogsView(containerID: navigationItem.id)
 			}
 		}
-		.navigationTitle(navigationTitle)
 		.id(self.id)
 	}
 }

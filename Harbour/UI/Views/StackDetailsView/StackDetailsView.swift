@@ -203,13 +203,13 @@ struct StackDetailsView: View {
 		.overlay {
 			removingStackOverlay
 		}
+		.navigationTitle(navigationTitle)
 		.navigationDestination(for: Subdestination.self) { subdestination in
 			switch subdestination {
 			case .environment(let environment):
 				StackEnvironmentView(entries: environment)
 			}
 		}
-		.navigationTitle(navigationTitle)
 		.animation(.default, value: viewModel.viewState)
 		.animation(.default, value: viewModel.stackFileViewState)
 		.animation(.default, value: viewModel.stack)
@@ -278,23 +278,19 @@ private extension StackDetailsView {
 
 // MARK: - StackDetailsView+Identifiable
 
-/*
 extension StackDetailsView: Identifiable {
 	nonisolated var id: String {
 		"\(Self.self).\(navigationItem.id)"
 	}
 }
- */
 
 // MARK: - StackDetailsView+Equatable
 
-/*
 extension StackDetailsView: Equatable {
 	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.navigationItem == rhs.navigationItem
 	}
 }
-*/
 
 // MARK: - StackDetailsView+ViewID
 

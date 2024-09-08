@@ -19,13 +19,20 @@ extension ContentView {
 
 			TabView(selection: $sceneDelegate.activeTab) {
 				Tab(value: .containers) {
-					NavigationSplitView {
+//					NavigationSplitView {
+//						ContainersView()
+//					} detail: {
+//						NavigationStack(path: $sceneDelegate.navigationState.containers) {
+//							Text("ContainersView.NoContainerSelectedPlaceholder")
+//								.foregroundStyle(.tertiary)
+//						}
+//					}
+					NavigationStack(path: $sceneDelegate.navigationState.containers) {
 						ContainersView()
-					} detail: {
-						NavigationStack(path: $sceneDelegate.navigationState.containers) {
-							Text("ContainersView.NoContainerSelectedPlaceholder")
-								.foregroundStyle(.tertiary)
-						}
+							.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
+								ContainerDetailsView(navigationItem: navigationItem)
+									.equatable()
+							}
 					}
 				} label: {
 					Label {
@@ -37,13 +44,20 @@ extension ContentView {
 				}
 
 				Tab(value: .stacks) {
-					NavigationSplitView {
+//					NavigationSplitView {
+//						StacksView()
+//					} detail: {
+//						NavigationStack(path: $sceneDelegate.navigationState.stacks) {
+//							Text("StacksView.NoStackSelectedPlaceholder")
+//								.foregroundStyle(.tertiary)
+//						}
+//					}
+					NavigationStack(path: $sceneDelegate.navigationState.stacks) {
 						StacksView()
-					} detail: {
-						NavigationStack(path: $sceneDelegate.navigationState.stacks) {
-							Text("StacksView.NoStackSelectedPlaceholder")
-								.foregroundStyle(.tertiary)
-						}
+							.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
+								StackDetailsView(navigationItem: navigationItem)
+									.equatable()
+							}
 					}
 				} label: {
 					Label {
