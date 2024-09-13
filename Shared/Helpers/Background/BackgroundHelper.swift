@@ -19,18 +19,24 @@ import UserNotifications
 
 /// Helper for background-related tasks.
 struct BackgroundHelper: Sendable {
-	internal static let logger = Logger(.custom(BackgroundHelper.self))
-	internal static let loggerBackground = Logger(.background)
+	internal nonisolated static let logger = Logger(.custom(BackgroundHelper.self))
+	internal nonisolated static let loggerBackground = Logger(.background)
 
 	/// Handles the containers change, providing a notificaion if needed.
 	/// - Parameters:
 	///   - oldContainers: Old (pre-update) containers
 	///   - newContainers: New (post-update) containers
 	///   - endpoint: Endpoint associated with this refresh
-	@Sendable
-	static func handleContainersUpdate(from oldContainers: [Container], to newContainers: [Container], endpoint: Endpoint) async throws {
-		let oldMapping = oldContainers.reduce(into: [:]) { $0[$1._persistentID] = $1 }
-		let newMapping = newContainers.reduce(into: [:]) { $0[$1._persistentID] = $1 }
+	// swiftlint:disable:next cyclomatic_complexity
+	nonisolated static func handleContainersUpdate(from oldContainers: [Container], to newContainers: [Container], endpoint: Endpoint) async throws {
+		let oldMapping: [String: Container] = oldContainers.reduce(into: [:]) {
+			guard let persistentID = $1._persistentID else { return }
+			$0[persistentID] = $1
+		}
+		let newMapping: [String: Container] = newContainers.reduce(into: [:]) {
+			guard let persistentID = $1._persistentID else { return }
+			$0[persistentID] = $1
+		}
 
 		// Find any changes from `oldMapping` to `newMapping`
 		var changes: [ContainerChange] = newMapping

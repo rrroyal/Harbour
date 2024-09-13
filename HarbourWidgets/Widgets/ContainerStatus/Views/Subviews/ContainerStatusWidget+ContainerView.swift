@@ -32,7 +32,8 @@ extension ContainerStatusWidget {
 			let deeplink = Deeplink.ContainerDetailsDestination(
 				containerID: container?.id ?? intentContainer._id,
 				containerName: container?.displayName ?? intentContainer.name,
-				endpointID: entry.configuration.endpoint?.id
+				endpointID: entry.configuration.endpoint?.id,
+				persistentID: container?._persistentID
 			)
 			return deeplink.url ?? Deeplink.appURL
 		}

@@ -19,22 +19,26 @@ extension ContainerDetailsView: Deeplinkable {
 			case id
 			case displayName
 			case endpointID
+			case persistentID
 		}
 
 		let id: Container.ID
 		let displayName: String?
 		let endpointID: Endpoint.ID?
+		let persistentID: String?
 
-		init(id: Container.ID, displayName: String?, endpointID: Endpoint.ID? = nil) {
+		init(id: Container.ID, displayName: String?, endpointID: Endpoint.ID? = nil, persistentID: String? = nil) {
 			self.id = id
 			self.displayName = displayName
 			self.endpointID = endpointID
+			self.persistentID = persistentID
 		}
 
 		init(from deeplink: DeeplinkDestination) {
 			self.id = deeplink.containerID
 			self.displayName = deeplink.containerName
 			self.endpointID = deeplink.endpointID
+			self.persistentID = deeplink.persistentID
 		}
 	}
 

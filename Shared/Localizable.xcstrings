@@ -71,22 +71,22 @@
         }
       }
     },
-    "AppIntents.Parameter.ResolveByName.Description" : {
+    "AppIntents.Parameter.ResolveStrictly.Description" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If enabled, containers will be resolved by their name (if matching ID isn't found)."
+            "value" : "If enabled, containers will be resolved only by their ID."
           }
         }
       }
     },
-    "AppIntents.Parameter.ResolveByName.Title" : {
+    "AppIntents.Parameter.ResolveStrictly.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Resolve By Name"
+            "value" : "Resolve Strictly"
           }
         }
       }
@@ -1243,12 +1243,42 @@
         }
       }
     },
+    "DebugView.PersistenceSection.UserDefaults" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UserDefaults"
+          }
+        }
+      }
+    },
     "DebugView.Title" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Debug"
+          }
+        }
+      }
+    },
+    "DebugView.UserDefaultsView.Empty" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Empty"
+          }
+        }
+      }
+    },
+    "DebugView.UserDefaultsView.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UserDefaults"
           }
         }
       }
@@ -1733,16 +1763,6 @@
         }
       }
     },
-    "IntentContainer.AssociationID" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Association ID"
-          }
-        }
-      }
-    },
     "IntentContainer.ContainerState" : {
       "localizations" : {
         "en" : {
@@ -1759,16 +1779,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ID"
-          }
-        }
-      }
-    },
-    "IntentContainer.Image" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Image"
           }
         }
       }

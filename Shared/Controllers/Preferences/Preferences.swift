@@ -20,10 +20,10 @@ import SwiftUI
 /// UserDefaults wrapper; user preferences store.
 @MainActor
 public final class Preferences: ObservableObject {
-	// swiftlint:disable:next force_unwrapping
-	private static let userDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
-
 	public static let shared = Preferences()
+
+	// swiftlint:disable:next force_unwrapping
+	static let userDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
 
 	private let logger = Logger(.custom(Preferences.self))
 
@@ -47,7 +47,7 @@ public final class Preferences: ObservableObject {
 	@AppStorage("LastBackgroundRefreshDate", store: Preferences.userDefaults)
 	public var lastBackgroundRefreshDate: TimeInterval?
 
-	/// Selected server
+	/// Selected server URL
 	@AppStorage("SelectedServer", store: Preferences.userDefaults)
 	public var selectedServer: String?
 

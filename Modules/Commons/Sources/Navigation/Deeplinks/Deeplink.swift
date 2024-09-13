@@ -60,6 +60,7 @@ internal extension Deeplink {
 	enum QueryKey: String {
 		case name = "n"
 		case endpointID = "eid"
+		case persistentID = "pid"
 	}
 }
 

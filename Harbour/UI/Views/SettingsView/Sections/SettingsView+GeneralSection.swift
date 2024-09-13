@@ -17,7 +17,7 @@ extension SettingsView {
 
 		var body: some View {
 			#if os(iOS)
-			Section("SettingsView.General.Title") {
+			NormalizedSection {
 				// Enable Background Refresh
 				ToggleOption(
 					"SettingsView.General.EnableBackgroundRefresh.Title",
@@ -27,6 +27,8 @@ extension SettingsView {
 				)
 //				.symbolVariant(preferences.enableBackgroundRefresh ? .none : .slash)
 				.id(SettingsView.ViewID.generalBackgroundRefresh)
+			} header: {
+				Text("SettingsView.General.Title")
 			}
 			#endif
 		}

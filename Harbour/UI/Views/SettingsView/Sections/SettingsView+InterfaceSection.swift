@@ -17,7 +17,7 @@ extension SettingsView {
 
 		var body: some View {
 			#if os(iOS) || targetEnvironment(macCatalyst)
-			Section("SettingsView.Interface.Title") {
+			NormalizedSection {
 				// Enable Haptics
 				#if os(iOS) && !targetEnvironment(macCatalyst)
 				ToggleOption(
@@ -47,6 +47,8 @@ extension SettingsView {
 					.id(SettingsView.ViewID.interfaceAppIcon)
 					.listRowAttentionFocus(isFocused: appIconIsFocused)
 				#endif
+			} header: {
+				Text("SettingsView.Interface.Title")
 			}
 			#endif
 		}

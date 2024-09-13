@@ -20,13 +20,13 @@ extension ContainerStatusWidget {
 			var id: Int {
 				switch self {
 				case .unconfigured:
-					-1
+					0
 				case .containers:
-					-2
+					1
 				case .unreachable:
-					-3
+					-1
 				case .error:
-					-4
+					-2
 				}
 			}
 		}

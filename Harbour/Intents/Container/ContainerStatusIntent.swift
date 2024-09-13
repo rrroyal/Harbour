@@ -24,7 +24,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	static var parameterSummary: some ParameterSummary {
 		When(\.$endpoint, .hasAnyValue) {
 			Summary("ContainerStatusIntent.ParameterSummary \(\.$endpoint) \(\.$container)") {
-				\.$resolveByName
+				\.$resolveStrictly
 			}
 		} otherwise: {
 			Summary("ContainerStatusIntent.ParameterSummary \(\.$endpoint)")
@@ -42,11 +42,11 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	var container: IntentContainer?
 
 	@Parameter(
-		title: "AppIntents.Parameter.ResolveByName.Title",
-		description: "AppIntents.Parameter.ResolveByName.Description",
-		default: true
+		title: "AppIntents.Parameter.ResolveStrictly.Title",
+		description: "AppIntents.Parameter.ResolveStrictly.Description",
+		default: false
 	)
-	var resolveByName: Bool
+	var resolveStrictly: Bool
 
 	init() { }
 
@@ -71,7 +71,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 			var filters = FetchFilters()
 			if let _container = self.container {
-				if resolveByName, let name = _container.name {
+				if !resolveStrictly, let name = _container.name {
 					filters.name = [name]
 				} else {
 					filters.id = [_container._id]

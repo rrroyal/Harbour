@@ -14,17 +14,22 @@ import SwiftData
 final class StoredContainer: Identifiable {
 	@Attribute(.unique)
 	var id: Container.ID
+
+	@Attribute(.unique)
+	var persistentID: String?
+
 	var name: String?
 	var lastState: Container.State?
 	var image: String?
 	var associationID: String?
 
-	init(id: ID, name: String?, lastState: Container.State?, image: String, associationID: String?) {
+	init(id: ID, name: String?, lastState: Container.State?, image: String, associationID: String?, persistentID: String?) {
 		self.id = id
 		self.name = name
 		self.lastState = lastState
 		self.image = image
 		self.associationID = associationID
+		self.persistentID = persistentID
 	}
 
 	init(container: Container) {
@@ -33,5 +38,6 @@ final class StoredContainer: Identifiable {
 		self.lastState = container.state
 		self.image = container.image
 		self.associationID = container.associationID
+		self.persistentID = container._persistentID
 	}
 }

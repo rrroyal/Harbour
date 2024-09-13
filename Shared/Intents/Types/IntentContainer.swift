@@ -31,49 +31,42 @@ struct IntentContainer: AppEntity {
 	@Property(title: "IntentContainer.Name")
 	public var name: String?
 
-	@Property(title: "IntentContainer.Image")
-	public var image: String?
-
 	@Property(title: "IntentContainer.ContainerState")
 	public var containerState: ContainerStateAppEnum?
 
 	@Property(title: "IntentContainer.Status")
 	public var status: String?
 
-	@Property(title: "IntentContainer.AssociationID")
-	public var associationID: String?
+	public var persistentID: String?
 
 	init(
 		id: Container.ID,
 		name: String?,
-		image: String?,
 		containerState: Container.State? = nil,
 		status: String? = nil,
-		associationID: String?
+		persistentID: String? = nil
 	) {
 		self._id = id
 		self.name = name
-		self.image = image
 		if let containerState {
 			self.containerState = .init(state: containerState)
 		} else {
 			self.containerState = nil
 		}
 		self.status = status
-		self.associationID = associationID
+		self.persistentID = persistentID
 	}
 
 	init(container: Container) {
 		self._id = container.id
 		self.name = container.displayName
-		self.image = container.image
 		if let containerState = container.state {
 			self.containerState = .init(state: containerState)
 		} else {
 			self.containerState = nil
 		}
 		self.status = container.status
-		self.associationID = container.associationID
+		self.persistentID = container._persistentID
 	}
 }
 
@@ -85,7 +78,7 @@ extension IntentContainer: Identifiable {
 	private static let partJoiner = ";"
 
 	var id: String {
-		[_id, name ?? "", image ?? "", associationID ?? ""].joined(separator: Self.partJoiner)
+		[_id, name ?? "", persistentID ?? ""].joined(separator: Self.partJoiner)
 	}
 
 	init?(id: String) {
@@ -94,15 +87,13 @@ extension IntentContainer: Identifiable {
 		let id: String? = if let id = parts[safe: 0] { String(id) } else { nil }
 		guard let id else { return nil }
 
-		let name: String? = if let name = parts[safe: 1] { String(name) } else { nil }
-		let image: String? = if let image = parts[safe: 2] { String(image) } else { nil }
-		let associationID: String? = if let associationID = parts[safe: 3] { String(associationID) } else { nil }
+		let name: String? = if let str = parts[safe: 1] { String(str) } else { nil }
+		let persistentID: String? = if let str = parts[safe: 2] { String(str) } else { nil }
 
 		self.init(
 			id: id,
 			name: name,
-			image: image,
-			associationID: associationID
+			persistentID: persistentID
 		)
 	}
 }
@@ -111,12 +102,8 @@ extension IntentContainer: Identifiable {
 
 extension IntentContainer: Equatable {
 	static func == (lhs: IntentContainer, rhs: IntentContainer) -> Bool {
-		lhs._id == rhs._id &&
-		lhs.name == rhs.name &&
-		lhs.image == rhs.image &&
-		lhs.containerState == rhs.containerState &&
-		lhs.status == rhs.status &&
-		lhs.associationID == rhs.associationID
+		(lhs.persistentID != nil && lhs.persistentID == rhs.persistentID) ||
+		(lhs.id == rhs.id && lhs.name == rhs.name)
 	}
 }
 
@@ -127,7 +114,7 @@ extension IntentContainer {
 		id: String = "PreviewContainerID",
 		name: String = String(localized: "IntentContainer.Preview.Name")
 	) -> Self {
-		.init(id: id, name: name, image: nil, associationID: nil)
+		.init(id: id, name: name)
 	}
 }
 
@@ -136,8 +123,7 @@ extension IntentContainer {
 extension IntentContainer {
 	func matchesContainer(_ container: Container) -> Bool {
 		self._id == container.id ||
-		(self.associationID != nil && self.associationID == container.associationID) ||
-		self.image == container.image ||
+		(self.persistentID != nil && self.persistentID == container._persistentID) ||
 		self.name == container.displayName
 	}
 }
@@ -149,13 +135,13 @@ extension IntentContainer {
 		typealias Entity = IntentContainer
 
 		#if TARGET_WIDGETS
-		@IntentParameterDependency<ContainerStatusWidget.Intent>(\.$endpoint, \.$resolveByName)
+		@IntentParameterDependency<ContainerStatusWidget.Intent>(\.$endpoint, \.$resolveStrictly)
 		var containerStatusWidgetIntent
 		#else
 		@IntentParameterDependency<ContainerActionIntent>(\.$endpoint)
 		var containerActionIntent
 
-		@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveByName)
+		@IntentParameterDependency<ContainerStatusIntent>(\.$endpoint, \.$resolveStrictly)
 		var containerStatusIntent
 		#endif
 
@@ -167,11 +153,11 @@ extension IntentContainer {
 			#endif
 		}
 
-		private var resolveByName: Bool {
+		private var resolveStrictly: Bool {
 			#if TARGET_WIDGETS
-			containerStatusWidgetIntent?.resolveByName ?? true
+			containerStatusWidgetIntent?.resolveStrictly ?? false
 			#else
-			containerStatusIntent?.resolveByName ?? true
+			containerStatusIntent?.resolveStrictly ?? false
 			#endif
 		}
 
@@ -207,7 +193,7 @@ extension IntentContainer {
 		}
 
 		func entities(matching string: String) async throws -> [Entity] {
-			logger.info("Getting entities matching \"\(string, privacy: .sensitive)\"...")
+			logger.info("Getting entities matching \"\(string)\"...")
 
 			do {
 				guard let endpoint else {
@@ -231,7 +217,7 @@ extension IntentContainer {
 		}
 
 		func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-			logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
+			logger.info("Getting entities for identifiers: \(identifiers)...")
 
 			guard let endpoint else {
 				logger.notice("Returning empty (no endpoint)")
@@ -247,14 +233,14 @@ extension IntentContainer {
 						try await portainerStore.setupIfNeeded()
 
 						let filters = FetchFilters(
-							id: resolveByName ? nil : parsedContainers.map(\._id)
+							id: resolveStrictly ? parsedContainers.map(\._id) : nil
 						)
 						return try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id, filters: filters)
 							.filter { container in
-								if resolveByName {
-									return parsedContainers.contains { $0.matchesContainer(container) }
+								if resolveStrictly {
+									parsedContainers.contains { $0._id == container.id }
 								} else {
-									return parsedContainers.contains { $0._id == container.id }
+									parsedContainers.contains { $0.matchesContainer(container) }
 								}
 							}
 							.compactMap { container in

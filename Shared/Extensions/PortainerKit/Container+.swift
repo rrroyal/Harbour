@@ -7,6 +7,7 @@
 //
 
 import CommonFoundation
+import CryptoKit
 import Foundation
 import PortainerKit
 
@@ -50,16 +51,22 @@ extension Container {
 		status == nil && imageID == nil && created == nil
 	}
 
-	/// Internal ID for this container, basing on `names`, `image` and `associationID`.
-	var _persistentID: Int {
-		var hasher = Hasher()
+	/// Internal ID for this container, based `associationID` or `image` + `names`.
+	var _persistentID: String? {
+		var hash = Insecure.MD5()
 		if let associationID {
-			hasher.combine(associationID)
+			hash.update(data: Data(associationID.utf8))
+		} else if let image, let names, !names.isEmpty {
+			hash.update(data: Data(image.utf8))
+			hash.update(data: Data(names.sorted().joined(separator: ",").utf8))
 		} else {
-			hasher.combine(names)
-			hasher.combine(image)
+			// We're unable to determine a persistent ID for this container :/
+			return nil
 		}
-		return hasher.finalize()
+		let digest = hash.finalize()
+		return digest
+			.map { String(format: "%02hhx", $0) }
+			.joined()
 	}
 }
 

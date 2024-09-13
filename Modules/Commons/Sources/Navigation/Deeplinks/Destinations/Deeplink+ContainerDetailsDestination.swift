@@ -15,12 +15,14 @@ public extension Deeplink {
 		public let containerID: String
 		public let containerName: String?
 		public let endpointID: Int?
+		public let persistentID: String?
 		public let subdestination: [String]?
 
-		public init(containerID: String, containerName: String?, endpointID: Int?, subdestination: [String]? = nil) {
+		public init(containerID: String, containerName: String?, endpointID: Int?, persistentID: String? = nil, subdestination: [String]? = nil) {
 			self.containerID = containerID
 			self.containerName = containerName
 			self.endpointID = endpointID
+			self.persistentID = persistentID
 			self.subdestination = subdestination
 		}
 	}
@@ -40,13 +42,21 @@ extension Deeplink.ContainerDetailsDestination: Deeplink.Destination {
 
 		components.path = "/" + containerID
 
-		components.queryItems = [
-			.init(name: Deeplink.QueryKey.name.rawValue, value: containerName)
-		]
+		var queryItems: [URLQueryItem] = []
+
+		if let persistentID {
+			queryItems.append(.init(name: Deeplink.QueryKey.persistentID.rawValue, value: persistentID))
+		}
 
 		if let endpointID {
-			components.queryItems?.append(.init(name: Deeplink.QueryKey.endpointID.rawValue, value: endpointID.description))
+			queryItems.append(.init(name: Deeplink.QueryKey.endpointID.rawValue, value: endpointID.description))
 		}
+
+		if let containerName {
+			queryItems.append(.init(name: Deeplink.QueryKey.name.rawValue, value: containerName))
+		}
+
+		components.queryItems = queryItems
 
 		return components.url
 	}
@@ -58,13 +68,13 @@ extension Deeplink.ContainerDetailsDestination: Deeplink.Destination {
 		self.containerID = String(containerID)
 
 		self.containerName = components.queryItems?.value(for: .name)
+		self.persistentID = components.queryItems?.value(for: .persistentID)
 
-		let endpointID: Int? = if let endpointIDStr = components.queryItems?.value(for: .endpointID) {
-			Int(endpointIDStr)
+		self.endpointID = if let str = components.queryItems?.value(for: .endpointID) {
+			Int(str)
 		} else {
 			nil
 		}
-		self.endpointID = endpointID
 
 		let subdestination = path
 			.dropFirst()

@@ -52,10 +52,10 @@ extension SceneDelegate: DeeplinkHandlable {
 
 	@MainActor
 	func handleURL(_ url: URL) {
-		logger.notice("Opening from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
+		logger.notice("Opening from URL: \"\(url.absoluteString)\"")
 
 		guard let destination = Deeplink.destination(from: url) else {
-			logger.warning("Failed to create Deeplink.Destination from URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"")
+			logger.warning("Failed to create Deeplink.Destination from URL: \"\(url.absoluteString)\"")
 			return
 		}
 

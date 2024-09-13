@@ -29,7 +29,7 @@ extension PortainerStore {
 
 extension PortainerStore {
 	func fetchContainers(filters: FetchFilters? = nil) async throws -> [Container] {
-		logger.info("Getting containers, filters: \(String(describing: filters), privacy: .sensitive(mask: .hash))...")
+		logger.info("Getting containers, filters: \(String(describing: filters))...")
 		do {
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
@@ -69,13 +69,13 @@ extension PortainerStore {
 	///   - endpointID: ID of the endpoint
 	/// - Returns: `ContainerDetails`
 	func fetchContainerDetails(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
-		logger.info("Getting details for containerID: \"\(containerID, privacy: .private(mask: .hash))\"...")
+		logger.info("Getting details for containerID: \"\(containerID)\"...")
 		do {
 			guard let endpointID = endpointID ?? selectedEndpoint?.id else {
 				throw PortainerError.noSelectedEndpoint
 			}
 			let details = try await portainer.fetchContainerDetails(for: containerID, endpointID: endpointID)
-			logger.info("Got details for containerID: \"\(containerID, privacy: .private(mask: .hash))\".")
+			logger.info("Got details for containerID: \"\(containerID)\".")
 			return details
 		} catch {
 			logger.error("Failed to get container details: \(error.localizedDescription, privacy: .public)")

@@ -16,7 +16,7 @@ extension SettingsView {
 		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		var body: some View {
-			Section("SettingsView.Portainer.Title") {
+			NormalizedSection {
 //				ToggleOption(
 //					"SettingsView.Portainer.ContainerRemoveForce.Title",
 //					description: "SettingsView.Portainer.ContainerRemoveForce.Description",
@@ -32,6 +32,8 @@ extension SettingsView {
 					isOn: $preferences.containerRemoveVolumes
 				)
 				.id(SettingsView.ViewID.portainerContainerRemoveVolumes)
+			} header: {
+				Text("SettingsView.Portainer.Title")
 			}
 		}
 	}

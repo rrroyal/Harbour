@@ -31,7 +31,9 @@ extension ContainerDetailsView {
 		var scrollViewIsRefreshing = false
 
 		var container: Container? {
-			portainerStore.containers.first { $0.id == navigationItem.id }
+			portainerStore.containers.first {
+				$0.id == navigationItem.id || (navigationItem.persistentID != nil ? $0._persistentID == navigationItem.persistentID : false)
+			}
 		}
 
 		var containerDetails: ContainerDetails? {
@@ -96,19 +98,31 @@ extension ContainerDetailsView {
 //			userActivity.becomeCurrent()
 		}
 
-		@MainActor @discardableResult
+		@discardableResult
 		func refresh() -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task {
 				self.viewState = viewState.reloading
 
 				do {
-					async let _container = portainerStore.refreshContainers(ids: [navigationItem.id]).value.first
-					async let _containerDetails = portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
-					let (_, containerDetails) = try await (_container, _containerDetails)
+					if let persistentID = navigationItem.persistentID,
+					   let container = portainerStore.containers.first(where: { $0._persistentID == persistentID }) {
+						logger.notice("Resolved by persistentID: \"\(persistentID)\" = \"\(container.id)\"")
 
-					guard !Task.isCancelled else { return }
-					self.viewState = .success(containerDetails)
+						#if DEBUG
+						if container.id != navigationItem.id {
+							logger.warning("container.id (\"\(container.id)\") != navigationItem.id (\"\(self.navigationItem.id)\")")
+						}
+						#endif
+
+						let containerDetails = try await portainerStore.fetchContainerDetails(container.id, endpointID: navigationItem.endpointID)
+						self.viewState = .success(containerDetails)
+					} else {
+						async let _container = portainerStore.refreshContainers(ids: [navigationItem.id]).value.first
+						async let _containerDetails = portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
+						let (_, containerDetails) = try await (_container, _containerDetails)
+						self.viewState = .success(containerDetails)
+					}
 				} catch {
 					guard !error.isCancellationError else { return }
 					viewState = .failure(error)

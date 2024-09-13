@@ -77,17 +77,17 @@ private extension ContainerStatusWidget.Provider {
 			try await portainerStore.setupIfNeeded()
 
 			let filters = FetchFilters(
-				id: configuration.resolveByName ? nil : configurationContainers.map(\._id)
+				id: configuration.resolveStrictly ? configurationContainers.map(\._id) : nil
 			)
 			let containers = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id, filters: filters)
 
 			let entities: [Container?] = configurationContainers
 				.map { configurationContainer in
 					if let foundContainer = containers.first(where: {
-						if configuration.resolveByName {
-							return configurationContainer.matchesContainer($0)
+						if configuration.resolveStrictly {
+							configurationContainer._id == $0.id
 						} else {
-							return configurationContainer._id == $0.id
+							configurationContainer.matchesContainer($0)
 						}
 					}) {
 						return Container(
@@ -113,7 +113,7 @@ private extension ContainerStatusWidget.Provider {
 			}
 		}
 
-		logger.info("Returning \(String(describing: entry), privacy: .sensitive) (result: \(entry.result.id, privacy: .public))")
+		logger.info("Returning entry: \(String(describing: entry), privacy: .sensitive)")
 		return entry
 	}
 }

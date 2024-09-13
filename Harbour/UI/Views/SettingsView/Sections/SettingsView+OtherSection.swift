@@ -16,11 +16,15 @@ extension SettingsView {
 		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		var body: some View {
-			Section(header: Text("SettingsView.Other.Title"), footer: FooterView(viewModel: viewModel)) {
+			NormalizedSection {
 				NavigationLinkOption("SettingsView.Other.Debug", iconSymbolName: "wrench.and.screwdriver") {
 					DebugView()
 				}
 				.id(SettingsView.ViewID.otherDebugNavigation)
+			} header: {
+				Text("SettingsView.Other.Title")
+			} footer: {
+				FooterView()
 			}
 		}
 	}
@@ -30,7 +34,7 @@ extension SettingsView {
 
 private extension SettingsView.OtherSection {
 	struct FooterView: View {
-		@Bindable var viewModel: SettingsView.ViewModel
+		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		// swiftlint:disable:next force_unwrapping
 		private let githubURL = URL(string: "https://github.com/rrroyal/Harbour")!
@@ -52,7 +56,8 @@ private extension SettingsView.OtherSection {
 					.buttonStyle(.plain)
 				}
 			}
-			.font(.subheadline.weight(.semibold))
+			.font(.callout)
+			.fontWeight(.semibold)
 			.foregroundStyle(.primary)
 			.opacity(Constants.secondaryOpacity)
 			.frame(maxWidth: .infinity)

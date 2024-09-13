@@ -19,9 +19,11 @@ extension SettingsView {
 		@Environment(SettingsView.ViewModel.self) var viewModel
 
 		var body: some View {
-			Section("SettingsView.Connection.Title") {
+			NormalizedSection {
 				ConnectionMenu()
 					.id(SettingsView.ViewID.connectionMenu)
+			} header: {
+				Text("SettingsView.Connection.Title")
 			}
 		}
 	}
@@ -74,7 +76,7 @@ private extension SettingsView.ConnectionSection {
 
 					Image(systemName: SFSymbol.chevronDown)
 						.fontWeight(.medium)
-						.foregroundStyle(.secondary)
+//						.foregroundStyle(.secondary)
 					#endif
 				}
 			}

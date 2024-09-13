@@ -19,27 +19,21 @@ private let logger = Logger(.custom(IntentPortainerStore.self))
 public final class IntentPortainerStore {
 	nonisolated(unsafe) static let shared = IntentPortainerStore()
 
-	private let keychain = Keychain.shared
-
 	public let portainer = PortainerClient(urlSessionConfiguration: .intents)
 
-	public private(set) var isSetup = false
-
 	public func setupIfNeeded() async throws {
-		guard !isSetup else { return }
-
 		guard let urlStr = await Preferences.shared.selectedServer else {
+			logger.warning("No selectedServer!")
 			throw PortainerError.noServer
 		}
 		guard let url = URL(string: urlStr) else {
+			logger.warning("selectedServer is not a valid URL: \(urlStr, privacy: .sensitive)")
 			throw URLError(.badURL)
 		}
 		if portainer.serverURL == url { return }
 
-		let token = try keychain.getString(for: url)
+		let token = try Keychain.shared.getString(for: url)
 		portainer.serverURL = url
 		portainer.token = token
-
-		isSetup = true
 	}
 }

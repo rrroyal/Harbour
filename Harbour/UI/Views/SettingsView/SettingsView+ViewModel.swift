@@ -13,6 +13,7 @@ import OSLog
 #if canImport(UIKit)
 import UIKit.UIDevice
 #endif
+import WidgetKit
 
 // MARK: - SettingsView+ViewModel
 
@@ -52,6 +53,8 @@ extension SettingsView {
 		func switchPortainerServer(to serverURL: URL) async throws {
 			activeURL = serverURL
 			AppState.shared.switchPortainerServer(to: serverURL)
+
+			WidgetCenter.shared.reloadAllTimelines()
 		}
 
 		@MainActor

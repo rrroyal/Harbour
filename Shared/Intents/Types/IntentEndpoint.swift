@@ -77,6 +77,33 @@ extension IntentEndpoint {
 			false
 		}
 
+		func defaultResult() async -> Entity? {
+			logger.info("Getting default result...")
+
+			do {
+				let portainerStore = IntentPortainerStore.shared
+				try await portainerStore.setupIfNeeded()
+				let endpoints = try await portainerStore.portainer.fetchEndpoints()
+
+				if endpoints.count == 1, let endpoint = endpoints.first {
+					logger.notice("Got one endpoint with ID: \"\(endpoint.id)\"")
+					return Entity(endpoint: endpoint)
+				} else {
+					let lastSelectedEndpointID = await Preferences.shared.selectedEndpointID
+					if let lastSelectedEndpointID, let lastSelectedEndpoint = endpoints.first(where: { $0.id == lastSelectedEndpointID }) {
+						logger.notice("Got \(endpoints.count) endpoints, returning last selected with ID: \"\(lastSelectedEndpointID)\"")
+						return Entity(endpoint: lastSelectedEndpoint)
+					} else {
+						logger.notice("Got \(endpoints.count) endpoints, none was last selected.")
+						return nil
+					}
+				}
+			} catch {
+				logger.error("Error getting default result: \(error.localizedDescription, privacy: .public)")
+				return nil
+			}
+		}
+
 		func suggestedEntities() async throws -> [Entity] {
 			logger.info("Getting suggested entities...")
 
@@ -96,7 +123,7 @@ extension IntentEndpoint {
 		}
 
 		func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-			logger.info("Getting entities for identifiers: \(String(describing: identifiers), privacy: .sensitive)...")
+			logger.info("Getting entities for identifiers: \(identifiers)...")
 
 			do {
 				let portainerStore = IntentPortainerStore.shared

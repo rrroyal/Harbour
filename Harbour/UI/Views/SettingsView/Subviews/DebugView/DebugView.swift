@@ -78,6 +78,12 @@ private extension DebugView {
 
 		var body: some View {
 			Section("DebugView.PersistenceSection.Title") {
+				NavigationLink {
+					UserDefaultsView()
+				} label: {
+					Text("DebugView.PersistenceSection.UserDefaults")
+				}
+
 				#if os(iOS)
 				Button("DebugView.PersistenceSection.DeleteUserActivities", role: .destructive) {
 					logger.warning("Deleting saved user activities...")

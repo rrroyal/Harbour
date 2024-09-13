@@ -10,7 +10,7 @@ import Foundation
 import PortainerKit
 
 struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
-	let id: Int
+	let id: String
 	let changeType: ChangeType
 	let containerName: String
 
@@ -20,7 +20,7 @@ struct ContainerChange: Codable, Hashable, Identifiable, Sendable {
 	let new: ChangeDetails?
 
 	init(
-		id: Int,
+		id: String,
 		changeType: ChangeType,
 		containerName: String,
 		endpointID: Endpoint.ID,

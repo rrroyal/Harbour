@@ -36,11 +36,11 @@ extension ContainerStatusWidget {
 		var containers: [IntentContainer]
 
 		@Parameter(
-			title: "AppIntents.Parameter.ResolveByName.Title",
-			description: "AppIntents.Parameter.ResolveByName.Description",
-			default: true
+			title: "AppIntents.Parameter.ResolveStrictly.Title",
+			description: "AppIntents.Parameter.ResolveStrictly.Description",
+			default: false
 		)
-		var resolveByName: Bool
+		var resolveStrictly: Bool
 
 		init() { }
 

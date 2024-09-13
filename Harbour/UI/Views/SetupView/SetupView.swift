@@ -124,6 +124,7 @@ struct SetupView: View {
 			}
 		}
 		.formStyle(.grouped)
+		.scrollDisabled(true)
 		#if os(iOS)
 		.safeAreaInset(edge: .bottom) {
 			VStack {
