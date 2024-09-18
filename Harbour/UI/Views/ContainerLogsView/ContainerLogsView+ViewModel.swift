@@ -69,11 +69,13 @@ extension ContainerLogsView {
 				self.parseTask?.cancel()
 
 				do {
+					// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L124
 					let logs = try await portainerStore.fetchContainerLogs(
 						for: containerID,
 						tail: .limit(lineCount),
 						timestamps: includeTimestamps
 					)
+					.replacing(/^(.{8})/.anchorsMatchLineEndings(), with: "")
 
 					Task.detached {
 						let logsParsed = ANSIParser.trim(logs)

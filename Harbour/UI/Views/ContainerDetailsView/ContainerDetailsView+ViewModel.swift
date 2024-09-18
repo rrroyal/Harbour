@@ -99,30 +99,105 @@ extension ContainerDetailsView {
 		}
 
 		@discardableResult
+		// swiftlint:disable:next cyclomatic_complexity
 		func refresh() -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task {
 				self.viewState = viewState.reloading
 
 				do {
-					if let persistentID = navigationItem.persistentID,
-					   let container = portainerStore.containers.first(where: { $0._persistentID == persistentID }) {
-						logger.notice("Resolved by persistentID: \"\(persistentID)\" = \"\(container.id)\"")
+					let containerDetails = try await withThrowingTaskGroup(of: Result<ContainerDetails?, Error>.self, returning: ContainerDetails?.self) { group in
+						var containerNotFoundError: Error?
 
-						#if DEBUG
-						if container.id != navigationItem.id {
-							logger.warning("container.id (\"\(container.id)\") != navigationItem.id (\"\(self.navigationItem.id)\")")
+						// Resolve by `navigationItem.id`
+						_ = group.addTaskUnlessCancelled { [weak self, navigationItem] in
+							do {
+								self?.logger.debug("Started resolving by navigationItem.id: \"\(navigationItem.id)\"...")
+
+								let containerDetails = try await self?.portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
+
+								guard !Task.isCancelled else { return .failure(CancellationError()) }
+
+								self?.logger.info("Resolved by navigationItem.id: \"\(navigationItem.id)\"")
+								return .success(containerDetails)
+							} catch {
+								// Store the error for user feedback
+								containerNotFoundError = error
+								return .failure(error)
+							}
 						}
-						#endif
 
-						let containerDetails = try await portainerStore.fetchContainerDetails(container.id, endpointID: navigationItem.endpointID)
-						self.viewState = .success(containerDetails)
-					} else {
-						async let _container = portainerStore.refreshContainers(ids: [navigationItem.id]).value.first
-						async let _containerDetails = portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
-						let (_, containerDetails) = try await (_container, _containerDetails)
-						self.viewState = .success(containerDetails)
+						// Resolve by `navigationItem.persistentID`
+						if let persistentID = navigationItem.persistentID {
+							_ = group.addTaskUnlessCancelled { [weak self, navigationItem] in
+								do {
+									self?.logger.debug("Started resolving by persistentID: \"\(persistentID)\"...")
+
+									// Wait for full refresh
+									if let containersTask = await self?.portainerStore.containersTask {
+										self?.logger.debug("Waiting for existing container refresh task")
+										_ = try await containersTask.value
+									} else {
+										self?.logger.debug("Starting a new container refresh task...")
+										_ = try await self?.portainerStore.refreshContainers().value
+									}
+
+									// Check if we still have to search
+									guard !Task.isCancelled else { return .failure(CancellationError()) }
+
+									// Try to find the container
+									guard let persistentContainer = await self?.portainerStore.containers.first(where: { $0._persistentID == persistentID }) else {
+										self?.logger.notice("Didn't find container for persistentID: \"\(persistentID)\"!")
+										return .success(nil)
+									}
+
+									// Check if we still have to search
+									guard !Task.isCancelled else { return .failure(CancellationError()) }
+
+									// Fetch
+									let containerDetails = try await self?.portainerStore.fetchContainerDetails(persistentContainer.id, endpointID: navigationItem.endpointID)
+									guard !Task.isCancelled else { return .failure(CancellationError()) }
+
+									// Return
+									self?.logger.notice("Resolved by persistentID: \"\(persistentID)\" = \"\(persistentContainer.id)\"")
+									return .success(containerDetails)
+								} catch {
+									self?.logger.warning("Failed to resolve ContainerDetails for persistentID: \"\(persistentID)\"")
+									return .success(nil)
+								}
+							}
+						}
+
+						for try await result in group {
+							switch result {
+							case .success(let details):
+								// If we got details, cancel the group and return them...
+								if let details {
+									group.cancelAll()
+									return details
+								}
+								// ...otherwise, wait for the rest
+							case .failure:
+								// We don't care what errors happened, we just want to know that they did
+								break
+							}
+						}
+
+						// At this point, all of the tasks have finished and they either returned a value, or `containerNotFoundError` shouldn't be nil.
+						// We return it to provide some feedback to the user.
+						if let containerNotFoundError {
+							throw containerNotFoundError
+						}
+
+						// This shouldn't happen, but the compiler doesn't know that
+						return nil
 					}
+
+					// This also shouldn't happen, but in case it does, provide some feedback to the user
+					guard let containerDetails else {
+						throw PortainerError.containerNotFound(navigationItem.id)
+					}
+					viewState = .success(containerDetails)
 				} catch {
 					guard !error.isCancellationError else { return }
 					viewState = .failure(error)

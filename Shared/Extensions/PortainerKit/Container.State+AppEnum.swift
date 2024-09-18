@@ -36,8 +36,8 @@ extension Container.State: @retroactive AppEnum {
 }
 
 // MARK: - ContainerStateAppEnum
-// TODO: Remove `ContainerStateAppEnum` when it starts working properly
 
+// This should be removed when `Container.State+AppEnum` starts working properly
 enum ContainerStateAppEnum: String {
 	case created
 	case running

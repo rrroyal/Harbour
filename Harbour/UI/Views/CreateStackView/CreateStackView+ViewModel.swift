@@ -132,7 +132,9 @@ extension CreateStackView {
 				let data = try Data(contentsOf: url)
 				url.stopAccessingSecurityScopedResource()
 
-				let string = String(decoding: data, as: UTF8.self)
+				guard let string = String(data: data, encoding: .utf8) else {
+					throw Error.unableToReadFile
+				}
 				self.stackFileContent = string
 				return string
 			} catch {

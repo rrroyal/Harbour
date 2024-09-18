@@ -33,7 +33,7 @@ extension ContainerStatusWidget {
 				containerID: container?.id ?? intentContainer._id,
 				containerName: container?.displayName ?? intentContainer.name,
 				endpointID: entry.configuration.endpoint?.id,
-				persistentID: container?._persistentID
+				persistentID: intentContainer.persistentID ?? container?._persistentID
 			)
 			return deeplink.url ?? Deeplink.appURL
 		}

@@ -701,6 +701,16 @@
         }
       }
     },
+    "ContainerStatusIntent.ReturnDialog Name:%@ Status:%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Status of \"%1$@\" is \"%2$@\"."
+          }
+        }
+      }
+    },
     "ContainerStatusIntent.Title" : {
       "localizations" : {
         "en" : {
@@ -2053,6 +2063,36 @@
         }
       }
     },
+    "PortainerKit.ClientError.EncodingFailed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encoding Failed"
+          }
+        }
+      }
+    },
+    "PortainerKit.ClientError.NotSetup" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Setup"
+          }
+        }
+      }
+    },
+    "PortainerKit.ClientError.ResponseCodeUnacceptable Code:%lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Response Code Unacceptable (%lld)"
+          }
+        }
+      }
+    },
     "PortainerKit.Container.State.AppEnumTitle" : {
       "localizations" : {
         "en" : {
@@ -2289,26 +2329,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resume"
-          }
-        }
-      }
-    },
-    "PortainerKit.PortainerError.NotSetup" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not Setup"
-          }
-        }
-      }
-    },
-    "PortainerKit.PortainerError.ResponseCodeUnacceptable Code:%lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Response Code Unacceptable (%lld)"
           }
         }
       }

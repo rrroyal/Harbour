@@ -142,7 +142,7 @@ private extension DebugView {
 		var body: some View {
 			Section("DebugView.WidgetsSection.Title") {
 				Button("DebugView.WidgetsSection.RefreshTimelines") {
-					logger.notice("Refreshing timelines...")
+					logger.notice("Refreshing WidgetKit timelines...")
 					Haptics.generateIfEnabled(.buttonPress)
 					WidgetCenter.shared.reloadAllTimelines()
 				}

@@ -15,11 +15,11 @@
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
 			<key>NSAppIconActionTintColorName</key>
-			<string>AccentColor</string>
+			<string>ComplementingColors/ActionTint</string>
 			<key>NSAppIconComplementingColorNames</key>
 			<array>
-				<string>AccentColor</string>
-				<string>AccentColor</string>
+				<string>ComplementingColors/Primary</string>
+				<string>ComplementingColors/Secondary</string>
 			</array>
 		</dict>
 	</dict>

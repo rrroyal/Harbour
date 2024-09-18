@@ -34,8 +34,8 @@ extension ContainerAction: @retroactive AppEnum {
 }
 
 // MARK: - ContainerActionAppEnum
-// TODO: Remove `ContainerActionAppEnum` when it starts working properly
 
+// This should be removed when `ContainerAction+AppEnum` starts working properly
 enum ContainerActionAppEnum: String {
 	case start
 	case stop

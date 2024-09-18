@@ -102,8 +102,6 @@ extension PortainerStore {
 				throw PortainerError.noSelectedEndpoint
 			}
 
-			// https://github.com/portainer/portainer/blob/8bb5129be039c3e606fb1dcc5b31e5f5022b5a7e/app/docker/helpers/logHelper/formatLogs.ts#L124
-
 			let logs = try await portainer.fetchContainerLogs(
 				for: containerID,
 				endpointID: selectedEndpoint.id,
@@ -113,10 +111,8 @@ extension PortainerStore {
 				tail: logsTailAmount,
 				includeTimestamps: includeTimestamps
 			)
-			.replacing(/^(.{8})/.anchorsMatchLineEndings(), with: "")
 
 			logger.info("Got logs for containerID: \"\(containerID, privacy: .public)\".")
-
 			return logs
 		} catch {
 			logger.error("Failed to get logs for containerID: \"\(containerID, privacy: .public)\": \(error.localizedDescription, privacy: .public)")

@@ -55,7 +55,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		self.container = container
 	}
 
-	func perform() async throws -> some ReturnsValue<IntentContainer> {
+	func perform() async throws -> some ReturnsValue<IntentContainer> & ProvidesDialog {
 		logger.info("Performing \(Self.self)...")
 
 		do {
@@ -92,7 +92,21 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 			}
 
 			logger.info("Returning \(String(describing: fetchedContainer)).")
-			return .result(value: fetchedContainer)
+
+			// swiftlint:disable:next line_length
+			let dialogString: LocalizedStringResource = "ContainerStatusIntent.ReturnDialog Name:\(fetchedContainer.name ?? fetchedContainer._id) Status:\(fetchedContainer.status ?? String(localized: "Generic.Unknown"))"
+			let dialog: IntentDialog = if let icon = fetchedContainer.containerState?.portainerState.icon {
+				.init(
+					full: dialogString,
+					systemImageName: icon
+				)
+			} else {
+				.init(dialogString)
+			}
+			return .result(
+				value: fetchedContainer,
+				dialog: dialog
+			)
 		} catch {
 			logger.error("Failed to perform \(Self.self, privacy: .public): \(error.localizedDescription, privacy: .public)")
 			throw error
