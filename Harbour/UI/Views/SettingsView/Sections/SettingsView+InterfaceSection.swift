@@ -8,6 +8,7 @@
 
 import CommonHaptics
 import SwiftUI
+import TipKit
 
 extension SettingsView {
 	struct InterfaceSection: View {
@@ -30,22 +31,12 @@ extension SettingsView {
 				.id(SettingsView.ViewID.interfaceHaptics)
 				#endif
 
-				#if os(iOS) && !targetEnvironment(macCatalyst)
 				// App Icon
-				let appIconIsFocused = Binding<Bool>(
-					get: { sceneDelegate.viewsToFocus.contains(SettingsView.ViewID.interfaceAppIcon) },
-					set: { isFocused in
-						let viewID = SettingsView.ViewID.interfaceAppIcon
-						if isFocused {
-							sceneDelegate.viewsToFocus.insert(viewID)
-						} else {
-							sceneDelegate.viewsToFocus.remove(viewID)
-						}
-					}
-				)
-				AppIconMenu()
-					.id(SettingsView.ViewID.interfaceAppIcon)
-					.listRowAttentionFocus(isFocused: appIconIsFocused)
+				#if os(iOS) && !targetEnvironment(macCatalyst)
+				Group {
+					AppIconMenu()
+						.id(SettingsView.ViewID.interfaceAppIcon)
+				}
 				#endif
 			} header: {
 				Text("SettingsView.Interface.Title")
@@ -62,6 +53,8 @@ private extension SettingsView.InterfaceSection {
 	struct AppIconMenu: View {
 		@Environment(\.errorHandler) private var errorHandler
 		@State private var currentIcon: AppIcon = .current
+
+		private let tip = SettingsView.AppIconTip()
 
 		var body: some View {
 			SettingsView.MenuOption("SettingsView.Interface.AppIcon.Title", iconSymbolName: "app.badge") {
@@ -84,9 +77,13 @@ private extension SettingsView.InterfaceSection {
 					Text(currentIcon.name)
 						.font(.callout)
 						.fontWeight(.medium)
-						.frame(maxWidth: .infinity, alignment: .trailing)
 						.animation(.default, value: currentIcon)
 				}
+			}
+			.popoverTip(tip, arrowEdge: .bottom)
+			.tipViewStyle(NoCloseButtonTipViewStyle())
+			.onDisappear {
+				SettingsView.AppIconTip.shouldShow = false
 			}
 		}
 
@@ -104,6 +101,28 @@ private extension SettingsView.InterfaceSection {
 	}
 }
 #endif
+
+// MARK: - SettingsView+AppIconTip
+
+extension SettingsView {
+	struct AppIconTip: Tip {
+		let id = "appicon"
+
+		let title = Text("SettingsView.AppIconTip.Title")
+//		let image: Image? = Image(systemName: "app.badge")
+
+		@Parameter(.transient)
+		static var shouldShow: Bool = false
+
+		var rules: [Rule] {
+			#Rule(Self.$shouldShow) { $0 }
+		}
+
+		var options: [any TipOption] {
+			IgnoresDisplayFrequency(true)
+		}
+	}
+}
 
 // MARK: - Previews
 

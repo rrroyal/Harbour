@@ -30,10 +30,6 @@ final class SceneDelegate: NSObject {
 
 	var navigationState = NavigationState()
 
-	// MARK: Cross-view
-
-	var viewsToFocus: Set<AnyHashable> = []
-
 	// MARK: Sheets
 
 	var isLandingSheetPresented = !Preferences.shared.landingDisplayed

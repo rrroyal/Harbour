@@ -41,7 +41,7 @@ private extension SceneDelegate {
 		case HarbourShortcutItem.changeAppIcon:
 			Haptics.generateIfEnabled(.sheetPresentation)
 			isSettingsSheetPresented = true
-			viewsToFocus.insert(SettingsView.ViewID.interfaceAppIcon)
+			SettingsView.AppIconTip.shouldShow = true
 		default:
 			return false
 		}

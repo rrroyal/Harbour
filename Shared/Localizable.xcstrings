@@ -2403,6 +2403,16 @@
         }
       }
     },
+    "SettingsView.AppIconTip.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You can change the icon here :)"
+          }
+        }
+      }
+    },
     "SettingsView.Connection.ConnectionMenu.Add" : {
       "localizations" : {
         "en" : {

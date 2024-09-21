@@ -6,10 +6,12 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import CommonFoundation
 import IndicatorsKit
 import PortainerKit
 import SwiftData
 import SwiftUI
+import TipKit
 
 // MARK: - HarbourApp
 
@@ -42,6 +44,17 @@ struct HarbourApp: App {
 					preferences: preferences,
 					portainerStore: portainerStore
 				)
+				.task {
+					do {
+						try Tips.configure([
+							// swiftlint:disable:next force_unwrapping
+							.datastoreLocation(.groupContainer(identifier: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")),
+							.displayFrequency(.immediate)
+						])
+					} catch {
+						appState.logger.warning("Failed to configure Tips: \(error.localizedDescription, privacy: .public)")
+					}
+				}
 		}
 		.onChange(of: portainerStore.containers, appState.onContainersChange)
 		.onChange(of: portainerStore.stacks, appState.onStacksChange)
