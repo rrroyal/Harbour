@@ -30,10 +30,12 @@ final class StoredStack: Identifiable {
 		self.endpointID = endpointID
 	}
 
-	init(stack: Stack) {
-		self.id = stack.id
-		self.type = stack.type
-		self.name = stack.name
-		self.endpointID = stack.endpointID
+	convenience init(stack: Stack) {
+		self.init(
+			id: stack.id,
+			type: stack.type,
+			name: stack.name,
+			endpointID: stack.endpointID
+		)
 	}
 }

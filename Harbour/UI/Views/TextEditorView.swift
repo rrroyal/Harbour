@@ -41,10 +41,12 @@ struct TextEditorView: View {
 				.focused($textFieldFocused)
 				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 				.addingCloseButton {
-					if text == backingText {
-						dismiss()
-					} else {
+					if text != backingText {
+						Haptics.generateIfEnabled(.warning)
 						isConfirmDismissDialogPresented = true
+					} else {
+						Haptics.generateIfEnabled(.buttonPress)
+						dismiss()
 					}
 				}
 				.toolbar {

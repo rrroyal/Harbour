@@ -23,7 +23,7 @@ final class StoredContainer: Identifiable {
 	var image: String?
 	var associationID: String?
 
-	init(id: ID, name: String?, lastState: Container.State?, image: String, associationID: String?, persistentID: String?) {
+	init(id: ID, name: String?, lastState: Container.State?, image: String?, associationID: String?, persistentID: String?) {
 		self.id = id
 		self.name = name
 		self.lastState = lastState
@@ -32,12 +32,14 @@ final class StoredContainer: Identifiable {
 		self.persistentID = persistentID
 	}
 
-	init(container: Container) {
-		self.id = container.id
-		self.name = container.displayName
-		self.lastState = container.state
-		self.image = container.image
-		self.associationID = container.associationID
-		self.persistentID = container._persistentID
+	convenience init(container: Container) {
+		self.init(
+			id: container.id,
+			name: container.displayName,
+			lastState: container.state,
+			image: container.image,
+			associationID: container.associationID,
+			persistentID: container._persistentID
+		)
 	}
 }

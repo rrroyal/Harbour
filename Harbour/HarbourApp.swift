@@ -30,41 +30,6 @@ struct HarbourApp: App {
 		self._portainerStore = .init(wrappedValue: portainerStore)
 	}
 
-	@CommandsBuilder
-	private var portainerCommands: some Commands {
-		CommandMenu("CommandMenu.Portainer") {
-			Button {
-				portainerStore.refreshEndpoints()
-				portainerStore.refreshContainers()
-				portainerStore.refreshStacks()
-			} label: {
-				Label("Generic.Refresh", systemImage: SFSymbol.reload)
-			}
-			.keyboardShortcut("r", modifiers: .command)
-			.disabled(!portainerStore.isSetup)
-
-			Divider()
-
-			let selectedEndpointBinding = Binding<Endpoint?>(
-				get: { portainerStore.selectedEndpoint },
-				set: { portainerStore.setSelectedEndpoint($0) }
-			)
-			Picker(selection: selectedEndpointBinding) {
-				ForEach(portainerStore.endpoints) { endpoint in
-					Text(endpoint.name ?? endpoint.id.description)
-						.tag(endpoint)
-				}
-			} label: {
-				Text("CommandMenu.Portainer.ActiveEndpoint")
-				if let selectedEndpoint = selectedEndpointBinding.wrappedValue {
-					Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
-						.foregroundStyle(.secondary)
-				}
-			}
-			.disabled(portainerStore.endpoints.isEmpty)
-		}
-	}
-
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
@@ -84,7 +49,7 @@ struct HarbourApp: App {
 		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
 		.commands {
-			portainerCommands
+			PortainerCommands(portainerStore: portainerStore)
 		}
 		#if os(macOS)
 		.windowStyle(.hiddenTitleBar)
@@ -108,7 +73,6 @@ struct HarbourApp: App {
 
 // MARK: - HarbourApp+PortainerCommands
 
-/*
 extension HarbourApp {
 	struct PortainerCommands: Commands {
 		let portainerStore: PortainerStore
@@ -148,4 +112,3 @@ extension HarbourApp {
 		}
 	}
 }
-*/

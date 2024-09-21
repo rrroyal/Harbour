@@ -6,6 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CommonHaptics
 import SwiftUI
 
 // MARK: - View+addingCloseButton
@@ -21,7 +22,7 @@ extension View {
 // MARK: - AddingCloseButtonViewModifier
 
 private struct AddingCloseButtonViewModifier: ViewModifier {
-	@Environment(\.dismiss) private var _dismiss
+	@Environment(\.dismiss) private var defaultDismiss
 	var dismissAction: (() -> Void)?
 
 	func body(content: Content) -> some View {
@@ -30,11 +31,21 @@ private struct AddingCloseButtonViewModifier: ViewModifier {
 				ToolbarItem(placement: .cancellationAction) {
 					#if os(iOS)
 					CloseButton(style: .circleButton) {
-						dismissAction?() ?? _dismiss()
+						if let dismissAction {
+							dismissAction()
+						} else {
+							Haptics.generateIfEnabled(.buttonPress)
+							defaultDismiss()
+						}
 					}
 					#elseif os(macOS)
 					CloseButton(style: .text) {
-						dismissAction?() ?? _dismiss()
+						if let dismissAction {
+							dismissAction()
+						} else {
+							Haptics.generateIfEnabled(.buttonPress)
+							defaultDismiss()
+						}
 					}
 					#endif
 				}
