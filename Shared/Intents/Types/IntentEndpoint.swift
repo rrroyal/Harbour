@@ -88,16 +88,10 @@ extension IntentEndpoint {
 				if endpoints.count == 1, let endpoint = endpoints.first {
 					logger.notice("Got one endpoint with ID: \"\(endpoint.id)\"")
 					return Entity(endpoint: endpoint)
-				} else {
-					let lastSelectedEndpointID = await Preferences.shared.selectedEndpointID
-					if let lastSelectedEndpointID, let lastSelectedEndpoint = endpoints.first(where: { $0.id == lastSelectedEndpointID }) {
-						logger.notice("Got \(endpoints.count) endpoints, returning last selected with ID: \"\(lastSelectedEndpointID)\"")
-						return Entity(endpoint: lastSelectedEndpoint)
-					} else {
-						logger.notice("Got \(endpoints.count) endpoints, none was last selected.")
-						return nil
-					}
 				}
+
+				logger.notice("Endpoints count: \(endpoints.count), returning no default.")
+				return nil
 			} catch {
 				logger.error("Error getting default result: \(error.localizedDescription, privacy: .public)")
 				return nil
