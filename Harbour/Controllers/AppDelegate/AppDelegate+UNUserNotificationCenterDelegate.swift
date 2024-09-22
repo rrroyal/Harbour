@@ -9,12 +9,23 @@
 import PortainerKit
 import UserNotifications
 
-extension AppDelegate: UNUserNotificationCenterDelegate {
-	nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
-		[.banner, .list, .sound]
+extension AppDelegate: @preconcurrency UNUserNotificationCenterDelegate {
+	func userNotificationCenter(
+		_ center: UNUserNotificationCenter,
+		willPresent notification: UNNotification,
+		withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+	) {
+		completionHandler([.banner, .list, .sound])
 	}
 
-	nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
-		await AppState.shared.handleNotification(response)
+	func userNotificationCenter(
+		_ center: UNUserNotificationCenter,
+		didReceive response: UNNotificationResponse,
+		withCompletionHandler completionHandler: @escaping () -> Void
+	) {
+		Task { @MainActor in
+			AppState.shared.handleNotification(response)
+			completionHandler()
+		}
 	}
 }
