@@ -54,11 +54,11 @@ struct LandingView: View {
 
 private extension LandingView {
 	func navigateToSetupIfNeeded() {
-//		if PortainerStore.shared.savedURLs.isEmpty {
+		if PortainerStore.shared.savedURLs.isEmpty {
 			currentScreen = .setup
-//		} else {
-//			dismiss()
-//		}
+		} else {
+			dismiss()
+		}
 	}
 }
 
