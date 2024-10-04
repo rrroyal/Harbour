@@ -96,8 +96,14 @@ private extension ContentView.ViewForMacOS {
 				switch sceneDelegate.activeTab {
 				case .containers:
 					ContainersView()
+						.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
+							ContainerDetailsView(navigationItem: navigationItem)
+						}
 				case .stacks:
 					StacksView()
+						.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
+							StackDetailsView(navigationItem: navigationItem)
+						}
 				}
 			}
 		}

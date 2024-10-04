@@ -87,11 +87,11 @@ extension ContainersView.ListView {
 			.lineLimit(1)
 			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
 			.frame(maxWidth: .infinity)
-			#if os(iOS)
+//			#if os(iOS)
 			.background(Color.secondaryGroupedBackground, in: background)
-			#elseif os(macOS)
-			.background(.thickMaterial, in: background)
-			#endif
+//			#elseif os(macOS)
+//			.background(.thickMaterial, in: background)
+//			#endif
 			.contentShape(background)
 			#if os(iOS)
 			.contentShape(.contextMenuPreview, background)

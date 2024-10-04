@@ -35,8 +35,13 @@
         }
       ],
       "color" : {
-        "platform" : "osx",
-        "reference" : "windowBackgroundColor"
+        "color-space" : "display-p3",
+        "components" : {
+          "alpha" : "0.040",
+          "blue" : "1.000",
+          "green" : "1.000",
+          "red" : "1.000"
+        }
       },
       "idiom" : "mac"
     }

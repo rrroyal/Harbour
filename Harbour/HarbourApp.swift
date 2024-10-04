@@ -36,9 +36,9 @@ struct HarbourApp: App {
 		WindowGroup {
 			ContentView()
 				.scrollDismissesKeyboard(.interactively)
-				#if os(macOS)
-				.containerBackground(.thickMaterial, for: .window)
-				#endif
+//				#if os(macOS)
+//				.containerBackground(.thickMaterial, for: .window)
+//				#endif
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
