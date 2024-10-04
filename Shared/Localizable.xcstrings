@@ -411,16 +411,6 @@
         }
       }
     },
-    "ContainerDetailsView.Section.Cmd" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "CMD"
-          }
-        }
-      }
-    },
     "ContainerDetailsView.Section.CreatedAt" : {
       "localizations" : {
         "en" : {

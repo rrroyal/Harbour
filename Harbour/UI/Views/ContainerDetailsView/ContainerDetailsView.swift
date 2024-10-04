@@ -168,23 +168,20 @@ struct ContainerDetailsView: View {
 	}
 
 	@ViewBuilder
-	private var commandSection: some View {
-		if let command = viewModel.containerDetails?.config?.cmd?.joined(separator: " ") {
+	private var entrypointSection: some View {
+		let entrypoint = viewModel.containerDetails?.config?.entrypoint?.joined(separator: " ")
+		let command = viewModel.containerDetails?.config?.cmd?.joined(separator: " ")
+		if entrypoint != nil || command != nil {
 			NormalizedSection {
-				Labeled(command)
-					.fontDesign(.monospaced)
-			} header: {
-				Text("ContainerDetailsView.Section.Cmd")
-			}
-		}
-	}
+				if let entrypoint {
+					Labeled(entrypoint)
+						.fontDesign(.monospaced)
+				}
 
-	@ViewBuilder
-	private var entryPointSection: some View {
-		if let entrypoint = viewModel.containerDetails?.config?.entrypoint?.joined(separator: " ") {
-			NormalizedSection {
-				Labeled(entrypoint)
-					.fontDesign(.monospaced)
+				if let command {
+					Labeled(command)
+						.fontDesign(.monospaced)
+				}
 			} header: {
 				Text("ContainerDetailsView.Section.Entrypoint")
 			}
@@ -248,8 +245,7 @@ struct ContainerDetailsView: View {
 				createdAtSection
 				finishedAtSection
 				imageSection
-				commandSection
-				entryPointSection
+				entrypointSection
 			}
 
 			stackSection

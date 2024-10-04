@@ -9,15 +9,13 @@
 @preconcurrency import UserNotifications
 
 extension AppState {
-	nonisolated func handleNotification(_ notification: UNNotificationResponse) {
-		Task { @MainActor in
-			notificationsToHandle.insert(notification)
-		}
+	@MainActor
+	func handleNotification(_ notification: UNNotificationResponse) {
+		notificationsToHandle.insert(notification)
 	}
 
-	nonisolated func notificationHandled(_ notification: UNNotificationResponse) {
-		Task { @MainActor in
-			notificationsToHandle.remove(notification)
-		}
+	@MainActor
+	func notificationHandled(_ notification: UNNotificationResponse) {
+		notificationsToHandle.remove(notification)
 	}
 }
