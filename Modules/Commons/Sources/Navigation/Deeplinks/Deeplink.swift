@@ -21,7 +21,7 @@ public struct Deeplink {
 		return components.url
 	}
 
-	public static func destination(from url: URL) -> Deeplink.Destination? {
+	public static func destination(from url: URL) -> (any Deeplink.Destination)? {
 		guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
 			// URL is malformed
 			return nil

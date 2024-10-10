@@ -9,7 +9,7 @@
 import Foundation
 
 public extension Deeplink {
-	protocol Destination {
+	protocol Destination: NavigableItem {
 		var host: Deeplink.Host { get }
 		var url: URL? { get }
 
