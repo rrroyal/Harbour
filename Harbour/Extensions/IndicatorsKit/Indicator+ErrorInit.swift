@@ -15,14 +15,16 @@ extension Indicator {
 		let subtitle: String
 		let expandedText: String?
 
+		let errorLocalizedDescriptionExpandedText = error.localizedDescription.count > 32 ? error.localizedDescription : nil
+
 		if let error = error as? LocalizedError {
 			title = error.failureReason ?? String(localized: "Indicators.Error")
 			subtitle = error.localizedDescription
-			expandedText = error.recoverySuggestion
+			expandedText = error.recoverySuggestion ?? errorLocalizedDescriptionExpandedText
 		} else {
 			title = String(localized: "Indicators.Error")
 			subtitle = error.localizedDescription
-			expandedText = nil
+			expandedText = errorLocalizedDescriptionExpandedText
 		}
 
 		self.init(
