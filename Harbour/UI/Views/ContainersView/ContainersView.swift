@@ -172,12 +172,26 @@ struct ContainersView: View {
 				description: Text("Portainer.NotSetup.Description")
 			)
 			.symbolVariant(.slash)
-		} else if portainerStore.endpoints.isEmpty {
-			ContentUnavailableView(
-				"ContainersView.NoEndpointsPlaceholder.Title",
-				systemImage: SFSymbol.xmark,
-				description: Text("ContainersView.NoEndpointsPlaceholder.Description")
-			)
+		} else if portainerStore.selectedEndpoint == nil {
+			if portainerStore.endpoints.isEmpty {
+				ContentUnavailableView(
+					"ContainersView.NoEndpointsPlaceholder.Title",
+					systemImage: SFSymbol.xmark,
+					description: Text("ContainersView.NoEndpointsPlaceholder.Description")
+				)
+			} else {
+				let error = PortainerError.noSelectedEndpoint
+				let description: Text? = if let recoverySuggestion = error.recoverySuggestion {
+					Text(recoverySuggestion)
+				} else {
+					nil
+				}
+				ContentUnavailableView(
+					error.localizedDescription,
+					systemImage: SFSymbol.error,
+					description: description
+				)
+			}
 		} else if !viewModel.searchText.isEmpty {
 			ContentUnavailableView.search(text: viewModel.searchText)
 		} else {

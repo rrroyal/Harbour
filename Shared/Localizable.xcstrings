@@ -1323,7 +1323,7 @@
         }
       }
     },
-    "Error.Portainer.NoSelectedEndpoint" : {
+    "Error.Portainer.NoSelectedEndpoint.ErrorDescription" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1333,7 +1333,17 @@
         }
       }
     },
-    "Error.Portainer.NoServer" : {
+    "Error.Portainer.NoSelectedEndpoint.RecoverySuggestion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select one in the endpoint picker."
+          }
+        }
+      }
+    },
+    "Error.Portainer.NoServer.ErrorDescription" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1343,12 +1353,32 @@
         }
       }
     },
-    "Error.Portainer.NotSetup" : {
+    "Error.Portainer.NoServer.RecoverySuggestion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup the Portainer connection in the settings."
+          }
+        }
+      }
+    },
+    "Error.Portainer.NotSetup.ErrorDescription" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not Setup"
+          }
+        }
+      }
+    },
+    "Error.Portainer.NotSetup.RecoverySuggestion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Setup the Portainer connection in the settings."
           }
         }
       }
@@ -2059,16 +2089,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Encoding Failed"
-          }
-        }
-      }
-    },
-    "PortainerKit.ClientError.NotSetup" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not Setup"
           }
         }
       }

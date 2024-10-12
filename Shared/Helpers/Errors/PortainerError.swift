@@ -31,13 +31,26 @@ extension PortainerError: LocalizedError {
 	var errorDescription: String? {
 		switch self {
 		case .notSetup:
-			String(localized: "Error.Portainer.NotSetup")
+			String(localized: "Error.Portainer.NotSetup.ErrorDescription")
 		case .noServer:
-			String(localized: "Error.Portainer.NoServer")
+			String(localized: "Error.Portainer.NoServer.ErrorDescription")
 		case .noSelectedEndpoint:
-			String(localized: "Error.Portainer.NoSelectedEndpoint")
+			String(localized: "Error.Portainer.NoSelectedEndpoint.ErrorDescription")
 		case .containerNotFound(let containerID):
 			String(localized: "Error.Portainer.ContainerNotFound ID:\(containerID)")
+		}
+	}
+
+	var recoverySuggestion: String? {
+		switch self {
+		case .notSetup:
+			String(localized: "Error.Portainer.NotSetup.RecoverySuggestion")
+		case .noServer:
+			String(localized: "Error.Portainer.NoServer.RecoverySuggestion")
+		case .noSelectedEndpoint:
+			String(localized: "Error.Portainer.NoSelectedEndpoint.RecoverySuggestion")
+		case .containerNotFound:
+			nil
 		}
 	}
 }

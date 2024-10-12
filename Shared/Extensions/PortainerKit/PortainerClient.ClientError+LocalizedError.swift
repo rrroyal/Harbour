@@ -13,11 +13,22 @@ extension PortainerClient.ClientError: @retroactive LocalizedError {
 	public var errorDescription: String? {
 		switch self {
 		case .notSetup:
-			String(localized: "PortainerKit.ClientError.NotSetup")
+			PortainerError.notSetup.errorDescription
 		case .responseCodeUnacceptable(let code):
 			String(localized: "PortainerKit.ClientError.ResponseCodeUnacceptable Code:\(code)")
 		case .encodingFailed:
 			String(localized: "PortainerKit.ClientError.EncodingFailed")
+		}
+	}
+
+	public var recoverySuggestion: String? {
+		switch self {
+		case .notSetup:
+			PortainerError.notSetup.recoverySuggestion
+		case .responseCodeUnacceptable:
+			nil
+		case .encodingFailed:
+			nil
 		}
 	}
 }
