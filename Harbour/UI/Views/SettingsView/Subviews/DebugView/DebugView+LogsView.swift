@@ -164,8 +164,8 @@ private extension DebugView.LogsView {
 		var color: Color? {
 			switch level {
 			case .debug:			.purple
-			case .info:				.blue
-			case .notice:			nil
+			case .info:				nil
+			case .notice:			.blue
 			case .error:			.yellow
 			case .fault:			.red
 			case nil, .undefined:	nil

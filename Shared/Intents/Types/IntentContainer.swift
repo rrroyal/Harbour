@@ -174,7 +174,7 @@ extension IntentContainer {
 
 			do {
 				guard let endpoint else {
-					logger.notice("Returning empty (no endpoint)")
+					logger.info("Returning empty (no endpoint)")
 					return []
 				}
 
@@ -184,7 +184,7 @@ extension IntentContainer {
 					.map { Entity(container: $0) }
 					.localizedSorted(by: \.name)
 
-				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
+				logger.info("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
 				return entities
 			} catch {
 				logger.error("Error getting suggested entities: \(error.localizedDescription, privacy: .public)")
@@ -197,7 +197,7 @@ extension IntentContainer {
 
 			do {
 				guard let endpoint else {
-					logger.notice("Returning empty (no endpoint)")
+					logger.info("Returning empty (no endpoint)")
 					return []
 				}
 
@@ -208,7 +208,7 @@ extension IntentContainer {
 					.map { Entity(container: $0) }
 					.localizedSorted(by: \.name)
 
-				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
+				logger.info("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
 				return entities
 			} catch {
 				logger.error("Error getting matching entities: \(error.localizedDescription, privacy: .public)")
@@ -220,7 +220,7 @@ extension IntentContainer {
 			logger.info("Getting entities for identifiers: \(identifiers)...")
 
 			guard let endpoint else {
-				logger.notice("Returning empty (no endpoint)")
+				logger.info("Returning empty (no endpoint)")
 				return []
 			}
 
@@ -252,14 +252,14 @@ extension IntentContainer {
 					}
 				}()
 
-				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
+				logger.info("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
 				return entities
 					.localizedSorted(by: \.name)
 			} catch {
 				logger.error("Error getting entities: \(error.localizedDescription, privacy: .public)")
 
 				if !requiresOnline && error is URLError {
-					logger.notice("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline)")
+					logger.info("Returning \(String(describing: parsedContainers), privacy: .sensitive) (offline)")
 					return parsedContainers
 				}
 

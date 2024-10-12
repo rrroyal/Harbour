@@ -52,7 +52,7 @@ extension SetupView {
 		}
 
 		func login() -> Task<Bool, Error> {
-			logger.notice("Attempting to login with URL: \"\(self.url)\"...")
+			logger.info("Attempting to login with URL: \"\(self.url)\"...")
 
 			cancelLogin()
 			let task = Task {

@@ -117,7 +117,7 @@ public extension PortainerStore {
 	///   - saveToken: Should the token be saved to the keychain?
 	@MainActor
 	func setup(url: URL, token: String? = nil, saveToken: Bool = true) {
-		logger.notice("Setting up, URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"...")
+		logger.info("Setting up, URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"...")
 
 		let token = try? (token ?? keychain.getString(for: url))
 		portainer.serverURL = url
@@ -178,7 +178,7 @@ public extension PortainerStore {
 
 		preferences.selectedServer = serverURL.absoluteString
 
-		logger.notice("Switched successfully!")
+		logger.info("Switched successfully!")
 	}
 
 	/// Removes authorization data from Keychain for the provided server URL.
@@ -229,7 +229,7 @@ extension PortainerStore {
 	/// - Parameter endpoint: Endpoint to switch to
 	@MainActor
 	func setSelectedEndpoint(_ endpoint: Endpoint?) {
-		logger.notice("Selected endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive(mask: .hash))\" (\(endpoint?.id.description ?? "<none>", privacy: .public))")
+		logger.notice("Selecting endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive(mask: .hash))\" (\(endpoint?.id.description ?? "<none>", privacy: .public))")
 		self.selectedEndpoint = endpoint
 
 		if endpoint != nil {

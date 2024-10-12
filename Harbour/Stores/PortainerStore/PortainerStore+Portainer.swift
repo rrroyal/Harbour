@@ -125,7 +125,7 @@ extension PortainerStore {
 	///   - action: Action to execute
 	///   - containerID: ID of the container we want to execute the action on.
 	func execute(_ action: ContainerAction, on containerID: Container.ID) async throws {
-		logger.notice("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
+		logger.info("Executing action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
@@ -139,7 +139,7 @@ extension PortainerStore {
 				}
 			}
 
-			logger.notice("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\".")
+			logger.info("Executed action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\".")
 		} catch {
 			// swiftlint:disable:next line_length
 			logger.error("Failed to execute action \"\(action.rawValue, privacy: .public)\" on container with ID: \"\(containerID, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
@@ -166,7 +166,7 @@ extension PortainerStore {
 			}
 		}
 
-		logger.notice("Removing container with ID: \"\(containerID, privacy: .public)\"...")
+		logger.info("Removing container with ID: \"\(containerID, privacy: .public)\"...")
 
 		do {
 			guard let selectedEndpoint else {
@@ -191,7 +191,7 @@ extension PortainerStore {
 				}
 			}
 
-			logger.notice("Removed container with ID: \"\(containerID, privacy: .public)\".")
+			logger.info("Removed container with ID: \"\(containerID, privacy: .public)\".")
 		} catch {
 			logger.error("Failed to remove container with ID: \"\(containerID, privacy: .public)\": \(error.localizedDescription, privacy: .public)")
 			throw error
@@ -201,7 +201,7 @@ extension PortainerStore {
 	/*
 	@discardableResult
 	func attachToContainer(containerID: Container.ID) throws -> AttachedContainer {
-		logger.notice("Attaching to container with ID: \"\(containerID, privacy: .public)\"...")
+		logger.info("Attaching to container with ID: \"\(containerID, privacy: .public)\"...")
 		do {
 			guard let selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint
@@ -213,7 +213,7 @@ extension PortainerStore {
 				throw PortainerError.containerNotFound(containerID)
 			}
 
-			logger.notice("Attached to container with ID: \"\(containerID, privacy: .public)\".")
+			logger.info("Attached to container with ID: \"\(containerID, privacy: .public)\".")
 
 			let attachedContainer = AttachedContainer(container: container, subject: subject)
 			self.attachedContainer = attachedContainer
@@ -292,7 +292,7 @@ public extension PortainerStore {
 			}
 		}
 
-		logger.notice("\(started ? "Starting" : "Stopping", privacy: .public) stack with stackID: \(stackID)...")
+		logger.info("\(started ? "Starting" : "Stopping", privacy: .public) stack with stackID: \(stackID)...")
 
 		do {
 			guard let selectedEndpoint else {
@@ -304,7 +304,7 @@ public extension PortainerStore {
 			}
 
 			let newStack = try await portainer.setStackState(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
-			logger.notice("\(started ? "Started" : "Stopped", privacy: .public) stack with stackID: \(stackID)")
+			logger.info("\(started ? "Started" : "Stopped", privacy: .public) stack with stackID: \(stackID)")
 
 			Task { @MainActor in
 				if let newStack, let index = stacks.firstIndex(where: { $0.id == stackID }) {

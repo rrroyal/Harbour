@@ -122,7 +122,7 @@ extension ContainerDetailsView {
 
 								guard !Task.isCancelled else { return .failure(CancellationError()) }
 
-								self.logger.info("Resolved by navigationItem.id: \"\(navigationItem.id)\"")
+								self.logger.notice("Resolved by navigationItem.id: \"\(navigationItem.id)\"")
 								return .success(containerDetails)
 							} catch {
 								// Store the error for user feedback
@@ -154,7 +154,7 @@ extension ContainerDetailsView {
 
 									// Try to find the container
 									guard let persistentContainer = await self.portainerStore.containers.first(where: { $0._persistentID == persistentID }) else {
-										self.logger.notice("Didn't find container for persistentID: \"\(persistentID)\"!")
+										self.logger.warning("Didn't find container for persistentID: \"\(persistentID)\"!")
 										return .failure(LoadingError.noContainerForPersistentID)
 									}
 

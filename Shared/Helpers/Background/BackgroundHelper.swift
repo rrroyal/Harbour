@@ -99,7 +99,7 @@ struct BackgroundHelper: Sendable {
 //			.filter { $0.changeType == .recreated ? $0.oldState != $0.newState : true }
 			.localizedSorted(by: \.containerName)
 
-		loggerBackground.notice("Changes (\(changes.count, privacy: .public)): \(changes, privacy: .sensitive)")
+		loggerBackground.info("Changes (\(changes.count, privacy: .public)): \(changes, privacy: .sensitive)")
 
 		if changes.isEmpty {
 			return
@@ -136,7 +136,7 @@ extension BackgroundHelper {
 
 			let identifier = TaskIdentifier.backgroundRefresh
 
-			logger.notice("Scheduling background refresh with identifier: \"\(identifier, privacy: .public)\"")
+			logger.info("Scheduling background refresh with identifier: \"\(identifier, privacy: .public)\"")
 
 			let request = BGAppRefreshTaskRequest(identifier: identifier)
 			request.earliestBeginDate = .now

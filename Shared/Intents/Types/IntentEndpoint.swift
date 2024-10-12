@@ -86,11 +86,11 @@ extension IntentEndpoint {
 				let endpoints = try await portainerStore.portainer.fetchEndpoints()
 
 				if endpoints.count == 1, let endpoint = endpoints.first {
-					logger.notice("Got one endpoint with ID: \"\(endpoint.id)\"")
+					logger.info("Got one endpoint with ID: \"\(endpoint.id)\"")
 					return Entity(endpoint: endpoint)
 				}
 
-				logger.notice("Endpoints count: \(endpoints.count), returning no default.")
+				logger.info("Endpoints count: \(endpoints.count), returning no default.")
 				return nil
 			} catch {
 				logger.error("Error getting default result: \(error.localizedDescription, privacy: .public)")
@@ -108,7 +108,7 @@ extension IntentEndpoint {
 					.map { Entity(endpoint: $0) }
 					.localizedSorted(by: \.name)
 
-				logger.notice("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
+				logger.info("Returning \(entities.count) entities (\(requiresOnline ? "live" : "parsed"))")
 				return entities
 			} catch {
 				logger.error("Error getting suggested entities: \(error.localizedDescription, privacy: .public)")
@@ -128,14 +128,14 @@ extension IntentEndpoint {
 					.map { Entity(endpoint: $0) }
 					.localizedSorted(by: \.name)
 
-				logger.notice("Returning \(entities.count) entities (live)")
+				logger.info("Returning \(entities.count) entities (live)")
 				return entities
 			} catch {
 				logger.error("Error getting entities: \(error.localizedDescription, privacy: .public)")
 
 				if !requiresOnline && error is URLError {
 					let parsed = identifiers.map { Entity(id: $0, name: nil) }
-					logger.notice("Returning \(parsed.count) entities (parsed)")
+					logger.info("Returning \(parsed.count) entities (parsed)")
 					return parsed
 				}
 
