@@ -80,14 +80,18 @@ extension ContainersView {
 				fetchError = nil
 
 				do {
-					if portainerStore.selectedEndpoint != nil {
-						async let endpointsTask = portainerStore.refreshEndpoints()
-						async let containersTask = portainerStore.refreshContainers()
+					try await withThrowingTaskGroup(of: Void.self) { group in
+						group.addTask {
+							_ = try await self.portainerStore.refreshEndpoints().value
+						}
 
-						_ = try await (endpointsTask.value, containersTask.value)
-					} else {
-						_ = try await portainerStore.refreshEndpoints().value
-						_ = try await portainerStore.refreshContainers().value
+						if portainerStore.selectedEndpoint != nil {
+							group.addTask {
+								_ = try await self.portainerStore.refreshContainers().value
+							}
+						}
+
+						try await group.waitForAll()
 					}
 
 					let staticTokens: [SearchToken] = [

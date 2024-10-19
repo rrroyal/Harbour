@@ -23,6 +23,7 @@ struct ContainersView: View {
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
+	@Environment(\.horizontalSizeClass) private var horizontalSizeClass
 	@State private var viewModel = ViewModel()
 	@FocusState private var isFocused: Bool
 
@@ -31,6 +32,16 @@ struct ContainersView: View {
 			return selectedEndpoint.name ?? selectedEndpoint.id.description
 		}
 		return String(localized: "AppName")
+	}
+
+	private var selectedEndpointTitle: String {
+		if let selectedEndpoint = portainerStore.selectedEndpoint {
+			selectedEndpoint.name ?? selectedEndpoint.id.description
+		} else if !portainerStore.endpoints.isEmpty {
+			String(localized: "ContainersView.NoEndpointSelected")
+		} else {
+			String(localized: "ContainersView.NoEndpointsAvailable")
+		}
 	}
 
 	@ViewBuilder @MainActor
@@ -48,26 +59,29 @@ struct ContainersView: View {
 					.tag(endpoint)
 			}
 		} label: {
-			let title = if let selectedEndpoint = portainerStore.selectedEndpoint {
-				selectedEndpoint.name ?? selectedEndpoint.id.description
-			} else if portainerStore.endpoints.isEmpty {
-				String(localized: "ContainersView.NoEndpointsAvailable")
-			} else {
-				String(localized: "ContainersView.NoEndpointSelected")
-			}
-			Text(title)
+			Text(selectedEndpointTitle)
 		}
+		.labelStyle(.titleAndIcon)
 		.disabled(!viewModel.canUseEndpointsMenu)
 	}
 
 	@ToolbarContentBuilder @MainActor
 	private var toolbarContent: some ToolbarContent {
-//		#if os(macOS)
-//		ToolbarItem(placement: .primaryAction) {
-//			endpointPicker
-//				.labelStyle(.titleAndIcon)
-//		}
-//		#endif
+		#if os(iOS)
+		if horizontalSizeClass == .regular {
+			ToolbarItem(placement: .navigation) {
+				Menu {
+					endpointPicker
+				} label: {
+					Label(selectedEndpointTitle, systemImage: SFSymbol.endpoint)
+						.symbolVariant(portainerStore.selectedEndpoint != nil ? .fill : portainerStore.endpoints.isEmpty ? .slash : .none)
+				}
+				.labelStyle(.iconOnly)
+				.animation(.default, value: portainerStore.endpoints.isEmpty)
+				.animation(.default, value: portainerStore.selectedEndpoint)
+			}
+		}
+		#endif
 
 		ToolbarItem(placement: .automatic) {
 			Menu {
@@ -119,40 +133,6 @@ struct ContainersView: View {
 			.labelStyle(.titleAndIcon)
 		}
 	}
-
-	/*
-	@ViewBuilder @MainActor
-	private var backgroundPlaceholder: some View {
-		Group {
-			if !portainerStore.isSetup {
-				ContentUnavailableView(
-					"Portainer.NotSetup.Title",
-					systemImage: SFSymbol.network,
-					description: Text("Portainer.NotSetup.Description")
-				)
-				.symbolVariant(.slash)
-			} else if portainerStore.endpoints.isEmpty {
-				ContentUnavailableView(
-					"ContainersView.NoEndpointsPlaceholder.Title",
-					systemImage: SFSymbol.xmark,
-					description: Text("ContainersView.NoEndpointsPlaceholder.Description")
-				)
-			} else if viewModel.containers.isEmpty {
-				if viewModel.viewState.isLoading {
-					ProgressView()
-				} else if !viewModel.searchText.isEmpty {
-					ContentUnavailableView.search(text: viewModel.searchText)
-				} else {
-					ContentUnavailableView(
-						"ContainersView.NoContainersPlaceholder.Title",
-						image: SFSymbol.Custom.container
-					)
-					.symbolVariant(.slash)
-				}
-			}
-		}
-	}
-	 */
 
 	@ViewBuilder @MainActor
 	private var backgroundPlaceholder: some View {
@@ -235,9 +215,14 @@ struct ContainersView: View {
 			#endif
 			.toolbar {
 				toolbarContent
-			}
-			.if(viewModel.canUseEndpointsMenu) {
-				$0.toolbarTitleMenu { endpointPicker }
+
+				#if os(iOS)
+				if horizontalSizeClass == .compact && viewModel.canUseEndpointsMenu {
+					ToolbarTitleMenu {
+						endpointPicker
+					}
+				}
+				#endif
 			}
 			.focusable()
 			.focused($isFocused)
@@ -361,6 +346,6 @@ private extension ContainersView {
 
 #Preview {
 	ContainersView()
-		.withEnvironment(appState: .shared)
+		.withEnvironment()
 		.environment(SceneDelegate())
 }
