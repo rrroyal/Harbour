@@ -65,6 +65,7 @@ extension ContainerStatusWidget {
 				#endif
 				.foregroundStyle(.tint)
 				.minimumScaleFactor(minimumScaleFactor)
+				.widgetAccentable()
 		}
 
 		@ViewBuilder @MainActor
@@ -72,6 +73,7 @@ extension ContainerStatusWidget {
 			Circle()
 				.fill(redactionReasons.isEmpty ? AnyShapeStyle(.tint) : AnyShapeStyle(.tint.secondary))
 				.frame(width: circleSize, height: circleSize)
+				.widgetAccentable()
 		}
 
 		@ViewBuilder @MainActor
@@ -126,9 +128,7 @@ extension ContainerStatusWidget {
 			VStack(spacing: 0) {
 				HStack {
 					stateHeadline
-
 					Spacer()
-
 					stateIcon
 				}
 
@@ -149,7 +149,6 @@ extension ContainerStatusWidget {
 			.tint(container?.state.color ?? Container.State?.none.color)
 			.contentTransition(.opacity)
 			.modifier(LinkWrappedViewModifier(url: url))
-			.background(Color.widgetBackground)
 			.id("ContainerStatusWidgetView.ContainerView:\(container?.id ?? intentContainer._id)")
 		}
 	}

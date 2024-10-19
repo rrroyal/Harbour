@@ -11,12 +11,17 @@ import SwiftUI
 // MARK: - InsetViewModifier
 
 struct InsetViewModifier: ViewModifier {
+	@Environment(\.widgetRenderingMode) private var widgetRenderingMode
+
+	private var shouldUseTransparentBackground: Bool {
+		widgetRenderingMode == .accented
+	}
+
 	func body(content: Content) -> some View {
 		content
-			.clipShape(ContainerRelativeShape())
 			.background(
 				ContainerRelativeShape()
-					.fill(Color.widgetBackground)
+					.fill(Color.widgetBackground.opacity(shouldUseTransparentBackground ? 0.04 : 1))
 					.shadow(color: .black.opacity(0.04), radius: 6, x: 0, y: 0)
 			)
 	}
