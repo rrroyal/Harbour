@@ -44,5 +44,5 @@ extension ContainersView {
 	}
 	.background(Color.groupedBackground)
 	.environment(SceneDelegate())
-	.withEnvironment(appState: .shared, preferences: .shared, portainerStore: .shared)
+	.withEnvironment()
 }

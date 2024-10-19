@@ -308,6 +308,6 @@ private extension StacksView {
 
 #Preview("StacksView") {
 	StacksView()
-		.withEnvironment(appState: .shared)
+		.withEnvironment()
 		.environment(SceneDelegate())
 }

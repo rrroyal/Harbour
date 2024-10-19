@@ -12,7 +12,7 @@ import SwiftUI
 extension View {
 	@ViewBuilder
 	func withEnvironment(
-		appState: AppState,
+		appState: AppState = .shared,
 		preferences: Preferences = .shared,
 		portainerStore: PortainerStore = .shared
 	) -> some View {

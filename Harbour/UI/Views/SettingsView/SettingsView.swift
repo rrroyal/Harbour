@@ -109,6 +109,6 @@ private extension SettingsView {
 
 #Preview {
 	SettingsView()
-		.withEnvironment(appState: .shared)
+		.withEnvironment()
 		.environment(SceneDelegate())
 }

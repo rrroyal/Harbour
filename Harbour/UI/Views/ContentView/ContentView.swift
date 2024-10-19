@@ -112,6 +112,6 @@ struct ContentView: View {
 
 #Preview {
 	ContentView()
-		.withEnvironment(appState: .shared)
+		.withEnvironment()
 		.environment(SceneDelegate())
 }

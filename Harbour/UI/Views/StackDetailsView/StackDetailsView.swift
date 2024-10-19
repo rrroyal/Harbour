@@ -304,5 +304,6 @@ private extension StackDetailsView {
 
 #Preview {
 	StackDetailsView(navigationItem: .init(stackID: Stack.preview().id.description, stackName: Stack.preview().name))
-		.withEnvironment(appState: .shared)
+		.withEnvironment()
+		.environment(SceneDelegate())
 }

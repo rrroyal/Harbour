@@ -74,6 +74,16 @@ extension ContentView {
 
 // MARK: - Previews
 
-#Preview {
+#Preview("Empty") {
 	ContentView.ViewForIOS()
+		.withEnvironment()
+		.environment(SceneDelegate())
 }
+
+#if DEBUG
+#Preview("Mocked") {
+	ContentView.ViewForIOS()
+		.withEnvironment(portainerStore: .preview)
+		.environment(SceneDelegate())
+}
+#endif

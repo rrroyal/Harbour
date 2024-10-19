@@ -11,9 +11,16 @@ import Foundation
 extension PortainerStore {
 	static let preview: PortainerStore = {
 		let portainerStore = PortainerStore()
-		portainerStore.containers = [.preview()]
+		portainerStore.isSetup = true
 		portainerStore.endpoints = [.init(id: 0, name: "Endpoint")]
 		portainerStore.selectedEndpoint = portainerStore.endpoints.first
+		portainerStore.endpointsTask?.cancel()
+		portainerStore.containersTask?.cancel()
+		portainerStore.stacksTask?.cancel()
+		portainerStore.containers = [
+			.preview(id: "1", name: "Container1"),
+			.preview(id: "2", name: "Container2")
+		]
 		return portainerStore
 	}()
 }
