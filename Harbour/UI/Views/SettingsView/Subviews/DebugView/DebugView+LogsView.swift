@@ -9,6 +9,7 @@
 import CommonFoundation
 import CommonHaptics
 import OSLog
+import PortainerKit
 import SwiftUI
 
 // MARK: - DebugView+LogsView
@@ -19,6 +20,7 @@ extension DebugView {
 		@State private var logsTask: Task<Void, Never>?
 		@State private var logs: [LogEntry] = []
 		@State private var filter: String = ""
+		@State private var includePortainerKitLogs = false
 		@State private var scrollViewIsRefreshing = false
 
 		private var filteredLogs: [LogEntry] {
@@ -38,6 +40,14 @@ extension DebugView {
 				} label: {
 					Label("Generic.Refresh", systemImage: SFSymbol.reload)
 				}
+
+				Divider()
+
+				Toggle("DebugView.LogsView.IncludePortainerKitLogs", isOn: $includePortainerKitLogs)
+					.onChange(of: includePortainerKitLogs) {
+						Haptics.generateIfEnabled(.selectionChanged)
+						getLogs()
+					}
 
 				Divider()
 
@@ -119,12 +129,22 @@ extension DebugView {
 				do {
 					let logStore = try OSLogStore(scope: .currentProcessIdentifier)
 					let position = logStore.position(date: Date().addingTimeInterval(-(6 * 60 * 60)))
-					// swiftlint:disable:next force_unwrapping
-					let predicate = NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)
+
+					var predicates: [NSPredicate] = [
+						// swiftlint:disable:next force_unwrapping
+						NSPredicate(format: "subsystem CONTAINS[c] %@", Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)
+					]
+					if await includePortainerKitLogs {
+						predicates.append(NSPredicate(format: "subsystem CONTAINS[c] %@", PortainerClient.bundleIdentifier))
+					}
+
 					let entries = try logStore.getEntries(
 						with: [],
 						at: position,
-						matching: predicate
+						matching: NSCompoundPredicate(
+							type: .or,
+							subpredicates: predicates
+						)
 					)
 
 					guard !Task.isCancelled else { break fetchLogs }

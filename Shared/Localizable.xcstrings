@@ -1103,6 +1103,16 @@
         }
       }
     },
+    "DebugView.LogsView.IncludePortainerKitLogs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include PortainerKit Logs"
+          }
+        }
+      }
+    },
     "DebugView.LogsView.LogLevel.Debug" : {
       "localizations" : {
         "en" : {
