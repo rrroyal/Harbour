@@ -20,31 +20,25 @@ extension SceneDelegate: DeeplinkHandlable {
 		isContainerChangesSheetPresented = false
 	}
 
-//	@MainActor
-//	func navigate(to tab: ViewTab) {
-//		activeTab = tab
-//
-//		switch tab {
-//		case .containers:
-//			navigationPathContainers.removeLast(navigationPathContainers.count)
-//		case .stacks:
-//			navigationPathStacks.removeLast(navigationPathStacks.count)
-//		}
-//	}
-
 	@MainActor
-	func navigate<each Destination: NavigableItem>(to tab: ViewTab, with navigationPathItems: repeat each Destination) {
+	func navigate<each Destination: NavigableItem>(to tab: ViewTab, with navigationItems: repeat each Destination, removingPrevious removePreviousItems: Bool = true) {
 		activeTab = tab
 
 		switch tab {
 		case .containers:
-			navigationState.containers.removeLast(navigationState.containers.count)
-			for navigationItem in repeat each navigationPathItems {
+			if removePreviousItems {
+				navigationState.containers.removeLast(navigationState.containers.count)
+			}
+
+			for navigationItem in repeat each navigationItems {
 				navigationState.containers.append(navigationItem)
 			}
 		case .stacks:
-			navigationState.stacks.removeLast(navigationState.stacks.count)
-			for navigationItem in repeat each navigationPathItems {
+			if removePreviousItems {
+				navigationState.stacks.removeLast(navigationState.stacks.count)
+			}
+
+			for navigationItem in repeat each navigationItems {
 				navigationState.stacks.append(navigationItem)
 			}
 		}

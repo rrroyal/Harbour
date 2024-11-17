@@ -186,7 +186,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 										id: foundContainer.id,
 										displayName: foundContainer.displayName ?? link.key
 									)
-									sceneDelegate.navigate(to: .containers, with: navigationItem)
+									sceneDelegate.navigate(to: .containers, with: navigationItem, removingPrevious: true) // bugged :(
 								}
 								#if os(macOS)
 								.buttonStyle(.plain)
