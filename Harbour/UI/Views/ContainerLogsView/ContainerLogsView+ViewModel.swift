@@ -32,7 +32,6 @@ extension ContainerLogsView {
 
 		var scrollViewIsRefreshing = false
 
-		var includeTimestamps = false
 		var lineCount = 100
 
 		var logs: String? {
@@ -60,7 +59,7 @@ extension ContainerLogsView {
 		}
 
 		@discardableResult
-		func getLogs() -> Task<Void, Error> {
+		func getLogs(includeTimestamps: Bool) -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
 				defer { self.fetchTask = nil }

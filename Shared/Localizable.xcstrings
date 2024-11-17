@@ -651,6 +651,26 @@
         }
       }
     },
+    "ContainerLogsView.Menu.SeparateLines" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Separate Lines"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.NoLogs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Logs"
+          }
+        }
+      }
+    },
     "ContainerLogsView.Title" : {
       "localizations" : {
         "en" : {

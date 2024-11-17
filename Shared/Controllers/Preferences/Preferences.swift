@@ -70,6 +70,14 @@ public final class Preferences: ObservableObject {
 	@AppStorage("StacksView.FilterByActiveEndpoint", store: Preferences.userDefaults)
 	public var svFilterByActiveEndpoint = false
 
+	/// Should logs include timestamps in ``ContainerLogsView``?
+	@AppStorage("ContainerLogsView.IncludeTimestamps", store: Preferences.userDefaults)
+	public var clIncludeTimestamps = true
+
+	/// Should lines be separated in ``ContainerLogsView``?
+	@AppStorage("ContainerLogsView.SeparateLines", store: Preferences.userDefaults)
+	public var clSeparateLines = true
+
 	/// When removing containers, should they be force-removed?
 	@AppStorage("ContainerRemove.Force", store: Preferences.userDefaults)
 	public var containerRemoveForce = false

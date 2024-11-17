@@ -14,6 +14,7 @@ import SwiftUI
 
 struct ContainerLogsView: View {
 	@EnvironmentObject private var portainerStore: PortainerStore
+	@EnvironmentObject private var preferences: Preferences
 	@Environment(\.errorHandler) private var errorHandler
 //	@Environment(\.presentIndicator) private var presentIndicator
 
@@ -31,45 +32,45 @@ struct ContainerLogsView: View {
 	var body: some View {
 		ScrollViewReader { scrollProxy in
 			ScrollView {
-				LazyVStack {
-					Text(viewModel.logs ?? "")
-						.font(.caption)
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-						// .textRenderer(HighlightedTextRenderer(highlightedText: ""))
-						#if os(iOS)
-						.padding(.horizontal, 10)
-						#elseif os(macOS)
-						.padding(.horizontal)
-						#endif
-						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-						.id(ViewID.logsLabel)
+				if preferences.clSeparateLines {
+					SeparatedView(
+						logs: viewModel.logs,
+						scrollProxy: scrollProxy,
+						includeTimestamps: preferences.clIncludeTimestamps
+					)
+				} else {
+					TextView(logs: viewModel.logs, scrollProxy: scrollProxy)
 				}
 			}
 			.defaultScrollAnchor(.bottom, for: .initialOffset)
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					ToolbarMenu(
 						viewState: viewModel.viewState,
 						lineCount: $viewModel.lineCount,
-						includeTimestamps: $viewModel.includeTimestamps,
 						shareableContent: viewModel.viewState.value,
 						scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
 						refreshAction: { fetch() }
 					)
 				}
 
-//				ToolbarItem(placement: .status) {
-//					DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
-//						ProgressView()
-//					}
-//				}
+				ToolbarItem(placement: .status) {
+					DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+						ProgressView()
+					}
+				}
 			}
 		}
 		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
+		.background {
+			if !viewModel.isLoading && viewModel.logs?.isEmpty ?? true {
+				ContentUnavailableView("ContainerLogsView.NoLogs", systemImage: SFSymbol.xmark)
+			}
+		}
 		.animation(.default, value: viewModel.viewState)
 		.animation(.default, value: viewModel.logs)
+		.animation(.default, value: preferences.clSeparateLines)
+		.animation(.default, value: preferences.clIncludeTimestamps)
 		.navigationTitle("ContainerLogsView.Title")
 		#if os(iOS)
 		.navigationBarTitleDisplayMode(.inline)
@@ -87,10 +88,16 @@ struct ContainerLogsView: View {
 		.onChange(of: viewModel.lineCount) {
 			fetch()
 		}
-		.onChange(of: viewModel.includeTimestamps) {
+		.onChange(of: preferences.clIncludeTimestamps) {
 			fetch()
 		}
 	}
+}
+
+// MARK: - ContainerLogsView+Static
+
+extension ContainerLogsView {
+	static let normalFont: Font = .caption.monospaced()
 }
 
 // MARK: - ContainerLogsView+Actions
@@ -100,7 +107,7 @@ private extension ContainerLogsView {
 	func fetch() -> Task<Void, Never> {
 		Task {
 			do {
-				try await viewModel.getLogs().value
+				try await viewModel.getLogs(includeTimestamps: preferences.clIncludeTimestamps).value
 			} catch {
 				errorHandler(error)
 			}
@@ -116,7 +123,7 @@ private extension ContainerLogsView {
 
 // MARK: - ContainerLogsView+ViewID
 
-private extension ContainerLogsView {
+extension ContainerLogsView {
 	enum ViewID {
 		case logsLabel
 	}
@@ -126,10 +133,10 @@ private extension ContainerLogsView {
 
 private extension ContainerLogsView {
 	struct ToolbarMenu: View {
+		@EnvironmentObject private var preferences: Preferences
 		@Environment(\.presentIndicator) private var presentIndicator
 		let viewState: ViewModel._ViewState
 		@Binding var lineCount: Int
-		@Binding var includeTimestamps: Bool
 		let shareableContent: String?
 		let scrollAction: (UnitPoint) -> Void
 		let refreshAction: () -> Void
@@ -162,11 +169,21 @@ private extension ContainerLogsView {
 		}
 
 		@ViewBuilder
+		private var separateLinesButton: some View {
+			Toggle(isOn: $preferences.clSeparateLines) {
+				Label("ContainerLogsView.Menu.SeparateLines", systemImage: "rectangle.split.1x2")
+			}
+			.onChange(of: preferences.clSeparateLines) {
+				Haptics.generateIfEnabled(.selectionChanged)
+			}
+		}
+
+		@ViewBuilder
 		private var includeTimestampsButton: some View {
-			Toggle(isOn: $includeTimestamps) {
+			Toggle(isOn: $preferences.clIncludeTimestamps) {
 				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: "clock")
 			}
-			.onChange(of: includeTimestamps) {
+			.onChange(of: preferences.clIncludeTimestamps) {
 				Haptics.generateIfEnabled(.selectionChanged)
 			}
 		}
@@ -215,6 +232,7 @@ private extension ContainerLogsView {
 					Divider()
 					scrollButtons
 					Divider()
+					separateLinesButton
 					includeTimestampsButton
 					logLinesMenu
 					Divider()
