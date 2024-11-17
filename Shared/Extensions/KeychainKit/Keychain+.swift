@@ -13,13 +13,13 @@ import KeychainKit
 
 extension Keychain {
 	// swiftlint:disable:next force_unwrapping
-	static let shared = Keychain(accessGroup: "\(Bundle.main.appIdentifierPrefix ?? "")group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
+	static let shared = Keychain(accessGroup: "\(Bundle.main.appIdentifierPrefix ?? "")\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
 }
 
 // MARK: - Keychain+itemDescription
 
 extension Keychain {
-	static let tokenItemDescription = "Harbour (Token)"
+	static let tokenItemDescription = "Harbour - Token"
 }
 
 // MARK: - Keychain+URL
