@@ -234,9 +234,7 @@ private extension ContainerLogsView {
 
 // MARK: - Previews
 
-#if DEBUG
-#Preview {
+#Preview(traits: .modifier(PortainerStorePreviewModifier())) {
 	ContainerLogsView(containerID: "")
-		.environmentObject(PortainerStore.preview)
+		.withEnvironment()
 }
-#endif

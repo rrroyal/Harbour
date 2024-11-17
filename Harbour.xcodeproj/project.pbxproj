@@ -552,7 +552,7 @@
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "Shared/Preview\\ Content";
+				DEVELOPMENT_ASSET_PATHS = "Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -591,7 +591,7 @@
 				CODE_SIGN_ENTITLEMENTS = Harbour/Harbour.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "Shared/Preview\\ Content";
+				DEVELOPMENT_ASSET_PATHS = "Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = WPN9Y7CDCT;
 				"ENABLE_HARDENED_RUNTIME[sdk=macosx*]" = YES;
 				GENERATE_INFOPLIST_FILE = YES;

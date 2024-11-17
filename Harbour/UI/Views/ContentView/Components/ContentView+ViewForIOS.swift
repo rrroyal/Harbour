@@ -80,10 +80,8 @@ extension ContentView {
 		.environment(SceneDelegate())
 }
 
-#if DEBUG
-#Preview("Mocked") {
+#Preview("Mocked", traits: .modifier(PortainerStorePreviewModifier())) {
 	ContentView.ViewForIOS()
-		.withEnvironment(portainerStore: .preview)
+		.withEnvironment()
 		.environment(SceneDelegate())
 }
-#endif

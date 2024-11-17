@@ -6,10 +6,12 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
-import Foundation
+import SwiftUI
 
-extension PortainerStore {
-	static let preview: PortainerStore = {
+struct PortainerStorePreviewModifier: PreviewModifier {
+	typealias Context = PortainerStore
+
+	static func makeSharedContext() async throws -> Context {
 		let portainerStore = PortainerStore()
 		portainerStore.isSetup = true
 		portainerStore.endpoints = [.init(id: 0, name: "Endpoint")]
@@ -22,5 +24,10 @@ extension PortainerStore {
 			.preview(id: "2", name: "Container2")
 		]
 		return portainerStore
-	}()
+	}
+
+	func body(content: Content, context: Context) -> some View {
+		content
+			.environmentObject(context)
+	}
 }
