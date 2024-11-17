@@ -268,25 +268,20 @@ private extension ContainerDetailsView.NetworkDetailsView {
 			if !entries.isEmpty {
 				NormalizedSection {
 					ForEach(entries, id: \.hashValue) { entry in
-						// haha it works
 						let shareMenu = {
 							Group {
 								if let publicPort = entry.publicPort {
 									CopyButton("ContainerDetailsView.NetworkDetailsView.CopyIP", content: entry.hostLabel)
 
-									if let endpointPublicURL = portainerStore.selectedEndpoint?.publicURL {
+									if let endpointPublicURL = portainerStore.selectedEndpoint?.publicURL, !endpointPublicURL.isEmpty {
 										Divider()
-
-//										CopyButton("ContainerDetailsView.NetworkDetailsView.CopyPublicURL", content: "\(endpointPublicURL):\(publicPort)")
-//
-//										if let portURL = URL(string: "http://\(endpointPublicURL):\(publicPort)") {
-//											Link(destination: portURL) {
-//												Label("ContainerDetailsView.NetworkDetailsView.OpenPublicURL", systemImage: SFSymbol.web)
-//											}
-//										}
 
 										let portURLString = "http://\(endpointPublicURL):\(publicPort)"
 										if let portURL = URL(string: portURLString) {
+											Link(destination: portURL) {
+												Label("ContainerDetailsView.NetworkDetailsView.OpenPublicURL", systemImage: SFSymbol.web)
+											}
+
 											ShareLink("ContainerDetailsView.NetworkDetailsView.SharePublicURL", item: portURL)
 										} else {
 											ShareLink("ContainerDetailsView.NetworkDetailsView.SharePublicURL", item: portURLString)

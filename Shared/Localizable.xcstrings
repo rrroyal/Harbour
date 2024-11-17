@@ -391,6 +391,16 @@
         }
       }
     },
+    "ContainerDetailsView.NetworkDetailsView.OpenPublicURL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open Public URL"
+          }
+        }
+      }
+    },
     "ContainerDetailsView.NetworkDetailsView.Ports" : {
       "localizations" : {
         "en" : {
