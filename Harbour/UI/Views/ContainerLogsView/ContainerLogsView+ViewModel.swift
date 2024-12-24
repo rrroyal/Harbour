@@ -31,6 +31,7 @@ extension ContainerLogsView {
 		var containerID: Container.ID
 
 		var scrollViewIsRefreshing = false
+		var scrollViewPersistScroll = false
 
 		var lineCount = 100
 
@@ -74,10 +75,14 @@ extension ContainerLogsView {
 						tail: .limit(lineCount),
 						timestamps: includeTimestamps
 					)
-					.replacing(/^(.{8})/.anchorsMatchLineEndings(), with: "")
+//					.dropFirst(8)												// first line
+//					.replacing(/\r?\n(.{8})/.dotMatchesNewlines(), with: "\n")	// the rest of the lines
+					.split(separator: "\n")
+					.map { $0.dropFirst(8) }
+					.joined(separator: "\n")
 
 					Task.detached {
-						let logsParsed = ANSIParser.trim(logs)
+						let logsParsed = ANSIParser.trim(String(logs))
 						guard !Task.isCancelled else { return }
 						await MainActor.run {
 							self.viewState = .success(logsParsed)

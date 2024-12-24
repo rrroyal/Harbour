@@ -31,18 +31,22 @@ struct ContainerLogsView: View {
 
 	var body: some View {
 		ScrollViewReader { scrollProxy in
-			ScrollView {
-				if preferences.clSeparateLines {
-					SeparatedView(
-						logs: viewModel.logs,
-						scrollProxy: scrollProxy,
-						includeTimestamps: preferences.clIncludeTimestamps
-					)
-				} else {
-					TextView(logs: viewModel.logs, scrollProxy: scrollProxy)
+			Group {
+				if let logs = viewModel.logs {
+					ScrollView {
+						if preferences.clSeparateLines {
+							SeparatedView(
+								logs: logs,
+								scrollProxy: scrollProxy,
+								includeTimestamps: preferences.clIncludeTimestamps
+							)
+						} else {
+							TextView(logs: logs, scrollProxy: scrollProxy)
+						}
+					}
+					.defaultScrollAnchor(.bottom, for: .initialOffset)
 				}
 			}
-			.defaultScrollAnchor(.bottom, for: .initialOffset)
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					ToolbarMenu(

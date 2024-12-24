@@ -31,23 +31,25 @@ extension ContainerLogsView {
 		}
 
 		var body: some View {
-			SeparatedLayout {
-				ForEach(logs) { logEntry in
-					VStack(alignment: .leading, spacing: 2) {
-						Text(logEntry.content)
-							.font(ContainerLogsView.normalFont)
-							.textSelection(.enabled)
+			LazyVStack {
+				SeparatedLayout {
+					ForEach(logs) { logEntry in
+						VStack(alignment: .leading, spacing: 2) {
+							Text(logEntry.content)
+								.font(ContainerLogsView.normalFont)
+								.textSelection(.enabled)
 
-						if let date = logEntry.date {
-							Text(date, format: .dateTime)
-								.font(.caption2)
-								.fontDesign(.monospaced)
-								.foregroundStyle(.secondary)
+							if let date = logEntry.date {
+								Text(date, format: .dateTime)
+									.font(.caption2)
+									.fontDesign(.monospaced)
+									.foregroundStyle(.secondary)
+							}
 						}
+						.padding(.vertical, 1)
+						.padding(.horizontal, 10)
+						.frame(maxWidth: .infinity, alignment: .leading)
 					}
-					.padding(.vertical, 1)
-					.padding(.horizontal, 10)
-					.frame(maxWidth: .infinity, alignment: .leading)
 				}
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -82,11 +84,13 @@ private extension ContainerLogsView.SeparatedView {
 					.trimmingCharacters(in: .whitespacesAndNewlines)
 					.split(separator: " ", maxSplits: 1)
 				let timestamp = String(split[0]).trimmingCharacters(in: .whitespacesAndNewlines)
-				let content = String(split[1])
 
-				if split.count == 2, let date = Self.formatter.date(from: timestamp) {
-					self.date = date
-					self.content = content
+				self.date = Self.formatter.date(from: timestamp)
+
+				if split.count == 2 {
+					self.content = String(split[1])
+				} else if self.date != nil {
+					self.content = ""
 				} else {
 					self.content = string
 				}
@@ -104,14 +108,12 @@ private extension ContainerLogsView.SeparatedView {
 		@ViewBuilder var content: Content
 
 		var body: some View {
-			ScrollView {
-				Group(subviews: content) { subviews in
-					ForEach(Array(subviews.enumerated()), id: \.offset) { index, subview in
-						subview
+			Group(subviews: content) { subviews in
+				ForEach(Array(subviews.enumerated()), id: \.offset) { index, subview in
+					subview
 
-						if subviews.endIndex > index + 1 {
-							Divider()
-						}
+					if subviews.endIndex > index + 1 {
+						Divider()
 					}
 				}
 			}
