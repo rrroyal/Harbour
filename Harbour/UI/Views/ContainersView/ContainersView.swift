@@ -96,14 +96,7 @@ struct ContainersView: View {
 					Divider()
 				}
 
-				let useGridBinding = Binding<Bool>(
-					get: { preferences.cvUseGrid },
-					set: {
-						Haptics.generateIfEnabled(.selectionChanged)
-						preferences.cvUseGrid = $0
-					}
-				)
-				Picker(selection: useGridBinding) {
+				Picker(selection: $preferences.cvUseGrid.withHaptics(.selectionChanged)) {
 					Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
 						.tag(true)
 

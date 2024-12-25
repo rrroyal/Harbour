@@ -45,7 +45,7 @@ struct StacksView: View {
 
 		ToolbarItem(placement: .automatic) {
 			Menu {
-				Toggle(isOn: $preferences.svFilterByActiveEndpoint) {
+				Toggle(isOn: $preferences.svFilterByActiveEndpoint.withHaptics(.selectionChanged)) {
 					Label {
 						Text("StacksView.Menu.ActiveEndpointOnly")
 					} icon: {
@@ -56,18 +56,14 @@ struct StacksView: View {
 						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
 					}
 				}
-				.onChange(of: preferences.svFilterByActiveEndpoint) {
-					Haptics.generateIfEnabled(.selectionChanged)
-				}
 
-				Toggle(isOn: $preferences.svIncludeLimitedStacks) {
+				Toggle(isOn: $preferences.svIncludeLimitedStacks.withHaptics(.selectionChanged)) {
 					Label(
 						"StacksView.Menu.IncludeLimitedStacks",
 						systemImage: "square.stack.3d.up.trianglebadge.exclamationmark"
 					)
 				}
 				.onChange(of: preferences.svIncludeLimitedStacks) {
-					Haptics.generateIfEnabled(.selectionChanged)
 					if preferences.svIncludeLimitedStacks {
 						fetch()
 					}

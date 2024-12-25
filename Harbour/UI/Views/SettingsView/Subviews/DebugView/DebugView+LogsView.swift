@@ -43,9 +43,8 @@ extension DebugView {
 
 				Divider()
 
-				Toggle("DebugView.LogsView.IncludePortainerKitLogs", isOn: $includePortainerKitLogs)
+				Toggle("DebugView.LogsView.IncludePortainerKitLogs", isOn: $includePortainerKitLogs.withHaptics(.selectionChanged))
 					.onChange(of: includePortainerKitLogs) {
-						Haptics.generateIfEnabled(.selectionChanged)
 						getLogs()
 					}
 
