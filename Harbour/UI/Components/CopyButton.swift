@@ -38,6 +38,7 @@ struct CopyButton<LabelContent: View>: View {
 			labelContent()
 				.disabled(content == nil)
 		}
+		.keyboardShortcut("c", modifiers: .command)
 	}
 }
 
