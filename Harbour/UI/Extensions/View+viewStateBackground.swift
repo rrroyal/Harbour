@@ -1,5 +1,5 @@
 //
-//  View+background.swift
+//  View+viewStateBackground.swift
 //  Harbour
 //
 //  Created by royal on 10/04/2024.
@@ -10,8 +10,8 @@ import SwiftUI
 
 extension View {
 	@ViewBuilder
-	func background<S, F>(
-		viewState: ViewState<S, F>,
+	func viewStateBackground<S, F>(
+		_ viewState: ViewState<S, F>,
 		isViewStateBackgroundVisible: Bool = true,
 		backgroundVisiblity: Visibility = .hidden,
 		backgroundColor: Color = .clear

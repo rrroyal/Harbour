@@ -196,9 +196,9 @@ struct StackDetailsView: View {
 			toolbarContent
 		}
 		#if os(iOS)
-		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
+		.viewStateBackground(viewModel.viewState, backgroundColor: .groupedBackground)
 		#elseif os(macOS)
-		.background(viewState: viewModel.viewState, backgroundColor: .clear)
+		.viewStateBackground(viewModel.viewState, backgroundColor: .clear)
 		#endif
 		.overlay {
 			removingStackOverlay
