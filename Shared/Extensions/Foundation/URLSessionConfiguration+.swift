@@ -16,18 +16,19 @@ extension URLSessionConfiguration {
 		configuration.httpAdditionalHeaders = [
 			"Accept-Encoding": "gzip, deflate"
 		]
-		configuration.isDiscretionary = false
-		// configuration.shouldUseExtendedBackgroundIdleMode = true
-		// configuration.waitsForConnectivity = true
+		configuration.shouldUseExtendedBackgroundIdleMode = true
+//		configuration.waitsForConnectivity = true
 		return configuration
 	}
 
 	/// `URLSessionConfiguration` for intents.
 	static var intents: URLSessionConfiguration {
-		let configuration = URLSessionConfiguration.app
-		configuration.timeoutIntervalForRequest = 10
-		configuration.timeoutIntervalForResource = 10
-		configuration.waitsForConnectivity = false
+		let configuration = URLSessionConfiguration.default
+//		configuration.allowsConstrainedNetworkAccess = true
+//		configuration.shouldUseExtendedBackgroundIdleMode = true
+		configuration.timeoutIntervalForRequest = 5
+		configuration.timeoutIntervalForResource = 5
+		configuration.waitsForConnectivity = true
 		return configuration
 	}
 }

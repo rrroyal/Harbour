@@ -10,23 +10,25 @@ import SwiftUI
 
 extension ContainerLogsView {
 	struct TextView: View {
-		var logs: String?
+		var logs: [String]
 		var scrollProxy: ScrollViewProxy
+		var searchText: String
 
 		var body: some View {
-			LazyVStack {
-				Text(logs ?? "")
-					.font(ContainerLogsView.normalFont)
-					.textSelection(.enabled)
-//					.textRenderer(HighlightedTextRenderer(highlightedText: ""))
-#if os(iOS)
-					.padding(.horizontal, 10)
-#elseif os(macOS)
-					.padding(.horizontal)
-#endif
-					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-					.id(ContainerLogsView.ViewID.logsLabel)
+			LazyVStack(alignment: .leading, spacing: 0) {
+				ForEach(Array(logs.enumerated()), id: \.0) { _, line in
+					HighlightedText(line)
+						.highlighting(searchText)
+//						.textSelection(.enabled)
+						.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+				}
 			}
+#if os(iOS)
+			.padding(.horizontal, 10)
+#elseif os(macOS)
+			.padding(.horizontal)
+#endif
+			.id(ContainerLogsView.ViewID.logsLabel)
 		}
 	}
 }
@@ -37,8 +39,9 @@ extension ContainerLogsView {
 	ScrollViewReader { proxy in
 		ScrollView {
 			ContainerLogsView.TextView(
-				logs: ContainerLogsView.PreviewContext.logs,
-				scrollProxy: proxy
+				logs: ContainerLogsView.PreviewContext.logs.split(separator: "\n").map(String.init),
+				scrollProxy: proxy,
+				searchText: "lsio"
 			)
 		}
 	}

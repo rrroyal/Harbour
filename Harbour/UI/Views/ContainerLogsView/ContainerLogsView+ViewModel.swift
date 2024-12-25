@@ -35,8 +35,26 @@ extension ContainerLogsView {
 
 		var lineCount = 100
 
-		var logs: String? {
-			viewState.value
+		var searchText: String = ""
+		var isSearchVisible = false
+		var isSearchFilteringLines = false
+
+		var logs: [String]? {
+			viewState.value?
+				.split(separator: "\n")
+				.filter {
+					(isSearchVisible && isSearchFilteringLines && !searchText.isEmpty) ? $0.localizedCaseInsensitiveContains(searchText) : true
+				}
+				.map { String($0) }
+		}
+
+		var searchOccurences: Int? {
+			guard isSearchVisible, !searchText.isEmpty else { return nil }
+			guard let logs else { return nil }
+			let searchTextLowercased = searchText.lowercased()
+			return logs.reduce(into: 0) { result, line in
+				result += line.lowercased().components(separatedBy: searchTextLowercased).count - 1
+			}
 		}
 
 		var isLoading: Bool {
@@ -60,7 +78,7 @@ extension ContainerLogsView {
 		}
 
 		@discardableResult
-		func getLogs(includeTimestamps: Bool) -> Task<Void, Error> {
+		func getLogs() -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
 				defer { self.fetchTask = nil }
@@ -73,7 +91,7 @@ extension ContainerLogsView {
 					let logs = try await portainerStore.fetchContainerLogs(
 						for: containerID,
 						tail: .limit(lineCount),
-						timestamps: includeTimestamps
+						timestamps: Preferences.shared.clIncludeTimestamps
 					)
 //					.dropFirst(8)												// first line
 //					.replacing(/\r?\n(.{8})/.dotMatchesNewlines(), with: "\n")	// the rest of the lines

@@ -416,7 +416,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share Public URL..."
+            "value" : "Share Public URL…"
           }
         }
       }
@@ -667,6 +667,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Logs"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.Search.FilterLines" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Only Matching"
+          }
+        }
+      }
+    },
+    "ContainerLogsView.Search.SearchLogs" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search logs…"
           }
         }
       }
@@ -1583,6 +1603,16 @@
         }
       }
     },
+    "Generic.Done" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
     "Generic.Edit" : {
       "localizations" : {
         "en" : {
@@ -1608,7 +1638,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Loading..."
+            "value" : "Loading…"
           }
         }
       }
@@ -1678,7 +1708,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Removing..."
+            "value" : "Removing…"
           }
         }
       }
@@ -1693,12 +1723,22 @@
         }
       }
     },
+    "Generic.Search" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search"
+          }
+        }
+      }
+    },
     "Generic.SharePortainerURL" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share Portainer URL..."
+            "value" : "Share Portainer URL…"
           }
         }
       }
@@ -2788,7 +2828,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Removing \"%@\"..."
+            "value" : "Removing \"%@\"…"
           }
         }
       }

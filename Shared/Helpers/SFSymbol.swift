@@ -92,6 +92,9 @@ enum SFSymbol {
 	/// 􀈑 trash
 	static let remove = "trash"
 
+	/// 􀊫 magnifyingglass
+	static let search = "magnifyingglass"
+
 	/// 􀍟 gear
 	static let settings = "gear"
 

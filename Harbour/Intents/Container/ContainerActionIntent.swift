@@ -110,14 +110,14 @@ struct ContainerActionIntent: AppIntent {
 			}
 
 			// swiftlint:disable:next line_length
-			logger.notice("Performing \(Self.self), endpoint: \(endpoint.id, privacy: .sensitive(mask: .hash)), container: \(container._id, privacy: .sensitive(mask: .hash)), action: \(containerAction.rawValue, privacy: .public)...")
+			logger.notice("Performing \(Self.self, privacy: .public), endpoint: \(endpoint.id, privacy: .sensitive(mask: .hash)), container: \(container._id, privacy: .sensitive(mask: .hash)), action: \(containerAction.rawValue, privacy: .public)...")
 
 			try await portainerStore.portainer.executeContainerAction(containerAction.portainerAction, containerID: container._id, endpointID: endpoint.id)
 
 			let newContainer = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id, filters: .init(id: [container._id])).first
 			guard let newContainer else {
 				return .result(value: nil)
-//				throw Error.containerNotFound(container._id)
+//				throw PortainerError.containerNotFound(container._id)
 			}
 			let newIntentContainer = IntentContainer(container: newContainer)
 

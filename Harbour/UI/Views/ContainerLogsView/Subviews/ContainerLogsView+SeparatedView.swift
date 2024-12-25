@@ -12,32 +12,25 @@ import SwiftUI
 
 extension ContainerLogsView {
 	struct SeparatedView: View {
-		private var logs: [LogEntry]
-		private var scrollProxy: ScrollViewProxy
-		private var includeTimestamps: Bool
+		var logs: [String]
+		var scrollProxy: ScrollViewProxy
+		var includeTimestamps: Bool
+		var searchText: String
 
-		init(logs: String?, scrollProxy: ScrollViewProxy, includeTimestamps: Bool) {
-			self.scrollProxy = scrollProxy
-			self.includeTimestamps = includeTimestamps
-
-			if let logs, !logs.isEmpty {
-				self.logs = logs
-					.split(separator: "\n")
-					.enumerated()
-					.map { LogEntry(line: $0, string: String($1), includeTimestamps: includeTimestamps) }
-			} else {
-				self.logs = []
-			}
+		private var logEntries: [LogEntry] {
+			logs
+				.enumerated()
+				.map { LogEntry(line: $0, string: String($1), includeTimestamps: includeTimestamps) }
 		}
 
 		var body: some View {
-			LazyVStack {
+			LazyVStack(alignment: .leading) {
 				SeparatedLayout {
-					ForEach(logs) { logEntry in
+					ForEach(logEntries) { logEntry in
 						VStack(alignment: .leading, spacing: 2) {
-							Text(logEntry.content)
-								.font(ContainerLogsView.normalFont)
-								.textSelection(.enabled)
+							HighlightedText(logEntry.content)
+								.highlighting(searchText)
+//								.textSelection(.enabled)
 
 							if let date = logEntry.date {
 								Text(date, format: .dateTime)
@@ -127,9 +120,10 @@ private extension ContainerLogsView.SeparatedView {
 	ScrollViewReader { proxy in
 		ScrollView {
 			ContainerLogsView.SeparatedView(
-				logs: ContainerLogsView.PreviewContext.logs,
+				logs: ContainerLogsView.PreviewContext.logs.split(separator: "\n").map(String.init),
 				scrollProxy: proxy,
-				includeTimestamps: false
+				includeTimestamps: false,
+				searchText: "lsio"
 			)
 		}
 	}
@@ -139,9 +133,10 @@ private extension ContainerLogsView.SeparatedView {
 	ScrollViewReader { proxy in
 		ScrollView {
 			ContainerLogsView.SeparatedView(
-				logs: ContainerLogsView.PreviewContext.logsTimestamped,
+				logs: ContainerLogsView.PreviewContext.logsTimestamped.split(separator: "\n").map(String.init),
 				scrollProxy: proxy,
-				includeTimestamps: true
+				includeTimestamps: true,
+				searchText: "lsio"
 			)
 		}
 	}

@@ -68,6 +68,16 @@ extension ViewState {
 		}
 	}
 
+	/// Is the current state error?
+	var isError: Bool {
+		switch self {
+		case .failure:
+			true
+		default:
+			false
+		}
+	}
+
 	/// Should additional loading view be visible?
 	var showAdditionalLoadingView: Bool {
 		switch self {

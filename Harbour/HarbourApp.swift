@@ -65,7 +65,7 @@ struct HarbourApp: App {
 			PortainerCommands(portainerStore: portainerStore)
 		}
 		#if os(macOS)
-		.windowStyle(.hiddenTitleBar)
+		.windowToolbarStyle(.unifiedCompact)
 		#endif
 		.modelContainer(for: ModelContainer.allModelTypes)
 

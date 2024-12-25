@@ -56,7 +56,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 	}
 
 	func perform() async throws -> some ReturnsValue<IntentContainer> & ProvidesDialog {
-		logger.info("Performing \(Self.self)...")
+		logger.info("Performing \(Self.self, privacy: .public)...")
 
 		do {
 			let portainerStore = IntentPortainerStore.shared

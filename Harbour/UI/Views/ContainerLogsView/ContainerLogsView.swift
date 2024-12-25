@@ -19,6 +19,7 @@ struct ContainerLogsView: View {
 //	@Environment(\.presentIndicator) private var presentIndicator
 
 	@State private var viewModel: ViewModel
+	@FocusState private var isSearchFocused: Bool
 
 	var containerID: Container.ID
 
@@ -38,23 +39,28 @@ struct ContainerLogsView: View {
 							SeparatedView(
 								logs: logs,
 								scrollProxy: scrollProxy,
-								includeTimestamps: preferences.clIncludeTimestamps
+								includeTimestamps: preferences.clIncludeTimestamps,
+								searchText: viewModel.isSearchVisible ? viewModel.searchText : ""
 							)
 						} else {
-							TextView(logs: logs, scrollProxy: scrollProxy)
+							TextView(
+								logs: logs,
+								scrollProxy: scrollProxy,
+								searchText: viewModel.isSearchVisible ? viewModel.searchText : ""
+							)
 						}
 					}
 					.defaultScrollAnchor(.bottom, for: .initialOffset)
+					.font(.caption.monospaced())
 				}
 			}
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					ToolbarMenu(
-						viewState: viewModel.viewState,
-						lineCount: $viewModel.lineCount,
-						shareableContent: viewModel.viewState.value,
-						scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) },
-						refreshAction: { fetch() }
+						viewModel: viewModel,
+						focusTextfieldAction: { isSearchFocused = true },
+						scrollAction: { scrollLogs(anchor: $0, scrollProxy: scrollProxy) }
 					)
 				}
 
@@ -64,15 +70,54 @@ struct ContainerLogsView: View {
 					}
 				}
 			}
+//			#if os(iOS)
+			.modifier(
+				WithSearchBarModifier(
+					searchText: $viewModel.searchText,
+					isSearchBarVisible: $viewModel.isSearchVisible,
+					isSearchFocused: _isSearchFocused,
+					occurenceCount: viewModel.searchOccurences
+				) {
+					Menu {
+						Toggle(isOn: $viewModel.isSearchFilteringLines.withHaptics(.light)) {
+							Label("ContainerLogsView.Search.FilterLines", systemImage: "line.3.horizontal.decrease")
+						}
+						.labelStyle(.titleAndIcon)
+					} label: {
+						Image(systemName: "text.magnifyingglass")
+							.fontWeight(.semibold)
+							.padding(4)
+					}
+					.menuStyle(.button)
+					.buttonStyle(.plain)
+					.foregroundStyle(.tertiary)
+					.padding(-4)
+				} doneAction: {
+					viewModel.isSearchVisible = false
+					isSearchFocused = false
+					DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+						viewModel.searchText = ""
+					}
+				}
+			)
+//			#elseif os(macOS)
+//			.searchable(text: $viewModel.searchText, isPresented: $viewModel.isSearchVisible)
+//			#endif
 		}
-		.background(viewState: viewModel.viewState, backgroundColor: .groupedBackground)
 		.background {
-			if !viewModel.isLoading && viewModel.logs?.isEmpty ?? true {
-				ContentUnavailableView("ContainerLogsView.NoLogs", systemImage: SFSymbol.xmark)
+			if !viewModel.isLoading && !viewModel.viewState.isError && viewModel.logs?.isEmpty ?? true {
+				if !viewModel.searchText.isReallyEmpty {
+					ContentUnavailableView.search(text: viewModel.searchText)
+				} else {
+					ContentUnavailableView("ContainerLogsView.NoLogs", systemImage: SFSymbol.xmark)
+				}
 			}
 		}
+		.viewStateBackground(viewModel.viewState, backgroundColor: .groupedBackground)
 		.animation(.default, value: viewModel.viewState)
 		.animation(.default, value: viewModel.logs)
+		.animation(.default, value: viewModel.isSearchVisible)
+		.animation(.default, value: viewModel.isSearchFilteringLines)
 		.animation(.default, value: preferences.clSeparateLines)
 		.animation(.default, value: preferences.clIncludeTimestamps)
 		.navigationTitle("ContainerLogsView.Title")
@@ -82,12 +127,13 @@ struct ContainerLogsView: View {
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
 		}
-//		.searchable(text: $searchText)
+		.onKeyPress(action: onKeyPress)
 		.task {
 			await fetch().value
 		}
 		.onChange(of: containerID) { _, newID in
 			viewModel.containerID = newID
+			fetch()
 		}
 		.onChange(of: viewModel.lineCount) {
 			fetch()
@@ -98,12 +144,6 @@ struct ContainerLogsView: View {
 	}
 }
 
-// MARK: - ContainerLogsView+Static
-
-extension ContainerLogsView {
-	static let normalFont: Font = .caption.monospaced()
-}
-
 // MARK: - ContainerLogsView+Actions
 
 private extension ContainerLogsView {
@@ -111,7 +151,7 @@ private extension ContainerLogsView {
 	func fetch() -> Task<Void, Never> {
 		Task {
 			do {
-				try await viewModel.getLogs(includeTimestamps: preferences.clIncludeTimestamps).value
+				try await viewModel.getLogs().value
 			} catch {
 				errorHandler(error)
 			}
@@ -121,6 +161,18 @@ private extension ContainerLogsView {
 	func scrollLogs(anchor: UnitPoint, scrollProxy: ScrollViewProxy) {
 		withAnimation {
 			scrollProxy.scrollTo(ViewID.logsLabel, anchor: anchor)
+		}
+	}
+
+	func onKeyPress(_ keyPress: KeyPress) -> KeyPress.Result {
+		switch keyPress.key {
+			// ⌘F
+		case "f" where keyPress.modifiers.contains(.command):
+			viewModel.isSearchVisible = true
+			isSearchFocused = true
+			return .handled
+		default:
+			return .ignored
 		}
 	}
 }
@@ -138,21 +190,42 @@ extension ContainerLogsView {
 private extension ContainerLogsView {
 	struct ToolbarMenu: View {
 		@EnvironmentObject private var preferences: Preferences
+		@Environment(\.errorHandler) private var errorHandler
 		@Environment(\.presentIndicator) private var presentIndicator
-		let viewState: ViewModel._ViewState
-		@Binding var lineCount: Int
-		let shareableContent: String?
-		let scrollAction: (UnitPoint) -> Void
-		let refreshAction: () -> Void
+		var viewModel: ViewModel
+		var focusTextfieldAction: () -> Void
+		var scrollAction: (UnitPoint) -> Void
 
 		@ViewBuilder
 		private var refreshButton: some View {
 			Button {
 				Haptics.generateIfEnabled(.buttonPress)
-				refreshAction()
+				Task {
+					do {
+						try await viewModel.getLogs().value
+					} catch {
+						errorHandler(error)
+					}
+				}
 			} label: {
 				Label("Generic.Refresh", systemImage: SFSymbol.reload)
 			}
+			.keyboardShortcut("r", modifiers: .command)
+		}
+
+		@ViewBuilder
+		private var searchButton: some View {
+			Button {
+				Haptics.generateIfEnabled(.buttonPress)
+				if !viewModel.isSearchVisible {
+					viewModel.searchText = ""
+				}
+				viewModel.isSearchVisible = true
+				focusTextfieldAction()
+			} label: {
+				Label("Generic.Search", systemImage: SFSymbol.search)
+			}
+			.keyboardShortcut("f", modifiers: .command)
 		}
 
 		@ViewBuilder
@@ -163,6 +236,7 @@ private extension ContainerLogsView {
 			} label: {
 				Label("ContainerLogsView.Menu.ScrollToTop", systemImage: SFSymbol.arrowUpLine)
 			}
+			.keyboardShortcut(.upArrow, modifiers: .command)
 
 			Button {
 				Haptics.generateIfEnabled(.rigid)
@@ -170,37 +244,35 @@ private extension ContainerLogsView {
 			} label: {
 				Label("ContainerLogsView.Menu.ScrollToBottom", systemImage: SFSymbol.arrowDownLine)
 			}
+			.keyboardShortcut(.downArrow, modifiers: .command)
 		}
 
 		@ViewBuilder
 		private var separateLinesButton: some View {
-			Toggle(isOn: $preferences.clSeparateLines) {
+			Toggle(isOn: $preferences.clSeparateLines.withHaptics(.selectionChanged)) {
 				Label("ContainerLogsView.Menu.SeparateLines", systemImage: "rectangle.split.1x2")
-			}
-			.onChange(of: preferences.clSeparateLines) {
-				Haptics.generateIfEnabled(.selectionChanged)
 			}
 		}
 
 		@ViewBuilder
 		private var includeTimestampsButton: some View {
-			Toggle(isOn: $preferences.clIncludeTimestamps) {
+			Toggle(isOn: $preferences.clIncludeTimestamps.withHaptics(.selectionChanged)) {
 				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: "clock")
-			}
-			.onChange(of: preferences.clIncludeTimestamps) {
-				Haptics.generateIfEnabled(.selectionChanged)
 			}
 		}
 
 		@ViewBuilder
 		private var logLinesMenu: some View {
+			@Bindable var viewModel = viewModel
+
 			let lineCounts: [Int] = [
 				100,
 				250,
 				500,
 				1_000
 			]
-			Picker(selection: $lineCount) {
+
+			Picker(selection: $viewModel.lineCount.withHaptics(.selectionChanged)) {
 				ForEach(lineCounts, id: \.self) { amount in
 					Text(amount.formatted())
 						.tag(amount)
@@ -209,30 +281,33 @@ private extension ContainerLogsView {
 				Label("ContainerLogsView.Menu.LineCount", systemImage: SFSymbol.logs)
 			}
 			.pickerStyle(.menu)
-			.onChange(of: lineCount) {
-				Haptics.generateIfEnabled(.selectionChanged)
-			}
 		}
 
 		@ViewBuilder
 		private var copyButton: some View {
-			CopyButton(content: shareableContent)
+			if let shareableContent = viewModel.viewState.value {
+				CopyButton(content: shareableContent)
+			}
 		}
 
 		@ViewBuilder
 		private var shareButton: some View {
-			if let shareableContent {
+			if let shareableContent = viewModel.viewState.value {
 				ShareLink(item: shareableContent, preview: .init(.init(verbatim: shareableContent)))
+					.keyboardShortcut("u", modifiers: .command)
 			}
 		}
 
 		var body: some View {
 			Menu {
-				switch viewState {
+				switch viewModel.viewState {
 				case .loading:
 					Text("Generic.Loading")
 				case .success:
 					refreshButton
+//					#if os(iOS)
+					searchButton
+//					#endif
 					Divider()
 					scrollButtons
 					Divider()
