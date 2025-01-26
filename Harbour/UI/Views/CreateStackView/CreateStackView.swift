@@ -160,7 +160,7 @@ struct CreateStackView: View {
 			TextEditorView(
 				text: Binding(
 					get: { viewModel.stackFileContent ?? "" },
-					set: { viewModel.stackFileContent = !$0.isEmpty ? $0 : nil }
+					set: { viewModel.stackFileContent = !$0.isReallyEmpty ? $0 : nil }
 				),
 				navigationTitle: !viewModel.stackName.isEmpty ? viewModel.stackName : String(localized: "Generic.Stack")
 			)
