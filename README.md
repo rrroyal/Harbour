@@ -2,6 +2,8 @@
 
 # Harbour
 Docker/Portainer management app for iOS, iPadOS and macOS.
+> [!IMPORTANT]  
+> [Portainer](https://www.portainer.io) is required to use Harbour.
 
 ## Features
 - [x] Multiple Servers and Endpoints
