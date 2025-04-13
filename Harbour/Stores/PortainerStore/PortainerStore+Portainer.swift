@@ -9,6 +9,34 @@
 import Foundation
 import PortainerKit
 
+// MARK: - PortainerStore+System
+
+extension PortainerStore {
+	func fetchSystemStatus() async throws -> SystemStatus {
+		logger.info("Getting system status...")
+		do {
+			let systemStatus = try await portainer.fetchSystemStatus()
+			logger.info("Got system status: \"\(systemStatus.version, privacy: .sensitive(mask: .hash))\".")
+			return systemStatus
+		} catch {
+			logger.error("Failed to get system status: \(error.localizedDescription, privacy: .public)")
+			throw error
+		}
+	}
+
+	func fetchSystemVersion() async throws -> SystemVersion {
+		logger.info("Getting system version...")
+		do {
+			let systemVersion = try await portainer.fetchSystemVersion()
+			logger.info("Got system version: \"\(systemVersion.latestVersion ?? "nil", privacy: .sensitive(mask: .hash))\".")
+			return systemVersion
+		} catch {
+			logger.error("Failed to get system version: \(error.localizedDescription, privacy: .public)")
+			throw error
+		}
+	}
+}
+
 // MARK: - PortainerStore+Endpoints
 
 extension PortainerStore {

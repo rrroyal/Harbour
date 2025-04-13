@@ -11,6 +11,7 @@ import CommonOSLog
 import CoreSpotlight
 import KeychainKit
 import OSLog
+import PortainerKit
 import SwiftData
 import SwiftUI
 import WidgetKit
@@ -18,10 +19,11 @@ import WidgetKit
 // MARK: - DebugView
 
 struct DebugView: View {
-	private let logger = Logger(.debug)
+	private nonisolated static let logger = Logger(.debug)
 
 	var body: some View {
 		Form {
+			PortainerInfoSection()
 			BackgroundSection()
 			PersistenceSection()
 			WidgetsSection()
@@ -32,13 +34,91 @@ struct DebugView: View {
 	}
 }
 
+// MARK: - DebugView+PortainerInfoSection
+
+private extension DebugView {
+	struct PortainerInfoSection: View {
+		@Environment(\.errorHandler) private var errorHandler
+		@EnvironmentObject private var portainerStore: PortainerStore
+		@State private var portainerSystemStatus: SystemStatus?
+		@State private var portainerSystemVersion: SystemVersion?
+
+		var body: some View {
+			Section("DebugView.PortainerInfoSection.Title") {
+				if let portainerSystemStatus {
+					Group {
+						LabeledContent(
+							"DebugView.PortainerInfoSection.Status.Version",
+							value: portainerSystemStatus.version
+						)
+						if let instanceID = portainerSystemStatus.instanceID, !instanceID.isEmpty {
+							LabeledContent(
+								"DebugView.PortainerInfoSection.Status.InstanceID",
+								value: instanceID
+							)
+						}
+					}
+				}
+
+				if let portainerSystemVersion {
+					Group {
+						if let latestVersion = portainerSystemVersion.latestVersion, !latestVersion.isEmpty {
+							LabeledContent(
+								"DebugView.PortainerInfoSection.Version.LatestVersion",
+								value: latestVersion
+							)
+						}
+
+						LabeledContent(
+							"DebugView.PortainerInfoSection.Version.ServerEdition",
+							value: portainerSystemVersion.serverEdition
+						)
+
+						if let serverVersion = portainerSystemVersion.serverVersion, !serverVersion.isEmpty {
+							LabeledContent(
+								"DebugView.PortainerInfoSection.Version.ServerVersion",
+								value: serverVersion
+							)
+						}
+
+						if let build = portainerSystemVersion.build {
+							LabeledContent("DebugView.PortainerInfoSection.Version.Build.BuildNumber") {
+								Text(build.buildNumber)
+									.fontDesign(.monospaced)
+									.textSelection(.enabled)
+							}
+						}
+
+						if portainerSystemVersion.updateAvailable == true {
+							if let url = URL(string: "https://docs.portainer.io/start/upgrade") {
+								Link(destination: url) {
+									Text("DebugView.PortainerInfoSection.Version.UpdateAvailable")
+								}
+							} else {
+								Text("DebugView.PortainerInfoSection.Version.UpdateAvailable")
+							}
+						}
+					}
+				}
+			}
+			.task {
+				async let systemStatus = try? portainerStore.fetchSystemStatus()
+				async let systemVersion = try? portainerStore.fetchSystemVersion()
+
+				self.portainerSystemStatus = await systemStatus
+				self.portainerSystemVersion = await systemVersion
+			}
+			.animation(.default, value: portainerSystemStatus)
+			.animation(.default, value: portainerSystemVersion)
+		}
+	}
+}
+
 // MARK: - DebugView+BackgroundSection
 
 private extension DebugView {
 	struct BackgroundSection: View {
 		@Environment(\.errorHandler) private var errorHandler
-
-		private let logger = Logger(.debug)
 
 		private var lastBackgroundRefreshDateString: String? {
 			if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
@@ -55,7 +135,7 @@ private extension DebugView {
 				)
 
 				Button("DebugView.BackgroundSection.SimulateBackgroundRefresh") {
-					logger.notice("Simulating background refresh...")
+					DebugView.logger.notice("Simulating background refresh...")
 					Haptics.generateIfEnabled(.buttonPress)
 
 					Task {
@@ -74,8 +154,6 @@ private extension DebugView {
 		@Environment(\.errorHandler) private var errorHandler
 		@Environment(\.modelContext) private var modelContext
 
-		private let logger = Logger(.debug)
-
 		var body: some View {
 			Section("DebugView.PersistenceSection.Title") {
 				NavigationLink {
@@ -86,47 +164,47 @@ private extension DebugView {
 
 				#if os(iOS)
 				Button("DebugView.PersistenceSection.DeleteUserActivities", role: .destructive) {
-					logger.warning("Deleting saved user activities...")
+					DebugView.logger.warning("Deleting saved user activities...")
 					Haptics.generateIfEnabled(.heavy)
 					UIApplication.shared.shortcutItems = nil
 					NSUserActivity.deleteAllSavedUserActivities {
-						logger.notice("Deleted user activities!")
+						DebugView.logger.notice("Deleted user activities!")
 					}
 				}
 				#endif
 
-				Button("DebugView.PersistenceSection.ResetSpotlight", role: .destructive) {
-					logger.warning("Resetting Spotlight...")
-					Haptics.generateIfEnabled(.heavy)
-					CSSearchableIndex.default().deleteAllSearchableItems { error in
-						if let error {
-							logger.error("Failed to reset Spotlight: \(error.localizedDescription, privacy: .public)")
-							return
-						}
-						logger.notice("Spotlight has been reset!")
-					}
-				}
-
-				Button("DebugView.PersistenceSection.ResetSwiftData", role: .destructive) {
-					logger.warning("Resetting SwiftData...")
-					Haptics.generateIfEnabled(.heavy)
-
-					modelContext.container.deleteAllData()
-					logger.notice("SwiftData has been reset!")
-				}
-
 				Button("DebugView.PersistenceSection.ResetKeychain", role: .destructive) {
-					logger.warning("Resetting Keychain...")
+					DebugView.logger.warning("Resetting Keychain...")
 					Haptics.generateIfEnabled(.heavy)
 					do {
 						let urls = try Keychain.shared.getSavedURLs()
 						for url in urls {
 							try Keychain.shared.removeContent(for: url)
 						}
-						logger.notice("Keychain has been reset!")
+						DebugView.logger.notice("Keychain has been reset!")
 					} catch {
 						errorHandler(error)
 					}
+				}
+
+				Button("DebugView.PersistenceSection.ResetSpotlight", role: .destructive) {
+					DebugView.logger.warning("Resetting Spotlight...")
+					Haptics.generateIfEnabled(.heavy)
+					CSSearchableIndex.default().deleteAllSearchableItems { error in
+						if let error {
+							DebugView.logger.error("Failed to reset Spotlight: \(error.localizedDescription, privacy: .public)")
+							return
+						}
+						DebugView.logger.notice("Spotlight has been reset!")
+					}
+				}
+
+				Button("DebugView.PersistenceSection.ResetSwiftData", role: .destructive) {
+					DebugView.logger.warning("Resetting SwiftData...")
+					Haptics.generateIfEnabled(.heavy)
+
+					modelContext.container.deleteAllData()
+					DebugView.logger.notice("SwiftData has been reset!")
 				}
 			}
 		}
@@ -137,12 +215,10 @@ private extension DebugView {
 
 private extension DebugView {
 	struct WidgetsSection: View {
-		private let logger = Logger(.debug)
-
 		var body: some View {
 			Section("DebugView.WidgetsSection.Title") {
 				Button("DebugView.WidgetsSection.RefreshTimelines") {
-					logger.notice("Refreshing WidgetKit timelines...")
+					DebugView.logger.notice("Refreshing WidgetKit timelines...")
 					Haptics.generateIfEnabled(.buttonPress)
 					WidgetCenter.shared.reloadAllTimelines()
 				}

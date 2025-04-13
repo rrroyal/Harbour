@@ -1313,6 +1313,86 @@
         }
       }
     },
+    "DebugView.PortainerInfoSection.Status.InstanceID" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instance ID"
+          }
+        }
+      }
+    },
+    "DebugView.PortainerInfoSection.Status.Version" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version"
+          }
+        }
+      }
+    },
+    "DebugView.PortainerInfoSection.Title" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Portainer"
+          }
+        }
+      }
+    },
+    "DebugView.PortainerInfoSection.Version.Build.BuildNumber" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Build Number"
+          }
+        }
+      }
+    },
+    "DebugView.PortainerInfoSection.Version.LatestVersion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Latest Version"
+          }
+        }
+      }
+    },
+    "DebugView.PortainerInfoSection.Version.ServerEdition" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server Edition"
+          }
+        }
+      }
+    },
+    "DebugView.PortainerInfoSection.Version.ServerVersion" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Server Version"
+          }
+        }
+      }
+    },
+    "DebugView.PortainerInfoSection.Version.UpdateAvailable" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Update available!"
+          }
+        }
+      }
+    },
     "DebugView.Title" : {
       "localizations" : {
         "en" : {
