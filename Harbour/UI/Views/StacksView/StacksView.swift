@@ -56,6 +56,9 @@ struct StacksView: View {
 						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
 					}
 				}
+				.onChange(of: preferences.svFilterByActiveEndpoint) {
+					fetch()
+				}
 
 				Toggle(isOn: $preferences.svIncludeLimitedStacks.withHaptics(.selectionChanged)) {
 					Label(
@@ -239,12 +242,12 @@ private extension StacksView {
 
 private extension StacksView {
 	@discardableResult
-	func fetch(includingContainers: Bool? = nil) -> Task<Void, Never> {
+	func fetch() -> Task<Void, Never> {
 		Task {
 			guard portainerStore.isSetup else { return }
 
 			do {
-				try await viewModel.fetch(includingContainers: includingContainers).value
+				try await viewModel.fetch().value
 			} catch {
 				errorHandler(error)
 			}

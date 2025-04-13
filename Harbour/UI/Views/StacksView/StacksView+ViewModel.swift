@@ -55,14 +55,6 @@ extension StacksView {
 				stacks += limitedStacks
 			}
 
-			if Preferences.shared.svFilterByActiveEndpoint, let selectedEndpointID = portainerStore.selectedEndpoint?.id {
-				stacks = stacks.filter {
-					// if there's no `stack.endpointID`, that means that this stack was derived from containers, which are already filtered by the active endpoint
-					let stackEndpointID = $0.stack?.endpointID ?? selectedEndpointID
-					return stackEndpointID == selectedEndpointID
-				}
-			}
-
 			if !searchText.isReallyEmpty {
 				stacks = stacks.filter {
 					$0.name.localizedCaseInsensitiveContains(searchText) ||
@@ -78,14 +70,14 @@ extension StacksView {
 		}
 
 		@discardableResult
-		func fetch(includingContainers: Bool? = nil) -> Task<Void, Error> {
+		func fetch() -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task { @MainActor in
 				defer { self.fetchTask = nil }
 				fetchError = nil
 
 				do {
-					if includingContainers ?? Preferences.shared.svIncludeLimitedStacks {
+					if Preferences.shared.svIncludeLimitedStacks {
 						async let _containers = portainerStore.refreshContainers().value
 						async let _stacks = portainerStore.refreshStacks().value
 						_ = try await (_containers, _stacks)

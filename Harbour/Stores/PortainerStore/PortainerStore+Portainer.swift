@@ -258,11 +258,17 @@ extension PortainerStore {
 
 public extension PortainerStore {
 	/// Fetches all of the stacks.
+	/// - Parameters:
+	///   - endpointID: Endpoint ID to fetch the stacks for.
+	///   - includeOrphaned: Include orphaned stacks?
 	/// - Returns: `[Stack]`
-	func fetchStacks() async throws -> [Stack] {
+	func fetchStacks(for endpointID: Endpoint.ID? = nil, includeOrphaned: Bool = true) async throws -> [Stack] {
 		logger.info("Fetching stacks...")
 		do {
-			let stacks = try await portainer.fetchStacks(endpointID: selectedEndpoint?.id)
+			let stacks = try await portainer.fetchStacks(
+				endpointID: endpointID,
+				includeOrphaned: includeOrphaned
+			)
 			logger.info("Got \(stacks.count, privacy: .public) stack(s).")
 			return stacks
 		} catch {
