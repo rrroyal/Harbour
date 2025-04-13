@@ -68,7 +68,7 @@ extension ViewState {
 		}
 	}
 
-	/// Is the current state error?
+	/// Is the current state an error?
 	var isError: Bool {
 		switch self {
 		case .failure:

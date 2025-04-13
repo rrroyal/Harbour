@@ -31,7 +31,6 @@ extension ContainerLogsView {
 		var containerID: Container.ID
 
 		var scrollViewIsRefreshing = false
-		var scrollViewPersistScroll = false
 
 		var lineCount = 100
 

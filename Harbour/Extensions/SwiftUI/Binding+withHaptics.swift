@@ -17,6 +17,5 @@ extension Binding where Value: Sendable {
 			Haptics.generateIfEnabled(haptic)
 			self.wrappedValue = newValue
 		}
-
 	}
 }
