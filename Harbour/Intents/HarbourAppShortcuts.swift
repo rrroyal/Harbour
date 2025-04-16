@@ -14,7 +14,8 @@ struct HarbourAppShortcuts: AppShortcutsProvider {
 		AppShortcut(
 			intent: ContainerActionIntent(),
 			phrases: [
-				"Execute container action in \(.applicationName)"
+				"Execute container action in \(.applicationName)",
+				"Ask \(.applicationName) to \(\.$containerAction) a container"
 			],
 			shortTitle: "ContainerActionIntent.Title",
 			systemImageName: "cube.transparent.fill"
@@ -24,7 +25,8 @@ struct HarbourAppShortcuts: AppShortcutsProvider {
 			intent: ContainerStatusIntent(),
 			phrases: [
 				"Get container status in \(.applicationName)",
-				"Check container in \(.applicationName)"
+				"Check container in \(.applicationName)",
+				"Ask \(.applicationName) what's the status of \(\.$container)"
 			],
 			shortTitle: "ContainerStatusIntent.Title",
 			systemImageName: "cube.fill"
