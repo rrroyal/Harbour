@@ -4,8 +4,6 @@
 <dict>
 	<key>AppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
-	<key>CoreSpotlightContinuation</key>
-	<true/>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>xyz.shameful.Harbour.BackgroundRefresh</string>
@@ -36,8 +34,8 @@
 			</array>
 		</dict>
 	</array>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+	<key>CoreSpotlightContinuation</key>
+	<true/>
 	<key>MDItemKeywords</key>
 	<string>Harbour, Harbor, Docker, Portainer, Containers</string>
 	<key>MainBundleIdentifier</key>
