@@ -10,7 +10,12 @@ import PortainerKit
 
 extension Container.State {
 	var isRunning: Bool {
-		self == .created || self == .paused || self == .removing || self == .restarting || self == .running
+		switch self {
+		case .created, .running, .restarting, .removing:
+			true
+		case .paused, .exited, .dead:
+			false
+		}
 	}
 }
 

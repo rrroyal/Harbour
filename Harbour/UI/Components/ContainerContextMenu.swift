@@ -60,7 +60,7 @@ struct ContainerContextMenu: View {
 //			#if ENABLE_PREVIEW_FEATURES
 //			Divider()
 //
-//			if containerState.isContainerOn {
+//			if containerState.isRunning {
 //				attachButton
 //			}
 //			#endif

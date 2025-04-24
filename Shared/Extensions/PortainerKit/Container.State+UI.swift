@@ -100,17 +100,3 @@ extension Container.State? {
 		self?.emoji ?? String(localized: "PortainerKit.Container.State.Icon.Unknown")
 	}
 }
-
-// MARK: - Container.State+isContainerOn
-
-extension Container.State {
-	var isContainerOn: Bool {
-		self == .created || self == .removing || self == .restarting || self == .running
-	}
-}
-
-extension Container.State? {
-	var isContainerOn: Bool {
-		self?.isContainerOn ?? false
-	}
-}

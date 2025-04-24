@@ -78,6 +78,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"Extensions/Foundation/Error+Equatable.swift",
+				"Extensions/PortainerKit/Container.State+isRunning.swift",
 				"Extensions/PortainerKit/Stack.StackType+UI.swift",
 				"Helpers/Spotlight/SpotlightHelper+Containers.swift",
 				"Helpers/Spotlight/SpotlightHelper+Stacks.swift",
