@@ -67,6 +67,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		007C645F2DDE28850035DEA0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				AppShortcuts.xcstrings,
+			);
+			target = 00A4AB862A34ECB60074E940 /* HarbourWidgets */;
+		};
 		00B084122C17A3940034DBDC /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -110,7 +117,7 @@
 		00B083F52C17A3890034DBDC /* Modules */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Modules; sourceTree = "<group>"; };
 		00B084072C17A3930034DBDC /* HarbourWidgets */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (00B084122C17A3940034DBDC /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = HarbourWidgets; sourceTree = "<group>"; };
 		00B0853A2C17A3D80034DBDC /* Shared */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (00B085BA2C17A3D80034DBDC /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Shared; sourceTree = "<group>"; };
-		00B086572C17A3F30034DBDC /* Harbour */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (00B086C62C17A3F30034DBDC /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Harbour; sourceTree = "<group>"; };
+		00B086572C17A3F30034DBDC /* Harbour */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (00B086C62C17A3F30034DBDC /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 007C645F2DDE28850035DEA0 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Harbour; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -481,6 +488,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
 			};
@@ -538,6 +546,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;

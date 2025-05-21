@@ -1,0 +1,35 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Execute container action in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Execute container action in ${applicationName}",
+              "Ask ${applicationName} to ${containerAction} a container"
+            ]
+          }
+        }
+      }
+    },
+    "Get container status in ${applicationName}" : {
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringSet" : {
+            "state" : "new",
+            "values" : [
+              "Get container status in ${applicationName}",
+              "Check container in ${applicationName}",
+              "Ask ${applicationName} what's the status of ${container}"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
