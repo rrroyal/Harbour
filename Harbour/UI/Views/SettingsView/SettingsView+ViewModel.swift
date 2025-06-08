@@ -25,6 +25,8 @@ extension SettingsView {
 		let logger = Logger(.settings)
 		let indicators = Indicators()
 
+		let isNegraButtonVisible = Int.random(in: 0...19) == 11
+
 		var scrollPosition: SettingsView.ViewID?
 
 		var isSetupSheetPresented = false
@@ -35,8 +37,6 @@ extension SettingsView {
 
 		var isRemoveEndpointAlertPresented = false
 		var endpointToRemove: URL?
-
-		var isNegraButtonVisible = Int.random(in: 0...19) == 11
 
 		init() {
 			serverURLs = portainerStore.savedURLs
