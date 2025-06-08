@@ -83,19 +83,14 @@ extension ContainersView.ListView {
 					.fontWeight(.black)
 					.foregroundStyle(tintColor)
 			}
-			.padding()
 			.lineLimit(1)
 			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
-			.frame(maxWidth: .infinity)
+			.padding(.vertical, 2)
 //			#if os(iOS)
-			.background(Color.secondaryGroupedBackground, in: background)
+//			.background(Color.secondaryGroupedBackground, in: background)
 //			#elseif os(macOS)
 //			.background(.thickMaterial, in: background)
 //			#endif
-			.contentShape(background)
-			#if os(iOS)
-			.contentShape(.contextMenuPreview, background)
-			#endif
 			.animation(.default, value: container)
 			.animation(.default, value: container.state)
 			.animation(.default, value: container.status)

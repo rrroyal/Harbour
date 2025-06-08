@@ -21,7 +21,7 @@ extension ContainersView {
 		let containers: [Container]
 
 		var body: some View {
-			LazyVStack(spacing: cellSpacing) {
+			List {
 				ForEach(containers) { container in
 					ContainersView.ContainerNavigationCell(container: container) {
 						ContainerCell(container: container)

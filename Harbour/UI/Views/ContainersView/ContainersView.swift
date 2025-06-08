@@ -315,22 +315,14 @@ private extension ContainersView {
 		let containers: [Container]
 
 		var body: some View {
-			ScrollView {
-				Group {
-					if preferences.cvUseGrid {
-						GridView(containers: containers)
-					} else {
-						ListView(containers: containers)
-					}
+			ZStack {
+				if preferences.cvUseGrid {
+					GridView(containers: containers)
+				} else {
+					ListView(containers: containers)
 				}
-				.padding(.horizontal)
-				.padding(.bottom)
-				#if os(macOS)
-				.padding(.top)
-				#endif
 			}
 			.animation(.default, value: preferences.cvUseGrid)
-			.transition(.opacity)
 		}
 	}
 }

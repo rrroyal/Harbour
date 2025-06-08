@@ -39,14 +39,21 @@ extension ContainersView {
 		private let cellSpacing: Double = 8
 
 		var body: some View {
-			LazyVGrid(columns: [.init(.adaptive(minimum: cellMinimumSize, maximum: cellMaximumSize))], spacing: cellSpacing) {
-				ForEach(containers) { container in
-					ContainersView.ContainerNavigationCell(container: container) {
-						ContainerCell(container: container)
-							.equatable()
-							.geometryGroup()
+			ScrollView {
+				LazyVGrid(columns: [.init(.adaptive(minimum: cellMinimumSize, maximum: cellMaximumSize))], spacing: cellSpacing) {
+					ForEach(containers) { container in
+						ContainersView.ContainerNavigationCell(container: container) {
+							ContainerCell(container: container)
+								.equatable()
+								.geometryGroup()
+						}
 					}
 				}
+				.padding(.horizontal)
+				.padding(.bottom)
+				#if os(macOS)
+				.padding(.top)
+				#endif
 			}
 			.animation(.default, value: containers)
 		}
