@@ -109,10 +109,10 @@ extension ContainerDetailsView {
 					let containerDetails = try await withThrowingTaskGroup(of: Result<ContainerDetails, Error>.self, returning: ContainerDetails.self) { group in
 						let addedTask1: Bool
 						let addedTask2: Bool
-						var containerNotFoundError: Error?
+						nonisolated(unsafe) var containerNotFoundError: Error?
 
 						// Resolve by `navigationItem.id`
-						addedTask1 = group.addTaskUnlessCancelled { [weak self, navigationItem] in
+						addedTask1 = group.addTaskUnlessCancelled { @Sendable [weak self, navigationItem] in
 							guard let self else { throw CancellationError() }
 
 							do {
