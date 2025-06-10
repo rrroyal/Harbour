@@ -95,7 +95,7 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 			// swiftlint:disable:next line_length
 			let dialogString: LocalizedStringResource = "ContainerStatusIntent.ReturnDialog Name:\(fetchedContainer.name ?? fetchedContainer._id) Status:\(fetchedContainer.status ?? String(localized: "Generic.Unknown"))"
-			let dialog: IntentDialog = if let icon = fetchedContainer.containerState?.portainerState.icon {
+			let dialog: IntentDialog = if let icon = fetchedContainer.state?.portainerState.icon {
 				.init(
 					full: dialogString,
 					systemImageName: icon

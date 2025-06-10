@@ -100,7 +100,7 @@ struct ContainerActionIntent: AppIntent {
 			if let _containerAction = self.containerAction {
 				containerAction = _containerAction
 			} else {
-				let acceptableActions = ContainerAction.actionsForState(container.containerState?.portainerState)
+				let acceptableActions = ContainerAction.actionsForState(container.state?.portainerState)
 					.localizedSorted(by: \.title)
 					.map { ContainerActionAppEnum(action: $0) }
 				containerAction = try await self.$containerAction.requestDisambiguation(

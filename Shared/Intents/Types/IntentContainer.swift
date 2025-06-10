@@ -32,7 +32,7 @@ struct IntentContainer: AppEntity {
 	public var name: String?
 
 	@Property(title: "IntentContainer.ContainerState")
-	public var containerState: ContainerStateAppEnum?
+	public var state: ContainerStateAppEnum?
 
 	@Property(title: "IntentContainer.Status")
 	public var status: String?
@@ -49,9 +49,9 @@ struct IntentContainer: AppEntity {
 		self._id = id
 		self.name = name
 		if let containerState {
-			self.containerState = .init(state: containerState)
+			self.state = .init(state: containerState)
 		} else {
-			self.containerState = nil
+			self.state = nil
 		}
 		self.status = status
 		self.persistentID = persistentID
@@ -61,9 +61,9 @@ struct IntentContainer: AppEntity {
 		self._id = container.id
 		self.name = container.displayName
 		if let containerState = container.state {
-			self.containerState = .init(state: containerState)
+			self.state = .init(state: containerState)
 		} else {
-			self.containerState = nil
+			self.state = nil
 		}
 		self.status = container.status
 		self.persistentID = container._persistentID
