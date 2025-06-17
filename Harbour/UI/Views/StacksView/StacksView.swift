@@ -84,7 +84,7 @@ struct StacksView: View {
 				.keyboardShortcut(",", modifiers: .command)
 				#endif
 			} label: {
-				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
 					.labelStyle(.iconOnly)
 			}
 			.labelStyle(.titleAndIcon)
@@ -164,6 +164,7 @@ struct StacksView: View {
 				Haptics.generateIfEnabled(.heavy)
 				removeStack(stack)
 			}
+			.tint(.red)
 		} message: { stack in
 			Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
 		}

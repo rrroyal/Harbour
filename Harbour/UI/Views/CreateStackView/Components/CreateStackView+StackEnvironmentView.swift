@@ -92,7 +92,7 @@ private extension CreateStackView.StackEnvironmentView {
 			} label: {
 				Label("Generic.Remove", systemImage: SFSymbol.remove)
 			}
-			.foregroundStyle(.red)
+			.tint(.red)
 		}
 	}
 }

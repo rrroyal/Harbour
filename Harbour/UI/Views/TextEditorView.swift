@@ -97,6 +97,7 @@ struct TextEditorView: View {
 				Haptics.generateIfEnabled(.heavy)
 				dismiss()
 			}
+			.tint(.red)
 		} message: {
 			Text("TextEditorView.ConfirmDismissDialog.Message")
 		}

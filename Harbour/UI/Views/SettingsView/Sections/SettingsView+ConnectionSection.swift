@@ -96,6 +96,7 @@ private extension SettingsView.ConnectionSection {
 					}
 					viewModel.endpointToRemove = nil
 				}
+				.tint(.red)
 			} message: { url in
 				Text("SettingsView.Connection.RemoveEndpointAlert.Message URL:\(url.absoluteString)")
 			}
@@ -149,6 +150,7 @@ private extension SettingsView.ConnectionSection {
 				} label: {
 					Label("Generic.Remove", systemImage: SFSymbol.remove)
 				}
+				.tint(.red)
 			} label: {
 				Label(formattedURL(url), systemImage: SFSymbol.checkmark)
 					.labelStyle(.iconOptional(showIcon: viewModel.activeURL == url))

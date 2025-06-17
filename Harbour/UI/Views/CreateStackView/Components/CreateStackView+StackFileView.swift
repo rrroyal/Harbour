@@ -139,6 +139,7 @@ private extension CreateStackView.StackFileView {
 					} label: {
 						Label("Generic.Clear", systemImage: SFSymbol.remove)
 					}
+					.tint(.red)
 				}
 				.labelStyle(.titleAndIcon)
 			}

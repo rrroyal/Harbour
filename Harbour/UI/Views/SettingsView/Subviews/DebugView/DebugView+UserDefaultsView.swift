@@ -46,7 +46,7 @@ extension DebugView {
 						} label: {
 							Label("Generic.Remove", systemImage: SFSymbol.remove)
 						}
-
+						.tint(.red)
 					}
 				}
 			}

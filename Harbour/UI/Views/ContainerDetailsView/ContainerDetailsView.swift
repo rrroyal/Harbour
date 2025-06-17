@@ -300,7 +300,7 @@ struct ContainerDetailsView: View {
 						)
 					}
 				} label: {
-					Label("Generic.More", systemImage: SFSymbol.moreCircle)
+					Label("Generic.More", systemImage: SFSymbol._moreToolbar)
 						.labelStyle(.automatic)
 				}
 				.labelStyle(.titleAndIcon)

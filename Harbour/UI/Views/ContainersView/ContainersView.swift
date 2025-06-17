@@ -120,7 +120,7 @@ struct ContainersView: View {
 				.labelStyle(.titleAndIcon)
 				#endif
 			} label: {
-				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
 					.labelStyle(.iconOnly)
 			}
 			.labelStyle(.titleAndIcon)
@@ -231,6 +231,7 @@ struct ContainersView: View {
 					Haptics.generateIfEnabled(.heavy)
 					removeContainer(container, force: true)
 				}
+				.tint(.red)
 			} message: { container in
 				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
 			}

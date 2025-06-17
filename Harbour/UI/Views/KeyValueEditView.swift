@@ -62,6 +62,7 @@ struct KeyValueEditView: View {
 			Label("Generic.Remove", systemImage: SFSymbol.remove)
 		}
 		.keyboardShortcut(.delete)
+		.tint(.red)
 	}
 
 	var body: some View {

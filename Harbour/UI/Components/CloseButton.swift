@@ -28,15 +28,19 @@ struct CloseButton: View {
 			case .text:
 				Text("Generic.Close")
 			case .circleButton:
-				Image(systemName: "xmark")
-					.font(.caption)
-					.fontWeight(.bold)
-					.foregroundStyle(.secondary)
-					.imageScale(.medium)
-					.padding(6)
-					.background(.quinary, in: Circle())
-					.accessibilityRemoveTraits(.isImage)
-					.tint(.primary)
+				if #available(iOS 26.0, *) {
+					Image(systemName: "xmark")
+				} else {
+					Image(systemName: "xmark")
+						.font(.caption)
+						.fontWeight(.bold)
+						.foregroundStyle(.secondary)
+						.imageScale(.medium)
+						.padding(6)
+						.background(.quinary, in: Circle())
+						.accessibilityRemoveTraits(.isImage)
+						.tint(.primary)
+				}
 			}
 		}
 		.keyboardShortcut(.cancelAction)

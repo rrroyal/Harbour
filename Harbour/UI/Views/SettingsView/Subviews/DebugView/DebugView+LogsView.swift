@@ -56,7 +56,7 @@ extension DebugView {
 					ShareLink(item: logsShareable, preview: .init(.init(verbatim: logsShareable)))
 				}
 			} label: {
-				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
 					.labelStyle(.iconOnly)
 			}
 			.labelStyle(.titleAndIcon)

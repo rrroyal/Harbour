@@ -321,7 +321,7 @@ private extension ContainerLogsView {
 					refreshButton
 				}
 			} label: {
-				Label("Generic.More", systemImage: SFSymbol.moreCircle)
+				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
 					.labelStyle(.iconOnly)
 			}
 			.labelStyle(.titleAndIcon)

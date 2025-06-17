@@ -92,7 +92,7 @@ private extension DebugView {
 						if portainerSystemVersion.updateAvailable == true {
 							if let url = URL(string: "https://docs.portainer.io/start/upgrade") {
 								Link(destination: url) {
-									Text("DebugView.PortainerInfoSection.Version.UpdateAvailable")
+									Label("DebugView.PortainerInfoSection.Version.UpdateAvailable", systemImage: SFSymbol.external)
 								}
 							} else {
 								Text("DebugView.PortainerInfoSection.Version.UpdateAvailable")
@@ -171,6 +171,7 @@ private extension DebugView {
 						DebugView.logger.notice("Deleted user activities!")
 					}
 				}
+				.tint(.red)
 				#endif
 
 				Button("DebugView.PersistenceSection.ResetKeychain", role: .destructive) {
@@ -186,6 +187,7 @@ private extension DebugView {
 						errorHandler(error)
 					}
 				}
+				.tint(.red)
 
 				Button("DebugView.PersistenceSection.ResetSpotlight", role: .destructive) {
 					DebugView.logger.warning("Resetting Spotlight...")
@@ -198,6 +200,7 @@ private extension DebugView {
 						DebugView.logger.notice("Spotlight has been reset!")
 					}
 				}
+				.tint(.red)
 
 				Button("DebugView.PersistenceSection.ResetSwiftData", role: .destructive) {
 					DebugView.logger.warning("Resetting SwiftData...")
@@ -206,6 +209,7 @@ private extension DebugView {
 					modelContext.container.deleteAllData()
 					DebugView.logger.notice("SwiftData has been reset!")
 				}
+				.tint(.red)
 			}
 		}
 	}

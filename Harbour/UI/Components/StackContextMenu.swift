@@ -51,6 +51,7 @@ struct StackContextMenu: View {
 					Label("Generic.Remove", systemImage: SFSymbol.remove)
 				}
 				.keyboardShortcut(.delete, modifiers: .command)
+				.tint(.red)
 			}
 
 			if let portainerServerURL = portainerStore.serverURL,
