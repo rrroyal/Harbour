@@ -51,6 +51,7 @@ extension DebugView {
 				}
 			}
 			.searchable(text: $searchText)
+			.searchableMinimized()
 			.overlay {
 				if values.isEmpty {
 					ContentUnavailableView("DebugView.UserDefaultsView.Empty", systemImage: SFSymbol.xmark)

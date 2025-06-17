@@ -85,6 +85,7 @@ extension DebugView {
 			}
 			.formStyle(.grouped)
 			.searchable(text: $filter)
+			.searchableMinimized()
 			.defaultScrollAnchor(.bottom, for: .initialOffset)
 			.navigationTitle("DebugView.LogsView.Title")
 			.toolbar {

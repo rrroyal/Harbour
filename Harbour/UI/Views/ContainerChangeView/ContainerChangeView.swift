@@ -49,6 +49,7 @@ struct ContainerChangeView: View {
 			.formStyle(.grouped)
 			.scrollContentBackground(.hidden)
 			.searchable(text: $searchText)
+			.searchableMinimized()
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.background {
 				placeholderView
