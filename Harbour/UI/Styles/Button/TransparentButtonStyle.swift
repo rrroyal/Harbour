@@ -16,15 +16,16 @@ struct TransparentButtonStyle: ButtonStyle {
 
 	private let paddingHorizontal: Double = 14
 	private let paddingVertical: Double = 14
-	private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius)
 
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
 			.multilineTextAlignment(.center)
 			.padding(.horizontal, includePadding ? paddingHorizontal : 0)
 			.padding(.vertical, includePadding ? paddingVertical : 0)
-			.background(Color.primaryGray.opacity(configuration.isPressed ? 0.1 : 0), in: roundedRectangle)
-			.contentShape(roundedRectangle)
+			.background(Color.primaryGray.opacity(configuration.isPressed ? 0.1 : 0), in: .buttonBorder)
+			.contentShape(.buttonBorder)
+			.contentShape(.contextMenuPreview, .buttonBorder)
+			.contentShape(.interaction, .buttonBorder)
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
 			.animation(.default, value: isEnabled)
 			.animation(.spring, value: configuration.isPressed)

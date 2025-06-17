@@ -16,8 +16,6 @@ struct PrimaryButtonStyle: ButtonStyle {
 	let backgroundColor: Color
 	let font: Font
 
-	private let roundedRectangle = RoundedRectangle(cornerRadius: Constants.cornerRadius)
-
 	init(foregroundColor: Color = .white, backgroundColor: Color = .accentColor, font: Font = .body.weight(.semibold)) {
 		self.foregroundColor = foregroundColor
 		self.backgroundColor = backgroundColor
@@ -31,8 +29,11 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.foregroundStyle(isEnabled ? foregroundColor : .secondary)
 			.padding()
 			.frame(maxWidth: .infinity, alignment: .center)
-			.background(isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2), in: roundedRectangle)
-			.contentShape(roundedRectangle)
+			.background(isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2), in: .buttonBorder)
+			.contentShape(.buttonBorder)
+			.contentShape(.contextMenuPreview, .buttonBorder)
+			.contentShape(.interaction, .buttonBorder)
+			._glassEffect()
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
 			.animation(.default, value: isEnabled)
 			.animation(.spring, value: configuration.isPressed)

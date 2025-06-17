@@ -56,16 +56,10 @@ extension CreateStackView {
 						}
 					}
 
-					Button {
+					AddButton {
 						Haptics.generateIfEnabled(.sheetPresentation)
 						viewModel.editedEnvironmentEntry = nil
 						viewModel.isEnvironmentEntrySheetPresented = true
-					} label: {
-						Label("Generic.Add", systemImage: SFSymbol.plus)
-							#if os(macOS)
-							.frame(maxWidth: .infinity, alignment: .leading)
-							.contentShape(Rectangle())
-							#endif
 					}
 				}
 				#if os(macOS)
@@ -83,12 +77,27 @@ extension CreateStackView {
 // MARK: - CreateStackView.StackEnvironmentView+RemoveButton
 
 private extension CreateStackView.StackEnvironmentView {
+	struct AddButton: View {
+		let action: () -> Void
+
+		var body: some View {
+			Button {
+				action()
+			} label: {
+				Label("Generic.Add", systemImage: SFSymbol.plus)
+					#if os(macOS)
+					.frame(maxWidth: .infinity, alignment: .leading)
+					.contentShape(Rectangle())
+					#endif
+			}
+		}
+	}
 	struct RemoveButton: View {
-		var removeAction: () -> Void
+		let action: () -> Void
 
 		var body: some View {
 			Button(role: .destructive) {
-				removeAction()
+				action()
 			} label: {
 				Label("Generic.Remove", systemImage: SFSymbol.remove)
 			}
