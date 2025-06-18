@@ -107,6 +107,7 @@ struct SetupView: View {
 		Link(destination: howToLoginURL) {
 			Label("SetupView.HowToLogin", systemImage: "person.fill.questionmark")
 		}
+		.foregroundStyle(.accent)
 	}
 
 	var body: some View {
@@ -149,7 +150,6 @@ struct SetupView: View {
 				howToLoginButton
 					.font(.callout)
 					.fontWeight(.medium)
-					.foregroundStyle(.accent)
 			}
 			#endif
 		}
