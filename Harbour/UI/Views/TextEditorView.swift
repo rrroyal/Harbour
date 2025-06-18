@@ -27,6 +27,69 @@ struct TextEditorView: View {
 		self.navigationTitle = navigationTitle
 	}
 
+	@ToolbarContentBuilder
+	private var toolbarContent: some ToolbarContent {
+		let textIsSame = text == backingText
+		ToolbarItem(placement: .primaryAction) {
+			Button {
+				Haptics.generateIfEnabled(.selectionChanged)
+				backingText = text
+				dismiss()
+			} label: {
+				Text("Generic.Save")
+			}
+			.disabled(textIsSame)
+//			.buttonStyle(.borderedProminent)
+			.tint(.accentColor)
+			.animation(.default, value: textIsSame)
+		}
+
+		#if os(iOS)
+		if #available(iOS 26.0, *) {
+			ToolbarItem(placement: .keyboard) {
+				Button {
+					insertAtCursor("\t")
+				} label: {
+					Label(String("⇥"), systemImage: "arrow.right.to.line")
+				}
+				.labelStyle(.iconOnly)
+			}
+
+			ToolbarSpacer(.flexible, placement: .keyboard)
+
+			ToolbarItem(placement: .keyboard) {
+				Button {
+					textFieldFocused = false
+				} label: {
+					Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
+				}
+				.labelStyle(.iconOnly)
+			}
+		} else {
+			ToolbarItem(placement: .keyboard) {
+				HStack {
+					Button {
+						insertAtCursor("\t")
+					} label: {
+						Label(String("⇥"), systemImage: "arrow.right.to.line")
+					}
+
+					Spacer()
+
+					Button {
+						textFieldFocused = false
+					} label: {
+						Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
+					}
+				}
+				.font(.footnote)
+				.labelStyle(.iconOnly)
+				.padding(.horizontal, -10)
+			}
+		}
+		#endif
+	}
+
 	var body: some View {
 		NavigationStack {
 			TextEditor(text: $text, selection: $selection)
@@ -50,41 +113,7 @@ struct TextEditorView: View {
 					}
 				}
 				.toolbar {
-					let textIsSame = text == backingText
-					ToolbarItem(placement: .primaryAction) {
-						Button {
-							Haptics.generateIfEnabled(.selectionChanged)
-							backingText = text
-							dismiss()
-						} label: {
-							Text("Generic.Save")
-						}
-						.disabled(textIsSame)
-						.animation(.default, value: textIsSame)
-					}
-
-					#if os(iOS)
-					ToolbarItem(placement: .keyboard) {
-						HStack {
-							Button {
-								insertAtCursor("\t")
-							} label: {
-								Label(String("⇥"), systemImage: "arrow.right.to.line")
-							}
-
-							Spacer()
-
-							Button {
-								textFieldFocused = false
-							} label: {
-								Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
-							}
-						}
-						.font(.footnote)
-						.labelStyle(.iconOnly)
-						.padding(.horizontal, -10)
-					}
-					#endif
+					toolbarContent
 				}
 				.navigationTitle(navigationTitle)
 				#if os(iOS)

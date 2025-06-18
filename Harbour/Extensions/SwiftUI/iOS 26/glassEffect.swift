@@ -9,11 +9,21 @@
 import SwiftUI
 
 extension View {
-	@ViewBuilder
+	@ViewBuilder @inlinable
 	func _glassEffect() -> some View {
 		if #available(iOS 26.0, *) {
 			self
 				.glassEffect()
+		} else {
+			self
+		}
+	}
+
+	@ViewBuilder @inlinable
+	func _glassEffect(tint: Color) -> some View {
+		if #available(iOS 26.0, *) {
+			self
+				.glassEffect(.regular.tint(tint))
 		} else {
 			self
 		}

@@ -13,6 +13,10 @@ private struct SearchableMinimizedViewModifier: ViewModifier {
 		if #available(iOS 26, *) {
 			content
 				.searchToolbarBehavior(.minimize)
+//				.toolbar {
+//					ToolbarSpacer(.flexible, placement: .bottomBar)
+//					DefaultToolbarItem(kind: .search, placement: .bottomBar)
+//				}
 		} else {
 			content
 		}

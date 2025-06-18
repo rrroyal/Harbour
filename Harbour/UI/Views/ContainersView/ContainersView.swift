@@ -67,22 +67,6 @@ struct ContainersView: View {
 
 	@ToolbarContentBuilder @MainActor
 	private var toolbarContent: some ToolbarContent {
-		#if os(iOS)
-		if horizontalSizeClass == .regular {
-			ToolbarItem(placement: .navigation) {
-				Menu {
-					endpointPicker
-				} label: {
-					Label(selectedEndpointTitle, systemImage: SFSymbol.endpoint)
-						.symbolVariant(portainerStore.selectedEndpoint != nil ? .fill : portainerStore.endpoints.isEmpty ? .slash : .none)
-				}
-				.labelStyle(.iconOnly)
-				.animation(.default, value: portainerStore.endpoints.isEmpty)
-				.animation(.default, value: portainerStore.selectedEndpoint)
-			}
-		}
-		#endif
-
 		ToolbarItem(placement: .automatic) {
 			Menu {
 				if !(appState.lastContainerChanges?.isEmpty ?? true) {
@@ -211,7 +195,19 @@ struct ContainersView: View {
 				toolbarContent
 
 				#if os(iOS)
-				if horizontalSizeClass == .compact && viewModel.canUseEndpointsMenu {
+				if horizontalSizeClass == .regular {
+					ToolbarItem(placement: .navigation) {
+						Menu {
+							endpointPicker
+						} label: {
+							Label(selectedEndpointTitle, systemImage: SFSymbol.endpoint)
+								.symbolVariant(portainerStore.selectedEndpoint != nil ? .fill : portainerStore.endpoints.isEmpty ? .slash : .none)
+						}
+						.labelStyle(.iconOnly)
+						.animation(.default, value: portainerStore.endpoints.isEmpty)
+						.animation(.default, value: portainerStore.selectedEndpoint)
+					}
+				} else if horizontalSizeClass == .compact && viewModel.canUseEndpointsMenu {
 					ToolbarTitleMenu {
 						endpointPicker
 					}
