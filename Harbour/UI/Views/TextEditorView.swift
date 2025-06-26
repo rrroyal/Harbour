@@ -29,23 +29,51 @@ struct TextEditorView: View {
 
 	@ToolbarContentBuilder
 	private var toolbarContent: some ToolbarContent {
-		let textIsSame = text == backingText
+		ToolbarItem(placement: .cancellationAction) {
+			Group {
+				#if os(iOS)
+				CloseButton(style: .circleButton) {
+					dismissWithConfirmation()
+				}
+				#elseif os(macOS)
+				CloseButton(style: .text) {
+					dismissWithConfirmation()
+				}
+				#endif
+			}
+			.confirmationDialog("Generic.AreYouSure", isPresented: $isConfirmDismissDialogPresented, titleVisibility: .visible) {
+				Button("Generic.Discard", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					dismiss()
+				}
+				.tint(.red)
+
+				if #available(iOS 26.0, macOS 26.0, *) {
+					Button("Generic.Cancel", role: .close) { }
+				}
+			} message: {
+				Text("TextEditorView.ConfirmDismissDialog.Message")
+			}
+		}
+
+//		let textIsSame = text == backingText
 		ToolbarItem(placement: .primaryAction) {
 			Button {
 				Haptics.generateIfEnabled(.selectionChanged)
 				backingText = text
 				dismiss()
 			} label: {
-				Text("Generic.Save")
+//				Text("Generic.Save")
+				Label("Generic.Done", systemImage: SFSymbol.checkmark)
 			}
-			.disabled(textIsSame)
-//			.buttonStyle(.borderedProminent)
+			.buttonStyle(.borderedProminent)
 			.tint(.accentColor)
-			.animation(.default, value: textIsSame)
+//			.disabled(textIsSame)
+//			.animation(.default, value: textIsSame)
 		}
 
 		#if os(iOS)
-		if #available(iOS 26.0, *) {
+		if #available(iOS 26.0, macOS 26.0, *) {
 			ToolbarItem(placement: .keyboard) {
 				Button {
 					insertAtCursor("\t")
@@ -103,15 +131,6 @@ struct TextEditorView: View {
 //				.textSelectionAffinity(.downstream)
 				.focused($textFieldFocused)
 				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-				.addingCloseButton {
-					if text != backingText {
-						Haptics.generateIfEnabled(.warning)
-						isConfirmDismissDialogPresented = true
-					} else {
-						Haptics.generateIfEnabled(.buttonPress)
-						dismiss()
-					}
-				}
 				.toolbar {
 					toolbarContent
 				}
@@ -121,15 +140,6 @@ struct TextEditorView: View {
 				#endif
 		}
 		.interactiveDismissDisabled(text != backingText)
-		.confirmationDialog("Generic.AreYouSure", isPresented: $isConfirmDismissDialogPresented, titleVisibility: .visible) {
-			Button("Generic.Discard", role: .destructive) {
-				Haptics.generateIfEnabled(.heavy)
-				dismiss()
-			}
-			.tint(.red)
-		} message: {
-			Text("TextEditorView.ConfirmDismissDialog.Message")
-		}
 		#if os(iOS)
 		.onAppear {
 			selection = .init(insertionPoint: text.endIndex)
@@ -151,6 +161,16 @@ private extension TextEditorView {
 
 		let indexBefore = text.index(range.lowerBound, offsetBy: 1)
 		self.selection = .init(insertionPoint: indexBefore)
+	}
+
+	func dismissWithConfirmation() {
+		if text != backingText {
+			Haptics.generateIfEnabled(.warning)
+			isConfirmDismissDialogPresented = true
+		} else {
+			Haptics.generateIfEnabled(.buttonPress)
+			dismiss()
+		}
 	}
 }
 

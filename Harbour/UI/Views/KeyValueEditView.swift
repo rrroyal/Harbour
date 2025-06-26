@@ -119,6 +119,7 @@ struct KeyValueEditView: View {
 				saveButton
 					.buttonStyle(.customPrimary)
 			}
+			._inGlassEffectContainer()
 			.padding()
 		}
 		#endif

@@ -24,7 +24,9 @@ struct TransparentButtonStyle: ButtonStyle {
 			.padding(.vertical, includePadding ? paddingVertical : 0)
 			.background(Color.primaryGray.opacity(configuration.isPressed ? 0.1 : 0), in: .buttonBorder)
 			.contentShape(.buttonBorder)
+			#if os(iOS)
 			.contentShape(.contextMenuPreview, .buttonBorder)
+			#endif
 			.contentShape(.interaction, .buttonBorder)
 			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
 			.animation(.default, value: isEnabled)

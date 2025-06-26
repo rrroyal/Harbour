@@ -129,7 +129,8 @@ struct StacksView: View {
 		StacksList(
 			stacks: viewModel.stacks,
 			filterByStackNameAction: filterByStackName,
-			setStackStateAction: setStackState
+			setStackStateAction: setStackState,
+			removeStackAction: removeStack
 		)
 		.scrollContentBackground(.hidden)
 		.scrollPosition(id: $viewModel.scrollPosition)
@@ -154,20 +155,6 @@ struct StacksView: View {
 		.focusable()
 		.focused($isFocused)
 		.focusEffectDisabled()
-		.confirmationDialog(
-			"Generic.AreYouSure",
-			isPresented: sceneDelegate.isRemoveStackAlertPresented,
-			titleVisibility: .visible,
-			presenting: sceneDelegate.stackToRemove
-		) { stack in
-			Button("Generic.Remove", role: .destructive) {
-				Haptics.generateIfEnabled(.heavy)
-				removeStack(stack)
-			}
-			.tint(.red)
-		} message: { stack in
-			Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
-		}
 		.navigationTitle("StacksView.Title")
 		.environment(viewModel)
 		.animation(.default, value: viewModel.viewState)
@@ -193,11 +180,13 @@ struct StacksView: View {
 
 private extension StacksView {
 	struct StacksList: View {
+		@Environment(SceneDelegate.self) private var sceneDelegate
 		@Environment(StacksView.ViewModel.self) private var viewModel
 		@EnvironmentObject private var portainerStore: PortainerStore
 		var stacks: [StacksView.StackItem]
 		var filterByStackNameAction: (String) -> Void
 		var setStackStateAction: (Stack, Bool) -> Void
+		var removeStackAction: (Stack) -> Void
 
 		var body: some View {
 			List {
@@ -228,6 +217,24 @@ private extension StacksView {
 					.padding(.vertical, 4)
 					.listRowSeparator(.hidden)
 					#endif
+					.confirmationDialog(
+						"Generic.AreYouSure",
+						isPresented: sceneDelegate.isRemoveStackAlertPresented,
+						titleVisibility: .visible,
+						presenting: sceneDelegate.stackToRemove
+					) { stack in
+						Button("Generic.Remove", role: .destructive) {
+							Haptics.generateIfEnabled(.heavy)
+							removeStackAction(stack)
+						}
+						.tint(.red)
+
+						if #available(iOS 26.0, macOS 26.0, *) {
+							Button("Generic.Cancel", role: .close) { }
+						}
+					} message: { stack in
+						Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
+					}
 				}
 			}
 			#if os(iOS)

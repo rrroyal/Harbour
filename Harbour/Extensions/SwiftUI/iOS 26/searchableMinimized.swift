@@ -10,7 +10,8 @@ import SwiftUI
 
 private struct SearchableMinimizedViewModifier: ViewModifier {
 	func body(content: Content) -> some View {
-		if #available(iOS 26, *) {
+		#if os(iOS)
+		if #available(iOS 26.0, *) {
 			content
 				.searchToolbarBehavior(.minimize)
 //				.toolbar {
@@ -20,6 +21,9 @@ private struct SearchableMinimizedViewModifier: ViewModifier {
 		} else {
 			content
 		}
+		#else
+		content
+		#endif
 	}
 }
 

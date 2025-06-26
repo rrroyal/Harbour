@@ -28,8 +28,9 @@ struct CloseButton: View {
 			case .text:
 				Text("Generic.Close")
 			case .circleButton:
-				if #available(iOS 26.0, *) {
+				if #available(iOS 26.0, macOS 26.0, *) {
 					Image(systemName: "xmark")
+						.accessibilityRemoveTraits(.isImage)
 				} else {
 					Image(systemName: "xmark")
 						.font(.caption)

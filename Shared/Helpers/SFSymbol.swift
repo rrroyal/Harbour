@@ -75,7 +75,7 @@ enum SFSymbol {
 	static let moreCircle = "ellipsis.circle"
 
 	static var _moreToolbar: String {
-		if #available(iOS 26.0, *) {
+		if #available(iOS 26.0, macOS 26.0, *) {
 			Self.more
 		} else {
 			Self.moreCircle

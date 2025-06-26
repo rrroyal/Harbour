@@ -23,20 +23,30 @@ struct PrimaryButtonStyle: ButtonStyle {
 	}
 
 	func makeBody(configuration: Configuration) -> some View {
-		configuration.label
+		let base = configuration.label
 			.font(font)
 			.multilineTextAlignment(.center)
 			.foregroundStyle(isEnabled ? foregroundColor : .secondary)
 			.padding()
 			.frame(maxWidth: .infinity, alignment: .center)
-			.background(isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2), in: .buttonBorder)
-			.contentShape(.buttonBorder)
-			.contentShape(.contextMenuPreview, .buttonBorder)
-			.contentShape(.interaction, .buttonBorder)
-			._glassEffect()
-			.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
-			.animation(.default, value: isEnabled)
-			.animation(.spring, value: configuration.isPressed)
+
+		Group {
+			if #available(iOS 26.0, macOS 26.0, *) {
+				base
+			} else {
+				base
+					.background(isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2), in: .buttonBorder)
+			}
+		}
+		.contentShape(.buttonBorder)
+		#if os(iOS)
+		.contentShape(.contextMenuPreview, .buttonBorder)
+		#endif
+		.contentShape(.interaction, .buttonBorder)
+		._glassEffectInteractive(tint: isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2), enabled: isEnabled)
+		.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
+		.animation(.default, value: isEnabled)
+		.animation(.spring, value: configuration.isPressed)
 	}
 }
 
