@@ -109,8 +109,8 @@ extension ContainersView.GridView.ContainerCell: Identifiable {
 
 // MARK: - ContainersView.GridView.ContainerCell+Equatable
 
-extension ContainersView.GridView.ContainerCell: Equatable {
-	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+extension ContainersView.GridView.ContainerCell: @MainActor Equatable {
+	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&

@@ -286,11 +286,13 @@ extension StackDetailsView: Identifiable {
 
 // MARK: - StackDetailsView+Equatable
 
+/*
 extension StackDetailsView: Equatable {
 	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.navigationItem == rhs.navigationItem
 	}
 }
+ */
 
 // MARK: - StackDetailsView+ViewID
 

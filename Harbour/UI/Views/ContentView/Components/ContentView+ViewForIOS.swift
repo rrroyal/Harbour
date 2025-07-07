@@ -31,7 +31,7 @@ extension ContentView {
 						ContainersView()
 							.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 								ContainerDetailsView(navigationItem: navigationItem)
-									.equatable()
+//									.equatable()
 							}
 					}
 				} label: {
@@ -56,7 +56,7 @@ extension ContentView {
 						StacksView()
 							.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
 								StackDetailsView(navigationItem: navigationItem)
-									.equatable()
+//									.equatable()
 							}
 					}
 				} label: {

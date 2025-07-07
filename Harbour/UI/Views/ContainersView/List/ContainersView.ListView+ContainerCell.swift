@@ -112,8 +112,8 @@ extension ContainersView.ListView.ContainerCell: Identifiable {
 
 // MARK: - ContainersListView.ContainerCell+Equatable
 
-extension ContainersView.ListView.ContainerCell: Equatable {
-	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
+extension ContainersView.ListView.ContainerCell: @MainActor Equatable {
+	static func == (lhs: Self, rhs: Self) -> Bool {
 		lhs.container._isStored == rhs.container._isStored &&
 		lhs.container.state == rhs.container.state &&
 		lhs.container.status == rhs.container.status &&
