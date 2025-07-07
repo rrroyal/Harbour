@@ -228,10 +228,6 @@ struct ContainersView: View {
 					removeContainer(container, force: true)
 				}
 				.tint(.red)
-
-				if #available(iOS 26.0, macOS 26.0, *) {
-					Button("Generic.Cancel", role: .close) { }
-				}
 			} message: { container in
 				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
 			}

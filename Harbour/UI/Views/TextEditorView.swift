@@ -47,29 +47,22 @@ struct TextEditorView: View {
 					dismiss()
 				}
 				.tint(.red)
-
-				if #available(iOS 26.0, macOS 26.0, *) {
-					Button("Generic.Cancel", role: .close) { }
-				}
 			} message: {
 				Text("TextEditorView.ConfirmDismissDialog.Message")
 			}
 		}
 
-//		let textIsSame = text == backingText
-		ToolbarItem(placement: .primaryAction) {
+		ToolbarItem(placement: .confirmationAction) {
 			Button {
 				Haptics.generateIfEnabled(.selectionChanged)
 				backingText = text
 				dismiss()
 			} label: {
-//				Text("Generic.Save")
 				Label("Generic.Done", systemImage: SFSymbol.checkmark)
 			}
-			.buttonStyle(.borderedProminent)
+//			.buttonStyle(.borderedProminent)
+			.buttonBorderShape(.circle)
 			.tint(.accentColor)
-//			.disabled(textIsSame)
-//			.animation(.default, value: textIsSame)
 		}
 
 		#if os(iOS)

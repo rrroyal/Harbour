@@ -36,9 +36,9 @@ struct HarbourApp: App {
 		WindowGroup {
 			ContentView()
 				.scrollDismissesKeyboard(.interactively)
-//				#if os(macOS)
-//				.containerBackground(.thickMaterial, for: .window)
-//				#endif
+				#if os(macOS)
+				.containerBackground(.ultraThickMaterial, for: .window)
+				#endif
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
@@ -56,17 +56,17 @@ struct HarbourApp: App {
 					}
 				}
 		}
-		.onChange(of: portainerStore.containers, appState.onContainersChange)
-		.onChange(of: portainerStore.stacks, appState.onStacksChange)
-		#if os(iOS)
-		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
-		#endif
 		.commands {
 			PortainerCommands(portainerStore: portainerStore)
 		}
-		#if os(macOS)
-		.windowToolbarStyle(.unifiedCompact)
+		#if os(iOS)
+		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
 		#endif
+		#if os(macOS)
+		.windowStyle(.hiddenTitleBar)
+		#endif
+		.onChange(of: portainerStore.containers, appState.onContainersChange)
+		.onChange(of: portainerStore.stacks, appState.onStacksChange)
 		.modelContainer(for: ModelContainer.allModelTypes)
 
 		#if os(macOS)

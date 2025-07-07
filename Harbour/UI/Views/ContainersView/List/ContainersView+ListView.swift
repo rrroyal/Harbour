@@ -30,6 +30,11 @@ extension ContainersView {
 					}
 				}
 			}
+			#if os(iOS)
+			.listStyle(.insetGrouped)
+			#elseif os(macOS)
+			.listStyle(.inset)
+			#endif
 			.animation(.default, value: containers)
 		}
 	}

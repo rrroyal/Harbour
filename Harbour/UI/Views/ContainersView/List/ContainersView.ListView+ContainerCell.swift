@@ -85,7 +85,9 @@ extension ContainersView.ListView {
 			}
 			.lineLimit(1)
 			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
-			.padding(.vertical, 2)
+			#if os(macOS)
+			.padding(4)
+			#endif
 //			#if os(iOS)
 //			.background(Color.secondaryGroupedBackground, in: background)
 //			#elseif os(macOS)

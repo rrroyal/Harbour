@@ -228,10 +228,6 @@ private extension StacksView {
 							removeStackAction(stack)
 						}
 						.tint(.red)
-
-						if #available(iOS 26.0, macOS 26.0, *) {
-							Button("Generic.Cancel", role: .close) { }
-						}
 					} message: { stack in
 						Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
 					}

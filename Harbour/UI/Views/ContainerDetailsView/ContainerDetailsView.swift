@@ -49,6 +49,9 @@ struct ContainerDetailsView: View {
 					Text("Generic.Loading")
 				} icon: {
 					ProgressView()
+						#if os(macOS)
+						.controlSize(.small)
+						#endif
 				}
 				.foregroundStyle(.secondary)
 			} else {

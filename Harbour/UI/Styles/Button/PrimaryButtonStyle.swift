@@ -39,12 +39,12 @@ struct PrimaryButtonStyle: ButtonStyle {
 			}
 		}
 		.contentShape(.buttonBorder)
-		#if os(iOS)
-		.contentShape(.contextMenuPreview, .buttonBorder)
-		#endif
-		.contentShape(.interaction, .buttonBorder)
+//		#if os(iOS)
+//		.contentShape(.contextMenuPreview, .buttonBorder)
+//		#endif
+//		.contentShape(.interaction, .buttonBorder)
 		._glassEffectInteractive(tint: isEnabled ? backgroundColor : Color.primaryGray.opacity(0.2), enabled: isEnabled)
-		.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
+//		.modifier(ButtonScalesDownOnPressModifier(configuration: configuration))
 		.animation(.default, value: isEnabled)
 		.animation(.spring, value: configuration.isPressed)
 	}

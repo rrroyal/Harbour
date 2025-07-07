@@ -97,10 +97,6 @@ private extension SettingsView.ConnectionSection {
 					viewModel.endpointToRemove = nil
 				}
 				.tint(.red)
-
-				if #available(iOS 26.0, macOS 26.0, *) {
-					Button("Generic.Cancel", role: .close) { }
-				}
 			} message: { url in
 				Text("SettingsView.Connection.RemoveEndpointAlert.Message URL:\(url.absoluteString)")
 			}

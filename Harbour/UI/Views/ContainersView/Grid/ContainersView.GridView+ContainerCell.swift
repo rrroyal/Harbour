@@ -80,11 +80,12 @@ extension ContainersView.GridView {
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.aspectRatio(1, contentMode: .fit)
 			.tint(isBeingRemoved ? .gray : (container._isStored ? Container.State?.none.color : container.state.color))
-//			#if os(iOS)
+			#if os(iOS)
 			.background(Color.secondaryGroupedBackground, in: background)
-//			#elseif os(macOS)
-//			.background(.thickMaterial, in: background)
-//			#endif
+			#elseif os(macOS)
+			.background(.regularMaterial, in: background)
+			.background(Color(nsColor: .windowBackgroundColor).opacity(0.1), in: background)
+			#endif
 			.contentShape(background)
 			#if os(iOS)
 			.contentShape(.contextMenuPreview, background)

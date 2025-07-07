@@ -14,7 +14,7 @@ extension ContentView {
 	struct ViewForMacOS: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
 		@State private var columnVisibility: NavigationSplitViewVisibility = .all
-		@ScaledMetric(relativeTo: .title2) private var sidebarWidth = 76
+		@ScaledMetric(relativeTo: .title2) private var sidebarWidth = 54
 
 		var body: some View {
 			NavigationSplitView(columnVisibility: $columnVisibility) {
