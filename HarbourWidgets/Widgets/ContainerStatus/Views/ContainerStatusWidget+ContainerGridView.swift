@@ -60,7 +60,7 @@ extension ContainerStatusWidget {
 				}
 			}
 			.containerBackground(for: .widget) {
-				Color.widgetBackgroundSecondary
+				Color.recessedWidgetBackground
 			}
 		}
 	}

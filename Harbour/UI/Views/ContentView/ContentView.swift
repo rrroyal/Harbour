@@ -62,44 +62,18 @@ struct ContentView: View {
 			.sheetMinimumFrame()
 			#endif
 		}
-		.sheet(isPresented: $sceneDelegate.isCreateStackSheetPresented) {
-			sceneDelegate.editedStack = nil
-			sceneDelegate.activeCreateStackSheetDetent = .medium
-			sceneDelegate.handledCreateSheetDetentUpdate = false
-		} content: {
-			NavigationStack {
-				CreateStackView(existingStack: sceneDelegate.editedStack, onEnvironmentEdit: { _ in
-					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
-					sceneDelegate.activeCreateStackSheetDetent = .large
-					sceneDelegate.handledCreateSheetDetentUpdate = true
-				}, onStackFileSelection: { stackFileContent in
-					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
-
-					if stackFileContent != nil {
-						sceneDelegate.activeCreateStackSheetDetent = .large
-					}
-
-					sceneDelegate.handledCreateSheetDetentUpdate = true
-				}, onStackCreation: { _ in
-					portainerStore.refreshStacks()
-					portainerStore.refreshContainers()
-				})
-				#if os(iOS)
-				.navigationBarTitleDisplayMode(.inline)
-				#endif
-				.addingCloseButton()
-			}
-			.presentationDetents([.medium, .large], selection: $sceneDelegate.activeCreateStackSheetDetent)
-			.presentationDragIndicator(.hidden)
-			.presentationContentInteraction(.resizes)
-			#if os(macOS)
-			.sheetMinimumFrame(width: 380, height: 400)
-			#endif
+		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails) {
+			sceneDelegate.onContinueUserActivity($0)
 		}
-		.onContinueUserActivity(HarbourUserActivityIdentifier.containerDetails, perform: sceneDelegate.onContinueUserActivity)
-		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails, perform: sceneDelegate.onContinueUserActivity)
-		.onContinueUserActivity(CSSearchableItemActionType, perform: sceneDelegate.onSpotlightUserActivity)
-		.onChange(of: appState.notificationsToHandle, sceneDelegate.onNotificationsToHandleChange)
+		.onContinueUserActivity(HarbourUserActivityIdentifier.stackDetails) {
+			sceneDelegate.onContinueUserActivity($0)
+		}
+		.onContinueUserActivity(CSSearchableItemActionType) {
+			sceneDelegate.onSpotlightUserActivity($0)
+		}
+		.onChange(of: appState.notificationsToHandle) {
+			sceneDelegate.onNotificationsToHandleChange(before: $0, after: $1)
+		}
 		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
 		.environment(sceneDelegate)
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))

@@ -48,7 +48,7 @@ extension ContainerStatusWidget {
 				}
 			}
 			.containerBackground(for: .widget) {
-				Color.widgetBackground
+				Color.clear
 			}
 		}
 	}

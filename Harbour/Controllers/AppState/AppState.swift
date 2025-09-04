@@ -16,7 +16,7 @@ import UserNotifications
 
 /// Main place for all of the app-related state management.
 @Observable @MainActor
-final class AppState: Sendable {
+final class AppState {
 
 	// MARK: Static Properties
 
@@ -38,6 +38,5 @@ final class AppState: Sendable {
 
 	// MARK: init
 
-	private init() { }
-
+	private init() {}
 }

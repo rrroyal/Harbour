@@ -11,6 +11,7 @@ import CoreSpotlight
 import PortainerKit
 import SwiftUI
 import UserNotifications
+import WidgetKit
 
 // MARK: - SceneDelegate+UserActivity
 
@@ -83,6 +84,8 @@ extension SceneDelegate {
 extension SceneDelegate {
 	@MainActor
 	func onScenePhaseChange(from previousScenePhase: ScenePhase, to newScenePhase: ScenePhase) {
+		WidgetCenter.shared.reloadAllTimelines()
+
 		let isFirstRun = self.scenePhase == nil
 		scenePhase = newScenePhase
 

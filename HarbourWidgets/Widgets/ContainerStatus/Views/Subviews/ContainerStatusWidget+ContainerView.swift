@@ -36,7 +36,6 @@ extension ContainerStatusWidget {
 				}
 
 				dateLabel
-					.frame(maxWidth: .infinity, alignment: .leading)
 
 				Spacer()
 
@@ -50,7 +49,6 @@ extension ContainerStatusWidget {
 			}
 			.padding()
 			.tint(container?.state.color ?? Container.State?.none.color)
-			.contentTransition(.opacity)
 			.modifier(LinkWrappedViewModifier(url: url))
 			.id("ContainerStatusWidgetView.ContainerView:\(container?.id ?? intentContainer._id)")
 		}
@@ -73,6 +71,7 @@ private extension ContainerStatusWidget.ContainerView {
 			.minimumScaleFactor(minimumScaleFactor)
 			.foregroundStyle(statusAccentStyle)
 			.widgetAccentable(isAccentable)
+			.contentTransition(.numericText())
 	}
 
 	@ViewBuilder
@@ -86,11 +85,12 @@ private extension ContainerStatusWidget.ContainerView {
 	@ViewBuilder
 	var dateLabel: some View {
 		Group {
-			if redactionReasons.isEmpty {
-				Text(entry.date, style: .relative)
-			} else {
-				Text(entry.date.formatted(.relative(presentation: .numeric, unitsStyle: .narrow)))
-			}
+//			if redactionReasons.isEmpty {
+//				Text(entry.date, style: .relative)
+//			} else {
+//				Text(entry.date.formatted(.relative(presentation: .numeric, unitsStyle: .narrow)))
+//			}
+			Text(.currentDate, format: .reference(to: entry.date, allowedFields: [.day, .hour, .minute], maxFieldCount: 1))
 		}
 		#if os(macOS)
 		.font(.subheadline)
@@ -100,6 +100,9 @@ private extension ContainerStatusWidget.ContainerView {
 		.fontWeight(.medium)
 		#endif
 		.foregroundStyle(.tertiary)
+		.contentTransition(.numericText())
+		.transition(.blurReplace)
+		.id("DateLabel.\(entry.date.timeIntervalSince1970)")
 	}
 
 	@ViewBuilder
@@ -129,6 +132,7 @@ private extension ContainerStatusWidget.ContainerView {
 			#endif
 			.foregroundStyle(container?.status != nil ? .secondary : .tertiary)
 			.lineLimit(2)
+			.contentTransition(.numericText())
 	}
 }
 

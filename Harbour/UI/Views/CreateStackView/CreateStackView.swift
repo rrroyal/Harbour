@@ -255,6 +255,12 @@ private extension CreateStackView {
 	}
 }
 
+// MARK: - Helpers
+
+extension CreateStackView {
+	static let id: String = "\(Self.self)"
+}
+
 // MARK: - Previews
 
 #Preview {

@@ -66,7 +66,7 @@ struct TextEditorView: View {
 		}
 
 		#if os(iOS)
-		if #available(iOS 26.0, macOS 26.0, *) {
+		if #available(iOS 26.0, *) {
 			ToolbarItem(placement: .keyboard) {
 				Button {
 					insertAtCursor("\t")

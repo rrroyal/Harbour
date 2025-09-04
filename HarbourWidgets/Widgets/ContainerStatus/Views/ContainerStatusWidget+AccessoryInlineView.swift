@@ -41,7 +41,7 @@ extension ContainerStatusWidget {
 			}
 			.frame(maxWidth: .infinity)
 			.containerBackground(for: .widget) {
-				Color.widgetBackground
+				Color.clear
 			}
 		}
 	}

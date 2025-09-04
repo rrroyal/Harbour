@@ -15,11 +15,11 @@ private let logger = Logger(.widgets(ContainerStatusWidget.Provider.self))
 // MARK: - ContainerStatusWidget+Provider
 
 extension ContainerStatusWidget {
-	struct Provider: AppIntentTimelineProvider {
+	struct Provider: AppIntentTimelineProvider, Sendable {
 
 		// MARK: Private Properties
 
-		private let portainerStore = IntentPortainerStore.shared
+		nonisolated(unsafe) let portainerStore = IntentPortainerStore.shared
 
 		// MARK: AppIntentTimelineProvider
 
@@ -28,7 +28,7 @@ extension ContainerStatusWidget {
 		}
 
 		func snapshot(for configuration: Intent, in context: Context) async -> Entry {
-			logger.info("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)...")
+			logger.notice("Getting snapshot, isPreview: \(context.isPreview, privacy: .public)...")
 
 			guard !context.isPreview else {
 				logger.debug("Running in preview")
@@ -42,7 +42,7 @@ extension ContainerStatusWidget {
 		}
 
 		func timeline(for configuration: Intent, in context: Context) async -> Timeline<Entry> {
-			logger.info("Getting timeline...")
+			logger.notice("Getting timeline...")
 
 			let entry = await getEntry(for: configuration, in: context)
 			let timeline = Timeline<Entry>(entries: [entry], policy: .atEnd)
@@ -62,16 +62,14 @@ private extension ContainerStatusWidget.Provider {
 		let configurationContainers = configuration.containers
 
 		guard let endpoint = configuration.endpoint else {
-			logger.notice("Configuration invalid, returning empty containers!")
+			logger.warning("Configuration invalid, returning empty containers!")
 			return Entry(date: now, configuration: configuration, result: .unconfigured)
 		}
 
 		guard !configurationContainers.isEmpty else {
-			logger.notice("No configuration containers, returning empty containers!")
+			logger.warning("No configuration containers, returning empty containers!")
 			return Entry(date: now, configuration: configuration, result: .containers([]))
 		}
-
-		let entry: Entry
 
 		do {
 			try await portainerStore.setupIfNeeded()
@@ -102,18 +100,17 @@ private extension ContainerStatusWidget.Provider {
 					return nil
 				}
 
-			entry = Entry(date: now, configuration: configuration, result: .containers(entities))
+			let entry = Entry(date: now, configuration: configuration, result: .containers(entities))
+			logger.info("Returning entry: \(String(describing: entry), privacy: .sensitive)")
+			return entry
 		} catch {
 			logger.error("Error getting entry: \(error.localizedDescription, privacy: .public)")
 
 			if error is URLError {
-				entry = Entry(date: now, configuration: configuration, result: .unreachable)
+				return Entry(date: now, configuration: configuration, result: .unreachable)
 			} else {
-				entry = Entry(date: now, configuration: configuration, result: .error(error))
+				return Entry(date: now, configuration: configuration, result: .error(error))
 			}
 		}
-
-		logger.info("Returning entry: \(String(describing: entry), privacy: .sensitive)")
-		return entry
 	}
 }

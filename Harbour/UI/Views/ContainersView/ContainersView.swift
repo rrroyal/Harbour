@@ -109,6 +109,26 @@ struct ContainersView: View {
 			}
 			.labelStyle(.titleAndIcon)
 		}
+
+		#if os(iOS)
+		if horizontalSizeClass == .regular {
+			ToolbarItem(placement: .navigation) {
+				Menu {
+					endpointPicker
+				} label: {
+					Label(selectedEndpointTitle, systemImage: SFSymbol.endpoint)
+						.symbolVariant(portainerStore.selectedEndpoint != nil ? .fill : portainerStore.endpoints.isEmpty ? .slash : .none)
+				}
+				.labelStyle(.iconOnly)
+				.animation(.default, value: portainerStore.endpoints.isEmpty)
+				.animation(.default, value: portainerStore.selectedEndpoint)
+			}
+		} else if horizontalSizeClass == .compact && viewModel.canUseEndpointsMenu {
+			ToolbarTitleMenu {
+				endpointPicker
+			}
+		}
+		#endif
 	}
 
 	@ViewBuilder @MainActor
@@ -193,26 +213,6 @@ struct ContainersView: View {
 			#endif
 			.toolbar {
 				toolbarContent
-
-				#if os(iOS)
-				if horizontalSizeClass == .regular {
-					ToolbarItem(placement: .navigation) {
-						Menu {
-							endpointPicker
-						} label: {
-							Label(selectedEndpointTitle, systemImage: SFSymbol.endpoint)
-								.symbolVariant(portainerStore.selectedEndpoint != nil ? .fill : portainerStore.endpoints.isEmpty ? .slash : .none)
-						}
-						.labelStyle(.iconOnly)
-						.animation(.default, value: portainerStore.endpoints.isEmpty)
-						.animation(.default, value: portainerStore.selectedEndpoint)
-					}
-				} else if horizontalSizeClass == .compact && viewModel.canUseEndpointsMenu {
-					ToolbarTitleMenu {
-						endpointPicker
-					}
-				}
-				#endif
 			}
 			.focusable()
 			.focused($isFocused)

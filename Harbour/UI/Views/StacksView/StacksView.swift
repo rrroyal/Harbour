@@ -20,107 +20,11 @@ struct StacksView: View {
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
+
 	@State private var viewModel = ViewModel()
+
 	@FocusState private var isFocused: Bool
-
-	@ToolbarContentBuilder
-	private var toolbarContent: some ToolbarContent {
-		var createStackToolbarItemPlacement: ToolbarItemPlacement {
-			#if os(iOS)
-			.navigation
-			#elseif os(macOS)
-			.primaryAction
-			#endif
-		}
-		ToolbarItem(placement: createStackToolbarItemPlacement) {
-			Button {
-				Haptics.generateIfEnabled(.sheetPresentation)
-				sceneDelegate.editedStack = nil
-				sceneDelegate.isCreateStackSheetPresented = true
-			} label: {
-				Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
-			}
-			.disabled(!portainerStore.isSetup)
-		}
-
-		ToolbarItem(placement: .automatic) {
-			Menu {
-				Toggle(isOn: $preferences.svFilterByActiveEndpoint.withHaptics(.selectionChanged)) {
-					Label {
-						Text("StacksView.Menu.ActiveEndpointOnly")
-					} icon: {
-						Image(systemName: SFSymbol.endpoint)
-					}
-
-					if let selectedEndpoint = portainerStore.selectedEndpoint {
-						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
-					}
-				}
-				.onChange(of: preferences.svFilterByActiveEndpoint) {
-					fetch()
-				}
-
-				Toggle(isOn: $preferences.svIncludeLimitedStacks.withHaptics(.selectionChanged)) {
-					Label(
-						"StacksView.Menu.IncludeLimitedStacks",
-						systemImage: "square.stack.3d.up.trianglebadge.exclamationmark"
-					)
-				}
-				.onChange(of: preferences.svIncludeLimitedStacks) {
-					if preferences.svIncludeLimitedStacks {
-						fetch()
-					}
-				}
-
-				#if os(iOS)
-				Divider()
-
-				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
-					sceneDelegate.isSettingsSheetPresented = true
-				} label: {
-					Label("SettingsView.Title", systemImage: SFSymbol.settings)
-				}
-				.keyboardShortcut(",", modifiers: .command)
-				#endif
-			} label: {
-				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
-					.labelStyle(.iconOnly)
-			}
-			.labelStyle(.titleAndIcon)
-		}
-
-//		ToolbarItem(placement: .status) {
-//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
-//				ProgressView()
-//			}
-//		}
-	}
-
-	@ViewBuilder @MainActor
-	private var backgroundPlaceholder: some View {
-		let isLoading = viewModel.viewState.isLoading ||
-			!(portainerStore.stacksTask?.isCancelled ?? true) ||
-			!(appState.portainerServerSwitchTask?.isCancelled ?? true)
-
-		if isLoading {
-			ProgressView()
-		} else if case .failure = viewModel.viewState {
-			viewModel.viewState.backgroundView
-		} else if !portainerStore.isSetup {
-			ContentUnavailableView(
-				"Portainer.NotSetup.Title",
-				systemImage: SFSymbol.network,
-				description: Text("Portainer.NotSetup.Description")
-			)
-			.symbolVariant(.slash)
-		} else if !viewModel.searchText.isEmpty {
-			ContentUnavailableView.search(text: viewModel.searchText)
-		} else {
-			ContentUnavailableView("StacksView.NoStacksPlaceholder", systemImage: SFSymbol.stack)
-				.symbolVariant(.slash)
-		}
-	}
+	@Namespace private var namespace
 
 	var body: some View {
 		@Bindable var sceneDelegate = sceneDelegate
@@ -160,6 +64,17 @@ struct StacksView: View {
 		.animation(.default, value: viewModel.viewState)
 //		.animation(.default, value: viewModel.stacks)
 		.animation(.default, value: viewModel.isStatusProgressViewVisible)
+		.sheet(item: $sceneDelegate.editedStack) {
+			onSheetDismiss()
+		} content: { stack in
+			SheetContentView(stack: stack)
+		}
+		.sheet(isPresented: $sceneDelegate.isCreateStackSheetPresented) {
+			onSheetDismiss()
+		} content: {
+			SheetContentView(stack: nil)
+//				.navigationTransition(.zoom(sourceID: CreateStackView.id, in: namespace))
+		}
 		.onChange(of: sceneDelegate.selectedStackNameForStacksView) { _, stackName in
 			viewModel.searchText = stackName ?? ""
 		}
@@ -176,74 +91,7 @@ struct StacksView: View {
 	}
 }
 
-// MARK: - StacksView+StacksList
-
-private extension StacksView {
-	struct StacksList: View {
-		@Environment(SceneDelegate.self) private var sceneDelegate
-		@Environment(StacksView.ViewModel.self) private var viewModel
-		@EnvironmentObject private var portainerStore: PortainerStore
-		var stacks: [StacksView.StackItem]
-		var filterByStackNameAction: (String) -> Void
-		var setStackStateAction: (Stack, Bool) -> Void
-		var removeStackAction: (Stack) -> Void
-
-		var body: some View {
-			List {
-				ForEach(stacks) { stackItem in
-					let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
-
-					Group {
-						if let stack = stackItem.stack {
-							NavigationLink(value: StackDetailsView.NavigationItem(stackID: stackItem.id, stackName: stackItem.name)) {
-								StackCell(
-									stackItem,
-									containers: containers,
-									filterAction: { filterByStackNameAction(stackItem.name) },
-									setStackStateAction: { setStackStateAction(stack, $0) }
-								)
-							}
-						} else {
-							StackCell(
-								stackItem,
-								containers: containers,
-								filterAction: { filterByStackNameAction(stackItem.name) },
-								setStackStateAction: nil
-							)
-						}
-					}
-					#if os(macOS)
-					.padding(.horizontal, 8)
-					.padding(.vertical, 4)
-					.listRowSeparator(.hidden)
-					#endif
-					.confirmationDialog(
-						"Generic.AreYouSure",
-						isPresented: sceneDelegate.isRemoveStackAlertPresented,
-						titleVisibility: .visible,
-						presenting: sceneDelegate.stackToRemove
-					) { stack in
-						Button("Generic.Remove", role: .destructive) {
-							Haptics.generateIfEnabled(.heavy)
-							removeStackAction(stack)
-						}
-						.tint(.red)
-					} message: { stack in
-						Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
-					}
-				}
-			}
-			#if os(iOS)
-			.listStyle(.insetGrouped)
-			#elseif os(macOS)
-			.listStyle(.inset)
-			#endif
-			.animation(.default, value: stacks)
-		}
-	}
-}
-
-// MARK: - StacksView+Actions
+// MARK: - Actions
 
 private extension StacksView {
 	@discardableResult
@@ -304,6 +152,117 @@ private extension StacksView {
 			return .handled
 		default:
 			return .ignored
+		}
+	}
+
+	func onSheetDismiss() {
+		sceneDelegate.editedStack = nil
+		sceneDelegate.isCreateStackSheetPresented = false
+		sceneDelegate.activeCreateStackSheetDetent = .medium
+		sceneDelegate.handledCreateSheetDetentUpdate = false
+	}
+}
+
+// MARK: - Subviews
+
+private extension StacksView {
+	@ToolbarContentBuilder
+	var toolbarContent: some ToolbarContent {
+		var createStackToolbarItemPlacement: ToolbarItemPlacement {
+			#if os(iOS)
+			.navigation
+			#elseif os(macOS)
+			.primaryAction
+			#endif
+		}
+		ToolbarItem(placement: createStackToolbarItemPlacement) {
+			Button {
+				Haptics.generateIfEnabled(.sheetPresentation)
+				sceneDelegate.editedStack = nil
+				sceneDelegate.isCreateStackSheetPresented = true
+			} label: {
+				Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
+			}
+			.disabled(!portainerStore.isSetup)
+		}
+		._matchedTransitionSource(id: CreateStackView.id, in: namespace)
+
+		ToolbarItem(placement: .automatic) {
+			Menu {
+				Toggle(isOn: $preferences.svFilterByActiveEndpoint.withHaptics(.selectionChanged)) {
+					Label {
+						Text("StacksView.Menu.ActiveEndpointOnly")
+					} icon: {
+						Image(systemName: SFSymbol.endpoint)
+					}
+
+					if let selectedEndpoint = portainerStore.selectedEndpoint {
+						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
+					}
+				}
+				.onChange(of: preferences.svFilterByActiveEndpoint) {
+					fetch()
+				}
+
+				Toggle(isOn: $preferences.svIncludeLimitedStacks.withHaptics(.selectionChanged)) {
+					Label(
+						"StacksView.Menu.IncludeLimitedStacks",
+						systemImage: "square.stack.3d.up.trianglebadge.exclamationmark"
+					)
+				}
+				.onChange(of: preferences.svIncludeLimitedStacks) {
+					if preferences.svIncludeLimitedStacks {
+						fetch()
+					}
+				}
+
+				#if os(iOS)
+				Divider()
+
+				Button {
+					Haptics.generateIfEnabled(.sheetPresentation)
+					sceneDelegate.isSettingsSheetPresented = true
+				} label: {
+					Label("SettingsView.Title", systemImage: SFSymbol.settings)
+				}
+				.keyboardShortcut(",", modifiers: .command)
+				#endif
+			} label: {
+				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
+					.labelStyle(.iconOnly)
+			}
+			.labelStyle(.titleAndIcon)
+		}
+
+		//		ToolbarItem(placement: .status) {
+		//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+		//				ProgressView()
+		//			}
+		//		}
+	}
+
+	@ViewBuilder @MainActor
+	private var backgroundPlaceholder: some View {
+		let isLoading = viewModel.viewState.isLoading ||
+		!(portainerStore.stacksTask?.isCancelled ?? true) ||
+		!(appState.portainerServerSwitchTask?.isCancelled ?? true)
+
+		if isLoading {
+			ProgressView()
+		} else if case .failure = viewModel.viewState {
+			viewModel.viewState.backgroundView
+		} else if !portainerStore.isSetup {
+			ContentUnavailableView(
+				"Portainer.NotSetup.Title",
+				systemImage: SFSymbol.network,
+				description: Text("Portainer.NotSetup.Description")
+			)
+			.symbolVariant(.slash)
+		} else if !viewModel.searchText.isEmpty {
+			ContentUnavailableView.search(text: viewModel.searchText)
+		} else {
+			ContentUnavailableView("StacksView.NoStacksPlaceholder", systemImage: SFSymbol.stack)
+				.symbolVariant(.slash)
 		}
 	}
 }
