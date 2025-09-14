@@ -19,14 +19,6 @@ extension ContentView {
 
 			TabView(selection: $sceneDelegate.activeTab) {
 				Tab(value: .containers) {
-//					NavigationSplitView {
-//						ContainersView()
-//					} detail: {
-//						NavigationStack(path: $sceneDelegate.navigationState.containers) {
-//							Text("ContainersView.NoContainerSelectedPlaceholder")
-//								.foregroundStyle(.tertiary)
-//						}
-//					}
 					NavigationStack(path: $sceneDelegate.navigationState.containers) {
 						ContainersView()
 							.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
@@ -40,18 +32,9 @@ extension ContentView {
 					} icon: {
 						ViewTab.containers.icon
 					}
-//					.environment(\.symbolVariants, sceneDelegate.activeTab == .containers ? .fill : .none)
 				}
 
 				Tab(value: .stacks) {
-//					NavigationSplitView {
-//						StacksView()
-//					} detail: {
-//						NavigationStack(path: $sceneDelegate.navigationState.stacks) {
-//							Text("StacksView.NoStackSelectedPlaceholder")
-//								.foregroundStyle(.tertiary)
-//						}
-//					}
 					NavigationStack(path: $sceneDelegate.navigationState.stacks) {
 						StacksView()
 							.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
@@ -65,8 +48,11 @@ extension ContentView {
 					} icon: {
 						ViewTab.stacks.icon
 					}
-//					.environment(\.symbolVariants, sceneDelegate.activeTab == .stacks ? .fill : .none)
 				}
+			}
+			.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
+				SettingsView()
+//					.navigationTransition(.zoom(sourceID: SettingsView.id, in: namespace))
 			}
 		}
 	}

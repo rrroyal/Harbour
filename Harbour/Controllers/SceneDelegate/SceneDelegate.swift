@@ -37,9 +37,6 @@ final class SceneDelegate: NSObject {
 	var isCreateStackSheetPresented = false
 	var isContainerChangesSheetPresented = false
 
-	var activeCreateStackSheetDetent: PresentationDetent = .medium
-	var handledCreateSheetDetentUpdate = false
-
 	// MARK: Containers
 
 	var containerToRemove: Container?

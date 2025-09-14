@@ -158,8 +158,6 @@ private extension StacksView {
 	func onSheetDismiss() {
 		sceneDelegate.editedStack = nil
 		sceneDelegate.isCreateStackSheetPresented = false
-		sceneDelegate.activeCreateStackSheetDetent = .medium
-		sceneDelegate.handledCreateSheetDetentUpdate = false
 	}
 }
 
@@ -233,6 +231,7 @@ private extension StacksView {
 			}
 			.labelStyle(.titleAndIcon)
 		}
+		._matchedTransitionSource(id: SettingsView.id, in: namespace)
 
 		//		ToolbarItem(placement: .status) {
 		//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {

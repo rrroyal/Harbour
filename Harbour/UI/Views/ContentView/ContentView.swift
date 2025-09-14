@@ -39,11 +39,6 @@ struct ContentView: View {
 		#elseif os(macOS)
 		.indicatorOverlay(model: sceneDelegate.indicators, alignment: .topTrailing, insets: .init(top: 8, leading: 0, bottom: 0, trailing: 0))
 		#endif
-		#if os(iOS)
-		.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
-			SettingsView()
-		}
-		#endif
 		.sheet(isPresented: $sceneDelegate.isLandingSheetPresented) {
 			sceneDelegate.onLandingDismissed()
 		} content: {

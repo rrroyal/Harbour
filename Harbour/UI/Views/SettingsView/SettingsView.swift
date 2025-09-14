@@ -13,6 +13,8 @@ import SwiftUI
 // MARK: - SettingsView
 
 struct SettingsView: View {
+	static let id: String = "\(SettingsView.self)"
+
 	#if os(iOS)
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	#elseif os(macOS)

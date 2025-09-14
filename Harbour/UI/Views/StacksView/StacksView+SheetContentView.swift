@@ -20,30 +20,18 @@ extension StacksView {
 			@Bindable var sceneDelegate = sceneDelegate
 
 			NavigationStack {
-				CreateStackView(existingStack: stack, onEnvironmentEdit: { _ in
-					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
-					sceneDelegate.activeCreateStackSheetDetent = .large
-					sceneDelegate.handledCreateSheetDetentUpdate = true
-				}, onStackFileSelection: { stackFileContent in
-					guard !sceneDelegate.handledCreateSheetDetentUpdate else { return }
-
-					if stackFileContent != nil {
-						sceneDelegate.activeCreateStackSheetDetent = .large
+				CreateStackView(
+					existingStack: stack,
+					onStackCreation: { _ in
+						portainerStore.refreshStacks()
+						portainerStore.refreshContainers()
 					}
-
-					sceneDelegate.handledCreateSheetDetentUpdate = true
-				}, onStackCreation: { _ in
-					portainerStore.refreshStacks()
-					portainerStore.refreshContainers()
-				})
+				)
 				#if os(iOS)
 				.navigationBarTitleDisplayMode(.inline)
 				#endif
 				.addingCloseButton()
 			}
-			.presentationDetents([.medium, .large], selection: $sceneDelegate.activeCreateStackSheetDetent)
-			.presentationDragIndicator(.hidden)
-			.presentationContentInteraction(.resizes)
 			#if os(macOS)
 			.sheetMinimumFrame(width: 380, height: 400)
 			#endif

@@ -26,15 +26,100 @@ struct ContainersView: View {
 	@Environment(\.horizontalSizeClass) private var horizontalSizeClass
 	@State private var viewModel = ViewModel()
 	@FocusState private var isFocused: Bool
+	@Namespace private var namespace
 
-	private var navigationTitle: String {
+	var body: some View {
+		@Bindable var sceneDelegate = sceneDelegate
+		let containers = viewModel.containers
+
+		ContainersList(containers: containers)
+			.scrollContentBackground(.hidden)
+			.background {
+				if containers.isEmpty {
+					backgroundPlaceholder
+				}
+			}
+			#if os(iOS)
+			.background(.groupedBackground, ignoresSafeAreaEdges: .all)
+			#elseif os(macOS)
+			.background(.clear, ignoresSafeAreaEdges: .all)
+			#endif
+			.searchable(
+				text: $viewModel.searchText,
+				tokens: $viewModel.searchTokens,
+				suggestedTokens: .constant(viewModel.suggestedSearchTokens),
+				isPresented: $viewModel.isSearchActive
+			) { token in
+				Label(token.title, systemImage: token.icon)
+			}
+			.searchableMinimized()
+			.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
+				await fetch()
+			}
+			.toolbar {
+				toolbarContent
+			}
+			.focusable()
+			.focused($isFocused)
+			.focusEffectDisabled()
+			.confirmationDialog(
+				"Generic.AreYouSure",
+				isPresented: sceneDelegate.isRemoveContainerAlertPresented,
+				titleVisibility: .visible,
+				presenting: sceneDelegate.containerToRemove
+			) { container in
+				Button("Generic.Remove", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					removeContainer(container, force: true)
+				}
+				.tint(.red)
+			} message: { container in
+				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
+			}
+			.animation(.default, value: viewModel.viewState)
+			.animation(.default, value: viewModel.containers)
+			.animation(.default, value: viewModel.isStatusProgressViewVisible)
+//			.animation(.default, value: portainerStore.removedContainerIDs)
+			.navigationTitle(navigationTitle)
+			.navigationBarTitleDisplayMode(.inline)
+			.environment(viewModel)
+			.onKeyPress(action: onKeyPress)
+			.onChange(of: sceneDelegate.selectedStackNameForContainersView) { _, stackName in
+				viewModel.filterByStackName(stackName)
+			}
+//			.onChange(of: viewModel.searchTokens) { _, tokens in
+//				sceneDelegate.selectedStackNameForContainersView = tokens
+//					.compactMap {
+//						if case .stack(let stackName) = $0 {
+//							return stackName
+//						}
+//						return nil
+//					}
+//					.last
+//			}
+			.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
+//				guard sceneDelegate.activeTab == .containers else { return }
+				viewModel.handleSpotlightSearchContinuation(userActivity)
+			}
+			.task {
+				if portainerStore.containersTask?.isCancelled ?? true {
+					await fetch()
+				}
+			}
+	}
+}
+
+// MARK: - Support
+
+private extension ContainersView {
+	var navigationTitle: String {
 		if let selectedEndpoint = portainerStore.selectedEndpoint {
 			return selectedEndpoint.name ?? selectedEndpoint.id.description
 		}
 		return String(localized: "AppName")
 	}
 
-	private var selectedEndpointTitle: String {
+	var selectedEndpointTitle: String {
 		if let selectedEndpoint = portainerStore.selectedEndpoint {
 			selectedEndpoint.name ?? selectedEndpoint.id.description
 		} else if !portainerStore.endpoints.isEmpty {
@@ -43,9 +128,13 @@ struct ContainersView: View {
 			String(localized: "ContainersView.NoEndpointsAvailable")
 		}
 	}
+}
 
+// MARK: - Subviews
+
+private extension ContainersView {
 	@ViewBuilder @MainActor
-	private var endpointPicker: some View {
+	var endpointPicker: some View {
 		let selectedEndpointBinding = Binding<Endpoint?>(
 			get: { portainerStore.selectedEndpoint },
 			set: {
@@ -66,7 +155,7 @@ struct ContainersView: View {
 	}
 
 	@ToolbarContentBuilder @MainActor
-	private var toolbarContent: some ToolbarContent {
+	var toolbarContent: some ToolbarContent {
 		ToolbarItem(placement: .automatic) {
 			Menu {
 				if !(appState.lastContainerChanges?.isEmpty ?? true) {
@@ -109,6 +198,7 @@ struct ContainersView: View {
 			}
 			.labelStyle(.titleAndIcon)
 		}
+		._matchedTransitionSource(id: SettingsView.id, in: namespace)
 
 		#if os(iOS)
 		if horizontalSizeClass == .regular {
@@ -179,91 +269,9 @@ struct ContainersView: View {
 			.symbolVariant(.slash)
 		}
 	}
-
-	var body: some View {
-		@Bindable var sceneDelegate = sceneDelegate
-		let containers = viewModel.containers
-
-		ContainersList(containers: containers)
-			.scrollContentBackground(.hidden)
-			.background {
-				if containers.isEmpty {
-					backgroundPlaceholder
-				}
-			}
-			#if os(iOS)
-			.background(.groupedBackground, ignoresSafeAreaEdges: .all)
-			#elseif os(macOS)
-			.background(.clear, ignoresSafeAreaEdges: .all)
-			#endif
-			.searchable(
-				text: $viewModel.searchText,
-				tokens: $viewModel.searchTokens,
-				suggestedTokens: .constant(viewModel.suggestedSearchTokens),
-				isPresented: $viewModel.isSearchActive
-			) { token in
-				Label(token.title, systemImage: token.icon)
-			}
-			.searchableMinimized()
-			.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
-				await fetch()
-			}
-			#if os(iOS)
-			.navigationBarTitleDisplayMode(.inline)
-			#endif
-			.toolbar {
-				toolbarContent
-			}
-			.focusable()
-			.focused($isFocused)
-			.focusEffectDisabled()
-			.confirmationDialog(
-				"Generic.AreYouSure",
-				isPresented: sceneDelegate.isRemoveContainerAlertPresented,
-				titleVisibility: .visible,
-				presenting: sceneDelegate.containerToRemove
-			) { container in
-				Button("Generic.Remove", role: .destructive) {
-					Haptics.generateIfEnabled(.heavy)
-					removeContainer(container, force: true)
-				}
-				.tint(.red)
-			} message: { container in
-				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
-			}
-			.animation(.default, value: viewModel.viewState)
-			.animation(.default, value: viewModel.containers)
-			.animation(.default, value: viewModel.isStatusProgressViewVisible)
-//			.animation(.default, value: portainerStore.removedContainerIDs)
-			.navigationTitle(navigationTitle)
-			.onKeyPress(action: onKeyPress)
-			.environment(viewModel)
-			.onChange(of: sceneDelegate.selectedStackNameForContainersView) { _, stackName in
-				viewModel.filterByStackName(stackName)
-			}
-//			.onChange(of: viewModel.searchTokens) { _, tokens in
-//				sceneDelegate.selectedStackNameForContainersView = tokens
-//					.compactMap {
-//						if case .stack(let stackName) = $0 {
-//							return stackName
-//						}
-//						return nil
-//					}
-//					.last
-//			}
-			.onContinueUserActivity(CSQueryContinuationActionType) { userActivity in
-//				guard sceneDelegate.activeTab == .containers else { return }
-				viewModel.handleSpotlightSearchContinuation(userActivity)
-			}
-			.task {
-				if portainerStore.containersTask?.isCancelled ?? true {
-					await fetch()
-				}
-			}
-	}
 }
 
-// MARK: - ContainersView+Actions
+// MARK: - Actions
 
 private extension ContainersView {
 	func fetch() async {
@@ -304,7 +312,7 @@ private extension ContainersView {
 	}
 }
 
-// MARK: - ContainersView+ContainersList
+// MARK: - Supporting Views
 
 private extension ContainersView {
 	struct ContainersList: View {
