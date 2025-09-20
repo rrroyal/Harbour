@@ -19,6 +19,26 @@
         "reference" : "systemBackgroundColor"
       },
       "idiom" : "universal"
+    },
+    {
+      "color" : {
+        "platform" : "osx",
+        "reference" : "windowBackgroundColor"
+      },
+      "idiom" : "mac"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "color" : {
+        "platform" : "osx",
+        "reference" : "windowBackgroundColor"
+      },
+      "idiom" : "mac"
     }
   ],
   "info" : {

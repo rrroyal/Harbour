@@ -183,7 +183,9 @@ private extension StacksView {
 			}
 			.disabled(!portainerStore.isSetup)
 		}
+		#if os(iOS)
 		._matchedTransitionSource(id: CreateStackView.id, in: namespace)
+		#endif
 
 		ToolbarItem(placement: .automatic) {
 			Menu {
@@ -231,7 +233,9 @@ private extension StacksView {
 			}
 			.labelStyle(.titleAndIcon)
 		}
+		#if os(iOS)
 		._matchedTransitionSource(id: SettingsView.id, in: namespace)
+		#endif
 
 		//		ToolbarItem(placement: .status) {
 		//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {

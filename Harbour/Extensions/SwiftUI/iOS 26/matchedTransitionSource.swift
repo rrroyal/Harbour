@@ -8,10 +8,11 @@
 
 import SwiftUI
 
+#if os(iOS)
 extension ToolbarContent {
 	@ToolbarContentBuilder @inlinable
 	func _matchedTransitionSource(id: some Hashable, in namespace: Namespace.ID) -> some ToolbarContent {
-		if #available(iOS 26.0, macOS 26.0, *) {
+		if #available(iOS 26.0, *) {
 			self
 				.matchedTransitionSource(id: id, in: namespace)
 		} else {
@@ -19,3 +20,4 @@ extension ToolbarContent {
 		}
 	}
 }
+#endif

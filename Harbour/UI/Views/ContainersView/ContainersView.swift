@@ -81,7 +81,9 @@ struct ContainersView: View {
 			.animation(.default, value: viewModel.isStatusProgressViewVisible)
 //			.animation(.default, value: portainerStore.removedContainerIDs)
 			.navigationTitle(navigationTitle)
+			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
+			#endif
 			.environment(viewModel)
 			.onKeyPress(action: onKeyPress)
 			.onChange(of: sceneDelegate.selectedStackNameForContainersView) { _, stackName in
@@ -198,7 +200,9 @@ private extension ContainersView {
 			}
 			.labelStyle(.titleAndIcon)
 		}
+		#if os(iOS)
 		._matchedTransitionSource(id: SettingsView.id, in: namespace)
+		#endif
 
 		#if os(iOS)
 		if horizontalSizeClass == .regular {
