@@ -52,7 +52,6 @@ struct ContainersView: View {
 			) { token in
 				Label(token.title, systemImage: token.icon)
 			}
-			.searchableMinimized()
 			.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 				await fetch()
 			}

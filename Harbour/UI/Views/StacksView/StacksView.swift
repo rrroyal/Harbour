@@ -49,7 +49,6 @@ struct StacksView: View {
 		.background(.clear, ignoresSafeAreaEdges: .all)
 		#endif
 		.searchable(text: $viewModel.searchText, isPresented: $viewModel.isSearchActive)
-		.searchableMinimized()
 		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
 			await fetch().value
 		}
