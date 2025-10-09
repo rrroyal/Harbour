@@ -700,7 +700,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/rrroyal/IndicatorsKit";
 			requirement = {
-				branch = main;
+				branch = develop;
 				kind = branch;
 			};
 		};
