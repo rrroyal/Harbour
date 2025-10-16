@@ -51,6 +51,8 @@ extension ContainerDetailsView: Deeplinkable {
 		case network
 		/// Subdestination for ``ContainerDetailsView.MountsDetailsView``.
 		case mounts
+		/// Subdestination for ``ContainerDetailsView.DevicesDetailsView``.
+		case devices
 		/// Subdestination for ``ContainerLogsView``.
 		case logs
 	}

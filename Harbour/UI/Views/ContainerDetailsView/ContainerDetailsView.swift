@@ -269,6 +269,11 @@ struct ContainerDetailsView: View {
 				}
 				.disabled(viewModel.containerDetails?.mounts == nil)
 
+				NavigationLink(value: Subdestination.devices) {
+					Label("ContainerDetailsView.Section.Devices", systemImage: SFSymbol.terminal)
+				}
+				.disabled(viewModel.containerDetails?.hostConfig.devices == nil)
+
 				NavigationLink(value: Subdestination.network) {
 					Label("ContainerDetailsView.Section.Network", systemImage: SFSymbol.network)
 				}
@@ -359,6 +364,8 @@ struct ContainerDetailsView: View {
 				)
 			case .mounts:
 				MountsDetailsView(mounts: viewModel.containerDetails?.mounts)
+			case .devices:
+				DevicesDetailsView(devices: viewModel.containerDetails?.hostConfig.devices)
 			case .logs:
 				ContainerLogsView(containerID: navigationItem.id)
 			}
