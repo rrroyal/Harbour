@@ -1,5 +1,5 @@
 //
-//  ContainerDetailsView+Components.swift
+//  ContainerDetailsView+DevicesDetailsView.swift
 //  Harbour
 //
 //  Created by enzofrnt on 16/10/2025.
