@@ -10,26 +10,24 @@ import PortainerKit
 import SwiftUI
 
 extension ContainerDetailsView {
-    struct DevicesDetailsView: View {
-        let devices: [Device]?
+	struct DevicesDetailsView: View {
+		let devices: [Device]?
 
-        private var data: [KeyValueEntry] {
-            (devices ?? [])
-                .map { device in
-                    let key = device.pathOnHost ?? ""
-                    let valueBase = device.pathInContainer ?? ""
-                    let value: String
-                    value = valueBase
-                    return KeyValueEntry(key: key, value: value)
-                }
-        }
+		private var data: [KeyValueEntry] {
+			(devices ?? [])
+				.map { device in
+					KeyValueEntry(
+						key: device.pathOnHost ?? "",
+						value: device.pathInContainer ?? ""
+					)
+				}
+		}
 
-        var body: some View {
-            KeyValueListView(data: data)
-                .headerFontDesign(.monospaced)
-                .contentFontDesign(.monospaced)
-                .navigationTitle("ContainerDetailsView.Section.Devices")
-        }
-    }
+		var body: some View {
+			KeyValueListView(data: data)
+				.headerFontDesign(.monospaced)
+				.contentFontDesign(.monospaced)
+				.navigationTitle("ContainerDetailsView.Section.Devices")
+		}
+	}
 }
-
