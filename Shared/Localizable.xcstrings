@@ -431,6 +431,16 @@
         }
       }
     },
+    "ContainerDetailsView.Section.Devices" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Devices"
+          }
+        }
+      }
+    },
     "ContainerDetailsView.Section.Entrypoint" : {
       "localizations" : {
         "en" : {

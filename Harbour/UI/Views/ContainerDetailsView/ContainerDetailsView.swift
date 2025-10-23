@@ -265,9 +265,15 @@ struct ContainerDetailsView: View {
 				.disabled(viewModel.containerDetails?.config?.labels == nil)
 
 				NavigationLink(value: Subdestination.mounts) {
-					Label("ContainerDetailsView.Section.Mounts", systemImage: "externaldrive")
+					Label("ContainerDetailsView.Section.Mounts", systemImage: "folder")
 				}
 				.disabled(viewModel.containerDetails?.mounts == nil)
+
+				if !(viewModel.containerDetails?.hostConfig.devices?.isEmpty ?? true) {
+					NavigationLink(value: Subdestination.devices) {
+						Label("ContainerDetailsView.Section.Devices", systemImage: "externaldrive")
+					}
+				}
 
 				NavigationLink(value: Subdestination.network) {
 					Label("ContainerDetailsView.Section.Network", systemImage: SFSymbol.network)
@@ -359,6 +365,8 @@ struct ContainerDetailsView: View {
 				)
 			case .mounts:
 				MountsDetailsView(mounts: viewModel.containerDetails?.mounts)
+			case .devices:
+				DevicesDetailsView(devices: viewModel.containerDetails?.hostConfig.devices)
 			case .logs:
 				ContainerLogsView(containerID: navigationItem.id)
 			}
