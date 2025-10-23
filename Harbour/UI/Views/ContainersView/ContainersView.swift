@@ -48,7 +48,14 @@ struct ContainersView: View {
 				text: $viewModel.searchText,
 				tokens: $viewModel.searchTokens,
 				suggestedTokens: .constant(viewModel.suggestedSearchTokens),
-				isPresented: $viewModel.isSearchActive
+				isPresented: $viewModel.isSearchActive,
+				placement: {
+					#if os(iOS)
+					.automatic
+					#elseif os(macOS)
+					.toolbarPrincipal
+					#endif
+				}()
 			) { token in
 				Label(token.title, systemImage: token.icon)
 			}

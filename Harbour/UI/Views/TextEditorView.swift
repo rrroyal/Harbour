@@ -68,21 +68,20 @@ struct TextEditorView: View {
 		#if os(iOS)
 		if #available(iOS 26.0, *) {
 			ToolbarItem(placement: .keyboard) {
-				Button {
-					insertAtCursor("\t")
-				} label: {
-					Label(String("⇥"), systemImage: "arrow.right.to.line")
-				}
-				.labelStyle(.iconOnly)
-			}
+				HStack {
+					Button {
+						insertAtCursor("\t")
+					} label: {
+						Label(String("⇥"), systemImage: "arrow.right.to.line")
+					}
 
-			ToolbarSpacer(.flexible, placement: .keyboard)
+					Spacer()
 
-			ToolbarItem(placement: .keyboard) {
-				Button {
-					textFieldFocused = false
-				} label: {
-					Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
+					Button {
+						textFieldFocused = false
+					} label: {
+						Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
+					}
 				}
 				.labelStyle(.iconOnly)
 			}

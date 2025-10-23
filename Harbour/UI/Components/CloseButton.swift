@@ -20,18 +20,18 @@ struct CloseButton: View {
 	}
 
 	var body: some View {
-		Button {
-//			Haptics.generateIfEnabled(.soft)
-			dismissAction?() ?? _dismiss()
-		} label: {
-			switch style {
-			case .text:
-				Text("Generic.Close")
-			case .circleButton:
-				if #available(iOS 26.0, macOS 26.0, *) {
-					Image(systemName: "xmark")
-						.accessibilityRemoveTraits(.isImage)
-				} else {
+		if #available(iOS 26.0, macOS 26.0, *) {
+			Button(role: .close) {
+				dismissAction?() ?? _dismiss()
+			}
+		} else {
+			Button {
+				dismissAction?() ?? _dismiss()
+			} label: {
+				switch style {
+				case .text:
+					Text("Generic.Close")
+				case .circleButton:
 					Image(systemName: "xmark")
 						.font(.caption)
 						.fontWeight(.bold)
@@ -43,10 +43,10 @@ struct CloseButton: View {
 						.tint(.primary)
 				}
 			}
+			.keyboardShortcut(.cancelAction)
+			.accessibilityLabel(Text("Generic.Close"))
+			.accessibilityAddTraits(.isButton)
 		}
-		.keyboardShortcut(.cancelAction)
-		.accessibilityLabel(Text("Generic.Close"))
-		.accessibilityAddTraits(.isButton)
 	}
 }
 

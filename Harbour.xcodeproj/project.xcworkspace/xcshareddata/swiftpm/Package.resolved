@@ -1,5 +1,5 @@
 {
-  "originHash" : "ff3db79ae5ce614da55e8bf0e8c49b5ab1ff753cf079da09e1c497cd5f51a756",
+  "originHash" : "6e12199d6a597ebb8d87c5e17afde4f9e00f7e83da403e25ab37ca5864a3189c",
   "pins" : [
     {
       "identity" : "commonskit",
@@ -16,7 +16,7 @@
       "location" : "https://github.com/rrroyal/IndicatorsKit",
       "state" : {
         "branch" : "develop",
-        "revision" : "67ce1b07da37687394354e74fc80f824e56ea124"
+        "revision" : "953f14d11091702eb1443404eddfcc86efc93ca9"
       }
     },
     {
@@ -25,7 +25,7 @@
       "location" : "https://github.com/rrroyal/KeychainKit",
       "state" : {
         "branch" : "main",
-        "revision" : "b09e16a265b5be29a5b3c7dc8dbb03c920d46853"
+        "revision" : "3b19392ab0b5ddb26e8eb026b3ca238f1a93ddfe"
       }
     },
     {
@@ -34,7 +34,7 @@
       "location" : "https://github.com/rrroyal/NetworkKit",
       "state" : {
         "branch" : "main",
-        "revision" : "9a7cbf968f3fcc21445f31a63dac22020d17a74b"
+        "revision" : "0fed89ce6aed59de0ae9909ac906413f8a41aff2"
       }
     },
     {
