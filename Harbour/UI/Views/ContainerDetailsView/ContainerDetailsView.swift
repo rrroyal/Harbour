@@ -265,14 +265,15 @@ struct ContainerDetailsView: View {
 				.disabled(viewModel.containerDetails?.config?.labels == nil)
 
 				NavigationLink(value: Subdestination.mounts) {
-					Label("ContainerDetailsView.Section.Mounts", systemImage: "externaldrive")
+					Label("ContainerDetailsView.Section.Mounts", systemImage: "folder")
 				}
 				.disabled(viewModel.containerDetails?.mounts == nil)
 
-				NavigationLink(value: Subdestination.devices) {
-					Label("ContainerDetailsView.Section.Devices", systemImage: SFSymbol.terminal)
+				if !(viewModel.containerDetails?.hostConfig.devices?.isEmpty ?? true) {
+					NavigationLink(value: Subdestination.devices) {
+						Label("ContainerDetailsView.Section.Devices", systemImage: "externaldrive")
+					}
 				}
-				.disabled(viewModel.containerDetails?.hostConfig.devices == nil)
 
 				NavigationLink(value: Subdestination.network) {
 					Label("ContainerDetailsView.Section.Network", systemImage: SFSymbol.network)
