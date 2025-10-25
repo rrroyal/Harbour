@@ -27,89 +27,6 @@ struct TextEditorView: View {
 		self.navigationTitle = navigationTitle
 	}
 
-	@ToolbarContentBuilder
-	private var toolbarContent: some ToolbarContent {
-		ToolbarItem(placement: .cancellationAction) {
-			Group {
-				#if os(iOS)
-				CloseButton(style: .circleButton) {
-					dismissWithConfirmation()
-				}
-				#elseif os(macOS)
-				CloseButton(style: .text) {
-					dismissWithConfirmation()
-				}
-				#endif
-			}
-			.confirmationDialog("Generic.AreYouSure", isPresented: $isConfirmDismissDialogPresented, titleVisibility: .visible) {
-				Button("Generic.Discard", role: .destructive) {
-					Haptics.generateIfEnabled(.heavy)
-					dismiss()
-				}
-				.tint(.red)
-			} message: {
-				Text("TextEditorView.ConfirmDismissDialog.Message")
-			}
-		}
-
-		ToolbarItem(placement: .confirmationAction) {
-			Button {
-				Haptics.generateIfEnabled(.selectionChanged)
-				backingText = text
-				dismiss()
-			} label: {
-				Label("Generic.Done", systemImage: SFSymbol.checkmark)
-			}
-//			.buttonStyle(.borderedProminent)
-			.buttonBorderShape(.circle)
-			.tint(.accentColor)
-		}
-
-		#if os(iOS)
-		if #available(iOS 26.0, *) {
-			ToolbarItem(placement: .keyboard) {
-				HStack {
-					Button {
-						insertAtCursor("\t")
-					} label: {
-						Label(String("⇥"), systemImage: "arrow.right.to.line")
-					}
-
-					Spacer()
-
-					Button {
-						textFieldFocused = false
-					} label: {
-						Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
-					}
-				}
-				.labelStyle(.iconOnly)
-			}
-		} else {
-			ToolbarItem(placement: .keyboard) {
-				HStack {
-					Button {
-						insertAtCursor("\t")
-					} label: {
-						Label(String("⇥"), systemImage: "arrow.right.to.line")
-					}
-
-					Spacer()
-
-					Button {
-						textFieldFocused = false
-					} label: {
-						Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
-					}
-				}
-				.font(.footnote)
-				.labelStyle(.iconOnly)
-				.padding(.horizontal, -10)
-			}
-		}
-		#endif
-	}
-
 	var body: some View {
 		NavigationStack {
 			TextEditor(text: $text, selection: $selection)
@@ -163,6 +80,102 @@ private extension TextEditorView {
 			Haptics.generateIfEnabled(.buttonPress)
 			dismiss()
 		}
+	}
+}
+
+// MARK: - Subviews
+
+private extension TextEditorView {
+	var closeToolbarButton: some ToolbarContent {
+		ToolbarItem(placement: .cancellationAction) {
+			Group {
+				#if os(iOS)
+				CloseButton(style: .circleButton) {
+					dismissWithConfirmation()
+				}
+				#elseif os(macOS)
+				CloseButton(style: .text) {
+					dismissWithConfirmation()
+				}
+				#endif
+			}
+			.confirmationDialog("Generic.AreYouSure", isPresented: $isConfirmDismissDialogPresented, titleVisibility: .visible) {
+				Button("Generic.Discard", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					dismiss()
+				}
+				.tint(.red)
+			} message: {
+				Text("TextEditorView.ConfirmDismissDialog.Message")
+			}
+		}
+	}
+
+	var doneToolbarButton: some ToolbarContent {
+		ToolbarItem(placement: .confirmationAction) {
+			Button {
+				Haptics.generateIfEnabled(.selectionChanged)
+				backingText = text
+				dismiss()
+			} label: {
+				Label("Generic.Done", systemImage: SFSymbol.checkmark)
+			}
+//			.buttonStyle(.borderedProminent)
+			.buttonBorderShape(.circle)
+			.tint(.accentColor)
+		}
+	}
+
+	@ToolbarContentBuilder
+	var keyboardToolbarContent: some ToolbarContent {
+		if #available(iOS 26.0, *) {
+			ToolbarItemGroup(placement: .keyboard) {
+				Button {
+					insertAtCursor("\t")
+				} label: {
+					Label(String("⇥"), systemImage: "arrow.right.to.line")
+				}
+
+				Spacer()
+
+				Button {
+					textFieldFocused = false
+				} label: {
+					Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
+				}
+			}
+		} else {
+			ToolbarItem(placement: .keyboard) {
+				HStack {
+					Button {
+						insertAtCursor("\t")
+					} label: {
+						Label(String("⇥"), systemImage: "arrow.right.to.line")
+					}
+
+					Spacer()
+
+					Button {
+						textFieldFocused = false
+					} label: {
+						Label("Generic.DismissKeyboard", systemImage: "keyboard.chevron.compact.down")
+					}
+				}
+				.font(.footnote)
+				.labelStyle(.iconOnly)
+				.padding(.horizontal, -10)
+			}
+		}
+	}
+
+	@ToolbarContentBuilder
+	var toolbarContent: some ToolbarContent {
+		closeToolbarButton
+		doneToolbarButton
+
+		#if os(iOS)
+		keyboardToolbarContent
+		#endif
 	}
 }
 
