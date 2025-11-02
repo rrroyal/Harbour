@@ -72,7 +72,7 @@ struct StacksView: View {
 			onSheetDismiss()
 		} content: {
 			SheetContentView(stack: nil)
-//				.navigationTransition(.zoom(sourceID: CreateStackView.id, in: namespace))
+				.navigationTransition(.zoom(sourceID: CreateStackView.id, in: namespace))
 		}
 		.onChange(of: sceneDelegate.selectedStackNameForStacksView) { _, stackName in
 			viewModel.searchText = stackName ?? ""
