@@ -55,7 +55,7 @@ extension ContainerLogsView {
 
 private extension ContainerLogsView.SeparatedView {
 	struct LogEntry: Hashable, Identifiable {
-		private nonisolated(unsafe) static let formatter: ISO8601DateFormatter = {
+		nonisolated(unsafe) private static let formatter: ISO8601DateFormatter = {
 			let formatter = ISO8601DateFormatter()
 			formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
 			return formatter

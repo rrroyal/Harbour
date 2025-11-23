@@ -19,8 +19,8 @@ import UserNotifications
 
 /// Helper for background-related tasks.
 struct BackgroundHelper: Sendable {
-	internal nonisolated static let logger = Logger(.custom(BackgroundHelper.self))
-	internal nonisolated static let loggerBackground = Logger(.background)
+	nonisolated internal static let logger = Logger(.custom(BackgroundHelper.self))
+	nonisolated internal static let loggerBackground = Logger(.background)
 
 	/// Handles the containers change, providing a notificaion if needed.
 	/// - Parameters:

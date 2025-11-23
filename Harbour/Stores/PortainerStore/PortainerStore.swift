@@ -28,7 +28,7 @@ public final class PortainerStore: ObservableObject {
 	internal let logger = Logger(.custom(PortainerStore.self))
 	internal let keychain = Keychain.shared
 	internal let preferences = Preferences.shared
-	internal nonisolated(unsafe) let portainer: PortainerClient
+	nonisolated(unsafe) internal let portainer: PortainerClient
 
 	// MARK: Public properties
 

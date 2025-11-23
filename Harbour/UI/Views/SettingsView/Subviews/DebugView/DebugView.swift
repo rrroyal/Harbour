@@ -19,7 +19,7 @@ import WidgetKit
 // MARK: - DebugView
 
 struct DebugView: View {
-	private nonisolated static let logger = Logger(.debug)
+	nonisolated private static let logger = Logger(.debug)
 
 	var body: some View {
 		Form {
