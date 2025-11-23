@@ -11,27 +11,13 @@ import SwiftUI
 
 extension Indicator {
 	init(error: Error) {
-		let title: String
-		let subtitle: String
-		let expandedText: String?
-
-		let errorLocalizedDescriptionExpandedText = error.localizedDescription.count > 32 ? error.localizedDescription : nil
-
-		if let error = error as? LocalizedError {
-			title = error.failureReason ?? String(localized: "Indicators.Error")
-			subtitle = error.localizedDescription
-			expandedText = error.recoverySuggestion ?? errorLocalizedDescriptionExpandedText
-		} else {
-			title = String(localized: "Indicators.Error")
-			subtitle = error.localizedDescription
-			expandedText = errorLocalizedDescriptionExpandedText
-		}
+		let title = (error as? LocalizedError)?.failureReason ?? String(localized: "Indicators.Error")
+		let subtitle = error.localizedDescription
 
 		self.init(
 			id: "Error.\(title.hashValue).\(subtitle.hashValue)",
 			title: title,
 			subtitle: subtitle,
-			expandedText: expandedText,
 			style: .error
 		)
 	}

@@ -16,7 +16,7 @@
       "location" : "https://github.com/rrroyal/IndicatorsKit",
       "state" : {
         "branch" : "develop",
-        "revision" : "ecac125f491b6024d625194c24be73f7cc660290"
+        "revision" : "e84b0fd0d9cc25b3efd31370ae1c0f4dd8d7592b"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin",
       "state" : {
-        "revision" : "be0b5c5a83cf90e62a51e61624f5b5f9a46279c9",
-        "version" : "0.61.0"
+        "revision" : "9bbc46a4cf8275ceb39334f6276b6b215d67d5d5",
+        "version" : "0.62.2"
       }
     }
   ],
