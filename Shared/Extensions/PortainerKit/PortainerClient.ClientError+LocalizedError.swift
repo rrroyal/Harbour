@@ -16,6 +16,8 @@ extension PortainerClient.ClientError: @retroactive LocalizedError {
 			PortainerError.notSetup.errorDescription
 		case .responseCodeUnacceptable(let code):
 			String(localized: "PortainerKit.ClientError.ResponseCodeUnacceptable Code:\(code)")
+		case .decodingFailed:
+			String(localized: "PortainerKit.ClientError.DecodingFailed")
 		case .encodingFailed:
 			String(localized: "PortainerKit.ClientError.EncodingFailed")
 		}
@@ -26,6 +28,8 @@ extension PortainerClient.ClientError: @retroactive LocalizedError {
 		case .notSetup:
 			PortainerError.notSetup.recoverySuggestion
 		case .responseCodeUnacceptable:
+			nil
+		case .decodingFailed:
 			nil
 		case .encodingFailed:
 			nil
