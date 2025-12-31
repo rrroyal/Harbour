@@ -691,16 +691,6 @@
         }
       }
     },
-    "ContainerLogsView.Search.SearchLogs" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search logs…"
-          }
-        }
-      }
-    },
     "ContainerLogsView.Title" : {
       "localizations" : {
         "en" : {

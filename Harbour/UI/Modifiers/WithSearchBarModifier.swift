@@ -46,7 +46,7 @@ struct WithSearchBarModifier<LeadingIconContent: View>: ViewModifier {
 			HStack {
 				leadingIcon()
 
-				TextField("ContainerLogsView.Search.SearchLogs", text: $searchText)
+				TextField("Generic.Search", text: $searchText)
 					.textFieldStyle(.plain)
 					.autocorrectionDisabled()
 					#if os(iOS)
