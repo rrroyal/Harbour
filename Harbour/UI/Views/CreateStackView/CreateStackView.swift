@@ -215,7 +215,7 @@ private extension CreateStackView {
 
 				let stack = try await viewModel.createOrUpdateStack(pullImage: pullImage).value
 
-				let indicatorAction: @Sendable () -> Void = {
+				let indicatorAction: PresentedIndicator.Action = {
 //					Haptics.generateIfEnabled(.soft)
 					let navigationItem = StackDetailsView.NavigationItem(stackID: stack.id.description, stackName: stack.name)
 					Task { @MainActor in
