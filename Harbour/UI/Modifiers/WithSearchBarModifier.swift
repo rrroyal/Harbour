@@ -91,7 +91,7 @@ struct WithSearchBarModifier<LeadingIconContent: View>: ViewModifier {
 				.frame(alignment: .trailing)
 
 				Button {
-					Haptics.generateIfEnabled(.soft)
+//					Haptics.generateIfEnabled(.soft)
 					doneAction()
 				} label: {
 					Text("Generic.Done")

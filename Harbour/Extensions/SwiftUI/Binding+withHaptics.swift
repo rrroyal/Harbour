@@ -10,7 +10,7 @@ import CommonHaptics
 import SwiftUI
 
 extension Binding where Value: Sendable {
-	func withHaptics(_ haptic: Haptics.HapticStyle) -> Self {
+	func withHaptics(_ haptic: Haptics.HapticStyle = .selectionChanged) -> Self {
 		.init {
 			self.wrappedValue
 		} set: { newValue in

@@ -46,7 +46,7 @@ struct FeaturesView: View {
 			Spacer(minLength: 40)
 
 			Button("FeaturesView.ContinueButton") {
-				Haptics.generateIfEnabled(.buttonPress)
+//				Haptics.generateIfEnabled(.buttonPress)
 				continueAction()
 			}
 			.buttonStyle(.customPrimary)

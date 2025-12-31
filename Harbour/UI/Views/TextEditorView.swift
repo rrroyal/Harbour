@@ -77,7 +77,7 @@ private extension TextEditorView {
 			Haptics.generateIfEnabled(.warning)
 			isConfirmDismissDialogPresented = true
 		} else {
-			Haptics.generateIfEnabled(.buttonPress)
+//			Haptics.generateIfEnabled(.buttonPress)
 			dismiss()
 		}
 	}
@@ -114,7 +114,7 @@ private extension TextEditorView {
 	var doneToolbarButton: some ToolbarContent {
 		ToolbarItem(placement: .confirmationAction) {
 			Button {
-				Haptics.generateIfEnabled(.selectionChanged)
+//				Haptics.generateIfEnabled(.selectionChanged)
 				backingText = text
 				dismiss()
 			} label: {

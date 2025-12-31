@@ -79,7 +79,7 @@ struct ContainerLogsView: View {
 					occurenceCount: viewModel.searchOccurences
 				) {
 					Menu {
-						Toggle(isOn: $viewModel.isSearchFilteringLines.withHaptics(.light)) {
+						Toggle(isOn: $viewModel.isSearchFilteringLines.withHaptics()) {
 							Label("ContainerLogsView.Search.FilterLines", systemImage: "line.3.horizontal.decrease")
 						}
 						.labelStyle(.titleAndIcon)
@@ -216,7 +216,7 @@ private extension ContainerLogsView {
 		@ViewBuilder
 		private var searchButton: some View {
 			Button {
-				Haptics.generateIfEnabled(.buttonPress)
+//				Haptics.generateIfEnabled(.buttonPress)
 				if !viewModel.isSearchVisible {
 					viewModel.searchText = ""
 				}
@@ -249,14 +249,14 @@ private extension ContainerLogsView {
 
 		@ViewBuilder
 		private var separateLinesButton: some View {
-			Toggle(isOn: $preferences.clSeparateLines.withHaptics(.selectionChanged)) {
+			Toggle(isOn: $preferences.clSeparateLines.withHaptics()) {
 				Label("ContainerLogsView.Menu.SeparateLines", systemImage: "rectangle.split.1x2")
 			}
 		}
 
 		@ViewBuilder
 		private var includeTimestampsButton: some View {
-			Toggle(isOn: $preferences.clIncludeTimestamps.withHaptics(.selectionChanged)) {
+			Toggle(isOn: $preferences.clIncludeTimestamps.withHaptics()) {
 				Label("ContainerLogsView.Menu.IncludeTimestamps", systemImage: "clock")
 			}
 		}
@@ -272,7 +272,7 @@ private extension ContainerLogsView {
 				1_000
 			]
 
-			Picker(selection: $viewModel.lineCount.withHaptics(.selectionChanged)) {
+			Picker(selection: $viewModel.lineCount.withHaptics()) {
 				ForEach(lineCounts, id: \.self) { amount in
 					Text(amount.formatted())
 						.tag(amount)

@@ -168,7 +168,7 @@ private extension ContainersView {
 			Menu {
 				if !(appState.lastContainerChanges?.isEmpty ?? true) {
 					Button {
-						Haptics.generateIfEnabled(.sheetPresentation)
+//						Haptics.generateIfEnabled(.sheetPresentation)
 						sceneDelegate.isContainerChangesSheetPresented = true
 					} label: {
 						Label("ContainersView.Menu.ShowLastContainerChanges", systemImage: "arrow.left.arrow.right")
@@ -177,7 +177,7 @@ private extension ContainersView {
 					Divider()
 				}
 
-				Picker(selection: $preferences.cvUseGrid.withHaptics(.selectionChanged)) {
+				Picker(selection: $preferences.cvUseGrid.withHaptics()) {
 					Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
 						.tag(true)
 
@@ -192,7 +192,7 @@ private extension ContainersView {
 				Divider()
 
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					sceneDelegate.isSettingsSheetPresented = true
 				} label: {
 					Label("SettingsView.Title", systemImage: SFSymbol.settings)

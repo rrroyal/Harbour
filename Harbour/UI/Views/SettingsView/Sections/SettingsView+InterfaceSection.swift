@@ -63,7 +63,7 @@ private extension SettingsView.InterfaceSection {
 						let isCurrent = AppIcon.current == icon
 
 						Button {
-							Haptics.generateIfEnabled(.light)
+//							Haptics.generateIfEnabled(.light)
 							setIcon(icon)
 						} label: {
 							if isCurrent {

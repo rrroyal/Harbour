@@ -176,7 +176,7 @@ private extension StacksView {
 		}
 		ToolbarItem(placement: createStackToolbarItemPlacement) {
 			Button {
-				Haptics.generateIfEnabled(.sheetPresentation)
+//				Haptics.generateIfEnabled(.sheetPresentation)
 				sceneDelegate.editedStack = nil
 				sceneDelegate.isCreateStackSheetPresented = true
 			} label: {
@@ -190,7 +190,7 @@ private extension StacksView {
 
 		ToolbarItem(placement: .automatic) {
 			Menu {
-				Toggle(isOn: $preferences.svFilterByActiveEndpoint.withHaptics(.selectionChanged)) {
+				Toggle(isOn: $preferences.svFilterByActiveEndpoint.withHaptics()) {
 					Label {
 						Text("StacksView.Menu.ActiveEndpointOnly")
 					} icon: {
@@ -205,7 +205,7 @@ private extension StacksView {
 					fetch()
 				}
 
-				Toggle(isOn: $preferences.svIncludeLimitedStacks.withHaptics(.selectionChanged)) {
+				Toggle(isOn: $preferences.svIncludeLimitedStacks.withHaptics()) {
 					Label(
 						"StacksView.Menu.IncludeLimitedStacks",
 						systemImage: "square.stack.3d.up.trianglebadge.exclamationmark"
@@ -221,7 +221,7 @@ private extension StacksView {
 				Divider()
 
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					sceneDelegate.isSettingsSheetPresented = true
 				} label: {
 					Label("SettingsView.Title", systemImage: SFSymbol.settings)

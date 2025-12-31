@@ -43,7 +43,7 @@ extension DebugView {
 
 				Divider()
 
-				Toggle("DebugView.LogsView.IncludePortainerKitLogs", isOn: $includePortainerKitLogs.withHaptics(.selectionChanged))
+				Toggle("DebugView.LogsView.IncludePortainerKitLogs", isOn: $includePortainerKitLogs.withHaptics())
 					.onChange(of: includePortainerKitLogs) {
 						getLogs()
 					}

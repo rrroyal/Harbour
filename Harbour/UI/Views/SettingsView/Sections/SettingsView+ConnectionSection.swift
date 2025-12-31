@@ -54,7 +54,7 @@ private extension SettingsView.ConnectionSection {
 				Divider()
 
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isSetupSheetPresented = true
 				} label: {
 					Label("SettingsView.Connection.ConnectionMenu.Add", systemImage: SFSymbol.plus)
@@ -155,6 +155,7 @@ private extension SettingsView.ConnectionSection {
 				Label(formattedURL(url), systemImage: SFSymbol.checkmark)
 					.labelStyle(.iconOptional(showIcon: viewModel.activeURL == url))
 			}
+			.menuOrder(.fixed)
 		}
 	}
 }

@@ -10,5 +10,5 @@ import CommonHaptics
 
 extension Haptics.HapticStyle {
 	static let buttonPress: Self = .light
-	static let sheetPresentation: Self = .soft
+//	static let sheetPresentation: Self = .soft
 }

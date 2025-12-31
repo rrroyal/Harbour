@@ -99,7 +99,7 @@ private extension CreateStackView.StackFileView {
 
 		var body: some View {
 			Button {
-				Haptics.generateIfEnabled(.sheetPresentation)
+//				Haptics.generateIfEnabled(.sheetPresentation)
 				viewModel.isTextEditorSheetPresented = true
 			} label: {
 				Text(stackFileContent.trimmingCharacters(in: .whitespacesAndNewlines))
@@ -174,7 +174,7 @@ private extension CreateStackView.StackFileView {
 		var body: some View {
 			Group {
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isTextEditorSheetPresented = true
 				} label: {
 					Label("CreateStackView.StackFile.Create", systemImage: "character.cursor.ibeam")
@@ -194,7 +194,7 @@ private extension CreateStackView.StackFileView {
 				}
 
 				Button {
-					Haptics.generateIfEnabled(.sheetPresentation)
+//					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isFileImportSheetPresented = true
 				} label: {
 					Label("CreateStackView.StackFile.Select", systemImage: "document")

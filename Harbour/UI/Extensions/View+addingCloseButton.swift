@@ -34,7 +34,7 @@ private struct AddingCloseButtonViewModifier: ViewModifier {
 						if let dismissAction {
 							dismissAction()
 						} else {
-							Haptics.generateIfEnabled(.buttonPress)
+//							Haptics.generateIfEnabled(.buttonPress)
 							defaultDismiss()
 						}
 					}
@@ -43,7 +43,7 @@ private struct AddingCloseButtonViewModifier: ViewModifier {
 						if let dismissAction {
 							dismissAction()
 						} else {
-							Haptics.generateIfEnabled(.buttonPress)
+//							Haptics.generateIfEnabled(.buttonPress)
 							defaultDismiss()
 						}
 					}
