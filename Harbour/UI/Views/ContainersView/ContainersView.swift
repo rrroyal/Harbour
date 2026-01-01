@@ -86,10 +86,8 @@ struct ContainersView: View {
 			.animation(.default, value: viewModel.containers)
 			.animation(.default, value: viewModel.isStatusProgressViewVisible)
 //			.animation(.default, value: portainerStore.removedContainerIDs)
-			.navigationTitle(navigationTitle)
-			#if os(iOS)
-			.navigationBarTitleDisplayMode(.inline)
-			#endif
+			.navigationTitle("ContainersView.Title")
+//			.toolbarTitleDisplayMode(.large)
 			.environment(viewModel)
 			.onKeyPress(action: onKeyPress)
 			.onChange(of: sceneDelegate.selectedStackNameForContainersView) { _, stackName in
@@ -117,65 +115,42 @@ struct ContainersView: View {
 	}
 }
 
-// MARK: - Support
-
-private extension ContainersView {
-	var navigationTitle: String {
-		if let selectedEndpoint = portainerStore.selectedEndpoint {
-			return selectedEndpoint.name ?? selectedEndpoint.id.description
-		}
-		return String(localized: "AppName")
-	}
-
-	var selectedEndpointTitle: String {
-		if let selectedEndpoint = portainerStore.selectedEndpoint {
-			selectedEndpoint.name ?? selectedEndpoint.id.description
-		} else if !portainerStore.endpoints.isEmpty {
-			String(localized: "ContainersView.NoEndpointSelected")
-		} else {
-			String(localized: "ContainersView.NoEndpointsAvailable")
-		}
-	}
-}
-
 // MARK: - Subviews
 
 private extension ContainersView {
-	@ViewBuilder @MainActor
-	var endpointPicker: some View {
-		let selectedEndpointBinding = Binding<Endpoint?>(
-			get: { portainerStore.selectedEndpoint },
-			set: {
-				Haptics.generateIfEnabled(.light)
-				portainerStore.setSelectedEndpoint($0)
-			}
-		)
-		Picker(selection: selectedEndpointBinding) {
-			ForEach(portainerStore.endpoints) { endpoint in
-				Text(endpoint.name ?? endpoint.id.description)
-					.tag(endpoint)
-			}
-		} label: {
-			Text(selectedEndpointTitle)
-		}
-		.labelStyle(.titleAndIcon)
-		.disabled(!viewModel.canUseEndpointsMenu)
-	}
-
 	@ToolbarContentBuilder @MainActor
 	var toolbarContent: some ToolbarContent {
 		ToolbarItem(placement: .automatic) {
 			Menu {
-				if !(appState.lastContainerChanges?.isEmpty ?? true) {
-					Button {
-//						Haptics.generateIfEnabled(.sheetPresentation)
-						sceneDelegate.isContainerChangesSheetPresented = true
-					} label: {
-						Label("ContainersView.Menu.ShowLastContainerChanges", systemImage: "arrow.left.arrow.right")
-					}
+				Group {
+					if portainerStore.endpoints.isEmpty {
+						Label("ContainersView.Menu.Endpoint.NoEndpointsAvailable", systemImage: SFSymbol.endpoint)
+							.symbolVariant(.slash)
+					} else {
+						let selectedEndpointBinding = Binding<Endpoint?>(
+							get: { portainerStore.selectedEndpoint },
+							set: {
+								Haptics.generateIfEnabled(.light)
+								portainerStore.setSelectedEndpoint($0)
+							}
+						)
 
-					Divider()
+						Picker(selection: selectedEndpointBinding) {
+							ForEach(portainerStore.endpoints) { endpoint in
+								Text(endpoint.name ?? endpoint.id.description)
+									.tag(endpoint)
+							}
+						} label: {
+							Label("ContainersView.Menu.Endpoint", systemImage: SFSymbol.endpoint)
+							if let selectedEndpoint = selectedEndpointBinding.wrappedValue {
+								Text(selectedEndpoint.name ?? selectedEndpoint.id.description)
+							}
+						}
+						.pickerStyle(.menu)
+					}
 				}
+
+				Divider()
 
 				Picker(selection: $preferences.cvUseGrid.withHaptics()) {
 					Label("ContainersView.Menu.ContainerLayout.Grid", systemImage: "square.grid.2x2")
@@ -187,6 +162,17 @@ private extension ContainersView {
 					Label("ContainersView.Menu.ContainerLayout", systemImage: "rectangle.3.group")
 				}
 				.pickerStyle(.menu)
+
+				if !(appState.lastContainerChanges?.isEmpty ?? true) {
+					Divider()
+
+					Button {
+//						Haptics.generateIfEnabled(.sheetPresentation)
+						sceneDelegate.isContainerChangesSheetPresented = true
+					} label: {
+						Label("ContainersView.Menu.ShowLastContainerChanges", systemImage: "arrow.left.arrow.right")
+					}
+				}
 
 				#if os(iOS)
 				Divider()
@@ -210,6 +196,7 @@ private extension ContainersView {
 		._matchedTransitionSource(id: SettingsView.id, in: namespace)
 		#endif
 
+		/*
 		#if os(iOS)
 		if horizontalSizeClass == .regular {
 			ToolbarItem(placement: .navigation) {
@@ -229,6 +216,7 @@ private extension ContainersView {
 			}
 		}
 		#endif
+		 */
 	}
 
 	@ViewBuilder @MainActor

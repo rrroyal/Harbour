@@ -64,10 +64,6 @@ extension ContainersView {
 			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
 		}
 
-		var canUseEndpointsMenu: Bool {
-			portainerStore.selectedEndpoint != nil || !portainerStore.endpoints.isEmpty
-		}
-
 		init() {
 			let portainerStore = PortainerStore.shared
 			self.portainerStore = portainerStore
