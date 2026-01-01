@@ -21,9 +21,9 @@ extension ViewTab {
 	var title: String {
 		switch self {
 		case .containers:
-			String(localized: "ViewTab.Containers")
+			String(localized: "ContainersView.Title")
 		case .stacks:
-			String(localized: "ViewTab.Stacks")
+			String(localized: "StacksView.Title")
 		}
 	}
 

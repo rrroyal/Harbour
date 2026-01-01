@@ -3150,26 +3150,6 @@
           }
         }
       }
-    },
-    "ViewTab.Containers" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Containers"
-          }
-        }
-      }
-    },
-    "ViewTab.Stacks" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stacks"
-          }
-        }
-      }
     }
   },
   "version" : "1.1"
