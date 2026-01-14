@@ -55,7 +55,7 @@ struct ContainerDetailsView: View {
 				}
 				.foregroundStyle(.secondary)
 			} else {
-				LabeledWithIcon(title, icon: state.icon)
+				LabeledTextWithIcon(title, systemImage: state.icon)
 					.foregroundStyle(state.color)
 			}
 		} header: {
@@ -108,8 +108,9 @@ struct ContainerDetailsView: View {
 	private var nameSection: some View {
 		if let name = viewModel.container?.displayName ?? viewModel.containerDetails?.displayName ?? navigationItem.displayName {
 			NormalizedSection {
-				Labeled(name)
+				LabeledText(name)
 					.fontDesign(.monospaced)
+					.textSelection(.enabled)
 			} header: {
 				Text("ContainerDetailsView.Section.Name")
 			}
@@ -120,8 +121,9 @@ struct ContainerDetailsView: View {
 	private var idSection: some View {
 		if let id = viewModel.container?.id ?? viewModel.containerDetails?.id {
 			NormalizedSection {
-				Labeled(id)
+				LabeledText(id)
 					.fontDesign(.monospaced)
+					.textSelection(.enabled)
 			} header: {
 				Text("ContainerDetailsView.Section.ID")
 			}
@@ -132,7 +134,7 @@ struct ContainerDetailsView: View {
 	private var createdAtSection: some View {
 		if let createdAt = viewModel.containerDetails?.created ?? viewModel.container?.created {
 			NormalizedSection {
-				Labeled(createdAt.formatted(.dateTime))
+				LabeledText(createdAt.formatted(.dateTime))
 			} header: {
 				Text("ContainerDetailsView.Section.CreatedAt")
 			}
@@ -143,7 +145,7 @@ struct ContainerDetailsView: View {
 	private var finishedAtSection: some View {
 		if let finishedAt = viewModel.containerDetails?.state.finishedAt, !(viewModel.containerDetails?.state.running ?? false) {
 			NormalizedSection {
-				Labeled(finishedAt.formatted(.dateTime))
+				LabeledText(finishedAt.formatted(.dateTime))
 			} header: {
 				Text("ContainerDetailsView.Section.FinishedAt")
 			}
@@ -156,11 +158,13 @@ struct ContainerDetailsView: View {
 			NormalizedSection {
 				Group {
 					if let image = viewModel.container?.image {
-						Labeled(image)
+						LabeledText(image)
+							.textSelection(.enabled)
 					}
 
 					if let imageID = viewModel.container?.imageID {
-						Labeled(imageID)
+						LabeledText(imageID)
+							.textSelection(.enabled)
 					}
 				}
 				.fontDesign(.monospaced)
@@ -177,13 +181,15 @@ struct ContainerDetailsView: View {
 		if entrypoint != nil || command != nil {
 			NormalizedSection {
 				if let entrypoint {
-					Labeled(entrypoint)
+					LabeledText(entrypoint)
 						.fontDesign(.monospaced)
+						.textSelection(.enabled)
 				}
 
 				if let command {
-					Labeled(command)
+					LabeledText(command)
 						.fontDesign(.monospaced)
+						.textSelection(.enabled)
 				}
 			} header: {
 				Text("ContainerDetailsView.Section.Entrypoint")
@@ -198,14 +204,15 @@ struct ContainerDetailsView: View {
 
 			NormalizedSection {
 				LabeledContent("ContainerDetailsView.Stack.Name") {
-					Text(stackName)
+					LabeledText(stackName)
+						.fontDesign(.monospaced)
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
 				}
 
 				if let storedStackID = storedStack?.id {
 					LabeledContent("ContainerDetailsView.Stack.ID") {
-						Text(storedStackID.description)
+						LabeledText(storedStackID.description)
 							.textSelection(.enabled)
 							.multilineTextAlignment(.trailing)
 					}

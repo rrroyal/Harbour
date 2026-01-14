@@ -24,7 +24,7 @@ extension ContainerDetailsView {
 		private var ipAddressSection: some View {
 			if let ipAddress = detailNetworkSettings?.ipAddress, !ipAddress.isEmpty {
 				NormalizedSection {
-					ContainerDetailsView.Labeled(ipAddress)
+					LabeledText(ipAddress)
 						.fontDesign(.monospaced)
 						.textSelection(.enabled)
 				} header: {
@@ -101,7 +101,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 		@ViewBuilder
 		private var networkIDSection: some View {
 			NormalizedSection {
-				ContainerDetailsView.Labeled(network.networkID ?? String(localized: "Generic.Empty"))
+				LabeledText(network.networkID ?? String(localized: "Generic.Empty"))
 					.fontDesign(.monospaced)
 					.textSelection(.enabled)
 			} header: {
@@ -113,7 +113,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 		private var gatewaySection: some View {
 			if let gateway = network.gateway {
 				NormalizedSection {
-					ContainerDetailsView.Labeled(gateway)
+					LabeledText(gateway)
 						.fontDesign(.monospaced)
 						.textSelection(.enabled)
 				} header: {
@@ -126,7 +126,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 		private var ipAddressSection: some View {
 			if let ipAddress = network.ipAddress {
 				NormalizedSection {
-					ContainerDetailsView.Labeled(ipAddress)
+					LabeledText(ipAddress)
 						.fontDesign(.monospaced)
 						.textSelection(.enabled)
 				} header: {
@@ -139,7 +139,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 		private var macAddressSection: some View {
 			if let macAddress = network.macAddress {
 				NormalizedSection {
-					ContainerDetailsView.Labeled(macAddress)
+					LabeledText(macAddress)
 						.fontDesign(.monospaced)
 						.textSelection(.enabled)
 				} header: {
@@ -153,7 +153,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 			if let aliases = network.aliases, !aliases.isEmpty {
 				NormalizedSection {
 					ForEach(Set(aliases).localizedSorted(), id: \.self) { alias in
-						ContainerDetailsView.Labeled(alias)
+						LabeledText(alias)
 							.fontDesign(.monospaced)
 							.textSelection(.enabled)
 					}

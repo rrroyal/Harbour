@@ -23,13 +23,12 @@
             "state" : "new",
             "values" : [
               "Get container status in ${applicationName}",
-              "Check container in ${applicationName}",
-              "Ask ${applicationName} what's the status of ${container}"
+              "Check container in ${applicationName}"
             ]
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version" : "1.1"
 }
