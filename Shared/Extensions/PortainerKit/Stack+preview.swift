@@ -16,7 +16,6 @@ extension Stack {
 			name: name,
 			type: .dockerCompose,
 			endpointID: 0,
-			env: nil,
 			status: status
 		)
 	}

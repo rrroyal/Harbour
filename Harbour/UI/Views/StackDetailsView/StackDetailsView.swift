@@ -33,124 +33,189 @@ struct StackDetailsView: View {
 		self.viewModel = viewModel
 	}
 
-	@ViewBuilder
-	private var removingStackOverlay: some View {
-		if viewModel.isRemovingStack {
-			VStack {
-				ProgressView()
-					.controlSize(.large)
-
-				let stackName = viewModel.stack?.name ?? viewModel.navigationItem.stackName ?? viewModel.navigationItem.stackID
-				Text("StackDetailsView.RemovingStack StackName:\(stackName)")
-					.font(.title2)
-					.fontWeight(.medium)
-					.foregroundStyle(.secondary)
-					.padding(.top)
-			}
-			.padding()
-			.frame(maxWidth: .infinity, maxHeight: .infinity)
-			.background(Material.regular, ignoresSafeAreaEdges: .all)
-		}
-	}
-
-	@ToolbarContentBuilder
-	private var toolbarContent: some ToolbarContent {
-		ToolbarItem(placement: .primaryAction) {
-			Menu {
-				if viewModel.viewState.isLoading {
-					Text("Generic.Loading")
-					Divider()
-				}
-
-				if !viewModel.isRemovingStack, let stack = viewModel.stack {
-					StackContextMenu(
-						stack: stack,
-						setStackStateAction: { setStackState(stack, started: $0) }
-					)
-				}
-			} label: {
-				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
-					.labelStyle(.automatic)
-			}
-			.labelStyle(.titleAndIcon)
-		}
-
-//		ToolbarItem(placement: .status) {
-//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
-//				ProgressView()
-//			}
-//		}
-	}
-
 	var body: some View {
 		Form {
-			// Stack Status
-			NormalizedSection {
-				Label(
-					(viewModel.stack?.status ?? Stack.Status?.none).title,
-					systemImage: (viewModel.stack?.status ?? Stack.Status?.none).icon
-				)
-				.foregroundStyle((viewModel.stack?.status ?? Stack.Status?.none).color)
-			} header: {
-				Text("StackDetailsView.Section.Status")
+			GeneralSection(stack: viewModel.stack, navigationItem: navigationItem)
+			StackAutoUpdateSection(autoUpdate: viewModel.stack?.autoUpdate)
+			StackGitConfigSection(gitConfig: viewModel.stack?.gitConfig)
+			StackEnvironmentSection(
+				environment: viewModel.stack?.env,
+				isStored: viewModel.stack?._isStored ?? true
+			)
+			StackFileContentsButton(
+				stack: viewModel.stack,
+				stackFileContent: viewModel.stackFileContent
+			)
+			StackShowContainersButton(
+				stack: viewModel.stack,
+				navigationItem: navigationItem
+			)
+		}
+		.formStyle(.grouped)
+		#if os(macOS)
+		.buttonStyle(.plain)
+		#endif
+		.toolbar {
+			toolbarContent
+		}
+		#if os(iOS)
+		.viewStateBackground(viewModel.viewState, backgroundColor: .groupedBackground)
+		#elseif os(macOS)
+		.viewStateBackground(viewModel.viewState, backgroundColor: .clear)
+		#endif
+		.overlay {
+			RemovingStackOverlay(
+				stackName: viewModel.stack?.name ?? viewModel.navigationItem.stackName ?? viewModel.navigationItem.stackID,
+				isRemoving: viewModel.isRemovingStack
+			)
+		}
+		.environment(viewModel)
+		.navigationTitle(navigationTitle)
+		.navigationDestination(for: Subdestination.self) { subdestination in
+			switch subdestination {
+			case .environment(let environment):
+				StackEnvironmentView(entries: environment)
 			}
+		}
+		.animation(.default, value: viewModel.viewState)
+		.animation(.default, value: viewModel.stackFileViewState)
+		.animation(.default, value: viewModel.stack)
+		.animation(.default, value: viewModel.isRemovingStack)
+		.animation(nil, value: navigationItem)
+		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneDelegate.activeTab == .stacks) { userActivity in
+			viewModel.createUserActivity(userActivity)
+		}
+		.task {
+			await fetch().value
+		}
+		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
+			await fetch().value
+		}
+		.onChange(of: navigationItem) { _, newNavigationItem in
+			viewModel.navigationItem = newNavigationItem
+		}
+	}
+}
 
-			// Stack Name
-			if let stackName = viewModel.stack?.name ?? navigationItem.stackName {
-				NormalizedSection {
-					Text(stackName)
-						.textSelection(.enabled)
+// MARK: - Subviews
+
+private extension StackDetailsView {
+	struct GeneralSection: View {
+		let stack: Stack?
+		let navigationItem: NavigationItem
+
+		var body: some View {
+			NormalizedSection {
+				LabeledContent("StackDetailsView.Section.General.Name") {
+					LabeledText(stack?.name ?? navigationItem.stackName)
 						.fontDesign(.monospaced)
-				} header: {
-					Text("StackDetailsView.Section.Name")
+						.multilineTextAlignment(.trailing)
+						.textSelection(.enabled)
+				}
+				LabeledContent("StackDetailsView.Section.General.ID") {
+					LabeledText(stack?.id.description ?? navigationItem.stackID)
+						.multilineTextAlignment(.trailing)
+						.textSelection(.enabled)
+				}
+				LabeledContent("StackDetailsView.Section.General.Status") {
+					LabeledTextWithIcon(
+						(stack?.status ?? Stack.Status?.none).title,
+						systemImage: (stack?.status ?? Stack.Status?.none).icon
+					)
+					.imageScale(.medium)
+					.labelStyle(.ordered(.labelIcon))
+					.multilineTextAlignment(.trailing)
+					.foregroundStyle((stack?.status ?? Stack.Status?.none).color)
+				}
+				LabeledContent("StackDetailsView.Section.General.Type") {
+					LabeledText(stack?.type.title)
+						.multilineTextAlignment(.trailing)
 				}
 			}
+		}
+	}
 
-			// Stack ID
-			NormalizedSection {
-				Text(viewModel.stack?.id.description ?? navigationItem.stackID)
-					.textSelection(.enabled)
-					.fontDesign(.monospaced)
-			} header: {
-				Text("StackDetailsView.Section.ID")
+	struct StackAutoUpdateSection: View {
+		let autoUpdate: Stack.AutoUpdate?
+
+		var body: some View {
+			if let autoUpdate {
+				NormalizedSection {
+					LabeledContent("StackDetailsView.Section.AutoUpdate.Interval") {
+						LabeledText(autoUpdate.interval)
+							.multilineTextAlignment(.trailing)
+					}
+					LabeledContent("StackDetailsView.Section.AutoUpdate.ForceUpdate") {
+						LabeledText(autoUpdate.forceUpdate.description)
+							.multilineTextAlignment(.trailing)
+					}
+					LabeledContent("StackDetailsView.Section.AutoUpdate.ForcePullImage") {
+						LabeledText(autoUpdate.forcePullImage.description)
+							.multilineTextAlignment(.trailing)
+					}
+				} header: {
+					Text("StackDetailsView.Section.AutoUpdate")
+				}
 			}
+		}
+	}
 
-			// Stack Type
-			NormalizedSection {
-				Text((viewModel.stack?.type ?? Stack.StackType?.none).title)
-			} header: {
-				Text("StackDetailsView.Section.Type")
+	struct StackGitConfigSection: View {
+		let gitConfig: Stack.GitConfig?
+
+		var body: some View {
+			if let gitConfig {
+				NormalizedSection {
+					LabeledContent("StackDetailsView.Section.GitConfig.ReferenceName") {
+						LabeledText(gitConfig.referenceName)
+							.fontDesign(.monospaced)
+							.multilineTextAlignment(.trailing)
+							.textSelection(.enabled)
+					}
+					LabeledContent("StackDetailsView.Section.GitConfig.ConfigFilePath") {
+						LabeledText(gitConfig.configFilePath)
+							.fontDesign(.monospaced)
+							.multilineTextAlignment(.trailing)
+							.textSelection(.enabled)
+					}
+					LabeledContent("StackDetailsView.Section.GitConfig.URL") {
+						Link(gitConfig.url.formatted(), destination: gitConfig.url)
+							.fontDesign(.monospaced)
+							.textSelection(.enabled)
+					}
+					.labeledContentStyle(.twoLine)
+				} header: {
+					Text("StackDetailsView.Section.GitConfig")
+				}
 			}
+		}
+	}
 
-			// Environment
+	struct StackEnvironmentSection: View {
+		let environment: [Stack.EnvironmentEntry]?
+		let isStored: Bool
+
+		var body: some View {
 			NormalizedSection {
-				NavigationLink(value: Subdestination.environment(viewModel.stack?.env)) {
+				NavigationLink(value: Subdestination.environment(environment)) {
 					Label("StackDetailsView.Environment", systemImage: SFSymbol.environment)
 				}
-				.disabled(viewModel.stack?._isStored ?? true)
+				.disabled(isStored)
 			}
+		}
+	}
 
-			// Show Containers Button
-			NormalizedSection {
-				Button {
-					if let stackName = viewModel.stack?.name ?? navigationItem.stackName {
-						filterByStackName(stackName)
-					}
-				} label: {
-					Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
-						#if os(macOS)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
-						#endif
-				}
-				.foregroundStyle((viewModel.stack?.isOn ?? false) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
-				.disabled(!(viewModel.stack?.isOn ?? false))
-			}
+	struct StackFileContentsButton: View {
+		@Environment(ViewModel.self) private var viewModel
+		@Environment(\.errorHandler) private var errorHandler
 
-			// Stack File Contents Button
+		let stack: Stack?
+		let stackFileContent: String?
+
+		var body: some View {
 			NormalizedSection {
 				Group {
-					if let stackFileContent = viewModel.stackFileContent {
+					if let stackFileContent {
 						ShareLink(item: stackFileContent) {
 							Label("StackDetailsView.StackFile.Share", systemImage: SFSymbol.share)
 								#if os(macOS)
@@ -183,56 +248,101 @@ struct StackDetailsView: View {
 						.disabled(viewModel.isFetchingStackFileContent)
 					}
 				}
-				.foregroundStyle(!(viewModel.stack?._isStored ?? true) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
-				.disabled(viewModel.stack?._isStored ?? true)
+				.foregroundStyle(!(stack?._isStored ?? true) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
+				.disabled(stack?._isStored ?? true)
 				.id(ViewID.stackFileButton)
 			}
 		}
-		.formStyle(.grouped)
-		#if os(macOS)
-		.buttonStyle(.plain)
-		#endif
-		.toolbar {
-			toolbarContent
-		}
-		#if os(iOS)
-		.viewStateBackground(viewModel.viewState, backgroundColor: .groupedBackground)
-		#elseif os(macOS)
-		.viewStateBackground(viewModel.viewState, backgroundColor: .clear)
-		#endif
-		.overlay {
-			removingStackOverlay
-		}
-		.navigationTitle(navigationTitle)
-		.navigationDestination(for: Subdestination.self) { subdestination in
-			switch subdestination {
-			case .environment(let environment):
-				StackEnvironmentView(entries: environment)
+
+		private func fetchStackFile() {
+			Task {
+				do {
+					try await viewModel.fetchStackFile().value
+				} catch {
+					errorHandler(error)
+				}
 			}
 		}
-		.animation(.default, value: viewModel.viewState)
-		.animation(.default, value: viewModel.stackFileViewState)
-		.animation(.default, value: viewModel.stack)
-		.animation(.default, value: viewModel.isRemovingStack)
-//		.animation(.default, value: viewModel.isStatusProgressViewVisible)
-		.animation(nil, value: navigationItem)
-		.userActivity(HarbourUserActivityIdentifier.stackDetails, isActive: sceneDelegate.activeTab == .stacks) { userActivity in
-			viewModel.createUserActivity(userActivity)
+	}
+
+	struct StackShowContainersButton: View {
+		@Environment(SceneDelegate.self) private var sceneDelegate
+
+		let stack: Stack?
+		let navigationItem: NavigationItem
+
+		var body: some View {
+			NormalizedSection {
+				Button {
+					if let stackName = stack?.name ?? navigationItem.stackName {
+						filterByStackName(stackName)
+					}
+				} label: {
+					Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
+#if os(macOS)
+						.frame(maxWidth: .infinity, alignment: .leading)
+						.contentShape(Rectangle())
+#endif
+				}
+				.foregroundStyle((stack?.isOn ?? false) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
+				.disabled(!(stack?.isOn ?? false))
+			}
 		}
-		.task {
-			await fetch().value
+
+		private func filterByStackName(_ stackName: String?) {
+			sceneDelegate.navigate(to: .containers)
+			sceneDelegate.selectedStackNameForContainersView = stackName
 		}
-		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
-			await fetch().value
+	}
+
+	struct RemovingStackOverlay: View {
+		let stackName: String
+		let isRemoving: Bool
+
+		var body: some View {
+			if isRemoving {
+				VStack {
+					ProgressView()
+						.controlSize(.large)
+
+					Text("StackDetailsView.RemovingStack StackName:\(stackName)")
+						.font(.title2)
+						.fontWeight(.medium)
+						.foregroundStyle(.secondary)
+						.padding(.top)
+				}
+				.padding()
+				.frame(maxWidth: .infinity, maxHeight: .infinity)
+				.background(Material.regular, ignoresSafeAreaEdges: .all)
+			}
 		}
-		.onChange(of: navigationItem) { _, newNavigationItem in
-			viewModel.navigationItem = newNavigationItem
+	}
+
+	@ToolbarContentBuilder
+	private var toolbarContent: some ToolbarContent {
+		ToolbarItem(placement: .primaryAction) {
+			Menu {
+				if viewModel.viewState.isLoading {
+					Text("Generic.Loading")
+					Divider()
+				}
+
+				if !viewModel.isRemovingStack, let stack = viewModel.stack {
+					StackContextMenu(
+						stack: stack,
+						setStackStateAction: { setStackState(stack, started: $0) }
+					)
+				}
+			} label: {
+				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
+					.labelStyle(.automatic)
+			}
+			.labelStyle(.titleAndIcon)
 		}
-//		.id(self.id)
 	}
 }
 
-// MARK: - StackDetailsView+Actions
+// MARK: - Actions
 
 private extension StackDetailsView {
 	@discardableResult
@@ -244,22 +354,6 @@ private extension StackDetailsView {
 				errorHandler(error)
 			}
 		}
-	}
-
-	@discardableResult
-	func fetchStackFile() -> Task<Void, Never> {
-		Task {
-			do {
-				try await viewModel.fetchStackFile().value
-			} catch {
-				errorHandler(error)
-			}
-		}
-	}
-
-	func filterByStackName(_ stackName: String?) {
-		sceneDelegate.navigate(to: .containers)
-		sceneDelegate.selectedStackNameForContainersView = stackName
 	}
 
 	func setStackState(_ stack: Stack, started: Bool) {
@@ -283,16 +377,6 @@ extension StackDetailsView: Identifiable {
 		"\(Self.self).\(navigationItem.id)"
 	}
 }
-
-// MARK: - StackDetailsView+Equatable
-
-/*
-extension StackDetailsView: Equatable {
-	nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
-		lhs.navigationItem == rhs.navigationItem
-	}
-}
- */
 
 // MARK: - StackDetailsView+ViewID
 

@@ -15,9 +15,7 @@ extension Stack {
 			id: storedStack.id,
 			name: storedStack.name,
 			type: storedStack.type,
-			endpointID: storedStack.endpointID,
-			env: nil,
-			status: nil
+			endpointID: storedStack.endpointID
 		)
 	}
 }
