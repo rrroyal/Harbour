@@ -111,6 +111,26 @@ extension PortainerStore {
 		}
 	}
 
+	/// Fetches a single-shot stats snapshot for the provided container ID.
+	/// - Parameters:
+	///   - containerID: ID of the container
+	///   - endpointID: ID of the endpoint (defaults to selected endpoint)
+	/// - Returns: `ContainerStats`
+	func fetchContainerStats(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerStats {
+		logger.info("Getting stats for containerID: \"\(containerID, privacy: .public)\"...")
+		do {
+			guard let endpointID = endpointID ?? selectedEndpoint?.id else {
+				throw PortainerError.noSelectedEndpoint
+			}
+			let stats = try await portainer.fetchContainerStats(for: containerID, endpointID: endpointID)
+			logger.info("Got stats for containerID: \"\(containerID, privacy: .public)\".")
+			return stats
+		} catch {
+			logger.error("Failed to get container stats: \(error.localizedDescription, privacy: .public)")
+			throw error
+		}
+	}
+
 	/// Fetches the logs for the provided container ID.
 	/// - Parameters:
 	///   - containerID: ID of the selected container

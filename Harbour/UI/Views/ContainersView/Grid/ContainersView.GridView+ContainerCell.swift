@@ -15,6 +15,7 @@ extension ContainersView.GridView {
 	struct ContainerCell: View {
 		@EnvironmentObject private var portainerStore: PortainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 10
+		@State private var stats: ContainerStats?
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12
 		private let background = RoundedRectangle(cornerRadius: 18, style: .circular)
@@ -24,6 +25,11 @@ extension ContainersView.GridView {
 		@MainActor
 		private var isBeingRemoved: Bool {
 			portainerStore.removedContainerIDs.contains(container.id)
+		}
+
+		@MainActor
+		private var isRunning: Bool {
+			container.state == .running
 		}
 
 		@ViewBuilder @MainActor
@@ -70,11 +76,48 @@ extension ContainersView.GridView {
 			.minimumScaleFactor(minimumScaleFactor)
 		}
 
+		@ViewBuilder @MainActor
+		private var statsLabels: some View {
+			if isRunning, let stats {
+				HStack(spacing: 6) {
+					if let cpu = stats.cpuUsagePercent {
+						Label {
+							Text(cpu, format: .number.precision(.fractionLength(1)))
+								+ Text("%")
+						} icon: {
+							Image(systemName: "cpu")
+						}
+					}
+
+					if let mem = stats.memoryUsageBytes, let limit = stats.memoryLimitBytes, limit > 0 {
+						let memMiB = Double(mem) / 1_048_576
+						Label {
+							if memMiB >= 1024 {
+								Text(memMiB / 1024, format: .number.precision(.fractionLength(1)))
+									+ Text("G")
+							} else {
+								Text(memMiB, format: .number.precision(.fractionLength(0)))
+									+ Text("M")
+							}
+						} icon: {
+							Image(systemName: "memorychip")
+						}
+					}
+				}
+				.labelStyle(.titleAndIcon)
+				.font(.system(size: 9, weight: .medium))
+				.foregroundStyle(.secondary)
+				.lineLimit(1)
+				.minimumScaleFactor(0.5)
+			}
+		}
+
 		var body: some View {
 			VStack(alignment: .leading) {
 				stateHeader
 				Spacer()
 				nameAndStatusLabels
+				statsLabels
 			}
 			.padding(paddingSize)
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -94,7 +137,15 @@ extension ContainersView.GridView {
 			.animation(.default, value: container.state)
 			.animation(.default, value: container.status)
 			.animation(.default, value: isBeingRemoved)
+			.animation(.default, value: stats?.cpuUsagePercent)
 			.id(self.id)
+			.task(id: container.id) {
+				guard isRunning else {
+					stats = nil
+					return
+				}
+				stats = try? await portainerStore.fetchContainerStats(container.id)
+			}
 		}
 	}
 }
