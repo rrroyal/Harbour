@@ -105,7 +105,7 @@ extension ContainersView.GridView {
 					}
 				}
 				.labelStyle(.titleAndIcon)
-				.font(.system(size: 9, weight: .medium))
+				.font(.footnote)
 				.foregroundStyle(.secondary)
 				.lineLimit(1)
 				.minimumScaleFactor(0.5)
