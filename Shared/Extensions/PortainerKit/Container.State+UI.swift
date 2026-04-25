@@ -39,7 +39,7 @@ extension Container.State {
 
 extension Container.State? {
 	var color: Color {
-		self?.color ?? Color.gray
+		self?.color ?? Color.gray.opacity(0.3)
 	}
 }
 

@@ -29,11 +29,19 @@ extension ContainersView.GridView {
 		@ViewBuilder @MainActor
 		private var stateHeader: some View {
 			HStack {
-				Text(isBeingRemoved ? String(localized: "Generic.Removing") : (container._isStored ? Container.State?.none : container.state).title)
-					.font(.footnote)
-					.fontWeight(.medium)
-					.foregroundStyle(.tint)
-					.lineLimit(1)
+				ZStack {
+					if isBeingRemoved {
+						Text("Generic.Removing")
+					} else if container._isStored {
+						Text(Container.State?.none.title)
+					} else {
+						Text(container.state.title)
+					}
+				}
+				.font(.footnote)
+				.fontWeight(.medium)
+				.foregroundStyle(.tint)
+				.lineLimit(1)
 
 				Spacer()
 
@@ -93,6 +101,7 @@ extension ContainersView.GridView {
 			.animation(.default, value: container)
 			.animation(.default, value: container.state)
 			.animation(.default, value: container.status)
+			.animation(.default, value: container._isStored)
 			.animation(.default, value: isBeingRemoved)
 			.id(self.id)
 		}

@@ -42,27 +42,21 @@ extension ContainersView.ListView {
 		@ViewBuilder @MainActor
 		private var subheadlineLabel: some View {
 			HStack(spacing: 4) {
-				if isBeingRemoved {
-					Text("Generic.Removing")
-				} else {
-					let stateLabel = (container._isStored ? Container.State?.none : container.state).title
-
-					if let containerStatus = container.status {
-						(
-							Text(stateLabel).foregroundStyle(tintColor) +
-							Text(verbatim: " • ").foregroundStyle(.secondary)
-						) +
-						Text(containerStatus)
-							.foregroundStyle(.secondary)
+				ZStack {
+					if isBeingRemoved {
+						Text("Generic.Removing")
+					} else if let containerStatus = container.status {
+						Text(verbatim: "\(Text(container.state.title).foregroundStyle(tintColor)) • \(containerStatus)")
+					} else if container._isStored {
+						Text(Container.State?.none.title)
 					} else {
-						Text(stateLabel)
-							.foregroundStyle(.secondary)
+						Text(container.state.title)
 					}
 				}
 			}
 			.font(.subheadline)
 			.fontWeight(.medium)
-			.tint(isBeingRemoved ? tintColor : .primary)
+			.foregroundStyle(isBeingRemoved ? tintColor : .secondary)
 		}
 
 		var body: some View {
@@ -96,6 +90,7 @@ extension ContainersView.ListView {
 			.animation(.default, value: container)
 			.animation(.default, value: container.state)
 			.animation(.default, value: container.status)
+			.animation(.default, value: container._isStored)
 			.animation(.default, value: isBeingRemoved)
 			.id(self.id)
 		}

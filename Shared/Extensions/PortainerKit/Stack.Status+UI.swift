@@ -50,12 +50,12 @@ extension Stack.Status {
 		#if canImport(UIKit)
 		switch self {
 		case .active:	Color(uiColor: .systemGreen)
-		case .inactive:	Color.secondary
+		case .inactive:	Color(uiColor: .systemGray)
 		}
 		#elseif canImport(AppKit)
 		switch self {
 		case .active:	Color(nsColor: .systemGreen)
-		case .inactive:	Color.secondary
+		case .inactive:	Color(nsColor: .systemGray)
 		}
 		#endif
 	}
@@ -63,6 +63,6 @@ extension Stack.Status {
 
 extension Stack.Status? {
 	var color: Color {
-		self?.color ?? Color.primaryGray
+		self?.color ?? Color.gray.opacity(0.3)
 	}
 }
