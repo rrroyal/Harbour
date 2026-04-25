@@ -166,18 +166,24 @@ private extension StackDetailsView {
 		var body: some View {
 			if let gitConfig {
 				NormalizedSection {
-					LabeledContent("StackDetailsView.Section.GitConfig.ReferenceName") {
-						LabeledText(gitConfig.referenceName)
-							.fontDesign(.monospaced)
-							.multilineTextAlignment(.trailing)
-							.textSelection(.enabled)
+					if !gitConfig.referenceName.isReallyEmpty {
+						LabeledContent("StackDetailsView.Section.GitConfig.ReferenceName") {
+							LabeledText(gitConfig.referenceName)
+								.fontDesign(.monospaced)
+								.multilineTextAlignment(.trailing)
+								.textSelection(.enabled)
+						}
 					}
-					LabeledContent("StackDetailsView.Section.GitConfig.ConfigFilePath") {
-						LabeledText(gitConfig.configFilePath)
-							.fontDesign(.monospaced)
-							.multilineTextAlignment(.trailing)
-							.textSelection(.enabled)
+
+					if !gitConfig.configFilePath.isReallyEmpty {
+						LabeledContent("StackDetailsView.Section.GitConfig.ConfigFilePath") {
+							LabeledText(gitConfig.configFilePath)
+								.fontDesign(.monospaced)
+								.multilineTextAlignment(.trailing)
+								.textSelection(.enabled)
+						}
 					}
+
 					LabeledContent("StackDetailsView.Section.GitConfig.URL") {
 						Link(gitConfig.url.formatted(), destination: gitConfig.url)
 							.fontDesign(.monospaced)

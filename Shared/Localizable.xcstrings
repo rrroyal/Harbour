@@ -2632,6 +2632,7 @@
       }
     },
     "SettingsView.Connection.ConnectionMenu.Server.CopyToken" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
