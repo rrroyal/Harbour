@@ -46,7 +46,9 @@ extension ContainersView.ListView {
 					if isBeingRemoved {
 						Text("Generic.Removing")
 					} else if let containerStatus = container.status {
-						Text(verbatim: "\(Text(container.state.title).foregroundStyle(tintColor)) • \(containerStatus)")
+						Text(container.state.title).foregroundStyle(tintColor) +
+						Text(verbatim: " • ") +
+						Text(containerStatus)
 					} else if container._isStored {
 						Text(Container.State?.none.title)
 					} else {
