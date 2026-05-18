@@ -30,11 +30,7 @@ extension ContainerDetailsView {
 
 		var scrollViewIsRefreshing = false
 
-		var container: Container? {
-			portainerStore.containers.first {
-				$0.id == navigationItem.id || (navigationItem.persistentID != nil ? $0._persistentID == navigationItem.persistentID : false)
-			}
-		}
+		var container: Container?
 
 		var containerDetails: ContainerDetails? {
 			viewState.value
@@ -47,6 +43,8 @@ extension ContainerDetailsView {
 		init(navigationItem: ContainerDetailsView.NavigationItem) {
 			self.navigationItem = navigationItem
 			self.viewState = self.viewState.reloading
+
+			self.container = portainerStore.containers.first(withID: navigationItem.id, persistentID: navigationItem.persistentID)
 		}
 
 		@MainActor
@@ -99,110 +97,16 @@ extension ContainerDetailsView {
 		}
 
 		@discardableResult
-		// swiftlint:disable:next cyclomatic_complexity
 		func refresh() -> Task<Void, Error> {
 			fetchTask?.cancel()
 			let task = Task {
 				self.viewState = viewState.reloading
 
 				do {
-					let containerDetails = try await withThrowingTaskGroup(of: Result<ContainerDetails, Error>.self, returning: ContainerDetails.self) { group in
-						let addedTask1: Bool
-						let addedTask2: Bool
-						nonisolated(unsafe) var containerNotFoundError: Error?
+					portainerStore.refreshContainers(ids: [navigationItem.id])
+					let containerDetails = try await resolveContainerDetails(navigationItem: navigationItem)
 
-						// Resolve by `navigationItem.id`
-						addedTask1 = group.addTaskUnlessCancelled { @Sendable [weak self, navigationItem] in
-							guard let self else { throw CancellationError() }
-
-							do {
-								self.logger.debug("Started resolving by navigationItem.id: \"\(navigationItem.id)\"...")
-
-								let containerDetails = try await self.portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
-
-								guard !Task.isCancelled else { return .failure(CancellationError()) }
-
-								self.logger.notice("Resolved by navigationItem.id: \"\(navigationItem.id)\"")
-								return .success(containerDetails)
-							} catch {
-								// Store the error for user feedback
-								containerNotFoundError = error
-								self.logger.warning("Failed to resolve ContainerDetails for navigationItem.id: \"\(navigationItem.id)\": \(String(describing: error), privacy: .public)")
-								return .failure(error)
-							}
-						}
-
-						// Resolve by `navigationItem.persistentID`
-						if let persistentID = navigationItem.persistentID {
-							addedTask2 = group.addTaskUnlessCancelled { [weak self, navigationItem] in
-								guard let self else { throw CancellationError() }
-
-								do {
-									self.logger.debug("Started resolving by persistentID: \"\(persistentID)\"...")
-
-									// Wait for full refresh
-									if let containersTask = await self.portainerStore.containersTask {
-										self.logger.debug("Waiting for existing container refresh task")
-										_ = try await containersTask.value
-									} else {
-										self.logger.debug("Starting a new container refresh task...")
-										_ = try await self.portainerStore.refreshContainers().value
-									}
-
-									// Check if we still have to search
-									guard !Task.isCancelled else { return .failure(CancellationError()) }
-
-									// Try to find the container
-									guard let persistentContainer = await self.portainerStore.containers.first(where: { $0._persistentID == persistentID }) else {
-										self.logger.warning("Didn't find container for persistentID: \"\(persistentID)\"!")
-										return .failure(LoadingError.noContainerForPersistentID)
-									}
-
-									// Check if we still have to search
-									guard !Task.isCancelled else { return .failure(CancellationError()) }
-
-									// Fetch
-									let containerDetails = try await self.portainerStore.fetchContainerDetails(persistentContainer.id, endpointID: navigationItem.endpointID)
-									guard !Task.isCancelled else { return .failure(CancellationError()) }
-
-									// Return
-									self.logger.notice("Resolved by persistentID: \"\(persistentID)\" = \"\(persistentContainer.id)\"")
-									return .success(containerDetails)
-								} catch {
-									self.logger.warning("Failed to resolve ContainerDetails for persistentID: \"\(persistentID)\": \(String(describing: error), privacy: .public)")
-									return .failure(LoadingError.noContainerForPersistentID)
-								}
-							}
-						} else {
-							addedTask2 = false
-						}
-
-						if group.isCancelled || (!addedTask1 && !addedTask2) {
-							// Didn't add any task, so the group had to be cancelled
-							logger.debug("Didn't add any tasks for resolving!")
-							throw CancellationError()
-						}
-
-						for try await result in group {
-							switch result {
-							case .success(let details):
-								// If we got details, cancel the group and return them...
-								group.cancelAll()
-								return details
-							case .failure:
-								// ...otherwise, we don't care what error happened and we just want to handle it
-								break
-							}
-						}
-
-						// Provide feedback for user
-						if let containerNotFoundError {
-							throw containerNotFoundError
-						}
-
-						// By here we should've returned a value or threw, so if not, resolving _really_ failed
-						throw PortainerError.containerNotFound(navigationItem.id)
-					}
+					container = portainerStore.containers.first(withID: navigationItem.id, persistentID: navigationItem.persistentID)
 					viewState = .success(containerDetails)
 				} catch {
 					guard !error.isCancellationError else { return }
@@ -213,6 +117,121 @@ extension ContainerDetailsView {
 			self.fetchTask = task
 			return task
 		}
+	}
+}
+
+private extension ContainerDetailsView.ViewModel {
+	// swiftlint:disable:next cyclomatic_complexity
+	func resolveContainerDetails(navigationItem: ContainerDetailsView.NavigationItem) async throws -> ContainerDetails {
+		let result = try await withThrowingTaskGroup(of: ContainerDetails.self, returning: ContainerDetails.self) { group in
+			let addedTask1: Bool
+			let addedTask2: Bool
+			nonisolated(unsafe) var containerNotFoundError: Error?
+
+			// Resolve by `navigationItem.id`
+			addedTask1 = group.addTaskUnlessCancelled { @Sendable [weak self, navigationItem] in
+				guard let self else { throw CancellationError() }
+
+				do {
+					self.logger.debug("Started resolving by navigationItem.id: \"\(navigationItem.id)\"...")
+
+					let containerDetails = try await self.portainerStore.fetchContainerDetails(navigationItem.id, endpointID: navigationItem.endpointID)
+
+					try Task.checkCancellation()
+
+					self.logger.notice("Resolved by navigationItem.id: \"\(navigationItem.id)\"")
+					return containerDetails
+				} catch {
+					self.logger.warning("Failed to resolve ContainerDetails for navigationItem.id: \"\(navigationItem.id)\": \(String(describing: error), privacy: .public)")
+
+					// Store the error for user feedback
+					if !(error is CancellationError) {
+						containerNotFoundError = error
+					}
+
+					throw error
+				}
+			}
+
+			// Resolve by `navigationItem.persistentID`
+			if let persistentID = navigationItem.persistentID {
+				addedTask2 = group.addTaskUnlessCancelled { [weak self, navigationItem] in
+					guard let self else { throw CancellationError() }
+
+					do {
+						self.logger.debug("Started resolving by persistentID: \"\(persistentID)\"...")
+
+						// Wait for full refresh
+						if let containersTask = await self.portainerStore.containersTask {
+							self.logger.debug("Waiting for existing container refresh task")
+							_ = try await containersTask.value
+						} else {
+							self.logger.debug("Starting a new container refresh task...")
+							_ = try await self.portainerStore.refreshContainers().value
+						}
+
+						// Check if we still have to search
+						try Task.checkCancellation()
+
+						// Try to find the container
+						guard let persistentContainer = await self.portainerStore.containers.first(where: { $0._persistentID == persistentID }) else {
+							self.logger.warning("Didn't find container for persistentID: \"\(persistentID)\"!")
+							throw LoadingError.noContainerForPersistentID
+						}
+
+						// Check if we still have to search
+						try Task.checkCancellation()
+
+						// Fetch
+						let containerDetails = try await self.portainerStore.fetchContainerDetails(persistentContainer.id, endpointID: navigationItem.endpointID)
+						try Task.checkCancellation()
+
+						// Return
+						self.logger.notice("Resolved by persistentID: \"\(persistentID)\" = \"\(persistentContainer.id)\"")
+						return containerDetails
+					} catch {
+						self.logger.warning("Failed to resolve ContainerDetails for persistentID: \"\(persistentID)\": \(String(describing: error), privacy: .public)")
+
+						// Store the error for user feedback
+						if !(error is CancellationError) {
+							containerNotFoundError = error
+						}
+
+						throw error
+					}
+				}
+			} else {
+				addedTask2 = false
+			}
+
+			if group.isCancelled || (!addedTask1 && !addedTask2) {
+				// Didn't add any task, so the group had to be cancelled
+				logger.debug("Didn't add any tasks for resolving!")
+				throw CancellationError()
+			}
+
+			while let result = await group.nextResult() {
+				switch result {
+				case .success(let details):
+					// If we got details, cancel the group and return them...
+					group.cancelAll()
+					return details
+				case .failure:
+					// ...otherwise, we don't care what error happened and we just want to handle it
+					break
+				}
+			}
+
+			// Provide feedback for user
+			if let containerNotFoundError {
+				throw containerNotFoundError
+			}
+
+			// By here we should've returned a value or threw, so if not, resolving _really_ failed
+			throw PortainerError.containerNotFound(navigationItem.id)
+		}
+
+		return result
 	}
 }
 

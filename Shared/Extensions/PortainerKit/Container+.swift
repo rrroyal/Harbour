@@ -92,4 +92,15 @@ extension [Container] {
 			(includingStacks ? ($0.stack?.localizedCaseInsensitiveContains(query) ?? false) : false)
 		}
 	}
+
+	/// Returns first element that matches the provided ID.
+	/// - Parameters:
+	///   - id: ID to match.
+	///   - persistentID: Optional persistent ID.
+	/// - Returns: First ``Container`` that matches.
+	func first(withID id: Container.ID, persistentID: String? = nil) -> Container? {
+		first {
+			$0.id == id || (persistentID != nil ? $0._persistentID == persistentID : false)
+		}
+	}
 }
