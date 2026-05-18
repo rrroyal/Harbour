@@ -18,7 +18,7 @@ extension ContainerAction {
 		case .paused:
 			[.unpause, .stop, .restart, .kill]
 		case .restarting:
-			[.pause, .stop, .kill]
+			[.pause, .stop, .restart, .kill]
 		case .removing:
 			[.kill]
 		case .exited:
