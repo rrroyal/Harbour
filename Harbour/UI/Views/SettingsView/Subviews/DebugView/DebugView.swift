@@ -22,14 +22,14 @@ struct DebugView: View {
 	nonisolated private static let logger = Logger(.debug)
 
 	var body: some View {
-		Form {
+		List {
 			PortainerInfoSection()
 			BackgroundSection()
 			PersistenceSection()
 			WidgetsSection()
 			OtherSection()
 		}
-		.formStyle(.grouped)
+		.listStyle(.insetGrouped)
 		.navigationTitle("DebugView.Title")
 	}
 }
@@ -90,17 +90,21 @@ private extension DebugView {
 						}
 
 						if portainerSystemVersion.updateAvailable == true {
-							if let url = URL(string: "https://docs.portainer.io/start/upgrade") {
-								Link(destination: url) {
-									Label("DebugView.PortainerInfoSection.Version.UpdateAvailable", systemImage: SFSymbol.external)
+							Group {
+								if let url = URL(string: "https://docs.portainer.io/start/upgrade") {
+									Link(destination: url) {
+										Label("DebugView.PortainerInfoSection.Version.UpdateAvailable", systemImage: SFSymbol.external)
+									}
+								} else {
+									Text("DebugView.PortainerInfoSection.Version.UpdateAvailable")
 								}
-							} else {
-								Text("DebugView.PortainerInfoSection.Version.UpdateAvailable")
 							}
 						}
 					}
 				}
 			}
+			.animation(.default, value: portainerSystemStatus)
+			.animation(.default, value: portainerSystemVersion)
 			.task {
 				async let systemStatus = try? portainerStore.fetchSystemStatus()
 				async let systemVersion = try? portainerStore.fetchSystemVersion()
@@ -108,8 +112,6 @@ private extension DebugView {
 				self.portainerSystemStatus = await systemStatus
 				self.portainerSystemVersion = await systemVersion
 			}
-			.animation(.default, value: portainerSystemStatus)
-			.animation(.default, value: portainerSystemVersion)
 		}
 	}
 }
