@@ -67,7 +67,7 @@ extension SetupView {
 						throw URLError(.badURL)
 					}
 
-					let portainer = PortainerClient(serverURL: url, token: self.token)
+					let portainer = PortainerClient(serverURL: url, token: self.token, urlSessionConfiguration: .app)
 					let endpoints = try await portainer.fetchEndpoints()
 					logger.info("Got \(endpoints.count, privacy: .public) endpoint(s) from the new server, switching...")
 

@@ -17,6 +17,8 @@ import UniformTypeIdentifiers
 extension CreateStackView {
 	@Observable @MainActor
 	final class ViewModel {
+		private let portainerStore: PortainerStore = .shared
+
 		private(set) var createStackTask: Task<Stack, Swift.Error>?
 		private(set) var createStackError: Swift.Error?
 
@@ -76,7 +78,7 @@ extension CreateStackView {
 							pullImage: pullImage,
 							stackFileContent: stackFileContent
 						)
-						let updatedStack = try await PortainerStore.shared.updateStack(stackID: stackID, settings: stackSettings)
+						let updatedStack = try await portainerStore.updateStack(stackID: stackID, settings: stackSettings)
 						return updatedStack
 					} else {
 						let stackSettings = StackDeployment.DeploymentSettings.StandaloneString(
@@ -85,7 +87,7 @@ extension CreateStackView {
 							name: stackName,
 							stackFileContent: stackFileContent
 						)
-						let createdStack = try await PortainerStore.shared.createStack(stackSettings: stackSettings)
+						let createdStack = try await portainerStore.createStack(stackSettings: stackSettings)
 						return createdStack
 					}
 				} catch {
@@ -110,7 +112,7 @@ extension CreateStackView {
 				self.fetchStackFileError = nil
 
 				do {
-					let stackFileContent = try await PortainerStore.shared.fetchStackFile(stackID: stackID)
+					let stackFileContent = try await portainerStore.fetchStackFile(stackID: stackID)
 					self.stackFileContent = stackFileContent
 				} catch {
 					self.fetchStackFileError = error
