@@ -38,245 +38,336 @@ struct ContainerDetailsView: View {
 		navigationItem.id
 	}
 
-	@ViewBuilder
-	private var statusSection: some View {
-		let state = (viewModel.container?._isStored ?? true) ? Container.State?.none : (viewModel.container?.state ?? viewModel.containerDetails?.state.state ?? Container.State?.none)
-		let title = viewModel.container?.status ?? state.title
-
-		NormalizedSection {
-			if state == .none && !(viewModel.fetchTask?.isCancelled ?? true) {
-				Label {
-					Text("Generic.Loading")
-				} icon: {
-					ProgressView()
-						#if os(macOS)
-						.controlSize(.small)
-						#endif
-				}
-				.foregroundStyle(.secondary)
-			} else {
-				LabeledTextWithIcon(title, systemImage: state.icon)
-					.foregroundStyle(state.color)
-			}
-		} header: {
-			Text("ContainerDetailsView.Section.State")
-		}
-		.animation(.default, value: state)
-		.animation(.default, value: viewModel.fetchTask?.isCancelled)
-	}
-
-	@ViewBuilder
-	private var healthSection: some View {
-		if let health = viewModel.containerDetails?.state.health {
-			let lastHealthCheck = health.log?.max { $0.start.compare($1.start) == .orderedAscending }
-
-			NormalizedSection {
-				if let healthStatus = health.status {
-					LabeledContent {
-						Text(healthStatus)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					} label: {
-						Text("ContainerDetailsView.Section.Health.Status")
-					}
-				}
-
-				if health.failingStreak > 0 {
-					LabeledContent("ContainerDetailsView.Section.Health.FailingStreak") {
-						Text(health.failingStreak.description)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-
-				if let lastHealthCheck, !lastHealthCheck.output.isReallyEmpty {
-					Text(lastHealthCheck.output.trimmingCharacters(in: .whitespacesAndNewlines))
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-				}
-			} header: {
-				Text("ContainerDetailsView.Section.Health")
-			} footer: {
-				if let lastHealthCheckDate = lastHealthCheck?.end {
-					Text(lastHealthCheckDate, format: .dateTime)
-				}
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var nameSection: some View {
-		if let name = viewModel.container?.displayName ?? viewModel.containerDetails?.displayName ?? navigationItem.displayName {
-			NormalizedSection {
-				LabeledText(name)
-					.fontDesign(.monospaced)
-					.textSelection(.enabled)
-			} header: {
-				Text("ContainerDetailsView.Section.Name")
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var idSection: some View {
-		if let id = viewModel.container?.id ?? viewModel.containerDetails?.id {
-			NormalizedSection {
-				LabeledText(id)
-					.fontDesign(.monospaced)
-					.textSelection(.enabled)
-			} header: {
-				Text("ContainerDetailsView.Section.ID")
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var createdAtSection: some View {
-		if let createdAt = viewModel.containerDetails?.created ?? viewModel.container?.created {
-			NormalizedSection {
-				LabeledText(createdAt.formatted(.dateTime))
-			} header: {
-				Text("ContainerDetailsView.Section.CreatedAt")
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var finishedAtSection: some View {
-		if let finishedAt = viewModel.containerDetails?.state.finishedAt, !(viewModel.containerDetails?.state.running ?? false) {
-			NormalizedSection {
-				LabeledText(finishedAt.formatted(.dateTime))
-			} header: {
-				Text("ContainerDetailsView.Section.FinishedAt")
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var imageSection: some View {
-		if viewModel.container?.image != nil || viewModel.container?.imageID != nil {
-			NormalizedSection {
-				Group {
-					if let image = viewModel.container?.image {
-						LabeledText(image)
-							.textSelection(.enabled)
-					}
-
-					if let imageID = viewModel.container?.imageID {
-						LabeledText(imageID)
-							.textSelection(.enabled)
-					}
-				}
-				.fontDesign(.monospaced)
-			} header: {
-				Text("ContainerDetailsView.Section.Image")
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var entrypointSection: some View {
-		let entrypoint = viewModel.containerDetails?.config?.entrypoint?.joined(separator: " ")
-		let command = viewModel.containerDetails?.config?.cmd?.joined(separator: " ")
-		if entrypoint != nil || command != nil {
-			NormalizedSection {
-				if let entrypoint {
-					LabeledText(entrypoint)
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-				}
-
-				if let command {
-					LabeledText(command)
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-				}
-			} header: {
-				Text("ContainerDetailsView.Section.Entrypoint")
-			}
-		}
-	}
-
-	@ViewBuilder
-	private var stackSection: some View {
-		if let stackName = viewModel.container?.stack {
-			let storedStack = portainerStore.stacks.first { $0.name == stackName }
-
-			NormalizedSection {
-				LabeledContent("ContainerDetailsView.Stack.Name") {
-					LabeledText(stackName)
-						.fontDesign(.monospaced)
-						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
-				}
-
-				if let storedStackID = storedStack?.id {
-					LabeledContent("ContainerDetailsView.Stack.ID") {
-						LabeledText(storedStackID.description)
-							.textSelection(.enabled)
-							.multilineTextAlignment(.trailing)
-					}
-				}
-
-				Button {
-					if let storedStackID = storedStack?.id {
-						let navigationItem = StackDetailsView.NavigationItem(stackID: storedStackID.description, stackName: stackName)
-						sceneDelegate.navigate(to: .stacks, with: navigationItem)
-					} else {
-						sceneDelegate.navigate(to: .stacks)
-						sceneDelegate.selectedStackNameForStacksView = stackName
-					}
-				} label: {
-					Label("ContainerDetailsView.Stack.ShowStack", systemImage: SFSymbol.stack)
-						#if os(macOS)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
-						#endif
-				}
-				#if os(macOS)
-				.buttonStyle(.plain)
-				.foregroundStyle(.accent)
-				#endif
-			} header: {
-				Text("ContainerDetailsView.Stack")
-			}
-		}
-	}
-
 	// MARK: body
 
 	var body: some View {
-		Form {
-			Group {
-				statusSection
-				healthSection
-				nameSection
-				idSection
-				createdAtSection
-				finishedAtSection
-				imageSection
-				entrypointSection
+		let container = viewModel.container
+		let containerDetails = viewModel.containerDetails
+
+		List {
+			StatusSection(
+				container: container,
+				containerDetails: containerDetails,
+				isFetching: !(viewModel.fetchTask?.isCancelled ?? true)
+			)
+
+			HealthSection(
+				health: containerDetails?.state.health
+			)
+
+			GeneralSection(
+				container: container,
+				containerDetails: containerDetails
+			)
+
+			EntrypointSection(
+				entrypoint: containerDetails?.config?.entrypoint?.joined(separator: " "),
+				command: containerDetails?.config?.cmd?.joined(separator: " ")
+			)
+
+			StackSection(
+				stackName: container?.stack,
+				storedStack: portainerStore.stacks.first { $0.name == viewModel.container?.stack }
+			)
+
+			NavigationLinksSection(
+				container: container,
+				containerDetails: containerDetails
+			)
+		}
+		.listStyle(.insetGrouped)
+		.scrollContentBackground(.hidden)
+		#if os(iOS)
+		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+		#endif
+		.toolbar {
+			toolbarContent
+		}
+		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
+			await refresh().value
+		}
+		.task(id: navigationItem.id) {
+			if viewModel.navigationItem != navigationItem {
+				viewModel.viewState = .loading
+				viewModel.navigationItem = navigationItem
 			}
 
-			stackSection
+			await refresh().value
+		}
+		.animation(.default, value: container)
+		.animation(.default, value: containerDetails)
+		.animation(.default, value: container?.state ?? containerDetails?.state.state)
+		.animation(.default, value: viewModel.isStatusProgressViewVisible)
+		.animation(.default, value: viewModel.fetchTask?.isCancelled)
+		.animation(nil, value: navigationItem)
+		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
+			viewModel.createUserActivity(userActivity, for: container)
+		}
+		.navigationTitle(navigationTitle)
+		.navigationDestination(for: Subdestination.self) { subdestination in
+			switch subdestination {
+			case .labels:
+				LabelsDetailsView(labels: containerDetails?.config?.labels)
+			case .environment:
+				EnvironmentDetailsView(environment: containerDetails?.config?.env)
+			case .network:
+				NetworkDetailsView(
+					ports: container?.ports,
+					detailNetworkSettings: containerDetails?.networkSettings,
+					exposedPorts: containerDetails?.config?.exposedPorts,
+					portBindings: containerDetails?.hostConfig.portBindings
+				)
+			case .mounts:
+				MountsDetailsView(mounts: containerDetails?.mounts)
+			case .devices:
+				DevicesDetailsView(devices: containerDetails?.hostConfig.devices)
+			case .logs:
+				ContainerLogsView(containerID: navigationItem.id)
+			}
+		}
+	}
+}
 
+// MARK: - Subviews
+
+private extension ContainerDetailsView {
+	struct StatusSection: View {
+		let container: Container?
+		let containerDetails: ContainerDetails?
+		let isFetching: Bool
+
+		var body: some View {
+			let state = (container?._isStored ?? true) ? Container.State?.none : (container?.state ?? containerDetails?.state.state ?? Container.State?.none)
+			let title = container?.status ?? state.title
+
+			NormalizedSection {
+				if state == .none && isFetching {
+					Label {
+						Text("Generic.Loading")
+					} icon: {
+						ProgressView()
+							#if os(macOS)
+							.controlSize(.small)
+							#endif
+					}
+					.foregroundStyle(.secondary)
+				} else {
+					LabeledTextWithIcon(title, systemImage: state.icon)
+						.foregroundStyle(state.color)
+				}
+			} header: {
+				Text("ContainerDetailsView.Section.State")
+			}
+			.id(container?.state)
+			.animation(.default, value: container?.status)
+			.animation(.default, value: container?.state)
+			.animation(.default, value: containerDetails?.state.state)
+			.animation(.default, value: isFetching)
+		}
+	}
+
+	struct HealthSection: View {
+		let health: ContainerDetails.State.Health?
+
+		var body: some View {
+			if let health {
+				let lastHealthCheck = health.log?.max { $0.start.compare($1.start) == .orderedAscending }
+
+				NormalizedSection {
+					if let healthStatus = health.status {
+						LabeledContent {
+							Text(healthStatus)
+								.textSelection(.enabled)
+								.multilineTextAlignment(.trailing)
+						} label: {
+							Text("ContainerDetailsView.Section.Health.Status")
+						}
+					}
+
+					if health.failingStreak > 0 {
+						LabeledContent("ContainerDetailsView.Section.Health.FailingStreak") {
+							Text(health.failingStreak.description)
+								.textSelection(.enabled)
+								.multilineTextAlignment(.trailing)
+						}
+					}
+
+					if let lastHealthCheck, !lastHealthCheck.output.isReallyEmpty {
+						Text(lastHealthCheck.output.trimmingCharacters(in: .whitespacesAndNewlines))
+							.fontDesign(.monospaced)
+							.textSelection(.enabled)
+					}
+				} header: {
+					Text("ContainerDetailsView.Section.Health")
+				} footer: {
+					if let lastHealthCheckDate = lastHealthCheck?.end {
+						Text(lastHealthCheckDate, format: .dateTime)
+					}
+				}
+			}
+		}
+	}
+
+	struct GeneralSection: View {
+		let container: Container?
+		let containerDetails: ContainerDetails?
+
+		var body: some View {
+			NormalizedSection {
+				LabeledContent("ContainerDetailsView.Section.General.Name") {
+					LabeledText(container?.displayName)
+						.fontDesign(.monospaced)
+						.multilineTextAlignment(.trailing)
+						.textSelection(.enabled)
+				}
+
+				LabeledContent("ContainerDetailsView.Section.General.ID") {
+					LabeledText(container?.id)
+						.fontDesign(.monospaced)
+						.multilineTextAlignment(.leading)
+						.textSelection(.enabled)
+						.frame(maxWidth: .infinity, alignment: .leading)
+				}
+				.labeledContentStyle(.twoLine)
+
+				if let createdAt = container?.created {
+					LabeledContent("ContainerDetailsView.Section.General.CreatedAt") {
+						LabeledText(createdAt.formatted(.dateTime))
+							.multilineTextAlignment(.trailing)
+					}
+				}
+
+				if let finishedAt = containerDetails?.state.finishedAt, !(containerDetails?.state.running ?? false) {
+					LabeledContent("ContainerDetailsView.Section.General.FinishedAt") {
+						LabeledText(finishedAt.formatted(.dateTime))
+							.multilineTextAlignment(.trailing)
+					}
+				}
+
+				if let image = container?.image ?? containerDetails?.image {
+					LabeledContent("ContainerDetailsView.Section.General.Image") {
+						LabeledText(image)
+							.fontDesign(.monospaced)
+							.multilineTextAlignment(.trailing)
+							.textSelection(.enabled)
+					}
+					.contextMenu {
+						CopyButton(content: image)
+
+						if let imageID = container?.imageID {
+							Divider()
+
+							CopyButton(content: imageID) {
+								Label("ContainerDetailsView.Section.General.Image.CopyImageID", systemImage: SFSymbol.copy)
+
+								Text(imageID)
+									.font(.caption)
+									.foregroundStyle(.secondary)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	struct EntrypointSection: View {
+		let entrypoint: String?
+		let command: String?
+
+		var body: some View {
+			if entrypoint != nil || command != nil {
+				NormalizedSection {
+					if let entrypoint {
+						LabeledText(entrypoint)
+							.fontDesign(.monospaced)
+							.textSelection(.enabled)
+					}
+
+					if let command {
+						LabeledText(command)
+							.fontDesign(.monospaced)
+							.textSelection(.enabled)
+					}
+				} header: {
+					Text("ContainerDetailsView.Section.Entrypoint")
+				}
+			}
+		}
+	}
+
+	struct StackSection: View {
+		@Environment(SceneDelegate.self) private var sceneDelegate
+
+		let stackName: String?
+		let storedStack: Stack?
+
+		var body: some View {
+			if let stackName {
+				NormalizedSection {
+					LabeledContent("ContainerDetailsView.Section.Stack.Name") {
+						LabeledText(stackName)
+							.fontDesign(.monospaced)
+							.textSelection(.enabled)
+							.multilineTextAlignment(.trailing)
+					}
+
+					if let storedStackID = storedStack?.id {
+						LabeledContent("ContainerDetailsView.Section.Stack.ID") {
+							LabeledText(storedStackID.description)
+								.textSelection(.enabled)
+								.multilineTextAlignment(.trailing)
+						}
+					}
+
+					Button {
+						if let storedStackID = storedStack?.id {
+							let navigationItem = StackDetailsView.NavigationItem(stackID: storedStackID.description, stackName: stackName)
+							sceneDelegate.navigate(to: .stacks, with: navigationItem)
+						} else {
+							sceneDelegate.navigate(to: .stacks)
+							sceneDelegate.selectedStackNameForStacksView = stackName
+						}
+					} label: {
+						Label("ContainerDetailsView.Section.Stack.ShowStack", systemImage: SFSymbol.stack)
+							#if os(macOS)
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.contentShape(Rectangle())
+							#endif
+					}
+					#if os(macOS)
+					.buttonStyle(.plain)
+					.foregroundStyle(.accent)
+					#endif
+				} header: {
+					Text("ContainerDetailsView.Section.Stack")
+				}
+			}
+		}
+	}
+
+	struct NavigationLinksSection: View {
+		let container: Container?
+		let containerDetails: ContainerDetails?
+
+		var body: some View {
 			NormalizedSection {
 				NavigationLink(value: Subdestination.environment) {
 					Label("ContainerDetailsView.Section.Environment", systemImage: SFSymbol.environment)
 				}
-				.disabled(viewModel.containerDetails?.config?.env == nil)
+				.disabled(containerDetails?.config?.env == nil)
 
 				NavigationLink(value: Subdestination.labels) {
 					Label("ContainerDetailsView.Section.Labels", systemImage: "tag")
 				}
-				.disabled(viewModel.containerDetails?.config?.labels == nil)
+				.disabled(containerDetails?.config?.labels == nil)
 
 				NavigationLink(value: Subdestination.mounts) {
 					Label("ContainerDetailsView.Section.Mounts", systemImage: "folder")
 				}
-				.disabled(viewModel.containerDetails?.mounts == nil)
+				.disabled(containerDetails?.mounts == nil)
 
-				if !(viewModel.containerDetails?.hostConfig.devices?.isEmpty ?? true) {
+				if !(containerDetails?.hostConfig.devices?.isEmpty ?? true) {
 					NavigationLink(value: Subdestination.devices) {
 						Label("ContainerDetailsView.Section.Devices", systemImage: "externaldrive")
 					}
@@ -286,7 +377,7 @@ struct ContainerDetailsView: View {
 					Label("ContainerDetailsView.Section.Network", systemImage: SFSymbol.network)
 				}
 				.disabled(
-					(viewModel.container?.ports?.isEmpty ?? true) && (viewModel.containerDetails == nil)
+					(container?.ports?.isEmpty ?? true) && (containerDetails == nil)
 				)
 
 				NavigationLink(value: Subdestination.logs) {
@@ -294,91 +385,52 @@ struct ContainerDetailsView: View {
 				}
 			}
 		}
-		.formStyle(.grouped)
-		.scrollContentBackground(.hidden)
-		#if os(iOS)
-		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
-		#endif
-		.toolbar {
-			ToolbarItem(placement: .primaryAction) {
-				Menu {
-					if viewModel.viewState.isLoading {
-						Text("Generic.Loading")
-						Divider()
-					}
+	}
 
-					if let container = viewModel.container {
-						ContainerContextMenu(
-							container: container,
-							onContainerAction: {
-								viewModel.refresh()
-							}
-						)
-					}
-				} label: {
-					Label("Generic.More", systemImage: SFSymbol._moreToolbar)
-						.labelStyle(.automatic)
+	@ToolbarContentBuilder
+	var toolbarContent: some ToolbarContent {
+		ToolbarItem(placement: .primaryAction) {
+			Menu {
+				if viewModel.viewState.isLoading {
+					Text("Generic.Loading")
+					Divider()
 				}
-				.labelStyle(.titleAndIcon)
-			}
 
-//			ToolbarItem(placement: .status) {
-//				DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
-//					ProgressView()
-//				}
+				if let container = viewModel.container {
+					ContainerContextMenu(
+						container: container,
+						onContainerAction: {
+							viewModel.refresh()
+						}
+					)
+				}
+			} label: {
+				Label("Generic.More", systemImage: SFSymbol._moreToolbar)
+					.labelStyle(.automatic)
+			}
+			.labelStyle(.titleAndIcon)
+		}
+
+//		ToolbarItem(placement: .status) {
+//			DelayedView(isVisible: viewModel.isStatusProgressViewVisible) {
+//				ProgressView()
 //			}
-		}
-		.refreshable(binding: $viewModel.scrollViewIsRefreshing) {
-			do {
-				try await viewModel.refresh().value
-			} catch {
-				errorHandler(error)
-			}
-		}
-		.task(id: navigationItem.id) {
-			if viewModel.navigationItem != navigationItem {
-				viewModel.viewState = .loading
-				viewModel.navigationItem = navigationItem
-			}
+//		}
+	}
+}
 
+// MARK: - Actions
+
+private extension ContainerDetailsView {
+	@discardableResult
+	func refresh() -> Task<Void, Never> {
+		Task {
 			do {
 				try await viewModel.refresh().value
 			} catch {
 				errorHandler(error)
 			}
 		}
-		.animation(.default, value: viewModel.container)
-		.animation(.default, value: viewModel.containerDetails)
-		.animation(.default, value: viewModel.container?.state ?? viewModel.containerDetails?.state.state)
-		.animation(.default, value: viewModel.isStatusProgressViewVisible)
-		.animation(.default, value: viewModel.fetchTask?.isCancelled)
-		.animation(nil, value: navigationItem)
-		.userActivity(HarbourUserActivityIdentifier.containerDetails, isActive: sceneDelegate.activeTab == .containers) { userActivity in
-			viewModel.createUserActivity(userActivity, for: viewModel.container)
-		}
-		.navigationTitle(navigationTitle)
-		.navigationDestination(for: Subdestination.self) { subdestination in
-			switch subdestination {
-			case .labels:
-				LabelsDetailsView(labels: viewModel.containerDetails?.config?.labels)
-			case .environment:
-				EnvironmentDetailsView(environment: viewModel.containerDetails?.config?.env)
-			case .network:
-				NetworkDetailsView(
-					ports: viewModel.container?.ports,
-					detailNetworkSettings: viewModel.containerDetails?.networkSettings,
-					exposedPorts: viewModel.containerDetails?.config?.exposedPorts,
-					portBindings: viewModel.containerDetails?.hostConfig.portBindings
-				)
-			case .mounts:
-				MountsDetailsView(mounts: viewModel.containerDetails?.mounts)
-			case .devices:
-				DevicesDetailsView(devices: viewModel.containerDetails?.hostConfig.devices)
-			case .logs:
-				ContainerLogsView(containerID: navigationItem.id)
-			}
-		}
-		.id(self.id)
 	}
 }
 
