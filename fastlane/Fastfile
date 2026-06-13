@@ -10,6 +10,7 @@ platform :ios do
 	lane :lint do
 		swiftlint(
 			mode: :lint,
+			config_file: ".swiftlint-full.yml",
 			# output_file: "swiftlint.result.json",
 			raise_if_swiftlint_error: true,
 			ignore_exit_status: false

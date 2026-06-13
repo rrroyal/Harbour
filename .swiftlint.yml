@@ -1,8 +1,3 @@
-analyzer_rules:
-  - typesafe_array_init
-  - unused_declaration
-  - unused_import
-
 opt_in_rules:
   # - accessibility_label_for_image # TODO: enable later
   # - accessibility_trait_for_button # TODO: enable later

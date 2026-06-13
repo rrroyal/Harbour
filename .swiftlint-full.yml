@@ -1,0 +1,6 @@
+parent_config: .swiftlint.yml
+
+analyzer_rules:
+  - typesafe_array_init
+  - unused_declaration
+  - unused_import
