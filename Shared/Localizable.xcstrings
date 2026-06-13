@@ -2661,6 +2661,16 @@
         }
       }
     },
+    "SettingsView.Connection.ConnectionMenu.Server.CopyToken" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copy Token"
+          }
+        }
+      }
+    },
     "SettingsView.Connection.ConnectionMenu.Server.InUse" : {
       "localizations" : {
         "en" : {

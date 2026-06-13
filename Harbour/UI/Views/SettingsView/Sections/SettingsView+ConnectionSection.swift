@@ -134,14 +134,11 @@ private extension SettingsView.ConnectionSection {
 				}
 				.disabled(isActive)
 
-				#if DEBUG
-				var token: String? {
-					try? Keychain.shared.getString(for: url)
-				}
-				CopyButton("SettingsView.Connection.ConnectionMenu.Server.CopyToken", content: token)
-				#endif
-
 				Divider()
+
+				if let token: String? = try? Keychain.shared.getString(for: url) {
+					CopyButton("SettingsView.Connection.ConnectionMenu.Server.CopyToken", content: token)
+				}
 
 				Button(role: .destructive) {
 					Haptics.generateIfEnabled(.warning)
@@ -155,7 +152,6 @@ private extension SettingsView.ConnectionSection {
 				Label(formattedURL(url), systemImage: SFSymbol.checkmark)
 					.labelStyle(.iconOptional(showIcon: viewModel.activeURL == url))
 			}
-			.menuOrder(.fixed)
 		}
 	}
 }

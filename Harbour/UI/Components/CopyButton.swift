@@ -44,7 +44,7 @@ struct CopyButton<LabelContent: View>: View {
 
 extension CopyButton where LabelContent == Label<Text, Image> {
 	init(
-		_ title: LocalizedStringKey = "Generic.Copy",
+		_ title: LocalizedStringResource = "Generic.Copy",
 		icon: String = SFSymbol.copy,
 		content: String?
 	) {
