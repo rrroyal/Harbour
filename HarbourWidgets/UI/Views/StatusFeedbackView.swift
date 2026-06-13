@@ -18,13 +18,9 @@ struct StatusFeedbackView: View {
 
 	private var includePadding: Bool {
 		switch widgetFamily {
-		case .accessoryCircular, .accessoryInline:
+		case .accessoryCircular, .accessoryInline, .accessoryRectangular:
 			false
-		case .accessoryRectangular:
-			false
-		case .systemExtraLarge, .systemLarge, .systemMedium, .systemSmall:
-			true
-		@unknown default:
+		default:
 			true
 		}
 	}
