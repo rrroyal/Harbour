@@ -21,7 +21,8 @@ extension ContainersView {
 		let containers: [Container]
 
 		var body: some View {
-			List {
+			@Bindable var sceneDelegate = sceneDelegate
+			List(selection: $sceneDelegate.selectedContainerNavigationItem) {
 				ForEach(containers) { container in
 					ContainersView.ContainerNavigationCell(container: container) {
 						ContainerCell(container: container)

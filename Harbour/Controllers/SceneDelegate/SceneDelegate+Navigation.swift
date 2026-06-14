@@ -28,6 +28,7 @@ extension SceneDelegate: DeeplinkHandlable {
 		case .containers:
 			if removePreviousItems {
 				navigationState.containers.removeLast(navigationState.containers.count)
+				selectedContainerNavigationItem = nil
 			}
 
 			for navigationItem in repeat each navigationItems {
@@ -36,6 +37,7 @@ extension SceneDelegate: DeeplinkHandlable {
 		case .stacks:
 			if removePreviousItems {
 				navigationState.stacks.removeLast(navigationState.stacks.count)
+				selectedStackNavigationItem = nil
 			}
 
 			for navigationItem in repeat each navigationItems {

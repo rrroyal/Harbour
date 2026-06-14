@@ -75,6 +75,11 @@ final class SceneDelegate: NSObject {
 
 	var selectedStackNameForContainersView: String?
 	var selectedStackNameForStacksView: String?
+
+	// MARK: Selection
+
+	var selectedContainerNavigationItem: ContainerDetailsView.NavigationItem?
+	var selectedStackNavigationItem: StackDetailsView.NavigationItem?
 }
 
 // MARK: - SceneDelegate+Configuration

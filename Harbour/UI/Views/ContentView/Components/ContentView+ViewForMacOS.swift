@@ -98,14 +98,8 @@ private extension ContentView.ViewForMacOS {
 				switch sceneDelegate.activeTab {
 				case .containers:
 					ContainersView(portainerStore: portainerStore, preferences: preferences)
-						.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-							ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
-						}
 				case .stacks:
 					StacksView(portainerStore: portainerStore, preferences: preferences)
-						.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-							StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
-						}
 				}
 			}
 		}
@@ -117,6 +111,8 @@ private extension ContentView.ViewForMacOS {
 private extension ContentView.ViewForMacOS {
 	struct DetailContent: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
+		@Environment(PortainerStore.self) private var portainerStore
+		@EnvironmentObject private var preferences: Preferences
 
 		var body: some View {
 			@Bindable var sceneDelegate = sceneDelegate
@@ -124,13 +120,37 @@ private extension ContentView.ViewForMacOS {
 			switch sceneDelegate.activeTab {
 			case .containers:
 				NavigationStack(path: $sceneDelegate.navigationState.containers) {
-					Text("ContainersView.NoContainerSelectedPlaceholder")
-						.foregroundStyle(.tertiary)
+					if let selectedItem = sceneDelegate.selectedContainerNavigationItem {
+						ContainerDetailsView(navigationItem: selectedItem, portainerStore: portainerStore)
+					} else {
+						Text("ContainersView.NoContainerSelectedPlaceholder")
+							.foregroundStyle(.tertiary)
+					}
+				}
+				.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
+					ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
+				}
+				.onChange(of: sceneDelegate.selectedContainerNavigationItem) { _, new in
+					if new != nil {
+						sceneDelegate.navigationState.containers = NavigationPath()
+					}
 				}
 			case .stacks:
 				NavigationStack(path: $sceneDelegate.navigationState.stacks) {
-					Text("StacksView.NoStackSelectedPlaceholder")
-						.foregroundStyle(.tertiary)
+					if let selectedItem = sceneDelegate.selectedStackNavigationItem {
+						StackDetailsView(navigationItem: selectedItem, portainerStore: portainerStore)
+					} else {
+						Text("StacksView.NoStackSelectedPlaceholder")
+							.foregroundStyle(.tertiary)
+					}
+				}
+				.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
+					StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
+				}
+				.onChange(of: sceneDelegate.selectedStackNavigationItem) { _, new in
+					if new != nil {
+						sceneDelegate.navigationState.stacks = NavigationPath()
+					}
 				}
 			}
 		}

@@ -21,7 +21,8 @@ extension StacksView {
 		var removeStackAction: (Stack) -> Void
 
 		var body: some View {
-			List {
+			@Bindable var sceneDelegate = sceneDelegate
+			List(selection: $sceneDelegate.selectedStackNavigationItem) {
 				ForEach(stacks) { stackItem in
 					let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
 
