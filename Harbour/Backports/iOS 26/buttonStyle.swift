@@ -21,16 +21,20 @@ extension View {
 }
 
 enum _ButtonStyle {
+	@available(anyAppleOS, obsoleted: 26.0, message: "Use the function directly")
+	@inline(always)
 	static var glass: (some PrimitiveButtonStyle)? {
-		if #available(iOS 26.0, macOS 26.0, *) {
+		if #available(anyAppleOS 26.0, *) {
 			GlassButtonStyle()
 		} else {
 			nil
 		}
 	}
 
+	@available(anyAppleOS, obsoleted: 26.0, message: "Use the function directly")
+	@inline(always)
 	static var glassProminent: (some PrimitiveButtonStyle)? {
-		if #available(iOS 26.0, macOS 26.0, *) {
+		if #available(anyAppleOS 26.0, *) {
 			GlassProminentButtonStyle()
 		} else {
 			nil

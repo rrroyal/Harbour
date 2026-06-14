@@ -9,9 +9,11 @@
 import SwiftUI
 
 extension View {
-	@ViewBuilder @inlinable
+	@available(anyAppleOS, obsoleted: 26.0, message: "Use the function directly")
+	@inline(always)
+	@ContentBuilder
 	func _inGlassEffectContainer(spacing: CGFloat? = nil) -> some View {
-		if #available(iOS 26.0, macOS 26.0, *) {
+		if #available(anyAppleOS 26.0, *) {
 			GlassEffectContainer(spacing: spacing) {
 				self
 			}

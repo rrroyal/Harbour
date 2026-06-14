@@ -10,9 +10,11 @@ import SwiftUI
 
 #if os(iOS)
 extension ToolbarContent {
-	@ToolbarContentBuilder @inlinable
+	@available(anyAppleOS, obsoleted: 26.0, message: "Use the function directly")
+	@inline(always)
+	@ContentBuilder
 	func _matchedTransitionSource(id: some Hashable, in namespace: Namespace.ID) -> some ToolbarContent {
-		if #available(iOS 26.0, *) {
+		if #available(anyAppleOS 26.0, *) {
 			self
 				.matchedTransitionSource(id: id, in: namespace)
 		} else {
