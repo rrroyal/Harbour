@@ -9,15 +9,17 @@
 import Foundation
 import PortainerKit
 
-extension Endpoint {
-	init(storedEndpoint: StoredEndpoint) {
+extension Endpoint: Storable {
+	typealias Stored = StoredEndpoint
+
+	static func fromStored(_ stored: Stored) -> Self {
 		self.init(
 			authorizedTeams: nil,
 			authorizedUsers: nil,
 			edgeID: nil,
 			groupID: nil,
-			id: storedEndpoint.id,
-			name: storedEndpoint.name,
+			id: stored.id,
+			name: stored.name,
 			publicURL: nil,
 			status: nil,
 			tls: nil,
@@ -25,6 +27,13 @@ extension Endpoint {
 			tags: nil,
 			type: nil,
 			url: nil
+		)
+	}
+
+	func toStored() -> Stored {
+		Stored(
+			id: self.id,
+			name: self.name
 		)
 	}
 }

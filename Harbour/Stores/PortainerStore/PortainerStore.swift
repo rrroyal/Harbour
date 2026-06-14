@@ -30,6 +30,9 @@ public final class PortainerStore {
 	internal let preferences = Preferences.shared
 	nonisolated(unsafe) internal let portainer: PortainerClient
 
+	/// Persistence model context
+	internal let modelActor: ModelActor?
+
 	// MARK: Public properties
 
 	/// Currently selected server URL
@@ -42,6 +45,8 @@ public final class PortainerStore {
 		(try? keychain.getSavedURLs()) ?? []
 	}
 
+	@ObservationIgnored
+	nonisolated(unsafe) private(set) var tasksController = TasksController()
 
 	/// Is `PortainerStore` setup?
 	@MainActor
@@ -86,10 +91,28 @@ public final class PortainerStore {
 		self.portainer = PortainerClient(urlSessionConfiguration: urlSessionConfiguration)
 
 		do {
-			let container = try ModelContainer.default()
-			self.modelContext = ModelContext(container)
+			let modelContainer = try ModelContainer.default()
+			self.modelActor = ModelActor(modelContext: ModelContext(modelContainer))
+
+			if let storedEndpoints = fetchStoredEndpoints() {
+				self.endpoints = storedEndpoints
+				self.selectedEndpoint = storedEndpoints.first { $0.id == preferences.selectedEndpointID }
+			}
+
+			if let storedContainers = fetchStoredContainers() {
+				self.containers = storedContainers
+			}
+
+			if let storedStacks = fetchStoredStacks() {
+				self.stacks = storedStacks
+			}
 		} catch {
-			logger.warning("Failed to create `ModelContainer`!")
+			logger.warning("Failed to create `ModelContainer`: \(error.localizedDescription, privacy: .public)")
+
+			self.modelActor = nil
+			if let selectedEndpointID = preferences.selectedEndpointID {
+				self.selectedEndpoint = .init(id: selectedEndpointID)
+			}
 		}
 	}
 }
@@ -125,23 +148,7 @@ public extension PortainerStore {
 
 	@MainActor
 	/// Sets up PortainerStore after init.
-	func setupInitially() {
-		if self.endpoints.isEmpty || self.endpoints.contains(where: \._isStored), let storedEndpoints = fetchStoredEndpoints() {
-			self.endpoints = storedEndpoints
-
-			if self.selectedEndpoint == nil {
-				self.selectedEndpoint = storedEndpoints.first { $0.id == preferences.selectedEndpointID }
-			}
-		}
-
-		if self.containers.isEmpty || self.containers.contains(where: \._isStored), let storedContainers = fetchStoredContainers() {
-			self.containers = storedContainers
-		}
-
-		if self.stacks.isEmpty || self.stacks.contains(where: \._isStored), let storedStacks = fetchStoredStacks() {
-			self.stacks = storedStacks
-		}
-
+	func setupWithStored() {
 		if let (url, token) = getStoredCredentials() {
 			setup(url: url, token: token, saveToken: false)
 		}

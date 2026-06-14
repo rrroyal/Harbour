@@ -31,15 +31,4 @@ final class StoredContainer: Identifiable {
 		self.associationID = associationID
 		self.persistentID = persistentID
 	}
-
-	convenience init(container: Container) {
-		self.init(
-			id: container.id,
-			name: container.displayName,
-			lastState: container.state,
-			image: container.image,
-			associationID: container.associationID,
-			persistentID: container._persistentID
-		)
-	}
 }

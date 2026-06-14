@@ -6,6 +6,7 @@
 //  Copyright © 2024 shameful. All rights reserved.
 //
 
+import CommonOSLog
 import Foundation
 import PortainerKit
 import SwiftData
@@ -18,8 +19,7 @@ extension PortainerStore {
 	func getStoredCredentials() -> (url: URL, token: String)? {
 		logger.info("Looking for credentials...")
 		do {
-			guard let selectedServer = preferences.selectedServer,
-				  let selectedServerURL = URL(string: selectedServer) else {
+			guard let selectedServerURL = Preferences.shared.selectedServer else {
 				logger.warning("No selected server")
 				return nil
 			}
@@ -38,55 +38,42 @@ extension PortainerStore {
 
 extension PortainerStore {
 	func storeEndpoints(_ endpoints: [Endpoint]?) {
-//		logger.debug("Storing \(endpoints?.count ?? 0, privacy: .public) endpoints...")
+		logger.debug("Storing \(endpoints?.count ?? 0, privacy: .public) endpoints...")
 
-		Task { @MainActor in
-			guard let modelContext else {
-				logger.warning("No `modelContext` set!")
-				return
-			}
+		guard let modelActor else {
+			logger.warning("No `modelActor` set!")
+			return
+		}
 
-			do {
-				guard let endpoints, !endpoints.isEmpty else {
-					try modelContext.delete(model: StoredEndpoint.self)
-					return
-				}
-
-				let existingIDs = Set(endpoints.map(\.id))
-				let nonExistingPredicate = #Predicate<StoredEndpoint> {
+		do {
+			try modelActor.store(endpoints) { existingIDs in
+				#Predicate<StoredEndpoint> {
 					!existingIDs.contains($0.id)
 				}
-				try modelContext.delete(model: StoredEndpoint.self, where: nonExistingPredicate)
-
-				for endpoint in endpoints {
-					let storedContainer = StoredEndpoint(endpoint: endpoint)
-					modelContext.insert(storedContainer)
-				}
-
-				try modelContext.save()
-
-//				logger.debug("Stored \(endpoints.count, privacy: .public) endpoints.")
-			} catch {
-				logger.error("Failed to store endpoints: \(error.localizedDescription, privacy: .public)")
 			}
+			logger.debug("Stored \(endpoints?.count ?? 0, privacy: .public) endpoints.")
+		} catch {
+			logger.error("Failed to store endpoints: \(error.localizedDescription, privacy: .public)")
 		}
 	}
 
 	func fetchStoredEndpoints() -> [Endpoint]? {
-//		logger.debug("Loading stored endpoints...")
+		logger.debug("Fetching stored endpoints...")
 
-		guard let modelContext else {
-			logger.warning("No `modelContext` set!")
+		guard let modelActor else {
+			logger.warning("No `modelActor` set!")
 			return nil
 		}
 
 		do {
-			let descriptor = FetchDescriptor<StoredEndpoint>(sortBy: [.init(\.name)])
-			let items = try modelContext.fetch(descriptor)
-
-//			logger.debug("Got \(items.count, privacy: .public) stored endpoints.")
-
-			return items.map { .init(storedEndpoint: $0) }
+			let items: [Endpoint] = try modelActor.fetch()
+				.sorted {
+					let a = $0.name ?? "\($0.id)"
+					let b = $1.name ?? "\($1.id)"
+					return a.localizedCaseInsensitiveCompare(b) == .orderedAscending
+				}
+			logger.debug("Got \(items.count, privacy: .public) stored endpoints.")
+			return items
 		} catch {
 			logger.error("Failed to load stored endpoints: \(error.localizedDescription, privacy: .public)")
 			return nil
@@ -97,60 +84,43 @@ extension PortainerStore {
 // MARK: - PortainerStore+Containers
 
 extension PortainerStore {
-	/// Stores containers to SwiftData.
-	/// - Parameter containers: Containers to store
 	func storeContainers(_ containers: [Container]?) {
-//		logger.debug("Storing \(containers?.count ?? 0, privacy: .public) containers...")
+		logger.debug("Storing \(containers?.count ?? 0, privacy: .public) containers...")
 
-		Task { @MainActor in
-			guard let modelContext else {
-				logger.warning("No `modelContext` set!")
-				return
-			}
+		guard let modelActor else {
+			logger.warning("No `modelActor` set!")
+			return
+		}
 
-			do {
-				guard let containers, !containers.isEmpty else {
-					try modelContext.delete(model: StoredContainer.self)
-					return
-				}
-
-				let existingIDs = Set(containers.map(\.id))
-				let nonExistingPredicate = #Predicate<StoredContainer> {
+		do {
+			try modelActor.store(containers) { existingIDs in
+				#Predicate<StoredContainer> {
 					!existingIDs.contains($0.id)
 				}
-				try modelContext.delete(model: StoredContainer.self, where: nonExistingPredicate)
-
-				for container in containers {
-					let storedContainer = StoredContainer(container: container)
-					modelContext.insert(storedContainer)
-				}
-
-				try modelContext.save()
-
-//				logger.debug("Stored \(containers.count, privacy: .public) containers.")
-			} catch {
-				logger.error("Failed to store containers: \(error.localizedDescription, privacy: .public)")
 			}
+			logger.debug("Stored \(containers?.count ?? 0, privacy: .public) containers.")
+		} catch {
+			logger.error("Failed to store containers: \(error.localizedDescription, privacy: .public)")
 		}
 	}
 
-	/// Fetches stored containers and returns them.
-	/// - Returns: Mapped [Container] from SwiftData.
 	func fetchStoredContainers() -> [Container]? {
-//		logger.debug("Loading stored containers...")
+		logger.debug("Fetching stored containers...")
 
-		guard let modelContext else {
-			logger.warning("No `modelContext` set!")
+		guard let modelActor else {
+			logger.warning("No `modelActor` set!")
 			return nil
 		}
 
 		do {
-			let descriptor = FetchDescriptor<StoredContainer>(sortBy: [.init(\.name)])
-			let items = try modelContext.fetch(descriptor)
-
-//			logger.debug("Got \(items.count, privacy: .public) stored containers.")
-
-			return items.map { .init(storedContainer: $0) }
+			let items: [Container] = try modelActor.fetch()
+				.sorted {
+					let a = $0.displayName ?? $0.id
+					let b = $1.displayName ?? $1.id
+					return a.localizedCaseInsensitiveCompare(b) == .orderedAscending
+				}
+			logger.debug("Got \(items.count, privacy: .public) stored containers.")
+			return items
 		} catch {
 			logger.error("Failed to load stored containers: \(error.localizedDescription, privacy: .public)")
 			return nil
@@ -162,50 +132,104 @@ extension PortainerStore {
 
 extension PortainerStore {
 	func storeStacks(_ stacks: [Stack]?) {
-		Task { @MainActor in
-			guard let modelContext else {
-				logger.warning("No `modelContext` set!")
-				return
-			}
+		logger.debug("Storing \(stacks?.count ?? 0, privacy: .public) stacks...")
 
-			do {
-				guard let stacks, !stacks.isEmpty else {
-					try modelContext.delete(model: StoredStack.self)
-					return
-				}
+		guard let modelActor else {
+			logger.warning("No `modelActor` set!")
+			return
+		}
 
-				let existingIDs = Set(stacks.map(\.id))
-				let nonExistingPredicate = #Predicate<StoredStack> {
+		do {
+			try modelActor.store(stacks) { existingIDs in
+				#Predicate<StoredStack> {
 					!existingIDs.contains($0.id)
 				}
-				try modelContext.delete(model: StoredStack.self, where: nonExistingPredicate)
-
-				for stack in stacks {
-					let storedStack = StoredStack(stack: stack)
-					modelContext.insert(storedStack)
-				}
-
-				try modelContext.save()
-			} catch {
-				logger.error("Failed to store stacks: \(error.localizedDescription, privacy: .public)")
 			}
+			logger.debug("Stored \(stacks?.count ?? 0, privacy: .public) stacks.")
+		} catch {
+			logger.error("Failed to store stacks: \(error.localizedDescription, privacy: .public)")
 		}
 	}
 
 	func fetchStoredStacks() -> [Stack]? {
-		guard let modelContext else {
-			logger.warning("No `modelContext` set!")
+		logger.debug("Fetching stored stacks...")
+
+		guard let modelActor else {
+			logger.warning("No `modelActor` set!")
 			return nil
 		}
 
 		do {
-			let descriptor = FetchDescriptor<StoredStack>(sortBy: [.init(\.name)])
-			let items = try modelContext.fetch(descriptor)
-
-			return items.map { .init(storedStack: $0) }
+			let items: [Stack] = try modelActor.fetch()
+				.sorted(by: \.name)
+			logger.debug("Got \(items.count, privacy: .public) stored stacks.")
+			return items
 		} catch {
 			logger.error("Failed to load stored stacks: \(error.localizedDescription, privacy: .public)")
 			return nil
+		}
+	}
+}
+
+extension PortainerStore {
+//	@SwiftData.ModelActor
+	@MainActor
+	final class ModelActor {
+		private let logger = Logger(.custom(ModelActor.self))
+		private var tasks: [String: Task<Void, Error>] = [:]
+		private let saveBufferDuration: Duration = .seconds(2)
+
+		let modelContext: ModelContext
+
+		init(modelContext: ModelContext) {
+			self.modelContext = modelContext
+		}
+
+		func store<S: Storable>(
+			_ storables: [S]?,
+			deletePredicate: @Sendable @escaping (Set<S.ID>) -> Predicate<S.Stored>
+		) throws where S.ID == S.Stored.ID {
+			let taskID = "\(S.Stored.self)"
+			tasks[taskID]?.cancel()
+
+			let task = Task(name: taskID) {
+				guard let storables, !storables.isEmpty else {
+					try modelContext.delete(model: S.Stored.self)
+					try save()
+					return
+				}
+
+				let existingIDs = Set(storables.map(\.id))
+				try modelContext.delete(model: S.Stored.self, where: deletePredicate(existingIDs))
+
+				for storable in storables {
+					let stored = storable.toStored()
+					modelContext.insert(stored)
+				}
+
+				try await Task.sleep(for: saveBufferDuration)
+				do {
+					try Task.checkCancellation()
+					try save()
+				} catch {
+					logger.warning("Task \(taskID, privacy: .public) cancelled or failed saving, rolling back!")
+					modelContext.rollback()
+				}
+			}
+			tasks[taskID] = task
+		}
+
+		func fetch<S: Storable>(
+			descriptor: FetchDescriptor<S.Stored> = .init()
+		) throws -> [S] {
+			let stored = try modelContext.fetch(descriptor)
+			return stored.map { S.fromStored($0) }
+		}
+
+		func save() throws {
+			if modelContext.hasChanges {
+				try modelContext.save()
+			}
 		}
 	}
 }

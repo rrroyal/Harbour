@@ -129,7 +129,7 @@ extension BackgroundHelper {
 	@Sendable
 	static func scheduleBackgroundRefreshIfNeeded() {
 		Task {
-			guard await Preferences.shared.enableBackgroundRefresh else {
+			guard Preferences.shared.enableBackgroundRefresh else {
 				logger.debug("Background refresh is disabled.")
 				return
 			}
@@ -167,9 +167,7 @@ extension BackgroundHelper {
 			#endif
 
 			let portainerStore = await PortainerStore(urlSessionConfiguration: .intents)
-			if await !portainerStore.isSetup {
-				await portainerStore.setupInitially()
-			}
+			await portainerStore.setupWithStored()
 
 			guard let endpoint = await portainerStore.selectedEndpoint else {
 				throw PortainerError.noSelectedEndpoint

@@ -19,11 +19,4 @@ final class StoredEndpoint: Identifiable {
 		self.id = id
 		self.name = name
 	}
-
-	convenience init(endpoint: Endpoint) {
-		self.init(
-			id: endpoint.id,
-			name: endpoint.name
-		)
-	}
 }

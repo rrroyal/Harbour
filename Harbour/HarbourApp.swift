@@ -28,7 +28,7 @@ struct HarbourApp: App {
 
 	init() {
 		let portainerStore = PortainerStore.shared
-		portainerStore.setupInitially()
+		portainerStore.setupWithStored()
 		self._portainerStore = .init(initialValue: portainerStore)
 	}
 
@@ -67,7 +67,6 @@ struct HarbourApp: App {
 		#endif
 		.onChange(of: portainerStore.containers, appState.onContainersChange)
 		.onChange(of: portainerStore.stacks, appState.onStacksChange)
-		.modelContainer(for: ModelContainer.allModelTypes)
 
 		#if os(macOS)
 		Settings {
@@ -79,7 +78,6 @@ struct HarbourApp: App {
 				)
 				.scrollDismissesKeyboard(.interactively)
 		}
-		.modelContainer(for: ModelContainer.allModelTypes)
 		#endif
 	}
 }
