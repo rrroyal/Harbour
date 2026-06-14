@@ -22,14 +22,14 @@ struct HarbourApp: App {
 	#elseif os(macOS)
 	@NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 	#endif
-	@StateObject private var portainerStore: PortainerStore
 	@StateObject private var preferences: Preferences = .shared
 	@State private var appState: AppState = .shared
+	@State private var portainerStore: PortainerStore
 
 	init() {
 		let portainerStore = PortainerStore.shared
 		portainerStore.setupInitially()
-		self._portainerStore = .init(wrappedValue: portainerStore)
+		self._portainerStore = .init(initialValue: portainerStore)
 	}
 
 	var body: some Scene {

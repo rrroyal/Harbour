@@ -15,7 +15,7 @@ import SwiftUI
 
 /// View fetching and displaying details for associated container ID.
 struct ContainerDetailsView: View {
-	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(PortainerStore.self) private var portainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel: ViewModel

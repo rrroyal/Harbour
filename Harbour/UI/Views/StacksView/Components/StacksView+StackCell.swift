@@ -14,7 +14,7 @@ import SwiftUI
 
 extension StacksView {
 	struct StackCell: View {
-		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(PortainerStore.self) private var portainerStore
 		@Environment(SceneDelegate.self) private var sceneDelegate
 		var stack: StackItem
 		var containers: [Container]

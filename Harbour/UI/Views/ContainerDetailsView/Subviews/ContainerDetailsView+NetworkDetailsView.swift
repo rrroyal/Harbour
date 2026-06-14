@@ -94,7 +94,7 @@ extension ContainerDetailsView {
 private extension ContainerDetailsView.NetworkDetailsView {
 	struct NetworkDetailView: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
-		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(PortainerStore.self) private var portainerStore
 		var name: String
 		var network: Network
 
@@ -224,7 +224,7 @@ private extension ContainerDetailsView.NetworkDetailsView {
 
 private extension ContainerDetailsView.NetworkDetailsView {
 	struct PortsSection: View {
-		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(PortainerStore.self) private var portainerStore
 		var ports: [PortainerKit.Port]?
 		var exposedPorts: [String: [String: String]]?
 		var portBindings: [String: [ContainerDetails.HostConfig.PortBinding]]?

@@ -14,7 +14,7 @@ import SwiftUI
 // MARK: - StacksView
 
 struct StacksView: View {
-	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(PortainerStore.self) private var portainerStore
 	@EnvironmentObject private var preferences: Preferences
 	@Environment(AppState.self) private var appState
 	@Environment(SceneDelegate.self) private var sceneDelegate
@@ -85,7 +85,7 @@ struct StacksView: View {
 			viewModel.handleSpotlightSearchContinuation(userActivity)
 		}
 		.task {
-			if portainerStore.stacksTask?.isCancelled ?? true {
+			if portainerStore.tasksController.stacks?.isCancelled ?? true {
 				await fetch().value
 			}
 		}
@@ -248,7 +248,7 @@ private extension StacksView {
 	@ViewBuilder @MainActor
 	private var backgroundPlaceholder: some View {
 		let isLoading = viewModel.viewState.isLoading ||
-		!(portainerStore.stacksTask?.isCancelled ?? true) ||
+		!(portainerStore.tasksController.stacks?.isCancelled ?? true) ||
 		!(appState.portainerServerSwitchTask?.isCancelled ?? true)
 
 		if isLoading {

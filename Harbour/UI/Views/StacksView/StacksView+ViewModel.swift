@@ -30,7 +30,7 @@ extension StacksView {
 		var viewState: ViewState<[Stack], Error> {
 			let stacks = portainerStore.stacks
 
-			if !(fetchTask?.isCancelled ?? true) || !(portainerStore.stacksTask?.isCancelled ?? true) {
+			if !(fetchTask?.isCancelled ?? true) || !(portainerStore.tasksController.stacks?.isCancelled ?? true) {
 				return stacks.isEmpty ? .loading : .reloading(stacks)
 			}
 

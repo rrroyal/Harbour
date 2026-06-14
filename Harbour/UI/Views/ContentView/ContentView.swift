@@ -20,7 +20,7 @@ struct ContentView: View {
 	#elseif os(macOS)
 	@State private var sceneDelegate = SceneDelegate()
 	#endif
-	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(PortainerStore.self) private var portainerStore
 	@Environment(\.scenePhase) private var scenePhase
 
 	var body: some View {

@@ -13,7 +13,7 @@ import SwiftUI
 
 extension ContainersView.ListView {
 	struct ContainerCell: View {
-		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(PortainerStore.self) private var portainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 12
 		private let minimumScaleFactor: Double = 0.8
 		private let background = RoundedRectangle(cornerRadius: 18, style: .circular)

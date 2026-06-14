@@ -13,7 +13,7 @@ import SwiftUI
 // MARK: - StackDetailsView
 
 struct StackDetailsView: View {
-	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(PortainerStore.self) private var portainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler

@@ -38,8 +38,8 @@ struct DebugView: View {
 
 private extension DebugView {
 	struct PortainerInfoSection: View {
+		@Environment(PortainerStore.self) private var portainerStore
 		@Environment(\.errorHandler) private var errorHandler
-		@EnvironmentObject private var portainerStore: PortainerStore
 		@State private var portainerSystemStatus: SystemStatus?
 		@State private var portainerSystemVersion: SystemVersion?
 
@@ -106,11 +106,15 @@ private extension DebugView {
 			.animation(.default, value: portainerSystemStatus)
 			.animation(.default, value: portainerSystemVersion)
 			.task {
-				async let systemStatus = try? portainerStore.fetchSystemStatus()
-				async let systemVersion = try? portainerStore.fetchSystemVersion()
+				async let _systemStatus = try? portainerStore.fetchSystemStatus()
+				async let _systemVersion = try? portainerStore.fetchSystemVersion()
 
-				self.portainerSystemStatus = await systemStatus
-				self.portainerSystemVersion = await systemVersion
+				let (systemStatus, systemVersion) = await (_systemStatus, _systemVersion)
+
+				await MainActor.run {
+					self.portainerSystemStatus = systemStatus
+					self.portainerSystemVersion = systemVersion
+				}
 			}
 		}
 	}

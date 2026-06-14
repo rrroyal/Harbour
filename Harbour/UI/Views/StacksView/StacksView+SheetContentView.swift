@@ -11,8 +11,8 @@ import SwiftUI
 
 extension StacksView {
 	struct SheetContentView: View {
-		@EnvironmentObject private var portainerStore: PortainerStore
 		@Environment(SceneDelegate.self) private var sceneDelegate
+		@Environment(PortainerStore.self) private var portainerStore
 
 		let stack: Stack?
 

@@ -14,7 +14,7 @@ extension StacksView {
 	struct StacksList: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
 		@Environment(StacksView.ViewModel.self) private var viewModel
-		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(PortainerStore.self) private var portainerStore
 		var stacks: [StacksView.StackItem]
 		var filterByStackNameAction: (String) -> Void
 		var setStackStateAction: (Stack, Bool) -> Void

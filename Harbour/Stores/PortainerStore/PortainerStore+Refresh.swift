@@ -15,9 +15,9 @@ extension PortainerStore {
 	/// - Returns: `Task<[Endpoint], Error>` of refresh
 	@discardableResult
 	func refreshEndpoints() -> Task<[Endpoint], Error> {
-		endpointsTask?.cancel()
+		tasksController.endpoints?.cancel()
 		let task = Task { @MainActor in
-			defer { self.endpointsTask = nil }
+			defer { self.tasksController.endpoints = nil }
 
 			do {
 				let endpoints = try await fetchEndpoints().sorted()
@@ -28,7 +28,7 @@ extension PortainerStore {
 				throw error
 			}
 		}
-		self.endpointsTask = task
+		self.tasksController.endpoints = task
 		return task
 	}
 
@@ -37,9 +37,9 @@ extension PortainerStore {
 	/// - Returns: `Task<[Container], Error>` of refresh
 	@discardableResult
 	func refreshContainers() -> Task<[Container], Error> {
-		containersTask?.cancel()
+		tasksController.containers?.cancel()
 		let task = Task { @MainActor in
-			defer { self.containersTask = nil }
+			defer { self.tasksController.containers = nil }
 
 			do {
 				let containers = try await self.fetchContainers()
@@ -50,7 +50,7 @@ extension PortainerStore {
 				throw error
 			}
 		}
-		self.containersTask = task
+		self.tasksController.containers = task
 		return task
 	}
 
@@ -84,9 +84,9 @@ extension PortainerStore {
 	/// - Returns: `Task<[Stack], Error>` of refresh
 	@discardableResult
 	func refreshStacks() -> Task<[Stack], Error> {
-		stacksTask?.cancel()
+		tasksController.stacks?.cancel()
 		let task = Task { @MainActor in
-			defer { self.stacksTask = nil }
+			defer { self.tasksController.stacks = nil }
 
 			do {
 				let stacks = try await fetchStacks(
@@ -100,7 +100,7 @@ extension PortainerStore {
 				throw error
 			}
 		}
-		self.stacksTask = task
+		self.tasksController.stacks = task
 		return task
 	}
 }

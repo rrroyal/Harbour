@@ -22,13 +22,9 @@ public final class IntentPortainerStore {
 	public let portainer = PortainerClient(urlSessionConfiguration: .intents)
 
 	public func setupIfNeeded() async throws {
-		guard let urlStr = await Preferences.shared.selectedServer else {
+		guard let url = Preferences.shared.selectedServer else {
 			logger.warning("No selectedServer!")
 			throw PortainerError.noServer
-		}
-		guard let url = URL(string: urlStr) else {
-			logger.warning("selectedServer is not a valid URL: \(urlStr, privacy: .sensitive)")
-			throw URLError(.badURL)
 		}
 		if portainer.serverURL == url { return }
 

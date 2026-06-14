@@ -104,14 +104,14 @@ extension SceneDelegate {
 
 			switch activeTab {
 			case .containers:
-				if portainerStore.endpointsTask?.isCancelled ?? true {
+				if portainerStore.tasksController.endpoints?.isCancelled ?? true {
 					portainerStore.refreshEndpoints()
 				}
-				if portainerStore.containersTask?.isCancelled ?? true {
+				if portainerStore.tasksController.containers?.isCancelled ?? true {
 					portainerStore.refreshContainers()
 				}
 			case .stacks:
-				if portainerStore.stacksTask?.isCancelled ?? true {
+				if portainerStore.tasksController.stacks?.isCancelled ?? true {
 					portainerStore.refreshStacks()
 				}
 			}

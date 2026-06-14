@@ -141,11 +141,9 @@ extension StackDetailsView {
 
 			userActivity.contentAttributeSet = attributeSet
 
-			if let serverURL = PortainerStore.shared.serverURL {
-				let portainerDeeplink = PortainerDeeplink(baseURL: serverURL)
-				let portainerURL = portainerDeeplink?.stackURL(stack: stack)
-				userActivity.webpageURL = portainerURL
-//				userActivity.referrerURL = portainerURL
+			if let portainerDeeplinkURL = PortainerDeeplink()?.stackURL(stack: stack) {
+				userActivity.webpageURL = portainerDeeplinkURL
+//				userActivity.referrerURL = portainerDeeplinkURL
 			}
 
 			userActivity.keywords = [stack.name]

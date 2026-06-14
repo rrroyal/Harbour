@@ -13,7 +13,7 @@ import SwiftUI
 
 extension ContainersView.GridView {
 	struct ContainerCell: View {
-		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(PortainerStore.self) private var portainerStore
 		@ScaledMetric(relativeTo: .body) private var circleSize = 10
 		private let minimumScaleFactor: Double = 0.7
 		private let paddingSize: Double = 12

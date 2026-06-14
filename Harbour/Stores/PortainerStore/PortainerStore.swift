@@ -17,11 +17,11 @@ import SwiftData
 // MARK: - PortainerStore
 
 /// Main store for Portainer-related data.
-@MainActor
-public final class PortainerStore: ObservableObject {
+@MainActor @Observable
+public final class PortainerStore {
 
 	/// Singleton for `PortainerStore`
-	static let shared = PortainerStore()
+	static var shared = PortainerStore()
 
 	// MARK: Private properties
 
@@ -42,51 +42,40 @@ public final class PortainerStore: ObservableObject {
 		(try? keychain.getSavedURLs()) ?? []
 	}
 
-	/// Persistence model context
-	var modelContext: ModelContext?
-
-	/// Task for `endpoints` refresh
-	var endpointsTask: Task<[Endpoint], Error>?
-
-	/// Task for `containers` refresh
-	var containersTask: Task<[Container], Error>?
-
-	/// Task for `stacks` refresh
-	var stacksTask: Task<[Stack], Error>?
 
 	/// Is `PortainerStore` setup?
-	@Published
+	@MainActor
 	var isSetup = false
 
 	/// Currently selected endpoint's ID
-	@Published
+	@MainActor
 	var selectedEndpoint: Endpoint? {
 		didSet { onSelectedEndpointChange(selectedEndpoint) }
 	}
 
-	@Published
+	@MainActor
 	var endpoints: [Endpoint] = []
 
-	@Published
+	@MainActor
 	var containers: [Container] = []
 
-	@Published
+	@MainActor
 	var stacks: [Stack] = []
 
-	@Published
+	@MainActor
 	var attachedContainer: AttachedContainer?
 
-	@Published
+	@MainActor
 	var removedContainerIDs: Set<Container.ID> = []
 
-	@Published
+	@MainActor
 	var loadingStackIDs: Set<Stack.ID> = []
 
-	@Published
+	@MainActor
 	var removedStackIDs: Set<Stack.ID> = []
 
 	var isRefreshing: Bool {
-		!(endpointsTask?.isCancelled ?? true) || !(containersTask?.isCancelled ?? true) || !(stacksTask?.isCancelled ?? true)
+		!(tasksController.endpoints?.isCancelled ?? true) || !(tasksController.containers?.isCancelled ?? true) || !(tasksController.stacks?.isCancelled ?? true)
 	}
 
 	// MARK: init
@@ -94,8 +83,6 @@ public final class PortainerStore: ObservableObject {
 	/// Initializes `PortainerStore` with provided ModelContext and URLSession configuration.
 	/// - Parameter urlSessionConfiguration: `URLSessionConfiguration`, `.app` if none
 	init(urlSessionConfiguration: URLSessionConfiguration = .app) {
-//		urlSessionConfiguration.shouldUseExtendedBackgroundIdleMode = true
-//		urlSessionConfiguration.sessionSendsLaunchEvents = true
 		self.portainer = PortainerClient(urlSessionConfiguration: urlSessionConfiguration)
 
 		do {
@@ -122,8 +109,6 @@ public extension PortainerStore {
 		let token = try? (token ?? keychain.getString(for: url))
 		portainer.serverURL = url
 		portainer.token = token
-
-		preferences.selectedServer = url.absoluteString
 
 		if let token, saveToken {
 			do {
@@ -159,11 +144,6 @@ public extension PortainerStore {
 
 		if let (url, token) = getStoredCredentials() {
 			setup(url: url, token: token, saveToken: false)
-		} else {
-			Task { @MainActor in
-				endpoints = []
-				containers = []
-			}
 		}
 	}
 
@@ -176,7 +156,7 @@ public extension PortainerStore {
 		reset()
 		setup(url: serverURL, saveToken: false)
 
-		preferences.selectedServer = serverURL.absoluteString
+		preferences.selectedServer = serverURL
 
 		logger.info("Switched successfully!")
 	}
@@ -209,13 +189,13 @@ public extension PortainerStore {
 
 		selectedEndpoint = nil
 
-		endpointsTask?.cancel()
+		tasksController.endpoints?.cancel()
 		setEndpoints(nil)
 
-		containersTask?.cancel()
+		tasksController.containers?.cancel()
 		setContainers(nil)
 
-		stacksTask?.cancel()
+		tasksController.stacks?.cancel()
 		setStacks(nil)
 
 		attachedContainer = nil
@@ -235,7 +215,7 @@ extension PortainerStore {
 		if endpoint != nil {
 			refreshContainers()
 		} else {
-			containersTask?.cancel()
+			tasksController.containers?.cancel()
 			setEndpoints(nil)
 			setContainers(nil)
 		}
@@ -256,21 +236,29 @@ extension PortainerStore {
 			selectedEndpoint = nil
 		}
 
-		storeEndpoints(endpoints)
+		Task.detached {
+			await self.storeEndpoints(endpoints)
+		}
 	}
 
 	@MainActor
 	func setContainers(_ containers: [Container]?) {
 		let containers = (containers ?? []).sorted()
 		self.containers = containers
-		storeContainers(containers)
+
+		Task.detached {
+			await self.storeContainers(containers)
+		}
 	}
 
 	@MainActor
 	func setStacks(_ stacks: [Stack]?) {
 		let stacks = (stacks ?? []).sorted()
 		self.stacks = stacks
-		storeStacks(stacks)
+
+		Task.detached {
+			await self.storeStacks(stacks)
+		}
 	}
 }
 

@@ -12,7 +12,7 @@ import PortainerKit
 import SwiftUI
 
 struct ContainerContextMenu: View {
-	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(PortainerStore.self) private var portainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
@@ -50,11 +50,10 @@ struct ContainerContextMenu: View {
 				.tint(.red)
 			}
 
-			if let portainerServerURL = portainerStore.serverURL,
-			   let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.containerURL(containerID: container.id, endpointID: portainerStore.selectedEndpoint?.id) {
+			if let portainerDeeplinkURL = PortainerDeeplink()?.containerURL(containerID: container.id, endpointID: portainerStore.selectedEndpoint?.id) {
 				Divider()
 
-				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+				ShareLink("Generic.SharePortainerURL", item: portainerDeeplinkURL)
 					.keyboardShortcut("u", modifiers: .command)
 			}
 

@@ -96,10 +96,15 @@ extension PortainerStore {
 	///   - containerID: ID of the inspected container
 	///   - endpointID: ID of the endpoint
 	/// - Returns: `ContainerDetails`
-	func fetchContainerDetails(_ containerID: Container.ID, endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
+	func fetchContainerDetails(_ containerID: Container.ID, endpointID _endpointID: Endpoint.ID? = nil) async throws -> ContainerDetails {
 		logger.info("Getting details for containerID: \"\(containerID)\"...")
 		do {
-			guard let endpointID = endpointID ?? selectedEndpoint?.id else {
+			let endpointID: Endpoint.ID
+			if let _endpointID {
+				endpointID = _endpointID
+			} else if let stored = selectedEndpoint?.id {
+				endpointID = stored
+			} else {
 				throw PortainerError.noSelectedEndpoint
 			}
 			let details = try await portainer.fetchContainerDetails(for: containerID, endpointID: endpointID)
@@ -163,7 +168,10 @@ extension PortainerStore {
 			Task { @MainActor in
 				if let index = containers.firstIndex(where: { $0.id == containerID }) {
 					containers[index].state = action.expectedState
-					storeContainers(containers)
+
+					Task.detached {
+						await self.storeContainers(self.containers)
+					}
 				}
 			}
 
@@ -182,9 +190,12 @@ extension PortainerStore {
 	///   - force: Force container removal
 	func removeContainer(
 		containerID: Container.ID,
-		removeVolumes: Bool = Preferences.shared.containerRemoveVolumes,
-		force: Bool = Preferences.shared.containerRemoveForce
+		removeVolumes: Bool? = nil,
+		force: Bool? = nil
 	) async throws {
+		let removeVolumes = removeVolumes ?? Preferences.shared.containerRemoveVolumes
+		let force = force ?? Preferences.shared.containerRemoveForce
+
 		defer {
 			Task {
 				try? await Task.sleep(for: .seconds(0.1))
@@ -215,7 +226,10 @@ extension PortainerStore {
 			Task { @MainActor in
 				if let index = containers.firstIndex(where: { $0.id == containerID }) {
 					containers.remove(at: index)
-					storeContainers(containers)
+
+					Task.detached {
+						await self.storeContainers(self.containers)
+					}
 				}
 			}
 
@@ -283,11 +297,9 @@ public extension PortainerStore {
 			let stack = try await portainer.fetchStack(id: stackID)
 			logger.info("Got stack for stackID: \(stackID)")
 
-			Task {
+			Task { @MainActor in
 				if let stackIndex = stacks.firstIndex(where: { $0.id == stackID }) {
-					Task { @MainActor in
-						stacks[stackIndex] = stack
-					}
+					stacks[stackIndex] = stack
 				}
 			}
 
@@ -343,7 +355,10 @@ public extension PortainerStore {
 			Task { @MainActor in
 				if let newStack, let index = stacks.firstIndex(where: { $0.id == stackID }) {
 					stacks[index] = newStack
-					storeStacks(stacks)
+
+					Task.detached {
+						await self.storeStacks(self.stacks)
+					}
 				}
 			}
 
@@ -387,7 +402,10 @@ public extension PortainerStore {
 			Task { @MainActor in
 				if let index = stacks.firstIndex(where: { $0.id == stack.id }) {
 					stacks[index] = stack
-					storeStacks(stacks)
+
+					Task.detached {
+						await self.storeStacks(self.stacks)
+					}
 				}
 			}
 
@@ -425,7 +443,10 @@ public extension PortainerStore {
 			Task { @MainActor in
 				if let index = stacks.firstIndex(where: { $0.id == stackID }) {
 					stacks.remove(at: index)
-					storeStacks(stacks)
+
+					Task.detached {
+						await self.storeStacks(self.stacks)
+					}
 				}
 			}
 		} catch {

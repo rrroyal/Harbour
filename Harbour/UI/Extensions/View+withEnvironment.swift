@@ -18,8 +18,8 @@ extension View {
 	) -> some View {
 		self
 			.environment(appState)
+			.environment(portainerStore)
 			.environment(\.ikEnableHaptics, preferences.enableHaptics)
-			.environmentObject(portainerStore)
 			.environmentObject(preferences)
 	}
 }

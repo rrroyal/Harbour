@@ -13,7 +13,7 @@ import SwiftUI
 // MARK: - ContainerLogsView
 
 struct ContainerLogsView: View {
-	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(PortainerStore.self) private var portainerStore
 	@EnvironmentObject private var preferences: Preferences
 	@Environment(\.errorHandler) private var errorHandler
 //	@Environment(\.presentIndicator) private var presentIndicator

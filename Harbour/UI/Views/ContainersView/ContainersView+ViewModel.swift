@@ -36,7 +36,7 @@ extension ContainersView {
 		var viewState: ViewState<[Container], Error> {
 			let containers = portainerStore.containers
 
-			if !(fetchTask?.isCancelled ?? true) || !(portainerStore.containersTask?.isCancelled ?? true) || !(portainerStore.endpointsTask?.isCancelled ?? true) {
+			if !(fetchTask?.isCancelled ?? true) || !(portainerStore.tasksController.containers?.isCancelled ?? true) || !(portainerStore.tasksController.endpoints?.isCancelled ?? true) {
 				return containers.isEmpty ? .loading : .reloading(containers)
 			}
 

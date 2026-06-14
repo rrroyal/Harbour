@@ -17,10 +17,10 @@ import SwiftUI
 // MARK: - ContainersView
 
 struct ContainersView: View {
-	@EnvironmentObject private var portainerStore: PortainerStore
 	@EnvironmentObject private var preferences: Preferences
 	@Environment(AppState.self) private var appState
 	@Environment(SceneDelegate.self) private var sceneDelegate
+	@Environment(PortainerStore.self) private var portainerStore
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@Environment(\.horizontalSizeClass) private var horizontalSizeClass
@@ -108,7 +108,7 @@ struct ContainersView: View {
 				viewModel.handleSpotlightSearchContinuation(userActivity)
 			}
 			.task {
-				if portainerStore.containersTask?.isCancelled ?? true {
+				if portainerStore.tasksController.containers?.isCancelled ?? true {
 					await fetch()
 				}
 			}
@@ -222,8 +222,8 @@ private extension ContainersView {
 	@ViewBuilder @MainActor
 	private var backgroundPlaceholder: some View {
 		let isLoading = viewModel.viewState.isLoading ||
-			!(portainerStore.endpointsTask?.isCancelled ?? true) ||
-			!(portainerStore.containersTask?.isCancelled ?? true) ||
+			!(portainerStore.tasksController.endpoints?.isCancelled ?? true) ||
+			!(portainerStore.tasksController.containers?.isCancelled ?? true) ||
 			!(appState.portainerServerSwitchTask?.isCancelled ?? true)
 
 		if isLoading {
@@ -314,7 +314,7 @@ private extension ContainersView {
 
 private extension ContainersView {
 	struct ContainersList: View {
-		@EnvironmentObject private var portainerStore: PortainerStore
+		@Environment(PortainerStore.self) private var portainerStore
 		@EnvironmentObject private var preferences: Preferences
 		let containers: [Container]
 

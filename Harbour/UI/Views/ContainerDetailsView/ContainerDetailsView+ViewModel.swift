@@ -69,12 +69,10 @@ extension ContainerDetailsView {
 
 			userActivity.contentAttributeSet = attributeSet
 
-			if let serverURL = portainerStore.serverURL,
-			   let endpointID = navigationItem.endpointID {
-				let portainerDeeplink = PortainerDeeplink(baseURL: serverURL)
-				let portainerURL = portainerDeeplink?.containerURL(containerID: navigationItem.id, endpointID: endpointID)
-				userActivity.webpageURL = portainerURL
-//				userActivity.referrerURL = portainerURL
+			if let endpointID = navigationItem.endpointID,
+			   let portainerDeeplinkURL = PortainerDeeplink()?.containerURL(containerID: navigationItem.id, endpointID: endpointID) {
+				userActivity.webpageURL = portainerDeeplinkURL
+//				userActivity.referrerURL = portainerDeeplinkURL
 			}
 
 			if let containerNames = container?.names, !containerNames.isEmpty {
@@ -162,7 +160,7 @@ private extension ContainerDetailsView.ViewModel {
 						self.logger.debug("Started resolving by persistentID: \"\(persistentID)\"...")
 
 						// Wait for full refresh
-						if let containersTask = await self.portainerStore.containersTask {
+						if let containersTask = self.portainerStore.tasksController.containers {
 							self.logger.debug("Waiting for existing container refresh task")
 							_ = try await containersTask.value
 						} else {

@@ -14,7 +14,7 @@ import SwiftUI
 
 struct StackContextMenu: View {
 	@Environment(SceneDelegate.self) private var sceneDelegate
-	@EnvironmentObject private var portainerStore: PortainerStore
+	@Environment(PortainerStore.self) private var portainerStore
 	var stack: Stack
 	var setStackStateAction: (Bool) -> Void
 
@@ -52,11 +52,10 @@ struct StackContextMenu: View {
 				.tint(.red)
 			}
 
-			if let portainerServerURL = portainerStore.serverURL,
-			   let portainerDeeplink = PortainerDeeplink(baseURL: portainerServerURL)?.stackURL(stack: stack) {
+			if let portainerDeeplinkURL = PortainerDeeplink()?.stackURL(stack: stack) {
 				Divider()
 
-				ShareLink("Generic.SharePortainerURL", item: portainerDeeplink)
+				ShareLink("Generic.SharePortainerURL", item: portainerDeeplinkURL)
 					.keyboardShortcut("u", modifiers: .command)
 			}
 		}
