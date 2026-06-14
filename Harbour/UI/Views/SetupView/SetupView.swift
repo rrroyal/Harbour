@@ -13,21 +13,21 @@ import SwiftUI
 // MARK: - SetupView
 
 struct SetupView: View {
-	@Environment(\.dismiss) private var dismiss: DismissAction
+	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 
-	@State private var viewModel: ViewModel
+	@State private var viewModel = ViewModel()
 	@FocusState private var focusedField: ViewModel.FocusedField?
+	let onDismiss: (() -> Void)?
+
+	init(onDismiss: (() -> Void)? = nil) {
+		self.onDismiss = onDismiss
+	}
 
 	private let urlPlaceholder: String = "https://172.17.0.2"
 	private let tokenPlaceholder: String = "ptr_********************************************"
 	// swiftlint:disable:next force_unwrapping
 	private let howToLoginURL = URL(string: "https://harbour.shameful.xyz/docs/setup")!
-
-	init() {
-		let viewModel = ViewModel()
-		self.viewModel = viewModel
-	}
 
 	@ViewBuilder
 	private var urlTextField: some View {
@@ -170,7 +170,11 @@ private extension SetupView {
 			do {
 				let success = try await viewModel.login().value
 				if success {
-					dismiss()
+					if let onDismiss {
+						onDismiss()
+					} else {
+						dismiss()
+					}
 				}
 			} catch {
 				errorHandler(error)

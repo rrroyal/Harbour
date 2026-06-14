@@ -58,6 +58,7 @@ private extension DebugView {
 							)
 						}
 					}
+					.transition(.opacity)
 				}
 
 				if let portainerSystemVersion {
@@ -101,6 +102,7 @@ private extension DebugView {
 							}
 						}
 					}
+					.transition(.opacity)
 				}
 			}
 			.animation(.default, value: portainerSystemStatus)
