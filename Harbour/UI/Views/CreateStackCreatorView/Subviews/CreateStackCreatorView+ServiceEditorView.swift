@@ -98,9 +98,11 @@ extension CreateStackCreatorView {
 				}
 			}
 			.sheet(item: $presentedSheet, content: sheetContent)
-			.onAppear {
-				if service == nil { focusedField = .name }
-			}
+//			.onAppear {
+//				if service == nil {
+//					focusedField = .name
+//				}
+//			}
 		}
 	}
 }
@@ -383,11 +385,10 @@ private extension CreateStackCreatorView.ServiceEditorView {
 			}
 		}
 		.presentationDetents([.medium, .large])
+		.presentationDetents([.medium, .large])
 		.presentationDragIndicator(.hidden)
 		.presentationContentInteraction(.resizes)
-		#if os(macOS)
-		.sheetMinimumFrame(width: 320, height: 240)
-		#endif
+		.presentationContentInteraction(.resizes)
 	}
 }
 

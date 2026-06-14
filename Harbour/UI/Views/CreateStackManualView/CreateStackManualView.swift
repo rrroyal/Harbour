@@ -114,12 +114,10 @@ struct CreateStackManualView: View {
 				.navigationTitle(oldEntry != nil ? "CreateStackView.EditEnvironmentValue" : "CreateStackView.AddEnvironmentValue")
 				.addingCloseButton()
 			}
-			.presentationDetents([.medium])
+			.presentationDetents([.medium, .large])
+			.presentationSizing(.fitted)
 			.presentationDragIndicator(.hidden)
 			.presentationContentInteraction(.resizes)
-			#if os(macOS)
-			.sheetMinimumFrame(width: 320, height: 240)
-			#endif
 		}
 		.sheet(isPresented: $viewModel.isTextEditorSheetPresented) {
 			TextEditorView(

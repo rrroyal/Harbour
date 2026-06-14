@@ -36,7 +36,7 @@ extension CreateStackCreatorView {
 		var body: some View {
 			Form {
 				NormalizedSection {
-					TextField("CreateStackView.ServiceEditor.Volume.Source", text: $source)
+					TextField(String("/data"), text: $source)
 						.focused($focusedField, equals: .source)
 						.autocorrectionDisabled()
 						.textInputAutocapitalization(.never)
@@ -53,7 +53,7 @@ extension CreateStackCreatorView {
 				}
 
 				NormalizedSection {
-					TextField("CreateStackView.ServiceEditor.Volume.Target", text: $target)
+					TextField(String("/usr/share/nginx/html"), text: $target)
 						.focused($focusedField, equals: .target)
 						.autocorrectionDisabled()
 						.textInputAutocapitalization(.never)
@@ -71,7 +71,6 @@ extension CreateStackCreatorView {
 				}
 			}
 			.formStyle(.grouped)
-			.scrollDisabled(true)
 			.scrollDismissesKeyboard(.interactively)
 			.onAppear {
 				if source.isEmpty {

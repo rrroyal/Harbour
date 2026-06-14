@@ -45,7 +45,6 @@ extension CreateStackCreatorView {
 					)
 				}
 				.formStyle(.grouped)
-				.scrollDisabled(true)
 				.scrollDismissesKeyboard(.interactively)
 				.navigationTitle(network != nil ? "CreateStackCreatorView.NetworkEditorView.Title.Edit" : "CreateStackCreatorView.NetworkEditorView.Title.Add")
 				#if os(iOS)
@@ -61,7 +60,9 @@ extension CreateStackCreatorView {
 					HStack {
 						if network != nil {
 							Button(role: .destructive) {
-								if let network { viewModel.removeNetwork(network) }
+								if let network {
+									viewModel.removeNetwork(network)
+								}
 								dismiss()
 							} label: {
 								Label("Generic.Remove", systemImage: SFSymbol.remove)

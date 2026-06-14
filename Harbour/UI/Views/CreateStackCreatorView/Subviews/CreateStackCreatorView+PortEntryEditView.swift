@@ -41,7 +41,7 @@ extension CreateStackCreatorView {
 			Form {
 				NormalizedSection {
 					TextField(
-						"CreateStackView.ServiceEditor.Port.Host",
+						String("8080"),
 						value: $hostPort,
 						formatter: numberFormatter
 					)
@@ -63,7 +63,7 @@ extension CreateStackCreatorView {
 
 				NormalizedSection {
 					TextField(
-						"CreateStackView.ServiceEditor.Port.Container",
+						String("80"),
 						value: $containerPort,
 						formatter: numberFormatter
 					)
@@ -97,7 +97,6 @@ extension CreateStackCreatorView {
 				}
 			}
 			.formStyle(.grouped)
-			.scrollDisabled(true)
 			.scrollDismissesKeyboard(.interactively)
 			#if os(iOS)
 			.safeAreaInset(edge: .bottom) {
