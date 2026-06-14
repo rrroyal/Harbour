@@ -75,10 +75,12 @@ struct ContainerDetailsView: View {
 				containerDetails: containerDetails
 			)
 		}
-		.listStyle(.insetGrouped)
 		.scrollContentBackground(.hidden)
 		#if os(iOS)
+		.listStyle(.insetGrouped)
 		.background(Color.groupedBackground, ignoresSafeAreaEdges: .all)
+		#elseif os(macOS)
+		.listStyle(.automatic)
 		#endif
 		.toolbar {
 			toolbarContent

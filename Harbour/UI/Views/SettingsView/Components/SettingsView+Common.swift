@@ -49,7 +49,7 @@ internal extension SettingsView {
 				.frame(width: backgroundSize, height: backgroundSize, alignment: .center)
 				.foregroundStyle(Color.accentColor)
 				.background(Color.accentColor.quaternary)
-				.cornerRadius(6)
+				.clipShape(.rect(cornerRadius: 6))
 		}
 	}
 }

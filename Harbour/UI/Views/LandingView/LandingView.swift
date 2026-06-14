@@ -18,7 +18,7 @@ struct LandingView: View {
 			VStack {
 				Spacer(minLength: 20)
 
-				Text("FeaturesView.Headline AppName:\(Text("AppName").foregroundColor(.accentColor))")
+				Text("FeaturesView.Headline AppName:\(Text("AppName").foregroundStyle(Color.accentColor))")
 					.font(.largeTitle.bold())
 					.multilineTextAlignment(.center)
 					.padding(.horizontal)

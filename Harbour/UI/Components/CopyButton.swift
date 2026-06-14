@@ -11,6 +11,7 @@ import SwiftUI
 
 struct CopyButton<LabelContent: View>: View {
 	@Environment(\.presentIndicator) private var presentIndicator
+	@EnvironmentObject private var preferences: Preferences
 	var content: String?
 	@ViewBuilder var labelContent: () -> LabelContent
 

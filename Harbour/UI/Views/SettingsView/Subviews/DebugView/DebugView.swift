@@ -29,7 +29,11 @@ struct DebugView: View {
 			WidgetsSection()
 			OtherSection()
 		}
+		#if os(iOS)
 		.listStyle(.insetGrouped)
+		#elseif os(macOS)
+		.listStyle(.inset)
+		#endif
 		.navigationTitle("DebugView.Title")
 	}
 }

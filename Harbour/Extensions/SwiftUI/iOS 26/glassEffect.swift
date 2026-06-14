@@ -10,12 +10,13 @@ import SwiftUI
 
 extension View {
 	@ViewBuilder @inlinable
-	func _glassEffect(tint color: Color? = nil) -> some View {
+	func _glassEffect(tint color: Color? = nil, in shape: some Shape = .rect) -> some View {
 		if #available(iOS 26.0, macOS 26.0, *) {
 			self
-				.glassEffect(.regular.tint(color))
+				.glassEffect(.regular.tint(color), in: shape)
 		} else {
 			self
+				.background(.ultraThinMaterial, in: shape)
 		}
 	}
 
