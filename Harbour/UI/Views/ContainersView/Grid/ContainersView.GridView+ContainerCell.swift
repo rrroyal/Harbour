@@ -59,14 +59,14 @@ extension ContainersView.GridView {
 		@ViewBuilder @MainActor
 		private var nameAndStatusLabels: some View {
 			VStack(alignment: .leading, spacing: 2) {
-				Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
+				Text(container.displayName ?? String(localized: "Generic.Unknown"))
 					.font(.callout)
 					.fontWeight(.semibold)
 					.foregroundStyle(container.displayName != nil ? .primary : .secondary)
 					.lineLimit(2)
 
 				if !isBeingRemoved {
-					Text(container.status ?? String(localized: "ContainerCell.UnknownStatus"))
+					Text(container.status ?? String(localized: "Generic.Unknown"))
 						.font(.footnote)
 						.fontWeight(.medium)
 						.foregroundStyle(container.status != nil ? .secondary : .tertiary)

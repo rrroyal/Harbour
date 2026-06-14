@@ -53,7 +53,7 @@ extension Container.State {
 
 extension Container.State? {
 	var title: String {
-		self?.title ?? String(localized: "PortainerKit.Container.State.Unknown")
+		self?.title ?? String(localized: "Generic.Unknown")
 	}
 }
 

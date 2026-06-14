@@ -22,6 +22,6 @@ extension Stack.StackType {
 
 extension Stack.StackType? {
 	var title: String {
-		self?.title ?? String(localized: "PortainerKit.Stack.StackType.Unknown")
+		self?.title ?? String(localized: "Generic.Unknown")
 	}
 }

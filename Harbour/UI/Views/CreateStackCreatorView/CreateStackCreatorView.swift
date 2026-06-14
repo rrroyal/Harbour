@@ -72,7 +72,7 @@ extension CreateStackCreatorView {
 					Text(error.localizedDescription)
 				} else {
 					Label(
-						"CreateStackView.Create",
+						"Generic.Create",
 						systemImage: SFSymbol.checkmark
 					)
 				}

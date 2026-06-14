@@ -344,7 +344,7 @@ private extension ContainerDetailsView {
 					.foregroundStyle(.accent)
 					#endif
 				} header: {
-					Text("ContainerDetailsView.Section.Stack")
+					Text("Generic.Stack")
 				}
 			}
 		}

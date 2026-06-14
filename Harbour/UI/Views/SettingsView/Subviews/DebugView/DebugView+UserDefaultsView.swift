@@ -53,7 +53,7 @@ extension DebugView {
 			.searchable(text: $searchText)
 			.overlay {
 				if values.isEmpty {
-					ContentUnavailableView("DebugView.UserDefaultsView.Empty", systemImage: SFSymbol.xmark)
+					ContentUnavailableView("Generic.Empty", systemImage: SFSymbol.xmark)
 				}
 			}
 			.navigationTitle("DebugView.UserDefaultsView.Title")

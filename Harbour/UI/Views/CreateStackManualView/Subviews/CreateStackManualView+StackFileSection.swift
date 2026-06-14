@@ -175,7 +175,7 @@ private extension CreateStackManualView.StackFileSection {
 //					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isTextEditorSheetPresented = true
 				} label: {
-					Label("CreateStackView.StackFile.Create", systemImage: "character.cursor.ibeam")
+					Label("Generic.Create", systemImage: "character.cursor.ibeam")
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.contentShape(Rectangle())
 				}

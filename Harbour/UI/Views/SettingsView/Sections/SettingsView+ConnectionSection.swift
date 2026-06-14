@@ -57,7 +57,7 @@ private extension SettingsView.ConnectionSection {
 //					Haptics.generateIfEnabled(.sheetPresentation)
 					viewModel.isSetupSheetPresented = true
 				} label: {
-					Label("SettingsView.Connection.ConnectionMenu.Add", systemImage: SFSymbol.plus)
+					Label("Generic.Add", systemImage: SFSymbol.plus)
 				}
 			} label: {
 				HStack {

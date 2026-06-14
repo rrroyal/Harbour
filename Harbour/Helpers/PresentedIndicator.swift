@@ -134,9 +134,9 @@ extension PresentedIndicator {
 		case .containerRemove(let containerName, let state, let action):
 			let (icon, title, subtitle) = switch state {
 			case .loading:
-				(Indicator.Icon.progressIndicator, String(localized: "Indicators.Container.Remove"), containerName)
+				(Indicator.Icon.progressIndicator, String(localized: "Generic.Remove"), containerName)
 			case .success:
-				(Indicator.Icon.systemImage(SFSymbol.remove), String(localized: "Indicators.Container.Remove"), containerName)
+				(Indicator.Icon.systemImage(SFSymbol.remove), String(localized: "Generic.Remove"), containerName)
 			case .failure(let error):
 				(Indicator.Icon.systemImage(SFSymbol.error), String(localized: "Indicators.Error"), error.localizedDescription)
 			}

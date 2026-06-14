@@ -173,7 +173,7 @@ extension CreateStackManualView {
 					Text(error.localizedDescription)
 				} else {
 					Label(
-						viewModel.shouldCreateNewStack ? "CreateStackView.Create" : "CreateStackView.Update",
+						viewModel.shouldCreateNewStack ? "Generic.Create" : "Generic.Update",
 						systemImage: SFSymbol.checkmark
 					)
 				}

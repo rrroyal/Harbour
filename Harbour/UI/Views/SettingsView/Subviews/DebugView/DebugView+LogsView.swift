@@ -199,8 +199,8 @@ private extension DebugView.LogsView {
 			case .notice:			String(localized: "DebugView.LogsView.LogLevel.Notice")
 			case .error:			String(localized: "DebugView.LogsView.LogLevel.Error")
 			case .fault:			String(localized: "DebugView.LogsView.LogLevel.Fault")
-			case nil, .undefined:	String(localized: "DebugView.LogsView.LogLevel.None")
-			@unknown default:		String(localized: "DebugView.LogsView.LogLevel.Unknown")
+			case nil, .undefined:	String(localized: "Generic.None")
+			@unknown default:		String(localized: "Generic.Unknown")
 			}
 		}
 	}

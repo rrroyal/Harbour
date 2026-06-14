@@ -22,7 +22,7 @@ extension Stack.Status {
 
 extension Stack.Status? {
 	var title: String {
-		self?.title ?? String(localized: "PortainerKit.Stack.Status.Unknown")
+		self?.title ?? String(localized: "Generic.Unknown")
 	}
 }
 

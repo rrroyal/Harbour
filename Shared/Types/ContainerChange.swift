@@ -90,9 +90,9 @@ extension ContainerChange {
 		var title: String {
 			switch self {
 			case .created:		String(localized: "ContainerChange.Created")
-			case .recreated:	String(localized: "ContainerChange.Recreated")
+			case .recreated:	String(localized: "Generic.Recreated")
 			case .changed:		String(localized: "ContainerChange.Changed")
-			case .removed:		String(localized: "ContainerChange.Removed")
+			case .removed:		String(localized: "Generic.Removed")
 			}
 		}
 

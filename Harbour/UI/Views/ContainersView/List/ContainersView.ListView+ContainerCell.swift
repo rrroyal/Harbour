@@ -32,7 +32,7 @@ extension ContainersView.ListView {
 
 		@ViewBuilder @MainActor
 		private var headlineLabel: some View {
-			Text(container.displayName ?? String(localized: "ContainerCell.UnknownName"))
+			Text(container.displayName ?? String(localized: "Generic.Unknown"))
 				.font(.headline)
 				.fontWeight(.semibold)
 				.foregroundStyle(container.displayName != nil ? .primary : .secondary)
