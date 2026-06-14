@@ -18,12 +18,11 @@ import SwiftUI
 // MARK: - Preferences
 
 /// UserDefaults wrapper; user preferences store.
-@MainActor
-public final class Preferences: ObservableObject {
+public final class Preferences: ObservableObject, @unchecked Sendable {
 	public static let shared = Preferences()
 
 	// swiftlint:disable:next force_unwrapping
-	static let userDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
+	nonisolated(unsafe) static let userDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
 
 	private let logger = Logger(.custom(Preferences.self))
 
@@ -49,7 +48,7 @@ public final class Preferences: ObservableObject {
 
 	/// Selected server URL
 	@AppStorage("SelectedServer", store: Preferences.userDefaults)
-	public var selectedServer: String?
+	public var selectedServer: URL?
 
 	/// Selected endpoint
 	@AppStorage("SelectedEndpointID", store: Preferences.userDefaults)

@@ -12,7 +12,7 @@ import PortainerKit
 struct PortainerDeeplink {
 	let baseURL: URL
 
-	init?(baseURL: URL?) {
+	init?(baseURL: URL? = Preferences.shared.selectedServer) {
 		guard let baseURL else { return nil }
 		self.baseURL = baseURL
 	}

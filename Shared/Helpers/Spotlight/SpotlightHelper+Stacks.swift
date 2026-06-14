@@ -18,8 +18,6 @@ extension SpotlightHelper {
 
 		let index = CSSearchableIndex.default()
 
-		let portainerDeeplink: PortainerDeeplink? = await PortainerDeeplink(baseURL: PortainerStore.shared.serverURL)
-
 		do {
 			try await index.deleteSearchableItems(withDomainIdentifiers: [DomainIdentifier.stack])
 		} catch {
@@ -34,7 +32,7 @@ extension SpotlightHelper {
 				attributes.title = stack.name
 				attributes.contentDescription = stack.id.description
 				attributes.contentType = UTType.url.identifier
-				attributes.contentURL = portainerDeeplink?.stackURL(stack: stack)
+				attributes.contentURL = PortainerDeeplink()?.stackURL(stack: stack)
 				attributes.keywords = [
 					stack.id.description,
 					stack.name
