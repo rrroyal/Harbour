@@ -25,7 +25,7 @@ struct CopyButton<LabelContent: View>: View {
 	var body: some View {
 		Button {
 			Haptics.generateIfEnabled(.selectionChanged)
-			presentIndicator(.copied(content))
+			presentIndicator(.copied(nil))
 
 			#if os(macOS)
 			if let content {
