@@ -131,10 +131,13 @@ extension CreateStackCreatorView.ServiceEditorView {
 		@Binding var networks: [Network]
 
 		var body: some View {
-			CreateStackCreatorView.NetworkEditorView(network: network) { newNetwork in
-				if !networks.contains(newNetwork) {
-					networks.append(newNetwork)
+			NavigationStack {
+				CreateStackCreatorView.NetworkEditorView(network: network) { newNetwork in
+					if !networks.contains(newNetwork) {
+						networks.append(newNetwork)
+					}
 				}
+				.addingCloseButton()
 			}
 		}
 	}

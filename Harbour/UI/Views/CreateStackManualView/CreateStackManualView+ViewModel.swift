@@ -83,7 +83,7 @@ extension CreateStackManualView {
 						let stackSettings = StackDeployment.DeploymentSettings.StandaloneString(
 							env: stackEnvironment.map { .init(name: $0.key, value: $0.value) },
 							fromAppTemplate: nil,
-							name: stackName,
+							name: stackName.replacingOccurrences(of: " ", with: "-"),
 							stackFileContent: stackFileContent
 						)
 						let createdStack = try await portainerStore.createStack(stackSettings: stackSettings)

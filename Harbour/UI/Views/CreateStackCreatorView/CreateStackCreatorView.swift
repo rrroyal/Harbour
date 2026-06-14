@@ -42,14 +42,13 @@ struct CreateStackCreatorView: View {
 				.background(Color.groupedBackground)
 		}
 		#endif
-		.sheet(item: $viewModel.serviceSheetMode) { mode in
+		.navigationDestination(item: $viewModel.serviceEditorMode) { mode in
 			ServiceEditorView(service: mode.unwrapped)
+				.environment(viewModel)
 		}
-		.sheet(item: $viewModel.networkSheetMode) { mode in
+		.navigationDestination(item: $viewModel.networkEditorMode) { mode in
 			NetworkEditorView(network: mode.unwrapped)
-				.presentationDetents([.medium, .large])
-				.presentationDragIndicator(.hidden)
-				.presentationContentInteraction(.resizes)
+				.environment(viewModel)
 		}
 		.toolbar {
 			#if os(macOS)
@@ -107,12 +106,16 @@ private extension CreateStackCreatorView {
 			@Bindable var viewModel = viewModel
 
 			NormalizedSection {
-				TextField("CreateStackView.Name", text: $viewModel.stackName)
-					.fontDesign(.monospaced)
-					.autocorrectionDisabled()
-					.labelsHidden()
-					.submitLabel(.continue)
-					.focused($isFocused)
+				TextField(
+					"CreateStackView.Name",
+					value: $viewModel.stackName.replacing(" ", with: "-"),
+					formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+				)
+				.fontDesign(.monospaced)
+				.autocorrectionDisabled()
+				.labelsHidden()
+				.submitLabel(.continue)
+				.focused($isFocused)
 			} header: {
 				Text("CreateStackView.Name")
 			} footer: {
@@ -132,7 +135,7 @@ private extension CreateStackCreatorView {
 			NormalizedSection {
 				ForEach(viewModel.services) { service in
 					Button {
-						viewModel.serviceSheetMode = .edit(service)
+						viewModel.serviceEditorMode = .edit(service)
 					} label: {
 						VStack(alignment: .leading) {
 							Text(service.name.isReallyEmpty ? String(localized: "CreateStackView.ComposeCreator.Service.Unnamed") : service.name)
@@ -147,7 +150,7 @@ private extension CreateStackCreatorView {
 					}
 					.contextMenu {
 						Button {
-							viewModel.serviceSheetMode = .edit(service)
+							viewModel.serviceEditorMode = .edit(service)
 						} label: {
 							Label("Generic.Edit", systemImage: SFSymbol.edit)
 						}
@@ -170,7 +173,7 @@ private extension CreateStackCreatorView {
 				}
 
 				Button {
-					viewModel.serviceSheetMode = .create
+					viewModel.serviceEditorMode = .create
 				} label: {
 					Label("Generic.Add", systemImage: SFSymbol.plus)
 				}
@@ -194,7 +197,7 @@ private extension CreateStackCreatorView {
 			NormalizedSection {
 				ForEach(viewModel.networks) { network in
 					Button {
-						viewModel.networkSheetMode = .edit(network)
+						viewModel.networkEditorMode = .edit(network)
 					} label: {
 						HStack {
 							Text(network.name)
@@ -203,7 +206,7 @@ private extension CreateStackCreatorView {
 					}
 					.contextMenu {
 						Button {
-							viewModel.networkSheetMode = .edit(network)
+							viewModel.networkEditorMode = .edit(network)
 						} label: {
 							Label("Generic.Edit", systemImage: SFSymbol.edit)
 						}
@@ -226,7 +229,7 @@ private extension CreateStackCreatorView {
 				}
 
 				Button {
-					viewModel.networkSheetMode = .create
+					viewModel.networkEditorMode = .create
 				} label: {
 					Label("Generic.Add", systemImage: SFSymbol.plus)
 				}

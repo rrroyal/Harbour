@@ -32,61 +32,54 @@ extension CreateStackCreatorView {
 		}
 
 		var body: some View {
-			NavigationStack {
-				Form {
-					NameSection(
-						name: $name,
-						focusedField: $focusedField,
-						onSubmit: saveNetwork
-					)
+			Form {
+				NameSection(
+					name: $name,
+					focusedField: $focusedField,
+					onSubmit: saveNetwork
+				)
 
-					GeneralSettingsSection(
-						external: $external
-					)
-				}
-				.formStyle(.grouped)
-				.scrollDismissesKeyboard(.interactively)
-				.navigationTitle(network != nil ? "CreateStackCreatorView.NetworkEditorView.Title.Edit" : "CreateStackCreatorView.NetworkEditorView.Title.Add")
-				#if os(iOS)
-				.navigationBarTitleDisplayMode(.inline)
-				#endif
-				.toolbar {
-					ToolbarItem(placement: .cancellationAction) {
-						CloseButton()
-					}
-				}
-				#if os(iOS)
-				.safeAreaInset(edge: .bottom) {
-					HStack {
-						if network != nil {
-							Button(role: .destructive) {
-								if let network {
-									viewModel.removeNetwork(network)
-								}
-								dismiss()
-							} label: {
-								Label("Generic.Remove", systemImage: SFSymbol.remove)
-							}
-							.buttonStyle(.customPrimary(backgroundColor: .red))
-						}
-
-						Button {
-							saveNetwork()
-						} label: {
-							Label(
-								network != nil ? "Generic.Save" : "Generic.Add",
-								systemImage: network != nil ? SFSymbol.apply : SFSymbol.plus
-							)
-						}
-						.keyboardShortcut(.defaultAction)
-						.disabled(!canSave)
-						.buttonStyle(.customPrimary)
-					}
-					._inGlassEffectContainer()
-					.padding()
-				}
-				#endif
+				GeneralSettingsSection(
+					external: $external
+				)
 			}
+			.formStyle(.grouped)
+			.scrollDismissesKeyboard(.interactively)
+			.navigationTitle(network != nil ? "CreateStackCreatorView.NetworkEditorView.Title.Edit" : "CreateStackCreatorView.NetworkEditorView.Title.Add")
+			#if os(iOS)
+			.navigationBarTitleDisplayMode(.inline)
+			#endif
+			#if os(iOS)
+			.safeAreaInset(edge: .bottom) {
+				HStack {
+					if network != nil {
+						Button(role: .destructive) {
+							if let network {
+								viewModel.removeNetwork(network)
+							}
+							dismiss()
+						} label: {
+							Label("Generic.Remove", systemImage: SFSymbol.remove)
+						}
+						.buttonStyle(.customPrimary(backgroundColor: .red))
+					}
+
+					Button {
+						saveNetwork()
+					} label: {
+						Label(
+							network != nil ? "Generic.Save" : "Generic.Add",
+							systemImage: network != nil ? SFSymbol.apply : SFSymbol.plus
+						)
+					}
+					.keyboardShortcut(.defaultAction)
+					.disabled(!canSave)
+					.buttonStyle(.customPrimary)
+				}
+				._inGlassEffectContainer()
+				.padding()
+			}
+			#endif
 			.onAppear {
 				if name.isEmpty {
 					focusedField = .name
@@ -111,7 +104,9 @@ private extension CreateStackCreatorView.NetworkEditorView {
 		guard canSave else { return }
 
 		let entry = CreateStackCreatorView.ViewModel.Network(
-			name: name.trimmingCharacters(in: .whitespacesAndNewlines),
+			name: name
+				.trimmingCharacters(in: .whitespacesAndNewlines)
+				.replacingOccurrences(of: " ", with: "-"),
 			external: external
 		)
 		viewModel.saveNetwork(entry)
@@ -141,7 +136,8 @@ private extension CreateStackCreatorView.NetworkEditorView {
 			NormalizedSection {
 				TextField(
 					String("my-network"),
-					text: $name
+					value: $name.replacing(" ", with: "-"),
+					formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
 				)
 				.focused($focusedField, equals: .name)
 				.autocorrectionDisabled()
@@ -175,14 +171,18 @@ private extension CreateStackCreatorView.NetworkEditorView {
 #Preview("Add Network") {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
-	CreateStackCreatorView.NetworkEditorView(network: nil)
-		.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
+	NavigationStack {
+		CreateStackCreatorView.NetworkEditorView(network: nil)
+	}
+	.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
 }
 
 #Preview("Edit Network") {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
 	let network = CreateStackCreatorView.ViewModel.Network(name: "my-network", external: true)
-	CreateStackCreatorView.NetworkEditorView(network: network)
-		.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
+	NavigationStack {
+		CreateStackCreatorView.NetworkEditorView(network: network)
+	}
+	.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
 }

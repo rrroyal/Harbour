@@ -39,8 +39,8 @@ extension CreateStackCreatorView {
 			!(createStackTask?.isCancelled ?? true)
 		}
 
-		var serviceSheetMode: CreateOrEdit<Service>?
-		var networkSheetMode: CreateOrEdit<Network>?
+		var serviceEditorMode: CreateOrEdit<Service>?
+		var networkEditorMode: CreateOrEdit<Network>?
 
 		func saveService(_ service: Service) {
 			if let index = services.firstIndex(where: { $0.id == service.id }) {
@@ -82,7 +82,7 @@ extension CreateStackCreatorView {
 					let stackSettings = StackDeployment.DeploymentSettings.StandaloneString(
 						env: [],
 						fromAppTemplate: nil,
-						name: stackName,
+						name: stackName.replacingOccurrences(of: " ", with: "-"),
 						stackFileContent: fileContent
 					)
 					let createdStack = try await portainerStore.createStack(stackSettings: stackSettings)

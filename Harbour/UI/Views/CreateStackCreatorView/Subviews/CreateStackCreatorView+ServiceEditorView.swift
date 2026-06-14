@@ -30,71 +30,69 @@ extension CreateStackCreatorView {
 		}
 
 		var body: some View {
-			NavigationStack {
-				Form {
-					IdentitySection(
-						service: $editedService,
-						focusedField: $focusedField
-					)
-					EnvironmentSection(
-						environment: $editedService.environment,
-						onAdd: { presentedSheet = .editEnvironment(nil) },
-						onEdit: { presentedSheet = .editEnvironment($0) },
-						onRemove: { entry in
-							editedService.removeEnvironmentEntry(entry)
-						}
-					)
-					VolumesSection(
-						volumes: $editedService.volumes,
-						onAdd: { presentedSheet = .editVolume(nil) },
-						onEdit: { presentedSheet = .editVolume($0) },
-						onRemove: { volume in
-							editedService.removeVolume(volume)
-						}
-					)
-					PortsSection(
-						ports: $editedService.ports,
-						onAdd: { presentedSheet = .editPort(nil) },
-						onEdit: { presentedSheet = .editPort($0) },
-						onRemove: { port in
-							editedService.removePort(port)
-						}
-					)
-					NetworksSection(
-						selectedNetworks: $editedService.networks,
-						availableNetworks: viewModel.networks,
-						onAdd: { presentedSheet = .editNetwork(nil) },
-						onEdit: { presentedSheet = .editNetwork($0) },
-						onRemove: { network in
-							viewModel.removeNetwork(network)
-							editedService.removeNetwork(network)
-						}
-					)
-				}
-				.formStyle(.grouped)
-				.scrollDismissesKeyboard(.interactively)
-				.navigationTitle(service != nil ? "CreateStackView.ServiceEditor.Title.Edit" : "CreateStackView.ServiceEditor.Title.Add")
-				#if os(iOS)
-				.navigationBarTitleDisplayMode(.inline)
-				#endif
-				.toolbar {
-					ToolbarItem(placement: .cancellationAction) {
-						CloseButton { dismiss() }
+			Form {
+				IdentitySection(
+					service: $editedService,
+					focusedField: $focusedField
+				)
+				EnvironmentSection(
+					environment: $editedService.environment,
+					onAdd: { presentedSheet = .editEnvironment(nil) },
+					onEdit: { presentedSheet = .editEnvironment($0) },
+					onRemove: { entry in
+						editedService.removeEnvironmentEntry(entry)
 					}
-					ToolbarItem(placement: .confirmationAction) {
-						Button {
-							viewModel.saveService(editedService)
-							dismiss()
-						} label: {
-							Label(
-								service != nil ? "Generic.Save" : "Generic.Add",
-								systemImage: service != nil ? SFSymbol.apply : SFSymbol.plus
-							)
-						}
-						.keyboardShortcut(.defaultAction)
-						.disabled(!canSave)
-						.animation(.default, value: canSave)
+				)
+				VolumesSection(
+					volumes: $editedService.volumes,
+					onAdd: { presentedSheet = .editVolume(nil) },
+					onEdit: { presentedSheet = .editVolume($0) },
+					onRemove: { volume in
+						editedService.removeVolume(volume)
 					}
+				)
+				PortsSection(
+					ports: $editedService.ports,
+					onAdd: { presentedSheet = .editPort(nil) },
+					onEdit: { presentedSheet = .editPort($0) },
+					onRemove: { port in
+						editedService.removePort(port)
+					}
+				)
+				NetworksSection(
+					selectedNetworks: $editedService.networks,
+					availableNetworks: viewModel.networks,
+					onAdd: { presentedSheet = .editNetwork(nil) },
+					onEdit: { presentedSheet = .editNetwork($0) },
+					onRemove: { network in
+						viewModel.removeNetwork(network)
+						editedService.removeNetwork(network)
+					}
+				)
+			}
+			.formStyle(.grouped)
+			.scrollDismissesKeyboard(.interactively)
+			.navigationTitle(service != nil ? "CreateStackView.ServiceEditor.Title.Edit" : "CreateStackView.ServiceEditor.Title.Add")
+			#if os(iOS)
+			.navigationBarTitleDisplayMode(.inline)
+			#endif
+			.toolbar {
+				ToolbarItem(placement: .confirmationAction) {
+					Button {
+						var normalized = editedService
+						normalized.name = normalized.name.replacingOccurrences(of: " ", with: "-")
+						normalized.image = normalized.image.replacingOccurrences(of: " ", with: "-")
+						viewModel.saveService(normalized)
+						dismiss()
+					} label: {
+						Label(
+							service != nil ? "Generic.Save" : "Generic.Add",
+							systemImage: service != nil ? SFSymbol.apply : SFSymbol.plus
+						)
+					}
+					.keyboardShortcut(.defaultAction)
+					.disabled(!canSave)
+					.animation(.default, value: canSave)
 				}
 			}
 			.sheet(item: $presentedSheet, content: sheetContent)
@@ -117,29 +115,39 @@ extension CreateStackCreatorView.ServiceEditorView {
 		var body: some View {
 			Group {
 				NormalizedSection {
-					TextField(String("service"), text: $service.name)
-						.focused($focusedField, equals: .name)
-						.autocorrectionDisabled()
-						.textInputAutocapitalization(.never)
-						.fontDesign(.monospaced)
-						.labelsHidden()
-						.submitLabel(.next)
-						.onSubmit {
-							focusedField = .image
-						}
+					TextField(
+						String("service"),
+						value: $service.name.replacing(" ", with: "-"),
+						formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+					)
+					.focused($focusedField, equals: .name)
+					.autocorrectionDisabled()
+					.textInputAutocapitalization(.never)
+					.fontDesign(.monospaced)
+					.labelsHidden()
+					.submitLabel(.next)
+					.onSubmit {
+						focusedField = .image
+					}
 				} header: {
 					Text("CreateStackView.ServiceEditor.Name")
 				}
 
 				NormalizedSection {
-					TextField(String("image"), text: $service.image)
-						.focused($focusedField, equals: .image)
-						.autocorrectionDisabled()
-						.textInputAutocapitalization(.never)
-						.fontDesign(.monospaced)
-						.labelsHidden()
-						.submitLabel(.done)
-						.onSubmit { focusedField = nil }
+					TextField(
+						String("image"),
+						value: $service.image.replacing(" ", with: "-"),
+						formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+					)
+					.focused($focusedField, equals: .image)
+					.autocorrectionDisabled()
+					.textInputAutocapitalization(.never)
+					.fontDesign(.monospaced)
+					.labelsHidden()
+					.submitLabel(.done)
+					.onSubmit {
+						focusedField = nil
+					}
 				} header: {
 					Text("CreateStackView.ServiceEditor.Image")
 				} footer: {
@@ -427,5 +435,5 @@ private extension CreateStackCreatorView.ServiceEditorView {
 	NavigationStack {
 		CreateStackCreatorView.ServiceEditorView(service: service)
 	}
-	.environment(CreateStackManualView.ViewModel(portainerStore: portainerStore))
+	.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
 }

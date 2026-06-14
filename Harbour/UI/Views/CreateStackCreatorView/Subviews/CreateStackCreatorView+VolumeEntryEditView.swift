@@ -36,16 +36,20 @@ extension CreateStackCreatorView {
 		var body: some View {
 			Form {
 				NormalizedSection {
-					TextField(String("/data"), text: $source)
-						.focused($focusedField, equals: .source)
-						.autocorrectionDisabled()
-						.textInputAutocapitalization(.never)
-						.fontDesign(.monospaced)
-						.labelsHidden()
-						.submitLabel(.next)
-						.onSubmit {
-							focusedField = .target
-						}
+					TextField(
+						String("/data"),
+						value: $source.replacing(" ", with: "-"),
+						formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+					)
+					.focused($focusedField, equals: .source)
+					.autocorrectionDisabled()
+					.textInputAutocapitalization(.never)
+					.fontDesign(.monospaced)
+					.labelsHidden()
+					.submitLabel(.next)
+					.onSubmit {
+						focusedField = .target
+					}
 				} header: {
 					Text("CreateStackView.ServiceEditor.Volume.Source")
 				} footer: {
@@ -53,17 +57,21 @@ extension CreateStackCreatorView {
 				}
 
 				NormalizedSection {
-					TextField(String("/usr/share/nginx/html"), text: $target)
-						.focused($focusedField, equals: .target)
-						.autocorrectionDisabled()
-						.textInputAutocapitalization(.never)
-						.fontDesign(.monospaced)
-						.labelsHidden()
-						.submitLabel(.done)
-						.onSubmit {
-							focusedField = nil
-							if canSave { saveEntry() }
-						}
+					TextField(
+						String("/usr/share/nginx/html"),
+						value: $target.replacing(" ", with: "-"),
+						formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+					)
+					.focused($focusedField, equals: .target)
+					.autocorrectionDisabled()
+					.textInputAutocapitalization(.never)
+					.fontDesign(.monospaced)
+					.labelsHidden()
+					.submitLabel(.done)
+					.onSubmit {
+						focusedField = nil
+						if canSave { saveEntry() }
+					}
 				} header: {
 					Text("CreateStackView.ServiceEditor.Volume.Target")
 				} footer: {
@@ -152,8 +160,12 @@ private extension CreateStackCreatorView.VolumeEntryEditView {
 	func saveEntry() {
 		guard canSave else { return}
 
-		let source = source.trimmingCharacters(in: .whitespacesAndNewlines)
-		let target = target.trimmingCharacters(in: .whitespacesAndNewlines)
+		let source = source
+			.trimmingCharacters(in: .whitespacesAndNewlines)
+			.replacingOccurrences(of: " ", with: "-")
+		let target = target
+			.trimmingCharacters(in: .whitespacesAndNewlines)
+			.replacingOccurrences(of: " ", with: "-")
 
 		let entry = CreateStackCreatorView.ViewModel.Service.VolumeEntry(
 			source: source,

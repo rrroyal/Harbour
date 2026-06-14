@@ -54,13 +54,19 @@ struct CreateStackManualView: View {
 	var body: some View {
 		Form {
 			NormalizedSection {
-				TextField("CreateStackView.Name", text: $viewModel.stackName)
-					.fontDesign(.monospaced)
-					.autocorrectionDisabled()
-					.labelsHidden()
-					.submitLabel(viewModel.canCreateStack ? .send : .continue)
-					.onSubmit { submitStack() }
-					.focused($focusedField, equals: .textfieldName)
+				TextField(
+					"CreateStackView.Name",
+					value: $viewModel.stackName.replacing(" ", with: "-"),
+					formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+				)
+				.fontDesign(.monospaced)
+				.autocorrectionDisabled()
+				.labelsHidden()
+				.focused($focusedField, equals: .textfieldName)
+				.submitLabel(viewModel.canCreateStack ? .send : .continue)
+				.onSubmit {
+					submitStack()
+				}
 			} header: {
 				Text("CreateStackView.Name")
 			}
