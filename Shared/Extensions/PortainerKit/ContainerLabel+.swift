@@ -13,7 +13,7 @@ import PortainerKit
 // swiftlint:disable force_unwrapping
 
 extension ContainerLabel {
-	static let associationID = "\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!).Association_ID"
+	static let associationID = "\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!).association_id".lowercased()
 }
 
 // swiftlint:enable force_unwrapping

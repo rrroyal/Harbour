@@ -27,13 +27,15 @@ extension Container {
 	}
 
 	/// Name of the stack associated with this container.
+	/// Falls back to the Docker Swarm namespace label for Swarm-managed containers.
 	var stack: String? {
-		labels?.first { $0.key.localizedCaseInsensitiveCompare(ContainerLabel.stack) == .orderedSame }?.value
+		labels?.first { $0.key.lowercased() == ContainerLabel.stack }?.value ??
+		labels?.first { $0.key.lowercased() == ContainerLabel.swarmStack }?.value
 	}
 
 	/// ID of Harbour container association.
 	var associationID: String? {
-		labels?.first { $0.key.localizedCaseInsensitiveCompare(ContainerLabel.associationID) == .orderedSame }?.value
+		labels?.first { $0.key.lowercased() == ContainerLabel.associationID }?.value
 	}
 
 	/// Exit code of this container.
