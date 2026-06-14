@@ -15,6 +15,7 @@ extension ContentView {
 		@Environment(SceneDelegate.self) private var sceneDelegate
 		@Environment(PortainerStore.self) private var portainerStore
 		@Environment(AppState.self) private var appState
+		@Environment(\.horizontalSizeClass) private var horizontalSizeClass
 		@EnvironmentObject private var preferences: Preferences
 
 		var body: some View {
@@ -28,16 +29,16 @@ extension ContentView {
 								ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 							}
 					} detail: {
-						NavigationStack(path: $sceneDelegate.navigationState.containers) {
-							if let selectedItem = sceneDelegate.selectedContainerNavigationItem {
+						NavigationStack(path: $sceneDelegate.navigationState.containersNavigationPath) {
+							if let selectedItem = sceneDelegate.navigationState.containerNavigationItem {
 								ContainerDetailsView(navigationItem: selectedItem, portainerStore: portainerStore)
 							} else {
 								Text("ContainersView.NoContainerSelectedPlaceholder")
 									.foregroundStyle(.tertiary)
+									.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
+										ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
+									}
 							}
-						}
-						.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-							ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 						}
 					}
 				} label: {
@@ -55,16 +56,16 @@ extension ContentView {
 								StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 							}
 					} detail: {
-						NavigationStack(path: $sceneDelegate.navigationState.stacks) {
-							if let selectedItem = sceneDelegate.selectedStackNavigationItem {
+						NavigationStack(path: $sceneDelegate.navigationState.stacksNavigationPath) {
+							if let selectedItem = sceneDelegate.navigationState.stackNavigationItem {
 								StackDetailsView(navigationItem: selectedItem, portainerStore: portainerStore)
 							} else {
 								Text("StacksView.NoStackSelectedPlaceholder")
 									.foregroundStyle(.tertiary)
+									.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
+										StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
+									}
 							}
-						}
-						.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-							StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 						}
 					}
 				} label: {
@@ -78,19 +79,6 @@ extension ContentView {
 			.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
 				SettingsView(portainerStore: portainerStore, appState: appState)
 //					.navigationTransition(.zoom(sourceID: SettingsView.id, in: namespace))
-			}
-			.onChange(of: sceneDelegate.selectedContainerNavigationItem) { _, new in
-				// Clear deeper navigation when user actively selects a new container.
-				// Guard against nil to avoid wiping paths set by deeplink navigation,
-				// since deeplinks set selection→nil then separately populate the path.
-				if new != nil {
-					sceneDelegate.navigationState.containers = NavigationPath()
-				}
-			}
-			.onChange(of: sceneDelegate.selectedStackNavigationItem) { _, new in
-				if new != nil {
-					sceneDelegate.navigationState.stacks = NavigationPath()
-				}
 			}
 		}
 	}

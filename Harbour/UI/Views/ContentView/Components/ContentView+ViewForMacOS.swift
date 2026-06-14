@@ -130,11 +130,6 @@ private extension ContentView.ViewForMacOS {
 				.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
 					ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 				}
-				.onChange(of: sceneDelegate.selectedContainerNavigationItem) { _, new in
-					if new != nil {
-						sceneDelegate.navigationState.containers = NavigationPath()
-					}
-				}
 			case .stacks:
 				NavigationStack(path: $sceneDelegate.navigationState.stacks) {
 					if let selectedItem = sceneDelegate.selectedStackNavigationItem {
@@ -146,11 +141,6 @@ private extension ContentView.ViewForMacOS {
 				}
 				.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
 					StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
-				}
-				.onChange(of: sceneDelegate.selectedStackNavigationItem) { _, new in
-					if new != nil {
-						sceneDelegate.navigationState.stacks = NavigationPath()
-					}
 				}
 			}
 		}

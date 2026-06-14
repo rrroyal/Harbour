@@ -22,7 +22,7 @@ extension StacksView {
 
 		var body: some View {
 			@Bindable var sceneDelegate = sceneDelegate
-			List(selection: $sceneDelegate.selectedStackNavigationItem) {
+			List(selection: $sceneDelegate.navigationState.stackNavigationItem) {
 				ForEach(stacks) { stackItem in
 					let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
 

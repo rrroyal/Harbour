@@ -27,21 +27,21 @@ extension SceneDelegate: DeeplinkHandlable {
 		switch tab {
 		case .containers:
 			if removePreviousItems {
-				navigationState.containers.removeLast(navigationState.containers.count)
-				selectedContainerNavigationItem = nil
+				navigationState.containersNavigationPath = .init()
+				navigationState.containerNavigationItem = nil
 			}
 
 			for navigationItem in repeat each navigationItems {
-				navigationState.containers.append(navigationItem)
+				navigationState.containersNavigationPath.append(navigationItem)
 			}
 		case .stacks:
 			if removePreviousItems {
-				navigationState.stacks.removeLast(navigationState.stacks.count)
-				selectedStackNavigationItem = nil
+				navigationState.stacksNavigationPath = .init()
+				navigationState.stackNavigationItem = nil
 			}
 
 			for navigationItem in repeat each navigationItems {
-				navigationState.stacks.append(navigationItem)
+				navigationState.stacksNavigationPath.append(navigationItem)
 			}
 		}
 	}
@@ -63,14 +63,22 @@ extension SceneDelegate: DeeplinkHandlable {
 			navigate(to: .containers)
 		case .containerDetails:
 			typealias DestinationView = ContainerDetailsView
+			let destination = destination as! DestinationView.DeeplinkDestination
+
 			navigate(to: .containers)
-			DestinationView.handleNavigation(&navigationState.containers, with: destination as! DestinationView.DeeplinkDestination)
+
+			DestinationView.handleNavigation(&navigationState.containersNavigationPath, with: destination)
+			navigationState.containerNavigationItem = DestinationView.NavigationItem(from: destination)
 		case .stacks:
 			navigate(to: .stacks)
 		case .stackDetails:
 			typealias DestinationView = StackDetailsView
+			let destination = destination as! DestinationView.DeeplinkDestination
+
 			navigate(to: .stacks)
-			DestinationView.handleNavigation(&navigationState.stacks, with: destination as! DestinationView.DeeplinkDestination)
+
+			DestinationView.handleNavigation(&navigationState.stacksNavigationPath, with: destination)
+			navigationState.stackNavigationItem = DestinationView.NavigationItem(stackID: destination.stackID, stackName: destination.stackName)
 		case .settings:
 			isSettingsSheetPresented = true
 		}
@@ -82,7 +90,10 @@ extension SceneDelegate: DeeplinkHandlable {
 
 extension SceneDelegate {
 	struct NavigationState {
-		var containers = NavigationPath()
-		var stacks = NavigationPath()
+		var containersNavigationPath = NavigationPath()
+		var containerNavigationItem: ContainerDetailsView.NavigationItem?
+
+		var stacksNavigationPath = NavigationPath()
+		var stackNavigationItem: StackDetailsView.NavigationItem?
 	}
 }
