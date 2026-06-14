@@ -1,5 +1,5 @@
 //
-//  CreateStackManualView+StackFileView.swift
+//  CreateStackManualView+StackFileSection.swift
 //  Harbour
 //
 //  Created by royal on 15/04/2024.
@@ -10,10 +10,8 @@ import CommonHaptics
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - CreateStackManualView+StackFileView
-
 extension CreateStackManualView {
-	struct StackFileView: View {
+	struct StackFileSection: View {
 		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 		@Environment(\.errorHandler) private var errorHandler
 		var allowedContentTypes: [UTType]
@@ -56,9 +54,9 @@ extension CreateStackManualView {
 	}
 }
 
-// MARK: - CreateStackManualView.StackFileView+Actions
+// MARK: - Actions
 
-private extension CreateStackManualView.StackFileView {
+private extension CreateStackManualView.StackFileSection {
 	func onItemsDrop(_ items: [NSItemProvider]) -> Bool {
 		let item = items.first { $0.hasItemConformingToTypeIdentifier(UTType.yaml.identifier) }
 		guard let item else { return false }
@@ -90,9 +88,9 @@ private extension CreateStackManualView.StackFileView {
 	}
 }
 
-// MARK: - CreateStackManualView.StackFileView+Subviews
+// MARK: - Subviews
 
-private extension CreateStackManualView.StackFileView {
+private extension CreateStackManualView.StackFileSection {
 	struct ViewForFileContent: View {
 		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 		var stackFileContent: String
@@ -227,7 +225,7 @@ private extension CreateStackManualView.StackFileView {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
 	Form {
-		CreateStackManualView.StackFileView(
+		CreateStackManualView.StackFileSection(
 			allowedContentTypes: []
 		)
 	}

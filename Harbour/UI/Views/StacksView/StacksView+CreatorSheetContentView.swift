@@ -27,9 +27,6 @@ extension StacksView {
 				#endif
 				.addingCloseButton()
 			}
-			#if os(macOS)
-			.sheetMinimumFrame(width: 380, height: 400)
-			#endif
 		}
 	}
 }

@@ -49,6 +49,7 @@ struct KeyValueEditView: View {
 			)
 		}
 		.keyboardShortcut(.defaultAction)
+		.buttonStyle(.borderedProminent)
 		.disabled(!canSave)
 		.animation(.default, value: canSave)
 	}
@@ -62,6 +63,7 @@ struct KeyValueEditView: View {
 			Label("Generic.Remove", systemImage: SFSymbol.remove)
 		}
 		.keyboardShortcut(.delete)
+		.buttonStyle(.borderedProminent)
 		.tint(.red)
 	}
 
@@ -103,28 +105,7 @@ struct KeyValueEditView: View {
 		.formStyle(.grouped)
 		.scrollDisabled(true)
 		.scrollDismissesKeyboard(.interactively)
-		.onAppear {
-			if key.isEmpty && value.isEmpty {
-				focusedField = .textfieldKey
-			}
-		}
-		#if os(iOS)
-		.safeAreaInset(edge: .bottom) {
-			HStack {
-				if entry != nil {
-					removeButton
-						.buttonStyle(.customPrimary(backgroundColor: .red))
-				}
-
-				saveButton
-					.buttonStyle(.customPrimary)
-			}
-			._inGlassEffectContainer()
-			.padding()
-		}
-		#endif
 		.toolbar {
-			#if os(macOS)
 			ToolbarItem(placement: .primaryAction) {
 				saveButton
 			}
@@ -132,11 +113,13 @@ struct KeyValueEditView: View {
 			ToolbarItem(placement: .destructiveAction) {
 				if entry != nil {
 					removeButton
-						.buttonStyle(.borderedProminent)
-						.tint(.red)
 				}
 			}
-			#endif
+		}
+		.onAppear {
+			if key.isEmpty && value.isEmpty {
+				focusedField = .textfieldKey
+			}
 		}
 	}
 }

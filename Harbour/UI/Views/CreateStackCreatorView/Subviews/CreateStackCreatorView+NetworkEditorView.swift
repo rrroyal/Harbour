@@ -49,21 +49,8 @@ extension CreateStackCreatorView {
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
-			#if os(iOS)
-			.safeAreaInset(edge: .bottom) {
-				HStack {
-					if network != nil {
-						Button(role: .destructive) {
-							if let network {
-								viewModel.removeNetwork(network)
-							}
-							dismiss()
-						} label: {
-							Label("Generic.Remove", systemImage: SFSymbol.remove)
-						}
-						.buttonStyle(.customPrimary(backgroundColor: .red))
-					}
-
+			.toolbar {
+				ToolbarItem(placement: .confirmationAction) {
 					Button {
 						saveNetwork()
 					} label: {
@@ -72,14 +59,27 @@ extension CreateStackCreatorView {
 							systemImage: network != nil ? SFSymbol.apply : SFSymbol.plus
 						)
 					}
+					.buttonStyle(.borderedProminent)
 					.keyboardShortcut(.defaultAction)
 					.disabled(!canSave)
-					.buttonStyle(.customPrimary)
 				}
-				._inGlassEffectContainer()
-				.padding()
+
+				if network != nil {
+					ToolbarItem(placement: .destructiveAction) {
+						Button(role: .destructive) {
+							if let network {
+								viewModel.removeNetwork(network)
+							}
+							dismiss()
+						} label: {
+							Label("Generic.Remove", systemImage: SFSymbol.remove)
+						}
+						.buttonStyle(.borderedProminent)
+						.tint(.red)
+						.keyboardShortcut(.delete)
+					}
+				}
 			}
-			#endif
 			.onAppear {
 				if name.isEmpty {
 					focusedField = .name

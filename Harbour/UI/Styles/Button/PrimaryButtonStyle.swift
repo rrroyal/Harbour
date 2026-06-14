@@ -28,6 +28,7 @@ struct PrimaryButtonStyle: ButtonStyle {
 			.multilineTextAlignment(.center)
 			.foregroundStyle(isEnabled ? foregroundColor : .secondary)
 			.padding()
+			.padding(.horizontal)
 			.frame(maxWidth: .infinity, alignment: .center)
 
 		Group {

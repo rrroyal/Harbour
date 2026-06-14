@@ -1,5 +1,5 @@
 //
-//  CreateStackManualView+StackEnvironmentView.swift
+//  CreateStackManualView+StackEnvironmentSection.swift
 //  Harbour
 //
 //  Created by royal on 15/04/2024.
@@ -10,10 +10,8 @@ import CommonHaptics
 import PortainerKit
 import SwiftUI
 
-// MARK: - CreateStackManualView+StackEnvironmentView
-
 extension CreateStackManualView {
-	struct StackEnvironmentView: View {
+	struct StackEnvironmentSection: View {
 		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 
 		var environmentSorted: [KeyValueEntry] {
@@ -74,9 +72,9 @@ extension CreateStackManualView {
 	}
 }
 
-// MARK: - CreateStackManualView.StackEnvironmentView+Buttons
+// MARK: - Subviews
 
-private extension CreateStackManualView.StackEnvironmentView {
+private extension CreateStackManualView.StackEnvironmentSection {
 	struct AddButton: View {
 		let action: () -> Void
 
@@ -112,6 +110,6 @@ private extension CreateStackManualView.StackEnvironmentView {
 #Preview {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
-	CreateStackManualView.StackEnvironmentView()
+	CreateStackManualView.StackEnvironmentSection()
 		.environment(CreateStackManualView.ViewModel(portainerStore: portainerStore))
 }

@@ -85,37 +85,7 @@ extension CreateStackCreatorView {
 					focusedField = .source
 				}
 			}
-#if os(iOS)
-			.safeAreaInset(edge: .bottom) {
-				HStack {
-					if entry != nil {
-						Button(role: .destructive) {
-							removeAction()
-							dismiss()
-						} label: {
-							Label("Generic.Remove", systemImage: SFSymbol.remove)
-						}
-						.buttonStyle(.customPrimary(backgroundColor: .red))
-					}
-
-					Button {
-						saveEntry()
-					} label: {
-						Label(
-							entry != nil ? "Generic.Save" : "Generic.Add",
-							systemImage: entry != nil ? SFSymbol.apply : SFSymbol.plus
-						)
-					}
-					.keyboardShortcut(.defaultAction)
-					.disabled(!canSave)
-					.buttonStyle(.customPrimary)
-				}
-				._inGlassEffectContainer()
-				.padding()
-			}
-#endif
 			.toolbar {
-#if os(macOS)
 				ToolbarItem(placement: .primaryAction) {
 					Button {
 						saveEntry()
@@ -125,9 +95,11 @@ extension CreateStackCreatorView {
 							systemImage: entry != nil ? SFSymbol.apply : SFSymbol.plus
 						)
 					}
+					.buttonStyle(.borderedProminent)
 					.keyboardShortcut(.defaultAction)
 					.disabled(!canSave)
 				}
+
 				if entry != nil {
 					ToolbarItem(placement: .destructiveAction) {
 						Button(role: .destructive) {
@@ -138,9 +110,9 @@ extension CreateStackCreatorView {
 						}
 						.buttonStyle(.borderedProminent)
 						.tint(.red)
+						.keyboardShortcut(.delete)
 					}
 				}
-#endif
 			}
 		}
 	}

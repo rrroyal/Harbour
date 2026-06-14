@@ -34,14 +34,6 @@ struct CreateStackCreatorView: View {
 		}
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
-		#if os(iOS)
-		.safeAreaInset(edge: .bottom) {
-			CreateButton(submitAction: submitStack)
-				.buttonStyle(.customPrimary(backgroundColor: viewModel.createStackError != nil ? .red : .accentColor))
-				.padding()
-				.background(Color.groupedBackground)
-		}
-		#endif
 		.navigationDestination(item: $viewModel.serviceEditorMode) { mode in
 			ServiceEditorView(service: mode.unwrapped)
 				.environment(viewModel)
@@ -51,11 +43,9 @@ struct CreateStackCreatorView: View {
 				.environment(viewModel)
 		}
 		.toolbar {
-			#if os(macOS)
 			ToolbarItem(placement: .primaryAction) {
 				CreateButton(submitAction: submitStack)
 			}
-			#endif
 		}
 		.environment(viewModel)
 		.navigationTitle("CreateStackView.Title.Create")
@@ -78,15 +68,16 @@ extension CreateStackCreatorView {
 			} label: {
 				if viewModel.isLoading {
 					ProgressView()
-						#if os(macOS)
-						.controlSize(.small)
-						#endif
 				} else if let error = viewModel.createStackError {
 					Text(error.localizedDescription)
 				} else {
-					Label("CreateStackView.Create", systemImage: "plus")
+					Label(
+						"CreateStackView.Create",
+						systemImage: SFSymbol.checkmark
+					)
 				}
 			}
+			.buttonStyle(.borderedProminent)
 			.keyboardShortcut(.defaultAction)
 			.disabled(!viewModel.canCreateStack)
 			.disabled(viewModel.isLoading)
@@ -286,5 +277,6 @@ private extension CreateStackCreatorView {
 	let portainerStore = PortainerStore(preferences: preferences)
 	NavigationStack {
 		CreateStackCreatorView(portainerStore: portainerStore)
+			.environment(SceneDelegate())
 	}
 }

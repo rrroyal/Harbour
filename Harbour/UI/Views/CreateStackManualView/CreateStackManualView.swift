@@ -71,7 +71,7 @@ struct CreateStackManualView: View {
 				Text("CreateStackView.Name")
 			}
 
-			StackFileView(
+			StackFileSection(
 				allowedContentTypes: allowedContentTypes,
 				onStackFileSelection: onStackFileSelection
 			)
@@ -80,7 +80,7 @@ struct CreateStackManualView: View {
 				onStackFileSelection?(newStackFileContent)
 			}
 
-			StackEnvironmentView()
+			StackEnvironmentSection()
 				.onChange(of: viewModel.stackEnvironment) { _, newEntries in
 					focusedField = nil
 					onEnvironmentEdit?(newEntries)
@@ -88,17 +88,6 @@ struct CreateStackManualView: View {
 		}
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
-		#if os(iOS)
-		.safeAreaInset(edge: .bottom) {
-			CreateButton(
-				submitAction: { submitStack() },
-				submitPullAction: { submitStack(pullImage: true) }
-			)
-			.buttonStyle(.customPrimary(backgroundColor: viewModel.createStackError != nil ? .red : .accentColor))
-			.padding()
-			.background(Color.groupedBackground)
-		}
-		#endif
 		.fileImporter(isPresented: $viewModel.isFileImportSheetPresented, allowedContentTypes: allowedContentTypes) { result in
 			handleStackFileResult(result)
 		}
@@ -135,14 +124,12 @@ struct CreateStackManualView: View {
 			)
 		}
 		.toolbar {
-			#if os(macOS)
 			ToolbarItem(placement: .primaryAction) {
 				CreateButton(
 					submitAction: { submitStack() },
 					submitPullAction: { submitStack(pullImage: true) }
 				)
 			}
-			#endif
 		}
 		.environment(viewModel)
 		.navigationTitle(viewModel.shouldCreateNewStack ? "CreateStackView.Title.Create" : "CreateStackView.Title.Update")
@@ -187,11 +174,12 @@ extension CreateStackManualView {
 				} else {
 					Label(
 						viewModel.shouldCreateNewStack ? "CreateStackView.Create" : "CreateStackView.Update",
-						systemImage: viewModel.shouldCreateNewStack ? "plus" : "square.and.arrow.up"
+						systemImage: SFSymbol.checkmark
 					)
 				}
 			}
 			.keyboardShortcut(.defaultAction)
+			.buttonStyle(.borderedProminent)
 			.contextMenu {
 				if !viewModel.shouldCreateNewStack {
 					Button {

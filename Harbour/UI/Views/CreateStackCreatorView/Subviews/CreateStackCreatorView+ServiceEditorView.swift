@@ -79,20 +79,33 @@ extension CreateStackCreatorView {
 			.toolbar {
 				ToolbarItem(placement: .confirmationAction) {
 					Button {
-						var normalized = editedService
-						normalized.name = normalized.name.replacingOccurrences(of: " ", with: "-")
-						normalized.image = normalized.image.replacingOccurrences(of: " ", with: "-")
-						viewModel.saveService(normalized)
-						dismiss()
+						saveService()
 					} label: {
 						Label(
 							service != nil ? "Generic.Save" : "Generic.Add",
 							systemImage: service != nil ? SFSymbol.apply : SFSymbol.plus
 						)
 					}
+					.buttonStyle(.borderedProminent)
 					.keyboardShortcut(.defaultAction)
 					.disabled(!canSave)
 					.animation(.default, value: canSave)
+				}
+
+				if service != nil {
+					ToolbarItem(placement: .destructiveAction) {
+						Button(role: .destructive) {
+							if let service {
+								viewModel.removeService(service)
+							}
+							dismiss()
+						} label: {
+							Label("Generic.Remove", systemImage: SFSymbol.remove)
+						}
+						.buttonStyle(.borderedProminent)
+						.tint(.red)
+						.keyboardShortcut(.delete)
+					}
 				}
 			}
 			.sheet(item: $presentedSheet, content: sheetContent)
@@ -372,6 +385,19 @@ extension CreateStackCreatorView.ServiceEditorView {
 				Text("CreateStackView.ServiceEditor.Networks")
 			}
 		}
+	}
+}
+
+// MARK: - Actions
+
+private extension CreateStackCreatorView.ServiceEditorView {
+	func saveService() {
+		guard canSave else { return }
+		var normalized = editedService
+		normalized.name = normalized.name.replacingOccurrences(of: " ", with: "-")
+		normalized.image = normalized.image.replacingOccurrences(of: " ", with: "-")
+		viewModel.saveService(normalized)
+		dismiss()
 	}
 }
 
