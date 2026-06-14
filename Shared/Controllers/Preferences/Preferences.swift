@@ -83,7 +83,7 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 	@AppStorage("ContainerRemove.Volumes", store: Preferences.userDefaults)
 	public var containerRemoveVolumes = false
 
-	public init() { }
+	public init() {}
 }
 
 // MARK: - Preferences+Handlers

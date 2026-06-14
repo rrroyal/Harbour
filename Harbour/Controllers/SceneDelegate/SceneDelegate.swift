@@ -40,7 +40,7 @@ final class SceneDelegate: NSObject {
 
 	var isLandingSheetPresented: Bool = false
 	var isSettingsSheetPresented = false
-	var isCreateStackSheetPresented = false
+	var stackSheet: StackSheet?
 	var isContainerChangesSheetPresented = false
 
 	// MARK: Containers
@@ -71,8 +71,6 @@ final class SceneDelegate: NSObject {
 		)
 	}
 
-	var editedStack: Stack?
-
 	var selectedStackNameForContainersView: String?
 	var selectedStackNameForStacksView: String?
 
@@ -80,6 +78,27 @@ final class SceneDelegate: NSObject {
 
 	var selectedContainerNavigationItem: ContainerDetailsView.NavigationItem?
 	var selectedStackNavigationItem: StackDetailsView.NavigationItem?
+}
+
+// MARK: - SceneDelegate+StackSheet
+
+extension SceneDelegate {
+	enum StackSheet: Identifiable {
+		case editStack(Stack)
+		case manual
+		case creator
+
+		var id: String {
+			switch self {
+			case .editStack(let stack):
+				"editStack-\(stack.id)"
+			case .manual:
+				"manual"
+			case .creator:
+				"creator"
+			}
+		}
+	}
 }
 
 // MARK: - SceneDelegate+Configuration

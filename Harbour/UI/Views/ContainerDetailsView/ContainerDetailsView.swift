@@ -251,9 +251,10 @@ private extension ContainerDetailsView {
 					LabeledContent("ContainerDetailsView.Section.General.Image") {
 						LabeledText(image)
 							.fontDesign(.monospaced)
-							.multilineTextAlignment(.trailing)
+							.multilineTextAlignment(.leading)
 							.textSelection(.enabled)
 					}
+					.labeledContentStyle(.twoLine)
 					.contextMenu {
 						CopyButton(content: image)
 

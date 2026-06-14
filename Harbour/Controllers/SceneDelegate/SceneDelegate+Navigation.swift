@@ -16,7 +16,7 @@ extension SceneDelegate: DeeplinkHandlable {
 	func resetSheets() {
 		isLandingSheetPresented = false
 		isSettingsSheetPresented = false
-		isCreateStackSheetPresented = false
+		stackSheet = nil
 		isContainerChangesSheetPresented = false
 	}
 

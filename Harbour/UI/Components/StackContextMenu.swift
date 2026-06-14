@@ -36,7 +36,7 @@ struct StackContextMenu: View {
 
 				Button {
 //					Haptics.generateIfEnabled(.sheetPresentation)
-					sceneDelegate.editedStack = stack
+					sceneDelegate.stackSheet = .editStack(stack)
 				} label: {
 					Label("Generic.Edit", systemImage: SFSymbol.edit)
 				}

@@ -17,8 +17,6 @@ struct KeyValueEntry: Identifiable, Hashable {
 	var value: String
 }
 
-// MARK: - [KeyValueEntry]+sorted()
-
 extension [KeyValueEntry] {
 	func sorted() -> Self {
 		sorted { ($0.key + $0.value).localizedCaseInsensitiveCompare($1.key + $1.value) == .orderedAscending }

@@ -1,5 +1,5 @@
 //
-//  CreateStackView+StackFileView.swift
+//  CreateStackManualView+StackFileView.swift
 //  Harbour
 //
 //  Created by royal on 15/04/2024.
@@ -10,11 +10,11 @@ import CommonHaptics
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - CreateStackView+StackFileView
+// MARK: - CreateStackManualView+StackFileView
 
-extension CreateStackView {
+extension CreateStackManualView {
 	struct StackFileView: View {
-		@Environment(CreateStackView.ViewModel.self) private var viewModel
+		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 		@Environment(\.errorHandler) private var errorHandler
 		var allowedContentTypes: [UTType]
 		var onStackFileSelection: ((String?) -> Void)?
@@ -56,9 +56,9 @@ extension CreateStackView {
 	}
 }
 
-// MARK: - CreateStackView.StackFileView+Actions
+// MARK: - CreateStackManualView.StackFileView+Actions
 
-private extension CreateStackView.StackFileView {
+private extension CreateStackManualView.StackFileView {
 	func onItemsDrop(_ items: [NSItemProvider]) -> Bool {
 		let item = items.first { $0.hasItemConformingToTypeIdentifier(UTType.yaml.identifier) }
 		guard let item else { return false }
@@ -71,7 +71,7 @@ private extension CreateStackView.StackFileView {
 					}
 
 					guard let url else {
-						throw CreateStackView.ViewModel.Error.unableToAccessFile
+						throw CreateStackManualView.ViewModel.Error.unableToAccessFile
 					}
 
 					#if os(iOS)
@@ -90,11 +90,11 @@ private extension CreateStackView.StackFileView {
 	}
 }
 
-// MARK: - CreateStackView.StackFileView+Subviews
+// MARK: - CreateStackManualView.StackFileView+Subviews
 
-private extension CreateStackView.StackFileView {
+private extension CreateStackManualView.StackFileView {
 	struct ViewForFileContent: View {
-		@Environment(CreateStackView.ViewModel.self) private var viewModel
+		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 		var stackFileContent: String
 
 		var body: some View {
@@ -147,7 +147,7 @@ private extension CreateStackView.StackFileView {
 	}
 
 	struct ViewForLoading: View {
-		@Environment(CreateStackView.ViewModel.self) private var viewModel
+		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 
 		var body: some View {
 			ProgressView()
@@ -169,7 +169,7 @@ private extension CreateStackView.StackFileView {
 	}
 
 	struct ViewForEmpty: View {
-		@Environment(CreateStackView.ViewModel.self) private var viewModel
+		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 
 		var body: some View {
 			Group {
@@ -227,9 +227,9 @@ private extension CreateStackView.StackFileView {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
 	Form {
-		CreateStackView.StackFileView(
+		CreateStackManualView.StackFileView(
 			allowedContentTypes: []
 		)
 	}
-	.environment(CreateStackView.ViewModel(portainerStore: portainerStore))
+	.environment(CreateStackManualView.ViewModel(portainerStore: portainerStore))
 }

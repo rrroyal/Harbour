@@ -1,5 +1,5 @@
 //
-//  CreateStackView+ViewModel.swift
+//  CreateStackManualView+ViewModel.swift
 //  Harbour
 //
 //  Created by royal on 14/04/2024.
@@ -10,11 +10,10 @@ import CommonOSLog
 import Foundation
 import OSLog
 import PortainerKit
-import UniformTypeIdentifiers
 
-// MARK: - CreateStackView+ViewModel
+// MARK: - CreateStackManualView+ViewModel
 
-extension CreateStackView {
+extension CreateStackManualView {
 	@Observable @MainActor
 	final class ViewModel {
 		private let portainerStore: PortainerStore
@@ -25,7 +24,7 @@ extension CreateStackView {
 		private(set) var fetchStackFileTask: Task<Void, Swift.Error>?
 		private(set) var fetchStackFileError: Swift.Error?
 
-		let logger = Logger(.view(CreateStackView.self))
+		let logger = Logger(.view(CreateStackManualView.self))
 
 		var isFileImportSheetPresented = false
 		var isTextEditorSheetPresented = false
@@ -48,11 +47,7 @@ extension CreateStackView {
 		}
 
 		var canCreateStack: Bool {
-			guard
-				!stackName.isReallyEmpty,
-				!(stackFileContent?.isReallyEmpty ?? true)
-			else { return false }
-			return true
+			!stackName.isReallyEmpty && !(stackFileContent?.isReallyEmpty ?? true)
 		}
 
 		var isLoading: Bool {
@@ -167,9 +162,9 @@ extension CreateStackView {
 	}
 }
 
-// MARK: - CreateStackView.ViewModel+Error
+// MARK: - CreateStackManualView.ViewModel+Error
 
-extension CreateStackView.ViewModel {
+extension CreateStackManualView.ViewModel {
 	enum Error: LocalizedError {
 		case unableToAccessFile
 		case unableToReadFile

@@ -1,28 +1,22 @@
 //
-//  StacksView+SheetContentView.swift
+//  StacksView+CreatorSheetContentView.swift
 //  Harbour
 //
-//  Created by royal on 24/07/2025.
-//  Copyright © 2025 shameful. All rights reserved.
+//  Created by royal on 14/06/2026.
+//  Copyright © 2026 shameful. All rights reserved.
 //
 
 import PortainerKit
 import SwiftUI
 
 extension StacksView {
-	struct SheetContentView: View {
-		@Environment(SceneDelegate.self) private var sceneDelegate
+	struct CreatorSheetContentView: View {
 		@Environment(PortainerStore.self) private var portainerStore
 
-		let stack: Stack?
-
 		var body: some View {
-			@Bindable var sceneDelegate = sceneDelegate
-
 			NavigationStack {
-				CreateStackManualView(
+				CreateStackCreatorView(
 					portainerStore: portainerStore,
-					existingStack: stack,
 					onStackCreation: { _ in
 						portainerStore.refreshStacks()
 						portainerStore.refreshContainers()
@@ -41,5 +35,8 @@ extension StacksView {
 }
 
 #Preview {
-	StacksView.SheetContentView(stack: nil)
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	StacksView.CreatorSheetContentView()
+		.environment(portainerStore)
 }

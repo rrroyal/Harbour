@@ -979,12 +979,112 @@
         }
       }
     },
+    "CreateStackCreatorView.NetworkEditorView.GeneralSettingsSection.External" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "External"
+          }
+        }
+      }
+    },
+    "CreateStackCreatorView.NetworkEditorView.NameSection.Header" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "CreateStackCreatorView.NetworkEditorView.Title.Add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Network"
+          }
+        }
+      }
+    },
+    "CreateStackCreatorView.NetworkEditorView.Title.Edit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Network"
+          }
+        }
+      }
+    },
     "CreateStackView.AddEnvironmentValue" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add Environment Value"
+          }
+        }
+      }
+    },
+    "CreateStackView.ComposeCreator.Networks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Networks"
+          }
+        }
+      }
+    },
+    "CreateStackView.ComposeCreator.Networks.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "External networks referenced by services in this stack."
+          }
+        }
+      }
+    },
+    "CreateStackView.ComposeCreator.Service.NoImage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image specified"
+          }
+        }
+      }
+    },
+    "CreateStackView.ComposeCreator.Service.Unnamed" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unnamed Service"
+          }
+        }
+      }
+    },
+    "CreateStackView.ComposeCreator.Services" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Services"
+          }
+        }
+      }
+    },
+    "CreateStackView.ComposeCreator.Services.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add at least one service with a name and image."
           }
         }
       }
@@ -1045,6 +1145,268 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Name"
+          }
+        }
+      }
+    },
+    "CreateStackView.Name.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The name of the stack as it will appear in Portainer."
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.AddPort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Port"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.AddVolume" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Volume"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.EditPort" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Port"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.EditVolume" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Volume"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Image" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Image.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Docker image name and tag, e.g. nginx:latest"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Name" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Networks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Networks"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Port.Container" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Container Port"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Port.Container.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port exposed by the container"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Port.Host" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host Port"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Port.Host.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Port exposed on the host machine"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Port.Label %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ → %@"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Port.Label %u %u" : {
+      "comment" : "A label for a port in a service editor. The first argument is the host port number. The second argument is the container port number.",
+      "isCommentAutoGenerated" : true,
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "CreateStackView.ServiceEditor.Port.Label %1$u %2$u"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Port.Protocol" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protocol"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Ports" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ports"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Ports.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Map host ports to container ports."
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Title.Add" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Service"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Title.Edit" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Service"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Volume.Source" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Source"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Volume.Source.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Host path or named volume, e.g. /data or my-volume"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Volume.Target" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Target"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Volume.Target.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mount path inside the container, e.g. /usr/share/nginx/html"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Volumes" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volumes"
+          }
+        }
+      }
+    },
+    "CreateStackView.ServiceEditor.Volumes.Footer" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mount host paths or named volumes into the container."
           }
         }
       }
@@ -3141,6 +3503,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Create Stack"
+          }
+        }
+      }
+    },
+    "StacksView.CreateStack.Creator" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Creator"
+          }
+        }
+      }
+    },
+    "StacksView.CreateStack.Manual" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manual"
           }
         }
       }

@@ -1,5 +1,5 @@
 //
-//  CreateStackView+StackEnvironmentView.swift
+//  CreateStackManualView+StackEnvironmentView.swift
 //  Harbour
 //
 //  Created by royal on 15/04/2024.
@@ -10,11 +10,11 @@ import CommonHaptics
 import PortainerKit
 import SwiftUI
 
-// MARK: - CreateStackView+StackEnvironmentView
+// MARK: - CreateStackManualView+StackEnvironmentView
 
-extension CreateStackView {
+extension CreateStackManualView {
 	struct StackEnvironmentView: View {
-		@Environment(CreateStackView.ViewModel.self) private var viewModel
+		@Environment(CreateStackManualView.ViewModel.self) private var viewModel
 
 		var environmentSorted: [KeyValueEntry] {
 			viewModel.stackEnvironment.sorted()
@@ -74,9 +74,9 @@ extension CreateStackView {
 	}
 }
 
-// MARK: - CreateStackView.StackEnvironmentView+RemoveButton
+// MARK: - CreateStackManualView.StackEnvironmentView+Buttons
 
-private extension CreateStackView.StackEnvironmentView {
+private extension CreateStackManualView.StackEnvironmentView {
 	struct AddButton: View {
 		let action: () -> Void
 
@@ -92,6 +92,7 @@ private extension CreateStackView.StackEnvironmentView {
 			}
 		}
 	}
+
 	struct RemoveButton: View {
 		let action: () -> Void
 
@@ -111,6 +112,6 @@ private extension CreateStackView.StackEnvironmentView {
 #Preview {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
-	CreateStackView.StackEnvironmentView()
-		.environment(CreateStackView.ViewModel(portainerStore: portainerStore))
+	CreateStackManualView.StackEnvironmentView()
+		.environment(CreateStackManualView.ViewModel(portainerStore: portainerStore))
 }

@@ -1,5 +1,5 @@
 //
-//  CreateStackView.swift
+//  CreateStackManualView.swift
 //  Harbour
 //
 //  Created by royal on 14/04/2024.
@@ -11,9 +11,9 @@ import PortainerKit
 import SwiftUI
 import UniformTypeIdentifiers
 
-// MARK: - CreateStackView
+// MARK: - CreateStackManualView
 
-struct CreateStackView: View {
+struct CreateStackManualView: View {
 	@Environment(SceneDelegate.self) private var sceneDelegate
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
@@ -51,43 +51,6 @@ struct CreateStackView: View {
 		.plainText
 	]
 
-	@ViewBuilder @MainActor
-	private var createButton: some View {
-		Button {
-			submitStack()
-		} label: {
-			if viewModel.isLoading {
-				ProgressView()
-					#if os(macOS)
-					.controlSize(.small)
-					#endif
-			} else if let error = viewModel.createStackError {
-				Text(error.localizedDescription)
-			} else {
-				Label(
-					viewModel.shouldCreateNewStack ? "CreateStackView.Create" : "CreateStackView.Update",
-					systemImage: viewModel.shouldCreateNewStack ? "plus" : "square.and.arrow.up"
-				)
-			}
-		}
-		.keyboardShortcut(.defaultAction)
-		.contextMenu {
-			if !viewModel.shouldCreateNewStack {
-				Button {
-					submitStack(pullImage: true)
-				} label: {
-					Label(
-						"CreateStackView.Update.PullingImage",
-						systemImage: "square.and.arrow.up.on.square"
-					)
-				}
-			}
-		}
-		.disabled(!viewModel.canCreateStack)
-		.disabled(viewModel.isLoading)
-		.animation(.default, value: viewModel.canCreateStack)
-	}
-
 	var body: some View {
 		Form {
 			NormalizedSection {
@@ -106,7 +69,6 @@ struct CreateStackView: View {
 				allowedContentTypes: allowedContentTypes,
 				onStackFileSelection: onStackFileSelection
 			)
-			.transition(.opacity)
 			.onChange(of: viewModel.stackFileContent) { _, newStackFileContent in
 				focusedField = nil
 				onStackFileSelection?(newStackFileContent)
@@ -120,13 +82,15 @@ struct CreateStackView: View {
 		}
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
-//		.navigationTitle(navigationTitle)
 		#if os(iOS)
 		.safeAreaInset(edge: .bottom) {
-			createButton
-				.buttonStyle(.customPrimary(backgroundColor: viewModel.createStackError != nil ? .red : .accentColor))
-				.padding()
-				.background(Color.groupedBackground)
+			CreateButton(
+				submitAction: { submitStack() },
+				submitPullAction: { submitStack(pullImage: true) }
+			)
+			.buttonStyle(.customPrimary(backgroundColor: viewModel.createStackError != nil ? .red : .accentColor))
+			.padding()
+			.background(Color.groupedBackground)
 		}
 		#endif
 		.fileImporter(isPresented: $viewModel.isFileImportSheetPresented, allowedContentTypes: allowedContentTypes) { result in
@@ -169,7 +133,10 @@ struct CreateStackView: View {
 		.toolbar {
 			#if os(macOS)
 			ToolbarItem(placement: .primaryAction) {
-				createButton
+				CreateButton(
+					submitAction: { submitStack() },
+					submitPullAction: { submitStack(pullImage: true) }
+				)
 			}
 			#endif
 		}
@@ -193,17 +160,64 @@ struct CreateStackView: View {
 	}
 }
 
-// MARK: - CreateStackView+FocusedField
+// MARK: - CreateStackManualView+CreateButton
 
-private extension CreateStackView {
+extension CreateStackManualView {
+	struct CreateButton: View {
+		@Environment(ViewModel.self) private var viewModel
+
+		let submitAction: () -> Void
+		let submitPullAction: () -> Void
+
+		var body: some View {
+			Button {
+				submitAction()
+			} label: {
+				if viewModel.isLoading {
+					ProgressView()
+						#if os(macOS)
+						.controlSize(.small)
+						#endif
+				} else if let error = viewModel.createStackError {
+					Text(error.localizedDescription)
+				} else {
+					Label(
+						viewModel.shouldCreateNewStack ? "CreateStackView.Create" : "CreateStackView.Update",
+						systemImage: viewModel.shouldCreateNewStack ? "plus" : "square.and.arrow.up"
+					)
+				}
+			}
+			.keyboardShortcut(.defaultAction)
+			.contextMenu {
+				if !viewModel.shouldCreateNewStack {
+					Button {
+						submitPullAction()
+					} label: {
+						Label(
+							"CreateStackView.Update.PullingImage",
+							systemImage: "square.and.arrow.up.on.square"
+						)
+					}
+				}
+			}
+			.disabled(!viewModel.canCreateStack)
+			.disabled(viewModel.isLoading)
+			.animation(.default, value: viewModel.canCreateStack)
+		}
+	}
+}
+
+// MARK: - CreateStackManualView+FocusedField
+
+private extension CreateStackManualView {
 	enum FocusedField {
 		case textfieldName
 	}
 }
 
-// MARK: - CreateStackView+Actions
+// MARK: - CreateStackManualView+Actions
 
-private extension CreateStackView {
+private extension CreateStackManualView {
 	@MainActor
 	func submitStack(pullImage: Bool = false) {
 		Task {
@@ -258,7 +272,7 @@ private extension CreateStackView {
 
 // MARK: - Helpers
 
-extension CreateStackView {
+extension CreateStackManualView {
 	static let id: String = "\(Self.self)"
 }
 
@@ -268,6 +282,6 @@ extension CreateStackView {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
 	NavigationStack {
-		CreateStackView(portainerStore: portainerStore)
+		CreateStackManualView(portainerStore: portainerStore)
 	}
 }

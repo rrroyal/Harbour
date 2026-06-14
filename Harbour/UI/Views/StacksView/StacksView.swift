@@ -67,18 +67,23 @@ struct StacksView: View {
 		.animation(.default, value: viewModel.viewState)
 //		.animation(.default, value: viewModel.stacks)
 		.animation(.default, value: viewModel.isStatusProgressViewVisible)
-		.sheet(item: $sceneDelegate.editedStack) {
+		.sheet(item: $sceneDelegate.stackSheet) {
 			onSheetDismiss()
-		} content: { stack in
-			SheetContentView(stack: stack)
-		}
-		.sheet(isPresented: $sceneDelegate.isCreateStackSheetPresented) {
-			onSheetDismiss()
-		} content: {
-			SheetContentView(stack: nil)
-				#if os(iOS)
-				.navigationTransition(.zoom(sourceID: CreateStackView.id, in: namespace))
-				#endif
+		} content: { sheet in
+			switch sheet {
+			case .editStack(let stack):
+				SheetContentView(stack: stack)
+			case .manual:
+				SheetContentView(stack: nil)
+					#if os(iOS)
+					.navigationTransition(.zoom(sourceID: CreateStackManualView.id, in: namespace))
+					#endif
+			case .creator:
+				CreatorSheetContentView()
+					#if os(iOS)
+					.navigationTransition(.zoom(sourceID: CreateStackManualView.id, in: namespace))
+					#endif
+			}
 		}
 		.onChange(of: sceneDelegate.selectedStackNameForStacksView) { _, stackName in
 			viewModel.searchText = stackName ?? ""
@@ -153,7 +158,7 @@ private extension StacksView {
 			viewModel.isSearchActive = true
 			return .handled
 		case "n" where keyPress.modifiers.contains(.command):
-			sceneDelegate.isCreateStackSheetPresented = true
+			sceneDelegate.stackSheet = .manual
 			return .handled
 		default:
 			return .ignored
@@ -161,8 +166,7 @@ private extension StacksView {
 	}
 
 	func onSheetDismiss() {
-		sceneDelegate.editedStack = nil
-		sceneDelegate.isCreateStackSheetPresented = false
+		sceneDelegate.stackSheet = nil
 	}
 }
 
@@ -179,17 +183,28 @@ private extension StacksView {
 			#endif
 		}
 		ToolbarItem(placement: createStackToolbarItemPlacement) {
-			Button {
-//				Haptics.generateIfEnabled(.sheetPresentation)
-				sceneDelegate.editedStack = nil
-				sceneDelegate.isCreateStackSheetPresented = true
+			Menu {
+				Button {
+					sceneDelegate.stackSheet = .creator
+				} label: {
+					Label("StacksView.CreateStack.Creator", systemImage: "wand.and.sparkles")
+				}
+
+				Button {
+					sceneDelegate.stackSheet = .manual
+				} label: {
+					Label("StacksView.CreateStack.Manual", systemImage: "doc.text")
+				}
 			} label: {
 				Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
+			} primaryAction: {
+				// Open the new creator by default
+				sceneDelegate.stackSheet = .creator
 			}
 			.disabled(!portainerStore.isSetup)
 		}
 		#if os(iOS)
-		._matchedTransitionSource(id: CreateStackView.id, in: namespace)
+		._matchedTransitionSource(id: CreateStackManualView.id, in: namespace)
 		#endif
 
 		ToolbarItem(placement: .automatic) {

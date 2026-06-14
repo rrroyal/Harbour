@@ -84,7 +84,6 @@
 				"Helpers/Spotlight/SpotlightHelper+Stacks.swift",
 				"Preview Content/PortainerStore+Preview.swift",
 				"Preview Content/Preview Assets.xcassets",
-				Types/KeyValueEntry.swift,
 				"UI/View Components/DelayedView.swift",
 			);
 			target = 00A4AB862A34ECB60074E940 /* HarbourWidgets */;
