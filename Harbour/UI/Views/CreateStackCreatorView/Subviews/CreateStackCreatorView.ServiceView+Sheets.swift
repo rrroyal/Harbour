@@ -1,5 +1,5 @@
 //
-//  CreateStackCreatorView.ServiceEditorView+Sheets.swift
+//  CreateStackCreatorView.ServiceView+Sheets.swift
 //  Harbour
 //
 //  Created by royal on 14/06/2026.
@@ -9,10 +9,10 @@
 import Foundation
 import SwiftUI
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	enum Sheet: Identifiable {
 		case editEnvironment(KeyValueEntry?)
-		case editVolume(CreateStackCreatorView.ViewModel.Service.VolumeEntry?)
+		case editVolume(CreateStackCreatorView.ViewModel.Service.Volume?)
 		case editPort(CreateStackCreatorView.ViewModel.Service.PortEntry?)
 		case editNetwork(CreateStackCreatorView.ViewModel.Network?)
 
@@ -29,7 +29,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 
 // MARK: - EditEnvironmentSheetContentView
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct EditEnvironmentSheetContentView: View {
 		var entry: KeyValueEntry?
 		@Binding var environment: [KeyValueEntry]
@@ -59,16 +59,16 @@ extension CreateStackCreatorView.ServiceEditorView {
 
 // MARK: - EditVolumeSheetContentView
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct EditVolumeSheetContentView: View {
-		typealias VolumeEntry = CreateStackCreatorView.ViewModel.Service.VolumeEntry
+		typealias Volume = CreateStackCreatorView.ViewModel.Service.Volume
 
-		var volume: VolumeEntry?
-		@Binding var volumes: [VolumeEntry]
+		var volume: Volume?
+		@Binding var volumes: [Volume]
 
 		var body: some View {
 			NavigationStack {
-				CreateStackCreatorView.VolumeEntryEditView(entry: volume) { newVolume in
+				CreateStackCreatorView.ServiceView.VolumeView(entry: volume) { newVolume in
 					if let volume, let index = volumes.firstIndex(where: { $0.id == volume.id }) {
 						volumes[index] = newVolume
 					} else {
@@ -82,7 +82,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 				#if os(iOS)
 				.navigationBarTitleDisplayMode(.inline)
 				#endif
-				.navigationTitle(volume != nil ? "CreateStackView.ServiceEditor.EditVolume" : "CreateStackView.ServiceEditor.AddVolume")
+				.navigationTitle(volume != nil ? "CreateStackCreatorView.ServiceView.Volume.Edit.Title" : "CreateStackCreatorView.ServiceView.Volume.Add.Title")
 				.addingCloseButton()
 			}
 		}
@@ -91,7 +91,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 
 // MARK: - EditPortSheetContentView
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct EditPortSheetContentView: View {
 		typealias PortEntry = CreateStackCreatorView.ViewModel.Service.PortEntry
 
@@ -100,7 +100,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 
 		var body: some View {
 			NavigationStack {
-				CreateStackCreatorView.PortEntryEditView(entry: port) { newPort in
+				CreateStackCreatorView.ServiceView.PortEntryView(entry: port) { newPort in
 					if let port, let index = ports.firstIndex(where: { $0.id == port.id }) {
 						ports[index] = newPort
 					} else {
@@ -114,7 +114,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 				#if os(iOS)
 				.navigationBarTitleDisplayMode(.inline)
 				#endif
-				.navigationTitle(port != nil ? "CreateStackView.ServiceEditor.EditPort" : "CreateStackView.ServiceEditor.AddPort")
+				.navigationTitle(port != nil ? "CreateStackCreatorView.ServiceView.PortEntry.Edit.Title" : "CreateStackCreatorView.ServiceView.PortEntry.Add.Title")
 				.addingCloseButton()
 			}
 		}
@@ -123,7 +123,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 
 // MARK: - EditNetworkSheetContentView
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct EditNetworkSheetContentView: View {
 		typealias Network = CreateStackCreatorView.ViewModel.Network
 
@@ -132,7 +132,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 
 		var body: some View {
 			NavigationStack {
-				CreateStackCreatorView.NetworkEditorView(network: network) { newNetwork in
+				CreateStackCreatorView.NetworkView(network: network) { newNetwork in
 					if !networks.contains(newNetwork) {
 						networks.append(newNetwork)
 					}

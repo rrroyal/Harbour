@@ -1,5 +1,5 @@
 //
-//  CreateStackCreatorView+ServiceEditorView.swift
+//  CreateStackCreatorView+ServiceView.swift
 //  Harbour
 //
 //  Created by royal on 14/06/2026.
@@ -10,7 +10,7 @@ import CommonHaptics
 import SwiftUI
 
 extension CreateStackCreatorView {
-	struct ServiceEditorView: View {
+	struct ServiceView: View {
 		@Environment(\.dismiss) private var dismiss
 		@Environment(CreateStackCreatorView.ViewModel.self) private var viewModel
 
@@ -72,7 +72,7 @@ extension CreateStackCreatorView {
 			}
 			.formStyle(.grouped)
 			.scrollDismissesKeyboard(.interactively)
-			.navigationTitle(service != nil ? "CreateStackView.ServiceEditor.Title.Edit" : "CreateStackView.ServiceEditor.Title.Add")
+			.navigationTitle(service != nil ? "CreateStackCreatorView.ServiceView.Title.Edit" : "CreateStackCreatorView.ServiceView.Title.Add")
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
@@ -118,9 +118,9 @@ extension CreateStackCreatorView {
 	}
 }
 
-// MARK: - ServiceEditorView+IdentitySection
+// MARK: - IdentitySection
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct IdentitySection: View {
 		@Binding var service: CreateStackCreatorView.ViewModel.Service
 		@FocusState.Binding var focusedField: FocusedField?
@@ -143,7 +143,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 						focusedField = .image
 					}
 				} header: {
-					Text("CreateStackView.ServiceEditor.Name")
+					Text("CreateStackCreatorView.ServiceView.Name")
 				}
 
 				NormalizedSection {
@@ -162,9 +162,9 @@ extension CreateStackCreatorView.ServiceEditorView {
 						focusedField = nil
 					}
 				} header: {
-					Text("CreateStackView.ServiceEditor.Image")
+					Text("CreateStackCreatorView.ServiceView.Image")
 				} footer: {
-					Text("CreateStackView.ServiceEditor.Image.Footer")
+					Text("CreateStackCreatorView.ServiceView.Image.Footer")
 				}
 			}
 		}
@@ -173,9 +173,9 @@ extension CreateStackCreatorView.ServiceEditorView {
 	}
 }
 
-// MARK: - ServiceEditorView+EnvironmentSection
+// MARK: - EnvironmentSection
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct EnvironmentSection: View {
 		@Binding var environment: [KeyValueEntry]
 		var onAdd: () -> Void
@@ -222,14 +222,14 @@ extension CreateStackCreatorView.ServiceEditorView {
 	}
 }
 
-// MARK: - ServiceEditorView+VolumesSection
+// MARK: - VolumesSection
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct VolumesSection: View {
-		@Binding var volumes: [CreateStackCreatorView.ViewModel.Service.VolumeEntry]
+		@Binding var volumes: [CreateStackCreatorView.ViewModel.Service.Volume]
 		var onAdd: () -> Void
-		var onEdit: (CreateStackCreatorView.ViewModel.Service.VolumeEntry) -> Void
-		var onRemove: (CreateStackCreatorView.ViewModel.Service.VolumeEntry) -> Void
+		var onEdit: (CreateStackCreatorView.ViewModel.Service.Volume) -> Void
+		var onRemove: (CreateStackCreatorView.ViewModel.Service.Volume) -> Void
 
 		var body: some View {
 			NormalizedSection {
@@ -265,17 +265,15 @@ extension CreateStackCreatorView.ServiceEditorView {
 					Label("Generic.Add", systemImage: SFSymbol.plus)
 				}
 			} header: {
-				Text("CreateStackView.ServiceEditor.Volumes")
-			} footer: {
-				Text("CreateStackView.ServiceEditor.Volumes.Footer")
+				Text("CreateStackCreatorView.ServiceView.Volumes")
 			}
 		}
 	}
 }
 
-// MARK: - ServiceEditorView+PortsSection
+// MARK: - PortsSection
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct PortsSection: View {
 		@Binding var ports: [CreateStackCreatorView.ViewModel.Service.PortEntry]
 		var onAdd: () -> Void
@@ -293,7 +291,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 								.fontDesign(.monospaced)
 								.multilineTextAlignment(.trailing)
 						} label: {
-							Text("CreateStackView.ServiceEditor.Port.Label \(port.hostPort) \(port.containerPort)")
+							Text("CreateStackCreatorView.ServiceView.PortEntryView.Label \(port.hostPort) \(port.containerPort)")
 						}
 					}
 					.fontDesign(.monospaced)
@@ -318,17 +316,15 @@ extension CreateStackCreatorView.ServiceEditorView {
 					Label("Generic.Add", systemImage: SFSymbol.plus)
 				}
 			} header: {
-				Text("CreateStackView.ServiceEditor.Ports")
-			} footer: {
-				Text("CreateStackView.ServiceEditor.Ports.Footer")
+				Text("CreateStackCreatorView.ServiceView.Ports")
 			}
 		}
 	}
 }
 
-// MARK: - ServiceEditorView+NetworksSection
+// MARK: - NetworksSection
 
-extension CreateStackCreatorView.ServiceEditorView {
+extension CreateStackCreatorView.ServiceView {
 	struct NetworksSection: View {
 		@Binding var selectedNetworks: [CreateStackCreatorView.ViewModel.Network]
 		var availableNetworks: [CreateStackCreatorView.ViewModel.Network]
@@ -382,7 +378,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 					Label("Generic.Add", systemImage: SFSymbol.plus)
 				}
 			} header: {
-				Text("CreateStackView.ServiceEditor.Networks")
+				Text("CreateStackCreatorView.ServiceView.Networks")
 			}
 		}
 	}
@@ -390,7 +386,7 @@ extension CreateStackCreatorView.ServiceEditorView {
 
 // MARK: - Actions
 
-private extension CreateStackCreatorView.ServiceEditorView {
+private extension CreateStackCreatorView.ServiceView {
 	func saveService() {
 		guard canSave else { return }
 		var normalized = editedService
@@ -403,7 +399,7 @@ private extension CreateStackCreatorView.ServiceEditorView {
 
 // MARK: - Sheet
 
-private extension CreateStackCreatorView.ServiceEditorView {
+private extension CreateStackCreatorView.ServiceView {
 	@ViewBuilder
 	func sheetContent(for sheet: Sheet) -> some View {
 		Group {
@@ -432,7 +428,7 @@ private extension CreateStackCreatorView.ServiceEditorView {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
 	NavigationStack {
-		CreateStackCreatorView.ServiceEditorView(service: nil)
+		CreateStackCreatorView.ServiceView(service: nil)
 	}
 	.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
 }
@@ -459,7 +455,7 @@ private extension CreateStackCreatorView.ServiceEditorView {
 	)
 
 	NavigationStack {
-		CreateStackCreatorView.ServiceEditorView(service: service)
+		CreateStackCreatorView.ServiceView(service: service)
 	}
 	.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
 }

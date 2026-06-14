@@ -18,6 +18,20 @@ extension ContainerStatusWidget {
 	struct Intent: WidgetConfigurationIntent {
 		static let title: LocalizedStringResource = "ContainerStatusWidget.Intent.Title"
 
+		static var parameterSummary: some ParameterSummary {
+			When(\.$endpoint, .hasAnyValue) {
+				Summary {
+					\.$endpoint
+					\.$containers
+					\.$resolveStrictly
+				}
+			} otherwise: {
+				Summary {
+					\.$endpoint
+				}
+			}
+		}
+
 		@Parameter(title: "AppIntents.Parameter.Endpoint.Title")
 		var endpoint: IntentEndpoint?
 

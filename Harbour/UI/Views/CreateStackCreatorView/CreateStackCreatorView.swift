@@ -35,11 +35,11 @@ struct CreateStackCreatorView: View {
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
 		.navigationDestination(item: $viewModel.serviceEditorMode) { mode in
-			ServiceEditorView(service: mode.unwrapped)
+			ServiceView(service: mode.unwrapped)
 				.environment(viewModel)
 		}
 		.navigationDestination(item: $viewModel.networkEditorMode) { mode in
-			NetworkEditorView(network: mode.unwrapped)
+			NetworkView(network: mode.unwrapped)
 				.environment(viewModel)
 		}
 		.toolbar {

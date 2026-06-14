@@ -1,5 +1,5 @@
 //
-//  CreateStackCreatorView+NetworkEditorView.swift
+//  CreateStackCreatorView+NetworkView.swift
 //  Harbour
 //
 //  Created by royal on 14/06/2026.
@@ -10,7 +10,7 @@ import CommonHaptics
 import SwiftUI
 
 extension CreateStackCreatorView {
-	struct NetworkEditorView: View {
+	struct NetworkView: View {
 		@Environment(\.dismiss) private var dismiss
 		@Environment(CreateStackCreatorView.ViewModel.self) private var viewModel
 
@@ -39,13 +39,13 @@ extension CreateStackCreatorView {
 					onSubmit: saveNetwork
 				)
 
-				GeneralSettingsSection(
+				ExternalToggleSection(
 					external: $external
 				)
 			}
 			.formStyle(.grouped)
 			.scrollDismissesKeyboard(.interactively)
-			.navigationTitle(network != nil ? "CreateStackCreatorView.NetworkEditorView.Title.Edit" : "CreateStackCreatorView.NetworkEditorView.Title.Add")
+			.navigationTitle(network != nil ? "CreateStackCreatorView.NetworkView.Title.Edit" : "CreateStackCreatorView.NetworkView.Title.Add")
 			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			#endif
@@ -91,7 +91,7 @@ extension CreateStackCreatorView {
 
 // MARK: - Helpers
 
-private extension CreateStackCreatorView.NetworkEditorView {
+private extension CreateStackCreatorView.NetworkView {
 	var canSave: Bool {
 		!name.isReallyEmpty
 	}
@@ -99,7 +99,7 @@ private extension CreateStackCreatorView.NetworkEditorView {
 
 // MARK: - Actions
 
-private extension CreateStackCreatorView.NetworkEditorView {
+private extension CreateStackCreatorView.NetworkView {
 	func saveNetwork() {
 		guard canSave else { return }
 
@@ -118,7 +118,7 @@ private extension CreateStackCreatorView.NetworkEditorView {
 
 // MARK: - Subtypes
 
-private extension CreateStackCreatorView.NetworkEditorView {
+private extension CreateStackCreatorView.NetworkView {
 	enum Field {
 		case name
 	}
@@ -126,7 +126,7 @@ private extension CreateStackCreatorView.NetworkEditorView {
 
 // MARK: - Subviews
 
-private extension CreateStackCreatorView.NetworkEditorView {
+private extension CreateStackCreatorView.NetworkView {
 	struct NameSection: View {
 		@Binding var name: String
 		@FocusState.Binding var focusedField: Field?
@@ -150,17 +150,21 @@ private extension CreateStackCreatorView.NetworkEditorView {
 					onSubmit()
 				}
 			} header: {
-				Text("CreateStackCreatorView.NetworkEditorView.NameSection.Header")
+				Text("CreateStackCreatorView.NetworkView.NameSection.Header")
 			}
 		}
 	}
 
-	struct GeneralSettingsSection: View {
+	struct ExternalToggleSection: View {
 		@Binding var external: Bool
 
 		var body: some View {
 			NormalizedSection {
-				Toggle("CreateStackCreatorView.NetworkEditorView.GeneralSettingsSection.External", isOn: $external)
+				Toggle("CreateStackCreatorView.NetworkView.ExternalToggleSection.External", isOn: $external)
+			} header: {
+				Text("CreateStackCreatorView.NetworkView.ExternalToggleSection.Header")
+			} footer: {
+				Text("CreateStackCreatorView.NetworkView.ExternalToggleSection.Footer")
 			}
 		}
 	}
@@ -172,7 +176,7 @@ private extension CreateStackCreatorView.NetworkEditorView {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
 	NavigationStack {
-		CreateStackCreatorView.NetworkEditorView(network: nil)
+		CreateStackCreatorView.NetworkView(network: nil)
 	}
 	.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
 }
@@ -182,7 +186,7 @@ private extension CreateStackCreatorView.NetworkEditorView {
 	let portainerStore = PortainerStore(preferences: preferences)
 	let network = CreateStackCreatorView.ViewModel.Network(name: "my-network", external: true)
 	NavigationStack {
-		CreateStackCreatorView.NetworkEditorView(network: network)
+		CreateStackCreatorView.NetworkView(network: network)
 	}
 	.environment(CreateStackCreatorView.ViewModel(portainerStore: portainerStore))
 }

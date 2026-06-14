@@ -1,5 +1,5 @@
 //
-//  CreateStackCreatorView+PortEntryEditView.swift
+//  CreateStackCreatorView.ServiceView+PortEntryView.swift
 //  Harbour
 //
 //  Created by royal on 14/06/2026.
@@ -9,24 +9,24 @@
 import CommonHaptics
 import SwiftUI
 
-extension CreateStackCreatorView {
-	struct PortEntryEditView: View {
+extension CreateStackCreatorView.ServiceView {
+	struct PortEntryView: View {
 		@Environment(\.dismiss) private var dismiss
 
-		var entry: ViewModel.Service.PortEntry?
-		var onSave: (ViewModel.Service.PortEntry) -> Void
+		var entry: CreateStackCreatorView.ViewModel.Service.PortEntry?
+		var onSave: (CreateStackCreatorView.ViewModel.Service.PortEntry) -> Void
 		var removeAction: () -> Void
 
 		@State private var hostPort: UInt16?
 		@State private var containerPort: UInt16?
-		@State private var proto: ViewModel.Service.PortEntry.Proto
+		@State private var proto: CreateStackCreatorView.ViewModel.Service.PortEntry.Proto
 		@FocusState private var focusedField: Field?
 
 		private let numberFormatter = NumberFormatter()
 
 		init(
-			entry: ViewModel.Service.PortEntry?,
-			onSave: @escaping (ViewModel.Service.PortEntry) -> Void,
+			entry: CreateStackCreatorView.ViewModel.Service.PortEntry?,
+			onSave: @escaping (CreateStackCreatorView.ViewModel.Service.PortEntry) -> Void,
 			removeAction: @escaping () -> Void
 		) {
 			self.entry = entry
@@ -39,6 +39,22 @@ extension CreateStackCreatorView {
 
 		var body: some View {
 			Form {
+				NormalizedSection {
+					Picker("CreateStackCreatorView.ServiceView.PortEntryView.Protocol", selection: $proto) {
+						ForEach(CreateStackCreatorView.ViewModel.Service.PortEntry.Proto.allCases, id: \.self) { p in
+							Text(p.rawValue.uppercased())
+								.tag(p)
+						}
+					}
+					.labelsHidden()
+					#if os(iOS)
+					.pickerStyle(.segmented)
+					#endif
+					.listRowInsets(nil)
+				} header: {
+					Text("CreateStackCreatorView.ServiceView.PortEntryView.Protocol.Header")
+				}
+
 				NormalizedSection {
 					TextField(
 						String("8080"),
@@ -56,9 +72,9 @@ extension CreateStackCreatorView {
 						focusedField = .containerPort
 					}
 				} header: {
-					Text("CreateStackView.ServiceEditor.Port.Host")
+					Text("CreateStackCreatorView.ServiceView.PortEntryView.Host.Header")
 				} footer: {
-					Text("CreateStackView.ServiceEditor.Port.Host.Footer")
+					Text("CreateStackCreatorView.ServiceView.PortEntryView.Host.Footer")
 				}
 
 				NormalizedSection {
@@ -76,24 +92,9 @@ extension CreateStackCreatorView {
 					.submitLabel(.done)
 					.onSubmit { focusedField = nil }
 				} header: {
-					Text("CreateStackView.ServiceEditor.Port.Container")
+					Text("CreateStackCreatorView.ServiceView.PortEntryView.Container.Header")
 				} footer: {
-					Text("CreateStackView.ServiceEditor.Port.Container.Footer")
-				}
-
-				NormalizedSection {
-					Picker("CreateStackView.ServiceEditor.Port.Protocol", selection: $proto) {
-						ForEach(ViewModel.Service.PortEntry.Proto.allCases, id: \.self) { p in
-							Text(p.rawValue.uppercased())
-								.tag(p)
-						}
-					}
-					.labelsHidden()
-					#if os(iOS)
-					.pickerStyle(.segmented)
-					#endif
-				} header: {
-					Text("CreateStackView.ServiceEditor.Port.Protocol")
+					Text("CreateStackCreatorView.ServiceView.PortEntryView.Container.Footer")
 				}
 			}
 			.formStyle(.grouped)
@@ -138,7 +139,7 @@ extension CreateStackCreatorView {
 
 // MARK: - Helpers
 
-private extension CreateStackCreatorView.PortEntryEditView {
+private extension CreateStackCreatorView.ServiceView.PortEntryView {
 	var canSave: Bool {
 		hostPort ?? 0 > 0 && containerPort ?? 0 > 0
 	}
@@ -146,7 +147,7 @@ private extension CreateStackCreatorView.PortEntryEditView {
 
 // MARK: - Actions
 
-private extension CreateStackCreatorView.PortEntryEditView {
+private extension CreateStackCreatorView.ServiceView.PortEntryView {
 	func saveEntry() {
 		guard canSave, let hostPort, let containerPort else { return }
 
@@ -163,7 +164,7 @@ private extension CreateStackCreatorView.PortEntryEditView {
 
 // MARK: - Subtypes
 
-private extension CreateStackCreatorView.PortEntryEditView {
+private extension CreateStackCreatorView.ServiceView.PortEntryView {
 	enum Field {
 		case hostPort
 		case containerPort

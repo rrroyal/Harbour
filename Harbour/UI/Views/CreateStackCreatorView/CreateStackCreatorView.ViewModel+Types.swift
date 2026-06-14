@@ -15,7 +15,7 @@ extension CreateStackCreatorView.ViewModel {
 		var name: String = ""
 		var image: String = ""
 		var environment: [KeyValueEntry] = []
-		var volumes: [VolumeEntry] = []
+		var volumes: [Volume] = []
 		var ports: [PortEntry] = []
 		var networks: [Network] = []
 	}
@@ -33,7 +33,7 @@ extension CreateStackCreatorView.ViewModel.Service {
 		environment.removeAll { $0 == entry }
 	}
 
-	mutating func removeVolume(_ volume: VolumeEntry) {
+	mutating func removeVolume(_ volume: Volume) {
 		volumes.removeAll { $0.id == volume.id }
 	}
 
@@ -47,7 +47,7 @@ extension CreateStackCreatorView.ViewModel.Service {
 }
 
 extension CreateStackCreatorView.ViewModel.Service {
-	struct VolumeEntry: Identifiable, Hashable {
+	struct Volume: Identifiable, Hashable {
 		/// Container path - must be unique within a service
 		var id: String { target }
 		/// Host path or named volume

@@ -1,5 +1,5 @@
 //
-//  CreateStackCreatorView+VolumeEntryEditView.swift
+//  CreateStackCreatorView.ServiceView+VolumeView.swift
 //  Harbour
 //
 //  Created by royal on 14/06/2026.
@@ -9,12 +9,12 @@
 import CommonHaptics
 import SwiftUI
 
-extension CreateStackCreatorView {
-	struct VolumeEntryEditView: View {
+extension CreateStackCreatorView.ServiceView {
+	struct VolumeView: View {
 		@Environment(\.dismiss) private var dismiss
 
-		var entry: ViewModel.Service.VolumeEntry?
-		var onSave: (ViewModel.Service.VolumeEntry) -> Void
+		var entry: CreateStackCreatorView.ViewModel.Service.Volume?
+		var onSave: (CreateStackCreatorView.ViewModel.Service.Volume) -> Void
 		var removeAction: () -> Void
 
 		@State private var source: String
@@ -22,8 +22,8 @@ extension CreateStackCreatorView {
 		@FocusState private var focusedField: Field?
 
 		init(
-			entry: ViewModel.Service.VolumeEntry?,
-			onSave: @escaping (ViewModel.Service.VolumeEntry) -> Void,
+			entry: CreateStackCreatorView.ViewModel.Service.Volume?,
+			onSave: @escaping (CreateStackCreatorView.ViewModel.Service.Volume) -> Void,
 			removeAction: @escaping () -> Void
 		) {
 			self.entry = entry
@@ -51,9 +51,9 @@ extension CreateStackCreatorView {
 						focusedField = .target
 					}
 				} header: {
-					Text("CreateStackView.ServiceEditor.Volume.Source")
+					Text("CreateStackCreatorView.ServiceView.VolumeView.Source.Header")
 				} footer: {
-					Text("CreateStackView.ServiceEditor.Volume.Source.Footer")
+					Text("CreateStackCreatorView.ServiceView.VolumeView.Source.Footer")
 				}
 
 				NormalizedSection {
@@ -70,12 +70,14 @@ extension CreateStackCreatorView {
 					.submitLabel(.done)
 					.onSubmit {
 						focusedField = nil
-						if canSave { saveEntry() }
+						if canSave {
+							saveEntry()
+						}
 					}
 				} header: {
-					Text("CreateStackView.ServiceEditor.Volume.Target")
+					Text("CreateStackCreatorView.ServiceView.VolumeView.Target.Header")
 				} footer: {
-					Text("CreateStackView.ServiceEditor.Volume.Target.Footer")
+					Text("CreateStackCreatorView.ServiceView.VolumeView.Target.Footer")
 				}
 			}
 			.formStyle(.grouped)
@@ -120,7 +122,7 @@ extension CreateStackCreatorView {
 
 // MARK: - Helpers
 
-private extension CreateStackCreatorView.VolumeEntryEditView {
+private extension CreateStackCreatorView.ServiceView.VolumeView {
 	var canSave: Bool {
 		!source.isReallyEmpty && !target.isReallyEmpty
 	}
@@ -128,7 +130,7 @@ private extension CreateStackCreatorView.VolumeEntryEditView {
 
 // MARK: - Actions
 
-private extension CreateStackCreatorView.VolumeEntryEditView {
+private extension CreateStackCreatorView.ServiceView.VolumeView {
 	func saveEntry() {
 		guard canSave else { return}
 
@@ -139,7 +141,7 @@ private extension CreateStackCreatorView.VolumeEntryEditView {
 			.trimmingCharacters(in: .whitespacesAndNewlines)
 			.replacingOccurrences(of: " ", with: "-")
 
-		let entry = CreateStackCreatorView.ViewModel.Service.VolumeEntry(
+		let entry = CreateStackCreatorView.ViewModel.Service.Volume(
 			source: source,
 			target: target
 		)
@@ -151,7 +153,7 @@ private extension CreateStackCreatorView.VolumeEntryEditView {
 
 // MARK: - Subtypes
 
-private extension CreateStackCreatorView.VolumeEntryEditView {
+private extension CreateStackCreatorView.ServiceView.VolumeView {
 	enum Field {
 		case source
 		case target
