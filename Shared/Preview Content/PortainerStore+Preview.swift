@@ -12,7 +12,8 @@ struct PortainerStorePreviewModifier: PreviewModifier {
 	typealias Context = PortainerStore
 
 	static func makeSharedContext() async throws -> Context {
-		let portainerStore = PortainerStore()
+		let preferences = Preferences()
+		let portainerStore = PortainerStore(preferences: preferences)
 		portainerStore.isSetup = true
 		portainerStore.endpoints = [.init(id: 0, name: "Endpoint")]
 		portainerStore.selectedEndpoint = portainerStore.endpoints.first

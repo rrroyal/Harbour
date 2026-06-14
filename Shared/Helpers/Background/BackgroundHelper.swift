@@ -28,7 +28,12 @@ struct BackgroundHelper: Sendable {
 	///   - newContainers: New (post-update) containers
 	///   - endpoint: Endpoint associated with this refresh
 	// swiftlint:disable:next cyclomatic_complexity
-	nonisolated static func handleContainersUpdate(from oldContainers: [Container], to newContainers: [Container], endpoint: Endpoint) async throws {
+	nonisolated static func handleContainersUpdate(
+		from oldContainers: [Container],
+		to newContainers: [Container],
+		endpoint: Endpoint,
+		onChanges: (@Sendable ([ContainerChange]) async -> Void)? = nil
+	) async throws {
 		let oldMapping: [String: Container] = oldContainers.reduce(into: [:]) {
 			guard let persistentID = $1._persistentID else { return }
 			$0[persistentID] = $1
@@ -107,7 +112,7 @@ struct BackgroundHelper: Sendable {
 
 		#if TARGET_APP
 		Task { @MainActor [changes] in
-			AppState.shared.lastContainerChanges = changes
+			await onChanges?(changes)
 		}
 		#endif
 
@@ -127,9 +132,9 @@ extension BackgroundHelper {
 	#if os(iOS)
 	/// Schedules a new background refresh task.
 	@Sendable
-	static func scheduleBackgroundRefreshIfNeeded() {
+	static func scheduleBackgroundRefreshIfNeeded(preferences: Preferences) {
 		Task {
-			guard Preferences.shared.enableBackgroundRefresh else {
+			guard preferences.enableBackgroundRefresh else {
 				logger.debug("Background refresh is disabled.")
 				return
 			}
@@ -152,21 +157,23 @@ extension BackgroundHelper {
 
 	#if TARGET_APP
 	/// Handles the background refresh task.
-	static func handleBackgroundRefresh() async {
+	static func handleBackgroundRefresh(appState: AppState) async {
 		do {
 			loggerBackground.notice("Handling background refresh...")
 
+			let preferences = Preferences()
+
 			#if DEBUG
 			Task { @MainActor in
-				Preferences.shared.lastBackgroundRefreshDate = Date().timeIntervalSince1970
+				preferences.lastBackgroundRefreshDate = Date().timeIntervalSince1970
 			}
 			#endif
 
 			#if os(iOS)
-			scheduleBackgroundRefreshIfNeeded()
+			scheduleBackgroundRefreshIfNeeded(preferences: preferences)
 			#endif
 
-			let portainerStore = await PortainerStore(urlSessionConfiguration: .intents)
+			let portainerStore = await PortainerStore(preferences: preferences, urlSessionConfiguration: .intents)
 			await portainerStore.setupWithStored()
 
 			guard let endpoint = await portainerStore.selectedEndpoint else {
@@ -177,10 +184,12 @@ extension BackgroundHelper {
 			let newContainers = try await portainerStore.refreshContainers().value
 
 			Task.detached {
-				try? await SpotlightHelper.indexContainers(newContainers)
+				try? await SpotlightHelper.indexContainers(newContainers, endpointID: endpoint.id, serverURL: await portainerStore.serverURL)
 			}
 
-			try await handleContainersUpdate(from: oldContainers, to: newContainers, endpoint: endpoint)
+			try await handleContainersUpdate(from: oldContainers, to: newContainers, endpoint: endpoint) { @MainActor [appState] changes in
+				appState.lastContainerChanges = changes
+			}
 		} catch {
 			loggerBackground.error("Error handling background refresh: \(error.localizedDescription, privacy: .public)")
 		}

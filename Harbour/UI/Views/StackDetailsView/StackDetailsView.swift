@@ -26,10 +26,10 @@ struct StackDetailsView: View {
 		viewModel.stack?.name ?? navigationItem.stackName ?? navigationItem.stackID.description
 	}
 
-	init(navigationItem: NavigationItem) {
+	init(navigationItem: NavigationItem, portainerStore: PortainerStore) {
 		self.navigationItem = navigationItem
 
-		let viewModel = ViewModel(navigationItem: navigationItem)
+		let viewModel = ViewModel(navigationItem: navigationItem, portainerStore: portainerStore)
 		self.viewModel = viewModel
 	}
 
@@ -395,7 +395,10 @@ private extension StackDetailsView {
 // MARK: - Previews
 
 #Preview {
-	StackDetailsView(navigationItem: .init(stackID: Stack.preview().id.description, stackName: Stack.preview().name))
-		.withEnvironment()
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
+	StackDetailsView(navigationItem: .init(stackID: Stack.preview().id.description, stackName: Stack.preview().name), portainerStore: portainerStore)
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 		.environment(SceneDelegate())
 }

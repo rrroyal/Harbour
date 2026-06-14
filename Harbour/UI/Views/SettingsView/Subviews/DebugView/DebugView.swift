@@ -130,10 +130,12 @@ private extension DebugView {
 
 private extension DebugView {
 	struct BackgroundSection: View {
+		@Environment(AppState.self) private var appState
 		@Environment(\.errorHandler) private var errorHandler
+		@EnvironmentObject private var preferences: Preferences
 
 		private var lastBackgroundRefreshDateString: String? {
-			if let lastBackgroundRefreshDate = Preferences.shared.lastBackgroundRefreshDate {
+			if let lastBackgroundRefreshDate = preferences.lastBackgroundRefreshDate {
 				return Date(timeIntervalSince1970: lastBackgroundRefreshDate).formatted(.dateTime)
 			}
 			return nil
@@ -150,8 +152,8 @@ private extension DebugView {
 					DebugView.logger.notice("Simulating background refresh...")
 					Haptics.generateIfEnabled(.buttonPress)
 
-					Task {
-						await BackgroundHelper.handleBackgroundRefresh()
+					Task { [appState] in
+						await BackgroundHelper.handleBackgroundRefresh(appState: appState)
 					}
 				}
 			}

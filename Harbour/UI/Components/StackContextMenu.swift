@@ -52,7 +52,7 @@ struct StackContextMenu: View {
 				.tint(.red)
 			}
 
-			if let portainerDeeplinkURL = PortainerDeeplink()?.stackURL(stack: stack) {
+			if let portainerDeeplinkURL = PortainerDeeplink(baseURL: portainerStore.serverURL)?.stackURL(stack: stack) {
 				Divider()
 
 				ShareLink("Generic.SharePortainerURL", item: portainerDeeplinkURL)

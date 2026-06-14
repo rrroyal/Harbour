@@ -20,7 +20,8 @@ import WidgetKit
 extension SettingsView {
 	@Observable @MainActor
 	final class ViewModel: IndicatorPresentable {
-		private let portainerStore: PortainerStore = .shared
+		private let portainerStore: PortainerStore
+		private let appState: AppState
 
 		let logger = Logger(.settings)
 		let indicators = Indicators()
@@ -38,7 +39,9 @@ extension SettingsView {
 		var isRemoveEndpointAlertPresented = false
 		var endpointToRemove: URL?
 
-		init() {
+		init(portainerStore: PortainerStore, appState: AppState) {
+			self.portainerStore = portainerStore
+			self.appState = appState
 			serverURLs = portainerStore.savedURLs
 			activeURL = portainerStore.serverURL
 		}
@@ -52,7 +55,7 @@ extension SettingsView {
 		@MainActor
 		func switchPortainerServer(to serverURL: URL) async throws {
 			activeURL = serverURL
-			AppState.shared.switchPortainerServer(to: serverURL)
+			appState.switchPortainerServer(to: serverURL)
 
 			WidgetCenter.shared.reloadAllTimelines()
 		}

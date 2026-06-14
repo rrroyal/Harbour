@@ -20,9 +20,14 @@ struct SettingsView: View {
 	#elseif os(macOS)
 	@State private var sceneDelegate = SceneDelegate()
 	#endif
+	@Environment(PortainerStore.self) private var portainerStore
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
-	@State private var viewModel = ViewModel()
+	@State private var viewModel: ViewModel
+
+	init(portainerStore: PortainerStore, appState: AppState) {
+		_viewModel = State(initialValue: ViewModel(portainerStore: portainerStore, appState: appState))
+	}
 
 	var body: some View {
 		NavigationStack {
@@ -55,7 +60,7 @@ struct SettingsView: View {
 			}
 		} content: {
 			NavigationStack {
-				SetupView()
+				SetupView(portainerStore: portainerStore)
 					.addingCloseButton()
 			}
 			#if os(macOS)
@@ -111,7 +116,10 @@ private extension SettingsView {
 // MARK: - Previews
 
 #Preview {
-	SettingsView()
-		.withEnvironment()
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
+	SettingsView(portainerStore: portainerStore, appState: appState)
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 		.environment(SceneDelegate())
 }

@@ -109,6 +109,8 @@ private extension CreateStackView.StackEnvironmentView {
 // MARK: - Previews
 
 #Preview {
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
 	CreateStackView.StackEnvironmentView()
-		.environment(CreateStackView.ViewModel())
+		.environment(CreateStackView.ViewModel(portainerStore: portainerStore))
 }

@@ -24,9 +24,13 @@ struct ContainersView: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 	@Environment(\.horizontalSizeClass) private var horizontalSizeClass
-	@State private var viewModel = ViewModel()
+	@State private var viewModel: ViewModel
 	@FocusState private var isFocused: Bool
 	@Namespace private var namespace
+
+	init(portainerStore: PortainerStore, preferences: Preferences) {
+		_viewModel = State(initialValue: ViewModel(portainerStore: portainerStore, preferences: preferences))
+	}
 
 	var body: some View {
 		@Bindable var sceneDelegate = sceneDelegate
@@ -334,7 +338,10 @@ private extension ContainersView {
 // MARK: - Previews
 
 #Preview {
-	ContainersView()
-		.withEnvironment()
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
+	ContainersView(portainerStore: portainerStore, preferences: preferences)
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 		.environment(SceneDelegate())
 }

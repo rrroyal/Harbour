@@ -13,7 +13,7 @@ import OSLog
 import PortainerKit
 
 extension SpotlightHelper {
-	static func indexStacks(_ stacks: [Stack]) async throws {
+	static func indexStacks(_ stacks: [Stack], serverURL: URL?) async throws {
 		logger.debug("Indexing \(stacks.count) stacks...")
 
 		let index = CSSearchableIndex.default()
@@ -32,7 +32,7 @@ extension SpotlightHelper {
 				attributes.title = stack.name
 				attributes.contentDescription = stack.id.description
 				attributes.contentType = UTType.url.identifier
-				attributes.contentURL = PortainerDeeplink()?.stackURL(stack: stack)
+				attributes.contentURL = PortainerDeeplink(baseURL: serverURL)?.stackURL(stack: stack)
 				attributes.keywords = [
 					stack.id.description,
 					stack.name

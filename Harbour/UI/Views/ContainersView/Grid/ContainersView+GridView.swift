@@ -63,11 +63,14 @@ extension ContainersView {
 // MARK: - Previews
 
 #Preview {
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
 	ScrollView {
 		ContainersView.GridView(containers: [.preview()])
 			.padding()
 	}
 	.background(Color.groupedBackground)
 	.environment(SceneDelegate())
-	.withEnvironment()
+	.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 }

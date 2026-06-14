@@ -35,6 +35,8 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 
 	static let isDiscoverable = true
 
+	@Dependency private var portainerStore: IntentPortainerStore
+
 	@Parameter(title: "AppIntents.Parameter.Endpoint.Title")
 	var endpoint: IntentEndpoint?
 
@@ -59,7 +61,6 @@ struct ContainerStatusIntent: AppIntent, WidgetConfigurationIntent {
 		logger.info("Performing \(Self.self, privacy: .public)...")
 
 		do {
-			let portainerStore = IntentPortainerStore.shared
 			try await portainerStore.setupIfNeeded()
 
 			let endpoint: IntentEndpoint

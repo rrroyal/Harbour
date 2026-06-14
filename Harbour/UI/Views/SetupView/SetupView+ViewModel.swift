@@ -18,6 +18,7 @@ extension SetupView {
 	@Observable @MainActor
 	final class ViewModel {
 		private let logger = Logger(.custom(SetupView.self))
+		private let portainerStore: PortainerStore
 
 		@ObservationIgnored
 		private var loginTask: Task<Bool, Error>?
@@ -36,6 +37,10 @@ extension SetupView {
 
 		var canSubmit: Bool {
 			!isLoading && !url.isReallyEmpty && !token.isReallyEmpty
+		}
+
+		init(portainerStore: PortainerStore) {
+			self.portainerStore = portainerStore
 		}
 
 		func onURLTextFieldSubmit() {
@@ -71,15 +76,15 @@ extension SetupView {
 					let endpoints = try await portainer.fetchEndpoints()
 					logger.info("Got \(endpoints.count, privacy: .public) endpoint(s) from the new server, switching...")
 
-					Task { @MainActor in
+					Task { @MainActor [portainerStore] in
 						guard !Task.isCancelled else { return }
 
-						PortainerStore.shared.reset()
-						PortainerStore.shared.setup(url: url, token: token, saveToken: true)
+						portainerStore.reset()
+						portainerStore.setup(url: url, token: token, saveToken: true)
 
-						PortainerStore.shared.setEndpoints(endpoints)
-						if PortainerStore.shared.selectedEndpoint != nil {
-							PortainerStore.shared.refreshContainers()
+						portainerStore.setEndpoints(endpoints)
+						if portainerStore.selectedEndpoint != nil {
+							portainerStore.refreshContainers()
 						}
 					}
 

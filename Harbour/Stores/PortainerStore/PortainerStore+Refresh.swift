@@ -84,7 +84,7 @@ extension PortainerStore {
 
 			do {
 				let stacks = try await fetchStacks(
-					for: Preferences.shared.svFilterByActiveEndpoint ? selectedEndpoint?.id : nil,
+					for: preferences.svFilterByActiveEndpoint ? selectedEndpoint?.id : nil,
 					includeOrphaned: true
 				)
 				self.setStacks(stacks)

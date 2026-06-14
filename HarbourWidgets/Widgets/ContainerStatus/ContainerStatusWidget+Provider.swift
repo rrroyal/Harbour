@@ -17,10 +17,6 @@ private let logger = Logger(.widgets(ContainerStatusWidget.Provider.self))
 extension ContainerStatusWidget {
 	struct Provider: AppIntentTimelineProvider, Sendable {
 
-		// MARK: Private Properties
-
-		nonisolated(unsafe) let portainerStore = IntentPortainerStore.shared
-
 		// MARK: AppIntentTimelineProvider
 
 		func placeholder(in context: Context) -> Entry {
@@ -72,6 +68,7 @@ private extension ContainerStatusWidget.Provider {
 		}
 
 		do {
+			let portainerStore = IntentPortainerStore()
 			try await portainerStore.setupIfNeeded()
 
 			let filters = FetchFilters(

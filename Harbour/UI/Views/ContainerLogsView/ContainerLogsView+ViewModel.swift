@@ -21,7 +21,8 @@ extension ContainerLogsView {
 	final class ViewModel {
 		typealias _ViewState = ViewState<String, Error>
 
-		private let portainerStore = PortainerStore.shared
+		private let portainerStore: PortainerStore
+		private let preferences: Preferences
 
 		private var fetchTask: Task<Void, Error>?
 		private var parseTask: Task<Void, Never>?
@@ -72,8 +73,10 @@ extension ContainerLogsView {
 			logs?.isEmpty ?? true
 		}
 
-		init(containerID: Container.ID) {
+		init(containerID: Container.ID, portainerStore: PortainerStore, preferences: Preferences) {
 			self.containerID = containerID
+			self.portainerStore = portainerStore
+			self.preferences = preferences
 		}
 
 		@discardableResult
@@ -90,7 +93,7 @@ extension ContainerLogsView {
 					let logs = try await portainerStore.fetchContainerLogs(
 						for: containerID,
 						tail: .limit(lineCount),
-						timestamps: Preferences.shared.clIncludeTimestamps
+						timestamps: preferences.clIncludeTimestamps
 					)
 //					.dropFirst(8)												// first line
 //					.replacing(/\r?\n(.{8})/.dotMatchesNewlines(), with: "\n")	// the rest of the lines

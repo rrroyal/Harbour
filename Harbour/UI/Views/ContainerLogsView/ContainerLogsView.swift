@@ -23,10 +23,10 @@ struct ContainerLogsView: View {
 
 	var containerID: Container.ID
 
-	init(containerID: Container.ID) {
+	init(containerID: Container.ID, portainerStore: PortainerStore, preferences: Preferences) {
 		self.containerID = containerID
 
-		let viewModel = ViewModel(containerID: containerID)
+		let viewModel = ViewModel(containerID: containerID, portainerStore: portainerStore, preferences: preferences)
 		self.viewModel = viewModel
 	}
 
@@ -332,6 +332,9 @@ private extension ContainerLogsView {
 // MARK: - Previews
 
 #Preview(traits: .modifier(PortainerStorePreviewModifier())) {
-	ContainerLogsView(containerID: "")
-		.withEnvironment()
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
+	ContainerLogsView(containerID: "", portainerStore: portainerStore, preferences: preferences)
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 }

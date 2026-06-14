@@ -19,7 +19,7 @@ extension ContainersView {
 	@Observable @MainActor
 	final class ViewModel {
 		private let portainerStore: PortainerStore
-		private let preferences = Preferences.shared
+		private let preferences: Preferences
 
 		@ObservationIgnored
 		private var fetchTask: Task<Void, Error>?
@@ -64,9 +64,9 @@ extension ContainersView {
 			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && fetchTask != nil
 		}
 
-		init() {
-			let portainerStore = PortainerStore.shared
+		init(portainerStore: PortainerStore, preferences: Preferences) {
 			self.portainerStore = portainerStore
+			self.preferences = preferences
 		}
 
 		func fetch() async throws {

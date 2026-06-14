@@ -6,7 +6,9 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import AppIntents
 import CommonFoundation
+import CommonHaptics
 import IndicatorsKit
 import PortainerKit
 import SwiftData
@@ -22,27 +24,37 @@ struct HarbourApp: App {
 	#elseif os(macOS)
 	@NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 	#endif
-	@StateObject private var preferences: Preferences = .shared
-	@State private var appState: AppState = .shared
+	@StateObject private var preferences: Preferences
 	@State private var portainerStore: PortainerStore
+	@State private var appState: AppState
 
 	init() {
-		let portainerStore = PortainerStore.shared
+		let preferences = Preferences()
+		self._preferences = .init(wrappedValue: preferences)
+
+		let portainerStore = PortainerStore(preferences: preferences)
 		portainerStore.setupWithStored()
 		self._portainerStore = .init(initialValue: portainerStore)
+
+		let appState = AppState(portainerStore: portainerStore)
+		self._appState = .init(initialValue: appState)
+
+		AppDependencyManager.shared.add {
+			IntentPortainerStore()
+		}
 	}
 
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				#if os(macOS)
-				.containerBackground(.ultraThickMaterial, for: .window)
-				#endif
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,
 					portainerStore: portainerStore
 				)
+				.task {
+					appDelegate.configure(appState: appState)
+				}
 				.task {
 					do {
 						try Tips.configure([
@@ -59,17 +71,22 @@ struct HarbourApp: App {
 			PortainerCommands(portainerStore: portainerStore)
 		}
 		#if os(iOS)
-		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh), action: BackgroundHelper.handleBackgroundRefresh)
+		.backgroundTask(.appRefresh(BackgroundHelper.TaskIdentifier.backgroundRefresh)) { [appState] in
+			await BackgroundHelper.handleBackgroundRefresh(appState: appState)
+		}
 		#endif
 		#if os(macOS)
 		.windowStyle(.hiddenTitleBar)
 		#endif
 		.onChange(of: portainerStore.containers, appState.onContainersChange)
 		.onChange(of: portainerStore.stacks, appState.onStacksChange)
+		.onChange(of: preferences.enableHaptics, initial: true) { _, newValue in
+			Haptics.isHapticsEnabled = newValue
+		}
 
 		#if os(macOS)
 		Settings {
-			SettingsView()
+			SettingsView(portainerStore: portainerStore, appState: appState)
 				.withEnvironment(
 					appState: appState,
 					preferences: preferences,

@@ -178,7 +178,7 @@ extension IntentContainer {
 					return []
 				}
 
-				let portainerStore = IntentPortainerStore.shared
+				let portainerStore = IntentPortainerStore()
 				try await portainerStore.setupIfNeeded()
 				let entities = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id)
 					.map { Entity(container: $0) }
@@ -201,7 +201,7 @@ extension IntentContainer {
 					return []
 				}
 
-				let portainerStore = IntentPortainerStore.shared
+				let portainerStore = IntentPortainerStore()
 				try await portainerStore.setupIfNeeded()
 				let entities = try await portainerStore.portainer.fetchContainers(endpointID: endpoint.id)
 					.filter(string)
@@ -229,7 +229,7 @@ extension IntentContainer {
 			do {
 				let entities: [Entity] = try await {
 					if requiresOnline {
-						let portainerStore = IntentPortainerStore.shared
+						let portainerStore = IntentPortainerStore()
 						try await portainerStore.setupIfNeeded()
 
 						let filters = FetchFilters(

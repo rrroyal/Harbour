@@ -22,6 +22,12 @@ final class SceneDelegate: NSObject {
 	let logger = Logger(.scene)
 	let indicators = Indicators()
 
+	// swiftlint:disable implicitly_unwrapped_optional
+	@ObservationIgnored private(set) var portainerStore: PortainerStore!
+	@ObservationIgnored private(set) var appState: AppState!
+	@ObservationIgnored private(set) var preferences: Preferences!
+	// swiftlint:enable implicitly_unwrapped_optional
+
 	// MARK: Navigation
 
 	var scenePhase: ScenePhase?
@@ -32,7 +38,7 @@ final class SceneDelegate: NSObject {
 
 	// MARK: Sheets
 
-	var isLandingSheetPresented = !Preferences.shared.landingDisplayed
+	var isLandingSheetPresented: Bool = false
 	var isSettingsSheetPresented = false
 	var isCreateStackSheetPresented = false
 	var isContainerChangesSheetPresented = false
@@ -71,10 +77,21 @@ final class SceneDelegate: NSObject {
 	var selectedStackNameForStacksView: String?
 }
 
+// MARK: - SceneDelegate+Configuration
+
+extension SceneDelegate {
+	func configure(portainerStore: PortainerStore, appState: AppState, preferences: Preferences) {
+		self.portainerStore = portainerStore
+		self.appState = appState
+		self.preferences = preferences
+		self.isLandingSheetPresented = !preferences.landingDisplayed
+	}
+}
+
 // MARK: - SceneDelegate+Actions
 
 extension SceneDelegate {
 	func onLandingDismissed() {
-		Preferences.shared.landingDisplayed = true
+		preferences.landingDisplayed = true
 	}
 }

@@ -21,6 +21,7 @@ struct ContentView: View {
 	@State private var sceneDelegate = SceneDelegate()
 	#endif
 	@Environment(PortainerStore.self) private var portainerStore
+	@EnvironmentObject private var preferences: Preferences
 	@Environment(\.scenePhase) private var scenePhase
 
 	var body: some View {
@@ -70,6 +71,13 @@ struct ContentView: View {
 			sceneDelegate.onNotificationsToHandleChange(before: $0, after: $1)
 		}
 		.onChange(of: scenePhase, sceneDelegate.onScenePhaseChange)
+		.task(id: ObjectIdentifier(portainerStore)) {
+			sceneDelegate.configure(
+				portainerStore: portainerStore,
+				appState: appState,
+				preferences: preferences
+			)
+		}
 		.environment(sceneDelegate)
 		.environment(\.errorHandler, .init(sceneDelegate.handleError))
 		.environment(\.presentIndicator, .init(sceneDelegate.presentIndicator))
@@ -80,7 +88,10 @@ struct ContentView: View {
 // MARK: - Previews
 
 #Preview {
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
 	ContentView()
-		.withEnvironment()
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 		.environment(SceneDelegate())
 }

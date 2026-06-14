@@ -90,19 +90,21 @@ private extension ContentView.ViewForMacOS {
 private extension ContentView.ViewForMacOS {
 	struct MainContent: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
+		@Environment(PortainerStore.self) private var portainerStore
+		@EnvironmentObject private var preferences: Preferences
 
 		var body: some View {
 			Group {
 				switch sceneDelegate.activeTab {
 				case .containers:
-					ContainersView()
+					ContainersView(portainerStore: portainerStore, preferences: preferences)
 						.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-							ContainerDetailsView(navigationItem: navigationItem)
+							ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 						}
 				case .stacks:
-					StacksView()
+					StacksView(portainerStore: portainerStore, preferences: preferences)
 						.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-							StackDetailsView(navigationItem: navigationItem)
+							StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 						}
 				}
 			}

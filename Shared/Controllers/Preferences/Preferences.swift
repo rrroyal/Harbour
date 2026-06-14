@@ -19,8 +19,6 @@ import SwiftUI
 
 /// UserDefaults wrapper; user preferences store.
 public final class Preferences: ObservableObject, @unchecked Sendable {
-	public static let shared = Preferences()
-
 	// swiftlint:disable:next force_unwrapping
 	nonisolated(unsafe) static let userDefaults = UserDefaults(suiteName: "group.\(Bundle.main.mainBundleIdentifier ?? Bundle.main.bundleIdentifier!)")
 
@@ -85,7 +83,7 @@ public final class Preferences: ObservableObject, @unchecked Sendable {
 	@AppStorage("ContainerRemove.Volumes", store: Preferences.userDefaults)
 	public var containerRemoveVolumes = false
 
-	private init() { }
+	public init() { }
 }
 
 // MARK: - Preferences+Handlers

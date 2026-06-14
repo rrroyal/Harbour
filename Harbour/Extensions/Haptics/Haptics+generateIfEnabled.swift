@@ -9,10 +9,11 @@
 import CommonHaptics
 
 extension Haptics {
-	@inlinable
+	nonisolated(unsafe) static var isHapticsEnabled: Bool = true
+
 	static func generateIfEnabled(_ style: HapticStyle) {
+		guard isHapticsEnabled else { return }
 		Task { @MainActor in
-			guard Preferences.shared.enableHaptics else { return }
 			generate(style)
 		}
 	}

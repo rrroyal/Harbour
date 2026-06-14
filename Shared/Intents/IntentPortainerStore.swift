@@ -16,13 +16,12 @@ private let logger = Logger(.custom(IntentPortainerStore.self))
 
 // MARK: - IntentPortainerStore
 
-public final class IntentPortainerStore {
-	nonisolated(unsafe) static let shared = IntentPortainerStore()
-
+public final class IntentPortainerStore: @unchecked Sendable {
 	public let portainer = PortainerClient(urlSessionConfiguration: .intents)
+	private let preferences = Preferences()
 
 	public func setupIfNeeded() async throws {
-		guard let url = Preferences.shared.selectedServer else {
+		guard let url = preferences.selectedServer else {
 			logger.warning("No selectedServer!")
 			throw PortainerError.noServer
 		}

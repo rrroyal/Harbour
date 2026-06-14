@@ -29,14 +29,14 @@ public extension Endpoint {
 		public init() { }
 
 		public func suggestedEntities() async throws -> [Entity] {
-			let portainerStore = IntentPortainerStore.shared
+			let portainerStore = IntentPortainerStore()
 			try await portainerStore.setupIfNeeded()
 			return try await portainerStore.portainer.fetchEndpoints()
 				.sorted { $0.id < $1.id }
 		}
 
 		public func entities(for identifiers: [Entity.ID]) async throws -> [Entity] {
-			let portainerStore = IntentPortainerStore.shared
+			let portainerStore = IntentPortainerStore()
 			try await portainerStore.setupIfNeeded()
 			return try await portainerStore.portainer.fetchEndpoints()
 				.filter { identifiers.contains($0.id) }

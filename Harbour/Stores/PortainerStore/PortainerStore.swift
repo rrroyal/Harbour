@@ -20,14 +20,11 @@ import SwiftData
 @MainActor @Observable
 public final class PortainerStore {
 
-	/// Singleton for `PortainerStore`
-	public static let shared = PortainerStore()
-
 	// MARK: Private properties
 
 	internal let logger = Logger(.custom(PortainerStore.self))
-	internal let keychain = Keychain.shared
-	internal let preferences = Preferences.shared
+	internal let keychain: Keychain
+	internal let preferences: Preferences
 	nonisolated(unsafe) internal let portainer: PortainerClient
 
 	/// Persistence model context
@@ -76,9 +73,18 @@ public final class PortainerStore {
 
 	// MARK: init
 
-	/// Initializes `PortainerStore` with provided ModelContext and URLSession configuration.
-	/// - Parameter urlSessionConfiguration: `URLSessionConfiguration`, `.app` if none
-	init(urlSessionConfiguration: URLSessionConfiguration = .app) {
+	/// Initializes `PortainerStore` with provided dependencies and URLSession configuration.
+	/// - Parameters:
+	///   - keychain: Keychain instance to use for credential storage
+	///   - preferences: Preferences instance to use for user settings
+	///   - urlSessionConfiguration: `URLSessionConfiguration`, `.app` if none
+	init(
+		keychain: Keychain = .shared,
+		preferences: Preferences,
+		urlSessionConfiguration: URLSessionConfiguration = .app
+	) {
+		self.keychain = keychain
+		self.preferences = preferences
 		self.portainer = PortainerClient(urlSessionConfiguration: urlSessionConfiguration)
 
 		do {

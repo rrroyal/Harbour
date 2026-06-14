@@ -16,12 +16,13 @@ struct SetupView: View {
 	@Environment(\.dismiss) private var dismiss
 	@Environment(\.errorHandler) private var errorHandler
 
-	@State private var viewModel = ViewModel()
+	@State private var viewModel: ViewModel
 	@FocusState private var focusedField: ViewModel.FocusedField?
 	let onDismiss: (() -> Void)?
 
-	init(onDismiss: (() -> Void)? = nil) {
+	init(portainerStore: PortainerStore, onDismiss: (() -> Void)? = nil) {
 		self.onDismiss = onDismiss
+		_viewModel = State(initialValue: ViewModel(portainerStore: portainerStore))
 	}
 
 	private let urlPlaceholder: String = "https://172.17.0.2"
@@ -186,5 +187,7 @@ private extension SetupView {
 // MARK: - Previews
 
 #Preview {
-	SetupView()
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	SetupView(portainerStore: portainerStore)
 }

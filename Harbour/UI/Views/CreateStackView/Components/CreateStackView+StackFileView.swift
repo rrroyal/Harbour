@@ -224,10 +224,12 @@ private extension CreateStackView.StackFileView {
 // MARK: - Previews
 
 #Preview {
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
 	Form {
 		CreateStackView.StackFileView(
 			allowedContentTypes: []
 		)
 	}
-	.environment(CreateStackView.ViewModel())
+	.environment(CreateStackView.ViewModel(portainerStore: portainerStore))
 }

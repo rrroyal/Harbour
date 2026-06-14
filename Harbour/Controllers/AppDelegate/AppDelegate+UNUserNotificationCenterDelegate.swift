@@ -24,7 +24,7 @@ extension AppDelegate: @preconcurrency UNUserNotificationCenterDelegate {
 		withCompletionHandler completionHandler: @escaping () -> Void
 	) {
 		Task { @MainActor in
-			AppState.shared.handleNotification(response)
+			appState?.handleNotification(response)
 			completionHandler()
 		}
 	}

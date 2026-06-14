@@ -13,6 +13,9 @@ import SwiftUI
 extension ContentView {
 	struct ViewForIOS: View {
 		@Environment(SceneDelegate.self) private var sceneDelegate
+		@Environment(PortainerStore.self) private var portainerStore
+		@Environment(AppState.self) private var appState
+		@EnvironmentObject private var preferences: Preferences
 
 		var body: some View {
 			@Bindable var sceneDelegate = sceneDelegate
@@ -20,9 +23,9 @@ extension ContentView {
 			TabView(selection: $sceneDelegate.activeTab) {
 				Tab(value: .containers) {
 					NavigationStack(path: $sceneDelegate.navigationState.containers) {
-						ContainersView()
+						ContainersView(portainerStore: portainerStore, preferences: preferences)
 							.navigationDestination(for: ContainerDetailsView.NavigationItem.self) { navigationItem in
-								ContainerDetailsView(navigationItem: navigationItem)
+								ContainerDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 //									.equatable()
 							}
 					}
@@ -36,9 +39,9 @@ extension ContentView {
 
 				Tab(value: .stacks) {
 					NavigationStack(path: $sceneDelegate.navigationState.stacks) {
-						StacksView()
+						StacksView(portainerStore: portainerStore, preferences: preferences)
 							.navigationDestination(for: StackDetailsView.NavigationItem.self) { navigationItem in
-								StackDetailsView(navigationItem: navigationItem)
+								StackDetailsView(navigationItem: navigationItem, portainerStore: portainerStore)
 //									.equatable()
 							}
 					}
@@ -51,7 +54,7 @@ extension ContentView {
 				}
 			}
 			.sheet(isPresented: $sceneDelegate.isSettingsSheetPresented) {
-				SettingsView()
+				SettingsView(portainerStore: portainerStore, appState: appState)
 //					.navigationTransition(.zoom(sourceID: SettingsView.id, in: namespace))
 			}
 		}
@@ -61,13 +64,19 @@ extension ContentView {
 // MARK: - Previews
 
 #Preview("Empty") {
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
 	ContentView.ViewForIOS()
-		.withEnvironment()
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 		.environment(SceneDelegate())
 }
 
 #Preview("Mocked", traits: .modifier(PortainerStorePreviewModifier())) {
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
 	ContentView.ViewForIOS()
-		.withEnvironment()
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 		.environment(SceneDelegate())
 }

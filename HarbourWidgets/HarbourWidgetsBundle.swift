@@ -6,11 +6,16 @@
 //  Copyright © 2023 shameful. All rights reserved.
 //
 
+import AppIntents
 import SwiftUI
 import WidgetKit
 
 @main
 struct HarbourWidgetsBundle: WidgetBundle {
+	init() {
+		AppDependencyManager.shared.add { IntentPortainerStore() }
+	}
+
 	var body: some Widget {
 		ContainerStatusWidget()
 	}

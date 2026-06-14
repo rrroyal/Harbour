@@ -17,7 +17,7 @@ extension StackDetailsView {
 	final class ViewModel {
 		private let logger = Logger(.view(StackDetailsView.self))
 
-		private let portainerStore = PortainerStore.shared
+		private let portainerStore: PortainerStore
 
 		@ObservationIgnored
 		private(set) var fetchTask: Task<Void, Error>?
@@ -66,8 +66,9 @@ extension StackDetailsView {
 			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
 		}
 
-		init(navigationItem: StackDetailsView.NavigationItem) {
+		init(navigationItem: StackDetailsView.NavigationItem, portainerStore: PortainerStore) {
 			self.navigationItem = navigationItem
+			self.portainerStore = portainerStore
 		}
 
 		@discardableResult
@@ -141,7 +142,7 @@ extension StackDetailsView {
 
 			userActivity.contentAttributeSet = attributeSet
 
-			if let portainerDeeplinkURL = PortainerDeeplink()?.stackURL(stack: stack) {
+			if let portainerDeeplinkURL = PortainerDeeplink(baseURL: portainerStore.serverURL)?.stackURL(stack: stack) {
 				userActivity.webpageURL = portainerDeeplinkURL
 //				userActivity.referrerURL = portainerDeeplinkURL
 			}

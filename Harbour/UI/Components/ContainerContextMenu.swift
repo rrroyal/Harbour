@@ -50,7 +50,7 @@ struct ContainerContextMenu: View {
 				.tint(.red)
 			}
 
-			if let portainerDeeplinkURL = PortainerDeeplink()?.containerURL(containerID: container.id, endpointID: portainerStore.selectedEndpoint?.id) {
+			if let portainerDeeplinkURL = PortainerDeeplink(baseURL: portainerStore.serverURL)?.containerURL(containerID: container.id, endpointID: portainerStore.selectedEndpoint?.id) {
 				Divider()
 
 				ShareLink("Generic.SharePortainerURL", item: portainerDeeplinkURL)

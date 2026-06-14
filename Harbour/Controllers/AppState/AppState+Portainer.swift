@@ -23,7 +23,7 @@ extension AppState {
 		let task = Task {
 			defer { self.portainerServerSwitchTask = nil }
 
-			let portainerStore = PortainerStore.shared
+			let portainerStore = self.portainerStore
 			do {
 				guard !Task.isCancelled else { return }
 				portainerStore.switchServer(to: serverURL)
@@ -57,7 +57,7 @@ extension AppState {
 //		}
 
 		Task.detached {
-			try? await SpotlightHelper.indexContainers(newContainers)
+			try? await SpotlightHelper.indexContainers(newContainers, endpointID: self.portainerStore.selectedEndpoint?.id, serverURL: self.portainerStore.serverURL)
 		}
 	}
 
@@ -67,7 +67,7 @@ extension AppState {
 //			await NSUserActivity.deleteSavedUserActivities(withPersistentIdentifiers: [HarbourUserActivityIdentifier.stackDetails])
 //		}
 		Task.detached {
-			try? await SpotlightHelper.indexStacks(newStacks)
+			try? await SpotlightHelper.indexStacks(newStacks, serverURL: self.portainerStore.serverURL)
 		}
 	}
 }

@@ -15,7 +15,8 @@ import SwiftUI
 extension StacksView {
 	@Observable @MainActor
 	final class ViewModel {
-		private let portainerStore = PortainerStore.shared
+		private let portainerStore: PortainerStore
+		private let preferences: Preferences
 
 		private var fetchTask: Task<Void, Error>?
 		private var fetchError: Error?
@@ -26,6 +27,11 @@ extension StacksView {
 		var scrollPosition: StackItem.ID?
 
 		var scrollViewIsRefreshing = false
+
+		init(portainerStore: PortainerStore, preferences: Preferences) {
+			self.portainerStore = portainerStore
+			self.preferences = preferences
+		}
 
 		var viewState: ViewState<[Stack], Error> {
 			let stacks = portainerStore.stacks
@@ -44,7 +50,7 @@ extension StacksView {
 		var stacks: [StackItem] {
 			var stacks = portainerStore.stacks.map(StackItem.init)
 
-			if Preferences.shared.svIncludeLimitedStacks {
+			if preferences.svIncludeLimitedStacks {
 				let realStackNames = Set(stacks.map(\.name))
 
 				let limitedStackNames = portainerStore.containers
@@ -77,7 +83,7 @@ extension StacksView {
 				fetchError = nil
 
 				do {
-					if Preferences.shared.svIncludeLimitedStacks {
+					if preferences.svIncludeLimitedStacks {
 						async let _containers = portainerStore.refreshContainers().value
 						async let _stacks = portainerStore.refreshStacks().value
 						_ = try await (_containers, _stacks)

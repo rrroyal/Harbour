@@ -21,10 +21,14 @@ struct StacksView: View {
 	@Environment(\.errorHandler) private var errorHandler
 	@Environment(\.presentIndicator) private var presentIndicator
 
-	@State private var viewModel = ViewModel()
+	@State private var viewModel: ViewModel
 
 	@FocusState private var isFocused: Bool
 	@Namespace private var namespace
+
+	init(portainerStore: PortainerStore, preferences: Preferences) {
+		_viewModel = State(initialValue: ViewModel(portainerStore: portainerStore, preferences: preferences))
+	}
 
 	var body: some View {
 		@Bindable var sceneDelegate = sceneDelegate
@@ -274,7 +278,10 @@ private extension StacksView {
 // MARK: - Previews
 
 #Preview("StacksView") {
-	StacksView()
-		.withEnvironment()
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
+	StacksView(portainerStore: portainerStore, preferences: preferences)
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 		.environment(SceneDelegate())
 }

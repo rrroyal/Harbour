@@ -19,7 +19,7 @@ import PortainerKit
 extension ContainerDetailsView {
 	@Observable @MainActor
 	final class ViewModel {
-		private let portainerStore: PortainerStore = .shared
+		private let portainerStore: PortainerStore
 		private let logger = Logger(.view(ContainerDetailsView.self))
 
 		private(set) var fetchTask: Task<Void, Error>?
@@ -40,8 +40,9 @@ extension ContainerDetailsView {
 			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView
 		}
 
-		init(navigationItem: ContainerDetailsView.NavigationItem) {
+		init(navigationItem: ContainerDetailsView.NavigationItem, portainerStore: PortainerStore) {
 			self.navigationItem = navigationItem
+			self.portainerStore = portainerStore
 			self.viewState = self.viewState.reloading
 
 			self.container = portainerStore.containers.first(withID: navigationItem.id, persistentID: navigationItem.persistentID)
@@ -69,7 +70,7 @@ extension ContainerDetailsView {
 			userActivity.contentAttributeSet = attributeSet
 
 			if let endpointID = navigationItem.endpointID,
-			   let portainerDeeplinkURL = PortainerDeeplink()?.containerURL(containerID: navigationItem.id, endpointID: endpointID) {
+			   let portainerDeeplinkURL = PortainerDeeplink(baseURL: portainerStore.serverURL)?.containerURL(containerID: navigationItem.id, endpointID: endpointID) {
 				userActivity.webpageURL = portainerDeeplinkURL
 //				userActivity.referrerURL = portainerDeeplinkURL
 			}

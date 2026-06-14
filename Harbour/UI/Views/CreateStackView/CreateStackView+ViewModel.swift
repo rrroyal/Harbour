@@ -17,7 +17,7 @@ import UniformTypeIdentifiers
 extension CreateStackView {
 	@Observable @MainActor
 	final class ViewModel {
-		private let portainerStore: PortainerStore = .shared
+		private let portainerStore: PortainerStore
 
 		private(set) var createStackTask: Task<Stack, Swift.Error>?
 		private(set) var createStackError: Swift.Error?
@@ -38,6 +38,10 @@ extension CreateStackView {
 		var stackName = ""
 		var stackFileContent: String?
 		var stackEnvironment: [KeyValueEntry] = []
+
+		init(portainerStore: PortainerStore) {
+			self.portainerStore = portainerStore
+		}
 
 		var shouldCreateNewStack: Bool {
 			stackID == nil

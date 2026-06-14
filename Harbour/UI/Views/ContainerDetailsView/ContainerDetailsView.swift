@@ -17,15 +17,16 @@ import SwiftUI
 struct ContainerDetailsView: View {
 	@Environment(PortainerStore.self) private var portainerStore
 	@Environment(SceneDelegate.self) private var sceneDelegate
+	@EnvironmentObject private var preferences: Preferences
 	@Environment(\.errorHandler) private var errorHandler
 	@State private var viewModel: ViewModel
 
 	var navigationItem: NavigationItem
 
-	init(navigationItem: NavigationItem) {
+	init(navigationItem: NavigationItem, portainerStore: PortainerStore) {
 		self.navigationItem = navigationItem
 
-		let viewModel = ViewModel(navigationItem: navigationItem)
+		let viewModel = ViewModel(navigationItem: navigationItem, portainerStore: portainerStore)
 		self.viewModel = viewModel
 	}
 
@@ -124,7 +125,7 @@ struct ContainerDetailsView: View {
 			case .devices:
 				DevicesDetailsView(devices: containerDetails?.hostConfig.devices)
 			case .logs:
-				ContainerLogsView(containerID: navigationItem.id)
+				ContainerLogsView(containerID: navigationItem.id, portainerStore: portainerStore, preferences: preferences)
 			}
 		}
 	}
@@ -457,5 +458,9 @@ extension ContainerDetailsView: Equatable {
 // MARK: - Previews
 
 #Preview {
-	ContainerDetailsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil))
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
+	let appState = AppState(portainerStore: portainerStore)
+	ContainerDetailsView(navigationItem: .init(id: "", displayName: "Containy", endpointID: nil), portainerStore: portainerStore)
+		.withEnvironment(appState: appState, preferences: preferences, portainerStore: portainerStore)
 }

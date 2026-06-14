@@ -66,11 +66,11 @@ extension SceneDelegate {
 
 		switch typeIdentifier.joined(separator: ".") {
 		case SpotlightHelper.DomainIdentifier.container:
-			let container = PortainerStore.shared.containers.first { $0.id == itemIdentifier }
+			let container = portainerStore.containers.first { $0.id == itemIdentifier }
 			let navigationItem = ContainerDetailsView.NavigationItem(id: itemIdentifier, displayName: container?.displayName, endpointID: nil)
 			navigate(to: .containers, with: navigationItem)
 		case SpotlightHelper.DomainIdentifier.stack:
-			let stack = PortainerStore.shared.stacks.first { $0.id.description == itemIdentifier }
+			let stack = portainerStore.stacks.first { $0.id.description == itemIdentifier }
 			let navigationItem = StackDetailsView.NavigationItem(stackID: itemIdentifier, stackName: stack?.name)
 			navigate(to: .stacks, with: navigationItem)
 		default:
@@ -92,14 +92,13 @@ extension SceneDelegate {
 		switch newScenePhase {
 		case .background:
 			#if os(iOS)
-			BackgroundHelper.scheduleBackgroundRefreshIfNeeded()
+			BackgroundHelper.scheduleBackgroundRefreshIfNeeded(preferences: preferences)
 			#endif
 		case .inactive:
 			break
 		case .active:
 			guard !isFirstRun else { break }
 
-			let portainerStore = PortainerStore.shared
 			guard portainerStore.isSetup else { break }
 
 			switch activeTab {
@@ -141,14 +140,14 @@ extension SceneDelegate {
 					continue
 				}
 
-				AppState.shared.lastContainerChanges = changes
+				appState.lastContainerChanges = changes
 				resetSheets()
 				isContainerChangesSheetPresented = true
 			default:
 				continue
 			}
 
-			AppState.shared.notificationHandled(response)
+			appState.notificationHandled(response)
 		}
 	}
 }

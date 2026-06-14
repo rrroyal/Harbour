@@ -13,12 +13,10 @@ import OSLog
 import PortainerKit
 
 extension SpotlightHelper {
-	static func indexContainers(_ containers: [Container]) async throws {
+	static func indexContainers(_ containers: [Container], endpointID: Endpoint.ID?, serverURL: URL?) async throws {
 		logger.debug("Indexing \(containers.count) containers...")
 
 		let index = CSSearchableIndex.default()
-
-		let portainerEndpoint: Endpoint? = await PortainerStore.shared.selectedEndpoint
 
 		do {
 			try await index.deleteSearchableItems(withDomainIdentifiers: [DomainIdentifier.container])
@@ -33,7 +31,7 @@ extension SpotlightHelper {
 			attributes.title = container.displayName ?? container.id
 			attributes.contentDescription = container.id
 			attributes.contentType = UTType.url.identifier
-			attributes.contentURL = PortainerDeeplink()?.containerURL(containerID: container.id, endpointID: portainerEndpoint?.id)
+			attributes.contentURL = PortainerDeeplink(baseURL: serverURL)?.containerURL(containerID: container.id, endpointID: endpointID)
 
 			let containerNames = container.namesNormalized
 			attributes.alternateNames = containerNames?.count == 1 ? nil : containerNames

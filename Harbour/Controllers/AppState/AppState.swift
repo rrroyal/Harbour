@@ -20,11 +20,10 @@ final class AppState {
 
 	// MARK: Static Properties
 
-	static let shared = AppState()
-
 	// MARK: Internal Properties
 
 	internal let logger = Logger(.app)
+	internal let portainerStore: PortainerStore
 
 	internal var portainerServerSwitchTask: Task<Void, Error>?
 
@@ -36,5 +35,7 @@ final class AppState {
 
 	// MARK: init
 
-	private init() {}
+	init(portainerStore: PortainerStore) {
+		self.portainerStore = portainerStore
+	}
 }

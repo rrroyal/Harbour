@@ -12,6 +12,7 @@ import SwiftUI
 
 struct LandingView: View {
 	@Environment(\.dismiss) private var dismiss
+	@Environment(PortainerStore.self) private var portainerStore
 
 	var body: some View {
 		NavigationStack {
@@ -48,7 +49,7 @@ struct LandingView: View {
 				Group {
 					if navigateToSetupOnContinue {
 						NavigationLink("FeaturesView.ContinueButton") {
-							SetupView {
+							SetupView(portainerStore: portainerStore) {
 								dismiss()
 							}
 							.navigationBarBackButtonHidden()
@@ -70,7 +71,7 @@ struct LandingView: View {
 
 private extension LandingView {
 	var navigateToSetupOnContinue: Bool {
-		PortainerStore.shared.savedURLs.isEmpty
+		portainerStore.savedURLs.isEmpty
 	}
 }
 

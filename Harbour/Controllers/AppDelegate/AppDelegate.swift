@@ -9,4 +9,10 @@
 import Foundation
 
 @MainActor
-final class AppDelegate: NSObject { }
+final class AppDelegate: NSObject {
+	var appState: AppState?
+
+	func configure(appState: AppState) {
+		self.appState = appState
+	}
+}

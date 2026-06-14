@@ -19,7 +19,7 @@ extension PortainerStore {
 	func getStoredCredentials() -> (url: URL, token: String)? {
 		logger.info("Looking for credentials...")
 		do {
-			guard let selectedServerURL = Preferences.shared.selectedServer else {
+			guard let selectedServerURL = preferences.selectedServer else {
 				logger.warning("No selected server")
 				return nil
 			}

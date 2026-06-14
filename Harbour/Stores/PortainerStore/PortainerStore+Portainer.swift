@@ -188,8 +188,8 @@ extension PortainerStore {
 		removeVolumes: Bool? = nil,
 		force: Bool? = nil
 	) async throws {
-		let removeVolumes = removeVolumes ?? Preferences.shared.containerRemoveVolumes
-		let force = force ?? Preferences.shared.containerRemoveForce
+		let removeVolumes = removeVolumes ?? preferences.containerRemoveVolumes
+		let force = force ?? preferences.containerRemoveForce
 
 		defer {
 			Task {

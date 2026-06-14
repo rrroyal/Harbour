@@ -26,12 +26,13 @@ struct CreateStackView: View {
 	var onStackCreation: ((Stack) -> Void)?
 
 	init(
+		portainerStore: PortainerStore,
 		existingStack: Stack? = nil,
 		onEnvironmentEdit: (([KeyValueEntry]) -> Void)? = nil,
 		onStackFileSelection: ((String?) -> Void)? = nil,
 		onStackCreation: ((Stack) -> Void)? = nil
 	) {
-		let viewModel = ViewModel()
+		let viewModel = ViewModel(portainerStore: portainerStore)
 		if let existingStack {
 			viewModel.stackID = existingStack.id
 			viewModel.stackName = existingStack.name
@@ -264,7 +265,9 @@ extension CreateStackView {
 // MARK: - Previews
 
 #Preview {
+	let preferences = Preferences()
+	let portainerStore = PortainerStore(preferences: preferences)
 	NavigationStack {
-		CreateStackView()
+		CreateStackView(portainerStore: portainerStore)
 	}
 }

@@ -21,6 +21,7 @@ extension StacksView {
 
 			NavigationStack {
 				CreateStackView(
+					portainerStore: portainerStore,
 					existingStack: stack,
 					onStackCreation: { _ in
 						portainerStore.refreshStacks()

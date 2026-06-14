@@ -81,7 +81,7 @@ extension IntentEndpoint {
 			logger.info("Getting default result...")
 
 			do {
-				let portainerStore = IntentPortainerStore.shared
+				let portainerStore = IntentPortainerStore()
 				try await portainerStore.setupIfNeeded()
 				let endpoints = try await portainerStore.portainer.fetchEndpoints()
 
@@ -102,7 +102,7 @@ extension IntentEndpoint {
 			logger.info("Getting suggested entities...")
 
 			do {
-				let portainerStore = IntentPortainerStore.shared
+				let portainerStore = IntentPortainerStore()
 				try await portainerStore.setupIfNeeded()
 				let entities = try await portainerStore.portainer.fetchEndpoints()
 					.map { Entity(endpoint: $0) }
@@ -120,7 +120,7 @@ extension IntentEndpoint {
 			logger.info("Getting entities for identifiers: \(identifiers)...")
 
 			do {
-				let portainerStore = IntentPortainerStore.shared
+				let portainerStore = IntentPortainerStore()
 				try await portainerStore.setupIfNeeded()
 
 				let entities = try await portainerStore.portainer.fetchEndpoints()
