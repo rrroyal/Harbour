@@ -21,7 +21,7 @@ import SwiftData
 public final class PortainerStore {
 
 	/// Singleton for `PortainerStore`
-	static var shared = PortainerStore()
+	public static let shared = PortainerStore()
 
 	// MARK: Private properties
 
@@ -46,41 +46,32 @@ public final class PortainerStore {
 	}
 
 	@ObservationIgnored
-	nonisolated(unsafe) private(set) var tasksController = TasksController()
+	private(set) var tasksController = TasksController()
 
 	/// Is `PortainerStore` setup?
-	@MainActor
 	var isSetup = false
 
 	/// Currently selected endpoint's ID
-	@MainActor
 	var selectedEndpoint: Endpoint? {
 		didSet { onSelectedEndpointChange(selectedEndpoint) }
 	}
 
-	@MainActor
 	var endpoints: [Endpoint] = []
 
-	@MainActor
 	var containers: [Container] = []
 
-	@MainActor
 	var stacks: [Stack] = []
 
-	@MainActor
 	var attachedContainer: AttachedContainer?
 
-	@MainActor
 	var removedContainerIDs: Set<Container.ID> = []
 
-	@MainActor
 	var loadingStackIDs: Set<Stack.ID> = []
 
-	@MainActor
 	var removedStackIDs: Set<Stack.ID> = []
 
 	var isRefreshing: Bool {
-		!(tasksController.endpoints?.isCancelled ?? true) || !(tasksController.containers?.isCancelled ?? true) || !(tasksController.stacks?.isCancelled ?? true)
+		tasksController.endpoints != nil || tasksController.containers != nil || tasksController.stacks != nil
 	}
 
 	// MARK: init
@@ -125,7 +116,6 @@ public extension PortainerStore {
 	///   - url: Server URL
 	///   - token: Authorization token (if `nil`, it's searched in the keychain)
 	///   - saveToken: Should the token be saved to the keychain?
-	@MainActor
 	func setup(url: URL, token: String? = nil, saveToken: Bool = true) {
 		logger.info("Setting up, URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\"...")
 
@@ -146,7 +136,6 @@ public extension PortainerStore {
 //		logger.info("Setup with URL: \"\(url.absoluteString, privacy: .sensitive(mask: .hash))\" sucessfully!")
 	}
 
-	@MainActor
 	/// Sets up PortainerStore after init.
 	func setupWithStored() {
 		if let (url, token) = getStoredCredentials() {
@@ -156,7 +145,6 @@ public extension PortainerStore {
 
 	/// Switches server to provided `serverURL`.
 	/// - Parameter serverURL: Server URL to switch to
-	@MainActor
 	func switchServer(to serverURL: URL) {
 		logger.notice("Switching to \"\(serverURL.absoluteString, privacy: .public)\"")
 
@@ -182,7 +170,6 @@ public extension PortainerStore {
 	}
 
 	/// Resets the `PortainerStore` state.
-	@MainActor
 	func reset() {
 		logger.notice("Resetting state")
 
@@ -214,7 +201,6 @@ public extension PortainerStore {
 extension PortainerStore {
 	/// Selects the currently active endpoint.
 	/// - Parameter endpoint: Endpoint to switch to
-	@MainActor
 	func setSelectedEndpoint(_ endpoint: Endpoint?) {
 		logger.notice("Selecting endpoint: \"\(endpoint?.name ?? "<none>", privacy: .sensitive(mask: .hash))\" (\(endpoint?.id.description ?? "<none>", privacy: .public))")
 		self.selectedEndpoint = endpoint
@@ -228,7 +214,6 @@ extension PortainerStore {
 		}
 	}
 
-	@MainActor
 	func setEndpoints(_ endpoints: [Endpoint]?) {
 		self.endpoints = endpoints ?? []
 
@@ -243,29 +228,21 @@ extension PortainerStore {
 			selectedEndpoint = nil
 		}
 
-		Task.detached {
-			await self.storeEndpoints(endpoints)
-		}
+		storeEndpoints(endpoints)
 	}
 
-	@MainActor
 	func setContainers(_ containers: [Container]?) {
 		let containers = (containers ?? []).sorted()
 		self.containers = containers
 
-		Task.detached {
-			await self.storeContainers(containers)
-		}
+		storeContainers(containers)
 	}
 
-	@MainActor
 	func setStacks(_ stacks: [Stack]?) {
 		let stacks = (stacks ?? []).sorted()
 		self.stacks = stacks
 
-		Task.detached {
-			await self.storeStacks(stacks)
-		}
+		storeStacks(stacks)
 	}
 }
 
@@ -273,12 +250,10 @@ extension PortainerStore {
 
 extension PortainerStore {
 	func onSelectedEndpointChange(_ selectedEndpoint: Endpoint?) {
-		Task { @MainActor in
-			guard let selectedEndpoint else {
-				preferences.selectedEndpointID = nil
-				return
-			}
-			preferences.selectedEndpointID = selectedEndpoint.id
+		guard let selectedEndpoint else {
+			preferences.selectedEndpointID = nil
+			return
 		}
+		preferences.selectedEndpointID = selectedEndpoint.id
 	}
 }

@@ -192,7 +192,7 @@ extension PortainerStore {
 			let taskID = "\(S.Stored.self)"
 			tasks[taskID]?.cancel()
 
-			let task = Task(name: taskID) {
+			let task = Task(name: taskID) { @MainActor in
 				guard let storables, !storables.isEmpty else {
 					try modelContext.delete(model: S.Stored.self)
 					try save()

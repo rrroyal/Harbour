@@ -28,12 +28,10 @@ final class AppState {
 
 	internal var portainerServerSwitchTask: Task<Void, Error>?
 
-	@MainActor
 	internal var notificationsToHandle: Set<UNNotificationResponse> = []
 
 	// MARK: Public Properties
 
-	@MainActor
 	var lastContainerChanges: [ContainerChange]?
 
 	// MARK: init

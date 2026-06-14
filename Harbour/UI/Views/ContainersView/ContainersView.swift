@@ -108,7 +108,7 @@ struct ContainersView: View {
 				viewModel.handleSpotlightSearchContinuation(userActivity)
 			}
 			.task {
-				if portainerStore.tasksController.containers?.isCancelled ?? true {
+				if portainerStore.tasksController.containers == nil {
 					await fetch()
 				}
 			}
@@ -222,9 +222,9 @@ private extension ContainersView {
 	@ViewBuilder @MainActor
 	private var backgroundPlaceholder: some View {
 		let isLoading = viewModel.viewState.isLoading ||
-			!(portainerStore.tasksController.endpoints?.isCancelled ?? true) ||
-			!(portainerStore.tasksController.containers?.isCancelled ?? true) ||
-			!(appState.portainerServerSwitchTask?.isCancelled ?? true)
+			portainerStore.tasksController.endpoints != nil ||
+			portainerStore.tasksController.containers != nil ||
+			appState.portainerServerSwitchTask != nil
 
 		if isLoading {
 			ProgressView()

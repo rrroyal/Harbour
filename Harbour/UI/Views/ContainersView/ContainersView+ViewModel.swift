@@ -36,7 +36,7 @@ extension ContainersView {
 		var viewState: ViewState<[Container], Error> {
 			let containers = portainerStore.containers
 
-			if !(fetchTask?.isCancelled ?? true) || !(portainerStore.tasksController.containers?.isCancelled ?? true) || !(portainerStore.tasksController.endpoints?.isCancelled ?? true) {
+			if fetchTask != nil || portainerStore.tasksController.containers != nil || portainerStore.tasksController.endpoints != nil {
 				return containers.isEmpty ? .loading : .reloading(containers)
 			}
 
@@ -61,7 +61,7 @@ extension ContainersView {
 		}
 
 		var isStatusProgressViewVisible: Bool {
-			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
+			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && fetchTask != nil
 		}
 
 		init() {

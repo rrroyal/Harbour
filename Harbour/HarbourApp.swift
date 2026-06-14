@@ -35,7 +35,6 @@ struct HarbourApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
-				.scrollDismissesKeyboard(.interactively)
 				#if os(macOS)
 				.containerBackground(.ultraThickMaterial, for: .window)
 				#endif

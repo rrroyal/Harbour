@@ -10,9 +10,9 @@ import Foundation
 import PortainerKit
 
 extension PortainerStore {
-	final class TasksController: Sendable {
-		nonisolated(unsafe) var endpoints: Task<[Endpoint], Error>?
-		nonisolated(unsafe) var containers: Task<[Container], Error>?
-		nonisolated(unsafe) var stacks: Task<[Stack], Error>?
+	final class TasksController {
+		var endpoints: Task<[Endpoint], Error>?
+		var containers: Task<[Container], Error>?
+		var stacks: Task<[Stack], Error>?
 	}
 }

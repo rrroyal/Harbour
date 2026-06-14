@@ -62,19 +62,13 @@ extension PortainerStore {
 	@discardableResult
 	func refreshContainers(ids: [Container.ID]) -> Task<[Container], Error> {
 		let task = Task { @MainActor in
-			do {
-				let containers = try await self.fetchContainers(filters: .init(id: ids))
-				Task { @MainActor in
-					for container in containers {
-						if let index = self.containers.firstIndex(where: { $0.id == container.id }) {
-							self.containers[index] = container
-						}
-					}
+			let containers = try await self.fetchContainers(filters: .init(id: ids))
+			for container in containers {
+				if let index = self.containers.firstIndex(where: { $0.id == container.id }) {
+					self.containers[index] = container
 				}
-				return containers
-			} catch {
-				throw error
 			}
+			return containers
 		}
 		return task
 	}

@@ -47,7 +47,6 @@ extension ContainerDetailsView {
 			self.container = portainerStore.containers.first(withID: navigationItem.id, persistentID: navigationItem.persistentID)
 		}
 
-		@MainActor
 		func createUserActivity(_ userActivity: NSUserActivity, for container: Container?) {
 			userActivity.isEligibleForHandoff = true
 			userActivity.isEligibleForSearch = false
@@ -119,12 +118,11 @@ extension ContainerDetailsView {
 }
 
 private extension ContainerDetailsView.ViewModel {
-	// swiftlint:disable:next cyclomatic_complexity
 	func resolveContainerDetails(navigationItem: ContainerDetailsView.NavigationItem) async throws -> ContainerDetails {
+		let existingContainersTask = portainerStore.tasksController.containers
 		let result = try await withThrowingTaskGroup(of: ContainerDetails.self, returning: ContainerDetails.self) { group in
 			let addedTask1: Bool
 			let addedTask2: Bool
-			nonisolated(unsafe) var containerNotFoundError: Error?
 
 			// Resolve by `navigationItem.id`
 			addedTask1 = group.addTaskUnlessCancelled { @Sendable [weak self, navigationItem] in
@@ -141,26 +139,20 @@ private extension ContainerDetailsView.ViewModel {
 					return containerDetails
 				} catch {
 					self.logger.warning("Failed to resolve ContainerDetails for navigationItem.id: \"\(navigationItem.id)\": \(String(describing: error), privacy: .public)")
-
-					// Store the error for user feedback
-					if !(error is CancellationError) {
-						containerNotFoundError = error
-					}
-
 					throw error
 				}
 			}
 
 			// Resolve by `navigationItem.persistentID`
 			if let persistentID = navigationItem.persistentID {
-				addedTask2 = group.addTaskUnlessCancelled { [weak self, navigationItem] in
+				addedTask2 = group.addTaskUnlessCancelled { [weak self, navigationItem, existingContainersTask] in
 					guard let self else { throw CancellationError() }
 
 					do {
 						self.logger.debug("Started resolving by persistentID: \"\(persistentID)\"...")
 
 						// Wait for full refresh
-						if let containersTask = self.portainerStore.tasksController.containers {
+						if let containersTask = existingContainersTask {
 							self.logger.debug("Waiting for existing container refresh task")
 							_ = try await containersTask.value
 						} else {
@@ -189,12 +181,6 @@ private extension ContainerDetailsView.ViewModel {
 						return containerDetails
 					} catch {
 						self.logger.warning("Failed to resolve ContainerDetails for persistentID: \"\(persistentID)\": \(String(describing: error), privacy: .public)")
-
-						// Store the error for user feedback
-						if !(error is CancellationError) {
-							containerNotFoundError = error
-						}
-
 						throw error
 					}
 				}
@@ -208,21 +194,24 @@ private extension ContainerDetailsView.ViewModel {
 				throw CancellationError()
 			}
 
+			// Consume results; capture the last non-cancellation error for user feedback
+			var lastError: Error?
 			while let result = await group.nextResult() {
 				switch result {
 				case .success(let details):
 					// If we got details, cancel the group and return them...
 					group.cancelAll()
 					return details
+				case .failure(let error) where !(error is CancellationError):
+					lastError = error
 				case .failure:
-					// ...otherwise, we don't care what error happened and we just want to handle it
 					break
 				}
 			}
 
 			// Provide feedback for user
-			if let containerNotFoundError {
-				throw containerNotFoundError
+			if let lastError {
+				throw lastError
 			}
 
 			// By here we should've returned a value or threw, so if not, resolving _really_ failed

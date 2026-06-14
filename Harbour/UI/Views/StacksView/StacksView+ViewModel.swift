@@ -30,7 +30,7 @@ extension StacksView {
 		var viewState: ViewState<[Stack], Error> {
 			let stacks = portainerStore.stacks
 
-			if !(fetchTask?.isCancelled ?? true) || !(portainerStore.tasksController.stacks?.isCancelled ?? true) {
+			if fetchTask != nil || portainerStore.tasksController.stacks != nil {
 				return stacks.isEmpty ? .loading : .reloading(stacks)
 			}
 
@@ -66,7 +66,7 @@ extension StacksView {
 		}
 
 		var isStatusProgressViewVisible: Bool {
-			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && !(fetchTask?.isCancelled ?? true)
+			!scrollViewIsRefreshing && viewState.showAdditionalLoadingView && fetchTask != nil
 		}
 
 		@discardableResult
