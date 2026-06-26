@@ -32,7 +32,17 @@ extension Binding where Value: Sendable {
 	}
 }
 
-extension Binding where Value == String {
+extension Binding<Bool> {
+	func and(_ condition: @escaping @autoclosure @Sendable () -> Bool) -> Self {
+		.init {
+			self.wrappedValue && condition()
+		} set: {
+			self.wrappedValue = $0
+		}
+	}
+}
+
+extension Binding<String> {
 	/// Returns a binding that replaces every occurrence of `character` with `replacement` as the user types.
 	func replacing(_ character: Character, with replacement: Character) -> Self {
 		.init {

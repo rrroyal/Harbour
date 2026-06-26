@@ -126,7 +126,7 @@ private extension TextEditorView {
 		}
 	}
 
-	@ToolbarContentBuilder
+	@ContentBuilder
 	var keyboardToolbarContent: some ToolbarContent {
 		if #available(iOS 26.0, *) {
 			ToolbarItemGroup(placement: .keyboard) {
@@ -168,7 +168,7 @@ private extension TextEditorView {
 		}
 	}
 
-	@ToolbarContentBuilder
+	@ContentBuilder
 	var toolbarContent: some ToolbarContent {
 		closeToolbarButton
 		doneToolbarButton

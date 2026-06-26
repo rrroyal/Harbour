@@ -37,8 +37,7 @@ struct StacksView: View {
 		StacksList(
 			stacks: viewModel.stacks,
 			filterByStackNameAction: filterByStackName,
-			setStackStateAction: setStackState,
-			removeStackAction: removeStack
+			setStackStateAction: setStackState
 		)
 		.scrollContentBackground(.hidden)
 		.scrollPosition(id: $viewModel.scrollPosition)
@@ -135,22 +134,6 @@ private extension StacksView {
 		}
 	}
 
-	func removeStack(_ stack: Stack) {
-		Task {
-			do {
-				presentIndicator(.stackRemove(stackName: stack.name, state: .loading))
-
-				try await viewModel.removeStack(stackID: stack.id)
-				presentIndicator(.stackRemove(stackName: stack.name, state: .success))
-
-				sceneDelegate.navigate(to: .stacks)
-			} catch {
-				presentIndicator(.stackRemove(stackName: stack.name, state: .failure(error)))
-				errorHandler(error, showIndicator: false)
-			}
-		}
-	}
-
 	func onKeyPress(_ keyPress: KeyPress) -> KeyPress.Result {
 		switch keyPress.key {
 			// ⌘F
@@ -173,7 +156,7 @@ private extension StacksView {
 // MARK: - Subviews
 
 private extension StacksView {
-	@ToolbarContentBuilder
+	@ContentBuilder
 	var toolbarContent: some ToolbarContent {
 		var createStackToolbarItemPlacement: ToolbarItemPlacement {
 			#if os(iOS)

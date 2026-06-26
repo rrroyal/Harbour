@@ -43,33 +43,8 @@ final class SceneDelegate: NSObject {
 	var stackSheet: StackSheet?
 	var isContainerChangesSheetPresented = false
 
-	// MARK: Containers
-
 	var containerToRemove: Container?
-	var isRemoveContainerAlertPresented: Binding<Bool> {
-		.init(
-			get: { self.containerToRemove != nil },
-			set: { isPresented in
-				if !isPresented {
-					self.containerToRemove = nil
-				}
-			}
-		)
-	}
-
-	// MARK: Stacks
-
 	var stackToRemove: Stack?
-	var isRemoveStackAlertPresented: Binding<Bool> {
-		.init(
-			get: { self.stackToRemove != nil },
-			set: { isPresented in
-				if !isPresented {
-					self.stackToRemove = nil
-				}
-			}
-		)
-	}
 
 	var selectedStackNameForContainersView: String?
 	var selectedStackNameForStacksView: String?

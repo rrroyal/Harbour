@@ -72,20 +72,6 @@ struct ContainersView: View {
 			.focusable()
 			.focused($isFocused)
 			.focusEffectDisabled()
-			.confirmationDialog(
-				"Generic.AreYouSure",
-				isPresented: sceneDelegate.isRemoveContainerAlertPresented,
-				titleVisibility: .visible,
-				presenting: sceneDelegate.containerToRemove
-			) { container in
-				Button("Generic.Remove", role: .destructive) {
-					Haptics.generateIfEnabled(.heavy)
-					removeContainer(container, force: true)
-				}
-				.tint(.red)
-			} message: { container in
-				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
-			}
 			.animation(.default, value: viewModel.viewState)
 			.animation(.default, value: viewModel.containers)
 			.animation(.default, value: viewModel.isStatusProgressViewVisible)
@@ -122,7 +108,7 @@ struct ContainersView: View {
 // MARK: - Subviews
 
 private extension ContainersView {
-	@ToolbarContentBuilder @MainActor
+	@ContentBuilder
 	var toolbarContent: some ToolbarContent {
 		ToolbarItem(placement: .automatic) {
 			Menu {
@@ -283,22 +269,6 @@ private extension ContainersView {
 			try await viewModel.fetch()
 		} catch {
 			errorHandler(error)
-		}
-	}
-
-	func removeContainer(_ container: Container, force: Bool) {
-		Task {
-			do {
-				presentIndicator(.containerRemove(containerName: container.displayName ?? container.id, state: .loading))
-
-				try await portainerStore.removeContainer(containerID: container.id, force: force)
-				presentIndicator(.containerRemove(containerName: container.displayName ?? container.id, state: .success))
-
-				sceneDelegate.navigate(to: .containers)
-			} catch {
-				presentIndicator(.containerRemove(containerName: container.displayName ?? container.id, state: .failure(error)))
-				errorHandler(error, showIndicator: false)
-			}
 		}
 	}
 

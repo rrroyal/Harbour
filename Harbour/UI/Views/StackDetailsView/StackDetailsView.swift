@@ -312,8 +312,10 @@ private extension StackDetailsView {
 		}
 	}
 
-	@ToolbarContentBuilder
+	@ContentBuilder
 	private var toolbarContent: some ToolbarContent {
+		@Bindable var sceneDelegate = sceneDelegate
+
 		ToolbarItem(placement: .primaryAction) {
 			Menu {
 				if viewModel.viewState.isLoading {
@@ -332,6 +334,19 @@ private extension StackDetailsView {
 					.labelStyle(.automatic)
 			}
 			.labelStyle(.titleAndIcon)
+			.confirmationDialog(
+				"Generic.AreYouSure",
+				item: $sceneDelegate.stackToRemove,
+				titleVisibility: .visible,
+			) { stack in
+				Button("Generic.Remove", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					sceneDelegate.removeStack(stack)
+				}
+				.tint(.red)
+			} message: { stack in
+				Text("StacksView.RemoveStackAlert.Message StackName:\(stack.name)")
+			}
 		}
 	}
 }

@@ -387,8 +387,10 @@ private extension ContainerDetailsView {
 		}
 	}
 
-	@ToolbarContentBuilder
+	@ContentBuilder
 	var toolbarContent: some ToolbarContent {
+		@Bindable var sceneDelegate = sceneDelegate
+
 		ToolbarItem(placement: .primaryAction) {
 			Menu {
 				if viewModel.viewState.isLoading {
@@ -409,6 +411,19 @@ private extension ContainerDetailsView {
 					.labelStyle(.automatic)
 			}
 			.labelStyle(.titleAndIcon)
+			.confirmationDialog(
+				"Generic.AreYouSure",
+				item: $sceneDelegate.containerToRemove,
+				titleVisibility: .visible
+			) { container in
+				Button("Generic.Remove", role: .destructive) {
+					Haptics.generateIfEnabled(.heavy)
+					sceneDelegate.removeContainer(container)
+				}
+				.tint(.red)
+			} message: { container in
+				Text("ContainersView.RemoveContainerAlert.Message ContainerName:\(container.displayName ?? container.id)")
+			}
 		}
 
 //		ToolbarItem(placement: .status) {

@@ -18,10 +18,10 @@ extension StacksView {
 		var stacks: [StacksView.StackItem]
 		var filterByStackNameAction: (String) -> Void
 		var setStackStateAction: (Stack, Bool) -> Void
-		var removeStackAction: (Stack) -> Void
 
 		var body: some View {
 			@Bindable var sceneDelegate = sceneDelegate
+
 			List(selection: $sceneDelegate.navigationState.stackNavigationItem) {
 				ForEach(stacks) { stackItem in
 					let containers = portainerStore.containers.filter { $0.stack == stackItem.name }
@@ -52,13 +52,12 @@ extension StacksView {
 					#endif
 					.confirmationDialog(
 						"Generic.AreYouSure",
-						isPresented: sceneDelegate.isRemoveStackAlertPresented,
+						item: $sceneDelegate.stackToRemove,
 						titleVisibility: .visible,
-						presenting: sceneDelegate.stackToRemove
 					) { stack in
 						Button("Generic.Remove", role: .destructive) {
 							Haptics.generateIfEnabled(.heavy)
-							removeStackAction(stack)
+							sceneDelegate.removeStack(stack)
 						}
 						.tint(.red)
 					} message: { stack in
