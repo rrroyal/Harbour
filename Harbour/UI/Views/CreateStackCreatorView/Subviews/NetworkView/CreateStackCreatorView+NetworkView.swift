@@ -44,6 +44,7 @@ extension CreateStackCreatorView {
 				)
 			}
 			.formStyle(.grouped)
+			.scrollDisabled(true)
 			.scrollDismissesKeyboard(.interactively)
 			.navigationTitle(network != nil ? "CreateStackCreatorView.NetworkView.Title.Edit" : "CreateStackCreatorView.NetworkView.Title.Add")
 			#if os(iOS)
@@ -140,10 +141,7 @@ private extension CreateStackCreatorView.NetworkView {
 					formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
 				)
 				.focused($focusedField, equals: .name)
-				.autocorrectionDisabled()
-				.textInputAutocapitalization(.never)
-				.fontDesign(.monospaced)
-				.labelsHidden()
+				.modifier(CreateStackCreatorView.TextFieldViewModifier())
 				.submitLabel(.done)
 				.onSubmit {
 					focusedField = nil
@@ -161,8 +159,6 @@ private extension CreateStackCreatorView.NetworkView {
 		var body: some View {
 			NormalizedSection {
 				Toggle("CreateStackCreatorView.NetworkView.ExternalToggleSection.External", isOn: $external)
-			} header: {
-				Text("CreateStackCreatorView.NetworkView.ExternalToggleSection.Header")
 			} footer: {
 				Text("CreateStackCreatorView.NetworkView.ExternalToggleSection.Footer")
 			}

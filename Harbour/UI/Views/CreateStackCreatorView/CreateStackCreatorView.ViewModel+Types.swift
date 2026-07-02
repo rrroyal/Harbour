@@ -11,13 +11,16 @@ import PortainerKit
 
 extension CreateStackCreatorView.ViewModel {
 	struct Service: Identifiable, Hashable {
-		var id: String { name }
-		var name: String = ""
-		var image: String = ""
-		var environment: [KeyValueEntry] = []
-		var volumes: [Volume] = []
-		var ports: [PortEntry] = []
-		var networks: [Network] = []
+		var id: String { serviceName }
+
+		var serviceName: String
+		var containerName: String?
+		var image: String
+		var environment: [KeyValueEntry]
+		var labels: [KeyValueEntry]
+		var volumes: [Volume]
+		var ports: [PortEntry]
+		var networks: [Network]
 	}
 
 	struct Network: Identifiable, Hashable {
@@ -31,6 +34,10 @@ extension CreateStackCreatorView.ViewModel {
 extension CreateStackCreatorView.ViewModel.Service {
 	mutating func removeEnvironmentEntry(_ entry: KeyValueEntry) {
 		environment.removeAll { $0 == entry }
+	}
+
+	mutating func removeLabel(_ entry: KeyValueEntry) {
+		labels.removeAll { $0 == entry }
 	}
 
 	mutating func removeVolume(_ volume: Volume) {

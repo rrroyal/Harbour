@@ -40,32 +40,13 @@ extension CreateStackCreatorView.ServiceView {
 		var body: some View {
 			Form {
 				NormalizedSection {
-					Picker("CreateStackCreatorView.ServiceView.PortEntryView.Protocol", selection: $proto) {
-						ForEach(CreateStackCreatorView.ViewModel.Service.PortEntry.Proto.allCases, id: \.self) { p in
-							Text(p.rawValue.uppercased())
-								.tag(p)
-						}
-					}
-					.labelsHidden()
-					#if os(iOS)
-					.pickerStyle(.segmented)
-					#endif
-					.listRowInsets(nil)
-				} header: {
-					Text("CreateStackCreatorView.ServiceView.PortEntryView.Protocol.Header")
-				}
-
-				NormalizedSection {
 					TextField(
 						String("8080"),
 						value: $hostPort,
 						formatter: numberFormatter
 					)
 					.focused($focusedField, equals: .hostPort)
-					.autocorrectionDisabled()
-					.textInputAutocapitalization(.never)
-					.fontDesign(.monospaced)
-					.labelsHidden()
+					.modifier(CreateStackCreatorView.TextFieldViewModifier())
 					.keyboardType(.numberPad)
 					.submitLabel(.next)
 					.onSubmit {
@@ -84,10 +65,7 @@ extension CreateStackCreatorView.ServiceView {
 						formatter: numberFormatter
 					)
 					.focused($focusedField, equals: .containerPort)
-					.autocorrectionDisabled()
-					.textInputAutocapitalization(.never)
-					.fontDesign(.monospaced)
-					.labelsHidden()
+					.modifier(CreateStackCreatorView.TextFieldViewModifier())
 					.keyboardType(.numberPad)
 					.submitLabel(.done)
 					.onSubmit { focusedField = nil }
@@ -98,7 +76,22 @@ extension CreateStackCreatorView.ServiceView {
 				}
 			}
 			.formStyle(.grouped)
+			.scrollDisabled(true)
 			.scrollDismissesKeyboard(.interactively)
+			.safeAreaInset(edge: .top) {
+				Picker("CreateStackCreatorView.ServiceView.PortEntryView.Protocol", selection: $proto) {
+					ForEach(CreateStackCreatorView.ViewModel.Service.PortEntry.Proto.allCases, id: \.self) { p in
+						Text(p.rawValue.uppercased())
+							.tag(p)
+					}
+				}
+				.labelsHidden()
+				#if os(iOS)
+				.pickerStyle(.segmented)
+				#endif
+				.padding(.top)
+				.padding(.horizontal)
+			}
 			.toolbar {
 				ToolbarItem(placement: .primaryAction) {
 					Button {
@@ -169,4 +162,22 @@ private extension CreateStackCreatorView.ServiceView.PortEntryView {
 		case hostPort
 		case containerPort
 	}
+}
+
+// MARK: - Previews
+
+#Preview("Create") {
+	CreateStackCreatorView.ServiceView.PortEntryView(
+		entry: nil,
+		onSave: { _ in },
+		removeAction: { }
+	)
+}
+
+#Preview("Edit") {
+	CreateStackCreatorView.ServiceView.PortEntryView(
+		entry: .init(hostPort: 8080, containerPort: 80, proto: .tcp),
+		onSave: { _ in },
+		removeAction: { }
+	)
 }

@@ -21,6 +21,7 @@ extension CreateStackCreatorView {
 		private(set) var createStackError: Swift.Error?
 
 		var stackName = ""
+		var stackEnvironment: [KeyValueEntry] = []
 
 		var services: [Service] = []
 		var networks: [Network] = []
@@ -32,15 +33,16 @@ extension CreateStackCreatorView {
 		var canCreateStack: Bool {
 			!stackName.isReallyEmpty &&
 			!services.isEmpty &&
-			services.allSatisfy { !$0.name.isReallyEmpty && !$0.image.isReallyEmpty }
+			services.allSatisfy { !$0.serviceName.isReallyEmpty && !$0.image.isReallyEmpty }
 		}
 
 		var isLoading: Bool {
 			!(createStackTask?.isCancelled ?? true)
 		}
 
-		var serviceEditorMode: CreateOrEdit<Service>?
-		var networkEditorMode: CreateOrEdit<Network>?
+		var serviceEditorMode: AddOrEdit<Service>?
+		var networkEditorMode: AddOrEdit<Network>?
+		var environmentEditorMode: AddOrEdit<KeyValueEntry>?
 
 		func saveService(_ service: Service) {
 			if let index = services.firstIndex(where: { $0.id == service.id }) {
@@ -70,6 +72,22 @@ extension CreateStackCreatorView {
 			}
 		}
 
+		func editEnvironmentEntry(old oldEntry: KeyValueEntry?, new newEntry: KeyValueEntry?) {
+			if let oldEntry, let newEntry {
+				if let oldIndex = stackEnvironment.firstIndex(of: oldEntry) {
+					stackEnvironment[oldIndex] = newEntry
+				} else {
+					stackEnvironment.append(newEntry)
+				}
+			} else if let oldEntry, newEntry == nil {
+				if let oldIndex = stackEnvironment.firstIndex(of: oldEntry) {
+					stackEnvironment.remove(at: oldIndex)
+				}
+			} else if oldEntry == nil, let newEntry {
+				stackEnvironment.append(newEntry)
+			}
+		}
+
 		func createStack() -> Task<Stack, Swift.Error> {
 			createStackTask?.cancel()
 			let task = Task<Stack, Swift.Error> {
@@ -80,7 +98,7 @@ extension CreateStackCreatorView {
 				do {
 					let fileContent = generateDockerComposeYAML()
 					let stackSettings = StackDeployment.DeploymentSettings.StandaloneString(
-						env: [],
+						env: stackEnvironment.map { .init(name: $0.key, value: $0.value) },
 						fromAppTemplate: nil,
 						name: stackName.replacingOccurrences(of: " ", with: "-"),
 						stackFileContent: fileContent
@@ -100,81 +118,124 @@ extension CreateStackCreatorView {
 			return task
 		}
 
-		// swiftlint:disable:next cyclomatic_complexity
+		@inline(always)
+		func normalizeString(_ string: String, replaceSpaces: Bool = true) -> String {
+			string
+				.trimmingCharacters(in: .whitespacesAndNewlines)
+				.replacingOccurrences(of: " ", with: replaceSpaces ? "-" : " ")
+		}
+
+		// swiftlint:disable:next cyclomatic_complexity function_body_length
 		func generateDockerComposeYAML() -> String {
-			var lines: [String] = ["services:"]
+			var indentationLevel = 0
+			var indentation: String {
+				String(repeating: " ", count: indentationLevel * 2)
+			}
+
+			var lines: [String] = [
+				"services:"
+			]
 
 			for service in services {
-				let safeName = service.name.isEmpty ? "service" : service.name
-				lines.append("  \(safeName):")
-				lines.append("    image: \(service.image)")
+				indentationLevel += 1
+
+				let serviceName = normalizeString(service.serviceName)
+				lines.append("\(indentation)\(serviceName):")
+				indentationLevel += 1
+
+				let serviceImage = normalizeString(service.image)
+				lines.append("\(indentation)image: \"\(serviceImage)\"")
+
+				if let containerName = service.containerName.map({ normalizeString($0, replaceSpaces: false) }) {
+					lines.append("\(indentation)container_name: \"\(containerName)\"")
+				}
 
 				if !service.environment.isEmpty {
-					lines.append("    environment:")
+					lines.append("\(indentation)environment:")
+					indentationLevel += 1
+
 					for entry in service.environment {
-						lines.append("      - \(entry.key)=\(entry.value)")
+						let key = normalizeString(entry.key)
+						let value = normalizeString(entry.value, replaceSpaces: false)
+						lines.append("\(indentation)- \"\(key)=\(value)\"")
 					}
+
+					indentationLevel -= 1
+				}
+
+				if !service.labels.isEmpty {
+					lines.append("\(indentation)labels:")
+					indentationLevel += 1
+
+					for entry in service.labels {
+						let key = normalizeString(entry.key)
+						let value = normalizeString(entry.value, replaceSpaces: false)
+						lines.append("\(indentation)- \"\(key)=\(value)\"")
+					}
+
+					indentationLevel -= 1
 				}
 
 				if !service.volumes.isEmpty {
-					lines.append("    volumes:")
+					lines.append("\(indentation)volumes:")
+					indentationLevel += 1
+
 					for volume in service.volumes {
-						lines.append("      - \(volume.source):\(volume.target)")
+						let source = normalizeString(volume.source, replaceSpaces: false)
+						let target = normalizeString(volume.target, replaceSpaces: false)
+						lines.append("\(indentation)- \"\(source):\(target)\"")
 					}
+
+					indentationLevel -= 1
 				}
 
 				if !service.ports.isEmpty {
-					lines.append("    ports:")
+					lines.append("\(indentation)ports:")
+					indentationLevel += 1
+
 					for port in service.ports {
-						let portStr = "\(port.hostPort):\(port.containerPort)"
 						let protoSuffix = port.proto == .tcp ? "" : "/\(port.proto.rawValue)"
-						lines.append("      - \"\(portStr)\(protoSuffix)\"")
+						lines.append("\(indentation)- \(port.hostPort):\(port.containerPort)\(protoSuffix)")
 					}
+
+					indentationLevel -= 1
 				}
 
 				if !service.networks.isEmpty {
-					lines.append("    networks:")
+					lines.append("\(indentation)networks:")
+					indentationLevel += 1
+
 					for network in service.networks {
-						lines.append("      - \(network.name)")
+						let name = normalizeString(network.name)
+						lines.append("\(indentation)- \(name)")
 					}
+
+					indentationLevel -= 1
 				}
+
+				indentationLevel -= 1
 			}
 
 			if !networks.isEmpty {
 				lines.append("")
 				lines.append("networks:")
+				indentationLevel += 1
 				for network in networks {
-					lines.append("  \(network.name):")
+					let name = normalizeString(network.name)
+					lines.append("\(indentationLevel)\(name):")
+					indentationLevel += 1
+
 					if network.external {
-						lines.append("    external: true")
+						lines.append("\(indentationLevel)external: true")
 					}
+
+					indentationLevel -= 1
 				}
+
+				indentationLevel -= 1
 			}
 
 			return lines.joined(separator: "\n")
-		}
-	}
-}
-
-extension CreateStackCreatorView.ViewModel {
-	enum CreateOrEdit<T: Hashable>: Hashable, Identifiable {
-		case create
-		case edit(T)
-
-		var id: Int {
-			switch self {
-			case .create: 0
-			case .edit: 1
-			}
-		}
-
-		var unwrapped: T? {
-			switch self {
-			case .create:
-				nil
-			case .edit(let t):
-				t
-			}
 		}
 	}
 }

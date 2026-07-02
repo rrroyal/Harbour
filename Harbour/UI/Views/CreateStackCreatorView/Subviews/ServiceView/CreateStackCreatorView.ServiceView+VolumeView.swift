@@ -38,14 +38,10 @@ extension CreateStackCreatorView.ServiceView {
 				NormalizedSection {
 					TextField(
 						String("/data"),
-						value: $source.replacing(" ", with: "-"),
-						formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+						text: $source
 					)
 					.focused($focusedField, equals: .source)
-					.autocorrectionDisabled()
-					.textInputAutocapitalization(.never)
-					.fontDesign(.monospaced)
-					.labelsHidden()
+					.modifier(CreateStackCreatorView.TextFieldViewModifier())
 					.submitLabel(.next)
 					.onSubmit {
 						focusedField = .target
@@ -59,14 +55,10 @@ extension CreateStackCreatorView.ServiceView {
 				NormalizedSection {
 					TextField(
 						String("/usr/share/nginx/html"),
-						value: $target.replacing(" ", with: "-"),
-						formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
+						text: $target
 					)
 					.focused($focusedField, equals: .target)
-					.autocorrectionDisabled()
-					.textInputAutocapitalization(.never)
-					.fontDesign(.monospaced)
-					.labelsHidden()
+					.modifier(CreateStackCreatorView.TextFieldViewModifier())
 					.submitLabel(.done)
 					.onSubmit {
 						focusedField = nil
@@ -81,6 +73,7 @@ extension CreateStackCreatorView.ServiceView {
 				}
 			}
 			.formStyle(.grouped)
+			.scrollDisabled(true)
 			.scrollDismissesKeyboard(.interactively)
 			.onAppear {
 				if source.isEmpty {

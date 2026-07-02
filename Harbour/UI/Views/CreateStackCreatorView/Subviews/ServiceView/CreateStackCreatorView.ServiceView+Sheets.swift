@@ -12,6 +12,7 @@ import SwiftUI
 extension CreateStackCreatorView.ServiceView {
 	enum Sheet: Identifiable {
 		case editEnvironment(KeyValueEntry?)
+		case editLabel(KeyValueEntry?)
 		case editVolume(CreateStackCreatorView.ViewModel.Service.Volume?)
 		case editPort(CreateStackCreatorView.ViewModel.Service.PortEntry?)
 		case editNetwork(CreateStackCreatorView.ViewModel.Network?)
@@ -19,6 +20,7 @@ extension CreateStackCreatorView.ServiceView {
 		var id: String {
 			switch self {
 			case .editEnvironment(let e): "env-\(e?.id ?? 0)"
+			case .editLabel(let e): "label-\(e?.id ?? 0)"
 			case .editVolume(let v): "vol-\(v?.id ?? "new")"
 			case .editPort(let p): "port-\(p?.id ?? "new")"
 			case .editNetwork(let n): "network-\(n?.id ?? "new")"
@@ -51,6 +53,36 @@ extension CreateStackCreatorView.ServiceView {
 				.navigationBarTitleDisplayMode(.inline)
 				#endif
 				.navigationTitle(entry != nil ? "CreateStackView.EditEnvironmentValue" : "CreateStackView.AddEnvironmentValue")
+				.addingCloseButton()
+			}
+		}
+	}
+}
+
+// MARK: - EditLabelSheetContentView
+
+extension CreateStackCreatorView.ServiceView {
+	struct EditLabelSheetContentView: View {
+		var entry: KeyValueEntry?
+		@Binding var labels: [KeyValueEntry]
+
+		var body: some View {
+			NavigationStack {
+				KeyValueEditView(entry: entry) { newEntry in
+					if let entry, let index = labels.firstIndex(of: entry) {
+						labels[index] = newEntry
+					} else {
+						labels.append(newEntry)
+					}
+				} removeAction: {
+					if let entry {
+						labels.removeAll { $0 == entry }
+					}
+				}
+				#if os(iOS)
+				.navigationBarTitleDisplayMode(.inline)
+				#endif
+				.navigationTitle(entry != nil ? "CreateStackCreatorView.ServiceView.Labels.Edit.Title" : "CreateStackCreatorView.ServiceView.Labels.Add.Title")
 				.addingCloseButton()
 			}
 		}
@@ -129,14 +161,23 @@ extension CreateStackCreatorView.ServiceView {
 
 		var network: Network?
 		@Binding var networks: [Network]
+		let onDidSave: ((Network) -> Void)?
 
 		var body: some View {
 			NavigationStack {
-				CreateStackCreatorView.NetworkView(network: network) { newNetwork in
-					if !networks.contains(newNetwork) {
-						networks.append(newNetwork)
+				CreateStackCreatorView.NetworkView(
+					network: network,
+					onDidSave: { newNetwork in
+						if !networks.contains(newNetwork) {
+							networks.append(newNetwork)
+						}
+						onDidSave?(newNetwork)
 					}
-				}
+				)
+				#if os(iOS)
+				.navigationBarTitleDisplayMode(.inline)
+				#endif
+				.navigationTitle(network != nil ? "CreateStackCreatorView.ServiceView.Network.Edit.Title" : "CreateStackCreatorView.ServiceView.Network.Add.Title")
 				.addingCloseButton()
 			}
 		}

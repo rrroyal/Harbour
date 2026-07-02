@@ -10,7 +10,7 @@ import CommonHaptics
 import PortainerKit
 import SwiftUI
 
-// MARK: - CreateStackCreatorView
+// TODO: Haptics
 
 struct CreateStackCreatorView: View {
 	@Environment(SceneDelegate.self) private var sceneDelegate
@@ -30,17 +30,34 @@ struct CreateStackCreatorView: View {
 		Form {
 			NameSection()
 			ServicesSection()
+			EnvironmentSection()
+			// TODO: Volumes
 			NetworksSection()
 		}
 		.formStyle(.grouped)
 		.scrollDismissesKeyboard(.interactively)
-		.navigationDestination(item: $viewModel.serviceEditorMode) { mode in
-			ServiceView(service: mode.unwrapped)
-				.environment(viewModel)
+		.sheet(item: $viewModel.serviceEditorMode) { mode in
+			NavigationStack {
+				ServiceView(service: mode.unwrapped)
+					.addingCloseButton()
+			}
+			.modifier(StyledSheetViewModifier(presentationDetents: [.large]))
+			.environment(viewModel)
 		}
-		.navigationDestination(item: $viewModel.networkEditorMode) { mode in
-			NetworkView(network: mode.unwrapped)
-				.environment(viewModel)
+		.sheet(item: $viewModel.networkEditorMode) { mode in
+			ServiceView.EditNetworkSheetContentView(
+				network: mode.unwrapped,
+				networks: $viewModel.networks,
+				onDidSave: nil
+			)
+			.modifier(StyledSheetViewModifier())
+		}
+		.sheet(item: $viewModel.environmentEditorMode) { mode in
+			ServiceView.EditEnvironmentSheetContentView(
+				entry: mode.unwrapped,
+				environment: $viewModel.stackEnvironment
+			)
+			.modifier(StyledSheetViewModifier())
 		}
 		.toolbar {
 			ToolbarItem(placement: .primaryAction) {
@@ -50,6 +67,7 @@ struct CreateStackCreatorView: View {
 		.environment(viewModel)
 		.navigationTitle("CreateStackView.Title.Create")
 		.animation(.default, value: viewModel.isLoading)
+		.animation(.default, value: viewModel.stackEnvironment)
 		.animation(.default, value: viewModel.createStackError != nil)
 	}
 }
@@ -102,10 +120,9 @@ private extension CreateStackCreatorView {
 					value: $viewModel.stackName.replacing(" ", with: "-"),
 					formatter: ReplacingCharactersFormatter(replacing: " ", with: "-")
 				)
-				.fontDesign(.monospaced)
-				.autocorrectionDisabled()
-				.labelsHidden()
-				.submitLabel(.continue)
+				.modifier(CreateStackCreatorView.TextFieldViewModifier())
+				.modifier(CreateStackCreatorView.RequiredValueViewModifier(hasValue: !viewModel.stackName.isReallyEmpty))
+				.submitLabel(.done)
 				.focused($isFocused)
 			} header: {
 				Text("CreateStackView.Name")
@@ -128,32 +145,25 @@ private extension CreateStackCreatorView {
 					Button {
 						viewModel.serviceEditorMode = .edit(service)
 					} label: {
-						VStack(alignment: .leading) {
-							Text(service.name.isReallyEmpty ? String(localized: "CreateStackView.ComposeCreator.Service.Unnamed") : service.name)
-								.fontDesign(.monospaced)
-								.foregroundStyle(service.name.isReallyEmpty ? .secondary : .primary)
-
-							Text(service.image.isReallyEmpty ? String(localized: "CreateStackView.ComposeCreator.Service.NoImage") : service.image)
-								.font(.caption)
-								.fontDesign(.monospaced)
-								.foregroundStyle(.secondary)
-						}
+						Text(service.serviceName)
+							.fontDesign(.monospaced)
+							.fullWidth(alignment: .leading)
 					}
-					.contextMenu {
-						Button {
-							viewModel.serviceEditorMode = .edit(service)
-						} label: {
-							Label("Generic.Edit", systemImage: SFSymbol.edit)
-						}
-						.labelStyle(.titleAndIcon)
-
-						Button(role: .destructive) {
-							viewModel.removeService(service)
-						} label: {
-							Label("Generic.Remove", systemImage: SFSymbol.remove)
-						}
-						.labelStyle(.titleAndIcon)
-					}
+//					.contextMenu {
+//						Button {
+//							viewModel.serviceEditorMode = .edit(service)
+//						} label: {
+//							Label("Generic.Edit", systemImage: SFSymbol.edit)
+//						}
+//						.labelStyle(.titleAndIcon)
+//
+//						Button(role: .destructive) {
+//							viewModel.removeService(service)
+//						} label: {
+//							Label("Generic.Remove", systemImage: SFSymbol.remove)
+//						}
+//						.labelStyle(.titleAndIcon)
+//					}
 					.swipeActions(edge: .trailing) {
 						Button(role: .destructive) {
 							viewModel.removeService(service)
@@ -164,16 +174,81 @@ private extension CreateStackCreatorView {
 				}
 
 				Button {
-					viewModel.serviceEditorMode = .create
+					viewModel.serviceEditorMode = .add
 				} label: {
 					Label("Generic.Add", systemImage: SFSymbol.plus)
+						.fullWidth(alignment: .leading)
 				}
+				.modifier(CreateStackCreatorView.RequiredValueViewModifier(hasValue: !viewModel.services.isEmpty))
 			} header: {
 				Text("CreateStackView.ComposeCreator.Services")
 			} footer: {
 				Text("CreateStackView.ComposeCreator.Services.Footer")
 			}
 			.animation(.default, value: viewModel.services)
+		}
+	}
+}
+
+// MARK: - EnvironmentSection
+
+private extension CreateStackCreatorView {
+	struct EnvironmentSection: View {
+		@Environment(CreateStackCreatorView.ViewModel.self) private var viewModel
+
+		var body: some View {
+			let environmentSorted = viewModel.stackEnvironment.sorted()
+
+			NormalizedSection {
+				ForEach(environmentSorted) { entry in
+					Button {
+						viewModel.environmentEditorMode = .edit(entry)
+					} label: {
+						LabeledContent {
+							Text(entry.value)
+								.multilineTextAlignment(.trailing)
+						} label: {
+							Text(entry.key)
+						}
+						.fullWidth(alignment: .leading)
+					}
+					.fontDesign(.monospaced)
+//					.contextMenu {
+//						Button(role: .destructive) {
+//							Haptics.generateIfEnabled(.light)
+//							viewModel.editEnvironmentEntry(old: entry, new: nil)
+//						} label: {
+//							Label("Generic.Remove", systemImage: SFSymbol.remove)
+//						}
+//						.labelStyle(.titleAndIcon)
+//						.tint(.red)
+//					}
+					.swipeActions(edge: .trailing) {
+						Button(role: .destructive) {
+							Haptics.generateIfEnabled(.light)
+							viewModel.editEnvironmentEntry(old: entry, new: nil)
+						} label: {
+							Label("Generic.Remove", systemImage: SFSymbol.remove)
+						}
+					}
+				}
+
+				Button {
+					viewModel.environmentEditorMode = .add
+				} label: {
+					Label("Generic.Add", systemImage: SFSymbol.plus)
+						.fullWidth(alignment: .leading)
+				}
+			} header: {
+				Text("CreateStackCreatorView.EnvironmentSection.Header")
+			} footer: {
+				if let randomKey = viewModel.stackEnvironment.randomElement()?.key {
+					Text("CreateStackCreatorView.EnvironmentSection.FooterWithKey \(randomKey)")
+				} else {
+					Text("CreateStackCreatorView.EnvironmentSection.Footer")
+				}
+			}
+			.animation(.default, value: environmentSorted)
 		}
 	}
 }
@@ -190,26 +265,25 @@ private extension CreateStackCreatorView {
 					Button {
 						viewModel.networkEditorMode = .edit(network)
 					} label: {
-						HStack {
-							Text(network.name)
-								.fontDesign(.monospaced)
-						}
+						Text(network.name)
+							.fontDesign(.monospaced)
+							.fullWidth(alignment: .leading)
 					}
-					.contextMenu {
-						Button {
-							viewModel.networkEditorMode = .edit(network)
-						} label: {
-							Label("Generic.Edit", systemImage: SFSymbol.edit)
-						}
-						.labelStyle(.titleAndIcon)
-
-						Button(role: .destructive) {
-							viewModel.removeNetwork(network)
-						} label: {
-							Label("Generic.Remove", systemImage: SFSymbol.remove)
-						}
-						.labelStyle(.titleAndIcon)
-					}
+//					.contextMenu {
+//						Button {
+//							viewModel.networkEditorMode = .edit(network)
+//						} label: {
+//							Label("Generic.Edit", systemImage: SFSymbol.edit)
+//						}
+//						.labelStyle(.titleAndIcon)
+//
+//						Button(role: .destructive) {
+//							viewModel.removeNetwork(network)
+//						} label: {
+//							Label("Generic.Remove", systemImage: SFSymbol.remove)
+//						}
+//						.labelStyle(.titleAndIcon)
+//					}
 					.swipeActions(edge: .trailing) {
 						Button(role: .destructive) {
 							viewModel.removeNetwork(network)
@@ -220,9 +294,10 @@ private extension CreateStackCreatorView {
 				}
 
 				Button {
-					viewModel.networkEditorMode = .create
+					viewModel.networkEditorMode = .add
 				} label: {
 					Label("Generic.Add", systemImage: SFSymbol.plus)
+						.fullWidth(alignment: .leading)
 				}
 			} header: {
 				Text("CreateStackView.ComposeCreator.Networks")
@@ -275,6 +350,7 @@ private extension CreateStackCreatorView {
 #Preview {
 	let preferences = Preferences()
 	let portainerStore = PortainerStore(preferences: preferences)
+
 	NavigationStack {
 		CreateStackCreatorView(portainerStore: portainerStore)
 			.environment(SceneDelegate())
