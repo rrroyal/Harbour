@@ -334,10 +334,6 @@ private extension ContainerDetailsView {
 						}
 					} label: {
 						Label("ContainerDetailsView.Section.Stack.ShowStack", systemImage: SFSymbol.stack)
-							#if os(macOS)
-							.frame(maxWidth: .infinity, alignment: .leading)
-							.contentShape(Rectangle())
-							#endif
 					}
 					#if os(macOS)
 					.buttonStyle(.plain)

@@ -48,8 +48,7 @@ struct KeyValueListView: View {
 					Text(entry.value.isEmpty ? String(localized: "Generic.Empty") : entry.value)
 						.fontDesign(contentFontDesign)
 						.foregroundStyle(entry.value.isEmpty ? .secondary : .primary)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
+						.fullWidth(alignment: .leading)
 						.textSelection(.enabled)
 				} header: {
 					Text(entry.key)

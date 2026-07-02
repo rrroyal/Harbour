@@ -101,8 +101,7 @@ private extension CreateStackManualView.StackFileSection {
 				viewModel.isTextEditorSheetPresented = true
 			} label: {
 				Text(stackFileContent.trimmingCharacters(in: .whitespacesAndNewlines))
-					.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-					.contentShape(Rectangle())
+					.fullWidth(alignment: .topLeading)
 			}
 			.foregroundStyle(.primary)
 			.font(.caption)
@@ -176,8 +175,7 @@ private extension CreateStackManualView.StackFileSection {
 					viewModel.isTextEditorSheetPresented = true
 				} label: {
 					Label("Generic.Create", systemImage: "character.cursor.ibeam")
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
+						.fullWidth(alignment: .leading)
 				}
 				.contextMenu {
 					Group {
@@ -196,8 +194,7 @@ private extension CreateStackManualView.StackFileSection {
 					viewModel.isFileImportSheetPresented = true
 				} label: {
 					Label("CreateStackView.StackFile.Select", systemImage: "document")
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
+						.fullWidth(alignment: .leading)
 				}
 
 				if let stackID = viewModel.stackID {
@@ -206,8 +203,7 @@ private extension CreateStackManualView.StackFileSection {
 						viewModel.fetchStackFile(for: stackID)
 					} label: {
 						Label("CreateStackView.StackFile.Fetch", systemImage: "arrow.down.document")
-							.frame(maxWidth: .infinity, alignment: .leading)
-							.contentShape(Rectangle())
+							.fullWidth(alignment: .leading)
 					}
 				}
 			}

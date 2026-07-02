@@ -224,10 +224,6 @@ private extension StackDetailsView {
 					if let stackFileContent {
 						ShareLink(item: stackFileContent) {
 							Label("StackDetailsView.StackFile.Share", systemImage: SFSymbol.share)
-								#if os(macOS)
-								.frame(maxWidth: .infinity, alignment: .leading)
-								.contentShape(Rectangle())
-								#endif
 						}
 					} else {
 						Button {
@@ -246,10 +242,6 @@ private extension StackDetailsView {
 										#endif
 								}
 							}
-							#if os(macOS)
-							.frame(maxWidth: .infinity, alignment: .leading)
-							.contentShape(Rectangle())
-							#endif
 						}
 						.disabled(viewModel.isFetchingStackFileContent)
 					}
@@ -285,10 +277,6 @@ private extension StackDetailsView {
 					}
 				} label: {
 					Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
-#if os(macOS)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.contentShape(Rectangle())
-#endif
 				}
 				.foregroundStyle((stack?.isOn ?? false) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
 				.disabled(!(stack?.isOn ?? false))

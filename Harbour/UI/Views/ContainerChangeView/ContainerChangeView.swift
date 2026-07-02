@@ -71,6 +71,7 @@ struct ContainerChangeView: View {
 					.pickerStyle(.segmented)
 					.labelsHidden()
 				}
+				._sharedBackgroundVisibility(.hidden)
 			}
 		}
 	}
@@ -96,8 +97,9 @@ private extension ContainerChangeView {
 						.foregroundStyle(hasValue ? .secondary : .tertiary)
 						.fontDesign(hasValue ? .monospaced : .default)
 						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
+						.multilineTextAlignment(.leading)
 				}
+				.labeledContentStyle(.twoLine)
 
 				LabeledContent("ContainerChangeView.State") {
 					let hasValue = changeDetails?.state != nil
@@ -107,14 +109,16 @@ private extension ContainerChangeView {
 						.textSelection(.enabled)
 						.multilineTextAlignment(.trailing)
 				}
+				.labeledContentStyle(.automatic)
 
 				LabeledContent("ContainerChangeView.Status") {
 					let hasValue = changeDetails?.status != nil
 					Text(changeDetails?.status ?? "-")
 						.foregroundStyle(hasValue ? .secondary : .tertiary)
 						.textSelection(.enabled)
-						.multilineTextAlignment(.trailing)
+						.multilineTextAlignment(.leading)
 				}
+				.labeledContentStyle(.twoLine)
 			} header: {
 				let containerID = change.new?.id
 				Button {

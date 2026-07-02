@@ -20,13 +20,34 @@ extension Binding where Value: Sendable {
 	}
 }
 
+extension Binding where Value: Sendable {
+	func unwrapping<Wrapped>(
+		default defaultValue: Wrapped
+	) -> Binding<Wrapped> where Value == Wrapped? {
+		.init {
+			self.wrappedValue ?? defaultValue
+		} set: {
+			self.wrappedValue = $0
+		}
+	}
+}
+
 extension Binding where Value == String {
 	/// Returns a binding that replaces every occurrence of `character` with `replacement` as the user types.
 	func replacing(_ character: Character, with replacement: Character) -> Self {
 		.init {
 			self.wrappedValue
-		} set: { newValue in
-			self.wrappedValue = newValue.replacingOccurrences(of: String(character), with: String(replacement))
+		} set: {
+			self.wrappedValue = $0.replacingOccurrences(of: String(character), with: String(replacement))
+		}
+	}
+
+	/// Returns a binding that trims characters in the specified set from the beginning and end of the string as the user types.
+	func trimmingCharacters(in set: CharacterSet) -> Self {
+		.init {
+			self.wrappedValue
+		} set: {
+			self.wrappedValue = $0.trimmingCharacters(in: set)
 		}
 	}
 }

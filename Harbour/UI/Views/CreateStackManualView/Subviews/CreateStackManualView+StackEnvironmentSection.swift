@@ -33,10 +33,6 @@ extension CreateStackManualView {
 							} label: {
 								Text(entry.key)
 							}
-							#if os(macOS)
-							.frame(maxWidth: .infinity, alignment: .leading)
-							.contentShape(Rectangle())
-							#endif
 						}
 						.fontDesign(.monospaced)
 						.contextMenu {
@@ -83,10 +79,6 @@ private extension CreateStackManualView.StackEnvironmentSection {
 				action()
 			} label: {
 				Label("Generic.Add", systemImage: SFSymbol.plus)
-					#if os(macOS)
-					.frame(maxWidth: .infinity, alignment: .leading)
-					.contentShape(Rectangle())
-					#endif
 			}
 		}
 	}
