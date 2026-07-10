@@ -29,7 +29,7 @@ extension ContainersView {
 
 		var body: some View {
 			@Bindable var sceneDelegate = sceneDelegate
-			
+
 			NavigationLink(value: navigationItem) {
 				content()
 					.contextMenu {

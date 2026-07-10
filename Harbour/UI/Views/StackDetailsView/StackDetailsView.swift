@@ -269,6 +269,10 @@ private extension StackDetailsView {
 		let stack: Stack?
 		let navigationItem: NavigationItem
 
+		private var canShowContainers: Bool {
+			(stack?.isOn ?? false) && stack?.type != .swarm
+		}
+
 		var body: some View {
 			NormalizedSection {
 				Button {
@@ -278,8 +282,8 @@ private extension StackDetailsView {
 				} label: {
 					Label("StacksView.ShowContainers", image: SFSymbol.Custom.container)
 				}
-				.foregroundStyle((stack?.isOn ?? false) ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
-				.disabled(!(stack?.isOn ?? false))
+				.foregroundStyle(canShowContainers ? AnyShapeStyle(.accent) : AnyShapeStyle(.disabled))
+				.disabled(!canShowContainers)
 			}
 		}
 

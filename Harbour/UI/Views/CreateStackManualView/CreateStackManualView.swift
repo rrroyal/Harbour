@@ -35,6 +35,7 @@ struct CreateStackManualView: View {
 		let viewModel = ViewModel(portainerStore: portainerStore)
 		if let existingStack {
 			viewModel.stackID = existingStack.id
+			viewModel.stackEndpointID = existingStack.endpointID
 			viewModel.stackName = existingStack.name
 			viewModel.stackEnvironment = existingStack.env?.map { .init(key: $0.name, value: $0.value) } ?? []
 		}

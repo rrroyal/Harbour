@@ -30,7 +30,7 @@ extension SceneDelegate {
 			do {
 				presentIndicator(.stackRemove(stackName: stack.name, state: .loading))
 
-				try await portainerStore.removeStack(stackID: stack.id)
+				try await portainerStore.removeStack(stackID: stack.id, endpointID: stack.endpointID)
 				portainerStore.refreshStacks()
 				presentIndicator(.stackRemove(stackName: stack.name, state: .success))
 

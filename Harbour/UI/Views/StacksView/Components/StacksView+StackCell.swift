@@ -52,8 +52,16 @@ extension StacksView {
 			stack.stack?.isOn ?? true
 		}
 
+		private var isSwarmStack: Bool {
+			stack.stack?.type == .swarm
+		}
+
 		private var stackColor: Color {
 			if stack.stack?._isStored ?? false || isLoading || isBeingRemoved { return .gray }
+
+			if let stack = stack.stack, stack.type == .swarm {
+				return stack.status.color
+			}
 
 			let containersCount = containers.count
 			if containersCount == runningContainersCount, containersCount > 0 {
@@ -105,7 +113,7 @@ extension StacksView {
 						} else {
 							let runningContainersCount = self.runningContainersCount
 							let containersCount = self.containers.count
-							let showContainerCount = isOn && containersCount > 0
+							let showContainerCount = !isSwarmStack && isOn && containersCount > 0
 							Text(verbatim: showContainerCount ? "\(stackStatusLabel) (\(runningContainersCount)/\(containersCount))" : stackStatusLabel)
 						}
 					}
@@ -131,7 +139,7 @@ extension StacksView {
 				}
 			}
 			.swipeActions(edge: .leading) {
-				if isOn {
+				if isOn, !isSwarmStack {
 					FilterButton(filterAction: filterAction)
 						.tint(.accent)
 				}

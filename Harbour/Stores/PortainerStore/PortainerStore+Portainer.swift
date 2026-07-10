@@ -257,6 +257,22 @@ extension PortainerStore {
 // MARK: - PortainerStore+Stacks
 
 public extension PortainerStore {
+	private func resolveStackEndpointID(for stackID: Stack.ID, override endpointID: Endpoint.ID?) throws -> Endpoint.ID {
+		if let endpointID {
+			return endpointID
+		}
+
+		if let stackEndpointID = stacks.first(where: { $0.id == stackID })?.endpointID {
+			return stackEndpointID
+		}
+
+		guard let selectedEndpoint else {
+			throw PortainerError.noSelectedEndpoint
+		}
+
+		return selectedEndpoint.id
+	}
+
 	/// Fetches all of the stacks.
 	/// - Parameters:
 	///   - endpointID: Endpoint ID to fetch the stacks for.
@@ -312,7 +328,7 @@ public extension PortainerStore {
 	///   - started: Should stack be started?
 	/// - Returns: `Stack`
 	@discardableResult
-	func setStackState(stackID: Stack.ID, started: Bool) async throws -> Stack? {
+	func setStackState(stackID: Stack.ID, started: Bool, endpointID: Endpoint.ID? = nil) async throws -> Stack? {
 		defer {
 			Task {
 				try? await Task.sleep(for: .seconds(0.1))
@@ -323,13 +339,11 @@ public extension PortainerStore {
 		logger.info("\(started ? "Starting" : "Stopping", privacy: .public) stack with stackID: \(stackID)...")
 
 		do {
-			guard let selectedEndpoint else {
-				throw PortainerError.noSelectedEndpoint
-			}
+			let endpointID = try resolveStackEndpointID(for: stackID, override: endpointID)
 
 			loadingStackIDs.insert(stackID)
 
-			let newStack = try await portainer.setStackState(stackID: stackID, started: started, endpointID: selectedEndpoint.id)
+			let newStack = try await portainer.setStackState(stackID: stackID, started: started, endpointID: endpointID)
 			logger.info("\(started ? "Started" : "Stopped", privacy: .public) stack with stackID: \(stackID)")
 
 			if let newStack, let index = stacks.firstIndex(where: { $0.id == stackID }) {
@@ -363,13 +377,11 @@ public extension PortainerStore {
 		}
 	}
 
-	func updateStack(stackID: Stack.ID, settings: StackUpdateSettings) async throws -> Stack {
+	func updateStack(stackID: Stack.ID, settings: StackUpdateSettings, endpointID: Endpoint.ID? = nil) async throws -> Stack {
 		logger.info("Updating stack with ID \(stackID)...")
 		do {
-			guard let selectedEndpoint else {
-				throw PortainerError.noSelectedEndpoint
-			}
-			let stack = try await portainer.updateStack(stackID: stackID, endpointID: selectedEndpoint.id, settings: settings)
+			let endpointID = try resolveStackEndpointID(for: stackID, override: endpointID)
+			let stack = try await portainer.updateStack(stackID: stackID, endpointID: endpointID, settings: settings)
 		logger.info("Updated stack with ID: \(stackID)!")
 
 		if let index = stacks.firstIndex(where: { $0.id == stack.id }) {
@@ -384,7 +396,7 @@ public extension PortainerStore {
 		}
 	}
 
-	func removeStack(stackID: Stack.ID) async throws {
+	func removeStack(stackID: Stack.ID, endpointID: Endpoint.ID? = nil) async throws {
 		defer {
 			Task {
 				try? await Task.sleep(for: .seconds(0.1))
@@ -395,13 +407,11 @@ public extension PortainerStore {
 		logger.info("Removing stack with ID: \(stackID)...")
 
 		do {
-			guard let selectedEndpoint else {
-				throw PortainerError.noSelectedEndpoint
-			}
+			let endpointID = try resolveStackEndpointID(for: stackID, override: endpointID)
 
 			removedStackIDs.insert(stackID)
 
-			try await portainer.removeStack(stackID: stackID, endpointID: selectedEndpoint.id)
+			try await portainer.removeStack(stackID: stackID, endpointID: endpointID)
 			logger.info("Removed stack with ID: \(stackID)")
 
 			if let index = stacks.firstIndex(where: { $0.id == stackID }) {

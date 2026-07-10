@@ -125,7 +125,7 @@ private extension StacksView {
 		Task {
 			do {
 				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .loading))
-				try await viewModel.setStackState(stackID: stack.id, started: started)
+				try await viewModel.setStackState(stack, started: started)
 				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .success))
 			} catch {
 				presentIndicator(.stackStartOrStop(stackName: stack.name, started: started, state: .failure(error)))

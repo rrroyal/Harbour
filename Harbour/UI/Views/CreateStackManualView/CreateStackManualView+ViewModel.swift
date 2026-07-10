@@ -34,6 +34,7 @@ extension CreateStackManualView {
 		var editedEnvironmentEntry: KeyValueEntry?
 
 		var stackID: Stack.ID?
+		var stackEndpointID: Endpoint.ID?
 		var stackName = ""
 		var stackFileContent: String?
 		var stackEnvironment: [KeyValueEntry] = []
@@ -77,7 +78,11 @@ extension CreateStackManualView {
 							pullImage: pullImage,
 							stackFileContent: stackFileContent
 						)
-						let updatedStack = try await portainerStore.updateStack(stackID: stackID, settings: stackSettings)
+						let updatedStack = try await portainerStore.updateStack(
+							stackID: stackID,
+							settings: stackSettings,
+							endpointID: stackEndpointID
+						)
 						return updatedStack
 					} else {
 						let stackSettings = StackDeployment.DeploymentSettings.StandaloneString(

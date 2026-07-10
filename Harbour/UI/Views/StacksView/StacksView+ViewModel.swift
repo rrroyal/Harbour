@@ -100,13 +100,13 @@ extension StacksView {
 			return task
 		}
 
-		func setStackState(stackID: Stack.ID, started: Bool) async throws {
-			try await portainerStore.setStackState(stackID: stackID, started: started)
+		func setStackState(_ stack: Stack, started: Bool) async throws {
+			try await portainerStore.setStackState(stackID: stack.id, started: started, endpointID: stack.endpointID)
 			portainerStore.refreshContainers()
 		}
 
-		func removeStack(stackID: Stack.ID) async throws {
-			try await portainerStore.removeStack(stackID: stackID)
+		func removeStack(_ stack: Stack) async throws {
+			try await portainerStore.removeStack(stackID: stack.id, endpointID: stack.endpointID)
 			portainerStore.refreshStacks()
 		}
 	}
