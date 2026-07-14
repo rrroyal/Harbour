@@ -28,7 +28,7 @@ extension CreateStackCreatorView {
 			self.network = network
 			self.onDidSave = onDidSave
 			self._name = .init(initialValue: network?.name ?? "")
-			self._external = .init(initialValue: network?.external ?? true)
+			self._external = .init(initialValue: network?.external ?? false)
 		}
 
 		var body: some View {

@@ -167,16 +167,20 @@ private extension StacksView {
 		}
 		ToolbarItem(placement: createStackToolbarItemPlacement) {
 			Menu {
-				Button {
-					sceneDelegate.stackSheet = .creator
-				} label: {
-					Label("StacksView.CreateStack.Creator", systemImage: "wand.and.sparkles")
-				}
+				Section {
+					Button {
+						sceneDelegate.stackSheet = .creator
+					} label: {
+						Label("StacksView.CreateStack.Creator", systemImage: "wand.and.sparkles")
+					}
 
-				Button {
-					sceneDelegate.stackSheet = .manual
-				} label: {
-					Label("StacksView.CreateStack.Manual", systemImage: "doc.text")
+					Button {
+						sceneDelegate.stackSheet = .manual
+					} label: {
+						Label("StacksView.CreateStack.Manual", systemImage: "doc.text")
+					}
+				} header: {
+					Text("StacksView.CreateStack")
 				}
 			} label: {
 				Label("StacksView.CreateStack", systemImage: SFSymbol.plus)
@@ -193,11 +197,7 @@ private extension StacksView {
 		ToolbarItem(placement: .automatic) {
 			Menu {
 				Toggle(isOn: $preferences.svFilterByActiveEndpoint.withHaptics()) {
-					Label {
-						Text("StacksView.Menu.ActiveEndpointOnly")
-					} icon: {
-						Image(systemName: SFSymbol.endpoint)
-					}
+					Label("StacksView.Menu.ActiveEndpointOnly", systemImage: SFSymbol.endpoint)
 
 					if let selectedEndpoint = portainerStore.selectedEndpoint {
 						Text(selectedEndpoint.name ?? selectedEndpoint.id.description)

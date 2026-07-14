@@ -242,11 +242,15 @@ private extension CreateStackCreatorView {
 			} header: {
 				Text("CreateStackCreatorView.EnvironmentSection.Header")
 			} footer: {
-				if let randomKey = viewModel.stackEnvironment.randomElement()?.key {
-					Text("CreateStackCreatorView.EnvironmentSection.FooterWithKey \(randomKey)")
+				let randomKey = viewModel.stackEnvironment.randomElement()?.key
+				let loc: LocalizedStringResource = if let randomKey {
+					"CreateStackCreatorView.EnvironmentSection.FooterWithKey \(randomKey)"
 				} else {
-					Text("CreateStackCreatorView.EnvironmentSection.Footer")
+					"CreateStackCreatorView.EnvironmentSection.Footer"
 				}
+				Text(loc)
+					.contentTransition(.opacity)
+					.animation(.default, value: randomKey)
 			}
 			.animation(.default, value: environmentSorted)
 		}

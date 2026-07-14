@@ -10,7 +10,7 @@ import SwiftUI
 
 extension View {
 	@inline(always)
-	func fullWidth(alignment: Alignment) -> some View {
+	func fullWidth(alignment: Alignment = .center) -> some View {
 		self
 			.frame(maxWidth: .infinity, alignment: alignment)
 			.contentShape(Rectangle())
