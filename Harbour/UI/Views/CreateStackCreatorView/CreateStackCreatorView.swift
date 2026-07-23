@@ -10,7 +10,7 @@ import CommonHaptics
 import PortainerKit
 import SwiftUI
 
-// TODO: Haptics
+// TODO: (UI) Haptics
 
 struct CreateStackCreatorView: View {
 	@Environment(SceneDelegate.self) private var sceneDelegate
@@ -31,7 +31,7 @@ struct CreateStackCreatorView: View {
 			NameSection()
 			ServicesSection()
 			EnvironmentSection()
-			// TODO: Volumes
+			// TODO: (Docker) Volumes
 			NetworksSection()
 		}
 		.formStyle(.grouped)
@@ -55,7 +55,8 @@ struct CreateStackCreatorView: View {
 		.sheet(item: $viewModel.environmentEditorMode) { mode in
 			ServiceView.EditEnvironmentSheetContentView(
 				entry: mode.unwrapped,
-				environment: $viewModel.stackEnvironment
+				environment: $viewModel.stackEnvironment,
+				suggestions: .init()
 			)
 			.modifier(StyledSheetViewModifier())
 		}

@@ -35,10 +35,14 @@ extension CreateStackCreatorView.ServiceView {
 	struct EditEnvironmentSheetContentView: View {
 		var entry: KeyValueEntry?
 		@Binding var environment: [KeyValueEntry]
+		var suggestions: KeyValueEditView.Suggestions
 
 		var body: some View {
 			NavigationStack {
-				KeyValueEditView(entry: entry) { newEntry in
+				KeyValueEditView(
+					entry: entry,
+					suggestions: suggestions
+				) { newEntry in
 					if let entry, let index = environment.firstIndex(of: entry) {
 						environment[index] = newEntry
 					} else {

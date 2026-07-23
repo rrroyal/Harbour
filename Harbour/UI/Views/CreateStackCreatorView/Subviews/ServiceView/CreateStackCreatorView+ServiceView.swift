@@ -189,7 +189,13 @@ private extension CreateStackCreatorView.ServiceView {
 		Group {
 			switch sheet {
 			case .editEnvironment(let entry):
-				EditEnvironmentSheetContentView(entry: entry, environment: $editedService.environment)
+				EditEnvironmentSheetContentView(
+					entry: entry,
+					environment: $editedService.environment,
+					suggestions: .init(
+						value: viewModel.stackEnvironment.map { "$\($0.key)" } // suggest environment keys from the stack
+					)
+				)
 			case .editLabel(let entry):
 				EditLabelSheetContentView(entry: entry, labels: $editedService.labels)
 			case .editVolume(let volume):
