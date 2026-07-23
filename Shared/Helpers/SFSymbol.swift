@@ -68,6 +68,9 @@ enum SFSymbol {
 	/// 􀤆 network
 	static let network = "network"
 
+	/// 􀍼 nosign
+	static let none = "nosign"
+
 	/// 􀍠 ellipsis
 	static let more = "ellipsis"
 

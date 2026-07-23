@@ -35,9 +35,6 @@ extension CreateStackCreatorView {
 			)
 		}
 
-		// TODO: network_mode
-		// TODO: restart
-
 		var body: some View {
 			Form {
 				GeneralSection(

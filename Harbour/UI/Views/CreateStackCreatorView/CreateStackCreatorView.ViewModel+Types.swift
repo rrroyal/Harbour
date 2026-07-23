@@ -21,6 +21,8 @@ extension CreateStackCreatorView.ViewModel {
 		var volumes: [Volume]
 		var ports: [PortEntry]
 		var networks: [Network]
+		var networkMode: NetworkMode?
+		var restartPolicy: RestartPolicy?
 	}
 
 	struct Network: Identifiable, Hashable {
@@ -71,5 +73,24 @@ extension CreateStackCreatorView.ViewModel.Service {
 		var hostPort: UInt16
 		var containerPort: UInt16
 		var proto: Proto
+	}
+
+	/// Maps to Docker Compose's `network_mode` key.
+	enum NetworkMode: String, CaseIterable, Identifiable, Hashable {
+		var id: Self { self }
+
+		case bridge
+		case host
+		case none
+	}
+
+	/// Maps to Docker Compose's `restart` key.
+	enum RestartPolicy: String, CaseIterable, Identifiable, Hashable {
+		var id: Self { self }
+
+		case always
+		case onFailure = "on-failure"
+		case unlessStopped = "unless-stopped"
+		case no
 	}
 }

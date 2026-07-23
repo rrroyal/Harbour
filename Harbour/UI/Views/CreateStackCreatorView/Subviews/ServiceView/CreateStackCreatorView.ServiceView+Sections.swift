@@ -65,6 +65,38 @@ extension CreateStackCreatorView.ServiceView {
 				} header: {
 					Text("CreateStackCreatorView.ServiceView.GeneralSection.ContainerName.Header")
 				}
+
+				NormalizedSection {
+					Picker(selection: $service.networkMode) {
+						ForEach(CreateStackCreatorView.ViewModel.Service.NetworkMode.allCases) { mode in
+							Label(mode.title, systemImage: mode.symbolName)
+								.tag(mode as CreateStackCreatorView.ViewModel.Service.NetworkMode?)
+						}
+
+						Divider()
+
+						Text("Generic.Unspecified")
+							.tag(nil as CreateStackCreatorView.ViewModel.Service.NetworkMode?)
+					} label: {
+						Text("CreateStackCreatorView.ServiceView.GeneralSection.Options.NetworkMode")
+					}
+
+					Picker(selection: $service.restartPolicy) {
+						ForEach(CreateStackCreatorView.ViewModel.Service.RestartPolicy.allCases) { policy in
+							Label(policy.title, systemImage: policy.symbolName)
+								.tag(policy as CreateStackCreatorView.ViewModel.Service.RestartPolicy?)
+						}
+
+						Divider()
+
+						Text("Generic.Unspecified")
+							.tag(nil as CreateStackCreatorView.ViewModel.Service.RestartPolicy?)
+					} label: {
+						Text("CreateStackCreatorView.ServiceView.GeneralSection.Options.Restart")
+					}
+				} header: {
+					Text("CreateStackCreatorView.ServiceView.GeneralSection.Options.Header")
+				}
 			}
 		}
 	}
@@ -314,6 +346,62 @@ extension CreateStackCreatorView.ServiceView {
 			} header: {
 				Text("CreateStackCreatorView.ServiceView.NetworksSection.Header")
 			}
+		}
+	}
+}
+
+// MARK: - CreateStackCreatorView.ViewModel.Service.NetworkMode+title
+
+extension CreateStackCreatorView.ViewModel.Service.NetworkMode {
+	var title: LocalizedStringKey {
+		switch self {
+		case .bridge:
+			"CreateStackCreatorView.ServiceView.NetworkMode.Bridge"
+		case .host:
+			"CreateStackCreatorView.ServiceView.NetworkMode.Host"
+		case .none:
+			"CreateStackCreatorView.ServiceView.NetworkMode.None"
+		}
+	}
+
+	var symbolName: String {
+		switch self {
+		case .bridge:
+			"point.3.connected.trianglepath.dotted"
+		case .host:
+			"network"
+		case .none:
+			SFSymbol.none
+		}
+	}
+}
+
+// MARK: - CreateStackCreatorView.ViewModel.Service.RestartPolicy+title
+
+extension CreateStackCreatorView.ViewModel.Service.RestartPolicy {
+	var title: LocalizedStringKey {
+		switch self {
+		case .always:
+			"CreateStackCreatorView.ServiceView.RestartPolicy.Always"
+		case .onFailure:
+			"CreateStackCreatorView.ServiceView.RestartPolicy.OnFailure"
+		case .unlessStopped:
+			"CreateStackCreatorView.ServiceView.RestartPolicy.UnlessStopped"
+		case .no:
+			"CreateStackCreatorView.ServiceView.RestartPolicy.No"
+		}
+	}
+
+	var symbolName: String {
+		switch self {
+		case .always:
+			"arrow.trianglehead.2.clockwise.rotate.90"
+		case .onFailure:
+			"exclamationmark.arrow.trianglehead.2.clockwise.rotate.90"
+		case .unlessStopped:
+			"clock.arrow.trianglehead.2.counterclockwise.rotate.90"
+		case .no:
+			SFSymbol.none
 		}
 	}
 }

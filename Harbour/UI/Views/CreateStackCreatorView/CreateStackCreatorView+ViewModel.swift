@@ -150,6 +150,14 @@ extension CreateStackCreatorView {
 					lines.append("\(indentation)container_name: \"\(containerName)\"")
 				}
 
+				if let networkMode = service.networkMode?.rawValue {
+					lines.append("\(indentation)network_mode: \"\(networkMode)\"")
+				}
+
+				if let restartPolicy = service.restartPolicy?.rawValue {
+					lines.append("\(indentation)restart: \"\(restartPolicy)\"")
+				}
+
 				if !service.environment.isEmpty {
 					lines.append("\(indentation)environment:")
 					indentationLevel += 1
