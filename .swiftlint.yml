@@ -63,6 +63,9 @@ disabled_rules:
   - redundant_string_enum_value
   - type_name
 
+excluded:
+  - "**/.build/**"
+
 # Custom rules
 
 custom_rules:
